@@ -1,6 +1,6 @@
 import imp
 from django.urls import path,include
-from . import views
+from port import views
 
 app_name='port'
 
@@ -11,5 +11,4 @@ urlpatterns = [
     #path('', include('django.contrib.auth.urls')),
     #loginpage
     path('',views.homepage, name='homepage'),
-    
 ]

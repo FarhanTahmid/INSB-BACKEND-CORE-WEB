@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+from users import registerUser
 from users.ActiveUser import ActiveUser
 
 # Create your views here.
@@ -24,4 +24,14 @@ def login(request):
         return render(request,'login.html')
 
 def dashboard(request):
+    if request.method=='POST':
+        
+        #this block of code contains codes for directly feeding info to SQL table from excel files
+        if request.POST.get("feed_members"):
+            registerUser.Registration.populateMembersDataThroughExcel() #feeding the sql table "MEMBERS" throuht his class
+            return redirect("users:dashboard")
+        else:
+            print("Didnt get data from post")
+            return redirect("users:dashboard")
+            
     return render(request,"dashboard.html")
