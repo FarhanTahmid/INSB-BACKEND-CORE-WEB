@@ -9,9 +9,9 @@ from django.urls import reverse
 # Create your models here.
 class Members(models.Model):
 
-    ieee_id=models.CharField(primary_key=True,blank=False,null=False,max_length=20)
+    ieee_id=models.IntegerField(primary_key=True,blank=False,null=False)
     name=models.CharField(null=False,blank=False,max_length=100)
-    nsu_id=models.CharField(null=False, blank=False,max_length=20)
+    nsu_id=models.IntegerField(null=False, blank=False)
     email_ieee=models.EmailField(null=False,blank=False)
     email_personal=models.EmailField(null=False,blank=False)
     contact_no=models.CharField(null=True,blank=True,max_length=16)

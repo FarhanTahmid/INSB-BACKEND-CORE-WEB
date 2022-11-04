@@ -25,10 +25,13 @@ def login(request):
 
 def dashboard(request):
     if request.method=='POST':
+        
+        #this block of code contains codes for directly feeding info to SQL table from excel files
         if request.POST.get("feed_members"):
-            registerUser.Registration.populateMembersDataThroughExcel() #feedin the sql table "MEMBERS" throuht his class
+            registerUser.Registration.populateMembersDataThroughExcel() #feeding the sql table "MEMBERS" throuht his class
             return redirect("users:dashboard")
         else:
             print("Didnt get data from post")
-            return redirect("users:dashboard")    
+            return redirect("users:dashboard")
+            
     return render(request,"dashboard.html")
