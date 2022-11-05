@@ -1,0 +1,1 @@
+web gunicorn insb_port.wsgi:application --log-file -
