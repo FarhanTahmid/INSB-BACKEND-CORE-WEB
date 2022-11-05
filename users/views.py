@@ -21,7 +21,7 @@ def login(request):
             messages.info(request,"Credentials given are wrong")
             return redirect('users:login')     
     else:
-        return render(request,'login.html')
+        return render(request,'users/login.html')
 
 def dashboard(request):
     if request.method=='POST':
@@ -34,4 +34,4 @@ def dashboard(request):
             print("Didnt get data from post")
             return redirect("users:dashboard")
             
-    return render(request,"dashboard.html")
+    return render(request,"users/dashboard.html")

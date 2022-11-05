@@ -1,5 +1,4 @@
 import csv
-import psycopg2
 import django
 from users.models import Members
 class Registration:
