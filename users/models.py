@@ -19,6 +19,8 @@ class Members(models.Model):
     date_of_birth=models.DateField(null=True,blank=True)
     gender=models.CharField(null=False,blank=True,max_length=7)
     facebook_url=models.URLField(null=True,blank=True,max_length=200)
+    team=models.IntegerField(null=True,blank=True)
+    position=models.IntegerField(null=True,blank=True)
     
     class Meta:
         verbose_name='INSB Registered Members'
