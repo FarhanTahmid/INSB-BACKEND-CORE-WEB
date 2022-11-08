@@ -1,0 +1,7 @@
+host: insbapp.mysql.pythonanywhere-services.com
+pass: ngl@insb6552
+Username: insbapp
+name: insbapp$default
+
+To dump data: python manage.py dumpdata > datadump.json
+to load data: python manage.py loaddata datadump.json
