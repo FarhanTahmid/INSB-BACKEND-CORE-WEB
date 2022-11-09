@@ -7,5 +7,6 @@ app_name='api'
 ##defining the urls to work with
 
 urlpatterns = [
-    path('members/',views.MemberList.as_view()),
+    #path('members/',views.MemberList.as_view()),
+    path('signup/',views.signupAppUser)
 ]

@@ -1,6 +1,7 @@
 import csv
 import django
 from users.models import Members
+from django.db import connection
 class Registration:
     def __init__(self) -> None:
         pass
@@ -27,5 +28,7 @@ class Registration:
                         addMember.save()
                     except django.db.utils.IntegrityError:
                         continue
+                    finally:
+                        connection.close()
             
                 
