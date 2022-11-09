@@ -83,6 +83,15 @@ WSGI_APPLICATION = 'insb_port.wsgi.application'
 DATABASES = {
     'default': {
         
+        #********MYSQL SERVER ON PYTHON ANYWHERE*********
+        # 'ENGINE': 'django.db.backends.mysql',
+        # 'NAME': 'insbapp$insb_port',
+        # 'USER': 'insbapp',
+        # 'PASSWORD': 'hello@insb',
+        # 'HOST':'insbapp.mysql.pythonanywhere-services.com',
+        # 'PORT':'',
+        
+
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
