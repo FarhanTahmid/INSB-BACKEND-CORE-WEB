@@ -21,7 +21,6 @@ class OnAppProcesses:
                 return "success"
         except:
             return DatabaseError
-     
     
     def getUserData(email):
         user:Members=Members.objects.get(email_ieee=email)
