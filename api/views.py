@@ -5,6 +5,7 @@ from api.serializers import MembersSerializer
 from rest_framework.generics import ListAPIView
 from django.views.decorators.csrf import csrf_exempt
 from . import OnAppAuth
+from django.contrib.auth.models import User,auth
 from django.db import DatabaseError
 # Create your views here.
 
@@ -28,5 +29,20 @@ def signupAppUser(request):
             return JsonResponse({"status":"code-failure"})
     else:
         return JsonResponse({"status":"connection-not secured"})
+
+@csrf_exempt
+def loginUser(request):
+    
+    if request.method=="POST":
+        email=request.POST.get("email_ieee")
+        password=request.POST.get("password")
+        get:Members=Members.objects.get(email=email)
+        username=get.ieee_id
+        user=auth.athenticate(username,password)
+        if user is not None:
+            auth.login(request,user)
+            return JsonResponse({"status":"logged-in"})
+        else:
+            return JsonResponse({"status":"not-logged-in"})
 
     

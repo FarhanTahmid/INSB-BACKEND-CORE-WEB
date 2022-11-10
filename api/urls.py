@@ -8,5 +8,7 @@ app_name='api'
 
 urlpatterns = [
     #path('members/',views.MemberList.as_view()),
-    path('signup/',views.signupAppUser)
+    path('signup/',views.signupAppUser),
+    path('login/',views.loginUser),
+    
 ]
