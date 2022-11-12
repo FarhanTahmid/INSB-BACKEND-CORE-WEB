@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'port',
     'users',
+    'recruitment',
     'api',
 ]
 
@@ -142,6 +143,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
 STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static'))
+LOGIN_REDIRECT_URL='users:dashboard'
+LOGIN_URL='users:login'
 django_heroku.settings(locals())
 
 REST_FRAMEWORK={

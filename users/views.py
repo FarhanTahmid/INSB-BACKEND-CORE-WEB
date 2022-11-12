@@ -22,7 +22,7 @@ def login(request):
             return redirect('users:login')     
     else:
         return render(request,'users/login.html')
-
+@login_required
 def dashboard(request):
     if request.method=='POST':
         

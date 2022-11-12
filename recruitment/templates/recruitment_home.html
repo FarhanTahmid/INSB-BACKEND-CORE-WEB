@@ -7,7 +7,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
+        <title>Recruitment</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="">
@@ -16,14 +16,19 @@
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <p>LETS CONTROL THE FREAKING DATABASE NOW</p>
-        <form method="POST" action="dashboard">
+        <p>Welcome to the recruitment page of INSB</p>
+        <form method="POST" action=''>
             {% csrf_token %}
-        <button type="submit" name="feed_members" value='1' class="log-btn" onclick='users:dashboard'>
-            Feed members Data
-       </button>
+            <div class="d-grid pt-3">
+                <input type="text" placeholder="New Recruitment Session" class="Form-cont my-1 p-1" Required name='recruitment_session'>
+            </div>
+            <button type="submit" class="log-btn" onclick=''>
+                Create
+           </button>
         </form>
-        <button><a href="{% url 'recruitment:recruitment_home' %}" class="log_in">Recruitment</a></button>
+        {% for session in sessions %}
+        <P>{{ session.id }}. {{ session.session }}</p>
+        {% endfor %}
         <script src="" async defer></script>
     </body>
 </html>
