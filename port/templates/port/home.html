@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8" />
+        <title>INSB PORT</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="{% static 'Home.css' %}" />
+        <link rel="stylesheet" href="{% static 'Slider.css' %}" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        />
+    </head>
+    <body>
+        <!-- Navbar Section -->
+
+        <nav>
+            <input type="checkbox" id="check" />
+            <label for="check" class="checkbtn">
+                <i class="fas fa-bars"></i>
+            </label>
+            <label class="logo">
+                <img src="https://ieeensusb.org/wp-content/uploads/2021/03/logo.gif" height="" alt="" srcset="" />
+            </label>
+            <ul>
+                <li><a class="" href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="users/login">Login</a></li>
+            </ul>
+        </nav>
+
+        <!-- Image Slider -->
+
+        
+        <section>
+                <div class="rt-container">
+                    <div class="col-rt-12">
+                        <div id="slider">
+                            <div class="slides">
+
+                                <div class="slider">
+                                    <div class="legend"></div>
+                                    <div class="ImageSliderContent">
+                                        <div class="content-txt">
+                                            <h2>Lorem ipsum dolor</h2>
+                                            <p>Nam ultrices pellentesque facilisis. In semper tellus mollis nisl pulvinar vitae vulputate lorem consequat. Fusce odio tortor, pretium sit amet auctor ut, ultrices vel nibh.</p>
+                                        </div>
+                                    </div>
+                                    <div class="image"> <img src="{% static '4.jpg' %}" /> </div>
+                                </div>
+
+                                <div class="slider">
+                                    <div class="legend"></div>
+                                    <div class="ImageSliderContent">
+                                        <div class="content-txt">
+                                            <h2>Lorem ipsum dolor</h2>
+                                            <p>Nam ultrices pellentesque facilisis. In semper tellus mollis nisl pulvinar vitae vulputate lorem consequat. Fusce odio tortor, pretium sit amet auctor ut, ultrices vel nibh.</p>
+                                        </div>
+                                    </div>
+                                    <div class="image"> <img src="{% static '2.jpg' %}" /> </div>
+                                </div>
+
+                                <div class="slider">
+                                    <div class="legend"></div>
+                                    <div class="ImageSliderContent">
+                                        <div class="content-txt">
+                                            <h2>Lorem ipsum dolor</h2>
+                                            <p>Nam ultrices pellentesque facilisis. In semper tellus mollis nisl pulvinar vitae vulputate lorem consequat. Fusce odio tortor, pretium sit amet auctor ut, ultrices vel nibh.</p>
+                                        </div>
+                                    </div>
+                                    <div class="image"> <img src="{% static '3.jpg' %}" /> </div>
+                                </div>
+
+                                <div class="slider">
+                                    <div class="legend"></div>
+                                    <div class="ImageSliderContent">
+                                        <div class="content-txt">
+                                            <h2>Lorem ipsum dolor</h2>
+                                            <p>Nam ultrices pellentesque facilisis. In semper tellus mollis nisl pulvinar vitae vulputate lorem consequat. Fusce odio tortor, pretium sit amet auctor ut, ultrices vel nibh.</p>
+                                        </div>
+                                    </div>
+                                    <div class="image"> <img src="{% static '1.png' %}" /> </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="switch w-100">
+                                <ul className='float-end me-5'>
+                                    <li>
+                                        <div class="on"></div>
+                                    </li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+    </body>
+
+</html>

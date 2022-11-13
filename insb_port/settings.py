@@ -141,8 +141,16 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#Date input Formats in the models
+DATE_INPUT_FORMATS = ['%d-%m-%Y']
+
+
+#static directory
 STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
 STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static'))
+
+#to do user login required
 LOGIN_REDIRECT_URL='users:dashboard'
 LOGIN_URL='users:login'
 django_heroku.settings(locals())
