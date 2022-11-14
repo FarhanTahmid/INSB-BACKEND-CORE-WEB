@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +8,10 @@
     <title>Recruitees</title>
 </head>
 <body>
+    <p>WELCOME TO THE RECRUITMENT PROCESS OF {{ session.session }}</p>
     <p>Recruitees list</p>
-    <p>{{ session.id }}</p>
+    {% for member in members %}
+        <p>NSU ID: {{ member.member.nsu_id }}</p>
+    {% endfor %}
 </body>
 </html>
