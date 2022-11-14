@@ -20,6 +20,5 @@ def recruitment_home(request):
 def recruitee(request):
     if request.method=="POST":
         session_id=request.POST["get_recruited_members"]
-        print(session_id)
         return render(request,'recruitees.html')
     return render(request,'recruitees.html')
