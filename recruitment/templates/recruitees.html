@@ -11,7 +11,8 @@
     <p>WELCOME TO THE RECRUITMENT PROCESS OF {{ session.session }}</p>
     <p>Recruitees list</p>
     {% for member in members %}
-        <p>NSU ID: {{ member.member.nsu_id }}</p>
+    <var>x</var>={{ forloop.counter0 }}
+    <p>NSU ID: {{ members.member.0.nsu_id }}</p>
     {% endfor %}
 </body>
 </html>
