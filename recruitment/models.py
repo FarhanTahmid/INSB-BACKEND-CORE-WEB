@@ -35,7 +35,7 @@ class recruited_members(models.Model):
         verbose_name="Recruited Members"
     
     def __str__(self) -> str:
-        return self.nsu_id
+        return str(self.nsu_id)
     def get_absolute_url(self):
         return reverse("recruited member", kwargs={"nsu_id": self.nsu_id})
     

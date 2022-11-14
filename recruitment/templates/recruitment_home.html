@@ -26,9 +26,13 @@
                 Create
            </button>
         </form>
-        {% for session in sessions %}
-        <P>{{ session.id }}. {{ session.session }}</p>
-        {% endfor %}
+        <form method="POST" action="recruitee">
+            {% csrf_token %}
+            {% for session in sessions %}
+            <button type="submit" onclick="recruitment:recruitee" name="get_recruited_members" value="1">{{ session.id }} {{ session.session }}</button>
+            {% endfor %}
+        </form>
+        
         <script src="" async defer></script>
     </body>
 </html>
