@@ -19,6 +19,4 @@ def recruitment_home(request):
 
 def recruitee(request):
 
-
-
     return render(request,'recruitees.html')
