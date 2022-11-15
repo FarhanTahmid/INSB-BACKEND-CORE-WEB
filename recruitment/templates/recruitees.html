@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +8,16 @@
     <title>Recruitees</title>
 </head>
 <body>
+    <p>WELCOME TO THE RECRUITMENT PROCESS OF {{ session.session }}</p>
     <p>Recruitees list</p>
-    <p>{{ session.id }}</p>
+    
+    <a href='form'>Register new member</a>
+    
+    {% comment %} This block is responsible for loading all the members recruited on that session and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
+    {% for member,count in members.items %}
+        {% for count in count %}
+            <a href="{% url "recruitment:recruitee_details" count.nsu_id %}">{{ count.nsu_id }}</a>
+        {% endfor %}    
+    {% endfor %}
 </body>
 </html>

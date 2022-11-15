@@ -9,6 +9,8 @@ app_name='recruitment'
 urlpatterns = [
     #path('members/',views.MemberList.as_view()),
     path('',views.recruitment_home,name='recruitment_home'),
-    path('recruitee',views.recruitee,name="recruitee"),
+    path('recruitee/<str:pk>',views.recruitee,name="recruitee"),
+    path('member/<int:nsu_id>',views.recruitee_details,name="recruitee_details"),
+    path('form',views.recruit_member,name="recruit member")
     
 ]
