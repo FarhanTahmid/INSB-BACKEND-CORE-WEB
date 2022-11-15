@@ -10,9 +10,10 @@
 <body>
     <p>WELCOME TO THE RECRUITMENT PROCESS OF {{ session.session }}</p>
     <p>Recruitees list</p>
-    {% for member in members %}
-    <var>x</var>={{ forloop.counter0 }}
-    <p>NSU ID: {{ members.member.0.nsu_id }}</p>
+    {% for member,count in members.items %}
+        {% for count in count %}
+            <p>NSU ID: {{ count.nsu_id }}</p>
+        {% endfor %}    
     {% endfor %}
 </body>
 </html>

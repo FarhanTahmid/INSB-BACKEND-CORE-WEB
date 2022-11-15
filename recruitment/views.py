@@ -27,6 +27,5 @@ def recruitee(request):
             'session':getSession,
             'members':getRecruitedMembers
         }
-        print(context['members']['member'][0]['nsu_id'])
         return render(request,'recruitees.html',context)
     return render(request,'recruitees.html')

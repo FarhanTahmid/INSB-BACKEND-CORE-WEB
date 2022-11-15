@@ -15,7 +15,7 @@ class recruitment_session(models.Model):
 
 class recruited_members(models.Model):
     nsu_id=models.IntegerField(primary_key=True,blank=False,null=False)
-    ieee_id=models.IntegerField(null=True,blank=False)
+    ieee_id=models.IntegerField(null=True,blank=True)
     first_name=models.CharField(null=True,blank=True,max_length=50)
     middle_name=models.CharField(null=True,blank=True,max_length=50)
     last_name=models.CharField(null=True,blank=True,max_length=50)
