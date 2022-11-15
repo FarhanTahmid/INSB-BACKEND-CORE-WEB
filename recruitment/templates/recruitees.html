@@ -12,15 +12,11 @@
     <p>Recruitees list</p>
     
     <a href='form'>Register new member</a>
-
+    
+    {% comment %} This block is responsible for loading all the members recruited on that session and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
     {% for member,count in members.items %}
         {% for count in count %}
-            <input
-            type="button"
-            value="{{ count.nsu_id }}" 
-            NSU ID: {{ count.nsu_id }}
-            onclick="location.href='{% url 'recruitment:recruitee_details' %}';"
-            >
+            <a href="{% url "recruitment:recruitee_details" count.nsu_id %}">{{ count.nsu_id }}</a>
         {% endfor %}    
     {% endfor %}
 </body>
