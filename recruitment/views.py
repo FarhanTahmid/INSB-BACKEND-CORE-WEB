@@ -25,7 +25,10 @@ def recruitee(request):
         
         context={
             'session':getSession,
-            'members':getRecruitedMembers
+            'members':getRecruitedMembers,
         }
         return render(request,'recruitees.html',context)
     return render(request,'recruitees.html')
+
+def recruit_member(request):
+    return render(request,"membership_form.html")

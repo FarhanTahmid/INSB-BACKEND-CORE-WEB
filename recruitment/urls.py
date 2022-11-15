@@ -10,5 +10,6 @@ urlpatterns = [
     #path('members/',views.MemberList.as_view()),
     path('',views.recruitment_home,name='recruitment_home'),
     path('recruitee',views.recruitee,name="recruitee"),
+    path('form',views.recruit_member,name="recruit member")
     
 ]

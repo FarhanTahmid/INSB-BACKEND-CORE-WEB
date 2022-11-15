@@ -10,6 +10,9 @@
 <body>
     <p>WELCOME TO THE RECRUITMENT PROCESS OF {{ session.session }}</p>
     <p>Recruitees list</p>
+    
+    <a href='form'>Register new member</a>
+
     {% for member,count in members.items %}
         {% for count in count %}
             <p>NSU ID: {{ count.nsu_id }}</p>
