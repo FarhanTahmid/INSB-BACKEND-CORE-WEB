@@ -29,7 +29,7 @@
         <form method="POST" action="recruitee">
             {% csrf_token %}
             {% for session in sessions %}
-            <input type="submit" onclick="recruitment:recruitee" name="get_recruited_members" value={{ session.id }}>{{ session.id }} {{ session.session }}</input>
+            <input type="submit" onclick="recruitment:recruitee" name="get_recruited_members" value={{ session.id }}>{{ session.session }}</input>
             {% endfor %}
         </form>
         

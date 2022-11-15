@@ -28,7 +28,8 @@ def recruitee(request):
             'members':getRecruitedMembers,
         }
         return render(request,'recruitees.html',context)
-    return render(request,'recruitees.html')
-
+    return render(request,'recruitees.html',context=context)
+def recruitee_details(request):
+    return render(request,"recruitee_details.html")
 def recruit_member(request):
     return render(request,"membership_form.html")

@@ -15,7 +15,12 @@
 
     {% for member,count in members.items %}
         {% for count in count %}
-            <p>NSU ID: {{ count.nsu_id }}</p>
+            <input
+            type="button"
+            value="{{ count.nsu_id }}" 
+            NSU ID: {{ count.nsu_id }}
+            onclick="location.href='{% url 'recruitment:recruitee_details' %}';"
+            >
         {% endfor %}    
     {% endfor %}
 </body>
