@@ -11,6 +11,6 @@ urlpatterns = [
     path('',views.recruitment_home,name='recruitment_home'),
     path('recruitee/<str:pk>',views.recruitee,name="recruitee"), #here pk is the id of the session we are accessing
     path('member/<int:nsu_id>',views.recruitee_details,name="recruitee_details"),
-    path('membership_form/',views.recruit_member,name="recruit_member")
+    path('membership_form/<str:session_name>',views.recruit_member,name="recruit_member")
     
 ]

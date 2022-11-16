@@ -31,7 +31,7 @@ def recruitee(request,pk):
     '''
     getSession=renderData.Recruitment.getSession(session_id=pk)
     getRecruitedMembers=renderData.Recruitment.getRecruitedMembers(session_id=pk)
-    renderData.Recruitment.set_session(pk)
+    
     context={
         'session':getSession,
         'members':getRecruitedMembers,
@@ -44,6 +44,7 @@ def recruitee_details(request,nsu_id):
     return render(request,"recruitee_details.html")
 
 @login_required
-def recruit_member(request):
-    print(renderData.Recruitment.return_session())
+def recruit_member(request,session_name):
+    print(session_name)
+    
     return render(request,"membership_form.html")
