@@ -25,17 +25,17 @@ def recruitment_home(request):
 
 @login_required  
 def recruitee(request,pk):
+    
     '''This function is responsible for getting all the members registered in a particular
     recruitment session. Loads all the datas and show them
     '''
     getSession=renderData.Recruitment.getSession(session_id=pk)
-    print(pk)
     getRecruitedMembers=renderData.Recruitment.getRecruitedMembers(session_id=pk)
+    renderData.Recruitment.set_session(pk)
     context={
         'session':getSession,
         'members':getRecruitedMembers,
        }
-    print(context)
     return render(request,'recruitees.html',context=context)
 
 
@@ -45,4 +45,5 @@ def recruitee_details(request,nsu_id):
 
 @login_required
 def recruit_member(request):
+    print(renderData.Recruitment.return_session())
     return render(request,"membership_form.html")

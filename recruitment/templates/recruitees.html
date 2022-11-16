@@ -11,7 +11,7 @@
     <p>WELCOME TO THE RECRUITMENT PROCESS OF {{ session.session }}</p>
     <p>Recruitees list</p>
     
-    <a href='form'>Register new member</a>
+    <a href="{% url "recruitment:recruit_member" %}">Register New Member</a>
     
     {% comment %} This block is responsible for loading all the members recruited on that session and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
     {% for member,count in members.items %}
