@@ -3,6 +3,7 @@ from django.db import DatabaseError
 from recruitment.models import recruitment_session,recruited_members
 from . import renderData
 from django.contrib.auth.decorators import login_required
+from . forms import StudentForm
 # Create your views here.
 
 @login_required
@@ -45,6 +46,9 @@ def recruitee_details(request,nsu_id):
 
 @login_required
 def recruit_member(request,session_name):
-    print(session_name)
-    
-    return render(request,"membership_form.html")
+    form=StudentForm
+    context={
+        'form':form,
+        'session_name':session_name
+    }
+    return render(request,"membership_form.html",context=context)
