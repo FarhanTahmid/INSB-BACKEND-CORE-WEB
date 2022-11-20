@@ -11,7 +11,9 @@ class Recruitment:
     def getSession(session_id):
         """Returns the whole session object"""
         return{'session':recruitment_session.objects.get(id=session_id)} #returns the object who has got the id of passed session
-    
+    def getSessionid(session_name):
+        """Returns the whole session object"""
+        return{'session':recruitment_session.objects.filter(session=session_name).values('id')}
     def getRecruitedMembers(session_id):
         '''This function returns all the recruited members on that particular session'''
         return{

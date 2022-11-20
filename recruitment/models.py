@@ -29,7 +29,9 @@ class recruited_members(models.Model):
     recruitment_time=models.DateTimeField(auto_now_add=True,null=False,blank=False)
     ieee_id=models.IntegerField(null=True,blank=True)
     session_id=models.IntegerField(null=False,blank=True)
-    payment_status=models.BooleanField(null=False,blank=False,default=False)
+    recruited_by=models.CharField(null=True,blank=True,max_length=30)
+    cash_payment_status=models.BooleanField(null=True,blank=True,default=False)
+    ieee_payment_status=models.BooleanField(null=False,blank=False,default=False)
     
     class Meta:
         verbose_name="Recruited Members"

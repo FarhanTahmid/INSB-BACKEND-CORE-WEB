@@ -17,7 +17,67 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         hello this is the membership form for {{ session_name }}
-        {{form.as_p}}
+        <a href="{% url 'recruitment:recruitee' session_id %}">See recruitees</a>
+        <form method="POST" action="" autocomplete="on">
+            {% csrf_token %}
+            <h1>
+                STUDENT COPY
+            </h1>
+            {% comment %} Required field, as nsu id is primary key in the database {% endcomment %}
+            <label> NSU ID: </label>
+            <input type="number" placeholder="Enter NSU ID" required name="nsu_id">
+            <br>
+            <br>
+            {% comment %} The following three field will be decorated side by side {% endcomment %}
+            <label> First Name : </label>
+            <input type="text" placeholder="Enter First Name" required name="first_name">
+            <label> Middle Name : </label>
+            <input type="text" placeholder="Enter Middle Name"  name="middle_name">
+            <label> Last Name : </label>
+            <input type="text" placeholder="Enter Last Name"  name="last_name">
+            <br>
+            <br>
+
+            {% comment %} From here the fields will go by serially {% endcomment %}
+            <label> Contact No : </label>
+            <input type="text" placeholder="Enter Contact no." required name="contact_no">
+            <br><label> Date of Birth : </label>
+            <input type="date" placeholder="Date of Birth (YY-MM-DD)" required name="date_of_birth">
+            <br><label> Email : </label>
+            <input type="email" placeholder="Enter E-Mail" required name="email_personal">
+            <br><label> Facebook URL : </label>
+            <input type="url" placeholder="Enter Facebook URL" required name="facebook_url">
+            <br><label> Address : </label>
+            <input type="text" placeholder="Enter Address" required name="home_address">
+            <br><label> Major : </label>
+            <input type="text" placeholder="Enter Major" required name="major">
+            <br><label> Graduating Year : </label>
+            <input type="number" placeholder="Enter Graduating Year" required name="graduating_year">
+            {% comment %} For radio Button {% endcomment %}
+            <br>
+            <label>Gender :  </label>
+            <input type="radio" id="male" name="gender" value="Male">
+            <label for="male">Male</label>
+            <input type="radio" id="female" name="gender" value="Female">
+            <label for="female">Female  </label>
+            <input type="radio" id="other" name="gender" value="Other">
+            <label for="other">Other</label>
+            {% comment %} There will be a border indicating that further details are used only for officials {% endcomment %}
+            <h1>
+                FOR OFFICIAL USE
+            </h1>
+            <br><label> Recruited By : </label>
+            <input type="text" placeholder="Name" required name="recruited_by">
+            <br>
+            <input type="checkbox" name="cash_payment_status" id="cash_payment" value="cash_payment">
+            <label for="cash_payment"> Cash Payment </label><br>
+            <input type="checkbox" name="ieee_payment_status" id="ieee_payment" value="ieee_payment">
+            <label for="ieee_payment"> IEEE Payment </label><br>
+            <input type="submit" value="Register Member">
+        </form>
+        {% for message in messages %}
+              <p class="message">{{message}}</p>
+        {% endfor %}
         <script src="" async defer></script>
     </body>
 </html>
