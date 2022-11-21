@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.db import DatabaseError
+from django.db import DatabaseError,IntegrityError
 from django.http import HttpResponseServerError,HttpResponseBadRequest
 from recruitment.models import recruitment_session,recruited_members
 from . import renderData
@@ -58,8 +58,10 @@ def recruit_member(request,session_name):
         'session_name':session_name,
         'session_id':getSessionId['session'][0]['id']
     }
-    try:
-        if request.method=="POST":
+
+    if request.method=="POST":
+        
+        try:
             cash_status=False
             ieee_payment_status=False
             if request.POST.get('cash_payment_status',True):
@@ -83,12 +85,18 @@ def recruit_member(request,session_name):
             cash_payment_status=cash_status,
             ieee_payment_status=ieee_payment_status
             )
-            recruited_member.save()
+            recruited_member.save() #Saving the member to the database
             messages.info(request,"Registered Member Successfully!")
             return render(request,"membership_form.html",context=context)
-        else:
-            messages.info(request,"Something went wrong!")
+        
+        except IntegrityError: #Checking if same id exist and handling the exception
+            messages.info(request,f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database!")
             return render(request,"membership_form.html",context=context)
-    except:
+        
+        except: #Handling all errors
+            messages.info(request,"Something went Wrong! Please try again")
+            return render(request,"membership_form.html",context=context)
+    
+    else:
         return render(request,"membership_form.html",context=context)
     
