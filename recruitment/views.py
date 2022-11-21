@@ -49,6 +49,7 @@ def recruitee(request,pk):
 def recruitee_details(request,nsu_id):
     return render(request,"recruitee_details.html")
 
+
 @login_required
 def recruit_member(request,session_name):
     getSessionId=renderData.Recruitment.getSessionid(session_name=session_name)
@@ -59,6 +60,9 @@ def recruit_member(request,session_name):
         'session_id':getSessionId['session'][0]['id']
     }
 
+    
+    #this method is for the POST from the recruitment form
+    
     if request.method=="POST":
         
         try:
