@@ -11,12 +11,78 @@
     <p>WELCOME TO THE RECRUITMENT PROCESS OF {{ session.session }}</p>
     <p>Recruitees list</p>
     <a href="{% url "recruitment:recruit_member" session.session %}">Register New Member</a>
+    <br>
+    <br>
+    {% comment %} Search Functionality {% endcomment %}
+    <label>Search: </label>
+    <input type="text" onkeyup="searchfunction()" id="search" placeholder="Search with any credentials">
     
+    <br>
+    <table id="recruitee_table">
+        <thead>
+            <tr id="table_row">
+                <th>NSU ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Major</th>
+                <th>Recruitment Time</th>
+                <th>Recruited By</th>
+            </tr>
+        </thead>
     {% comment %} This block is responsible for loading all the members recruited on that session and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
     {% for member,count in members.items %}
         {% for count in count %}
-            <a href="{% url "recruitment:recruitee_details" count.nsu_id %}">{{ count.nsu_id }}</a>
+        <tr>
+            <td><a href="{% url "recruitment:recruitee_details" count.nsu_id %}">{{ count.nsu_id }}</a></td>
+            <td>{{ count.first_name }} {{ count.middle_name }} {{ count.last_name }}</td>
+            <td>{{ count.email_personal }}</td>
+            <td>{{ count.major }}</td>
+            <td>{{ count.recruitment_time }}</td>
+            <td>{{ count.recruited_by }}</td>
+        </tr>
         {% endfor %}    
     {% endfor %}
+    </table>
+<p id="no_data"></p>
+
+
+
+
+{% comment %} JS FUNCTION TO SEARCH ITEM ON THE TABLE. THIS SEARCHES WITH ALL THE credentials INSIDE THE TABLE DISPLAYED IN WEBPAGE. NOT CASE SENSITIVE {% endcomment %}
+<script>
+
+    function searchfunction(){
+        let input,filter,table,tr,td,j;
+        input=document.getElementById("search");
+        filter=input.value.toUpperCase();
+        table=document.getElementById("recruitee_table");
+        tr=table.getElementsByTagName("tr");
+        
+        for(j=0;j<tr.length;j++){
+            td=tr[j].getElementsByTagName("td");
+            message=document.getElementById("no_data");
+
+            if(td.length > 0){
+                if(td[0].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
+                td[1].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
+                td[2].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
+                td[3].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
+                td[4].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
+                td[5].innerHTML.toLocaleUpperCase().indexOf(filter)> -1){
+                tr[j].style.display="";
+                message.innerHTML="";
+            }
+                    else{
+                        tr[j].style.display="none";
+                    }
+            
+            }        
+            if(td.length==0){
+                message.innerHTML="Member not found!";
+            }
+        }
+    }
+
+</script>
 </body>
 </html>

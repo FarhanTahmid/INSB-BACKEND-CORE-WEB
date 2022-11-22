@@ -15,8 +15,10 @@ def login(request):
         
         if user is not None and user.is_superuser:
             auth.login(request,user)
-            
             return redirect('users:dashboard')
+        elif user is not user.is_superuser :
+            messages.info(request,"You are not allowed to login to this site")
+            return redirect('users:login') 
         else:
             messages.info(request,"Credentials given are wrong")
             return redirect('users:login')     

@@ -1,8 +1,13 @@
-from django.shortcuts import render
-from django.db import DatabaseError
+from django.shortcuts import render,redirect
+from django.db import DatabaseError,IntegrityError
+from django.http import HttpResponseServerError,HttpResponseBadRequest
 from recruitment.models import recruitment_session,recruited_members
 from . import renderData
 from django.contrib.auth.decorators import login_required
+from . forms import StudentForm
+from . models import recruited_members
+from django.contrib import messages
+
 # Create your views here.
 
 @login_required
@@ -30,6 +35,7 @@ def recruitee(request,pk):
     recruitment session. Loads all the datas and show them
     '''
     getSession=renderData.Recruitment.getSession(session_id=pk)
+    
     getRecruitedMembers=renderData.Recruitment.getRecruitedMembers(session_id=pk)
     
     context={
@@ -43,8 +49,58 @@ def recruitee(request,pk):
 def recruitee_details(request,nsu_id):
     return render(request,"recruitee_details.html")
 
+
 @login_required
 def recruit_member(request,session_name):
-    print(session_name)
+    getSessionId=renderData.Recruitment.getSessionid(session_name=session_name)
+    form=StudentForm
+    context={
+        'form':form,
+        'session_name':session_name,
+        'session_id':getSessionId['session'][0]['id']
+    }
+
     
-    return render(request,"membership_form.html")
+    #this method is for the POST from the recruitment form
+    
+    if request.method=="POST":
+        
+        try:
+            cash_status=False
+            ieee_payment_status=False
+            if request.POST.get('cash_payment_status',True):
+                cash_status=True
+            #getting all data from form and registering user upon validation
+            recruited_member=recruited_members(
+            nsu_id=request.POST['nsu_id'],
+            first_name=request.POST['first_name'],
+            middle_name=request.POST['middle_name'],
+            last_name=request.POST['last_name'],
+            contact_no=request.POST['contact_no'],
+            date_of_birth=request.POST['date_of_birth'],
+            email_personal=request.POST['email_personal'],
+            gender=request.POST['gender'],
+            facebook_url=request.POST['facebook_url'],
+            home_address=request.POST['home_address'],
+            major=request.POST['major'],
+            graduating_year=request.POST['graduating_year'],
+            session_id=getSessionId['session'][0]['id'],
+            recruited_by=request.POST['recruited_by'],
+            cash_payment_status=cash_status,
+            ieee_payment_status=ieee_payment_status
+            )
+            recruited_member.save() #Saving the member to the database
+            messages.info(request,"Registered Member Successfully!")
+            return render(request,"membership_form.html",context=context)
+        
+        except IntegrityError: #Checking if same id exist and handling the exception
+            messages.info(request,f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database!")
+            return render(request,"membership_form.html",context=context)
+        
+        except: #Handling all errors
+            messages.info(request,"Something went Wrong! Please try again")
+            return render(request,"membership_form.html",context=context)
+    
+    else:
+        return render(request,"membership_form.html",context=context)
+    
