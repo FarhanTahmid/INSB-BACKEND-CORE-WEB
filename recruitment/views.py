@@ -60,13 +60,11 @@ def recruitee_details(request,nsu_id):
     if request.method=="POST":
         if request.POST.get('save_edit'): #this is used to update the recruited member details
             # checks the marked check-boxes
-            cash_payment_status=data['recruited_member'][0]['cash_payment_status']
-            ieee_payment_status=data['recruited_member'][0]['ieee_payment_status']
-            print(ieee_payment_status)
-            if request.POST.get('cash_payment_status',True):
+            cash_payment_status=False
+            if request.POST.get('cash_payment_status'):
                 cash_payment_status=True
-            if request.POST.get('ieee_payment_status',True):
-                
+            ieee_payment_status=False
+            if request.POST.get('ieee_payment_status'):
                 ieee_payment_status=True
             
             info_dict={
@@ -105,8 +103,12 @@ def recruit_member(request,session_name):
         
         try:
             
-            paymentStatus= request.POST.get('cash_payment_status')
-            print(paymentStatus)
+            cash_payment_status=False
+            if request.POST.get("cash_payment_status"):
+                cash_payment_status=True
+            ieee_payment_status=False
+            if request.POST.get("ieee_payment_status"):
+                ieee_payment_status=True
                 
             #getting all data from form and registering user upon validation
             recruited_member=recruited_members(
@@ -124,8 +126,8 @@ def recruit_member(request,session_name):
             graduating_year=request.POST['graduating_year'],
             session_id=getSessionId['session'][0]['id'],
             recruited_by=request.POST['recruited_by'],
-            cash_payment_status=paymentStatus,
-            ieee_payment_status=paymentStatus
+            cash_payment_status=cash_payment_status,
+            ieee_payment_status=ieee_payment_status
             )
             recruited_member.save() #Saving the member to the database
             messages.info(request,"Registered Member Successfully!")
