@@ -1,6 +1,8 @@
 #this file is solely responsible for collecting all the related data for recruitment site
+from pymysql import NULL
 from . models import recruitment_session,recruited_members
-
+from django.db import IntegrityError
+from django.db import InternalError
 class Recruitment:
     id=''
     def __init__(self) -> None:
@@ -25,9 +27,32 @@ class Recruitment:
         '''This function updates any changes happening to any recruitee'''    
         try:
             member=recruited_members.objects.get(nsu_id=nsu_id)
-            print(values)
+            member.ieee_id=values['ieee_id']
+            member.first_name=values['first_name']
+            member.middle_name=values['middle_name']
+            member.last_name=values['last_name']
+            member.contact_no=values['contact_no']
+            member.date_of_birth=values['date_of_birth']
+            member.email_personal=values['email_personal']
+            member.facebook_url=values['facebook_url']
+            member.home_address=values['home_address']
+            member.major=values['major']
+            member.graduating_year=values['graduating_year']
+            member.recruited_by=values['recruited_by']
+            member.cash_payment_status=values['cash_payment_status']
+            member.ieee_payment_status=values['ieee_payment_status']
+            
+            if(member.ieee_id):
+                print("yes null")
+            else:
+                print("Not null")
+            if (values['ieee_payment_status'] and (values['ieee_id']==0)):
+                print("member can not be saved without ieee_id")
+                
+        except IntegrityError:
+            return IntegrityError
         except:
-            pass
+            return InternalError
         
         
         
