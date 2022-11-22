@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from . forms import StudentForm
 from . models import recruited_members
 from django.contrib import messages
+import datetime
+
 
 # Create your views here.
 
@@ -47,7 +49,43 @@ def recruitee(request,pk):
 
 @login_required
 def recruitee_details(request,nsu_id):
-    return render(request,"recruitee_details.html")
+    """Preloads all the data of the recruitees who are registered in the particular session, here we can edit and save the data of the recruitee"""
+    data=renderData.Recruitment.getRecruitedMemberDetails(nsu_id=nsu_id)
+    dob=datetime.datetime.strptime(str(data['recruited_member'][0]['date_of_birth']), "%Y-%m-%d").strftime("%Y-%m-%d") #this dob does not change any internal data, it is used just to convert the string type from database to load in to html
+    context={
+             'data':data,
+             'dob':dob
+             }
+    
+    if request.method=="POST":
+        if request.POST.get('save_edit'): #this is used to update the recruited member details
+            # checks the marked check-boxes
+            cash_payment_status=data['recruited_member'][0]['cash_payment_status']
+            ieee_payment_status=data['recruited_member'][0]['ieee_payment_status']
+            print(ieee_payment_status)
+            if request.POST.get('cash_payment_status',True):
+                cash_payment_status=True
+            if request.POST.get('ieee_payment_status',True):
+                
+                ieee_payment_status=True
+            
+            info_dict={
+                'first_name':request.POST['first_name'],
+                'middle_name':request.POST['middle_name'],
+                'last_name':request.POST['last_name'],
+                'contact_no':request.POST['contact_no'],
+                'date_of_birth':request.POST['date_of_birth'],
+                'email_personal':request.POST['email_personal'],
+                'facebook_url':request.POST['facebook_url'],
+                'home_address':request.POST['home_address'],
+                'major':request.POST['major'], 'graduating_year':request.POST['graduating_year'],
+                'ieee_id':request.POST['ieee_id'],
+                'recruited_by':request.POST['recruited_by'],
+                'cash_payment_status':cash_payment_status,
+                'ieee_payment_status':ieee_payment_status
+            }
+            renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)
+    return render(request,"recruitee_details.html",context=context)
 
 
 @login_required
@@ -66,10 +104,10 @@ def recruit_member(request,session_name):
     if request.method=="POST":
         
         try:
-            cash_status=False
-            ieee_payment_status=False
-            if request.POST.get('cash_payment_status',True):
-                cash_status=True
+            
+            paymentStatus= request.POST.get('cash_payment_status')
+            print(paymentStatus)
+                
             #getting all data from form and registering user upon validation
             recruited_member=recruited_members(
             nsu_id=request.POST['nsu_id'],
@@ -86,8 +124,8 @@ def recruit_member(request,session_name):
             graduating_year=request.POST['graduating_year'],
             session_id=getSessionId['session'][0]['id'],
             recruited_by=request.POST['recruited_by'],
-            cash_payment_status=cash_status,
-            ieee_payment_status=ieee_payment_status
+            cash_payment_status=paymentStatus,
+            ieee_payment_status=paymentStatus
             )
             recruited_member.save() #Saving the member to the database
             messages.info(request,"Registered Member Successfully!")
