@@ -26,11 +26,45 @@
                 Create
            </button>
         </form>
+        <br>
+
+        <label>Search Sessions: </label>
+        <input type="text" onkeyup="searchfunction()" id="search" placeholder="Enter session">
+    
+        <br>
         {% comment %} This loads the datas from the view function and uses the session name as link and passes the session id as url as well as a value to the recruitee function to use that as session id {% endcomment %}
-            {% for session in sessions %}
-            <a href="{% url "recruitment:recruitee" session.id %}">{{ session.session }}</a>
-            {% endfor %}
-        
+        <ul id="ul">
+        {% for session in sessions %}
+        <li id="li"><a href="{% url "recruitment:recruitee" session.id %}">{{ session.session }}</a></li>
+        {% endfor %}
+        <ul>
+        <p id="no_data"></p>
         <script src="" async defer></script>
+        
+        <script>
+            function searchfunction(){
+                let input,filter,j;
+                input=document.getElementById("search");
+                filter=input.value.toUpperCase();
+                let ul=document.getElementById("ul");
+                let li=ul.getElementsByTagName("li");
+
+                for(j=0;j<li.length;j++){
+                    message=document.getElementById("no_data");
+                    let a=li[j].getElementsByTagName('a')[0];
+                    let textValue=a.textContent || a.innerHTML;
+                    if(textValue.toUpperCase().indexOf(filter) > -1){
+                        li[j].style.display='';
+                        
+                    }                           
+                    else{
+                        li[j].style.display="none";
+
+                    }
+
+                }
+            }
+        
+        </script>
     </body>
 </html>
