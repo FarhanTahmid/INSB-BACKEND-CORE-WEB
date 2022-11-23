@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.db import DatabaseError,IntegrityError
+from django.db import DatabaseError,IntegrityError,InternalError
 from django.http import HttpResponseServerError,HttpResponseBadRequest
 from recruitment.models import recruitment_session,recruited_members
 from . import renderData
@@ -82,7 +82,16 @@ def recruitee_details(request,nsu_id):
                 'cash_payment_status':cash_payment_status,
                 'ieee_payment_status':ieee_payment_status
             }
-            renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)
+            if(renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)=="no_ieee_id"):
+                messages.info(request,"Please Enter IEEE ID if you have completed payment")
+            elif(renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)==IntegrityError):
+                messages.info(request,"There is already a member registered with this IEEE ID")
+            elif((renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)=="no_ieee_id")==InternalError):
+                messages.info(request,"A Server Error Occured!")
+            elif((renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)=="no_ieee_id")=="success"):
+                return redirect(request)###need to work here
+                messages.info(request,"Information Updated")
+
     return render(request,"recruitee_details.html",context=context)
 
 
