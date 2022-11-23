@@ -41,14 +41,11 @@ class Recruitment:
             member.recruited_by=values['recruited_by']
             member.cash_payment_status=values['cash_payment_status']
             member.ieee_payment_status=values['ieee_payment_status']
-            
-            if(member.ieee_id):
-                print("yes null")
+            if member.ieee_payment_status and member.ieee_id=="":
+                return "no_ieee_id"
             else:
-                print("Not null")
-            if (values['ieee_payment_status'] and (values['ieee_id']==0)):
-                print("member can not be saved without ieee_id")
-                
+                 member.save()
+                 return "success"
         except IntegrityError:
             return IntegrityError
         except:
