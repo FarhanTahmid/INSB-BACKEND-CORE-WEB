@@ -39,6 +39,11 @@
             <td>{{ count.major }}</td>
             <td>{{ count.recruitment_time }}</td>
             <td>{{ count.recruited_by }}</td>
+            {% comment %} <td>
+                <form method=="POST" action=''>
+                    <input type='submit' onclick={'recruitment:recruitee', 'count.nsu_id'} name="delete_member" value='Delete'>
+                </form>        
+            </td> {% endcomment %}
         </tr>
         {% endfor %}    
     {% endfor %}
