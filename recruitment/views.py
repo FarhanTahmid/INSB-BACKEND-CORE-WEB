@@ -215,7 +215,7 @@ def generateExcelSheet(request,session_name):
     font_style=xlwt.XFStyle()
     font_style.font.bold=True
     #Defining columns that will stay in the first row
-    columns=['NSU ID','First Name','Middle Name','Last Name','Email (personal)','Contact No','IEEE ID','Gender','Date Of Birth'
+    columns=['NSU ID','First Name','Middle Name','Last Name','Email (personal)','Contact No','IEEE ID','Gender','Date Of Birth',
              'Facebook Url','Address','Major','Graduating Year',
              'Recruitment Time','Recruited By','Cash Payment Status','IEEE Payment Status']
     for column in range(len(columns)):
@@ -223,7 +223,7 @@ def generateExcelSheet(request,session_name):
     font_style=xlwt.XFStyle()
     getSession=renderData.Recruitment.getSessionid(session_name=session_name)
     
-    rows=recruited_members.objects.filter(session_id=getSession['session'][0]['id']).values('nsu_id',
+    rows=recruited_members.objects.filter(session_id=getSession['session'][0]['id']).values_list('nsu_id',
                                                                         'first_name','middle_name','last_name',
                                                                         'email_personal',
                                                                         'contact_no',
@@ -243,8 +243,6 @@ def generateExcelSheet(request,session_name):
         
         row_num+=1
         for col_num in range(len(row)):
-            print(row[0])
-            #print(str(row[col_num]))
-            #workSheet.write(row_num,col_num,str(row[col_num]),font_style)
+            workSheet.write(row_num,col_num,str(row[col_num]),font_style)
     workBook.save(response)
     return(response)
