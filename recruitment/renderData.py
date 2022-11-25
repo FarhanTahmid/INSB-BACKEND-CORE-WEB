@@ -65,7 +65,7 @@ class Recruitment:
                 
                 # Registering member to the main database
                 if member.ieee_payment_status and member.ieee_id != '':
-                    if (Members.objects.filter(ieee_id=member.ieee_id).exists()):
+                    if (Members.objects.get(ieee_id=int(member.ieee_id)).exists()):
                         return "already_registered"
                     else:
                         newMember = Members(
@@ -134,3 +134,8 @@ class Recruitment:
                 return True
         except:
             return ObjectDoesNotExist
+
+
+    def getTotalNumberOfMembers(session_id):
+        return recruited_members.objects.filter(session_id=session_id).count()
+    
