@@ -30,6 +30,7 @@ def recruitment_home(request):
             return DatabaseError
     return render(request,'recruitment_home.html',numberOfSessions)
 
+
 @login_required  
 def recruitee(request,pk):
     
@@ -118,8 +119,9 @@ def recruitee_details(request,nsu_id):
                 messages.info(request,"Information Updated")
                 return redirect('recruitment:recruitee_details',nsu_id)
             else:
-                messages.info(request,"Internal Server Error! Try again")
-                return('recruitment:recruitee_details',nsu_id)
+                messages.info(request,"Information Updated")
+                return redirect('recruitment:recruitee_details',nsu_id)
+        
         
         
         #####DELETING RECRUITEES#######

@@ -28,6 +28,7 @@
                 <th>Major</th>
                 <th>Recruitment Time</th>
                 <th>Recruited By</th>
+                <th>IEEE Payment Status</th>
             </tr>
         </thead>
     {% comment %} This block is responsible for loading all the members recruited on that session and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
@@ -40,11 +41,11 @@
             <td>{{ count.major }}</td>
             <td>{{ count.recruitment_time }}</td>
             <td>{{ count.recruited_by }}</td>
-            {% comment %} <td>
-                <form method=="POST" action=''>
-                    <input type='submit' onclick={'recruitment:recruitee', 'count.nsu_id'} name="delete_member" value='Delete'>
-                </form>        
-            </td> {% endcomment %}
+            {% if count.ieee_payment_status %}
+            <td><img src="/static/admin/img/icon-yes.svg" alt="True"></td>
+            {% else %}
+            <td><img src="/static/admin/img/icon-no.svg" alt="False"></td>
+            {% endif %}
         </tr>
         {% endfor %}    
     {% endfor %}
