@@ -7,4 +7,4 @@ class Session(admin.ModelAdmin):
     list_display= ['id','session']
 @admin.register(recruited_members)
 class Recruited_Members(admin.ModelAdmin):
-    list_display=['nsu_id','email_personal']
+    list_display=['nsu_id','first_name','email_personal','ieee_payment_status']
