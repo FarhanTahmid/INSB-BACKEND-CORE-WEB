@@ -17,8 +17,11 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <p>Page for Recruitee Details</p>
-        
+
+        {% comment %} Insert an icon of go back if possible {% endcomment %}
+        <a href="{% url "recruitment:recruitee" session %}">Go back</a> 
         {% comment %} Editable Form {% endcomment %}
+        
         <form method="POST" action="" autocomplete="on">
             {% csrf_token %}
             {% for data,recruited_member in data.items %}
@@ -97,11 +100,13 @@
             
             <input type="submit" value="Delete Recruited Member" name="delete_member">
             <input type="submit" value="Save Edits" name="save_edit">
-            <input type="submit" value="Register Member in INSB" name="register_member_to_database">
+            {% comment %} <input type="submit" value="Register Member in INSB" name="register_member_to_database"> {% endcomment %}
             {% endfor %}
             {% endfor %}
         </form>
-
+        {% for message in messages %}
+        <p class="message">{{message}}</p>
+        {% endfor %}
 
 
 

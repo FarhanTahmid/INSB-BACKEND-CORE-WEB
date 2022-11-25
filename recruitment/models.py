@@ -27,7 +27,7 @@ class recruited_members(models.Model):
     major=models.CharField(null=True,blank=True,max_length=30)
     graduating_year=models.IntegerField(null=True,blank=True)
     recruitment_time=models.DateTimeField(auto_now_add=True,null=False,blank=False)
-    ieee_id=models.IntegerField(null=True,blank=True)
+    ieee_id=models.CharField(null=True,blank=True,max_length=30)
     session_id=models.IntegerField(null=False,blank=True)
     recruited_by=models.CharField(null=True,blank=True,max_length=30)
     cash_payment_status=models.BooleanField(null=True,blank=True,default=False)

@@ -11,6 +11,7 @@
     <p>WELCOME TO THE RECRUITMENT PROCESS OF {{ session.session }}</p>
     <p>Recruitees list</p>
     <a href="{% url "recruitment:recruit_member" session.session %}">Register New Member</a>
+    <a href="{% url "recruitment:recruitment_home" %}">Recruitment Sessions</a>
     <br>
     <br>
     {% comment %} Search Functionality {% endcomment %}
@@ -39,6 +40,11 @@
             <td>{{ count.major }}</td>
             <td>{{ count.recruitment_time }}</td>
             <td>{{ count.recruited_by }}</td>
+            {% comment %} <td>
+                <form method=="POST" action=''>
+                    <input type='submit' onclick={'recruitment:recruitee', 'count.nsu_id'} name="delete_member" value='Delete'>
+                </form>        
+            </td> {% endcomment %}
         </tr>
         {% endfor %}    
     {% endfor %}

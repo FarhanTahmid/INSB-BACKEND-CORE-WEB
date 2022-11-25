@@ -8,7 +8,7 @@ from . forms import StudentForm
 from . models import recruited_members
 from django.contrib import messages
 import datetime
-
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 
@@ -50,15 +50,32 @@ def recruitee(request,pk):
 @login_required
 def recruitee_details(request,nsu_id):
     """Preloads all the data of the recruitees who are registered in the particular session, here we can edit and save the data of the recruitee"""
-    data=renderData.Recruitment.getRecruitedMemberDetails(nsu_id=nsu_id)
-    dob=datetime.datetime.strptime(str(data['recruited_member'][0]['date_of_birth']), "%Y-%m-%d").strftime("%Y-%m-%d") #this dob does not change any internal data, it is used just to convert the string type from database to load in to html
+    try:
+        
+        data=renderData.Recruitment.getRecruitedMemberDetails(nsu_id=nsu_id)
+        #this parses the date in -DD-MM-YY Format for html
+        dob=datetime.datetime.strptime(str(data['recruited_member'][0]['date_of_birth']), "%Y-%m-%d").strftime("%Y-%m-%d") #this dob does not change any internal data, it is used just to convert the string type from database to load in to html
+    
+    except ObjectDoesNotExist:
+        #if object doesnot exist...
+        messages.info(request,"Member does not exist!")
+    except:
+        #goes to recruitment home if list_index_out_of bound occures
+        return redirect('recruitment:recruitment_home')
+    
+    #Passing data to the template
     context={
+             'session':str((data['recruited_member'][0]['session_id'])),
              'data':data,
              'dob':dob
              }
     
     if request.method=="POST":
-        if request.POST.get('save_edit'): #this is used to update the recruited member details
+        
+        #####this is used to update the recruited member details
+        #Upon entering IEEE id this registers members to the main database of members
+        if request.POST.get('save_edit'): 
+            
             # checks the marked check-boxes
             cash_payment_status=False
             if request.POST.get('cash_payment_status'):
@@ -66,7 +83,7 @@ def recruitee_details(request,nsu_id):
             ieee_payment_status=False
             if request.POST.get('ieee_payment_status'):
                 ieee_payment_status=True
-            
+            #Collecting all infos
             info_dict={
                 'first_name':request.POST['first_name'],
                 'middle_name':request.POST['middle_name'],
@@ -82,15 +99,41 @@ def recruitee_details(request,nsu_id):
                 'cash_payment_status':cash_payment_status,
                 'ieee_payment_status':ieee_payment_status
             }
+            
+            #Getting returned values and handling the exceptions
+            
             if(renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)=="no_ieee_id"):
                 messages.info(request,"Please Enter IEEE ID if you have completed payment")
+                return redirect('recruitment:recruitee_details',nsu_id)
             elif(renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)==IntegrityError):
                 messages.info(request,"There is already a member registered with this IEEE ID")
+                return redirect('recruitment:recruitee_details',nsu_id)
             elif((renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)=="no_ieee_id")==InternalError):
                 messages.info(request,"A Server Error Occured!")
+                return redirect('recruitment:recruitee_details',nsu_id)
+            elif((renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)=="no_ieee_id")=="already_registered"):
+                messages.info(request,"This member is already registered in INSB Database! If you still want to edit information for this member, redirect to members segment!")
+                return redirect('recruitment:recruitee_details',nsu_id)
             elif((renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)=="no_ieee_id")=="success"):
-                return redirect(request)###need to work here
                 messages.info(request,"Information Updated")
+                return redirect('recruitment:recruitee_details',nsu_id)
+            else:
+                messages.info(request,"Internal Server Error! Try again")
+                return('recruitment:recruitee_details',nsu_id)
+        
+        
+        #####DELETING RECRUITEES#######
+        if request.POST.get('delete_member'):
+            if(renderData.Recruitment.deleteMember(nsu_id=nsu_id)=="both_database"):
+                messages.info(request,f"Member Deleted Successfully from recruitment process and also from INSB Database with the id {nsu_id}")
+            elif(renderData.Recruitment.deleteMember(nsu_id=nsu_id)==ObjectDoesNotExist):
+                messages.info(request,f"The member with the id {nsu_id} was deleted!")
+            elif(renderData.Recruitment.deleteMember(nsu_id=nsu_id)):
+                messages.info(request,f"The member with the id {nsu_id} was deleted!")
+            else:
+                messages.info(request,f"Something went wrong! Try again!")
+                return redirect('recruitment:recruitee_details',nsu_id)        
+                
 
     return render(request,"recruitee_details.html",context=context)
 
@@ -152,4 +195,4 @@ def recruit_member(request,session_name):
     
     else:
         return render(request,"membership_form.html",context=context)
-    
+   

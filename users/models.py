@@ -14,7 +14,7 @@ class Members(models.Model):
     ieee_id=models.IntegerField(primary_key=True,blank=False,null=False)
     name=models.CharField(null=False,blank=False,max_length=100)
     nsu_id=models.IntegerField(null=False, blank=False)
-    email_ieee=models.EmailField(null=False,blank=False)
+    email_ieee=models.EmailField(null=True,blank=True)
     email_personal=models.EmailField(null=False,blank=False)
     contact_no=models.CharField(null=True,blank=True,max_length=16)
     home_address=models.CharField(null=True,blank=True,max_length=200)
@@ -23,8 +23,8 @@ class Members(models.Model):
     facebook_url=models.URLField(null=True,blank=True,max_length=200)
     team=models.IntegerField(null=True,blank=True)
     position=models.IntegerField(null=True,blank=True)
-    #session=models.IntegerField(null=True,blank=False)
-    #renewal_time_stamp=models.DateField(null=True,blank=False)
+    session=models.IntegerField(null=True,blank=True)
+    #renewal_time_stamp=models.DateField(null=True,blank=True,default)
     
     
     class Meta:
