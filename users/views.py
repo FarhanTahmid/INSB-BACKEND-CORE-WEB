@@ -33,7 +33,6 @@ def dashboard(request):
             registerUser.Registration.populateMembersDataThroughExcel() #feeding the sql table "MEMBERS" throuht his class
             return redirect("users:dashboard")
         else:
-            print("Didnt get data from post")
             return redirect("users:dashboard")
             
     return render(request,"users/dashboard.html")

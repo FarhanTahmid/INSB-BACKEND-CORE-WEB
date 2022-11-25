@@ -82,15 +82,23 @@ def recruitee_details(request,nsu_id):
                 'cash_payment_status':cash_payment_status,
                 'ieee_payment_status':ieee_payment_status
             }
+            
             if(renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)=="no_ieee_id"):
                 messages.info(request,"Please Enter IEEE ID if you have completed payment")
+                return redirect('recruitment:recruitee_details',nsu_id)
             elif(renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)==IntegrityError):
                 messages.info(request,"There is already a member registered with this IEEE ID")
+                return redirect('recruitment:recruitee_details',nsu_id)
             elif((renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)=="no_ieee_id")==InternalError):
                 messages.info(request,"A Server Error Occured!")
+                return redirect('recruitment:recruitee_details',nsu_id)
+            elif((renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)=="no_ieee_id")=="already_registered"):
+                messages.info(request,"This member is already registered in INSB Database! If you still want to edit information for this member, redirect to members segment!")
+                return redirect('recruitment:recruitee_details',nsu_id)
             elif((renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)=="no_ieee_id")=="success"):
-                return redirect(request)###need to work here
                 messages.info(request,"Information Updated")
+                return redirect('recruitment:recruitee_details',nsu_id)###need to work here
+                
 
     return render(request,"recruitee_details.html",context=context)
 
@@ -152,4 +160,4 @@ def recruit_member(request,session_name):
     
     else:
         return render(request,"membership_form.html",context=context)
-    
+   

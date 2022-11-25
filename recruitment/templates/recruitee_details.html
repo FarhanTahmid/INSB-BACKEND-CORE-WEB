@@ -101,7 +101,9 @@
             {% endfor %}
             {% endfor %}
         </form>
-
+        {% for message in messages %}
+        <p class="message">{{message}}</p>
+        {% endfor %}
 
 
 
