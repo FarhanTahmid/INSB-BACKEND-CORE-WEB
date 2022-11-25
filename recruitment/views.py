@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.db import DatabaseError,IntegrityError,InternalError
-from django.http import HttpResponseServerError,HttpResponseBadRequest
+from django.http import HttpResponseServerError,HttpResponseBadRequest,HttpResponse
 from recruitment.models import recruitment_session,recruited_members
 from . import renderData
 from django.contrib.auth.decorators import login_required
@@ -9,6 +9,7 @@ from . models import recruited_members
 from django.contrib import messages
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
+import xlwt
 
 # Create your views here.
 
@@ -38,10 +39,11 @@ def recruitee(request,pk):
     recruitment session. Loads all the datas and show them
     '''
     getSession=renderData.Recruitment.getSession(session_id=pk)
-    
+    getMemberCount=renderData.Recruitment.getTotalNumberOfMembers(int(pk))
     getRecruitedMembers=renderData.Recruitment.getRecruitedMembers(session_id=pk)
-    
+
     context={
+        'memberCount':getMemberCount,
         'session':getSession,
         'members':getRecruitedMembers,
        }
@@ -119,7 +121,7 @@ def recruitee_details(request,nsu_id):
                 messages.info(request,"Information Updated")
                 return redirect('recruitment:recruitee_details',nsu_id)
             else:
-                messages.info(request,"Information Updated")
+                messages.info(request,"This IEEE id is already registered in the main database. Can not Update and Overwrite the info in main Database!")
                 return redirect('recruitment:recruitee_details',nsu_id)
         
         
@@ -196,5 +198,51 @@ def recruit_member(request,session_name):
             return render(request,"membership_form.html",context=context)
     
     else:
+        
         return render(request,"membership_form.html",context=context)
-   
+
+
+def generateExcelSheet(request,session_name):
+    '''This method generates the excel files for different sessions'''
+    response=HttpResponse(content_type='application/ms-excel') #eclaring content type for the excel files
+    response['Content-Disposition']=f'attachment; filename=Recruitment Process of {session_name}---'+\
+        str(datetime.datetime.now())+'.xls' #making files downloadable with name
+    workBook=xlwt.Workbook(encoding='utf-8') #adding encoding to the workbook
+    workSheet=workBook.add_sheet(f'Recruitment-{session_name}')
+    
+    #generating the first row
+    row_num=0
+    font_style=xlwt.XFStyle()
+    font_style.font.bold=True
+    #Defining columns that will stay in the first row
+    columns=['NSU ID','First Name','Middle Name','Last Name','Email (personal)','Contact No','IEEE ID','Gender','Date Of Birth',
+             'Facebook Url','Address','Major','Graduating Year',
+             'Recruitment Time','Recruited By','Cash Payment Status','IEEE Payment Status']
+    for column in range(len(columns)):
+        workSheet.write(row_num,column,columns[column],font_style)
+    font_style=xlwt.XFStyle()
+    getSession=renderData.Recruitment.getSessionid(session_name=session_name)
+    
+    rows=recruited_members.objects.filter(session_id=getSession['session'][0]['id']).values_list('nsu_id',
+                                                                        'first_name','middle_name','last_name',
+                                                                        'email_personal',
+                                                                        'contact_no',
+                                                                        'ieee_id',
+                                                                        'gender',
+                                                                        'date_of_birth',
+                                                                        'facebook_url',
+                                                                        'home_address',
+                                                                        'major','graduating_year',
+                                                                        'recruitment_time',
+                                                                        'recruited_by',
+                                                                        'cash_payment_status',
+                                                                        'ieee_payment_status'
+                                                                        )
+    
+    for row in rows:
+        
+        row_num+=1
+        for col_num in range(len(row)):
+            workSheet.write(row_num,col_num,str(row[col_num]),font_style)
+    workBook.save(response)
+    return(response)
