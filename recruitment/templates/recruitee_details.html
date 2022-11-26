@@ -103,6 +103,8 @@
             
             {% if recruited_member.ieee_payment_status %}
             <input type="submit" value="Update Member in INSB Database" name="register_member">
+            {% else %}
+            <p>Member is not yet registered in INSB Database</p>
             {% endif %}
 
             {% endfor %}
