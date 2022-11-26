@@ -62,8 +62,7 @@ class Recruitment:
                 return "no_ieee_id" #This is implied to enforce entering of ieee id upon completion of payment
             else:
                 member.save() #Updating member data
-                
-                
+                return True
         except IntegrityError:
             return IntegrityError
         except:
@@ -100,18 +99,18 @@ class Recruitment:
         try:
             #Gets member from the database
             deleteMember=recruited_members.objects.get(nsu_id=nsu_id)
-            
-            #checks if the member is already registered in the main member database
-            if(Members.objects.filter(nsu_id=deleteMember.nsu_id).exists()):
-                #deleting members from both database
-                deleteMember2=Members.objects.get(ieee_id=deleteMember.ieee_id)
-                deleteMember.delete()
-                deleteMember2.delete()
-                return "both_database" #Returns that it was deleted from both databases
-            elif (Members.objects.filter(nsu_id=deleteMember.nsu_id).exists()==False):
-                #deleting member from recruitment process
-                deleteMember.delete()
-                return True
+            deleteMember.delete()
+            # #checks if the member is already registered in the main member database
+            # if(Members.objects.filter(nsu_id=deleteMember.nsu_id).exists()):
+            #     #deleting members from both database
+            #     deleteMember2=Members.objects.get(ieee_id=deleteMember.ieee_id)
+            #     deleteMember.delete()
+            #     deleteMember2.delete()
+            #     return "both_database" #Returns that it was deleted from both databases
+            # elif (Members.objects.filter(nsu_id=deleteMember.nsu_id).exists()==False):
+            #     #deleting member from recruitment process
+            #     deleteMember.delete()
+            #     return True
         except:
             return ObjectDoesNotExist
 
