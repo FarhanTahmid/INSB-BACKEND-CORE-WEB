@@ -112,26 +112,23 @@ def recruitee_details(request,nsu_id):
             elif(renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)==IntegrityError):
                 messages.info(request,"There is already a member registered with this IEEE ID")
                 return redirect('recruitment:recruitee_details',nsu_id)
-            elif((renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)=="no_ieee_id")==InternalError):
+            elif(renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)==InternalError):
                 messages.info(request,"A Server Error Occured!")
                 return redirect('recruitment:recruitee_details',nsu_id)
-            elif((renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)=="no_ieee_id")=="already_registered"):
-                messages.info(request,"This member is already registered in INSB Database! If you still want to edit information for this member, redirect to members segment!")
-                return redirect('recruitment:recruitee_details',nsu_id)
-            elif((renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)=="no_ieee_id")=="success"):
+            elif(renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id,values=info_dict)):
                 messages.info(request,"Information Updated")
                 return redirect('recruitment:recruitee_details',nsu_id)
             else:
-                messages.info(request,"This IEEE id is already registered in the main database. Can not Update and Overwrite the info in main Database!")
+                messages.info(request,"Something went wrong. Please Try again")
                 return redirect('recruitment:recruitee_details',nsu_id)
         
         
         
         #####DELETING RECRUITEES#######
         if request.POST.get('delete_member'):
-            if(renderData.Recruitment.deleteMember(nsu_id=nsu_id)=="both_database"):
-                messages.info(request,f"Member Deleted Successfully from recruitment process and also from INSB Database with the id {nsu_id}")
-            elif(renderData.Recruitment.deleteMember(nsu_id=nsu_id)==ObjectDoesNotExist):
+            # if(renderData.Recruitment.deleteMember(nsu_id=nsu_id)=="both_database"):
+            #     messages.info(request,f"Member Deleted Successfully from recruitment process and also from INSB Database with the id {nsu_id}")
+            if(renderData.Recruitment.deleteMember(nsu_id=nsu_id)==ObjectDoesNotExist):
                 messages.info(request,f"The member with the id {nsu_id} was deleted!")
             elif(renderData.Recruitment.deleteMember(nsu_id=nsu_id)):
                 messages.info(request,f"The member with the id {nsu_id} was deleted!")
@@ -158,41 +155,30 @@ def recruitee_details(request,nsu_id):
             )
             
             # Registering member to the main database
-            checkMember=Members.objects.filter(nsu_id=nsu_id).values('ieee_id')
-
-            ###PROBLEM HERE SOLVE#####
-
-            if Members.objects.get(nsu_id=nsu_id).exists():
-                messages.info(request,"Member already exists in INSB Database")
+            try:        
+                newMember = Members(
+                ieee_id=int(getMember[0]['ieee_id']),
+                name=getMember[0]['first_name'] + " " +getMember[0]['middle_name']+" " +getMember[0]['last_name'],
+                nsu_id=getMember[0]['nsu_id'],
+                email_personal=getMember[0]['email_personal'],
+                contact_no=getMember[0]['contact_no'],
+                home_address=getMember[0]['home_address'],
+                date_of_birth=getMember[0]['date_of_birth'],
+                gender=recruited_members.objects.filter(
+                nsu_id=nsu_id).values('gender'),
+                facebook_url=getMember[0]['facebook_url'],
+                session=recruited_members.objects.filter(
+                nsu_id=nsu_id).values('session_id'),
+                )
+                newMember.save()
+                messages.info(request,"Member Updated in INSB Database")
+                return redirect('recruitment:recruitee_details',nsu_id)    
+            except IntegrityError:
+                messages.info("The member is already registered in INSB Database. Can not change IEEE id of a member who is already registered!")
                 return redirect('recruitment:recruitee_details',nsu_id)
-            else:
-                if getMember[0]['ieee_payment_status'] and getMember[0]['ieee_id'] != '':
-                    if (Members.objects.get(ieee_id=int(checkMember[0]['ieee_id'])).exists()):
-                        messages.info(request,"Member is already registered in the INSB Database")
-                    else:
-                        newMember = Members(
-                        ieee_id=int(getMember[0]['ieee_id']),
-                        name=getMember[0]['first_name'] + " " +
-                        getMember[0]['middle_name']+" " +
-                        getMember[0]['last_name'],
-                        nsu_id=getMember[0]['nsu_id'],
-                        email_personal=getMember[0]['email_personal'],
-                        contact_no=getMember[0]['contact_no'],
-                        home_address=getMember[0]['home_address'],
-                            date_of_birth=getMember[0]['date_of_birth'],
-                            gender=recruited_members.objects.filter(
-                                nsu_id=nsu_id).values('gender'),
-                            facebook_url=getMember[0]['facebook_url'],
-                            session=recruited_members.objects.filter(
-                                nsu_id=nsu_id).values('session_id'),
-                        )
-                        newMember.save()
-                        return redirect('recruitment:recruitee_details',nsu_id)
-                else:
-                    messages.info(request,"Please enter IEEE ID to register member in the INSB Database")
-                    return redirect('recruitment:recruitee_details',nsu_id) 
-                    
-
+            except:
+                messages.info(request,"Something went wrong! Please Try again!")
+                return redirect('recruitment:recruitee_details',nsu_id)    
     return render(request,"recruitee_details.html",context=context)
 
 
