@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.db import DatabaseError,IntegrityError,InternalError
 from django.http import HttpResponseServerError,HttpResponseBadRequest,HttpResponse
 from recruitment.models import recruitment_session,recruited_members
+from users.models import Members
 from . import renderData
 from django.contrib.auth.decorators import login_required
 from . forms import StudentForm
@@ -136,8 +137,61 @@ def recruitee_details(request,nsu_id):
                 messages.info(request,f"The member with the id {nsu_id} was deleted!")
             else:
                 messages.info(request,f"Something went wrong! Try again!")
-                return redirect('recruitment:recruitee_details',nsu_id)        
-                
+                return redirect('recruitment:recruitee_details',nsu_id)
+
+
+        #####REGISTERING MEMBER IN INSB DATABASE####
+
+        if request.POST.get("register_member"):
+            getMember=recruited_members.objects.filter(nsu_id=nsu_id).values(
+                'ieee_id',
+                'first_name','middle_name','last_name',
+                'nsu_id',
+                'email_personal',
+                'contact_no',
+                'home_address',
+                'date_of_birth',
+                'gender',
+                'facebook_url',
+                'session_id',
+                'ieee_payment_status'
+            )
+            
+            # Registering member to the main database
+            checkMember=Members.objects.filter(nsu_id=nsu_id).values('ieee_id')
+
+            ###PROBLEM HERE SOLVE#####
+
+            if Members.objects.get(nsu_id=nsu_id).exists():
+                messages.info(request,"Member already exists in INSB Database")
+                return redirect('recruitment:recruitee_details',nsu_id)
+            else:
+                if getMember[0]['ieee_payment_status'] and getMember[0]['ieee_id'] != '':
+                    if (Members.objects.get(ieee_id=int(checkMember[0]['ieee_id'])).exists()):
+                        messages.info(request,"Member is already registered in the INSB Database")
+                    else:
+                        newMember = Members(
+                        ieee_id=int(getMember[0]['ieee_id']),
+                        name=getMember[0]['first_name'] + " " +
+                        getMember[0]['middle_name']+" " +
+                        getMember[0]['last_name'],
+                        nsu_id=getMember[0]['nsu_id'],
+                        email_personal=getMember[0]['email_personal'],
+                        contact_no=getMember[0]['contact_no'],
+                        home_address=getMember[0]['home_address'],
+                            date_of_birth=getMember[0]['date_of_birth'],
+                            gender=recruited_members.objects.filter(
+                                nsu_id=nsu_id).values('gender'),
+                            facebook_url=getMember[0]['facebook_url'],
+                            session=recruited_members.objects.filter(
+                                nsu_id=nsu_id).values('session_id'),
+                        )
+                        newMember.save()
+                        return redirect('recruitment:recruitee_details',nsu_id)
+                else:
+                    messages.info(request,"Please enter IEEE ID to register member in the INSB Database")
+                    return redirect('recruitment:recruitee_details',nsu_id) 
+                    
 
     return render(request,"recruitee_details.html",context=context)
 
