@@ -63,27 +63,7 @@ class Recruitment:
             else:
                 member.save() #Updating member data
                 
-                # Registering member to the main database
-                if member.ieee_payment_status and member.ieee_id != '':
-                    if (Members.objects.get(ieee_id=int(member.ieee_id)).exists()):
-                        return "already_registered"
-                    else:
-                        newMember = Members(
-                        ieee_id=int(values['ieee_id']),
-                        name=member.first_name + " "+member.middle_name+" " + member.last_name,
-                        nsu_id=member.nsu_id,
-                        email_personal=member.email_personal,
-                        contact_no=member.contact_no,
-                        home_address=member.home_address,
-                        date_of_birth=member.date_of_birth,
-                        gender=recruited_members.objects.filter(
-                        nsu_id=nsu_id).values('gender'),
-                        facebook_url=member.facebook_url,
-                        session=recruited_members.objects.filter(
-                            nsu_id=nsu_id).values('session_id'),
-                        )
-                        newMember.save()
-                    return "success"
+                
         except IntegrityError:
             return IntegrityError
         except:
