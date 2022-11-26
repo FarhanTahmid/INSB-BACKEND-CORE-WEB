@@ -206,23 +206,30 @@ def generateExcelSheet(request,session_name):
     '''This method generates the excel files for different sessions'''
     response=HttpResponse(content_type='application/ms-excel') #eclaring content type for the excel files
     response['Content-Disposition']=f'attachment; filename=Recruitment Process of {session_name}---'+\
-        str(datetime.datetime.now())+'.xls' #making files downloadable with name
+        str(datetime.datetime.now())+'.xls' #making files downloadable with name of session and timestamp
     workBook=xlwt.Workbook(encoding='utf-8') #adding encoding to the workbook
-    workSheet=workBook.add_sheet(f'Recruitment-{session_name}')
+    workSheet=workBook.add_sheet(f'Recruitment-{session_name}') #opening an worksheet to work with the columns
     
     #generating the first row
     row_num=0
     font_style=xlwt.XFStyle()
     font_style.font.bold=True
+    
     #Defining columns that will stay in the first row
-    columns=['NSU ID','First Name','Middle Name','Last Name','Email (personal)','Contact No','IEEE ID','Gender','Date Of Birth',
-             'Facebook Url','Address','Major','Graduating Year',
-             'Recruitment Time','Recruited By','Cash Payment Status','IEEE Payment Status']
+    columns=['NSU ID','First Name','Middle Name','Last Name','Email (personal)','Contact No','IEEE ID','Gender','Date Of Birth','Facebook Url',
+             'Address','Major','Graduating Year','Recruitment Time','Recruited By','Cash Payment Status','IEEE Payment Status']
+    
+    #Defining first column
     for column in range(len(columns)):
         workSheet.write(row_num,column,columns[column],font_style)
+    
+    #reverting font style to default
     font_style=xlwt.XFStyle()
+    
+    #getting the session to find members recruited in that particular session
     getSession=renderData.Recruitment.getSessionid(session_name=session_name)
     
+    #getting all the values of members as rows with same session
     rows=recruited_members.objects.filter(session_id=getSession['session'][0]['id']).values_list('nsu_id',
                                                                         'first_name','middle_name','last_name',
                                                                         'email_personal',
