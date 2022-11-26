@@ -17,6 +17,7 @@ nav{
   background: var(--yellow);
   height: 80px;
   width: 100%;
+  
 }
 .logo img{
   height: 100%;
@@ -68,11 +69,15 @@ background: var(--deepBlue);
   }
 }
 @media (max-width: 858px){
+
+  nav{
+  
+  }
   .checkbtn{
     display: block;
   }
   ul{
-    position: fixed;
+    position: absolute;
     width: 100%;
     height: 100vh;
     background: var(--blue);
@@ -80,6 +85,7 @@ background: var(--deepBlue);
     left: -100%;
     text-align: center;
     transition: all .5s;
+    z-index: 2;
   }
   nav ul li{
     display: block;
