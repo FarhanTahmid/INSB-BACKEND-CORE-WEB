@@ -19,12 +19,12 @@
         <p>LETS CONTROL THE FREAKING DATABASE NOW</p>
         <form method="POST" action="dashboard">
             {% csrf_token %}
-        <button type="submit" name="feed_members" value='1' class="log-btn" onclick='users:dashboard'>
+        {% comment %} Dont Add in production <button type="submit" name="feed_members" value='1' class="log-btn" onclick='users:dashboard'>
             Feed members Data
-       </button>
-       <button type="submit" name="feed_data" value='2' onclick='recruitment:render_data'>
+       </button> {% endcomment %}
+       {% comment %} ""Dont add in production"""" <button type="submit" name="feed_data" value='2' onclick='recruitment:render_data'>
         Feed data for Fall 2020
-    </button> 
+    </button>  {% endcomment %}
         </form>
         <button><a href="{% url 'recruitment:recruitment_home' %}" class="log_in">Recruitment</a></button>
         <script src="" async defer></script>
