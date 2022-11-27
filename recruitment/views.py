@@ -151,9 +151,10 @@ def recruitee_details(request,nsu_id):
                 'gender',
                 'facebook_url',
                 'session_id',
-                'ieee_payment_status'
+                'ieee_payment_status',
+                'recruitment_time'
             )
-            
+            print(type(getMember[0]['recruitment_time']))
             # Registering member to the main database
             try:        
                 newMember = Members(
@@ -164,11 +165,10 @@ def recruitee_details(request,nsu_id):
                 contact_no=getMember[0]['contact_no'],
                 home_address=getMember[0]['home_address'],
                 date_of_birth=getMember[0]['date_of_birth'],
-                gender=recruited_members.objects.filter(
-                nsu_id=nsu_id).values('gender'),
+                gender=getMember[0]['gender'],
                 facebook_url=getMember[0]['facebook_url'],
-                session=recruited_members.objects.filter(
-                nsu_id=nsu_id).values('session_id'),
+                session=getMember[0]['session_id'],
+                renewal_time_stamp=(getMember[0]['recruitment_time'])+datetime.timedelta(days=365)
                 )
                 newMember.save()
                 messages.info(request,"Member Updated in INSB Database")
