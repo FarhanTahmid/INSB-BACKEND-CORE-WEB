@@ -311,8 +311,3 @@ def generateExcelSheet(request, session_name):
             workSheet.write(row_num, col_num, str(row[col_num]), font_style)
     workBook.save(response)
     return (response)
-
-
-def feedData(request):
-    
-    return HttpResponse("<h1>DONE</h1>")

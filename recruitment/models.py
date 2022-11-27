@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from insb_port import settings
+import datetime
 
 # Create your models here.
 class recruitment_session(models.Model):
@@ -26,7 +27,7 @@ class recruited_members(models.Model):
     home_address=models.CharField(null=True,blank=True,max_length=50)
     major=models.CharField(null=True,blank=True,max_length=30)
     graduating_year=models.IntegerField(null=True,blank=True)
-    recruitment_time=models.DateTimeField(auto_now_add=False,null=True,blank=True)
+    recruitment_time=models.DateTimeField(auto_now_add=False,null=True,blank=True,default=datetime.datetime.now())
     ieee_id=models.CharField(null=True,blank=True,max_length=30)
     session_id=models.IntegerField(null=False,blank=True)
     recruited_by=models.CharField(null=True,blank=True,max_length=30)
