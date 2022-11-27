@@ -3,6 +3,10 @@ from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from users import registerUser
+from django.db import connection
+from django.db.utils import IntegrityError
+from recruitment.models import recruited_members
+import csv,datetime
 from users.ActiveUser import ActiveUser
 
 # Create your views here.
@@ -32,7 +36,36 @@ def dashboard(request):
         if request.POST.get("feed_members"):
             registerUser.Registration.populateMembersDataThroughExcel() #feeding the sql table "MEMBERS" throuht his class
             return redirect("users:dashboard")
+        # if request.POST.get("feed_data"):
+        #     print("clicked")
+        #     '''This function is used to populate members in the MEMBERS table through CSV files'''
+        #     with open("./DATA/Fall_2020_Recruited_Members.csv", 'r') as file_registered_members:
+        #         fileReader = csv.reader(file_registered_members)
+        #         for row in fileReader:
+        #             if ("ï»¿" in row[0]):
+        #                 continue
+        #             else:
+                        
+        #                     addMember = recruited_members(
+        #                                         nsu_id=row[0],
+        #                                         first_name=row[1],
+        #                                         middle_name=row[2],
+        #                                         last_name=row[3],
+        #                                         date_of_birth=datetime.datetime.strptime(row[4], "%m/%d/%Y").strftime("%Y-%m-%d"),
+        #                                         email_personal=row[5],
+        #                                         gender=row[6],
+        #                                         home_address=row[7],
+        #                                         major=row[8],
+        #                                         graduating_year=row[9],
+        #                                         session_id=row[10],
+        #                                         recruited_by=row[11],
+        #                                         cash_payment_status=row[12],
+        #                                         ieee_payment_status=row[13]
+        #                                         )
+        #                     addMember.save()
+                        
         else:
             return redirect("users:dashboard")
+        
             
-    return render(request,"users/dashboard.html")
+    return render(request,"users/dashboard.html") 
