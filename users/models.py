@@ -24,7 +24,7 @@ class Members(models.Model):
     team=models.IntegerField(null=True,blank=True)
     position=models.IntegerField(null=True,blank=True)
     session=models.IntegerField(null=True,blank=True)
-    #renewal_time_stamp=models.DateField(null=True,blank=True,default)
+    renewal_time_stamp=models.DateField(null=True,blank=True)
     
     
     class Meta:
