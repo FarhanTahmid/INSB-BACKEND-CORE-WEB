@@ -22,4 +22,5 @@ urlpatterns = [
     path('users/',include('users.urls',namespace="users")),
     path('recruitment/',include('recruitment.urls',namespace="recruitment")),
     path('',include('port.urls',namespace='port')),
+    path('insb_central/',include('insb_central.urls',namespace='insb_central')),
 ]

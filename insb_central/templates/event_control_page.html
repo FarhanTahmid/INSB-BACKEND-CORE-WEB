@@ -16,18 +16,8 @@
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <p>LETS CONTROL THE FREAKING DATABASE NOW</p>
-        <form method="POST" action="dashboard">
-            {% csrf_token %}
-        {% comment %} Dont Add in production <button type="submit" name="feed_members" value='1' class="log-btn" onclick='users:dashboard'>
-            Feed members Data
-       </button> {% endcomment %}
-       {% comment %} ""Dont add in production"""" <button type="submit" name="feed_data" value='2' onclick='recruitment:render_data'>
-        Feed data for Fall 2020
-    </button>  {% endcomment %}
-        </form>
-        <button><a href="{% url 'recruitment:recruitment_home' %}" class="log_in">Recruitment</a></button>
-        <button><a href="{% url 'insb_central:central_home' %}" class="insb_central">Central INSB</a></button>
+        <h1>Central event control page for INSB</h1>
+        <button><a href="" class="">Create a new Event</a></button>
         <script src="" async defer></script>
     </body>
 </html>
