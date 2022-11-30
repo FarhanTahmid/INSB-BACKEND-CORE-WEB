@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'users',
     'recruitment',
     'api',
+    'insb_central',
 ]
 
 MIDDLEWARE = [
