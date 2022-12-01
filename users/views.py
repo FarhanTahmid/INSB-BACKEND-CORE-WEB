@@ -70,4 +70,4 @@ def dashboard(request):
             return redirect("users:dashboard")
         
             
-    return render(request,"users/dashboard.html") 
+    return render(request,"users/index (1).html") 
