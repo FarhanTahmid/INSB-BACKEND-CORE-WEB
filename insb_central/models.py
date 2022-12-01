@@ -3,6 +3,8 @@ from django.urls import reverse
 
 # Create your models here.
 
+###### THESE MODELS ARE SPECIFICALLY USED FOR EVENTS HANDLING PURPOSE ####
+
 #The events table. Primary key is the id
 class Events(models.Model):
     event_name=models.CharField(null=False,blank=False,max_length=150)
@@ -17,4 +19,12 @@ class Events(models.Model):
         return self.event_name
     def get_absolute_url(self):
         return reverse("registered_events", kwargs={"event_name": self.event_name})
-    
+
+#list of the venues
+class Venue_List(models.Model):
+    venue_name=models.CharField(null=False,blank=True,max_length=50)
+
+# table for venues for specific events    
+class Event_Venue(models.Model):
+    event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
+    venue_id=models.ForeignKey(Venue_List,on_delete=models.CASCADE)
