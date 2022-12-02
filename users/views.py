@@ -11,6 +11,7 @@ from users.ActiveUser import ActiveUser
 
 # Create your views here.
 def login(request):
+    
     '''Logs in an user only if he is an super user'''
     if request.method=="POST":
         username=request.POST['username']
@@ -70,4 +71,4 @@ def dashboard(request):
             return redirect("users:dashboard")
         
             
-    return render(request,"users/index (1).html") 
+    return render(request,"users/dashboard.html") 
