@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'users',
     'recruitment',
     'api',
+    'membership_development_team',
     'insb_central',
 ]
 
