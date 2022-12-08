@@ -89,11 +89,11 @@ DATABASES = {
         
         #********MYSQL SERVER ON PYTHON ANYWHERE*********
         # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'insbapp$insb_port',
-        # 'USER': 'insbapp',
-        # 'PASSWORD': 'hello@insb',
-        # 'HOST':'insbapp.mysql.pythonanywhere-services.com',
-        # 'PORT':'',
+        # 'NAME': 'insb_port',
+        # 'USER': 'root',
+        # 'PASSWORD': '',
+        # 'HOST':'localhost',
+        # 'PORT':'3306',
         
 
         'ENGINE': 'django.db.backends.sqlite3',
