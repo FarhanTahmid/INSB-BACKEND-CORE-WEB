@@ -11,10 +11,7 @@ def md_team_homepage(request):
 def members_list(request):
     '''This function is responsible to display all the member data in the page'''
     members=Members.objects.order_by('position')
-    
-    print(position)
-    context={'members':members,
-             
-             }
+    totalNumber=Members.objects.all().count()
+    context={'members':members,'totalNumber':totalNumber}
           
     return render(request,'insb_member_list.html',context=context)
