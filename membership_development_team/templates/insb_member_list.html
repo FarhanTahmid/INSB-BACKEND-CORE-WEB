@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruitees</title>
+</head>
+<body>
+    <h1>Registered Members for IEEENSUSB</h1>
+    <p>Total members: <p>
+
+    <a href="">Generate Excel Sheet Of this Session</a>
+    <br>
+    <br>
+    {% comment %} Search Functionality {% endcomment %}
+    <label>Search: </label>
+    <input type="text" onkeyup="searchfunction()" id="search" placeholder="Search with any credentials">
+    
+    <br>
+    <table id="recruitee_table">
+        <thead>
+            <tr id="table_row">
+                <th>IEEE ID</th>
+                <th>NSU ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Contact No.</th>
+                <th>Current Position</th>
+                <th>Team Name</th>
+                <th>IEEE Account Status</th>
+            </tr>
+        </thead>
+    {% comment %} This block is responsible for loading all the members recruited on that session and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
+    {% for member in members %}
+        <tr>
+            <td><a href=""></a>{{ member.ieee_id }}</td>
+            <td>{{ member.nsu_id }}</td>
+            <td>{{ member.name }}</td>
+            <td>{{ member.email_ieee }}</td>
+            <td>{{ member.contact_no }}</td>
+            <td>{{ member.position }}</td>
+            <td>{{ member.team }}</td>
+            <td><img src="" alt="True"></td>
+            <td><img src="" alt="False"></td>
+
+        </tr>
+    {% endfor %}
+    </table>
+<p id="no_data"></p>
+
+
+
+
+{% comment %} JS FUNCTION TO SEARCH ITEM ON THE TABLE. THIS SEARCHES WITH ALL THE credentials INSIDE THE TABLE DISPLAYED IN WEBPAGE. NOT CASE SENSITIVE {% endcomment %}
+<script>
+
+    function searchfunction(){
+        let input,filter,table,tr,td,j;
+        input=document.getElementById("search");
+        filter=input.value.toUpperCase();
+        table=document.getElementById("recruitee_table");
+        tr=table.getElementsByTagName("tr");
+        
+        for(j=0;j<tr.length;j++){
+            td=tr[j].getElementsByTagName("td");
+            message=document.getElementById("no_data");
+
+            if(td.length > 0){
+                if(td[0].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
+                td[1].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
+                td[2].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
+                td[3].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
+                td[4].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
+                td[5].innerHTML.toLocaleUpperCase().indexOf(filter)> -1){
+                tr[j].style.display="";
+                message.innerHTML="";
+            }
+                    else{
+                        tr[j].style.display="none";
+                    }
+            
+            }        
+            if(td.length==0){
+                message.innerHTML="Member not found!";
+            }
+        }
+    }
+
+</script>
+</body>
+</html>

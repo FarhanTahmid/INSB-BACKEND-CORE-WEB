@@ -8,4 +8,5 @@ app_name='users'
 
 urlpatterns = [
    path('',views.md_team_homepage,name="md_team_homepage"),
+   path('members/',views.members_list,name="members_list")
 ]
