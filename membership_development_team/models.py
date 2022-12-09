@@ -7,6 +7,7 @@ from users.models import Members
 class Renewal_Sessions(models.Model):
     session_name=models.CharField(null=False,blank=False,max_length=30)
     session_time=models.DateField(null=False,blank=False)
+    
     class Meta:
         verbose_name="Renewal Session"
     def __str__(self) -> str:

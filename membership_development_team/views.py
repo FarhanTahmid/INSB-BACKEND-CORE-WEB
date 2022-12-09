@@ -28,7 +28,7 @@ def membership_renewal(request):
     '''This view loads the renewal homepage'''
     '''This function is responsible for the data handling for renewal Process and loads all the sessions'''
     #Load all sessions at first
-    sessions=Renewal_Sessions.objects.all()
+    sessions=Renewal_Sessions.objects.order_by('-id')
     context={
         'sessions':sessions
     }
@@ -38,17 +38,18 @@ def membership_renewal(request):
         try:
             session_name=request.POST['renewal_session']
             session_time=datetime.datetime.now()
-            add_session=Renewal_Sessions.objects.create(session_name,session_time)
+            add_session=Renewal_Sessions(session_name=session_name,session_time=session_time)
             add_session.save()
+            return render(request,'renewal.html',context)
         except DatabaseError:
             return DatabaseError
-        return redirect('membership_renewal')
+        
     return render(request,'renewal.html',context)
 
 @login_required
 def renewal_session_data(request,pk):
     '''This view function loads all data for the renewal session including the members registered'''
-    return render(request,'renewal_session.html')
+    return render(request,'renewal_sessions.html')
 
 @login_required
 def generateExcelSheet(request):
