@@ -11,7 +11,7 @@
     <h1>Registered Members for IEEE NSU Student Branch</h1>
     <p>Total members: {{ totalNumber }}<p>
 
-    <a href="">Generate Excel Sheet Of this Session</a>
+    <a href="{% url 'membership_development_team:export_excel' %}">Generate Excel Sheet Of this Session</a>
     <br>
     <br>
     {% comment %} Search Functionality {% endcomment %}
