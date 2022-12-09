@@ -22,8 +22,8 @@ class Members(models.Model):
     date_of_birth=models.DateField(null=True,blank=True)
     gender=models.CharField(null=True,blank=True,max_length=7)
     facebook_url=models.URLField(null=True,blank=True,max_length=200)
-    team=models.IntegerField(null=True,blank=True)
-    position=models.IntegerField(null=False,blank=False,default=13) #Default=13 means the position of a general member
+    team=models.ForeignKey(Teams,null=True,blank=True,on_delete=models.CASCADE)
+    position=models.ForeignKey(Roles_and_Position,default=13,on_delete=models.CASCADE) #Default=13 means the position of a general member
     session=models.IntegerField(null=True,blank=True)
     renewal_time_stamp=models.DateField(null=True,blank=True)
     
