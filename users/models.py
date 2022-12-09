@@ -24,7 +24,7 @@ class Members(models.Model):
     facebook_url=models.URLField(null=True,blank=True,max_length=200)
     team=models.ForeignKey(Teams,null=True,blank=True,on_delete=models.CASCADE)
     position=models.ForeignKey(Roles_and_Position,default=13,on_delete=models.CASCADE) #Default=13 means the position of a general member
-    session=models.IntegerField(null=True,blank=True)
+    session=models.ForeignKey(recruitment_session,null=True,blank=True,on_delete=models.CASCADE)
     renewal_time_stamp=models.DateField(null=True,blank=True)
     
     

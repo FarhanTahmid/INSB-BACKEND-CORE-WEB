@@ -8,5 +8,6 @@ app_name='users'
 
 urlpatterns = [
    path('',views.md_team_homepage,name="md_team_homepage"),
-   path('members/',views.members_list,name="members_list")
+   path('members/',views.members_list,name="members_list"),
+   path('export_excel',views.generateExcelSheet,name="export_excel"),
 ]
