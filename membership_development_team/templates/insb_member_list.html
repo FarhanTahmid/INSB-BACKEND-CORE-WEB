@@ -26,7 +26,10 @@
                 <th>NSU ID</th>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Current Position</th>
+                <th>Current Team</th>
                 <th>Contact No.</th>
+                
             </tr>
         </thead>
     {% comment %} This block is responsible for loading all the members recruited on that session and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
@@ -36,7 +39,10 @@
             <td>{{ member.nsu_id }}</td>
             <td>{{ member.name }}</td>
             <td>{{ member.email_ieee }}</td>
+            <td>{{ member.position.role }}</td>
+            <td>{{ member.team.team_name }}</td>
             <td>0{{ member.contact_no }}</td>
+            
         </tr>
     {% endfor %}
     </table>
@@ -63,7 +69,9 @@
                 td[1].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
                 td[2].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
                 td[3].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
-                td[4].innerHTML.toLocaleUpperCase().indexOf(filter)> -1){
+                td[4].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
+                td[5].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
+                td[6].innerHTML.toLocaleUpperCase().indexOf(filter)> -1){
                 tr[j].style.display="";
                 message.innerHTML="";
             }
