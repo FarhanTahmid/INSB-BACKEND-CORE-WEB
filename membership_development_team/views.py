@@ -1,9 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
+from django.db import DatabaseError, IntegrityError, InternalError
 from users.models import Members
 from port.models import Roles_and_Position
 from recruitment import renderData
 from django.db import connections
 from django.contrib.auth.decorators import login_required
+from . models import Renewal_Sessions
 from django.http import HttpResponse
 import datetime
 import xlwt
@@ -12,6 +14,7 @@ import xlwt
 def md_team_homepage(request):
     return render(request,'md_team_homepage.html')
 
+@login_required
 def members_list(request):
     '''This function is responsible to display all the member data in the page'''
     members=Members.objects.order_by('position')
@@ -19,6 +22,33 @@ def members_list(request):
     context={'members':members,'totalNumber':totalNumber}
           
     return render(request,'insb_member_list.html',context=context)
+
+@login_required
+def membership_renewal(request):
+    '''This view loads the renewal homepage'''
+    '''This function is responsible for the data handling for renewal Process and loads all the sessions'''
+    #Load all sessions at first
+    sessions=Renewal_Sessions.objects.all()
+    context={
+        'sessions':sessions
+    }
+    if request.method=="POST":
+        #MUST PERFORM TRY CATCH
+        #Creating and inserting the data of the session
+        try:
+            session_name=request.POST['renewal_session']
+            session_time=datetime.datetime.now()
+            add_session=Renewal_Sessions.objects.create(session_name,session_time)
+            add_session.save()
+        except DatabaseError:
+            return DatabaseError
+        return redirect('membership_renewal')
+    return render(request,'renewal.html',context)
+
+@login_required
+def renewal_session_data(request,pk):
+    '''This view function loads all data for the renewal session including the members registered'''
+    return render(request,'renewal_session.html')
 
 @login_required
 def generateExcelSheet(request):
