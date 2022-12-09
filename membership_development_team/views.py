@@ -6,9 +6,11 @@ from recruitment import renderData
 from django.db import connections
 from django.contrib.auth.decorators import login_required
 from . models import Renewal_Sessions
+from . import renewal_data
 from django.http import HttpResponse
 import datetime
 import xlwt
+from django.contrib import messages
 
 # Create your views here.
 def md_team_homepage(request):
@@ -37,11 +39,16 @@ def membership_renewal(request):
         #Creating and inserting the data of the session
         try:
             session_name=request.POST['renewal_session']
-            session_time=datetime.datetime.now()
-            add_session=Renewal_Sessions(session_name=session_name,session_time=session_time)
-            add_session.save()
-            return render(request,'renewal.html',context)
+            try:
+                if(Renewal_Sessions.objects.get(session_name=session_name)):
+                    messages.info(request,"A same session with this name already exists!")
+            except Renewal_Sessions.DoesNotExist:
+                session_time=datetime.datetime.now()
+                add_session=Renewal_Sessions(session_name=session_name,session_time=session_time)
+                add_session.save()
+                return render(request,'renewal.html',context)
         except DatabaseError:
+            messages.info(request,"Error Creating a new Session!")
             return DatabaseError
         
     return render(request,'renewal.html',context)
@@ -49,7 +56,12 @@ def membership_renewal(request):
 @login_required
 def renewal_session_data(request,pk):
     '''This view function loads all data for the renewal session including the members registered'''
-    return render(request,'renewal_sessions.html')
+    renewal_data.get_renewal_session_name(pk)
+    session_name=renewal_data.get_renewal_session_name(pk)
+    context={
+        'session_name':session_name,
+    }
+    return render(request,'renewal_sessions.html',context)
 
 @login_required
 def generateExcelSheet(request):
