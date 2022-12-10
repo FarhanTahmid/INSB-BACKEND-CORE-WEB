@@ -113,7 +113,7 @@ def renewal_session_data(request,pk):
     session_name=renewal_data.get_renewal_session_name(pk)
     session_id=renewal_data.get_renewal_session_id(session_name=session_name)
     get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('name','email_personal','contact_no',)
-    form_link="http://127.0.0.1:8000/membership_development_team/renewal_form/"+str(session_id)
+    form_link="http:insbapp.pythonanywhere.com/membership_development_team/renewal_form/"+str(session_id)
     context={
         'session_name':session_name,
         'session_id':session_id,
