@@ -7,7 +7,7 @@ from django.db import connections
 from django.contrib.auth.decorators import login_required
 from . models import Renewal_Sessions,Renewal_requests
 from . import renewal_data
-from django.http import HttpResponse,HttpResponseBadRequest
+from django.http import HttpResponse,HttpResponseBadRequest,HttpResponseServerError
 import datetime
 import xlwt
 from django.contrib import messages
@@ -91,9 +91,12 @@ def membership_renewal_form(request,pk):
             if(password==confirm_password):
                 #change here if ieee_id is allowed in the field
                 #get_ieee_id=Members.objects.filter(email_personal=email_personal).values_list('ieee_id')
-                renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),name=name,contact_no=contact_no,email_personal=email_personal,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
-                renewal_instance.save()
-                messages.info(request,"Application Successful!")
+                try:
+                    renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),name=name,contact_no=contact_no,email_personal=email_personal,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
+                    renewal_instance.save()
+                    messages.info(request,"Application Successful!")
+                except:
+                    return HttpResponseServerError
             else:
                 messages.info(request,"Two Passwords did not match!")   
         else:
@@ -109,10 +112,15 @@ def renewal_session_data(request,pk):
     renewal_data.get_renewal_session_name(pk)
     session_name=renewal_data.get_renewal_session_name(pk)
     session_id=renewal_data.get_renewal_session_id(session_name=session_name)
+    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('name','email_personal','contact_no',)
+    form_link="http://127.0.0.1:8000/membership_development_team/renewal_form/"+str(session_id)
     context={
         'session_name':session_name,
         'session_id':session_id,
+        'requests':get_renewal_requests,
+        'form_link':form_link,
     }
+    
     return render(request,'renewal_sessions.html',context)
 
 @login_required
