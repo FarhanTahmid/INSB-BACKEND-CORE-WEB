@@ -16,9 +16,12 @@
             <li>To apply for the renewal session please fill this form up only after paying the Renewal Fee. Enter the correct password only for your IEEE account and Enter the e-mail which is associated with your IEEE account!</li>
             <li>Your password will stay confidential and would not be shared anywhere.</li>
             <li>If you have Paid by yourself or via any Societies / Affinity Group, write "Self" / "Society / Affinity Group name" in the Transaction ID field</li>
+            <li>If you have a free subscription of any kind, tick mark the option and put it under the comment section</li>
+            <li>If you have any further queries, please contact Membership Development Team of IEEE NSU STUDENT BRANCH</li>
         </ul>
         <h3>Renewal Form</h3>
         <form method="POST" action="">
+            {% csrf_token %}
             <label for="name">Name:</label>
             <input type="text" name="name" required placeholder="Enter Your Name"></input>
             <br>
@@ -28,17 +31,17 @@
             <br>
             <br>
             <label for="email_personal">E-mail:</label>
-            <input type="email" name="email_personal" required placeholder="Enter Email Associated with Your IEEE ID"></input>
+            <input type="email" autocomplete="off" id="email_personal" name="email_personal" required placeholder="Enter Email Associated with Your IEEE ID"></input>
             <br>
             <br>
             <label for="name">Password:</label>
-            <input type="password" name="password" required placeholder="Enter the Password For your IEEE Account"></input>
+            <input type="password" name="password" autocomplete="off" required placeholder="Enter the Password For your IEEE Account"></input>
             <label for="name">Confirm Password:</label>
-            <input type="password" name="confirm_password" required placeholder="Confirm Password"></input>
+            <input type="password" name="confirm_password" autocomplete="off" required placeholder="Confirm Password"></input>
             <br>
             <br>
             <p>Subscriptions you want to renew: </p>
-            <input type="checkbox" id="branch" name="ieee">
+            <input type="checkbox" id="branch" name="ieee" required>
             <label for="branch"> Institute of Electrical and Electronics Engineers (IEEE)</label><br>
             <input type="checkbox" id="pes" name="pes">
             <label for="pes"> IEEE Power and Energy Society (PES)</label><br>
@@ -50,9 +53,11 @@
             <label for="wie"> IEEE Women in Engineering Affinity Group (WIE)</label><br><br>
             <label for="trxid">Transaction ID:</label>
             <input type="text" name="trx_id" required placeholder="Enter the Transaction ID"></input><br><br>
+            <label for="comment">Comments:</label>
+            <input type="text" id="comment" name="comment"  placeholder="Write a comment"></input><br><br>
             <input type="submit" name="apply" value="Apply"></input>
-            <input type="submit" name="cancel" value="Cancel"></input>
         </form>
+        {% for messages in messages %}<P>{{ messages }}</p>{% endfor %}
         <script src="" async defer></script>
     </body>
 </html>
