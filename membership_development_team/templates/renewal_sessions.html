@@ -10,7 +10,13 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
-        <h1>Payment Renewal Session {{ session_name }}</h1>
-        <script src="" async defer></script>
+        <h1>Renewal Session - {{ session_name }}</h1>
+        <button><a href="{% url 'membership_development_team:renewal_form' session_id %}" class="log_in">View Renewal Form</a></button>
+        <button type="button" onclick="getURL();">Get Form Link</button>
+        <script>
+            function getURL() {
+                alert("The URL of this page is: " + window.location.href);
+            }
+        </script>
     </body>
 </html>

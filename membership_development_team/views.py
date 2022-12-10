@@ -53,13 +53,25 @@ def membership_renewal(request):
         
     return render(request,'renewal.html',context)
 
+
+def membership_renewal_form(request,pk):
+    session_name=renewal_data.get_renewal_session_name(pk)
+    context={
+        'session_name':session_name,
+        
+    }
+    return render(request,'renewal_form.html',context)
+
+
 @login_required
 def renewal_session_data(request,pk):
     '''This view function loads all data for the renewal session including the members registered'''
     renewal_data.get_renewal_session_name(pk)
     session_name=renewal_data.get_renewal_session_name(pk)
+    session_id=renewal_data.get_renewal_session_id(session_name=session_name)
     context={
         'session_name':session_name,
+        'session_id':session_id,
     }
     return render(request,'renewal_sessions.html',context)
 
