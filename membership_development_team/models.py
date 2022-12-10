@@ -18,12 +18,24 @@ class Renewal_Sessions(models.Model):
 #Table for renewal requests for every session, primary key is id. This table is View Protected. Donot register this in admin
 class Renewal_requests(models.Model):
     session_id=models.ForeignKey(Renewal_Sessions,null=False,blank=False,on_delete=models.CASCADE)
-    ieee_id=models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE)
+    #ieee_id=models.ForeignKey(Members,null=True,blank=True,on_delete=models.CASCADE)
+    name=models.CharField(null=False,blank=False,max_length=100,default="null")
+    contact_no=models.CharField(null=False,blank=False,max_length=30,default="null")
     email_personal=models.EmailField(null=False,blank=False)
     ieee_account_password=models.CharField(null=False,blank=False,max_length=50)
+    
+    #this *_check fields refers to the subscriptions the user is selecting on the forms.
+    ieee_renewal_check=models.BooleanField(null=False,blank=False,default=False)
+    pes_renewal_check=models.BooleanField(null=False,blank=False,default=False)
+    ras_renewal_check=models.BooleanField(null=False,blank=False,default=False)
+    wie_renewal_check=models.BooleanField(null=False,blank=False,default=False)
+    
+    transaction_id=models.CharField(null=False,blank=False,max_length=50,default="Self")
+    comment=models.CharField(null=True,blank=True,max_length=100)
+    
     renewal_status=models.BooleanField(null=False,blank=False,default=False)
     view_status=models.BooleanField(null=False,blank=False,default=False)
     
     # Warning! Don't register This Table in Admin! Security Issue #
     def __str__(self) -> str:
-        return str(self.ieee_id)
+        return self.name

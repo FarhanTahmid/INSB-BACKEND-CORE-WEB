@@ -5,12 +5,13 @@ from port.models import Roles_and_Position
 from recruitment import renderData
 from django.db import connections
 from django.contrib.auth.decorators import login_required
-from . models import Renewal_Sessions
+from . models import Renewal_Sessions,Renewal_requests
 from . import renewal_data
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseBadRequest
 import datetime
 import xlwt
 from django.contrib import messages
+
 
 # Create your views here.
 def md_team_homepage(request):
@@ -60,6 +61,45 @@ def membership_renewal_form(request,pk):
         'session_name':session_name,
         
     }
+    
+    if request.method=="POST":
+        if(request.POST.get('apply')):
+            name=request.POST['name']
+            contact_no=request.POST['contact_no']
+            email_personal=request.POST['email_personal']
+            password=request.POST['password']
+            confirm_password=request.POST['confirm_password']
+            
+            #check if check marks are checked in the form
+            ieee_renewal=False
+            pes_renewal=False
+            ras_renewal=False
+            ias_renewal=False
+            wie_renewal=False
+            if(request.POST.get('ieee')):
+                ieee_renewal=True
+            if(request.POST.get('pes')):
+                pes_renewal=True
+            if(request.POST.get('ras')):
+                ras_renewal=True
+            if(request.POST.get('ias')):
+                ias_renewal=True
+            if(request.POST.get('wie')):
+                wie_renewal=True
+            transaction_id=request.POST['trx_id']
+            comment=request.POST['comment']
+            if(password==confirm_password):
+                #change here if ieee_id is allowed in the field
+                #get_ieee_id=Members.objects.filter(email_personal=email_personal).values_list('ieee_id')
+                renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),name=name,contact_no=contact_no,email_personal=email_personal,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
+                renewal_instance.save()
+                messages.info(request,"Application Successful!")
+            else:
+                messages.info(request,"Two Passwords did not match!")   
+        else:
+            return HttpResponseBadRequest
+    
+    
     return render(request,'renewal_form.html',context)
 
 
