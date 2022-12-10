@@ -10,7 +10,49 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
-        <h1>Renewal Form</h1>
+        <h1>Renewal Form For {{ session_name }}</h1>
+        <h3>Please read the instructions Carefully before applying for IEEE account renewal</h3>
+        <ul>
+            <li>To apply for the renewal session please fill this form up only after paying the Renewal Fee. Enter the correct password only for your IEEE account and Enter the e-mail which is associated with your IEEE account!</li>
+            <li>Your password will stay confidential and would not be shared anywhere.</li>
+            <li>If you have Paid by yourself or via any Societies / Affinity Group, write "Self" / "Society / Affinity Group name" in the Transaction ID field</li>
+        </ul>
+        <h3>Renewal Form</h3>
+        <form method="POST" action="">
+            <label for="name">Name:</label>
+            <input type="text" name="name" required placeholder="Enter Your Name"></input>
+            <br>
+            <br>
+            <label for="contact_no">Contact No.:</label>
+            <input type="text" name="contact_no" required placeholder="Enter Your Contact no"></input>
+            <br>
+            <br>
+            <label for="email_personal">E-mail:</label>
+            <input type="email" name="email_personal" required placeholder="Enter Email Associated with Your IEEE ID"></input>
+            <br>
+            <br>
+            <label for="name">Password:</label>
+            <input type="password" name="password" required placeholder="Enter the Password For your IEEE Account"></input>
+            <label for="name">Confirm Password:</label>
+            <input type="password" name="confirm_password" required placeholder="Confirm Password"></input>
+            <br>
+            <br>
+            <p>Subscriptions you want to renew: </p>
+            <input type="checkbox" id="branch" name="ieee">
+            <label for="branch"> Institute of Electrical and Electronics Engineers (IEEE)</label><br>
+            <input type="checkbox" id="pes" name="pes">
+            <label for="pes"> IEEE Power and Energy Society (PES)</label><br>
+            <input type="checkbox" id="ras" name="ras">
+            <label for="ras"> IEEE Robotics and Automation Society (RAS)</label><br>
+            <input type="checkbox" id="ias" name="ias">
+            <label for="ias"> IEEE Industry Application Society (IAS)</label><br>
+            <input type="checkbox" id="wie" name="wie">
+            <label for="wie"> IEEE Women in Engineering Affinity Group (WIE)</label><br><br>
+            <label for="trxid">Transaction ID:</label>
+            <input type="text" name="trx_id" required placeholder="Enter the Transaction ID"></input><br><br>
+            <input type="submit" name="apply" value="Apply"></input>
+            <input type="submit" name="cancel" value="Cancel"></input>
+        </form>
         <script src="" async defer></script>
     </body>
 </html>

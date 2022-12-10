@@ -6,9 +6,11 @@ from recruitment import renderData
 from django.db import connections
 from django.contrib.auth.decorators import login_required
 from . models import Renewal_Sessions
+from . import renewal_data
 from django.http import HttpResponse
 import datetime
 import xlwt
+from django.contrib import messages
 
 # Create your views here.
 def md_team_homepage(request):
@@ -28,7 +30,7 @@ def membership_renewal(request):
     '''This view loads the renewal homepage'''
     '''This function is responsible for the data handling for renewal Process and loads all the sessions'''
     #Load all sessions at first
-    sessions=Renewal_Sessions.objects.all()
+    sessions=Renewal_Sessions.objects.order_by('-id')
     context={
         'sessions':sessions
     }
@@ -37,18 +39,41 @@ def membership_renewal(request):
         #Creating and inserting the data of the session
         try:
             session_name=request.POST['renewal_session']
-            session_time=datetime.datetime.now()
-            add_session=Renewal_Sessions.objects.create(session_name,session_time)
-            add_session.save()
+            try:
+                if(Renewal_Sessions.objects.get(session_name=session_name)):
+                    messages.info(request,"A same session with this name already exists!")
+            except Renewal_Sessions.DoesNotExist:
+                session_time=datetime.datetime.now()
+                add_session=Renewal_Sessions(session_name=session_name,session_time=session_time)
+                add_session.save()
+                return render(request,'renewal.html',context)
         except DatabaseError:
+            messages.info(request,"Error Creating a new Session!")
             return DatabaseError
-        return redirect('membership_renewal')
+        
     return render(request,'renewal.html',context)
+
+
+def membership_renewal_form(request,pk):
+    session_name=renewal_data.get_renewal_session_name(pk)
+    context={
+        'session_name':session_name,
+        
+    }
+    return render(request,'renewal_form.html',context)
+
 
 @login_required
 def renewal_session_data(request,pk):
     '''This view function loads all data for the renewal session including the members registered'''
-    return render(request,'renewal_session.html')
+    renewal_data.get_renewal_session_name(pk)
+    session_name=renewal_data.get_renewal_session_name(pk)
+    session_id=renewal_data.get_renewal_session_id(session_name=session_name)
+    context={
+        'session_name':session_name,
+        'session_id':session_id,
+    }
+    return render(request,'renewal_sessions.html',context)
 
 @login_required
 def generateExcelSheet(request):

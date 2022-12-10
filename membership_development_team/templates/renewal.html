@@ -22,10 +22,13 @@
                 Create
            </button>
         </form>
+        {% for messages in messages %}
+        <p>{{ messages }}</p>
+        {% endfor %}
         <br>
         <br>
-        <label for="search_member">Search Sessions<label>
-        <input type="text" id="search_member" placeholder="Search sessions"></input>
+        <label for="search_session">Search Sessions<label>
+        <input type="text" onkeyup="searchfunction()" id="search_session" placeholder="Search sessions"></input>
         <br>
         <h1>Sessions</h1>
 
@@ -33,14 +36,14 @@
         {% comment %} This loads the datas from the view function and uses the session name as link and passes the session id as url as well as a value to the recruitee function to use that as session id {% endcomment %}
         <ul id="ul">
             {% for session in sessions %}
-            <li id="li"><a href="{% url "recruitment:recruitee" session.id %}">{{ session.session }}</a></li>
+                <li id="li"><a href="{% url "membership_development_team:renewal_session_data" session.id %}">{{ session.session_name }}</a></li>
             {% endfor %}
         <ul>
         <p id="no_data"></p>
         <script>
                     function searchfunction(){
                     let input,filter,j;
-                    input=document.getElementById("search");
+                    input=document.getElementById("search_session");
                     filter=input.value.toUpperCase();
                     let ul=document.getElementById("ul");
                     let li=ul.getElementsByTagName("li");
