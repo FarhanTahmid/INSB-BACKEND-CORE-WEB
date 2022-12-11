@@ -3,3 +3,4 @@ linux_env2/
 nashrat_insb_port/
 __pycache__/
 *.py[cod]
+db.sqlite3

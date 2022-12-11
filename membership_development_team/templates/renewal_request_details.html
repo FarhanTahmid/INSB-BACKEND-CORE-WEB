@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <h1>Details for renewal request for {{ name }}</h1>
+
+        <table id="renewal_request_table">
+            <thead>
+                <tr id="table_row">
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact No.</th>
+                    <th>Password For IEEE account</th>
+                    <th>IEEE Renewal Request</th>
+                    <th>PES Renewal Request</th>
+                    <th>RAS Renewal Request</th>
+                    <th>IAS Renewal Request</th>
+                    <th>WIE Renewal Request</th>
+                    <th>Comments</th>
+                    <th>Transaction ID</th>
+                    <th>Renewal Status</th>
+                       
+                </tr>
+            </thead>
+        {% comment %} This block is responsible for loading all the members recruited on that session and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
+            {% for details in details %}
+            <tr>
+                <td>{{ details.name }}</td>
+                <td>{{ details.email_personal }}</td>
+                <td>{{ details.contact_no }}</td>
+                <td>{{ details.ieee_account_password }}</td>
+                <td>{{ details.ieee_renewal_check }}</td>
+                <td>{{ details.pes_renewal_check }}</td>
+                <td>{{ details.ras_renewal_check }}</td>
+                <td>{{ details.ias_renewal_check }}</td>
+                <td>{{ details.wie_renewal_check }}</td>
+                <td>{{ details.comment }}</td>
+                <td>{{ details.transation_id }}</td>
+                <td>{{ details.renewal_status }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <br><br>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Renew Membership" name="renew_button"></input>
+            <input type="submit" value="Delete Application" name="delete_button"></input>
+        </form>
+        <br><br>
+
+        {% for details in details %}
+        <form method="POST">
+            {% csrf_token %}
+            <label> Comments</label><br>
+            <input name="official_comment" type="text" placeholder="Leave a comment if you want with in 150 words" value={{ details.official_comment }}></input><br>
+            <input type="submit" value="Update Comment" name="update_comment"></input>
+        </form>
+        {% endfor %}
+        <script src="" async defer></script>
+    </body>
+</html>

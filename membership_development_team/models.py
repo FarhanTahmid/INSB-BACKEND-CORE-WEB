@@ -28,13 +28,16 @@ class Renewal_requests(models.Model):
     ieee_renewal_check=models.BooleanField(null=False,blank=False,default=False)
     pes_renewal_check=models.BooleanField(null=False,blank=False,default=False)
     ras_renewal_check=models.BooleanField(null=False,blank=False,default=False)
+    ias_renewal_check=models.BooleanField(null=False,blank=False,default=False)
     wie_renewal_check=models.BooleanField(null=False,blank=False,default=False)
     
     transaction_id=models.CharField(null=False,blank=False,max_length=50,default="Self")
-    comment=models.CharField(null=True,blank=True,max_length=100)
+    comment=models.CharField(null=True,blank=True,max_length=100) #the comment left by the applicant while applying
     
     renewal_status=models.BooleanField(null=False,blank=False,default=False)
     view_status=models.BooleanField(null=False,blank=False,default=False)
+    
+    official_comment=models.CharField(null=True,blank=True,max_length=150) #the comment that team member leaves while renewal time
     
     # Warning! Don't register This Table in Admin! Security Issue #
     def __str__(self) -> str:

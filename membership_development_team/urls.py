@@ -12,6 +12,7 @@ urlpatterns = [
    path('export_excel',views.generateExcelSheet,name="export_excel"),
    path('membership_renewal/',views.membership_renewal,name="membership_renewal"),
    path('membership_renewal/session/<str:pk>',views.renewal_session_data,name="renewal_session_data"),
-   path('renewal_form/<str:pk>',views.membership_renewal_form,name="renewal_form")
+   path('renewal_form/<str:pk>',views.membership_renewal_form,name="renewal_form"),
+   path('renewal_request/<str:pk>/<str:name>',views.renewal_request_details,name="request_details"),
    
 ]

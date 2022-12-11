@@ -54,7 +54,7 @@ def membership_renewal(request):
         
     return render(request,'renewal.html',context)
 
-
+# no login required as this will open up for other people
 def membership_renewal_form(request,pk):
     session_name=renewal_data.get_renewal_session_name(pk)
     context={
@@ -92,7 +92,7 @@ def membership_renewal_form(request,pk):
                 #change here if ieee_id is allowed in the field
                 #get_ieee_id=Members.objects.filter(email_personal=email_personal).values_list('ieee_id')
                 try:
-                    renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),name=name,contact_no=contact_no,email_personal=email_personal,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
+                    renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),name=name,contact_no=contact_no,email_personal=email_personal,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
                     renewal_instance.save()
                     messages.info(request,"Application Successful!")
                 except:
@@ -113,15 +113,49 @@ def renewal_session_data(request,pk):
     session_name=renewal_data.get_renewal_session_name(pk)
     session_id=renewal_data.get_renewal_session_id(session_name=session_name)
     get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('name','email_personal','contact_no',)
+    #loading all the unviewed request count
+    notification_count=Renewal_requests.objects.filter(session_id=session_id,view_status=False).count()
+    #counting the renewed requests
+    renewed_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=True).count()
+    #counting the pending requests
+    pending_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=False).count()
+    #form link for particular sessions
     form_link="http:insbapp.pythonanywhere.com/membership_development_team/renewal_form/"+str(session_id)
     context={
         'session_name':session_name,
         'session_id':session_id,
         'requests':get_renewal_requests,
         'form_link':form_link,
+        'notification_count':notification_count,
+        'renewed_count':renewed_count,
+        'pending_count':pending_count,
     }
     
     return render(request,'renewal_sessions.html',context)
+
+@login_required
+def renewal_request_details(request,pk,name):
+    '''This function loads the datas for particular renewal requests'''
+    renewal_request_details=Renewal_requests.objects.filter(name=name).values('name','email_personal','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
+    #changing the notification status
+    Renewal_requests.objects.filter(name=name).update(view_status=True)
+    
+    context={
+        'name':name,
+        'details':renewal_request_details,
+    }
+    if request.method=="POST":
+        if(request.POST.get('renew_button')):
+            print(Renewal_requests.objects.filter(name=name,session_id=int(pk)).values('name'))
+        if(request.POST.get('delete_button')):
+            print("Delete button")
+        if(request.POST.get('update_comment')):
+            updated_comment=request.POST['official_comment']
+            print(updated_comment)
+            print("Update Comment")
+            
+    return render(request,"renewal_request_details.html",context=context)
+    
 
 @login_required
 def generateExcelSheet(request):
