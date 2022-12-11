@@ -144,13 +144,13 @@ def recruitee_details(request, nsu_id):
                 return redirect('recruitment:recruitee_details', nsu_id)
 
         ##### REGISTERING MEMBER IN INSB DATABASE####
-
         if request.POST.get("register_member"):
             getMember = recruited_members.objects.filter(nsu_id=nsu_id).values(
                 'ieee_id',
                 'first_name', 'middle_name', 'last_name',
                 'nsu_id',
                 'email_personal',
+                'major',
                 'contact_no',
                 'home_address',
                 'date_of_birth',
@@ -170,14 +170,13 @@ def recruitee_details(request, nsu_id):
                     getMember[0]['last_name'],
                     nsu_id=getMember[0]['nsu_id'],
                     email_personal=getMember[0]['email_personal'],
+                    major=getMember[0]['major'],
                     contact_no=getMember[0]['contact_no'],
                     home_address=getMember[0]['home_address'],
                     date_of_birth=getMember[0]['date_of_birth'],
                     gender=getMember[0]['gender'],
                     facebook_url=getMember[0]['facebook_url'],
-                    session=getMember[0]['session_id'],
-                    renewal_time_stamp=(
-                        getMember[0]['recruitment_time'])+datetime.timedelta(days=365)
+                    session=recruitment_session.objects.get(id=int(getMember[0]['session_id']))
                 )
                 newMember.save()
                 messages.info(request, "Member Updated in INSB Database")
@@ -186,10 +185,10 @@ def recruitee_details(request, nsu_id):
                 messages.info(
                     "An Error Occured! The member is already registered in INSB Database or you have not entered IEEE ID of the member!")
                 return redirect('recruitment:recruitee_details', nsu_id)
-            except:
-                messages.info(
-                    request, "Something went wrong! Please Try again!")
-                return redirect('recruitment:recruitee_details', nsu_id)
+            # except:
+            #     messages.info(
+            #         request, "Something went wrong! Please Try again!")
+            #     return redirect('recruitment:recruitee_details', nsu_id)
     return render(request, "recruitee_details.html", context=context)
 
 
