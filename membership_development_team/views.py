@@ -11,6 +11,7 @@ from django.http import HttpResponse,HttpResponseBadRequest,HttpResponseServerEr
 import datetime
 import xlwt
 from django.contrib import messages
+from django.urls import reverse
 
 
 # Create your views here.
@@ -89,8 +90,12 @@ def membership_renewal_form(request,pk):
             transaction_id=request.POST['trx_id']
             comment=request.POST['comment']
             if(password==confirm_password):
+                
+                
                 #change here if ieee_id is allowed in the field
                 #get_ieee_id=Members.objects.filter(email_personal=email_personal).values_list('ieee_id')
+                
+                
                 try:
                     renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),name=name,contact_no=contact_no,email_personal=email_personal,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
                     renewal_instance.save()
@@ -136,7 +141,14 @@ def renewal_session_data(request,pk):
 @login_required
 def renewal_request_details(request,pk,name):
     '''This function loads the datas for particular renewal requests'''
+    # session_name=renewal_data.get_renewal_session_name(pk)
+    # session_id=renewal_data.get_renewal_session_id(session_name)
+    # print(session_id)
     renewal_request_details=Renewal_requests.objects.filter(name=name).values('name','email_personal','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
+    renewal_email=""
+    for i in range(len(renewal_request_details)):
+        renewal_email=renewal_request_details[i]['email_personal']
+    
     #changing the notification status
     Renewal_requests.objects.filter(name=name).update(view_status=True)
     
@@ -146,7 +158,24 @@ def renewal_request_details(request,pk,name):
     }
     if request.method=="POST":
         if(request.POST.get('renew_button')):
-            print(Renewal_requests.objects.filter(name=name,session_id=int(pk)).values('name'))
+            try:
+                #First check if the member is registered in the database or not, search with ASSOCIATED EMAIL (email_personal)
+                member=Members.objects.get(email_personal=renewal_email)
+                ieee_id=0
+                for i in range(len(member)):
+                    ieee_id=member[i]['ieee_id'] #Get ieee_id
+                #update data in main registered Members database
+                Members.objects.filter(ieee_id=ieee_id).update(last_renewal=datetime.datetime.now())
+                #Update in renewal requests database.
+                Renewal_requests.objects.filter(name=name,session_id=pk).update(renewal_status=True)
+                messages.info(request,f"Membership with IEEE ID {ieee_id} has been renewed!")
+                return redirect('membership_development_team:request_details',pk,name)
+            #Now if the member is not registered in the database
+            except Members.DoesNotExist:
+                # just Update the renewal request table and notify team that member is not registered in the main database
+                Renewal_requests.objects.filter(name=name,session_id=pk).update(renewal_status=True)
+                messages.info(request,"Membership has been renewed!\nThis member with the associated email was not found in the INSB Registered Member Database!\nHowever, the system kept the Data of renewal!")
+                return redirect('membership_development_team:request_details',pk,name)
         if(request.POST.get('delete_button')):
             print("Delete button")
         if(request.POST.get('update_comment')):

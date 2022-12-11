@@ -176,9 +176,7 @@ def recruitee_details(request, nsu_id):
                     date_of_birth=getMember[0]['date_of_birth'],
                     gender=getMember[0]['gender'],
                     facebook_url=getMember[0]['facebook_url'],
-                    session=recruitment_session.objects.get(id=int(getMember[0]['session_id'])),
-                    renewal_time_stamp=(
-                        getMember[0]['recruitment_time'])+datetime.timedelta(days=365)
+                    session=recruitment_session.objects.get(id=int(getMember[0]['session_id']))
                 )
                 newMember.save()
                 messages.info(request, "Member Updated in INSB Database")

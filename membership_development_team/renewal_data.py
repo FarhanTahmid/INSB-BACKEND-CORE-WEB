@@ -5,4 +5,7 @@ def get_renewal_session_name(pk):
     return (session_name[0]['session_name'])
 def get_renewal_session_id(session_name):
     session_id=Renewal_Sessions.objects.filter(session_name=session_name).values('id')
-    return(session_id[0]['id'])
+    id=0
+    for i in range(len(session_id)):
+        id=session_id[i]['id']
+    return id

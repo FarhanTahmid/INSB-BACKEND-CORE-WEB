@@ -54,7 +54,9 @@
             <input type="submit" value="Renew Membership" name="renew_button"></input>
             <input type="submit" value="Delete Application" name="delete_button"></input>
         </form>
-        <br><br>
+        <br>
+        {% for messages in messages %}<p>{{ messages }}</p>{% endfor %}
+        <br>
 
         {% for details in details %}
         <form method="POST">
