@@ -13,6 +13,6 @@ urlpatterns = [
    path('membership_renewal/',views.membership_renewal,name="membership_renewal"),
    path('membership_renewal/session/<str:pk>',views.renewal_session_data,name="renewal_session_data"),
    path('renewal_form/<str:pk>',views.membership_renewal_form,name="renewal_form"),
-   path('renewal_request/<str:pk>/<str:name>',views.renewal_request_details,name="request_details"),
+   path('renewal_request/<str:pk>/<str:contact_no>',views.renewal_request_details,name="request_details"), #using contact no as url because its the only unique matter in renewal process as no ieee id could be used
    
 ]
