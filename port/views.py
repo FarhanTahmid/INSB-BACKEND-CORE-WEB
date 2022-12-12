@@ -4,4 +4,4 @@ import datetime
 
 # Create your views here.
 def homepage(request):
-    return render(request,'port/home.html')
+    return render(request,'port/landing_page.html')

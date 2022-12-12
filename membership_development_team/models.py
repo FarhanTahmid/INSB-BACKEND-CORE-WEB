@@ -31,7 +31,7 @@ class Renewal_requests(models.Model):
     ias_renewal_check=models.BooleanField(null=False,blank=False,default=False)
     wie_renewal_check=models.BooleanField(null=False,blank=False,default=False)
     
-    transaction_id=models.CharField(null=False,blank=False,max_length=50,default="Self")
+    transaction_id=models.CharField(null=True,blank=True,max_length=80)
     comment=models.CharField(null=True,blank=True,max_length=100) #the comment left by the applicant while applying
     
     renewal_status=models.BooleanField(null=False,blank=False,default=False)
@@ -40,5 +40,7 @@ class Renewal_requests(models.Model):
     official_comment=models.CharField(null=True,blank=True,max_length=150) #the comment that team member leaves while renewal time
     
     # Warning! Don't register This Table in Admin! Security Issue #
+    class Meta:
+        verbose_name="Renewal Requests"
     def __str__(self) -> str:
         return self.name

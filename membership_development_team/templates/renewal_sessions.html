@@ -37,7 +37,7 @@
                 <td>{{ request.name }}</td>
                 <td>{{ request.email_personal }}</td>
                 <td>{{ request.contact_no }}</td>
-                <td><a href="{% url 'membership_development_team:request_details' session_id request.name %}">View Details</a></td>
+                <td><a href="{% url 'membership_development_team:request_details' session_id request.contact_no %}">View Details</a></td>
             </tr>
         {% endfor %}
         </table>
