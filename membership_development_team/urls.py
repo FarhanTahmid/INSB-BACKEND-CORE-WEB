@@ -14,5 +14,5 @@ urlpatterns = [
    path('membership_renewal/session/<str:pk>',views.renewal_session_data,name="renewal_session_data"),
    path('renewal_form/<str:pk>',views.membership_renewal_form,name="renewal_form"),
    path('renewal_request/<str:pk>/<str:request_id>',views.renewal_request_details,name="request_details"), #using renewal request tables primary key 'id' as url because its the only unique matter in renewal process as no ieee id could be used
-   
+   path('export_excel_renewal_request/<str:session_id>',views.generateExcelSheet_renewal_requestList,name="export_excel_renewal_request"), #generate excel for renewal request
 ]

@@ -214,15 +214,67 @@ def renewal_request_details(request,pk,request_id):
                 return redirect('membership_development_team:request_details',pk,request_id)
             
     return render(request,"renewal_request_details.html",context=context)
-    
 
 @login_required
-def generateExcelSheet_membersList(request):
-    '''This method generates the excel files for different sessions'''
+def generateExcelSheet_renewal_requestList(request,session_id):
+    
+    '''This method generates excel sheets only for renewal recruitment details for particular sessions'''
+    session_name=renewal_data.get_renewal_session_name(pk=session_id)
+    date=datetime.datetime.now()
     response = HttpResponse(
         content_type='application/ms-excel')  # eclaring content type for the excel files
-    response['Content-Disposition'] = f'attachment; filename=Member List - ' +\
-        str(datetime.datetime.now()) + \
+    response['Content-Disposition'] = f'attachment; filename=Renewal Application - ' +\
+        session_name + ' - ' +\
+        str(date.strftime('%m/%d/%Y')) + \
+        '.xls'  # making files downloadable with name of session and timestamp
+    # adding encoding to the workbook
+    workBook = xlwt.Workbook(encoding='utf-8')
+    # opening an worksheet to work with the columns
+    workSheet = workBook.add_sheet(f'Application List')
+
+    # generating the first row
+    row_num = 0
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    # Defining columns that will stay in the first row
+    columns = ['Name', 'Associated Email','Contact No', 'IEEE Account Password', 'IEEE-Renewal', 'PES-Renewal', 'RAS-Renewal','IAS-Renewal','WIE-Renewal','Transaction ID','Any Comments?',
+               'Renewal Status','MDT Comment']
+
+    # Defining first column
+    for column in range(len(columns)):
+        workSheet.write(row_num, column, columns[column], font_style)
+
+    # reverting font style to default
+    font_style = xlwt.XFStyle()
+
+    # getting all the values of members as rows with same session
+    rows = Renewal_requests.objects.all().values_list('name',
+                                             'email_personal',
+                                             'contact_no',
+                                             'ieee_account_password',
+                                             'ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check',
+                                             'transaction_id',
+                                             'comment',
+                                             'renewal_status',
+                                             'official_comment')
+    for row in rows:
+        row_num += 1
+        for col_num in range(len(row)):
+            workSheet.write(row_num, col_num, str(row[col_num]), font_style)
+    workBook.save(response)
+    return (response)
+    
+    
+    
+@login_required
+def generateExcelSheet_membersList(request):
+    '''This method generates the excel files for The Registered INSB members for MDT'''
+    date=datetime.datetime.now()
+    response = HttpResponse(
+        content_type='application/ms-excel')  # eclaring content type for the excel files
+    response['Content-Disposition'] = f'attachment; filename=Registered Member List - ' +\
+        str(date.strftime('%m/%d/%Y')) + \
         '.xls'  # making files downloadable with name of session and timestamp
     # adding encoding to the workbook
     workBook = xlwt.Workbook(encoding='utf-8')
