@@ -127,7 +127,7 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="#">Profile</a></li>
                                 <li><a class="dropdown-item" href="#">Settings</a></li>
-                                <li><a class="dropdown-item" href="#">Logout</a></li>
+                                <li><a class="dropdown-item" href="{% url 'users:logoutUser' %}">Logout</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -169,7 +169,7 @@
                                         <p class="fs-7">Date:24.12.2021</p>
                                        
                                     </div>
-                                   <img class="img-fluid w-100 mb-4" src="http://insbapp.pythonanywhere.com/static/317071519_2341969599303534_667144018837746752_n.jpg" alt="profile pic" width="150px" height="150px">
+                                   <img class="img-fluid w-100 mb-4" src="{% static 'spac_banner.jpg' %}" alt="profile pic" width="150px" height="150px">
                                 </a>
                                   
                                 </div>
@@ -182,7 +182,7 @@
                                         <p class="fs-7">Date:24.12.2021</p>
                                        
                                     </div>
-                                   <img class="img-fluid w-100 mb-4" src="http://insbapp.pythonanywhere.com/static/317071519_2341969599303534_667144018837746752_n.jpg" alt="profile pic" width="150px" height="150px">
+                                   <img class="img-fluid w-100 mb-4" src="{% static 'spac_banner.jpg' %}" alt="profile pic" width="150px" height="150px">
                                 </a>
                                   
                                 </div>
@@ -193,15 +193,11 @@
                                         <h3 class="fs-2">SPAC 2022</h3>
                                         <p class="fs-5">IEEE NSU Student Branch - INSB - North South University</p>
                                         <p class="fs-7">Date:24.12.2021</p>
-                                       
+               
                                     </div>
-                                   <img class="img-fluid w-100 mb-4" src="http://insbapp.pythonanywhere.com/static/317071519_2341969599303534_667144018837746752_n.jpg" alt="profile pic" width="150px" height="150px">
+                                   <img class="img-fluid w-100 mb-4" src="{% static 'spac_banner.jpg' %}" alt="profile pic" width="150px" height="150px">
                                 </a>
-                                  
                                 </div>
-
-
-
                             </div>
                         </div>
                     </div>
@@ -209,6 +205,7 @@
             </div>
        </div>
    
+       {% comment %} FOOTER {% endcomment %}
 
         <footer class="bg-dark text-white mt-5">
             <div class="container-fluid py-4">

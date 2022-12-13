@@ -2,7 +2,7 @@
 {% load static %}
 <html lang="en">
   <head>
-    <title>Login</title>
+    <title>Signup</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -18,7 +18,7 @@
             <img src="{% static 'INSB.png' %}" alt="logo">
         </div>
         <div class="Form d-grid p-3">
-              <form method="POST" action='login'>
+              <form method="POST" action='signup'>
                 {% csrf_token %}
                 <div class="d-grid pt-3">
                     <input type="text" placeholder="Enter IEEE ID" autocomplete="off" class="Form-cont form-control border usernameInp my-1 p-3" Required name='ieee_id'>
@@ -38,9 +38,9 @@
                 </div>
                    <br>
                 {% for message in messages %}
-                  <p class="message">{{message}}</p>
+                  <p class="message" style="color:#941910; text-align: center;">{{message}}</p>
                 {% endfor %}
-                <span class="login_text">Already signed up?</span><a href="{% url 'users:login' %}">Login?</a>
+                <span class="login_text" style="margin-left: 42px;">Already signed up?</span><span class="login_text"><a href="{% url 'users:login' %}">Login?</a></span>
                 <br>
               </form>
         </div>

@@ -34,6 +34,7 @@ LOGIN_URL='/users/login'
 # Application definition
 
 INSTALLED_APPS = [
+    'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'port',
-    'users',
+    
     'recruitment',
     'api',
     'membership_development_team',
@@ -158,6 +159,7 @@ MEDIA_URL= "/files/"
 
 #to do user login required
 LOGIN_REDIRECT_URL='users:dashboard'
+LOGOUT_REDIRECT_URL='users:logoutUser'
 LOGIN_URL='users:login'
 django_heroku.settings(locals())
 
