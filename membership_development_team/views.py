@@ -143,32 +143,36 @@ def renewal_request_details(request,pk,request_id):
     
     renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('name','email_personal','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
     renewal_email=""
+    has_comment=False
     for i in range(len(renewal_request_details)):
         renewal_email=renewal_request_details[i]['email_personal']
-    
+        if(renewal_request_details[i]['official_comment'] is not None):
+            has_comment=True
     #changing the viewing status
     Renewal_requests.objects.filter(id=request_id).update(view_status=True)
     
     context={
         'id':request_id,
         'details':renewal_request_details,
+        'has_comment':has_comment,
+        'pk':pk
     }
     if request.method=="POST":
+        if (request.POST.get('go_back')):
+            return redirect('membership_development_team:renewal_session_data',pk)
         if(request.POST.get('renew_button')):
             try:
                 #First check if the member is registered in the database or not, search with ASSOCIATED EMAIL (email_personal) and get ieee id with it
-                member=Members.objects.filter(email_personal=renewal_email).values('ieee_id')
-                ieee_id=0
-                for i in range(len(member)):
-                    ieee_id=member[i]['ieee_id'] #Get ieee_id
+                member=Members.objects.get(email_personal=renewal_email)
+                ieee_id=member.ieee_id #getting the ieee id
                     
                 #update data in main registered Members database
                 Members.objects.filter(ieee_id=ieee_id).update(last_renewal=datetime.datetime.now())
                 
-                #Update in renewal requests database.
+                # #Update in renewal requests database.
                 Renewal_requests.objects.filter(id=request_id).update(renewal_status=True)
                 
-                #show success message
+                # #show success message
                 messages.info(request,f"Membership with IEEE ID {ieee_id} has been renewed!")
                 return redirect('membership_development_team:request_details',pk,request_id)
             
@@ -179,7 +183,7 @@ def renewal_request_details(request,pk,request_id):
                 Renewal_requests.objects.filter(id=request_id,session_id=pk).update(renewal_status=True)
                 
                 #show message
-                messages.info(request,"Membership has been renewed!\nThis member with the associated email was not found in the INSB Registered Member Database!\nHowever, the system kept the Data of renewal!")
+                messages.info(request,f"Membership has been renewed!\nThis member with the associated E-mail: {renewal_email} was not found in the INSB Registered Member Database!\nHowever, the system kept the Data of renewal!")
                 
         
         #TO DELETE AN APPLICATION
@@ -200,22 +204,9 @@ def renewal_request_details(request,pk,request_id):
             updated_comment=request.POST['official_comment']
             
             try:
-                #getting existing comment if there is any
-                getPreviousComment=Renewal_requests.objects.filter(id=request_id,session_id=pk).values('official_comment')
-                previousComment=""
-                for i in range(len(getPreviousComment)):
-                    previousComment=getPreviousComment[i]['official_comment'] #getting previous comment from database
-                
-                hasComment=True #boolean variable to check if is there a comment or not
-                none=type(previousComment)
-                #check if previous comment is none type
-                if(none is None):
-                    hasComment=False
-                print(type(previousComment))
-                print(hasComment)
                 
                 #Updating new comment with previous comment
-                Renewal_requests.objects.filter(id=request_id,session_id=pk).update(official_comment=str(previousComment)+" "+updated_comment)
+                Renewal_requests.objects.filter(id=request_id,session_id=pk).update(official_comment=updated_comment)
                 messages.info(request,"Comment Updated!")
                 return redirect('membership_development_team:request_details',pk,request_id)
             except Renewal_requests.DoesNotExist:
@@ -226,7 +217,7 @@ def renewal_request_details(request,pk,request_id):
     
 
 @login_required
-def generateExcelSheet(request):
+def generateExcelSheet_membersList(request):
     '''This method generates the excel files for different sessions'''
     response = HttpResponse(
         content_type='application/ms-excel')  # eclaring content type for the excel files

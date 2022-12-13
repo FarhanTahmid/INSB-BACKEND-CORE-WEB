@@ -31,7 +31,7 @@ class Members(models.Model):
         verbose_name='INSB Registered Members'
     
     def __str__(self) -> str:
-        return self.name
+        return str(self.ieee_id)
     def get_absolute_url(self):
         return reverse('registered member',kwargs={'member_id':self.iee_id})
 
