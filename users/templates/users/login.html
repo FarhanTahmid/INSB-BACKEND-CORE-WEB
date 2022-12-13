@@ -35,11 +35,11 @@
                 </div>
                    <br>
                 {% for message in messages %}
-                   <p class="message">{{message}}</p>
+                   <p class="message" style="color:#941910; text-align: center;">{{message}}</p>
                  {% endfor %}
-                <span>Don't have an account?</span><a href="{% url 'users:signup' %}">Signup</a>
+                 <span class="login_text" style="margin-left: 42px;">Didn't Signup yet? </span><span class="login_text"><a href="{% url 'users:signup' %}">Signup</a></span>
                 <br>
-                <a href="#">Forgot Password?</a>
+                <a href="#" style="margin-left: 55px;" >Forgot Password?</a>
                 <br>
                 
                 

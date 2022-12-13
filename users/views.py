@@ -8,7 +8,8 @@ from django.db.utils import IntegrityError
 from recruitment.models import recruited_members
 from . models import Members
 import csv,datetime
-from users.ActiveUser import ActiveUser
+from django.db import DatabaseError
+from . import renderData
 
 # Create your views here.
 def login(request):
@@ -84,11 +85,20 @@ def dashboard(request):
     '''This function loads all the dashboard activities for the program'''
     
     #### LOOK into registerUser.py for manual input of data from csv. Templates are created there.
-        
-            
-    return render(request,"users/dashboard.html") 
+
+    #Loading current user data from renderData.py
+    current_user=renderData.LoggedinUser(request.user)
+    user_data=current_user.getUserData() #getting user data as dictionary
+    if(user_data==False):
+        return DatabaseError
+    context={
+        'user_data':user_data
+    }
+
+    
+    return render(request,"users/dashboard.html",context=context) 
 
 
 def logoutUser(request):
     auth.logout(request)
-    return redirect('/') 
+    return redirect('/users/login') 
