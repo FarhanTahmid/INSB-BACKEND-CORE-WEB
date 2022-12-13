@@ -21,28 +21,27 @@
               <form method="POST" action='login'>
                 {% csrf_token %}
                 <div class="d-grid pt-3">
-                    <input type="text" placeholder="Username" class="Form-cont form-control border usernameInp my-1 p-3" Required name='username'>
+                    <input type="text" placeholder="Enter IEEE ID" autocomplete="off" class="Form-cont form-control border usernameInp my-1 p-3" Required name='ieee_id'>
                 </div>
 
                 <div class="d-grid pt-3">
-                    <input type="Password" placeholder="********" class="Form-cont form-control border passwordInp my-1 p-3" Required name='password'>
+                    <input type="Password" placeholder="Enter Password" autocomplete="off" class="Form-cont form-control border passwordInp my-1 p-3" Required name='password'>
+                </div>
+                <div class="d-grid pt-3">
+                    <input type="Password" placeholder="Confirm Password" autocomplete="off" class="Form-cont form-control border passwordInp my-1 p-3" Required name='confirm_password'>
                 </div>
 
                 <div class="d-grid pt-3">
                    <button type="submit" class="log-btn btn-outline-dark" onclick='users:login'>
-                        Login
+                        Signup
                    </button>
                 </div>
                    <br>
                 {% for message in messages %}
-                   <p class="message">{{message}}</p>
-                 {% endfor %}
-                <span>Don't have an account?</span><a href="{% url 'users:signup' %}">Signup</a>
+                  <p class="message">{{message}}</p>
+                {% endfor %}
+                <span class="login_text">Already signed up?</span><a href="{% url 'users:login' %}">Login?</a>
                 <br>
-                <a href="#">Forgot Password?</a>
-                <br>
-                
-                
               </form>
         </div>
     </section>

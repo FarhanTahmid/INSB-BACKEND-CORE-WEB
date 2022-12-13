@@ -29,6 +29,9 @@ def login(request):
             return redirect('users:login')     
     else:
         return render(request,'users/login.html')
+def signup(request):
+    '''Signs up user. only limited to IEEENSUSB Member. Checks if the member is registered in the main database'''
+    return render(request,'users/signup.html')
 @login_required
 def dashboard(request):
     if request.method=='POST':
