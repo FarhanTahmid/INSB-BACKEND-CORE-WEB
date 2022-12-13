@@ -17,7 +17,9 @@
         <p>Applications Not viewed Yet: {{ notification_count }}</P>
         <p>Total Pending Applications: {{ pending_count }}</p>
         <p>Total Renewed Applications: {{ renewed_count }}</p>
+        <a href="{% url "membership_development_team:export_excel_renewal_request" session_id %}">Generate Excel Sheet Of this Session</a>
         {% comment %} Search Functionality {% endcomment %}
+        <br><br>
         <label>Search: </label>
         <input type="text" onkeyup="searchfunction()" id="search" placeholder="Search with any credentials">
         <br>
@@ -37,7 +39,7 @@
                 <td>{{ request.name }}</td>
                 <td>{{ request.email_personal }}</td>
                 <td>{{ request.contact_no }}</td>
-                <td><a href="{% url 'membership_development_team:request_details' session_id request.contact_no %}">View Details</a></td>
+                <td><a href="{% url 'membership_development_team:request_details' session_id request.id %}">View Details</a></td>
             </tr>
         {% endfor %}
         </table>

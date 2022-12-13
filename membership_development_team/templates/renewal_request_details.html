@@ -11,7 +11,10 @@
     </head>
     <body>
         <h1>Details for renewal request for {{ name }}</h1>
-
+        <form method="POST">
+            {% csrf_token %}
+            <input type="submit" name="go_back" value="Go back to Application Lists"></input>
+        </form>
         <table id="renewal_request_table">
             <thead>
                 <tr id="table_row">
@@ -62,7 +65,11 @@
         <form method="POST">
             {% csrf_token %}
             <label> Comments</label><br>
-            <input name="official_comment" type="text" placeholder="Leave a comment if you want with in 150 words" value={{ details.official_comment }}></input><br>
+            {% if has_comment %}
+            <input name="official_comment" type="text" placeholder="Leave a comment if you want with in 150 words" value="{{ details.official_comment }}"></input><br>
+            {% else %}
+            <input name="official_comment" type="text" placeholder="Leave a comment if you want with in 150 words"></input><br>
+            {% endif %}
             <input type="submit" value="Update Comment" name="update_comment"></input>
         </form>
         {% endfor %}

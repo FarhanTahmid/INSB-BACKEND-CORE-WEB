@@ -257,10 +257,11 @@ def recruit_member(request, session_name):
 @login_required
 def generateExcelSheet(request, session_name):
     '''This method generates the excel files for different sessions'''
+    date=datetime.datetime.now()
     response = HttpResponse(
         content_type='application/ms-excel')  # eclaring content type for the excel files
     response['Content-Disposition'] = f'attachment; filename=Recruitment Session - {session_name}---' +\
-        str(datetime.datetime.now()) + \
+        str(date.strftime('%m/%d/%Y')) + \
         '.xls'  # making files downloadable with name of session and timestamp
     # adding encoding to the workbook
     workBook = xlwt.Workbook(encoding='utf-8')
