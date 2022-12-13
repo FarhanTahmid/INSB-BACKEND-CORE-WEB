@@ -116,7 +116,7 @@ def renewal_session_data(request,pk):
     renewal_data.get_renewal_session_name(pk)
     session_name=renewal_data.get_renewal_session_name(pk)
     session_id=renewal_data.get_renewal_session_id(session_name=session_name)
-    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('name','email_personal','contact_no',)
+    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_personal','contact_no',)
     #loading all the unviewed request count
     notification_count=Renewal_requests.objects.filter(session_id=session_id,view_status=False).count()
     #counting the renewed requests
@@ -138,19 +138,19 @@ def renewal_session_data(request,pk):
     return render(request,'renewal_sessions.html',context)
 
 @login_required
-def renewal_request_details(request,pk,contact_no):
+def renewal_request_details(request,pk,request_id):
     '''This function loads the datas for particular renewal requests'''
     
-    renewal_request_details=Renewal_requests.objects.filter(contact_no=contact_no).values('name','email_personal','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
+    renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('name','email_personal','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
     renewal_email=""
     for i in range(len(renewal_request_details)):
         renewal_email=renewal_request_details[i]['email_personal']
     
-    #changing the notification status
-    Renewal_requests.objects.filter(contact_no=contact_no).update(view_status=True)
+    #changing the viewing status
+    Renewal_requests.objects.filter(id=request_id).update(view_status=True)
     
     context={
-        'contact_no':contact_no,
+        'id':request_id,
         'details':renewal_request_details,
     }
     if request.method=="POST":
@@ -166,50 +166,61 @@ def renewal_request_details(request,pk,contact_no):
                 Members.objects.filter(ieee_id=ieee_id).update(last_renewal=datetime.datetime.now())
                 
                 #Update in renewal requests database.
-                Renewal_requests.objects.filter(contact_no=contact_no,session_id=pk).update(renewal_status=True)
+                Renewal_requests.objects.filter(id=request_id).update(renewal_status=True)
                 
                 #show success message
                 messages.info(request,f"Membership with IEEE ID {ieee_id} has been renewed!")
-                return redirect('membership_development_team:request_details',pk,contact_no)
+                return redirect('membership_development_team:request_details',pk,request_id)
             
             #Now if the member is not registered in the database
             except Members.DoesNotExist:
                 
                 # just Update the renewal request table and notify team that member is not registered in the main database
-                Renewal_requests.objects.filter(contact_no=contact_no,session_id=pk).update(renewal_status=True)
+                Renewal_requests.objects.filter(id=request_id,session_id=pk).update(renewal_status=True)
                 
                 #show message
                 messages.info(request,"Membership has been renewed!\nThis member with the associated email was not found in the INSB Registered Member Database!\nHowever, the system kept the Data of renewal!")
                 
         
-        if(request.POST.get('delete_button')):
+        #TO DELETE AN APPLICATION
+        if(request.POST.get('delete_button')): 
             
             #getting member
             try:
                 #getting member and deleting
-                Renewal_requests.objects.get(contact_no,session_id=pk).delete()
-                return redirect('membership_development_team:',pk)
+                Renewal_requests.objects.get(id=request_id,session_id=pk).delete()
+                return redirect('membership_development_team:renewal_session_data',pk)
             except Renewal_requests.DoesNotExist:
                 messages.info(request,"Member could not be found!")
-            # except:
-            #     messages.info(request,"Something went Wrong!")
+            except:
+                messages.info(request,"Something went Wrong!")
             
+        #TO UPDATE AN APPLICATIONS COMMENT BY MD TEAM
         if(request.POST.get('update_comment')):
             updated_comment=request.POST['official_comment']
+            
             try:
                 #getting existing comment if there is any
-                getPreviousComment=Renewal_requests.objects.get(contact_no,session_id=pk).values('official_comment')
+                getPreviousComment=Renewal_requests.objects.filter(id=request_id,session_id=pk).values('official_comment')
                 previousComment=""
-                for i in len(getPreviousComment):
+                for i in range(len(getPreviousComment)):
                     previousComment=getPreviousComment[i]['official_comment'] #getting previous comment from database
                 
+                hasComment=True #boolean variable to check if is there a comment or not
+                none=type(previousComment)
+                #check if previous comment is none type
+                if(none is None):
+                    hasComment=False
+                print(type(previousComment))
+                print(hasComment)
+                
                 #Updating new comment with previous comment
-                Renewal_requests.objects.filter(contact_no=contact_no,session_id=pk).update(official_comment=previousComment+" "+updated_comment)
+                Renewal_requests.objects.filter(id=request_id,session_id=pk).update(official_comment=str(previousComment)+" "+updated_comment)
                 messages.info(request,"Comment Updated!")
-                return redirect(reverse('membership_development_team:request_details',pk,contact_no))
+                return redirect('membership_development_team:request_details',pk,request_id)
             except Renewal_requests.DoesNotExist:
                 messages.info(request,"Something Went Wrong! Please refresh the page and try again")
-                return redirect(reverse('membership_development_team:request_details',pk,contact_no))
+                return redirect('membership_development_team:request_details',pk,request_id)
             
     return render(request,"renewal_request_details.html",context=context)
     
