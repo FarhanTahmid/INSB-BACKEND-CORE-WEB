@@ -18,5 +18,5 @@ urlpatterns = [
     #dashboard
     path('dashboard',views.dashboard,name='dashboard'),
     #logoutUser
-    path('logout/',views.logout,name='logoutUser'),
+    path('logout/',views.logoutUser,name='logoutUser'),
 ]
