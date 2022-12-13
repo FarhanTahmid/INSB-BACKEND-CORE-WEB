@@ -39,7 +39,9 @@ body{
 }
 
 
-
+.container .login_text{
+    align-items: center;
+}
 .container{
     margin: 60px 0px;
     padding: 20px; 
