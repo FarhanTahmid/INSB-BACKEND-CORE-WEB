@@ -1,4 +1,5 @@
 from users.models import Members
+from system_administration.models import adminUsers
 from port.models import Roles_and_Position,Teams
 class LoggedinUser:
     
@@ -9,10 +10,7 @@ class LoggedinUser:
         ieee_id=self.user.username
         try:
             get_Member_details=Members.objects.get(ieee_id=ieee_id)
-            
-        except Members.DoesNotExist:
-            return False
-        return {
+            return {
             'name':get_Member_details.name,
             'position':get_Member_details.position,
             'team':get_Member_details.team,
@@ -20,3 +18,21 @@ class LoggedinUser:
             'email':get_Member_details.email_ieee,
             'nsu_id':get_Member_details.nsu_id,
         }
+        except Members.DoesNotExist:
+            try:
+                get_Member_details=adminUsers.objects.get(username=self.user.username)
+                return {
+                'name':get_Member_details.name,
+                'email':get_Member_details.email,
+                }
+            except adminUsers.DoesNotExist:
+                return False
+        except ValueError:
+            try:
+                get_Member_details=adminUsers.objects.get(username=self.user.username)
+                return {
+                'name':get_Member_details.name,
+                'email':get_Member_details.email,
+                }
+            except adminUsers.DoesNotExist:
+                return False

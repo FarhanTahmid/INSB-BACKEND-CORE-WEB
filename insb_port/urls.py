@@ -26,5 +26,7 @@ urlpatterns = [
     path('',include('port.urls',namespace='port')),
     path('insb_central/',include('insb_central.urls',namespace='insb_central')),
     path('membership_development_team/',include('membership_development_team.urls',namespace='membership_development_team')),
+    path('system_administration',include('system_administration.urls',namespace='system_administration')),
+    
 ]
 urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'port',
-    
+    'system_administration',
     'recruitment',
     'api',
     'membership_development_team',
