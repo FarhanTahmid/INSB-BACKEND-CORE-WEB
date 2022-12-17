@@ -1,6 +1,6 @@
 asgiref==3.5.2
 dj-database-url==1.2.0
-Django==4.1.4
+Django==3.2.16
 django-heroku==0.3.1
 djangorestframework==3.14.0
 Pillow==9.3.0
