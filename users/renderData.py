@@ -20,7 +20,7 @@ class LoggedinUser:
         }
         except Members.DoesNotExist:
             try:
-                get_Member_details=adminUsers.objects.get(username=self.user.username)
+                get_Member_details=adminUsers.objects.get(username=self.user.username) #getting data of the admin from database table. the admin must be in the database table.
                 return {
                 'name':get_Member_details.name,
                 'email':get_Member_details.email,
