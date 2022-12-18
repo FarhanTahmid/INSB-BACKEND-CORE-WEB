@@ -2,7 +2,7 @@ import imp
 from django.urls import path,include
 from . import views
 
-app_name='users'
+app_name='membership_development_team'
 
 ##defining the urls to work with
 
