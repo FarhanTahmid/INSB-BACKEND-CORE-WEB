@@ -35,7 +35,7 @@
     {% comment %} This block is responsible for loading all the members recruited on that session and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
     {% for member in members %}
         <tr>
-            <td><a href=""></a>{{ member.ieee_id }}</td>
+            <td><a href="{% url 'membership_development_team:member_details' member.ieee_id %}">{{ member.ieee_id }}</a></td>
             <td>{{ member.nsu_id }}</td>
             <td>{{ member.name }}</td>
             <td>{{ member.email_ieee }}</td>

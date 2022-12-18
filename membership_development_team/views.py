@@ -7,6 +7,7 @@ from django.db import connections
 from django.contrib.auth.decorators import login_required
 from . models import Renewal_Sessions,Renewal_requests
 from . import renewal_data
+from . import renderData
 from django.http import HttpResponse,HttpResponseBadRequest,HttpResponseServerError
 import datetime
 import xlwt
@@ -26,6 +27,18 @@ def members_list(request):
     context={'members':members,'totalNumber':totalNumber}
           
     return render(request,'insb_member_list.html',context=context)
+
+@login_required
+def member_details(request,ieee_id):
+    '''This function loads an editable member details view for particular IEEE ID'''
+    
+    member_data=renderData.MDT_DATA.get_member_data(ieee_id=ieee_id)
+    context={
+        'member_data':member_data,
+    }
+    
+    
+    return render(request,'member_details.html',context=context)
 
 @login_required
 def membership_renewal(request):
