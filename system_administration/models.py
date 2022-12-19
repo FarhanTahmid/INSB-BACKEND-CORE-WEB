@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from port.models import Teams
+from users.models import Members
 
 # Create your models here.
 
@@ -16,4 +18,20 @@ class adminUsers(models.Model):
     def get_absolute_url(self):
         return reverse("admin_users", kwargs={"userid": self.userid})
         
+class Access_Criterias(models.Model):
+    criteria_name=models.CharField(null=False,blank=False,max_length=30,default="all")
+
+    class Meta:
+        verbose_name="Data Access Criteria"
+    def __str__(self) -> str:
+        return str(self.criteria_name)
     
+class Team_Data_Access(models.Model):
+    team=models.ForeignKey(Teams,null=False,blank=False,on_delete=models.CASCADE,verbose_name="Team")
+    ieee_id=models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE,verbose_name="IEEE ID")
+    criteria=models.ForeignKey(Access_Criterias,null=True,blank=True,on_delete=models.CASCADE,verbose_name="Accepted Permission Criteria")
+    has_permission=models.BooleanField(null=False,blank=False,default=False,verbose_name="Permission Status")
+    class Meta:
+        verbose_name="Team Data Access"
+    def __str__(self) -> str:
+        return str(self.ieee_id)
