@@ -328,3 +328,8 @@ def generateExcelSheet_membersList(request):
             workSheet.write(row_num, col_num, str(row[col_num]), font_style)
     workBook.save(response)
     return (response)
+
+
+@login_required
+def data_access(request):
+    return render(request,'data_access.html')
