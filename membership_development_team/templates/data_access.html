@@ -90,12 +90,42 @@
             </div>
           </div>
         </div>
-      </nav>
+    </nav>
     
-      <div class="text">
+    <div class="text">
         <h2 class="data_access_text">Control The Data View and Access For Membership Development Team</h2>
     <div>
-                       <!-- section for data access table -->
+    <div class="table">
+        <table id="permission_table">
+            <thead>
+                <tr class="table_row" id="table_row">
+                    <th>IEEE ID</th>
+                    <th>Name</th>
+                    <th>Current Position</th>
+                    <th>Granted Permissions</th>
+                </tr>
+            </thead>
+            {% for team_members in team_members  %}
+            <tr>
+                <td>{{team_members.ieee_id}}</td>
+                <td>{{team_members.name}}</td>
+                <td>{{team_members.position}}</td>
+                {% for permission in permission_criterias %}
+                <td>
+                    <input type="checkbox" name="permission_checkbox" value={{permission.id}} />{{permission.criteria_name}} 
+                    
+                </td>
+                
+                    
+                {% endfor %}
+                
+            </tr>
+            {% endfor %}
+            
+        </table>
+    </div>
+        
+
    
 
         <!-- <footer class="bg-dark text-white mt-5">
@@ -144,7 +174,7 @@
 
 
 
-
+    
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
 
