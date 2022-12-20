@@ -1,0 +1,41 @@
+
+h2 {
+    text-align: center;
+    padding: 20px 0;
+    color: white;
+  }
+  
+  .table-bordered {
+    margin: auto;
+    padding: 50%;
+    border: 1px solid #ddd !important;
+  }
+  th{
+    align-items: center;
+    color: white;
+}
+td{
+    color: white;
+    text-align: center;
+    padding: auto;
+  }
+  table caption {
+      padding: .5em 0;
+  }
+  .button{
+    background-color: #FFC936;
+    border-radius: 7px;
+  }
+ 
+  @media screen and (max-width: 767px) {
+    table caption {
+      display: none;
+    }
+  }
+  
+  .p {
+    text-align: center;
+    padding-top: 140px;
+    font-size: 14px;
+  }
+  
