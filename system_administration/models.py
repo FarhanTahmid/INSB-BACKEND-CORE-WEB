@@ -19,6 +19,7 @@ class adminUsers(models.Model):
         return reverse("admin_users", kwargs={"userid": self.userid})
         
 class Access_Criterias(models.Model):
+    team=models.ForeignKey(Teams,null=False,blank=False,on_delete=models.CASCADE,default=13)
     criteria_name=models.CharField(null=False,blank=False,max_length=30,default="all")
 
     class Meta:

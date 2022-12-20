@@ -1,4 +1,6 @@
 from users.models import Members
+from port.models import Teams
+from system_administration.models import Access_Criterias
 
 class MDT_DATA:
     
@@ -20,4 +22,21 @@ class MDT_DATA:
             'session':member_data.session,
             'last_renewal':member_data.last_renewal,        
         }
+    def get_team_id():
+        team=Teams.objects.get(team_name="Membership Development")
+        return team.id
     
+    def load_team_members():
+        
+        load_team_members=Members.objects.filter(team=MDT_DATA.get_team_id()).order_by('position')
+        team_members=[]
+        for i in range(len(load_team_members)):
+            team_members.append(load_team_members[i])
+        return team_members
+    def load_team_permissions():
+        load_permissions_mdt=Access_Criterias.objects.filter(team=MDT_DATA.get_team_id())
+        permission_criterias=[]
+        for i in range(len(load_permissions_mdt)):
+            permission_criterias.append(load_permissions_mdt[i])
+
+        return permission_criterias        

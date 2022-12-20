@@ -6,7 +6,7 @@ class Admin(admin.ModelAdmin):
     list_display=['username','name','email']
 @admin.register(Access_Criterias)
 class Access_Criteria(admin.ModelAdmin):
-    list_display=['id','criteria_name']
+    list_display=['id','criteria_name','team']
 @admin.register(Team_Data_Access)
 class Access_Criteria(admin.ModelAdmin):
     list_display=['ieee_id','team','criteria','has_permission']
