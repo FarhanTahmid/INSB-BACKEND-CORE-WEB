@@ -333,8 +333,11 @@ def generateExcelSheet_membersList(request):
 @login_required
 def data_access(request):
     
+    
+    
+    
     context={
         'team_members': renderData.MDT_DATA.load_team_members(),
         'permission_criterias':renderData.MDT_DATA.load_team_permissions()
     }
-    return render(request,'data_access.html',context=context)
+    return render(request,'data_access_table.html',context=context)
