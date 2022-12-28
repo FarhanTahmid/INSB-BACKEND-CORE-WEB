@@ -1,6 +1,6 @@
 from users.models import Members
 from port.models import Teams
-from system_administration.models import Access_Criterias
+from system_administration.models import Access_Criterias,Team_Data_Access
 
 class MDT_DATA:
     
@@ -39,4 +39,40 @@ class MDT_DATA:
         for i in range(len(load_permissions_mdt)):
             permission_criterias.append(load_permissions_mdt[i])
 
-        return permission_criterias        
+        return permission_criterias
+    
+    
+    def get_team_access_data():
+        load_data=Access_Criterias.objects.filter(team=Teams.objects.get(id=MDT_DATA.get_team_id()))
+        data=[]
+        for i in range(len(load_data)):
+            data.append(load_data[i].id)
+        return data                
+    
+    def get_member_access_data(ieee_id):
+        load_data=Team_Data_Access.objects.filter(ieee_id=ieee_id,team=Teams.objects.get(id=MDT_DATA.get_team_id()))
+        data=[]
+        for i in range(len(load_data)):
+            data.append(load_data[i])
+        return data
+    
+    
+    def mdt_access_modifications(requested_permission_list,ieee_id):
+        team_data_access=MDT_DATA.get_team_access_data()
+        
+        for team_access in team_data_access:
+            for access_request in requested_permission_list:
+                #print(f"Team access: {team_access} and Requested Access {access_request}")
+                if(team_access==access_request):
+                    try:
+                        Team_Data_Access.objects.get(criteria=Access_Criterias.objects.get(id=access_request),ieee_id=Members.objects.get(ieee_id=ieee_id),team=Teams.objects.get(id=MDT_DATA.get_team_id()))
+                        Team_Data_Access.objects.filter(criteria=Access_Criterias.objects.get(id=access_request),ieee_id=Members.objects.get(ieee_id=ieee_id),team=Teams.objects.get(id=MDT_DATA.get_team_id())).update(has_permission=True)
+                    except Team_Data_Access.DoesNotExist:
+                        Team_Data_Access.objects.create(ieee_id=Members.objects.get(ieee_id=ieee_id),team=Teams.objects.get(id=MDT_DATA.get_team_id()),criteria=Access_Criterias.objects.get(id=access_request),has_permission=True)
+                else:
+                    try:
+                        Team_Data_Access.objects.get(criteria=Access_Criterias.objects.get(id=access_request),ieee_id=Members.objects.get(ieee_id=ieee_id),team=Teams.objects.get(id=MDT_DATA.get_team_id()))
+                        Team_Data_Access.objects.filter(criteria=Access_Criterias.objects.get(id=access_request),ieee_id=Members.objects.get(ieee_id=ieee_id),team=Teams.objects.get(id=MDT_DATA.get_team_id())).update(has_permission=False)
+                    except Team_Data_Access.DoesNotExist:
+                        Team_Data_Access.objects.create(ieee_id=Members.objects.get(ieee_id=ieee_id),team=Teams.objects.get(id=MDT_DATA.get_team_id()),criteria=Access_Criterias.objects.get(id=access_request),has_permission=False)
+        
