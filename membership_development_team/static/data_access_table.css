@@ -10,8 +10,8 @@ h2 {
     padding: 50%;
     border: 1px solid #ddd !important;
   }
-  th{
-    align-items: center;
+th{
+    text-align: center;
     color: white;
 }
 td{

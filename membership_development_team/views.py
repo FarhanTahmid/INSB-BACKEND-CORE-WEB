@@ -1,7 +1,8 @@
 from django.shortcuts import render,redirect
 from django.db import DatabaseError, IntegrityError, InternalError
 from users.models import Members
-from port.models import Roles_and_Position
+from port.models import Teams
+from system_administration.models import Access_Criterias,Team_Data_Access
 from recruitment import renderData
 from django.db import connections
 from django.contrib.auth.decorators import login_required
@@ -336,6 +337,42 @@ def data_access(request):
     
     
     
+    if request.method=="POST":
+        
+        checked_permission=request.POST.getlist('permission_criteria')
+        ieee_id=request.POST['ieee_id']
+        
+        new_permission_list=[]
+        for i in range(len(checked_permission)):
+            
+            permission=Access_Criterias.objects.get(id=int(checked_permission[i]))
+            new_permission_list.append(permission.id)
+        
+        renderData.MDT_DATA.mdt_access_modifications(new_permission_list,ieee_id)
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            # print(f"Team Name: {permission.team} Permission Criteria: {permission.criteria_name}")
+            # for j in range(len(team_data_access)):
+            #     print(team_data_access[j].criteria)
+            #     print(permission.criteria_name)
+            #     if(team_data_access[j].criteria==permission.criteria_name):
+            #         print("need to update only")
+                
+            # try:
+            #     Team_Data_Access.objects.filter(ieee_id=ieee_id,criteria=Access_Criterias.objects.get(id=permission.pk),team=Teams.objects.get(id=renderData.MDT_DATA.get_team_id())).update()
+            # except:
+            #     Team_Data_Access.objects.create(team=Teams.objects.get(id=renderData.MDT_DATA.get_team_id()),ieee_id=Members.objects.get(ieee_id=ieee_id),criteria=Access_Criterias.objects.get(id=permission.pk),has_permission=True)            
+
     context={
         'team_members': renderData.MDT_DATA.load_team_members(),
         'permission_criterias':renderData.MDT_DATA.load_team_permissions()
