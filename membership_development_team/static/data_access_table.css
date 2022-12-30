@@ -5,7 +5,7 @@ h2 {
     color: white;
   }
   
-  .table-bordered {
+.table-bordered {
     margin: auto;
     padding: 50%;
     border: 1px solid #ddd !important;

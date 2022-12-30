@@ -9,8 +9,11 @@ from insb_port import settings
 from port.models import Teams,Roles_and_Position
 from recruitment.models import recruitment_session
 # Create your models here.
-class Members(models.Model):
 
+class Members(models.Model):
+    
+    '''This is the main registered members database for IEEE NSU SB'''
+    
     ieee_id=models.IntegerField(primary_key=True,blank=False,null=False)
     name=models.CharField(null=False,blank=False,max_length=100)
     nsu_id=models.IntegerField(null=False, blank=False)

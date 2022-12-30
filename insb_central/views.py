@@ -33,5 +33,31 @@ def teams(request):
     }
     
     return render(request,'teams.html',context=context)
-def team_details(request):
-    return render(request,'team_details_page.html')
+def team_details(request,pk,name):
+    
+    '''Detailed panel for the team'''
+    
+    #load data of current team Members
+    team_members=renderData.Branch.load_team_members(pk)
+    #load all the roles and positions from database
+    positions=renderData.Branch.load_roles_and_positions()
+    #loading all members of insb
+    insb_members=renderData.Branch.load_all_insb_members()
+    
+    members_to_add=[]
+    position=12 #assigning default to volunteer
+    if request.method=='POST':
+        if(request.POST.get('add_to_team')):
+            #Checking if a button is clicked
+            if(request.POST.get('member_select')):
+                members_to_add=request.POST.getlist('member_select')
+                position=request.POST.get('position')
+     
+    context={
+        'team_name':name,
+        'team_members':team_members,
+        'positions':positions,
+        'insb_members':insb_members,
+        
+    }
+    return render(request,'team_details_page.html',context=context)
