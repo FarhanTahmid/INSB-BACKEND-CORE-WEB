@@ -15,6 +15,6 @@ urlpatterns = [
     #teams page
     path('teams',views.teams,name='teams'),
     #team details page
-    path('team_details',views.team_details,name='team_details'),
+    path('team_details/<str:pk>/<str:name>',views.team_details,name='team_details'),
     
 ]
