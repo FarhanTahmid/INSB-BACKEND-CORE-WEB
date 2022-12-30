@@ -348,6 +348,8 @@ def data_access(request):
             new_permission_list.append(permission.id)
         
         renderData.MDT_DATA.mdt_access_modifications(new_permission_list,ieee_id)
+    
+    
                        
 
     context={
