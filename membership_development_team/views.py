@@ -347,10 +347,8 @@ def data_access(request):
             permission=Access_Criterias.objects.get(id=int(checked_permission[i]))
             new_permission_list.append(permission.id)
         
-        renderData.MDT_DATA.mdt_access_modifications(new_permission_list,ieee_id)
-    
-    
-                       
+        # renderData.MDT_DATA.mdt_access_modifications(new_permission_list,ieee_id)
+                     
 
     context={
         'team_members': renderData.MDT_DATA.load_team_members(),

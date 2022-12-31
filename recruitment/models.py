@@ -24,7 +24,7 @@ class recruited_members(models.Model):
     email_personal=models.EmailField(null=True,blank=True,max_length=50)
     gender=models.CharField(null=True,blank=True,max_length=8)
     facebook_url=models.CharField(null=True,blank=True,max_length=100)
-    home_address=models.CharField(null=True,blank=True,max_length=50)
+    home_address=models.CharField(null=True,blank=True,max_length=300)
     major=models.CharField(null=True,blank=True,max_length=30)
     graduating_year=models.IntegerField(null=True,blank=True)
     recruitment_time=models.DateTimeField(auto_now_add=True,null=True,blank=True)
