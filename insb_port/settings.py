@@ -34,7 +34,7 @@ LOGIN_URL='/users/login'
 # Application definition
 
 INSTALLED_APPS = [
-    'users',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'port',
+    'users',
     'system_administration',
     'recruitment',
     'api',
@@ -88,17 +89,22 @@ WSGI_APPLICATION = 'insb_port.wsgi.application'
 DATABASES = {
     'default': {
         
-        #********MYSQL SERVER ON PYTHON ANYWHERE*********
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'insb_port',
-        # 'USER': 'root',
-        # 'PASSWORD': '',
-        # 'HOST':'localhost',
-        # 'PORT':'3306',
+        #********MYSQL SERVER ON LOCALHOST*********
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'insb_port',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST':'localhost',
+        'PORT':'3306',
+        'OPTIONS':{
+            'init_command':"SET sql_mode='STRICT_TRANS_TABLES'"
+        }
         
-
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        
+        
+        #DB.SQLITE3
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 

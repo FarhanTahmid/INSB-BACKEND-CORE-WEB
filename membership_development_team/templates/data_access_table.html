@@ -119,6 +119,7 @@
                       <form method="POST">
                           {% csrf_token %}
                       {% for permission in permission_criterias %}
+                        
                         <input type="checkbox" class="checkbox" value={{permission.id}} name="permission_criteria">
                         <label for="horns">{{permission.criteria_name}}</label><br>
                       {% endfor %}
