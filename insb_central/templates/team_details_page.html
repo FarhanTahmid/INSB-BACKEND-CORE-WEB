@@ -100,10 +100,13 @@
                                 </tr>
                             {% endfor %}
                             </table>
-                            <p id="no_data1"></p>
+                            <p  id="no_data1" style="text-align:center;"></p>
                         </div>
                     </div>
                     <br> 
+                    {% for message in messages %}
+                        <p>{{message}}</p>
+                    {% endfor %}
                     <input type="submit" value="Add to Team" class="add_to_team" name="add_to_team">
                   </form>
                   

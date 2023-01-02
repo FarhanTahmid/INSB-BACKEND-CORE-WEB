@@ -1,5 +1,6 @@
 from port.models import Teams,Roles_and_Position
 from users.models import Members
+from django.db import DatabaseError
 
 
 class Branch:
@@ -21,7 +22,15 @@ class Branch:
         positions=Roles_and_Position.objects.all().order_by('-id')
         return positions
     def load_all_insb_members():
-        insb_members=Members.objects.all().order_by('name')
+        insb_members=Members.objects.all().order_by('nsu_id')
         return insb_members
-    def add_member_to_team(ieee_id):
-        pass
+    def add_member_to_team(ieee_id,team,position):
+        '''This function adds member to the team'''
+        
+        try:
+            Members.objects.filter(ieee_id=ieee_id).update(team=team,position=position)
+            return True
+        except Members.DoesNotExist:
+            return False
+        except:
+            return DatabaseError

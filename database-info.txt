@@ -1,7 +1,12 @@
-host: insbapp.mysql.pythonanywhere-services.com
-pass: ngl@insb6552
-Username: insbapp
-name: hello@insb
+'ENGINE': 'django.db.backends.mysql',
+        'NAME':'insbapp$insb_port',
+        'USER': 'insbapp',
+        'PASSWORD': 'farhan@nglinsb',
+        'HOST': 'insbapp.mysql.pythonanywhere-services.com',
+        'PORT':'3306',
+        'OPTIONS':{
+            'init_command':"SET sql_mode='STRICT_TRANS_TABLES'"
+        }
 
 To dump data: python manage.py dumpdata > datadump.json
 to load data: python manage.py loaddata datadump.json

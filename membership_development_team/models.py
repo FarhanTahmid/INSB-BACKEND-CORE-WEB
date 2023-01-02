@@ -44,3 +44,4 @@ class Renewal_requests(models.Model):
         verbose_name="Renewal Requests"
     def __str__(self) -> str:
         return self.name
+
