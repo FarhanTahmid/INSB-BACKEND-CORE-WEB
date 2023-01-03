@@ -16,6 +16,7 @@ from django.contrib import messages
 from django.urls import reverse
 
 
+
 # Create your views here.
 def md_team_homepage(request):
     return render(request,'md_team_homepage.html')
@@ -110,7 +111,8 @@ def membership_renewal_form(request,pk):
                 #get_ieee_id=Members.objects.filter(email_personal=email_personal).values_list('ieee_id')
                 
                 try:
-                    renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),name=name,contact_no=contact_no,email_personal=email_personal,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
+                    encrypted_pass=renewal_data.encrypt_password(password=password)
+                    renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),name=name,contact_no=contact_no,email_personal=email_personal,ieee_account_password=encrypted_pass,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
                     renewal_instance.save()
                     messages.info(request,"Application Successful!")
                 except:
@@ -153,6 +155,7 @@ def renewal_session_data(request,pk):
 
 @login_required
 def renewal_request_details(request,pk,request_id):
+    
     '''This function loads the datas for particular renewal requests'''
     
     renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('name','email_personal','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')

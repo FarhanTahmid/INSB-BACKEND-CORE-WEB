@@ -1,4 +1,5 @@
 from . models import Renewal_requests,Renewal_Sessions
+from cryptography.fernet import Fernet
 
 def get_renewal_session_name(pk):
     session_name=Renewal_Sessions.objects.filter(id=pk).values('session_name')
@@ -9,3 +10,11 @@ def get_renewal_session_id(session_name):
     for i in range(len(session_id)):
         id=session_id[i]['id']
     return id
+
+def encrypt_password(password):
+    key=Fernet.generate_key()
+    fernet=Fernet(key=key)
+    return fernet.encrypt(password.encode())
+
+    
+    
