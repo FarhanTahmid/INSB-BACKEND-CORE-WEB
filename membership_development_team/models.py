@@ -22,7 +22,7 @@ class Renewal_requests(models.Model):
     name=models.CharField(null=False,blank=False,max_length=100,default="null")
     contact_no=models.CharField(null=False,blank=False,max_length=30,default="null")
     email_personal=models.EmailField(null=False,blank=False)
-    ieee_account_password=models.CharField(null=False,blank=False,max_length=50)
+    ieee_account_password=models.CharField(null=False,blank=False,max_length=500)
     
     #this *_check fields refers to the subscriptions the user is selecting on the forms.
     ieee_renewal_check=models.BooleanField(null=False,blank=False,default=False)
