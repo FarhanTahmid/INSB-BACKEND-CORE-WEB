@@ -111,8 +111,8 @@ def membership_renewal_form(request,pk):
                 #get_ieee_id=Members.objects.filter(email_personal=email_personal).values_list('ieee_id')
                 
                 try:
-                    encrypted_pass=renewal_data.encrypt_password(password=password)
-                    renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),name=name,contact_no=contact_no,email_personal=email_personal,ieee_account_password=encrypted_pass,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
+                    #encrypted_pass=renewal_data.encrypt_password(password=password)
+                    renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),name=name,contact_no=contact_no,email_personal=email_personal,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
                     renewal_instance.save()
                     messages.info(request,"Application Successful!")
                 except:
