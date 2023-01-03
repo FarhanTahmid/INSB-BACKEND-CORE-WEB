@@ -89,22 +89,22 @@ WSGI_APPLICATION = 'insb_port.wsgi.application'
 DATABASES = {
     'default': {
         
-        #********MYSQL SERVER ON LOCALHOST*********
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'insb_port',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST':'localhost',
-        'PORT':'3306',
-        'OPTIONS':{
-            'init_command':"SET sql_mode='STRICT_TRANS_TABLES'"
-        }
+        # #********MYSQL SERVER ON LOCALHOST*********
+        # 'ENGINE': 'django.db.backends.mysql',
+        # 'NAME': 'insb_port',
+        # 'USER': 'root',
+        # 'PASSWORD': '',
+        # 'HOST':'localhost',
+        # 'PORT':'3306',
+        # 'OPTIONS':{
+        #     'init_command':"SET sql_mode='STRICT_TRANS_TABLES'"
+        # }
         
         
         
         #DB.SQLITE3
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
