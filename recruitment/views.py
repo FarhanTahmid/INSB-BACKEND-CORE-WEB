@@ -50,7 +50,7 @@ def recruitee(request, pk):
         'session': getSession,
         'members': getRecruitedMembers,
     }
-    return render(request, 'recruitees.html', context=context)
+    return render(request, 'session_recruitees.html', context=context)
 
 
 @login_required
