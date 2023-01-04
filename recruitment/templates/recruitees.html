@@ -34,23 +34,7 @@
             </tr>
         </thead>
     {% comment %} This block is responsible for loading all the members recruited on that session and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
-    {% for member,count in members.items %}
-        {% for count in count %}
-        <tr>
-            <td><a href="{% url "recruitment:recruitee_details" count.nsu_id %}">{{ count.nsu_id }}</a></td>
-            <td>{{ count.first_name }} {{ count.middle_name }} {{ count.last_name }}</td>
-            <td>{{ count.email_personal }}</td>
-            <td>{{ count.major }}</td>
-            <td>{{ count.recruitment_time }}</td>
-            <td>{{ count.recruited_by }}</td>
-            {% if count.ieee_payment_status %}
-            <td><img src="/static/admin/img/icon-yes.svg" alt="True"></td>
-            {% else %}
-            <td><img src="/static/admin/img/icon-no.svg" alt="False"></td>
-            {% endif %}
-        </tr>
-        {% endfor %}    
-    {% endfor %}
+    
     </table>
 <p id="no_data"></p>
 
