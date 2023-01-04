@@ -18,4 +18,6 @@ urlpatterns = [
     path('dashboard',views.dashboard,name='dashboard'),
     #logoutUser
     path('logout/',views.logoutUser,name='logoutUser'),
+    #user Profile
+    path('profile',views.profile_page,name='profile'),
 ]

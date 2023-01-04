@@ -10,6 +10,7 @@ from users.models import Members
 class adminUsers(models.Model):
     username=models.CharField(primary_key=True,null=False,blank=False,max_length=30,default='Undetermined')
     name=models.CharField(null=False,blank=False,max_length=60,default="Undetermined")
+    profile_picture=models.ImageField(null=False,blank=False,default='/Admin/admin_profile_pictures/default_profile_picture.png',upload_to='Admin/admin_profile_pictures/')
     email=models.EmailField(null=False,blank=False,max_length=50)
     class Meta:
         verbose_name="Admin User"
