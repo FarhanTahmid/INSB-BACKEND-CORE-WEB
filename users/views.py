@@ -12,6 +12,7 @@ from django.db import DatabaseError
 from . import renderData
 from django.utils.datastructures import MultiValueDictKeyError
 
+
 # Create your views here.
 def login(request):
     
@@ -101,13 +102,20 @@ def dashboard(request):
 
 
 def profile_page(request):
+    
     '''This function loads all the view for User profile View'''
     
     if request.method=="POST":
         if request.POST.get('change_profile_pic'):
             try:
                 file=request.FILES['profile_picture']
-                print(file)
+                user=renderData.LoggedinUser(request.user)
+                change_pro_pic=user.change_profile_picture(file) #Calling function to change profile picture of the user
+                if(change_pro_pic==False):
+                    return DatabaseError
+                else:
+                    messages.info(request,"Profile Picture was changed successfully!")
+                    
             except MultiValueDictKeyError:
                 messages.info(request,"Please select a file first!")
     
