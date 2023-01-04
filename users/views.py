@@ -10,6 +10,7 @@ from . models import Members
 import csv,datetime
 from django.db import DatabaseError
 from . import renderData
+from django.utils.datastructures import MultiValueDictKeyError
 
 # Create your views here.
 def login(request):
@@ -87,8 +88,8 @@ def dashboard(request):
     #### LOOK into registerUser.py for manual input of data from csv. Templates are created there.
 
     #Loading current user data from renderData.py
-    current_user=renderData.LoggedinUser(request.user)
-    user_data=current_user.getUserData() #getting user data as dictionary
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     if(user_data==False):
         return DatabaseError
     context={
@@ -99,6 +100,23 @@ def dashboard(request):
     return render(request,"users/dashboard.html",context=context) 
 
 
+def profile_page(request):
+    '''This function loads all the view for User profile View'''
+    
+    if request.method=="POST":
+        if request.POST.get('change_profile_pic'):
+            try:
+                file=request.FILES['profile_picture']
+                print(file)
+            except MultiValueDictKeyError:
+                messages.info(request,"Please select a file first!")
+    
+    return render(request,"users/user_profile.html")
+
+
+
+
+@login_required
 def logoutUser(request):
     auth.logout(request)
     return redirect('/users/login') 

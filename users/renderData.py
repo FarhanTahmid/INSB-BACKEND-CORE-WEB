@@ -1,9 +1,12 @@
 from users.models import Members
 from system_administration.models import adminUsers
 from port.models import Roles_and_Position,Teams
+
+
 class LoggedinUser:
     
     def __init__(self,user):
+        '''Initializing loggedin user with current user from views'''
         self.user=user
     
     def getUserData(self):
@@ -17,6 +20,7 @@ class LoggedinUser:
             'ieee_id':get_Member_details.ieee_id,
             'email':get_Member_details.email_ieee,
             'nsu_id':get_Member_details.nsu_id,
+            'profile_picture':'/media_files/'+str(get_Member_details.user_profile_picture),
         }
         except Members.DoesNotExist:
             try:
@@ -24,6 +28,7 @@ class LoggedinUser:
                 return {
                 'name':get_Member_details.name,
                 'email':get_Member_details.email,
+                'profile_picture':'/media_files/'+str(get_Member_details.profile_picture),
                 }
             except adminUsers.DoesNotExist:
                 return False
@@ -33,6 +38,9 @@ class LoggedinUser:
                 return {
                 'name':get_Member_details.name,
                 'email':get_Member_details.email,
+                'profile_picture':'/media_files/'+str(get_Member_details.profile_picture),
                 }
             except adminUsers.DoesNotExist:
                 return False
+    
+    

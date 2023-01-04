@@ -160,8 +160,8 @@ DATE_INPUT_FORMATS = ['%d-%m-%Y']
 STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
 STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static'))
 #Media Files
-MEDIA_ROOT= os.path.join(BASE_DIR, 'files/')
-MEDIA_URL= "/files/" 
+MEDIA_ROOT= os.path.join(BASE_DIR, 'User Files/')
+MEDIA_URL= "/media_files/" 
 
 #to do user login required
 LOGIN_REDIRECT_URL='users:dashboard'
