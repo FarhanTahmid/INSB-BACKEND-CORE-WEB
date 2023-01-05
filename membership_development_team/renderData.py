@@ -29,10 +29,15 @@ class MDT_DATA:
         team=Teams.objects.get(team_name="Membership Development")
         return team.id
     
+    def get_member_with_postion(position):
+        '''Returns MDT Team Members with positions'''
+        team_members=Members.objects.filter(team=MDT_DATA.get_team_id(),position=position)
+        return team_members
+    
     def load_team_members():
         
         '''This function loads all the team members for membership development team'''
-        
+
         load_team_members=Members.objects.filter(team=MDT_DATA.get_team_id()).order_by('position')
         team_members=[]
         for i in range(len(load_team_members)):

@@ -14,12 +14,32 @@ import datetime
 import xlwt
 from django.contrib import messages
 from django.urls import reverse
+from django.conf import settings
 
 
 
 # Create your views here.
 def md_team_homepage(request):
-    return render(request,'md_team_homepage.html')
+    '''Loads the data for homepage of MDT TEAM'''
+    
+    #Loading data of the co-ordinators, co ordinator id is 9,
+    co_ordinators=renderData.MDT_DATA.get_member_with_postion(9)
+    #Loading data of the incharges, incharge id is 10
+    in_charges=renderData.MDT_DATA.get_member_with_postion(10)
+    #Loading data of the cor-volunteers, core-volunteer id is 11
+    core_volunteers=renderData.MDT_DATA.get_member_with_postion(11)
+    #Loading data of the cor-volunteers, volunteer id is 12
+    volunteers=renderData.MDT_DATA.get_member_with_postion(12)
+    
+    context={
+        'co_ordinators':co_ordinators,
+        'incharges':in_charges,
+        'core_volunteers':core_volunteers,
+        'volunteers':volunteers,
+        'media_url':settings.MEDIA_URL
+    }    
+    
+    return render(request,'md_team_homepage.html',context=context)
 
 @login_required
 def members_list(request):
