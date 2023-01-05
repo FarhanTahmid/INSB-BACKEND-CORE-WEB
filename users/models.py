@@ -25,6 +25,7 @@ class Members(models.Model):
     date_of_birth=models.DateField(null=True,blank=True)
     gender=models.CharField(null=True,blank=True,max_length=7)
     facebook_url=models.URLField(null=True,blank=True,max_length=200)
+    linkedin_url=models.URLField(null=True,blank=False,max_length=200)
     user_profile_picture=models.ImageField(null=False,blank=False,default='/user_profile_pictures/default_profile_picture.png',upload_to='user_profile_pictures/')
     team=models.ForeignKey(Teams,null=True,blank=True,on_delete=models.CASCADE)
     position=models.ForeignKey(Roles_and_Position,default=13,on_delete=models.CASCADE) #Default=13 means the position of a general member, check roles and positions table
