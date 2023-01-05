@@ -36,7 +36,7 @@
         {% comment %} This loads the datas from the view function and uses the session name as link and passes the session id as url as well as a value to the recruitee function to use that as session id {% endcomment %}
         <ul id="ul">
         {% for session in sessions %}
-        <li id="li"><a href="{% url "recruitment:recruitee" session.id %}">{{ session.session }}</a></li>
+            <li id="li"><a href="{% url "recruitment:recruitee" session.id %}">{{ session.session }}</a></li>
         {% endfor %}
         <ul>
         <p id="no_data"></p>

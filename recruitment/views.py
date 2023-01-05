@@ -32,7 +32,7 @@ def recruitment_home(request):
             add_session.save()
         except DatabaseError:
             return DatabaseError
-    return render(request, 'recruitment_home.html', numberOfSessions)
+    return render(request, 'recruitment_homepage.html', numberOfSessions)
 
 
 @login_required
