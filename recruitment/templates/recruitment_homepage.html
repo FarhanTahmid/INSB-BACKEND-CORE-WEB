@@ -5,12 +5,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MDT Data Access</title>
-    <link rel="stylesheet" href="{% static 'data_access_table.css' %}">
+    <title>MDT Recruitment Home</title>
+    <link rel="stylesheet" href="{% static 'recruitment_homepage.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
 
         body{
@@ -54,13 +55,14 @@
         }
         .event{
             scale: 1;
-          
+           
         }
         .event:hover{
             scale: 1.01;
             background-color:  rgba(44, 167, 216, .1);
             transition: .2s;
         }
+
     </style>
 
 </head>
@@ -81,7 +83,7 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ms-auto">
-                <a class="nav-link navLi" href="{% url 'users:dashboard' %}">Dashboard</a>
+              <a class="nav-link navLi" href="{% url 'users:dashboard' %}">Dashboard</a>
                 <a class="nav-link navLi" aria-current="page" href="{% url 'membership_development_team:md_team_homepage' %}">Home</a>
                 <a class="nav-link navLi" href="{% url 'membership_development_team:members_list' %}"><small>INSB Members</small></a>
                 <a class="nav-link navLi" href="{% url 'recruitment:recruitment_home' %}"><small>Recruitment</small></a>
@@ -90,59 +92,81 @@
             </div>
           </div>
         </div>
-      </nav>
+    </nav>
 
 
-      <h2>Access Control For Membership Development Team</h2>
+    <section class="banner">
+   
+        <div class="container">
+            <div class="row">
+            
+                    <div class="d-flex flex-column justify-content-center  h-100">
+                        <h1 class="text-center fw-bold mt-3 text-uppercase txt-hd">Recruitment sessions of IEEE NSU SB</h1>
+                       
+                        <!--create new session start -->
+                        <br>
+                        <br>
+                        <br>
+                        <div class="d-flex flex-column justify-content-center">
+                            <form method="POST" class="form-inline">
+                              <label>Want to start a new Recruitment Session?</label>
+                              <input class="form-control mr-sm-2 w-50" type="text" placeholder="Enter the name of the new Recruitment Session" aria-label="Search" Required name='recruitment_session'>
+                              <button type="submit" class="btn btn-success rounded my-2 my-sm-0 mt-lg-3">Create</button>
+                            </form>
+                        </div>
+                        <br>
+                        <br>
+                        <!--create new session  end-->
+    
+                        <!--search session start -->
+                        <div class="d-flex flex-column justify-content-center mt-3">
+                            <form class="form-inline">
+                              <label>Search For a Recruitment Session</label>
+                              <input class="form-control mr-sm-2 w-50" onkeyup="searchfunction()" type="text" id="search" placeholder="Enter Session Name to Search" aria-label="Search">
+                            </form>
+                        </div>
+                        <br>
+                        <!--search session  end-->
 
-      <div class="container">
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="table-responsive" data-pattern="priority-columns">
-              <table class="table table-bordered">
+                    
+       <!-- SESSION start -->
+    
+    <div class="row  pb-3">
+        {% for session in sessions %}
+        <div class="col-sm-4 mt-4 mb-2">
+          <div class="card">
+            <div class="card-body">
+              <ul class="list" id="ul">
                 
-                <thead>
-                  
-                  <tr>
-                    <th style="text-align:center;">IEEE ID</th>
-                    <th data-priority="1" style="text-align:center;">Name</th>
-                    <th data-priority="2" style="text-align:center;">Current Position</th>
-                    <th data-priority="3" style="text-align:center;">Permission Criterias</th>
-                    
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for team_members in team_members  %}
-                  <tr>
-                    <td>{{team_members.ieee_id}}</td>
-                    <td>{{team_members.name}}</td>
-                    <td>{{team_members.position}}</td>
-                    
-                    <td>
-                      <form method="POST">
-                          {% csrf_token %}
-                      {% for permission in permission_criterias %}
-                        
-                        <input type="checkbox" class="checkbox" value={{permission.id}} name="permission_criteria">
-                        <label for="horns">{{permission.criteria_name}}</label><br>
-                      {% endfor %}
-                      </td>
-                    
-                    <td>
-                            <input class="button" type="submit" value="Update">
-                            <input type="hidden" name="ieee_id" value={{team_members.ieee_id}}>
-                        </form>
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div><!--end of .table-responsive-->
+                <li id="li"><a class="links" href="{% url "recruitment:recruitee" session.id %}">{{ session.session }}</a></li>
+                
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
+        {% endfor %}
+    </div>
       
+      
+
+
+          <!-- SESSION end -->
+    
+    </section>
+   
+    
+    
+    
+    <!-- footer start -->
+    <footer class="py-3 text-white text-center">
+        <small>&copy; All Rights Reserved by IEEE NSU STUDENT BRANCH.</small>
+    </footer>
+    <!-- footer end -->
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+    <script src="{% static 'session_recruitees.js' %}"></script>
+
 </body>
 </html>
-
-

@@ -1,0 +1,19 @@
+.txt-hd{
+    color: #ffffff;
+}
+label{
+    color: white;
+    font-size: 25px;
+}
+.row{
+    color: yellow;
+}
+
+.list{
+    align-items: center;
+    list-style-type: none;
+}
+.links{
+    text-decoration: none;
+
+}
