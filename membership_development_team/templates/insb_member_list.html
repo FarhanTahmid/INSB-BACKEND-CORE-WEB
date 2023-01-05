@@ -141,6 +141,7 @@
                         
                         <thead>
                           <tr id="table_row">
+
                             <th data-priority="1">IEEE ID</th>
                             <th data-priority="1">NSU ID</th>
                             <th data-priority="1">Name</th>
@@ -155,6 +156,7 @@
                           {% for member in members %}
                             
                             <tr>
+            
                                 <td><a href="{% url 'membership_development_team:member_details' member.ieee_id %}">{{ member.ieee_id  }}</a></td>
                                 <td>{{ member.nsu_id }}</td>
                                 <td>{{ member.name  }}</td>

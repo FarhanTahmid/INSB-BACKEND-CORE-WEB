@@ -1,0 +1,14 @@
+let input=document.querySelector("#fileUpload")
+let span=document.querySelector("#messageBox")
+
+input.addEventListener('change',()=>{
+    let files=input.files;
+
+    if(files.length>0){
+        if(files[0].size > 3.5*1024*1024){
+            span.innerHTML="File should be under 3.5 MB";
+            return;
+        }
+    }
+    span.innerHTML='';
+});
