@@ -38,4 +38,14 @@ td{
     padding-top: 140px;
     font-size: 14px;
   }
-  
+.search{
+  margin: auto;
+  width: 50%;
+}
+.label_text{
+  color: yellow;
+  margin-left: 11px;
+}
+.searchbar{
+  margin-left: 11px;
+}
