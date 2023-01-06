@@ -55,7 +55,8 @@ class LoggedinUser:
             
             #get the previous profile picture of the user to delete it later
             previous_profile_picture=settings.MEDIA_ROOT+str(get_user.user_profile_picture)
-            
+            print(previous_profile_picture)
+            print(settings.MEDIA_ROOT+'user_profile_pictures/default_profile_picture.png')
             #check if the previous profile picture is the default one, if yes, just replace with new one. if no, delete the previous profile picture. replace with new one
             if(previous_profile_picture!=(settings.MEDIA_ROOT+'user_profile_pictures/default_profile_picture.png')):
                 
@@ -78,6 +79,7 @@ class LoggedinUser:
                     return True
             
             else:
+                
                 #normally just update the profile picture, not deletinf the default one
                 get_user.user_profile_picture=picture_file
                 get_user.save()
@@ -113,10 +115,11 @@ class LoggedinUser:
         
         except ValueError:
             try:
+                #DO THE SAME WORK DONE ABOVE, BUT JUST WITH THE ADMIN DATABASE NOW
                 get_user=adminUsers.objects.get(username=self.user.username)
                 previous_profile_picture=settings.MEDIA_ROOT+str(get_user.profile_picture)
                 
-                if(previous_profile_picture!=(settings.MEDIA_ROOT+'\Admin\admin_profile_pictures')):
+                if(previous_profile_picture!=(settings.MEDIA_ROOT+'Admin/admin_profile_pictures/default_profile_picture.png')):
                     
                     if(os.path.isfile(previous_profile_picture)):
                         try:
@@ -137,4 +140,3 @@ class LoggedinUser:
                 
             except adminUsers.DoesNotExist:
                 return False 
-    

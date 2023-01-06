@@ -25,6 +25,14 @@
             color: #FFC107;
             transition: .2s;
         }
+        .navL{
+            color: #FFC107;
+          }
+          
+        .navL:hover{
+            color: #FFC107;
+            transition: .2s;
+        }
 
         .fb, .twitter, .yt, .insta, .linkedin, .footer_mail{
             color: whitesmoke;
@@ -83,7 +91,7 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ms-auto">
-              <a class="nav-link navLi" aria-current="page" href="#">Home</a>
+              <a class="nav-link navL"  href="{% url 'users:dashboard' %}">Home</a>
               <a class="nav-link navLi" href="{% url 'insb_central:central_home' %}"><small>Central Branch</small></a>
               <a class="nav-link navLi" href="#"><small>Event & Management</small></a>
               <a class="nav-link navLi" href="#"><small>Logistics</small></a>
