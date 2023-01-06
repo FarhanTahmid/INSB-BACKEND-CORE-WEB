@@ -1,5 +1,5 @@
 from . models import Renewal_requests,Renewal_Sessions
-from cryptography.fernet import Fernet
+
 
 def get_renewal_session_name(pk):
     session_name=Renewal_Sessions.objects.filter(id=pk).values('session_name')
