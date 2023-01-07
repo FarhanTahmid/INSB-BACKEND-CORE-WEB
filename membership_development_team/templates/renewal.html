@@ -1,69 +1,183 @@
 <!DOCTYPE html>
 {% load static %}
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        <h1>Welcome to the renewal process of IEEE NSU Student Branch</h1>
-        <br><br>
-        <form method="POST" action=''>
-            {% csrf_token %}
-            <div class="d-grid pt-3">
-                <label for="new_session">Create New Renewal Session</label>
-                <input type="text" placeholder="New Recruitment Session" id="new_session" Required name='renewal_session'>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDT Recruitment Home</title>
+    <link rel="stylesheet" href="{% static 'recruitment_homepage.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+
+        body{
+            font-family: 'Poppins', sans-serif;
+
+        }
+        .navLi{
+            color: whitesmoke;
+        }
+        .navL{
+            color: #FFC107;
+          }
+          .navL:hover{
+            color: #FFC107;
+            transition: .2s;
+          }
+        .navLi:hover{
+            color: #FFC107;
+            transition: .2s;
+        }
+
+        .fb, .twitter, .yt, .insta, .linkedin, .footer_mail{
+            color: whitesmoke;
+        }
+        .fb:hover{
+            color: #1977F3;
+            transition: .2s;
+        }
+        .insta:hover{
+            color: #F60C52;
+            transition: .2s;
+        }
+        .linkedin:hover{
+            color: #0077B5;
+            transition: .2s;
+        }
+        .yt:hover{
+            color: #FE0202;
+            transition: .2s;
+        }
+        .twitter:hover{
+            color: #1DA1F2;
+            transition: .2s;
+        }
+        .footer_mail:hover{
+            color: #FFC936;
+            transition: .2s;
+        }
+        .event{
+            scale: 1;
+           
+        }
+        .event:hover{
+            scale: 1.01;
+            background-color:  rgba(44, 167, 216, .1);
+            transition: .2s;
+        }
+
+    </style>
+
+</head>
+
+
+<body style="background-image: linear-gradient(90deg, #2280b3, #0b1261);" class="">
+
+    <!-- Section for nav-bar -->
+
+    <nav style="background-color: #050D3A;" class="navbar navbar-expand-lg border border-5 border-dark border-opacity-25">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img class="img-fluid" src="{% static 'logo.gif' %}" alt="IEEE_logo" width="40" height="40">
+            </a> 
+          <!-- <a class="navbar-brand" href="#">IEEE</a> -->
+          <button class="navbar-toggler bg-warning" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+              <a class="nav-link navLi" href="{% url 'users:dashboard' %}">Dashboard</a>
+                <a class="nav-link navLi" aria-current="page" href="{% url 'membership_development_team:md_team_homepage' %}">Home</a>
+                <a class="nav-link navLi" href="{% url 'membership_development_team:members_list' %}"><small>INSB Members</small></a>
+                <a class="nav-link navLi" href="{% url 'recruitment:recruitment_home' %}"><small>Recruitment</small></a>
+                <a class="nav-link navL" href="{% url 'membership_development_team:membership_renewal' %}"><small>Membership Renewal</small></a>
+                <a class="nav-link navLi" href="{% url 'membership_development_team:data_access' %}"><small>Data Access</small></a>
             </div>
-            <button type="submit" class="log-btn" onclick=''>
-                Create
-           </button>
-        </form>
-        {% for messages in messages %}
-        <p>{{ messages }}</p>
-        {% endfor %}
-        <br>
-        <br>
-        <label for="search_session">Search Sessions<label>
-        <input type="text" onkeyup="searchfunction()" id="search_session" placeholder="Search sessions"></input>
-        <br>
-        <h1>Sessions</h1>
+          </div>
+        </div>
+    </nav>
 
 
-        {% comment %} This loads the datas from the view function and uses the session name as link and passes the session id as url as well as a value to the recruitee function to use that as session id {% endcomment %}
-        <ul id="ul">
-            {% for session in sessions %}
-                <li id="li"><a href="{% url "membership_development_team:renewal_session_data" session.id %}">{{ session.session_name }}</a></li>
-            {% endfor %}
-        <ul>
-        <p id="no_data"></p>
-        <script>
-                    function searchfunction(){
-                    let input,filter,j;
-                    input=document.getElementById("search_session");
-                    filter=input.value.toUpperCase();
-                    let ul=document.getElementById("ul");
-                    let li=ul.getElementsByTagName("li");
-    
-                    for(j=0;j<li.length;j++){
-                        message=document.getElementById("no_data");
-                        let a=li[j].getElementsByTagName('a')[0];
-                        let textValue=a.textContent || a.innerHTML;
-                        if(textValue.toUpperCase().indexOf(filter) > -1){
-                            li[j].style.display='';
-                            
-                        }                           
-                        else{
-                            li[j].style.display="none";
-    
-                        }
-    
-                    }
-                }
+    <section class="banner">
+   
+        <div class="container">
+            <div class="row">
             
-        </script>
-    </body>
+                    <div class="d-flex flex-column justify-content-center  h-100">
+                        <h1 class="text-center fw-bold mt-3 text-uppercase txt-hd">Renewal sessions of IEEE NSU SB</h1>
+                       
+                        <!--create new session start -->
+                        <br>
+                        <br>
+                        <br>
+                        <div class="d-flex flex-column justify-content-center">
+                            <form method="POST" class="form-inline">
+                              <label>Want to start a new Renewal Session?</label>
+                              <input class="form-control mr-sm-2 w-50" type="text" placeholder="Enter the name of the new Renewal Session" aria-label="Search" Required name='recruitment_session'>
+                              <button type="submit" class="btn btn-success rounded my-2 my-sm-0 mt-lg-3">Create</button>
+                            </form>
+                        </div>
+                        <br>
+                        <br>
+                        <!--create new session  end-->
+    
+                        <!--search session start -->
+                        <div class="d-flex flex-column justify-content-center mt-3">
+                            <form class="form-inline">
+                              <label>Search For a Renewal Session</label>
+                              <input class="form-control mr-sm-2 w-50" onkeyup="searchfunction()" type="text" id="search_session" placeholder="Enter Session Name to Search" aria-label="Search">
+                            </form>
+                        </div>
+                        <br>
+                        <!--search session  end-->
+
+                    
+       <!-- SESSION start -->
+    <ul class="list" id="ul">
+    {% for session in sessions %}
+    <div class="row  pb-3">
+      
+        <div class="col-sm-4 mt-4 mb-2">
+          
+          <div class="card">
+            
+            <div class="card-body">
+                <li id="li"><a class="links" href="{% url "membership_development_team:renewal_session_data" session.id %}">{{ session.session_name }}</a></li>
+              <p id="no_data"></p>
+            </div>
+            
+          </div>
+          
+        </div>
+        
+      
+    </div>
+    {% endfor %}
+  </ul>
+      
+
+
+          <!-- SESSION end -->
+    
+    </section>
+   
+    
+    
+    
+    <!-- footer start -->
+    <footer class="py-3 text-white text-center">
+        <small>&copy; All Rights Reserved by IEEE NSU STUDENT BRANCH.</small>
+    </footer>
+    <!-- footer end -->
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+    <script src="{% static 'renewal.js' %}"></script>
+
+</body>
 </html>

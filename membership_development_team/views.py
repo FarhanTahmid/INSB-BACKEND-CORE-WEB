@@ -184,6 +184,7 @@ def renewal_request_details(request,pk,request_id):
     '''This function loads the datas for particular renewal requests'''
     
     renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('name','email_personal','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
+    name=renewal_request_details[0]['name']
     renewal_email=""
     has_comment=False
     for i in range(len(renewal_request_details)):
@@ -197,7 +198,8 @@ def renewal_request_details(request,pk,request_id):
         'id':request_id,
         'details':renewal_request_details,
         'has_comment':has_comment,
-        'pk':pk
+        'pk':pk,
+        'name':name,
     }
     if request.method=="POST":
         if (request.POST.get('go_back')):

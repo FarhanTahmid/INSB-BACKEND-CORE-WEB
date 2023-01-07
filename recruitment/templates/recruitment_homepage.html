@@ -129,7 +129,7 @@
                         <div class="d-flex flex-column justify-content-center mt-3">
                             <form class="form-inline">
                               <label>Search For a Recruitment Session</label>
-                              <input class="form-control mr-sm-2 w-50" onkeyup="searchfunction()" type="text" id="search" placeholder="Enter Session Name to Search" aria-label="Search">
+                              <input class="form-control mr-sm-2 w-50" onkeyup="searchfunction()" type="text" id="search_session" placeholder="Enter Session Name to Search" aria-label="Search">
                             </form>
                         </div>
                         <br>
@@ -137,23 +137,25 @@
 
                     
        <!-- SESSION start -->
-    
-    <div class="row  pb-3">
+       <ul class="list" id="ul">
         {% for session in sessions %}
+    <div class="row  pb-3">
+        
         <div class="col-sm-4 mt-4 mb-2">
           <div class="card">
             <div class="card-body">
-              <ul class="list" id="ul">
+              
                 
                 <li id="li"><a class="links" href="{% url "recruitment:recruitee" session.id %}">{{ session.session }}</a></li>
                 
-              </ul>
+              
             </div>
           </div>
         </div>
-        {% endfor %}
+        
     </div>
-      
+    {% endfor %}
+  </ul>
       
 
 
@@ -173,7 +175,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
-    <script src="{% static 'session_recruitees.js' %}"></script>
+    <script src="{% static 'recruitment_home.js' %}"></script>
 
 </body>
 </html>
