@@ -42,11 +42,16 @@ def md_team_homepage(request):
     return render(request,'md_team_homepage.html',context=context)
 
 @login_required
-def members_list(request):
+def insb_members_list(request):
+    
     '''This function is responsible to display all the member data in the page'''
     members=Members.objects.order_by('position')
     totalNumber=Members.objects.all().count()
-    context={'members':members,'totalNumber':totalNumber}
+    has_view_permission=True
+    context={'members':members,'totalNumber':totalNumber,'has_view_permission':has_view_permission}
+    
+    
+    
           
     return render(request,'insb_member_list.html',context=context)
 

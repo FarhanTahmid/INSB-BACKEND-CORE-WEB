@@ -16,7 +16,7 @@ class Recruitment:
     
     def loadSession():
         '''Loads all the recruitment session present in the database'''
-        return {'sessions':recruitment_session.objects.all().values()} #returns a dictionary which contains session dataa
+        return {'sessions':recruitment_session.objects.all().values().order_by('id')} #returns a dictionary which contains session dataa
     
     
     
@@ -72,22 +72,7 @@ class Recruitment:
     
     def getRecruitedMemberDetails(nsu_id):
         '''This function extracts all the datas from the passes nsu_id'''
-        return {'recruited_member':recruited_members.objects.filter(nsu_id=nsu_id).values('nsu_id',
-                                                                                'first_name',                                                                                'middle_name','last_name',
-                                                                                'contact_no',
-                                                                                'date_of_birth',
-                                                                                'email_personal',
-                                                                                'gender',
-                                                                                'facebook_url',
-                                                                                'home_address',
-                                                                                'major','graduating_year',
-                                                                                'recruitment_time',
-                                                                                'ieee_id',
-                                                                                'session_id',
-                                                                                'recruited_by',
-                                                                                'cash_payment_status',
-                                                                                'ieee_payment_status'
-                                                                                )}
+        return recruited_members.objects.get(nsu_id=nsu_id)
     
     
     def deleteMember(nsu_id):

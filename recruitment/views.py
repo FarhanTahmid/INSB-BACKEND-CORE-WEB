@@ -62,8 +62,10 @@ def recruitee_details(request, nsu_id):
         # this parses the date in -DD-MM-YY Format for html
         # this dob does not change any internal data, it is used just to convert the string type from database to load in to html
         dob = datetime.datetime.strptime(str(
-            data['recruited_member'][0]['date_of_birth']), "%Y-%m-%d").strftime("%Y-%m-%d")
-
+            data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
+        address=data.home_address
+        
+     
     except ObjectDoesNotExist:
         # if object doesnot exist...
         messages.info(request, "Member does not exist!")
@@ -72,19 +74,22 @@ def recruitee_details(request, nsu_id):
         return redirect('recruitment:recruitment_home')
 
     # Passing data to the template
+    session=data.session_id 
     context = {
-        'session': str((data['recruited_member'][0]['session_id'])),
+        'session': session,
         'data': data,
-        'dob': dob
+        'dob': dob,
+        'address':address,
     }
 
     if request.method == "POST":
-
-        # this is used to update the recruited member details
-        # Upon entering IEEE id this registers members to the main database of members
+        
+        
+        # # this is used to update the recruited member details
+        # # Upon entering IEEE id this registers members to the main database of members
         if request.POST.get('save_edit'):
-
-            # checks the marked check-boxes
+            
+        #     # checks the marked check-boxes
             cash_payment_status = False
             if request.POST.get('cash_payment_status'):
                 cash_payment_status = True
@@ -107,8 +112,9 @@ def recruitee_details(request, nsu_id):
                 'cash_payment_status': cash_payment_status,
                 'ieee_payment_status': ieee_payment_status
             }
+            
 
-            # Getting returned values and handling the exceptions
+             # Getting returned values and handling the exceptions
 
             if (renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id, values=info_dict) == "no_ieee_id"):
                 messages.info(
@@ -129,22 +135,26 @@ def recruitee_details(request, nsu_id):
                     request, "Something went wrong. Please Try again")
                 return redirect('recruitment:recruitee_details', nsu_id)
 
-        ##### DELETING RECRUITEES#######
+        # ##### DELETING RECRUITEES#######
         if request.POST.get('delete_member'):
+            
             # if(renderData.Recruitment.deleteMember(nsu_id=nsu_id)=="both_database"):
             #     messages.info(request,f"Member Deleted Successfully from recruitment process and also from INSB Database with the id {nsu_id}")
             if (renderData.Recruitment.deleteMember(nsu_id=nsu_id) == ObjectDoesNotExist):
                 messages.info(
                     request, f"The member with the id {nsu_id} was deleted!")
+                return redirect('recruitment:recruitee', session)
             elif (renderData.Recruitment.deleteMember(nsu_id=nsu_id)):
                 messages.info(
                     request, f"The member with the id {nsu_id} was deleted!")
+                return redirect('recruitment:recruitee', session)
             else:
                 messages.info(request, f"Something went wrong! Try again!")
                 return redirect('recruitment:recruitee_details', nsu_id)
 
-        ##### REGISTERING MEMBER IN INSB DATABASE####
+        # ##### REGISTERING MEMBER IN INSB DATABASE####
         if request.POST.get("register_member"):
+            
             getMember = recruited_members.objects.filter(nsu_id=nsu_id).values(
                 'ieee_id',
                 'first_name', 'middle_name', 'last_name',
@@ -206,7 +216,7 @@ def recruit_member(request, session_name):
     # this method is for the POST from the recruitment form
 
     if request.method == "POST":
-
+        
         try:
 
             cash_payment_status = False

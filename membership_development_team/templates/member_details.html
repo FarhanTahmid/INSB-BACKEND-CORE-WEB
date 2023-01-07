@@ -29,8 +29,8 @@
         }
         .navL{
             color: #FFC107;
-          }
-          .navL:hover{
+        }
+        .navL:hover{
             color: #FFC107;
             transition: .2s;
           }
@@ -108,93 +108,7 @@
 
 
 
-      <form method="POST" action="" autocomplete="on">
-        {% csrf_token %}
-        
-        {% comment %} This block only loads the data of the selected members informations {% endcomment %}
-        <h1>
-            General Details
-        </h1>
-        <label> NSU ID: </label>
-        <input type="number" placeholder="Enter NSU ID" required name="nsu_id" value={{ member_data.nsu_id }} >
-        <br>
-        <label> IEEE ID: </label>
-        <input type="number" placeholder="Enter IEEE ID" name="ieee_id" value={{ recruited_member.ieee_id }} >
-        <br>
-        <br>
-
-        {% comment %} The following fields is used to portray personal datas of the recruited members {% endcomment %}
-        <h1>
-            Personal Details
-        </h1>
-
-        <label> First Name : </label>
-        <input type="text" placeholder="Enter First Name" required name="first_name" value={{ recruited_member.first_name }}>
-        <label> Middle Name : </label>
-        <input type="text" placeholder="Enter Middle Name"  name="middle_name" value={{ recruited_member.middle_name }}>
-        <label> Last Name : </label>
-        <input type="text" placeholder="Enter Last Name"  name="last_name" value={{ recruited_member.last_name }}>
-        <br>
-        <br>
-        {% comment %} From here the fields will go by serially {% endcomment %}
-        <label> Contact No : </label>
-        <input type="text" placeholder="Enter Contact no." required name="contact_no" value={{ recruited_member.contact_no }}>
-        <br><label> Date of Birth : </label>
-        <input type="date" placeholder="Date of Birth" required name="date_of_birth" value={{ dob }}>
-        <br><label> Email : </label>
-        <input type="email" placeholder="Enter E-Mail" required name="email_personal" value={{ recruited_member.email_personal }}>
-        <br><label> Facebook URL : </label>
-        <input type="url" placeholder="Enter Facebook URL" required name="facebook_url" value={{ recruited_member.facebook_url }}>
-        <br><label> Address : </label>
-        <input type="text" placeholder="Enter Address" required name="home_address" value={{ recruited_member.home_address }}>
-        
-        <h1>
-            Academic Details
-        </h1>
-        
-        <br><label> Major : </label>
-        <input type="text" placeholder="Enter Major" required name="major" value={{ recruited_member.major }} >
-        <br><label> Graduating Year : </label>
-        <input type="number" placeholder="Enter Graduating Year" required name="graduating_year" value={{ recruited_member.graduating_year }}>
-        
-        {% comment %} There will be a border indicating that further details are used only for officials {% endcomment %}
-        <h1>
-            Membership Development Team Details
-        </h1>
-        <br><label> Recruited By : </label>
-        <input type="text" placeholder="Name" required name="recruited_by" value={{ recruited_member.recruited_by }}>
-        <br>
-
-        {% if recruited_member.cash_payment_status %}
-        <input type="checkbox" checked="True" name="cash_payment_status" id="cash_payment">
-        <label for="cash_payment"> Cash Payment </label><br>
-        {% else %}
-        <input type="checkbox" name="cash_payment_status" id="cash_payment">
-        <label for="cash_payment"> Cash Payment </label><br>
-        {% endif %}
-        
-        
-        {% if recruited_member.ieee_payment_status %}
-        <input type="checkbox" checked="True" name="ieee_payment_status" id="ieee_payment">
-        <label for="ieee_payment"> IEEE Payment </label><br>
-        {% else %}
-        <input type="checkbox" name="ieee_payment_status" id="ieee_payment">
-        <label for="ieee_payment"> IEEE Payment </label><br>
-        {% endif %}
-        
-        <input type="submit" value="Delete Recruited Member" name="delete_member">
-        <input type="submit" value="Save Edits" name="save_edit">
-        
-        {% if recruited_member.ieee_payment_status %}
-        <input type="submit" value="Update Member in INSB Database" name="register_member">
-        {% else %}
-        <p>Member is not yet Updated in INSB Database. To Update Member to the INSB Database, Please complete the IEEE Payment and Enter IEEE ID and then Update!</p>
-        {% endif %}
-
-    </form>
-    {% for message in messages %}
-    <p class="message">{{message}}</p>
-    {% endfor %}
+      
 
       
 
