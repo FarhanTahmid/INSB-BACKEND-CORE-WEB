@@ -8,7 +8,7 @@ app_name='membership_development_team'
 
 urlpatterns = [
    path('',views.md_team_homepage,name="md_team_homepage"),
-   path('members/',views.members_list,name="members_list"),
+   path('members/',views.insb_members_list,name="members_list"),
    path('member_details/<int:ieee_id>',views.member_details,name="member_details"),
    path('export_excel',views.generateExcelSheet_membersList,name="export_excel"),
    path('membership_renewal/',views.membership_renewal,name="membership_renewal"),

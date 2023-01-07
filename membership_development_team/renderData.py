@@ -132,6 +132,11 @@ class MDT_DATA:
 
                     Team_Data_Access.objects.create(criteria=Access_Criterias.objects.get(id=access),ieee_id=Members.objects.get(ieee_id=ieee_id),team=Teams.objects.get(id=MDT_DATA.get_team_id()),has_permission=True)
 
+    
+    def general_access(ieee_id):
+        position=Members.objects.get(ieee_id=ieee_id).values('position')
+        print(position)
+        
                 
                 
             

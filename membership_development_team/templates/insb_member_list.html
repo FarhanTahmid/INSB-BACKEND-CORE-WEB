@@ -100,7 +100,8 @@
           </div>
         </div>
       </nav>
-   
+    
+    {% if has_view_permission %}
     <section class="banner">
    
       <div class="container">
@@ -127,6 +128,7 @@
           <!-- SESSION end -->
     
           <!-- search button -->
+          
           <div class="search">
             <br>
             <label>Search</label>
@@ -135,6 +137,7 @@
           <div>  
       
           <!-- search button -->
+          
           <div class="card text-center shadow p-3 mt-5 mb-5 bg-white rounded">
             <div class="card-header text-uppercase">
               <h3 class="txt-hd text-black">IEEE NSU SB Registered Members List</h3>
@@ -192,8 +195,11 @@
               </div>
             </div>
         </div>
+        
     </section>
-    
+    {% else %}
+    <h3 style="color:white;margin:auto;width:50%;margin-top:10%;">Sorry!<br>You do not have Permission to view this Data.<br> Please Contact To Executive Body, Membership Development Team or The System Administrators if you are authorised to view this particular data!</h3>
+    {% endif %}
     
     <!-- footer start -->
     <footer class="py-3 text-white text-center">
