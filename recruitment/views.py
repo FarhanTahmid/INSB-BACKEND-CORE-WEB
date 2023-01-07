@@ -216,7 +216,7 @@ def recruit_member(request, session_name):
     # this method is for the POST from the recruitment form
 
     if request.method == "POST":
-
+        
         try:
 
             cash_payment_status = False
