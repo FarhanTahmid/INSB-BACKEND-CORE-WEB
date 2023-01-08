@@ -27,8 +27,9 @@ def recruitment_home(request):
     numberOfSessions = renderData.Recruitment.loadSession()
     if request.method == "POST":
         session_name = request.POST["recruitment_session"]
+        session_time=datetime.datetime.now()
         try:
-            add_session = recruitment_session(session=session_name)
+            add_session = recruitment_session(session=session_name,session_time=session_time)
             add_session.save()
         except DatabaseError:
             return DatabaseError

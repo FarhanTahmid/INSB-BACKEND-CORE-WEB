@@ -90,7 +90,7 @@
                         </div>
 
                     
-                    <form method="POST" autocomplete="off">
+                    <form method="POST">
                         {% csrf_token %}
                         
                         <div class="container p-2 bg-white my-5 rounded">
@@ -144,7 +144,7 @@
                                                 <div class="col-md-8">
                                                     <input
                                                         class="form-control w-75"
-                                                        type="text" placeholder="Enter First Name" required name="first_name" value={{ data.first_name }}
+                                                        type="text" placeholder="Enter First Name" required name="first_name" value="{{ data.first_name }}"
                                                     />
                                                 </div>
                                             </div>
@@ -157,7 +157,7 @@
                                                 <div class="col-md-8">
                                                     <input
                                                         class="form-control w-75"
-                                                        type="text" placeholder="Enter Middle Name"  name="middle_name" value={{ data.middle_name }}
+                                                        type="text" placeholder="Enter Middle Name"  name="middle_name" value="{{ data.middle_name }}"
                                                     />
                                                 </div>
                                             </div>
@@ -173,7 +173,7 @@
                                             <div class="col-md-8">
                                                 <input
                                                     class="form-control w-75"
-                                                    type="text" placeholder="Enter Last Name"  name="last_name" value={{ data.last_name }}
+                                                    type="text" placeholder="Enter Last Name"  name="last_name" value="{{ data.last_name }}"
                                                 />
                                             </div>
                                         </div>
@@ -191,7 +191,7 @@
                                                 <div class="col-md-8">
                                                     <input
                                                         class="form-control w-75"
-                                                        type="text" placeholder="Enter Contact no." required name="contact_no" value={{ data.contact_no }}
+                                                        type="text" placeholder="Enter Contact no." required name="contact_no" value="{{ data.contact_no }}"
                                                     />
                                                 </div>
                                             </div>
@@ -206,7 +206,7 @@
                                                 <div class="col-md-9">
                                                     <input
                                                         class="form-control w-75"
-                                                        type="date" placeholder="Date of Birth" required name="date_of_birth" value={{ dob }}
+                                                        type="date" placeholder="Date of Birth" required name="date_of_birth" value="{{ dob }}"
                                                     />
                                                 </div>
                                             </div>
@@ -218,7 +218,7 @@
                                         <div class="col-md-8">
                                             <input
                                                 class="form-control w-75"
-                                                type="email" placeholder="Enter E-Mail" required name="email_personal" value={{ data.email_personal }}
+                                                type="email" placeholder="Enter E-Mail" required name="email_personal" value="{{ data.email_personal }}"
                                             />
                                         </div>
                                     </div>
@@ -230,7 +230,7 @@
                                         <div class="col-md-8">
                                             <input
                                                 class="form-control w-75"
-                                                type="url" placeholder="Enter Facebook URL" required name="facebook_url" value={{ data.facebook_url }}
+                                                type="url" placeholder="Enter Facebook URL" required name="facebook_url" value="{{ data.facebook_url }}"
                                             />
                                         </div>
                                     </div>
@@ -242,8 +242,8 @@
                                         <div class="col-md-8">
                                             <input
                                                 class="form-control w-75"
-                                                type="text" placeholder="Enter Address" required name="home_address" value={{ address }}
-                                                autocomplete="off"
+                                                type="text" placeholder="Enter Address" required name="home_address" value="{{address}}"
+                                                
                                             />
                                         </div>
                                     </div>
@@ -262,7 +262,7 @@
                                         <div class="col-md-8">
                                             <input
                                                 class="form-control w-75"
-                                                type="text" placeholder="Enter Major" required name="major" value={{ data.major }}
+                                                type="text" placeholder="Enter Major" required name="major" value="{{ data.major }}"
                                             />
                                         </div>
                                     </div>
@@ -295,7 +295,7 @@
                                         <div class="col-md-8">
                                             <input
                                                 class="form-control w-75"
-                                                type="text" placeholder="Name" required name="recruited_by" value={{ data.recruited_by }}
+                                                type="text" placeholder="Name" required name="recruited_by" value="{{ data.recruited_by }}"
                                             />
                                         </div>
                                     </div>

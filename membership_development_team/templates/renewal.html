@@ -137,32 +137,32 @@
 
                     
        <!-- SESSION start -->
-    <ul class="list" id="ul">
-    {% for session in sessions %}
-    <div class="row  pb-3">
-      
-        <div class="col-sm-4 mt-4 mb-2">
-          
-          <div class="card">
+        <div class="my-3">
+            <h2 class="mt-3 text-light">Renewal Sessions</h2>
+            <ul id="ul" class="row m-0" style="list-style-type: none">
+                {% for session in sessions %}
+                <li id="li" class="col-md-3 my-3">
+                    <div
+                        class="card text-white myCard"
+                        style="cursor: pointer"
+                    >
+                        <div class="card-body text-center pt-4">
+                            <h4 class="card-title text-black cardDiv">
+                                <a class="links" href="{% url "membership_development_team:renewal_session_data" session.id %}">{{ session.session_name }}</a>
+                            </h4>
+                        </div>
+                    </div>
+                </li>
+                
+                {% endfor %}
+            </ul>
             
-            <div class="card-body">
-                <li id="li"><a class="links" href="{% url "membership_development_team:renewal_session_data" session.id %}">{{ session.session_name }}</a></li>
-              <p id="no_data"></p>
-            </div>
-            
-          </div>
-          
         </div>
-        
-      
-    </div>
-    {% endfor %}
-  </ul>
       
 
 
           <!-- SESSION end -->
-    
+          
     </section>
    
     
