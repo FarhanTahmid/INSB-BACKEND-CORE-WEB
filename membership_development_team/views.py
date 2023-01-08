@@ -104,7 +104,9 @@ def membership_renewal_form(request,pk):
     }
     
     if request.method=="POST":
+        
         if(request.POST.get('apply')):
+           
             name=request.POST['name']
             contact_no=request.POST['contact_no']
             email_personal=request.POST['email_personal']
@@ -157,7 +159,7 @@ def renewal_session_data(request,pk):
     renewal_data.get_renewal_session_name(pk)
     session_name=renewal_data.get_renewal_session_name(pk)
     session_id=renewal_data.get_renewal_session_id(session_name=session_name)
-    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_personal','contact_no',)
+    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_personal','contact_no',).order_by('-id')
     #loading all the unviewed request count
     notification_count=Renewal_requests.objects.filter(session_id=session_id,view_status=False).count()
     #counting the renewed requests
@@ -184,6 +186,7 @@ def renewal_request_details(request,pk,request_id):
     '''This function loads the datas for particular renewal requests'''
     
     renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('name','email_personal','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
+    name=renewal_request_details[0]['name']
     renewal_email=""
     has_comment=False
     for i in range(len(renewal_request_details)):
@@ -197,7 +200,8 @@ def renewal_request_details(request,pk,request_id):
         'id':request_id,
         'details':renewal_request_details,
         'has_comment':has_comment,
-        'pk':pk
+        'pk':pk,
+        'name':name,
     }
     if request.method=="POST":
         if (request.POST.get('go_back')):

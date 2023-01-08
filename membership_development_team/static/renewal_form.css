@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+body{
+	margin:0;
+	padding:0;
+	font-family:"arial",heletica,sans-serif;
+	font-size:12px;
+    background: #2980b9 url('https://static.tumblr.com/03fbbc566b081016810402488936fbae/pqpk3dn/MRSmlzpj3/tumblr_static_bg3.png') repeat 0 0;
+	-webkit-animation: 10s linear 0s normal none infinite animate;
+	-moz-animation: 10s linear 0s normal none infinite animate;
+	-ms-animation: 10s linear 0s normal none infinite animate;
+	-o-animation: 10s linear 0s normal none infinite animate;
+	animation: 10s linear 0s normal none infinite animate;
+    box-sizing: border-box;
+ 
+}
+@-webkit-keyframes animate {
+	from {background-position:0 0;}
+	to {background-position: 500px 0;}
+}
+ 
+@-moz-keyframes animate {
+	from {background-position:0 0;}
+	to {background-position: 500px 0;}
+}
+ 
+@-ms-keyframes animate {
+	from {background-position:0 0;}
+	to {background-position: 500px 0;}
+}
+ 
+@-o-keyframes animate {
+	from {background-position:0 0;}
+	to {background-position: 500px 0;}
+}
+ 
+@keyframes animate {
+	from {background-position:0 0;}
+	to {background-position: 500px 0;}
+}
+
+.txt-hd{
+    color: #050d3a;
+}
+
+.navbar{
+    background-color: #050d3a;
+}
+.nav-link{
+color: #ffffff;
+}
+.nav-link:hover{
+    color: #FFC936;
+}
+.navL{
+    color: #FFC107;
+}
+.navL:hover{
+    color: #FFC107;
+    transition: .2s;
+}
+.navigation{
+    height: 100px;
+}
+.banner{
+  min-height: 100vh;
+  
+}
+  
+.btn-primary:hover{
+    background-color: #050d3a;
+    color: #fff;
+}
+.design{
+    min-height: 100vh;
+}
+.stop{
+    background-image: url(../img/banner.png);
+    background-color: rgba(0, 0, 0, 0.534);
+    background-blend-mode: overlay;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+
+}
+.right-bg{
+    background-color: #050d3a;
+
+}

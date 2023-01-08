@@ -12,8 +12,10 @@ label{
 .list{
     align-items: center;
     list-style-type: none;
+    display: inline-block;
 }
 .links{
     text-decoration: none;
+    
 
 }
