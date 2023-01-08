@@ -133,9 +133,14 @@
                       <form method="POST">
                           {% csrf_token %}
                       {% for permission in permission_criterias %}
-                        
+                        {% if ieee_id.criteria_name.has_permission %}
+                        <input type="checkbox" checked="True" class="checkbox" value={{permission.id}} name="permission_criteria">
+                        <label for="horns">{{permission.criteria_name}}</label><br>
+                        {% else %}
                         <input type="checkbox" class="checkbox" value={{permission.id}} name="permission_criteria">
                         <label for="horns">{{permission.criteria_name}}</label><br>
+                        {% endif %}
+                        
                       {% endfor %}
                       </td>
                     

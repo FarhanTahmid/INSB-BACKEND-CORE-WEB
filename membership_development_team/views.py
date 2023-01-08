@@ -104,7 +104,9 @@ def membership_renewal_form(request,pk):
     }
     
     if request.method=="POST":
+        
         if(request.POST.get('apply')):
+           
             name=request.POST['name']
             contact_no=request.POST['contact_no']
             email_personal=request.POST['email_personal']
@@ -157,7 +159,7 @@ def renewal_session_data(request,pk):
     renewal_data.get_renewal_session_name(pk)
     session_name=renewal_data.get_renewal_session_name(pk)
     session_id=renewal_data.get_renewal_session_id(session_name=session_name)
-    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_personal','contact_no',)
+    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_personal','contact_no',).order_by('-id')
     #loading all the unviewed request count
     notification_count=Renewal_requests.objects.filter(session_id=session_id,view_status=False).count()
     #counting the renewed requests
