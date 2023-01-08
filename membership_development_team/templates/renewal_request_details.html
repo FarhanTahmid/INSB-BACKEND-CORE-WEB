@@ -198,29 +198,82 @@
                         <form method="POST">
                             {% csrf_token %}
                             <div class="p-2 mb-4">
-                                <div class="py-3 text-center">
-                                    <button
-                                        class="btn btn-success"
-                                        type="button"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#update"
-                                        
-                                    >
-                                        Renew Member
-                                    </button>
-                                </div>
-                                <div class="py-3 text-center">
-                                    <button
-                                        class="btn btn-danger me-3"
-                                        type="button"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#delete"
-                                        
-                                    >
-                                        Delete Renewal Request
-                                    </button>
-                                </div>
+                                
+                                
+                              
+                                <div class="row my-3">
+                                    <div class="col-md-6">
+                                        {% for details in details %}
+                                        <div class="row">
+                                            <div class="col-md-4 mt-1">
+                                                Comments:
+                                            </div>
+                                            <div class="col-md-8">
+                                                {% if has_comment %}
+                                                <input
+                                                    style="height:120px;width:400px;"
+                                                    class="form-control w-70"
+                                                    type="text" placeholder="Leave a comment if you want within 150 words" name="official_comment"  value="{{details.official_comment}}"
+                                                />
+                                                {% else %}
+                                                <input
+                                                    style="height:120px;width:400px;"
+                                                    class="form-control w-70"
+                                                    type="text" placeholder="Leave a comment if you want within 150 words" name="official_comment"
+                                                />
+                                                {% endif %}
+                                                
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-md-7 mt-4">
+                                        <input
+                                            class="btn btn-success me-3"
+                                            type="submit"
+                                            name="update_comment"
+                                            value="Update Comment"
+                                        />
+                                            
+                                    <br><br>
+                                    </div>
+                                    <div class="row my-3">
+                                        <div class="col-md-7">
+                                            <div class="py-3 text-center">
+                                                <button
+                                                    class="btn btn-success"
+                                                    type="button"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#update"
+                                                    
+                                                >
+                                                    Renew Member
+                                                </button>
+                                            </div>
+                                        </div>
 
+                                        <div class="col-md-3">
+                                            
+                                                <div class="py-3 text-center">
+                                                    <button
+                                                        class="btn btn-danger me-3"
+                                                        type="button"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#delete"
+                                                        
+                                                    >
+                                                        Delete Renewal Request
+                                                    </button>
+                                                </div>
+                                        
+                                        </div>
+
+
+                                    
+
+                                    
+                                    
+                                </div>
                             
                                 <div class="py-3 text-center">
                                 

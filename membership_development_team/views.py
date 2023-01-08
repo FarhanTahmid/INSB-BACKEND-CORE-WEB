@@ -7,6 +7,7 @@ from recruitment import renderData
 from django.db import connections
 from django.contrib.auth.decorators import login_required
 from . models import Renewal_Sessions,Renewal_requests
+from recruitment.models import recruitment_session
 from . import renewal_data
 from . import renderData
 from django.http import HttpResponse,HttpResponseBadRequest,HttpResponseServerError
@@ -60,10 +61,57 @@ def member_details(request,ieee_id):
     '''This function loads an editable member details view for particular IEEE ID'''
     
     member_data=renderData.MDT_DATA.get_member_data(ieee_id=ieee_id)
+    
+    dob = datetime.datetime.strptime(str(
+        member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
+    sessions=recruitment_session.objects.all()
+    renewal_session=Renewal_Sessions.objects.all()
     context={
         'member_data':member_data,
+        'dob':dob,
+        'sessions':sessions,
+        'renewal_session':renewal_session,
+        'media_url':settings.MEDIA_URL
     }
-    
+    if request.method=="POST":
+        if request.POST.get('save_edit'):
+            nsu_id=request.POST['nsu_id']
+            ieee_id=request.POST['ieee_id']
+            name=request.POST['name']
+            contact_no=request.POST['contact_no']
+            date_of_birth=request.POST['date_of_birth']
+            email_ieee=request.POST['email_ieee']
+            email_personal=request.POST['email_personal']
+            facebook_url=request.POST['facebook_url']
+            linkedin_url=request.POST['linkedin_url']
+            home_address=request.POST['home_address']
+            major=request.POST['major']
+            
+            #updating member Details
+            try:
+                Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+                                                               name=name,
+                                                               contact_no=contact_no,
+                                                               date_of_birth=date_of_birth,
+                                                               email_ieee=email_ieee,
+                                                               email_personal=email_personal,
+                                                               facebook_url=facebook_url,
+                                                               linkedin_url=linkedin_url,
+                                                               home_address=home_address,
+                                                               major=major)
+                
+                messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                return redirect('membership_development_team:member_details',ieee_id)
+            except Members.DoesNotExist:
+                messages.info(request,"Sorry! Something went wrong! Try Again.")            
+            
+        if request.POST.get('delete_member'):
+            #Deleting a member from database
+            member_to_delete=Members.objects.get(ieee_id=ieee_id)
+            member_to_delete.delete()
+            return redirect('membership_development_team:members_list')
+              
+            
     
     return render(request,'member_details.html',context=context)
 
@@ -213,7 +261,7 @@ def renewal_request_details(request,pk,request_id):
                 ieee_id=member.ieee_id #getting the ieee id
                     
                 #update data in main registered Members database
-                Members.objects.filter(ieee_id=ieee_id).update(last_renewal=datetime.datetime.now())
+                Members.objects.filter(ieee_id=ieee_id).update(last_renewal=pk)
                 
                 # #Update in renewal requests database.
                 Renewal_requests.objects.filter(id=request_id).update(renewal_status=True)

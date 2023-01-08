@@ -137,25 +137,27 @@
 
                     
        <!-- SESSION start -->
-       <ul class="list" id="ul">
-        {% for session in sessions %}
-    <div class="row  pb-3">
-        
-        <div class="col-sm-4 mt-4 mb-2">
-          <div class="card">
-            <div class="card-body">
-              
+        <div class="my-3">
+            <h2 class="mt-3 text-light">Recruitment Sessions</h2>
+            <ul id="ul" class="row m-0" style="list-style-type: none">
+                {% for session in sessions %}
+                <li id="li" class="col-md-3 my-3">
+                    <div
+                        class="card text-white myCard"
+                        style="cursor: pointer"
+                    >
+                        <div class="card-body text-center pt-4">
+                            <h4 class="card-title text-black cardDiv">
+                                <a class="links" style="text-decoration:none;" href="{% url "recruitment:recruitee" session.id %}">{{ session.session }}</a>
+                            </h4>
+                        </div>
+                    </div>
+                </li>
                 
-                <li id="li"><a class="links" href="{% url "recruitment:recruitee" session.id %}">{{ session.session }}</a></li>
-                
-              
-            </div>
-          </div>
+                {% endfor %}
+            </ul>
+            
         </div>
-        
-    </div>
-    {% endfor %}
-  </ul>
       
 
 

@@ -64,3 +64,6 @@ div.scroll{
     height: 200px;
     overflow-y: scroll;
 }
+.container.comments{
+    height: 10%;
+}

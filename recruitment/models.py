@@ -6,6 +6,8 @@ import datetime
 # Create your models here.
 class recruitment_session(models.Model):
     session=models.CharField(null=False,blank=False,max_length=100)
+    session_time=models.DateField(null=True,blank=True)
+    
     
     class Meta:
         verbose_name="Recruitment Session"

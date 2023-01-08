@@ -1,10 +1,11 @@
 
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 body{
     font-family: 'Poppins', sans-serif;
 }
 .bk-gra{
-    background-image: linear-gradient(90deg, #2280b3, #0b1261)
+    background-image: linear-gradient(90deg, #2daadb, #050d3a);
 }
 .txt-hd{
     color: #050d3a;
@@ -21,8 +22,8 @@ color: #ffffff;
 }
 .navL{
     color: #FFC107;
-  }
-  .navL:hover{
+}
+.navL:hover{
     color: #FFC107;
     transition: .2s;
   }
@@ -31,12 +32,9 @@ color: #ffffff;
 }
 .banner{
   min-height: 100vh;
+  background-image: linear-gradient(90deg, #2daadb, #0b1261);
+}
   
-}
-  .btn{
-    background-color: #FFC936;
-    
-}
 .btn-primary:hover{
     background-color: #050d3a;
     color: #fff;
@@ -56,21 +54,4 @@ color: #ffffff;
 .right-bg{
     background-color: #050d3a;
 
-}
-
-.myCard{
-    background-color: #195D8C;
-    /* box-shadow: 1px 1px 15px black; */
-    /* border: 1px solid white; */
-}
-
-.myCard:hover{
-    box-shadow: 1px 1px 15px white;
-    transition: .3s ease-in-out;
-}
-
-.myCard:hover .cardDiv{
-    scale: 1.1;
-    transition: .3s ease-in-out;
-    color: #FFC936;
 }
