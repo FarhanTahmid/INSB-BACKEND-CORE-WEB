@@ -1,6 +1,7 @@
 from port.models import Teams,Roles_and_Position
 from users.models import Members
 from django.db import DatabaseError
+from system_administration.models import MDT_Data_Access
 
 
 class Branch:
@@ -28,8 +29,20 @@ class Branch:
         '''This function adds member to the team'''
         
         try:
-            Members.objects.filter(ieee_id=ieee_id).update(team=team,position=position)
-            return True
+            if(team=="12"): #Checking if the team is MDT as its id is 12
+                
+                Members.objects.filter(ieee_id=ieee_id).update(team=team,position=position)
+                data_access_instance=MDT_Data_Access(ieee_id=ieee_id,
+                                                     renewal_data_access=False,
+                                                     insb_member_details=False,
+                                                     recruitment_session=False,
+                                                     recruited_member_details=False) #create data access for the member with default value set to false
+                data_access_instance.save()
+                return True
+            else:
+                print("Inside False loop")
+                Members.objects.filter(ieee_id=ieee_id).update(team=team,position=position)
+                return True
         except Members.DoesNotExist:
             return False
         except:

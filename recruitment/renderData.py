@@ -70,12 +70,12 @@ class Recruitment:
         
         
     
-    def getRecruitedMemberDetails(nsu_id):
+    def getRecruitedMemberDetails(nsu_id,session_id):
         '''This function extracts all the datas from the passes nsu_id'''
-        return recruited_members.objects.get(nsu_id=nsu_id)
+        return recruited_members.objects.get(nsu_id=nsu_id,session_id=session_id)
     
     
-    def deleteMember(nsu_id):
+    def deleteMember(nsu_id,session_id):
         '''
         This method is used to delete a member from the recruitment process
         this also checks if the member is registered in the main database or not and if yes,
@@ -83,8 +83,9 @@ class Recruitment:
         '''
         try:
             #Gets member from the database
-            deleteMember=recruited_members.objects.get(nsu_id=nsu_id)
+            deleteMember=recruited_members.objects.filter(nsu_id=nsu_id,session_id=session_id)
             deleteMember.delete()
+            return True
             # #checks if the member is already registered in the main member database
             # if(Members.objects.filter(nsu_id=deleteMember.nsu_id).exists()):
             #     #deleting members from both database

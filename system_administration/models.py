@@ -19,21 +19,17 @@ class adminUsers(models.Model):
     def get_absolute_url(self):
         return reverse("admin_users", kwargs={"userid": self.userid})
         
-class Access_Criterias(models.Model):
-    team=models.ForeignKey(Teams,null=False,blank=False,on_delete=models.CASCADE,default=13)
-    criteria_name=models.CharField(null=False,blank=False,max_length=30,default="all")
 
-    class Meta:
-        verbose_name="Data Access Criteria"
-    def __str__(self) -> str:
-        return str(self.criteria_name)
     
-class Team_Data_Access(models.Model):
-    team=models.ForeignKey(Teams,null=False,blank=False,on_delete=models.CASCADE,verbose_name="Team")
+class MDT_Data_Access(models.Model):
+    
     ieee_id=models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE,verbose_name="IEEE ID")
-    criteria=models.ForeignKey(Access_Criterias,null=True,blank=True,on_delete=models.CASCADE,verbose_name="Accepted Permission Criteria")
-    has_permission=models.BooleanField(null=False,blank=False,default=False,verbose_name="Permission Status")
+    renewal_data_access=models.BooleanField(null=False,blank=False,default=False,verbose_name='Membership Renewal Data Access Permission')
+    insb_member_details=models.BooleanField(null=False,blank=False,default=False,verbose_name="INSB Registered Member Details Permission")
+    recruitment_session=models.BooleanField(null=False,blank=False,default=False,verbose_name="Recruitment Data View Permission")
+    recruited_member_details=models.BooleanField(null=False,blank=False,default=False,verbose_name="Rectuited Member Details Permission")
+    
     class Meta:
-        verbose_name="Team Data Access"
+        verbose_name="Membership Development Team Data Access"
     def __str__(self) -> str:
         return str(self.ieee_id)

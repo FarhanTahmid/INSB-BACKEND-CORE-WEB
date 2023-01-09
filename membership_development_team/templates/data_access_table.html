@@ -101,9 +101,60 @@
           </div>
         </div>
       </nav>
-   
-    
 
+
+      
+      <div class="justify-content-center">
+        <h2>Current Team Members
+        </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="table-responsive" data-pattern="priority-columns">
+              <table class="table table-bordered">
+                
+                <thead>
+                  
+                  <tr>
+                    <th data-priority="1" style="text-align:center;">Name</th>
+                    <th style="text-align:center;">IEEE ID</th>
+                    <th style="text-align:center;">NSU ID</th>
+                    <th data-priority="2" style="text-align:center;">Current Position</th>
+                    <th data-priority="3" style="text-align:center;">Email</th>
+                    <th data-priority="3" style="text-align:center;">Contact</th>
+                    
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for member in members %}
+                  <tr>
+                    <td><a style="text-decoration:none;color:yellow;" href="{% url 'membership_development_team:member_details' member.ieee_id %}">{{ member.name  }}</a></td>
+                    <td>{{member.ieee_id}}</td>
+                    <td>{{member.nsu_id}}</td>
+                    <td>{{member.position}}</td>
+                    <td>{{member.email_ieee}}</td>
+                    <td>{{member.contact_no}}</td>
+                    <td>
+                      <form method="POST">
+                        {% csrf_token %}
+                            <input class="btn btn-danger" name="remove_member" type="submit" value="Remove Member">
+                            <input type="hidden" name="remove_ieee_id" value={{member.ieee_id}}>
+                        </form>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div><!--end of .table-responsive-->
+            {% for messages in messages %}
+              <p class="text-white text-center">{{messages}}</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+
+      </div>
       <h2>Access Control For Membership Development Team</h2>
 
       <div class="container">
@@ -123,30 +174,59 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for team_members in team_members  %}
+                  {% for data_access in data_access %}
                   <tr>
-                    <td>{{team_members.ieee_id}}</td>
-                    <td>{{team_members.name}}</td>
-                    <td>{{team_members.position}}</td>
+                    <td>{{data_access.ieee_id}}</td>
+                    <td>{{data_access.ieee_id.name}}</td>
+                    <td>{{data_access.ieee_id.position}}</td>
                     
                     <td>
                       <form method="POST">
                           {% csrf_token %}
-                      {% for permission in permission_criterias %}
-                        {% if ieee_id.criteria_name.has_permission %}
-                        <input type="checkbox" checked="True" class="checkbox" value={{permission.id}} name="permission_criteria">
-                        <label for="horns">{{permission.criteria_name}}</label><br>
+                      
+                        
+
+                        {% if data_access.insb_member_details %}
+                        <input type="checkbox" checked="True" class="checkbox" value="insb_member_details" name="insb_member_details">
+                        <label for="insb_member_details">INSB Registered Member Details Permission
+                        </label><br>
                         {% else %}
-                        <input type="checkbox" class="checkbox" value={{permission.id}} name="permission_criteria">
-                        <label for="horns">{{permission.criteria_name}}</label><br>
+                        <input type="checkbox" class="checkbox" value="insb_member_details" name="insb_member_details">
+                        <label for="insb_member_details">INSB Registered Member Details Permission</label><br>
+                        {% endif %}
+
+
+                        {% if data_access.recruitment_session %}
+                        <input type="checkbox" checked="True" class="checkbox" value="recruitment_session" name="recruitment_session">
+                        <label for="recruitment_session">Recruitment Data View Permission</label><br>
+                        {% else %}
+                        <input type="checkbox" class="checkbox" value="recruitment_session" name="recruitment_session">
+                        <label for="recruitment_session">Recruitment Data View Permission</label><br>
+                        {% endif %}
+
+
+                        {% if data_access.recruited_member_details %}
+                        <input type="checkbox" checked="True" class="checkbox" value="recruited_member_details" name="recruited_member_details">
+                        <label for="recruited_member_details">Rectuited Member Details Permission</label><br>
+                        {% else %}
+                        <input type="checkbox" class="checkbox" value="recruited_member_details" name="recruited_member_details">
+                        <label for="recruited_member_details">Rectuited Member Details Permission</label><br>
+                        {% endif %}
+
+
+                        {% if data_access.renewal_data_access %}
+                        <input type="checkbox" checked="True" class="checkbox" value="renewal_data_access" name="renewal_data_access">
+                        <label for="renewal_data_access">Membership Renewal Data Access Permission</label><br>
+                        {% else %}
+                        <input type="checkbox" class="checkbox" value="renewal_data_access" name="renewal_data_access">
+                        <label for="renewal_data_access">Membership Renewal Data Access Permission</label><br>
                         {% endif %}
                         
-                      {% endfor %}
                       </td>
                     
                     <td>
-                            <input class="button" type="submit" value="Update">
-                            <input type="hidden" name="ieee_id" value={{team_members.ieee_id}}>
+                            <input class="button" name="access_update" type="submit" value="Update">
+                            <input type="hidden" name="access_ieee_id" value={{data_access.ieee_id}}>
                         </form>
                     </td>
                   </tr>
@@ -154,6 +234,9 @@
                 </tbody>
               </table>
             </div><!--end of .table-responsive-->
+            {% for messages in messages %}
+              <p class="text-white text-center">{{messages}}</p>
+            {% endfor %}
           </div>
         </div>
       </div>

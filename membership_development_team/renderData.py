@@ -1,6 +1,6 @@
 from users.models import Members
 from port.models import Teams
-from system_administration.models import Access_Criterias,Team_Data_Access
+from system_administration.models import MDT_Data_Access
 
 class MDT_DATA:
     
@@ -31,99 +31,24 @@ class MDT_DATA:
             team_members.append(load_team_members[i])
         return team_members
     
-    def load_team_permissions():
-        
-        '''This function loads all the team permissions assigned for the team'''
-        
-        load_permissions_mdt=Access_Criterias.objects.filter(team=MDT_DATA.get_team_id())
-        permission_criterias=[]
-        for i in range(len(load_permissions_mdt)):
-            permission_criterias.append(load_permissions_mdt[i])
-
-        return permission_criterias
+    def load_mdt_data_access():
+        return MDT_Data_Access.objects.all()
     
     
-    def get_team_access_data():
-        
-        '''This function loads the access data specified for the team members only'''
-        
-        load_data=Access_Criterias.objects.filter(team=Teams.objects.get(id=MDT_DATA.get_team_id()))
-        data=[]
-        for i in range(len(load_data)):
-            data.append(load_data[i])
-        return data                
-    
-    def get_member_access_data():
-        
-        '''This function loads the access data specified for the particular team members'''
-        
-        load_data=Team_Data_Access.objects.filter(team=Teams.objects.get(id=MDT_DATA.get_team_id()))
-        data=[]
-        for i in range(len(load_data)):
-            data.append(load_data[i])
-        return data
-    
-    
-    def mdt_access_modifications(requested_permission_list,ieee_id):
-        
-        '''This method sets all the access modifications for MDT TEAM Only'''
-        
-        #all the permissions in the MDT permission criteria updates for inividual member selected. It creates objects for the member
-        #permission criteria and updates the value of access upon a click on update button in the frontEnd.
-        
-        
-        #getting the MDT team's access criterias
-        team_data=MDT_DATA.get_team_access_data()
-        team_data_access=[]
-        for i in range(len(team_data)):
-            team_data_access.append(team_data[i].id)
-        
-        
-        #check algorithm for reuested access list and team data access list. if item matches, we set the permission to true. If not set it to false
-        
-        for access in team_data_access:
-            
-            #check if item does or does not exist in both of the lists, do the false permission work if it is not present in the requested permission list and do the true work if its present.
-            
-            if access not in (team_data_access and requested_permission_list): #checking if item doesnot exist
-                
-                #check if the permission object already exists in the database
-                
-                if(Team_Data_Access.objects.filter(criteria=Access_Criterias.objects.get(id=access),ieee_id=Members.objects.get(ieee_id=ieee_id),team=Teams.objects.get(id=MDT_DATA.get_team_id())).exists()):
-                    
-                    #if permission exists update the particular permission to false as it is now not checked in the reuested permission list
-                    
-                    Team_Data_Access.objects.filter(criteria=Access_Criterias.objects.get(id=access),ieee_id=Members.objects.get(ieee_id=ieee_id),team=Teams.objects.get(id=MDT_DATA.get_team_id())).update(has_permission=False)
-                   
-                else:
-                    
-                    #if permission doesnot exists, the system creates an object of permission with that particular member and team and automatically sets that value of access to false.
-
-                    Team_Data_Access.objects.create(criteria=Access_Criterias.objects.get(id=access),ieee_id=Members.objects.get(ieee_id=ieee_id),team=Teams.objects.get(id=MDT_DATA.get_team_id()),has_permission=False)
-
-                
-              
-            elif access in (team_data_access and requested_permission_list): #check the permissions that exists in both of the lists 
-                
-                #check if the permission object already exists in the database
-
-                if(Team_Data_Access.objects.filter(criteria=Access_Criterias.objects.get(id=access),ieee_id=Members.objects.get(ieee_id=ieee_id),team=Teams.objects.get(id=MDT_DATA.get_team_id())).exists()):
-                    
-                    #if permission exists update the particular permission to true as it is now checked in the reuested permission list
-                    
-                    Team_Data_Access.objects.filter(criteria=Access_Criterias.objects.get(id=access),ieee_id=Members.objects.get(ieee_id=ieee_id),team=Teams.objects.get(id=MDT_DATA.get_team_id())).update(has_permission=True)
-                    
-                else:
-                    
-                    #if permission doesnot exists, the system creates an object of permission with that particular member and team and automatically sets that value of access to true.
-
-                    Team_Data_Access.objects.create(criteria=Access_Criterias.objects.get(id=access),ieee_id=Members.objects.get(ieee_id=ieee_id),team=Teams.objects.get(id=MDT_DATA.get_team_id()),has_permission=True)
-
+    def mdt_access_modifications(insb_member_details_permission,recruitment_session_permission,
+            recruited_member_details_permission,
+            renewal_data_access_permission,ieee_id):
+        try:
+            MDT_Data_Access.objects.filter(ieee_id=ieee_id).update(insb_member_details=insb_member_details_permission,
+                                       recruited_member_details=recruited_member_details_permission,
+                                       recruitment_session=recruitment_session_permission,renewal_data_access=renewal_data_access_permission)
+            return True
+        except MDT_Data_Access.DoesNotExist:
+            return False
     
     def general_access(ieee_id):
         position=Members.objects.get(ieee_id=ieee_id).values('position')
         print(position)
-        
-                
-                
+    
+    
             
