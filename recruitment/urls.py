@@ -9,8 +9,8 @@ app_name='recruitment'
 urlpatterns = [
     #path('members/',views.MemberList.as_view()),
     path('',views.recruitment_home,name='recruitment_home'),
-    path('recruitee/<str:pk>',views.recruitee,name="recruitee"), #here pk is the id of the session we are accessing
-    path('member/<int:nsu_id>',views.recruitee_details,name="recruitee_details"),
+    path('recruited_member_list/<str:pk>',views.recruitee,name="recruitee"), #here pk is the id of the session we are accessing
+    path('recruited_member/<int:session_id>/<int:nsu_id>',views.recruitee_details,name="recruitee_details"),
     path('membership_form/<str:session_name>',views.recruit_member,name="recruit_member"),
     path('export_excel/<str:session_name>',views.generateExcelSheet,name="export_excel"),
 

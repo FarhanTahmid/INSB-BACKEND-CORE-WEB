@@ -108,14 +108,15 @@
             <div class="row">
             
                     <div class="d-flex flex-column justify-content-center  h-100">
-                        <h1 class="text-center fw-bold mt-3 text-uppercase txt-hd">Recruitment sessions of IEEE NSU SB</h1>
+                        <h1 class="text-center fw-bold mt-3 text-uppercase text-white txt-hd">Recruitment sessions of IEEE NSU SB</h1>
                        
                         <!--create new session start -->
                         <br>
                         <br>
                         <br>
-                        <div class="d-flex flex-column justify-content-center">
+                        <div class="d-flex flex-column justify-content-center text-white">
                             <form method="POST" class="form-inline">
+                                {% csrf_token %}
                               <label>Want to start a new Recruitment Session?</label>
                               <input class="form-control mr-sm-2 w-50" type="text" placeholder="Enter the name of the new Recruitment Session" aria-label="Search" Required name='recruitment_session'>
                               <button type="submit" class="btn btn-success rounded my-2 my-sm-0 mt-lg-3">Create</button>
@@ -126,8 +127,9 @@
                         <!--create new session  end-->
     
                         <!--search session start -->
-                        <div class="d-flex flex-column justify-content-center mt-3">
+                        <div class="d-flex flex-column justify-content-center mt-3 text-white ">
                             <form class="form-inline">
+                                {% csrf_token %}
                               <label>Search For a Recruitment Session</label>
                               <input class="form-control mr-sm-2 w-50" onkeyup="searchfunction()" type="text" id="search_session" placeholder="Enter Session Name to Search" aria-label="Search">
                             </form>

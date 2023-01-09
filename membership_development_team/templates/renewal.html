@@ -107,18 +107,19 @@
         <div class="container">
             <div class="row">
             
-                    <div class="d-flex flex-column justify-content-center  h-100">
-                        <h1 class="text-center fw-bold mt-3 text-uppercase txt-hd">Renewal sessions of IEEE NSU SB</h1>
+                    <div class="d-flex flex-column justify-content-center text-white  h-100">
+                        <h1 class="text-center fw-bold mt-3 text-uppercase text-white txt-hd">Renewal sessions of IEEE NSU SB</h1>
                        
                         <!--create new session start -->
                         <br>
                         <br>
                         <br>
-                        <div class="d-flex flex-column justify-content-center">
+                        <div class="d-flex flex-column justify-content-center text-white">
                             <form method="POST" class="form-inline">
+                                {% csrf_token %}
                               <label>Want to start a new Renewal Session?</label>
-                              <input class="form-control mr-sm-2 w-50" type="text" placeholder="Enter the name of the new Renewal Session" aria-label="Search" Required name='recruitment_session'>
-                              <button type="submit" class="btn btn-success rounded my-2 my-sm-0 mt-lg-3">Create</button>
+                              <input class="form-control mr-sm-2 w-50" type="text" placeholder="Enter the name of the new Renewal Session" aria-label="Search" Required name='renewal_session'>
+                              <input type="submit" class="btn btn-success rounded my-2 my-sm-0 mt-lg-3">Create</input>
                             </form>
                         </div>
                         <br>
@@ -148,7 +149,7 @@
                     >
                         <div class="card-body text-center pt-4">
                             <h4 class="card-title text-black cardDiv">
-                                <a class="links" href="{% url "membership_development_team:renewal_session_data" session.id %}">{{ session.session_name }}</a>
+                                <a style="text-decoration:none;" class="links" href="{% url "membership_development_team:renewal_session_data" session.id %}">{{ session.session_name }}</a>
                             </h4>
                         </div>
                     </div>

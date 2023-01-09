@@ -162,7 +162,7 @@
                           {% for member,count in members.items %}
                             {% for count in count %}
                             <tr>
-                                <td><a href="{% url "recruitment:recruitee_details" count.nsu_id %}">{{ count.nsu_id }}</a></td>
+                                <td><a href="{% url "recruitment:recruitee_details" pk count.nsu_id %}">{{ count.nsu_id }}</a></td>
                                 <td>{{ count.first_name }} {{ count.middle_name }} {{ count.last_name }}</td>
                                 <td>{{ count.email_personal }}</td>
                                 <td>{{ count.major }}</td>

@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.db import DatabaseError, IntegrityError, InternalError
 from users.models import Members
 from port.models import Teams
-from system_administration.models import Access_Criterias,Team_Data_Access
+from system_administration.models import MDT_Data_Access
 from recruitment import renderData
 from django.db import connections
 from django.contrib.auth.decorators import login_required
@@ -15,13 +15,16 @@ import datetime
 import xlwt
 from django.contrib import messages
 from django.urls import reverse
+from port.models import Roles_and_Position,Teams
 from django.conf import settings
+
 
 
 
 # Create your views here.
 def md_team_homepage(request):
     '''Loads the data for homepage of MDT TEAM'''
+    
     
     #Loading data of the co-ordinators, co ordinator id is 9,
     co_ordinators=renderData.MDT_DATA.get_member_with_postion(9)
@@ -83,7 +86,7 @@ def member_details(request,ieee_id):
             email_ieee=request.POST['email_ieee']
             email_personal=request.POST['email_personal']
             facebook_url=request.POST['facebook_url']
-            linkedin_url=request.POST['linkedin_url']
+            
             home_address=request.POST['home_address']
             major=request.POST['major']
             
@@ -96,7 +99,7 @@ def member_details(request,ieee_id):
                                                                email_ieee=email_ieee,
                                                                email_personal=email_personal,
                                                                facebook_url=facebook_url,
-                                                               linkedin_url=linkedin_url,
+                                                               
                                                                home_address=home_address,
                                                                major=major)
                 
@@ -414,25 +417,50 @@ def generateExcelSheet_membersList(request):
 @login_required
 def data_access(request):
     
-    '''This function mantains all the data access works'''
+    # '''This function mantains all the data access works'''
+    
+    data_access=renderData.MDT_DATA.load_mdt_data_access()
+    team_members=renderData.MDT_DATA.load_team_members()
     
     if request.method=="POST":
-        
-        checked_permission=request.POST.getlist('permission_criteria')
-        ieee_id=request.POST['ieee_id']
-        
-        new_permission_list=[]
-        for i in range(len(checked_permission)):
+        if request.POST.get('access_update'):
             
-            permission=Access_Criterias.objects.get(id=int(checked_permission[i]))
-            new_permission_list.append(permission.id)
-        
-        renderData.MDT_DATA.mdt_access_modifications(new_permission_list,ieee_id)
+            insb_member_details_permission=False
+            recruitment_session_permission=False
+            recruited_member_details_permission=False
+            renewal_data_access_permission=False
+            
+            #GEtting values from checkbox
+            if(request.POST.get('insb_member_details')):
+                insb_member_details_permission=True
+            if(request.POST.get('recruitment_session')):
+                recruitment_session_permission=True
+            if(request.POST.get('recruited_member_details')):
+                recruited_member_details_permission=True
+            if(request.POST.get('renewal_data_access')):
+                renewal_data_access_permission=True
+            ieee_id=request.POST['access_ieee_id']
+            
+            if(renderData.MDT_DATA.mdt_access_modifications(
+                ieee_id=ieee_id,insb_member_details_permission=insb_member_details_permission,recruitment_session_permission=recruitment_session_permission,
+                recruited_member_details_permission=recruited_member_details_permission,renewal_data_access_permission=renewal_data_access_permission
+            )):
+                messages.info(request,f"Permission Details Was updated For the Member with {ieee_id}")
+            
+            else:
+                messages.info(request,f"Something Went Wrong! Please Contact System Administrator about this issue")
+        if request.POST.get('remove_member'):
+            try:
+                Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))   
+                return redirect('membership_development_team:data_access')
+            except:
+                pass
+            
            
 
     context={
-        'team_members': renderData.MDT_DATA.load_team_members(),
-        'permission_criterias':renderData.MDT_DATA.load_team_permissions(),
-        'member_permission_details':renderData.MDT_DATA.get_member_access_data(),
+        'data_access':data_access,
+        'members':team_members,
+        
     }
     return render(request,'data_access_table.html',context=context)
