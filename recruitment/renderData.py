@@ -16,7 +16,7 @@ class Recruitment:
     
     def loadSession():
         '''Loads all the recruitment session present in the database'''
-        return {'sessions':recruitment_session.objects.all().values().order_by('id')} #returns a dictionary which contains session dataa
+        return {'sessions':recruitment_session.objects.all().values().order_by('-id')} #returns a dictionary which contains session dataa
     
     
     

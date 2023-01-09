@@ -63,13 +63,19 @@ def insb_members_list(request):
 def member_details(request,ieee_id):
     '''This function loads an editable member details view for particular IEEE ID'''
     
-    member_data=renderData.MDT_DATA.get_member_data(ieee_id=ieee_id)
+    '''This has some views restrictions'''
+    #Loading Access Permission
+    user=request.user
     
+    has_access=renderData.MDT_DATA.insb_member_details_view_control(user.username)
+    
+    member_data=renderData.MDT_DATA.get_member_data(ieee_id=ieee_id)
     dob = datetime.datetime.strptime(str(
         member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
     sessions=recruitment_session.objects.all()
     renewal_session=Renewal_Sessions.objects.all()
     context={
+        
         'member_data':member_data,
         'dob':dob,
         'sessions':sessions,
@@ -115,9 +121,10 @@ def member_details(request,ieee_id):
             return redirect('membership_development_team:members_list')
               
             
-    
-    return render(request,'member_details.html',context=context)
-
+    if(has_access):
+        return render(request,'member_details.html',context=context)
+    else:
+        return render(request,'access_denied.html')
 @login_required
 def membership_renewal(request):
     '''This view loads the renewal homepage'''

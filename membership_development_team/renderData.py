@@ -1,6 +1,7 @@
 from users.models import Members
 from port.models import Teams
 from system_administration.models import MDT_Data_Access
+from system_administration.render_access import Access_Render
 
 class MDT_DATA:
     
@@ -45,10 +46,38 @@ class MDT_DATA:
             return True
         except MDT_Data_Access.DoesNotExist:
             return False
+
     
-    def general_access(ieee_id):
-        position=Members.objects.get(ieee_id=ieee_id).values('position')
-        print(position)
+    def insb_member_details_view_control(username):
+        
+        faculty_advisor_access=Access_Render.faculty_advisor_access(username=username)
+        eb_access=Access_Render.eb_access(username=username)
+        team_co_ordinator_access=Access_Render.team_co_ordinator_access(team_id=MDT_DATA.get_team_id(),username=username)
+        custom_data_access=False
+        try:
+            try:
+                c=MDT_Data_Access.objects.get(ieee_id=int(username))
+                if(c.insb_member_details):
+                    custom_data_access=True        
+                else:
+                    custom_data_access=False
+            except MDT_Data_Access.DoesNotExist:
+                custom_data_access=False
+        except:
+            custom_data_access=False
+        
+        if(faculty_advisor_access):
+            return True
+        elif(eb_access):
+            return True
+        elif(team_co_ordinator_access):
+            return True
+        elif(custom_data_access):
+            return True
+        else:
+            return False
+        
+
     
     
             
