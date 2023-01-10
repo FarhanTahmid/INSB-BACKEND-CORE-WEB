@@ -132,6 +132,7 @@ def member_details(request,ieee_id):
         return render(request,'member_details.html',context=context)
     else:
         return render(request,'access_denied.html')
+    
 @login_required
 def membership_renewal(request):
     '''This view loads the renewal homepage'''
@@ -206,7 +207,7 @@ def membership_renewal_form(request,pk):
                     #encrypted_pass=renewal_data.encrypt_password(password=password)
                     renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),name=name,contact_no=contact_no,email_personal=email_personal,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
                     renewal_instance.save()
-                    messages.info(request,"Application Successful!")
+                    return redirect('membership_development_team:renewal_form_success',pk)
                 except:
                     return HttpResponseServerError
             else:
@@ -217,6 +218,11 @@ def membership_renewal_form(request,pk):
     
     return render(request,'renewal_form.html',context)
 
+def membership_renewal_form_success(request,pk):
+    context={
+        'pk':pk
+    }
+    return render(request,"renewal_form_confirmation.html",context)
 
 @login_required
 def renewal_session_data(request,pk):
@@ -330,6 +336,7 @@ def renewal_request_details(request,pk,request_id):
         return render(request,"renewal_request_details.html",context=context)
     else:
         return render(request,'access_denied.html')
+    
 @login_required
 def generateExcelSheet_renewal_requestList(request,session_id):
     
@@ -575,6 +582,8 @@ def site_registration_request_details(request,ieee_id):
         return render(request,'site_registration_request_details.html',context)
     else:
         return render(request,"access_denied.html")
+
+
 
 from . models import Portal_Joining_Requests
 def site_registration_form(request):
