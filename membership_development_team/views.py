@@ -17,6 +17,7 @@ from django.contrib import messages
 from django.urls import reverse
 from port.models import Roles_and_Position,Teams
 from django.conf import settings
+from system_administration.render_access import Access_Render
 
 
 
@@ -242,6 +243,9 @@ def renewal_session_data(request,pk):
 def renewal_request_details(request,pk,request_id):
     
     '''This function loads the datas for particular renewal requests'''
+    #check if the user has access to view
+    user=request.user
+    has_access=renderData.MDT_DATA.renewal_data_access_view_control(user.username)
     
     renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('name','email_personal','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
     name=renewal_request_details[0]['name']
@@ -316,9 +320,10 @@ def renewal_request_details(request,pk,request_id):
             except Renewal_requests.DoesNotExist:
                 messages.info(request,"Something Went Wrong! Please refresh the page and try again")
                 return redirect('membership_development_team:request_details',pk,request_id)
-            
-    return render(request,"renewal_request_details.html",context=context)
-
+    if(has_access):        
+        return render(request,"renewal_request_details.html",context=context)
+    else:
+        return render(request,'access_denied.html')
 @login_required
 def generateExcelSheet_renewal_requestList(request,session_id):
     
@@ -425,6 +430,9 @@ def generateExcelSheet_membersList(request):
 def data_access(request):
     
     # '''This function mantains all the data access works'''
+    #Only sub eb of that team can access the page
+    user=request.user
+    has_access=Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username)
     
     data_access=renderData.MDT_DATA.load_mdt_data_access()
     team_members=renderData.MDT_DATA.load_team_members()
@@ -470,4 +478,7 @@ def data_access(request):
         'members':team_members,
         
     }
-    return render(request,'data_access_table.html',context=context)
+    if(has_access):
+        return render(request,'data_access_table.html',context=context)
+    else:
+        return render(request,'access_denied.html')
