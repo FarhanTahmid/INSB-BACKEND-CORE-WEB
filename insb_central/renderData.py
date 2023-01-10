@@ -30,13 +30,15 @@ class Branch:
         
         try:
             if(team=="12"): #Checking if the team is MDT as its id is 12
-                
+                print("INSIDE LOOP")
                 Members.objects.filter(ieee_id=ieee_id).update(team=team,position=position)
-                data_access_instance=MDT_Data_Access(ieee_id=ieee_id,
+                print("Next line")
+                data_access_instance=MDT_Data_Access(ieee_id=Members.objects.get(ieee_id=ieee_id),
                                                      renewal_data_access=False,
                                                      insb_member_details=False,
                                                      recruitment_session=False,
                                                      recruited_member_details=False) #create data access for the member with default value set to false
+                
                 data_access_instance.save()
                 return True
             else:

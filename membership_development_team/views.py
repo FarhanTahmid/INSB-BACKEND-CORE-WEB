@@ -466,7 +466,11 @@ def data_access(request):
                 messages.info(request,f"Something Went Wrong! Please Contact System Administrator about this issue")
         if request.POST.get('remove_member'):
             try:
-                Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))   
+                Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
+                try:
+                    MDT_Data_Access.objects.filter(ieee_id=request.POST['remove_ieee_id']).delete()
+                except MDT_Data_Access.DoesNotExist:
+                     return redirect('membership_development_team:data_access')
                 return redirect('membership_development_team:data_access')
             except:
                 pass
