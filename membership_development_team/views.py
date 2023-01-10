@@ -50,10 +50,16 @@ def md_team_homepage(request):
 def insb_members_list(request):
     
     '''This function is responsible to display all the member data in the page'''
+    if request.method=="POST":
+        if request.POST.get("site_register"):
+            print("Getting")
+            return redirect('membership_development_team:site_registration')
+        
     members=Members.objects.order_by('position')
     totalNumber=Members.objects.all().count()
     has_view_permission=True
     context={'members':members,'totalNumber':totalNumber,'has_view_permission':has_view_permission}
+    
     
     
     
@@ -68,7 +74,7 @@ def member_details(request,ieee_id):
     #Loading Access Permission
     user=request.user
     
-    has_access=renderData.MDT_DATA.insb_member_details_view_control(user.username)
+    has_access=(renderData.MDT_DATA.insb_member_details_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
     
     member_data=renderData.MDT_DATA.get_member_data(ieee_id=ieee_id)
     dob = datetime.datetime.strptime(str(
@@ -245,7 +251,7 @@ def renewal_request_details(request,pk,request_id):
     '''This function loads the datas for particular renewal requests'''
     #check if the user has access to view
     user=request.user
-    has_access=renderData.MDT_DATA.renewal_data_access_view_control(user.username)
+    has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
     
     renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('name','email_personal','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
     name=renewal_request_details[0]['name']
@@ -432,7 +438,7 @@ def data_access(request):
     # '''This function mantains all the data access works'''
     #Only sub eb of that team can access the page
     user=request.user
-    has_access=Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username)
+    has_access=(Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
     
     data_access=renderData.MDT_DATA.load_mdt_data_access()
     team_members=renderData.MDT_DATA.load_team_members()
@@ -486,3 +492,150 @@ def data_access(request):
         return render(request,'data_access_table.html',context=context)
     else:
         return render(request,'access_denied.html')
+@login_required
+def site_registration_request_home(request):
+    
+    '''This loads data for site joining request'''
+    
+    get_requests=Portal_Joining_Requests.objects.all()
+    #loading all the unviewed request count
+    notification_count=Portal_Joining_Requests.objects.filter(view_status=False).count()
+    #counting the renewed requests
+    accepted_count=Portal_Joining_Requests.objects.filter(application_status=True).count()
+    #counting the pending requests
+    pending_count=Portal_Joining_Requests.objects.filter(application_status=False).count()
+    #form link for particular sessions
+    form_link="http:insbapp.pythonanywhere.com/membership_development_team/insb_site_registration_form"
+    
+    context={
+        'requests':get_requests,
+        'notification_count': notification_count,
+        'accepted':accepted_count,
+        'pending_count':pending_count,
+        'form_link':form_link
+    }
+    
+    
+    return render(request,'site_registration_home.html',context)
+
+@login_required
+def site_registration_request_details(request,ieee_id):
+    #gaining access data at first
+    user=request.user
+    has_access=Access_Render.system_administrator_superuser_access(user.username)
+    
+    
+    '''Get the request data'''
+    get_request=Portal_Joining_Requests.objects.get(ieee_id=ieee_id)
+    
+    #changing view Status
+    Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).update(view_status=True)
+    
+    dob = datetime.datetime.strptime(str(
+        get_request.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
+    context={
+        'request':get_request,
+        'dob':dob,
+    }
+    if request.method=="POST":
+        if request.POST.get('register_to_database'):
+            try:
+                new_member=Members(
+                    ieee_id=get_request.ieee_id,
+                    name=get_request.name,
+                    nsu_id=get_request.nsu_id,
+                    email_ieee=get_request.email_ieee,
+                    email_personal=get_request.email_personal,
+                    major=get_request.major,
+                    contact_no=get_request.contact_no,
+                    home_address=get_request.home_address,
+                    date_of_birth=get_request.date_of_birth,
+                    gender=get_request.gender,
+                    facebook_url=get_request.facebook_url,
+                    linkedin_url=get_request.linkedin_url,
+                    team=Teams.objects.get(id=get_request.team.id),
+                    position=Roles_and_Position.objects.get(id=get_request.position.id)
+
+                )
+                new_member.save()
+                Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).update(application_status=True)
+                messages.info(request,"Member Successfully Updated to the Main Database")
+            except:
+                messages.info(request,"Sorry! Somethin went Wrong Please Try again")
+        if request.POST.get('delete_request'):
+            #Deleting Member
+            try:
+                Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).delete()
+                messages.info(request,"Request Deleted")
+                return redirect('membership_development_team:site_registration')
+            except:
+                messages.info(request,"Sorry! Member Couldn't be Deleted")
+    if(has_access):
+        
+        return render(request,'site_registration_request_details.html',context)
+    else:
+        return render(request,"access_denied.html")
+
+from . models import Portal_Joining_Requests
+def site_registration_form(request):
+    load_all_teams=Teams.objects.all()
+    positions=Roles_and_Position.objects.all()
+    
+    context={
+        'team_data':load_all_teams,
+        'positions':positions,
+    }
+    if request.method=="POST":
+        
+        if request.POST.get('apply'):
+            
+            if(request.POST.get('team')=="null"):
+                try:
+                    registration_request=Portal_Joining_Requests(
+                        ieee_id=request.POST['ieee_id'],
+                        name=request.POST['name'],
+                        nsu_id=request.POST['nsu_id'],
+                        email_ieee=request.POST['email_ieee'],
+                        email_personal=request.POST['email_personal'],
+                        major=request.POST['major'],
+                        contact_no=request.POST['contact_no'],
+                        home_address=request.POST['home_address'],
+                        date_of_birth=request.POST['date_of_birth'],
+                        gender=request.POST['gender'],
+                        facebook_url=request.POST['facebook_url'],
+                        linkedin_url=request.POST['linkedin_url'],
+                        team=None,
+                        position=Roles_and_Position.objects.get(id=request.POST.get('position')) 
+                    )
+                    registration_request.save()
+                    return redirect('membership_development_team:confirmation')
+                except:
+                    messages.info(request,"Some Error Occured! Please contact the System Administrator")
+                    return redirect('membership_development_team:site_registration_form')
+            else:
+                try:
+                    registration_request=Portal_Joining_Requests(
+                        ieee_id=request.POST['ieee_id'],
+                        name=request.POST['name'],
+                        nsu_id=request.POST['nsu_id'],
+                        email_ieee=request.POST['email_ieee'],
+                        email_personal=request.POST['email_personal'],
+                        major=request.POST['major'],
+                        contact_no=request.POST['contact_no'],
+                        home_address=request.POST['home_address'],
+                        date_of_birth=request.POST['date_of_birth'],
+                        gender=request.POST['gender'],
+                        facebook_url=request.POST['facebook_url'],
+                        linkedin_url=request.POST['linkedin_url'],
+                        team=Teams.objects.get(id=request.POST.get('team')),
+                        position=Roles_and_Position.objects.get(id=request.POST.get('position')) 
+                    )
+                    registration_request.save()
+                    return redirect('membership_development_team:confirmation')
+                except:
+                    messages.info(request,"Some Error Occured! Please contact the System Administrator")
+                    return redirect('membership_development_team:site_registration_form')
+    
+    return render(request,'site_registration_form.html',context)
+def confirmation_of_form_submission(request):
+    return render(request,'confirmation.html')

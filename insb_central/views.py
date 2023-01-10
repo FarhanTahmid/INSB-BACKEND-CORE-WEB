@@ -10,10 +10,15 @@ from recruitment.models import recruited_members
 import csv,datetime
 from users.ActiveUser import ActiveUser
 from django.db import DatabaseError
-
+from system_administration.render_access import Access_Render
 # Create your views here.
 def central_home(request):
-    return render(request,'central_home.html')
+    user=request.user
+    has_access=Access_Render.system_administrator_superuser_access(user.username)
+    if (has_access):
+        return render(request,'central_home.html')
+    else:
+        return render(request,"access_denied2.html")
 def event_control(request):
     return render(request,'event_control_page.html')
 def teams(request):
