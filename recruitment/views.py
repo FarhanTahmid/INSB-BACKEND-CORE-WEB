@@ -12,7 +12,8 @@ import datetime
 from django.core.exceptions import ObjectDoesNotExist
 import xlwt,csv
 from django.db.utils import IntegrityError
-
+from membership_development_team.renderData import MDT_DATA
+from system_administration.render_access import Access_Render
 # Create your views here.
 
 
@@ -41,6 +42,10 @@ def recruitee(request, pk):
     '''This function is responsible for getting all the members registered in a particular
     recruitment session. Loads all the datas and show them
     '''
+    #check the users view access
+    user=request.user
+    has_access=(MDT_DATA.recruitment_session_view_access_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
+    
     getSession = renderData.Recruitment.getSession(session_id=pk)
     getMemberCount = renderData.Recruitment.getTotalNumberOfMembers(int(pk))
     getRecruitedMembers = renderData.Recruitment.getRecruitedMembers(
@@ -52,12 +57,17 @@ def recruitee(request, pk):
         'session': getSession,
         'members': getRecruitedMembers,
     }
-    return render(request, 'session_recruitees.html', context=context)
-
+    if(has_access):
+        return render(request, 'session_recruitees.html', context=context)
+    else:
+        return render(request,'access_denied.html')
 
 @login_required
 def recruitee_details(request,session_id,nsu_id):
     """Preloads all the data of the recruitees who are registered in the particular session, here we can edit and save the data of the recruitee"""
+    #Checking user access
+    user=request.user
+    has_access=(MDT_DATA.recruited_member_details_view_access(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
     try:
 
         data = renderData.Recruitment.getRecruitedMemberDetails(nsu_id=nsu_id,session_id=session_id)
@@ -202,8 +212,10 @@ def recruitee_details(request,session_id,nsu_id):
             #     messages.info(
             #         request, "Something went wrong! Please Try again!")
             #     return redirect('recruitment:recruitee_details', nsu_id)
-    return render(request, "recruitee_details.html", context=context)
-
+    if(has_access):
+        return render(request, "recruitee_details.html", context=context)
+    else:
+        return render(request,'access_denied.html')
 
 @login_required
 def recruit_member(request, session_name):

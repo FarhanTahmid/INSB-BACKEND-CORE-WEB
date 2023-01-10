@@ -1,6 +1,6 @@
 from port.models import Roles_and_Position,Teams
 from users.models import Members
-
+from django.contrib.auth .models import User
 class Access_Render:
     def faculty_advisor_access(username):
         try:
@@ -47,5 +47,24 @@ class Access_Render:
                 return False
         except Members.DoesNotExist:
             return False
+        except:
+            return False
+    def system_administrator_superuser_access(username):
+        try:
+            access=User.objects.get(username=username)
+            print(access)
+            if(access.is_superuser):
+                return True
+            else:
+                return False
+        except:
+            return False
+    def system_administrator_staffuser_access(username):
+        try:
+            access=User.objects.get(username=username)
+            if(access.is_staff()):
+                return True
+            else:
+                return False
         except:
             return False
