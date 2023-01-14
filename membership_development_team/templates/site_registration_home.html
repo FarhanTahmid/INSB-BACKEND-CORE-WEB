@@ -169,6 +169,7 @@
                             <th data-priority="1">Contact No</th>
                             <th data-priority="1">Team</th>
                             <th data-priority="1">Position</th>
+                            <th data-priority="1">Status</th>
                           </tr>
                         </thead>
 
@@ -182,6 +183,11 @@
                                 <td>{{ request.contact_no }}</td>
                                 <td>{{ request.team.team_name }}</td>
                                 <td>{{ request.position.role }}</td>
+                                {% if request.application_status %}
+                                  <td><img src="/static/admin/img/icon-yes.svg" alt="True"></td>
+                                {% else %}
+                                  <td><img src="/static/admin/img/icon-no.svg" alt="False"></td>
+                                {% endif %}
                                 
                             </tr>
                             {% endfor %}
