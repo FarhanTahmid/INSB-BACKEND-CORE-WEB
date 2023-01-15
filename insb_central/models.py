@@ -79,13 +79,13 @@ class Event_Venue(models.Model):
     venue_id=models.ForeignKey(Venue_List,on_delete=models.CASCADE)
 
 #Table For Permissions for specific events
-    class Event_Permission(models.Model):
+class Event_Permission(models.Model):
         event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
         permission_id=models.ForeignKey(Permission_criteria,on_delete=models.CASCADE)
         permission_status=models.BooleanField(null=False,blank=False,default=False)
 
 #Table For Permissions for specific events
-    class Event_Logistic_Items(models.Model):
+class Event_Logistic_Items(models.Model):
         event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
         logistic_id=models.ForeignKey(Logistic_Item_List,on_delete=models.CASCADE)
         buying_status=models.BooleanField(null=False,blank=False,default=False)

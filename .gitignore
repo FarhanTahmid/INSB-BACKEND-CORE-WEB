@@ -3,6 +3,7 @@
 *.log
 *.pot
 *.pyc
+*.swp
 __pycache__
 db.sqlite3
 media
@@ -109,6 +110,14 @@ farhan_insb_port/
 linux_env2/
 nashrat_insb_port/ 
 meem_venv/
+.virtualenvs/
+
+#pythonanywhere
+.cache/
+.local/
+.bashrc
+.my.cnf
+.profile
 
 # mkdocs documentation 
 /site 
