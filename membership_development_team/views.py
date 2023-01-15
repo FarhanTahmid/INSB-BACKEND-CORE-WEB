@@ -239,7 +239,7 @@ def renewal_session_data(request,pk):
     #counting the pending requests
     pending_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=False).count()
     #form link for particular sessions
-    form_link="http:insbapp.pythonanywhere.com/membership_development_team/renewal_form/"+str(session_id)
+    form_link=f"{request.META['HTTP_HOST']}/membership_development_team/renewal_form/"+str(session_id)
     context={
         'session_name':session_name,
         'session_id':session_id,
@@ -512,8 +512,8 @@ def site_registration_request_home(request):
     accepted_count=Portal_Joining_Requests.objects.filter(application_status=True).count()
     #counting the pending requests
     pending_count=Portal_Joining_Requests.objects.filter(application_status=False).count()
-    #form link for particular sessions
-    form_link="http:insbapp.pythonanywhere.com/membership_development_team/insb_site_registration_form"
+    #form link for site registration
+    form_link=f"{request.META['HTTP_HOST']}/membership_development_team/insb_site_registration_form"
     
     context={
         'requests':get_requests,
