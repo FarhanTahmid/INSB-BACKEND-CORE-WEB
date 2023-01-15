@@ -174,10 +174,14 @@ REST_FRAMEWORK={
 }
 
 
+import environ
+env = environ.Env()
+environ.Env.read_env()
+
 #EMAIL SETTINGS
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST='smtp.gmail.com'
 EMAIL_PORT=587
-EMAIL_HOST_USER='ieeensusb.portal@gmail.com'
-EMAIL_HOST_PASSWORD='wamgfayquxjnhzob'
+EMAIL_HOST_USER=env('email_user')
+EMAIL_HOST_PASSWORD=env('email_password')
 EMAIL_USE_TLS=True
