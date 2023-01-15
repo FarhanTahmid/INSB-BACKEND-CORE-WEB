@@ -18,7 +18,8 @@ from django.urls import reverse
 from port.models import Roles_and_Position,Teams
 from django.conf import settings
 from system_administration.render_access import Access_Render
-
+from django.core.mail import send_mail
+import socket
 
 
 
@@ -238,7 +239,7 @@ def renewal_session_data(request,pk):
     #counting the pending requests
     pending_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=False).count()
     #form link for particular sessions
-    form_link="http:insbapp.pythonanywhere.com/membership_development_team/renewal_form/"+str(session_id)
+    form_link=f"{request.META['HTTP_HOST']}/membership_development_team/renewal_form/"+str(session_id)
     context={
         'session_name':session_name,
         'session_id':session_id,
@@ -511,8 +512,8 @@ def site_registration_request_home(request):
     accepted_count=Portal_Joining_Requests.objects.filter(application_status=True).count()
     #counting the pending requests
     pending_count=Portal_Joining_Requests.objects.filter(application_status=False).count()
-    #form link for particular sessions
-    form_link="http:insbapp.pythonanywhere.com/membership_development_team/insb_site_registration_form"
+    #form link for site registration
+    form_link=f"{request.META['HTTP_HOST']}/membership_development_team/insb_site_registration_form"
     
     context={
         'requests':get_requests,
@@ -524,6 +525,11 @@ def site_registration_request_home(request):
     
     
     return render(request,'site_registration_home.html',context)
+
+
+
+import socket
+from smtplib import SMTPException
 
 @login_required
 def site_registration_request_details(request,ieee_id):
@@ -547,6 +553,8 @@ def site_registration_request_details(request,ieee_id):
     if request.method=="POST":
         if request.POST.get('register_to_database'):
             try:
+                #Creating record for the new Member. If the IEEE already exists in the database it will already update that particualr record with new Information
+                
                 new_member=Members(
                     ieee_id=get_request.ieee_id,
                     name=get_request.name,
@@ -565,10 +573,26 @@ def site_registration_request_details(request,ieee_id):
 
                 )
                 new_member.save()
+                
+                try:
+                    #Send an Email now
+                    subject="Site Registration Request Approved"
+                    #Getting the site domain
+                    site_domain=request.META['HTTP_HOST']
+                    message=f"Dear {new_member.name}, Welcome aboard!\nYour request to join IEEE NSU SB's new Portal Website has been Approved! Please redirect to the site to Signup With your IEEE ID using this link: {site_domain}/users/signup\nThank You."
+                    email_from=settings.EMAIL_HOST_USER
+                    recipient_list=[new_member.email_personal,]
+                    send_mail(
+                        subject,message,email_from,recipient_list
+                    )
+                except SMTPException as e:
+                    messages.info(request,"Email could not be sent to the user!\n")
+                
+                #Updating application status
                 Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).update(application_status=True)
                 messages.info(request,"Member Successfully Updated to the Main Database")
             except:
-                messages.info(request,"Sorry! Somethin went Wrong Please Try again")
+                messages.info(request,"Something went wrong! Please try Again")
         if request.POST.get('delete_request'):
             #Deleting Member
             try:

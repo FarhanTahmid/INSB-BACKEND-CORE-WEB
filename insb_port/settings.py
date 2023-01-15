@@ -172,3 +172,16 @@ django_heroku.settings(locals())
 REST_FRAMEWORK={
     'DEFAULT_RENDERER_CLASSES':('rest_framework.renderers.JSONRenderer',)
 }
+
+
+import environ
+env = environ.Env()
+environ.Env.read_env()
+
+#EMAIL SETTINGS
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_PORT=587
+EMAIL_HOST_USER=env('email_user')
+EMAIL_HOST_PASSWORD=env('email_password')
+EMAIL_USE_TLS=True
