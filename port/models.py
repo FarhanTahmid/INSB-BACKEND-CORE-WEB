@@ -6,6 +6,16 @@ class Teams(models.Model):
     
     def __str__(self) -> str:
         return self.team_name
+
+
+class Chapters_Society_and_Affinity_Groups(models.Model):
+    group_name=models.CharField(null=False,blank=False,max_length=150)
+
+    class Meta:
+        verbose_name="Chapters-Societies-Affinity Group"
+    def __str__(self) -> str:
+        return self.group_name    
+
 class Roles_and_Position(models.Model):
     role=models.CharField(max_length=40,null=False,blank=False)
     

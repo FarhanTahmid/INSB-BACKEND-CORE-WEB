@@ -19,8 +19,25 @@ def central_home(request):
         return render(request,'central_home.html')
     else:
         return render(request,"access_denied2.html")
+
+@login_required
 def event_control(request):
-    return render(request,'event_control_page.html')
+    
+    if(request.method=="POST"):
+        if request.POST.get('create_new_event'):
+            print("Create")
+    
+    return render(request,'event_page.html')
+
+@login_required
+def event_creation_form(request):
+    #load data to show in the form boxes
+    
+    #
+    return render(request,'event_creation_form.html')
+
+
+
 def teams(request):
     
     '''
