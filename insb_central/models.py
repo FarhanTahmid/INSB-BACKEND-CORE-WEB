@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.core.files.storage import FileSystemStorage
+from port.models import Chapters_Society_and_Affinity_Groups
 # Create your models here.
 
 ###### THESE MODELS ARE SPECIFICALLY USED FOR EVENT HANDLING PURPOSE ####
@@ -15,6 +16,11 @@ event_proposal_files=FileSystemStorage(location='Event Proposals')
 #list of the venues, primary key=id
 class Venue_List(models.Model):
     venue_name=models.CharField(null=False,blank=True,max_length=50)
+    
+    class Meta:
+        verbose_name="Venue"
+    def __str__(self) -> str:
+        return self.venue_name
 
 #Permission Criterias For an event, primary key=id
 class Permission_criteria(models.Model):
@@ -27,7 +33,7 @@ class Permission_criteria(models.Model):
     def get_absolute_url(self):
         return reverse("permission_categories", kwargs={"permission_name": self.permission_name})
 
-#Logistic Item For an Event, primary key=id
+#Table For Logistic Items , primary key=id
 class Logistic_Item_List(models.Model):
     item_list=models.CharField(max_length=100,null=False,blank=False)
     class Meta:
@@ -52,32 +58,83 @@ class Event_Proposal_Template(models.Model):
 
 ####### THIS BLOCK OF CODES REPRESENTS THE TABLES FOR SPECIFIC CREATED EVENTS #########
 
+#Super event table. A super event is like IEEE Day events. Lots of events are done under this
+#Super events primary key is the auto generated id
+class SuperEvents(models.Model):
+    super_event_name=models.CharField(null=False,blank=False,max_length=150)
+    super_event_description=models.CharField(null=True,blank=True,max_length=500)
+    start_date=models.DateField(null=True,blank=True,auto_now_add=False)
+    end_date=models.DateField(null=True,blank=True,auto_now_add=False)
+
+    class Meta:
+        verbose_name="Mother Event"
+    def __str__(self) -> str:
+        return self.super_event_name
+    def get_absolute_url(self):
+        return reverse("super_event", kwargs={"event_name": self.super_event_name})
+    
+
 #The events table. Primary key is the id
 class Events(models.Model):
     event_name=models.CharField(null=False,blank=False,max_length=150)
-    event_description=models.CharField(null=True,blank=True,max_length=500)
-    probable_date=models.DateField(null=True,blank=True,auto_now_add=False)
-    collaboration_with=models.CharField(null=True,blank=True,max_length=100)
+    super_event_name=models.ForeignKey(SuperEvents,null=True,blank=True,on_delete=models.CASCADE)
+    event_description=models.CharField(null=True,blank=True,max_length=1000)
+    event_organiser=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE,default=5)#Default is set to 5 to keep branch as default organizer of events
+    probable_date=models.DateField(null=False,blank=False,auto_now_add=False) #Must add probable date for an event
     final_date=models.DateField(null=True,blank=True,auto_now_add=False)
+    registration_fee=models.BooleanField(null=False,blank=False,default=False)
+    
     class Meta:
-        verbose_name="Registered Events"
+        verbose_name="Registered Event"
     
     def __str__(self) -> str:
         return self.event_name
     def get_absolute_url(self):
         return reverse("registered_events", kwargs={"event_name": self.event_name})
+
+#Inter NSU Branch-Student Branch Collaboration   
+class InterBranchCollaborations(models.Model):
+    event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
+    collaboration_with=models.ForeignKey(Chapters_Society_and_Affinity_Groups,on_delete=models.CASCADE)
     
+    class Meta:
+        verbose_name="Inter Branch Collaborations"
+    def __str__(self) -> str:
+        return str(self.event_id)
+    
+    
+#Collaboration Outside of NSU
+class IntraBranchCollaborations(models.Model):
+    event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
+    collaboration_with=models.CharField(null=True,blank=True,max_length=300) #max length kept long because there might be multiple collaborations
+
+    class Meta:
+        verbose_name="Intra Branch Collaborations"
+    def __str__(self) -> str:
+        return str(self.event_id)
 
 #Table for event Proposal for specific events
 class Event_Proposal(models.Model):
     event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
     event_proposal=models.FileField(storage=event_proposal_files,blank=True,null=True,default=None)
-
+    class Meta:
+        verbose_name="Event Proposal"
+    def __str__(self) -> str:
+        return str(self.event_id)
+    def get_absolute_url(self):
+        return reverse("proposal", kwargs={"event_name": self.event_id})
+    
 # table for venues for specific events, One to Many Field, primary key will be auto incremented id    
 class Event_Venue(models.Model):
     event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
     venue_id=models.ForeignKey(Venue_List,on_delete=models.CASCADE)
-
+    booking_status=models.BooleanField(null=False,blank=False,default=False)
+    
+    class Meta:
+        verbose_name="Event Venue"
+    def __str__(self) -> str:
+        return str(self.venue_id)
+    
 #Table For Permissions for specific events
 class Event_Permission(models.Model):
         event_id=models.ForeignKey(Events,on_delete=models.CASCADE)

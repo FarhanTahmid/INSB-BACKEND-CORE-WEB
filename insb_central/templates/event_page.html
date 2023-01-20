@@ -17,7 +17,8 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <h1>Central event control page for INSB</h1>
-        <button><a href="" class="">Create a new Event</a></button>
+        <button><a href="{% url 'insb_central:event_creation_form' %}" class="">Create a new Event</a></button>
+        <button><a href="" class="">Create a new Super Event</a></button>
         <script src="" async defer></script>
     </body>
 </html>

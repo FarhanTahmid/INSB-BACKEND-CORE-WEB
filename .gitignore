@@ -153,3 +153,9 @@ GitHub.sublime-settings
 #Database
 
 database-info.txt
+
+#Project Files
+User Files/
+Permission Templates/
+Event Proposals/
+Temlate-Event Proposal/
