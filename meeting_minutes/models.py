@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 
-# List of meeting minutes
+# meeting minutes' information
 class meeting_minute(models.Model):
     meeting_title=models.CharField(null=False,blank=False,max_length=150)
     meeting_attendees=models.CharField(null=False,blank=False,max_length=150)

@@ -52,7 +52,6 @@ class Access_Render:
     def system_administrator_superuser_access(username):
         try:
             access=User.objects.get(username=username)
-            print(access)
             if(access.is_superuser):
                 return True
             else:
