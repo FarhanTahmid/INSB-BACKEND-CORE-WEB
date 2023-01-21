@@ -1,2 +1,5 @@
+from . models import Logistic_Item_List
 class LogisticsTeam:
-    pass
+    
+    def getLogisticsItem():
+        return Logistic_Item_List.objects.all()
