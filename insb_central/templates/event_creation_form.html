@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,12 +12,15 @@
         Event Creation Form
     </h1>
     <form method="POST">
+        {% csrf_token %}
         <label for="">Mother Event</label>
-        <select name="event_under">
-            <option value="null" name="" selected>----------</option>
-            <option value="1" name="collaboration_option">1</option>
-            <option value="1" name="collaboration_option">1</option>
-            <option value="1" name="collaboration_option">1</option>
+        <select name="super_event">
+            <option value="null" selected>----------</option>
+            {% for super_event in super_events %}
+                <option value={{super_event.id}}>{{super_event.super_event_name}}</option>
+            {% endfor %}
+            
+            
         </select>
         <br><br>
         <label>Name:</label>
@@ -28,10 +32,12 @@
         <br><br>
         <label for="">Inter Branch Collaboration With:</label><br>
         <select name="collaboration_with" multiple>
-            <option value="null" name="" selected>----------</option>
-            <option value="1" name="collaboration_option">1</option>
-            <option value="1" name="collaboration_option">1</option>
-            <option value="1" name="collaboration_option">1</option>
+            <option value="null" name="collaboration_option" selected>----------</option>
+            {% for inter_branch_collaboration_option in inter_branch_collaboration_options %}
+                <option value={{inter_branch_collaboration_option.id}} name="inter_branch_collaboration_option">{{inter_branch_collaboration_option.group_name}}</option>
+            {% endfor %}
+            
+            
         </select>
         <br>
         <br>
@@ -42,19 +48,21 @@
         
         <label for="">Select Probable Venues For the Event</label><br>
         <select name="collaboration_with" multiple>
-            <option value="null" name="" selected>----------</option>
-            <option value="1" name="collaboration_option">1</option>
-            <option value="1" name="collaboration_option">1</option>
-            <option value="1" name="collaboration_option">1</option>
+            <option value="null" name="venue_option" selected>----------</option>
+            {% for venue  in venues %}
+                <option value={{venue.id}} name="venue_option">{{venue.venue_name}}</option>
+            {% endfor %}
+            
+            
         </select>
         <br><br>
 
         <label for="">Select Permission Criterias For the Event</label><br>
         <select name="collaboration_with" multiple>
-            <option value="null" name="" selected>----------</option>
-            <option value="1" name="collaboration_option">1</option>
-            <option value="1" name="collaboration_option">1</option>
-            <option value="1" name="collaboration_option">1</option>
+            <option value="null" name="permission_criteria" selected>----------</option>
+            {% for permission in permission_criterias %}{% endfor %}
+            <option value={{permission.id}} name="permission_criteria">{{permission.permission_name}}</option>
+            
         </select>
         <br><br>
         

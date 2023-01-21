@@ -11,6 +11,11 @@ import csv,datetime
 from users.ActiveUser import ActiveUser
 from django.db import DatabaseError
 from system_administration.render_access import Access_Render
+from insb_central.renderData import Branch
+from events_and_management_team.renderData import Events_And_Management_Team
+from logistics_and_operations_team.renderData import LogisticsTeam
+
+
 # Create your views here.
 def central_home(request):
     user=request.user
@@ -31,10 +36,39 @@ def event_control(request):
 
 @login_required
 def event_creation_form(request):
-    #load data to show in the form boxes
+    
+    #######load data to show in the form boxes#########
+    
+    #loading super/mother event at first
+    super_events=Branch.load_all_mother_events()
+    #loading all inter branch collaboration Options
+    inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+    #loading all venues from the venue list from event management team database
+    venues=Events_And_Management_Team.getVenues()
+    #loading all the permission criterias from event management team database
+    permission_criterias=Events_And_Management_Team.getPermissionCriterias()
+
+    
+    context={
+        'super_events':super_events,
+        'inter_branch_collaboration_options':inter_branch_collaboration_options,
+        'venues':venues,
+        'permission_criterias':permission_criterias,
+    }
+    
+    if(request.method=="POST"):
+        if(request.POST.get('create')):
+            super_event_name=request.POST.get('super_event')
+            
+            if(super_event_name=="null"):
+                print(super_event_name)
+                #now create the event as null
+            else:
+                print(super_event_name)
+                #create the event with super event id
     
     #
-    return render(request,'event_creation_form.html')
+    return render(request,'event_creation_form.html',context)
 
 
 
