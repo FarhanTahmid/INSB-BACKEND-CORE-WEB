@@ -61,8 +61,21 @@ def event_creation_form(request):
             super_event_name=request.POST.get('super_event')
             
             if(super_event_name=="null"):
-                print(super_event_name)
-                #now create the event as null
+                #now create the event as super event is null
+                event_name=request.POST['event_name']
+                event_description=request.POST['event_description']
+                 
+                inter_branch_collaboration=request.POST.get('inter_branch_collaboration')#this stores multiple option so keep the place for that
+                intra_branch_collaboration=request.POST['intra_branch_collaboration']
+                
+                if(inter_branch_collaboration=="null"):
+                    #dont create an instance of InterBranchCollaborations table which is in insb_central models
+                    pass
+                else:
+                    pass
+                
+                print(super_event_name )
+                
             else:
                 print(super_event_name)
                 #create the event with super event id
