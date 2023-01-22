@@ -13,6 +13,7 @@
     </h1>
     <form method="POST">
         {% csrf_token %}
+        
         <label for="">Mother Event</label>
         <select name="super_event">
             <option value="null" selected>----------</option>
@@ -31,10 +32,10 @@
         <input type="text" name="event_description" style="height: 250px; width:500px;" placeholder="Write with in 500 words">
         <br><br>
         <label for="">Inter Branch Collaboration With:</label><br>
-        <select name="collaboration_with" multiple>
-            <option value="null" name="collaboration_option" selected>----------</option>
+        <select name="inter_branch_collaboration" multiple>
+            <option value="null" selected>----------</option>
             {% for inter_branch_collaboration_option in inter_branch_collaboration_options %}
-                <option value={{inter_branch_collaboration_option.id}} name="inter_branch_collaboration_option">{{inter_branch_collaboration_option.group_name}}</option>
+                <option value={{inter_branch_collaboration_option.id}}>{{inter_branch_collaboration_option.group_name}}</option>
             {% endfor %}
             
             
@@ -42,15 +43,14 @@
         <br>
         <br>
         <label for="">Intra Branch Collaboration:</label>
-        <input type="text" name="itra_collaboration_name" id="" placeholder="Enter Organization Names">
+        <input type="text" name="intra_branch_collaboration" id="" placeholder="Enter Organization Names">
         <br>
         <br>
         
         <label for="">Select Probable Venues For the Event</label><br>
-        <select name="collaboration_with" multiple>
-            <option value="null" name="venue_option" selected>----------</option>
+        <select name="event_venues" multiple>
             {% for venue  in venues %}
-                <option value={{venue.id}} name="venue_option">{{venue.venue_name}}</option>
+                <option value={{venue.id}}>{{venue.venue_name}}</option>
             {% endfor %}
             
             
