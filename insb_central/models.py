@@ -36,7 +36,11 @@ class Events(models.Model):
     event_name=models.CharField(null=False,blank=False,max_length=150)
     super_event_name=models.ForeignKey(SuperEvents,null=True,blank=True,on_delete=models.CASCADE)
     event_description=models.CharField(null=True,blank=True,max_length=1000)
+<<<<<<< HEAD
+    event_organiser=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE,default=5)#Default is set to 5 to keep branch as default organizer of events
+=======
     event_organiser=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE,default=5)#Default is set to 5 to keep branch as default organizer of events, If a new database is created change this number according to the id of the branch
+>>>>>>> 0b48b49b16c951c3eea9048649959ab8e77feb2a
     probable_date=models.DateField(null=True,blank=True,auto_now_add=False) #Must add probable date for an event
     final_date=models.DateField(null=True,blank=True,auto_now_add=False)
     registration_fee=models.BooleanField(null=False,blank=False,default=False)
