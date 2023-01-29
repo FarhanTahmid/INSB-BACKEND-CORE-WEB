@@ -1,7 +1,8 @@
-from port.models import Teams,Roles_and_Position
+from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups
 from users.models import Members
 from django.db import DatabaseError
 from system_administration.models import MDT_Data_Access
+from . models import SuperEvents
 
 
 class Branch:
@@ -49,3 +50,10 @@ class Branch:
             return False
         except:
             return DatabaseError
+    
+    def load_all_mother_events():
+        '''This method loads all the mother/Super events'''
+        return SuperEvents.objects.all()
+    def load_all_inter_branch_collaboration_options():
+        '''This loads all the chapters and Societies of the branch'''
+        return Chapters_Society_and_Affinity_Groups.objects.all()
