@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'logistics_and_operations_team',
     'events_and_management_team',
     'insb_central',
+    'meeting_minutes',
 ]
 
 MIDDLEWARE = [
