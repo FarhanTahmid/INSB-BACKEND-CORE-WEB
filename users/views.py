@@ -104,9 +104,14 @@ def dashboard(request):
 def profile_page(request):
     
     '''This function loads all the view for User profile View'''
+
+    current_user=renderData.LoggedinUser(request.user)
+    profile_data=current_user.getUserData()
+
     
     if request.method=="POST":
         if request.POST.get('change_profile_pic'):
+            print("gett")
             try:
                 file=request.FILES['profile_picture']
                 user=renderData.LoggedinUser(request.user)
@@ -118,8 +123,11 @@ def profile_page(request):
                     
             except MultiValueDictKeyError:
                 messages.info(request,"Please select a file first!")
+    context={
+        'user_data':profile_data,
+    }
     
-    return render(request,"users/user_profile.html")
+    return render(request,"users/profile_page.html",context)
 
 
 
