@@ -239,14 +239,14 @@
                             </div>
                             <div class="row px-3">
                                 <div class="col-md-6">
-                                    <p class="fw-bold">Address: <span class="fw-light ms-2">Planet earth</span></p>
-                                    <p class="fw-bold">Email: <span class="fw-light ms-2">depression@northsouth.edu</span></p>
-                                    <p class="fw-bold">Contact Info: <span class="fw-light ms-2">+88013420420420</span></p>
+                                    <p class="fw-bold">Address: <span class="fw-light ms-2">{{ user_data.home_address }}</span></p>
+                                    <p class="fw-bold">Email: <span class="fw-light ms-2">{{ user_data.email_personal }}</span></p>
+                                    <p class="fw-bold">Contact Info: <span class="fw-light ms-2">{{ user_data.contact_no }}</span></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p class="fw-bold">Date of Birth: <span class="fw-light ms-2">14-04-1730</span></p>
-                                    <p class="fw-bold">Gender: <span class="fw-light ms-2">Male</span></p>
-                                    <p class="fw-bold">Major in NSU: <span class="fw-light ms-2">Tar Bisheshoggo</span></p>
+                                    <p class="fw-bold">Date of Birth: <span class="fw-light ms-2">{{ user_data.dob }}</span></p>
+                                    <p class="fw-bold">Gender: <span class="fw-light ms-2">{{ user_data.gender }}</span></p>
+                                    <p class="fw-bold">Major in NSU: <span class="fw-light ms-2">{{ user_data.major }}</span></p>
                                 </div>
                             </div>
 
@@ -256,8 +256,8 @@
                             </div>
 
                             <div class="px-3">
-                                <p class="fw-bold">Joining Session: <span class="fw-light ms-2">1971</span></p>
-                                <p class="fw-bold">Last Renewal: <span class="fw-light ms-2">Mone nai</span></p>
+                                <p class="fw-bold">Joining Session: <span class="fw-light ms-2">{{ user_data.joining_session }}</span></p>
+                                <p class="fw-bold">Last Renewal: <span class="fw-light ms-2">{{ user_data.last_renewal }}</span></p>
                                 <p class="fw-bold">Account Status: <span class="fw-light ms-2">Poor (0 BDT)</span></p>
                             </div>
                         </div>
