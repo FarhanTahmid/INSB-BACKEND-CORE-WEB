@@ -108,21 +108,22 @@ def profile_page(request):
     current_user=renderData.LoggedinUser(request.user)
     profile_data=current_user.getUserData()
 
-    
     if request.method=="POST":
-        if request.POST.get('change_profile_pic'):
-            print("gett")
-            try:
-                file=request.FILES['profile_picture']
-                user=renderData.LoggedinUser(request.user)
-                change_pro_pic=user.change_profile_picture(file) #Calling function to change profile picture of the user
-                if(change_pro_pic==False):
-                    return DatabaseError
-                else:
-                    messages.info(request,"Profile Picture was changed successfully!")
-                    
-            except MultiValueDictKeyError:
-                messages.info(request,"Please select a file first!")
+        
+        try:
+            file=request.FILES['profile_picture']
+            user=renderData.LoggedinUser(request.user)
+            change_pro_pic=user.change_profile_picture(file) #Calling function to change profile picture of the user
+            if(change_pro_pic==False):
+                return DatabaseError
+            else:
+                messages.info(request,"Profile Picture was changed successfully!")
+                return redirect('users:profile')
+        except MultiValueDictKeyError:
+            messages.info(request,"Please select a file first!")
+        
+            
+            
     context={
         'user_data':profile_data,
     }
