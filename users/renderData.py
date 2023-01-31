@@ -24,7 +24,9 @@ class LoggedinUser:
             'ieee_id':get_Member_details.ieee_id,
             'email':get_Member_details.email_ieee,
             'nsu_id':get_Member_details.nsu_id,
+            'ieee_email':get_Member_details.email_ieee,
             'profile_picture':'/media_files/'+str(get_Member_details.user_profile_picture),
+        
         }
         except Members.DoesNotExist:
             try:
