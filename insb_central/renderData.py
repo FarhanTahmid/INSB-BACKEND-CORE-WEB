@@ -3,8 +3,7 @@ from users.models import Members
 from django.db import DatabaseError
 from system_administration.models import MDT_Data_Access
 from . models import SuperEvents
-from apiclient import discovery
-from httplib2 import Http
+
 
 
 

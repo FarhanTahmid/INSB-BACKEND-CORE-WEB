@@ -8,7 +8,7 @@ from django.urls import reverse
 from insb_port import settings
 from port.models import Teams,Roles_and_Position
 from recruitment.models import recruitment_session
-from membership_development_team.models import Renewal_Sessions
+# from membership_development_team.models import Renewal_Sessions
 # Create your models here.
 
 class Members(models.Model):
@@ -31,7 +31,8 @@ class Members(models.Model):
     team=models.ForeignKey(Teams,null=True,blank=True,on_delete=models.CASCADE)
     position=models.ForeignKey(Roles_and_Position,default=13,on_delete=models.CASCADE) #Default=13 means the position of a general member, check roles and positions table
     session=models.ForeignKey(recruitment_session,null=True,blank=True,on_delete=models.CASCADE)
-    last_renewal=models.ForeignKey(Renewal_Sessions,blank=True,null=True,on_delete=models.CASCADE) #registers the last renewal
+    last_renewal_time=models.DateField(blank=True,null=True,auto_now_add=False) #registers the last renewal
+    last_renewal_session=models.CharField(blank=True,null=True,max_length=50) #registers the last renewal
     
     class Meta:
         verbose_name='INSB Registered Members'
