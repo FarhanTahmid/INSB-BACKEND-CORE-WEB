@@ -17,10 +17,12 @@ from logistics_and_operations_team.renderData import LogisticsTeam
 
 
 # Create your views here.
+
 def central_home(request):
     user=request.user
     has_access=Access_Render.system_administrator_superuser_access(user.username)
     if (has_access):
+        #renderData.Branch.test_google_form()
         return render(request,'central_home.html')
     else:
         return render(request,"access_denied2.html")
