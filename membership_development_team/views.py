@@ -288,7 +288,9 @@ def renewal_request_details(request,pk,request_id):
                 ieee_id=member.ieee_id #getting the ieee id
                     
                 #update data in main registered Members database
-                Members.objects.filter(ieee_id=ieee_id).update(last_renewal=pk)
+                get_renewal_session=Renewal_Sessions.objects.get(id=pk)
+                Members.objects.filter(ieee_id=ieee_id).update(last_renewal_time=get_renewal_session.session_time)
+                Members.objects.filter(ieee_id=ieee_id).update(last_renewal_session=get_renewal_session.session_name)
                 
                 # #Update in renewal requests database.
                 Renewal_requests.objects.filter(id=request_id).update(renewal_status=True)
