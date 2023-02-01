@@ -117,6 +117,7 @@
        <!-- SESSION start -->
       <div class="btn-group w-100 justify-content-center justify-content-center m-3" role="group" aria-label="Basic example">
         <a href="{% url 'membership_development_team:renewal_form' session_id %}" class="btn btn-primary rounded m-1">View Renewal Form</a>
+        <a href="{% url 'membership_development_team:renewal_form' session_id %}" class="btn btn-warning rounded m-1">Edit Renewal Form Credentials</a>
         <a href="{% url "membership_development_team:export_excel_renewal_request" session_id %}" class="btn btn-success rounded m-1">Generate Excel Sheet of this Session</a> 
         <a href="{% url "membership_development_team:membership_renewal" %}" class="btn btn-info rounded m-1">View sessions</a>
       </div>
