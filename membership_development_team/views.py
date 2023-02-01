@@ -164,6 +164,7 @@ def membership_renewal(request):
 
 # no login required as this will open up for other people
 def membership_renewal_form(request,pk):
+    
     session_name=renewal_data.get_renewal_session_name(pk)
     context={
         'session_name':session_name,
@@ -238,8 +239,37 @@ def renewal_session_data(request,pk):
     renewed_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=True).count()
     #counting the pending requests
     pending_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=False).count()
+    
+    #loading team member data for form credential edit
+    load_team_members=renderData.MDT_DATA.load_team_members()
+    
     #form link for particular sessions
     form_link=f"{request.META['HTTP_HOST']}/membership_development_team/renewal_form/"+str(session_id)
+    
+    if request.method=="POST":
+        if request.POST.get('update_form_credentials'):
+            form_description=request.POST['form_description']
+            ieee_membership_amount=request.POST['ieee_membership_amount']
+            ieee_ras_membership_amount=request.POST['ieee_ras_membership_amount']
+            ieee_pes_membership_amount=request.POST['ieee_pes_membership_amount']
+            ieee_ias_membership_amount=request.POST['ieee_ias_membership_amount']
+            ieee_wie_membership_amount=request.POST['ieee_wie_membership_amount']
+            bkash_payment_number=request.POST['bkash_payment_number']
+            further_contact_member_id=request.POST['further_contact_member_id']
+            
+            #update form credentials
+            renderData.MDT_DATA.create_form_data_for_particular_renewal_session(
+                renewal_session_id=pk,
+                form_description=form_description,
+                ieee_membership_amount=ieee_membership_amount,
+                ieee_ias_membership_amount=ieee_ias_membership_amount,
+                ieee_pes_membership_amount=ieee_pes_membership_amount,
+                ieee_ras_membership_amount=ieee_ras_membership_amount,
+                ieee_wie_membership_amount=ieee_wie_membership_amount,
+                bkash_payment_number=bkash_payment_number,
+                further_contact_member_id=further_contact_member_id
+            )
+            
     context={
         'session_name':session_name,
         'session_id':session_id,
@@ -248,6 +278,7 @@ def renewal_session_data(request,pk):
         'notification_count':notification_count,
         'renewed_count':renewed_count,
         'pending_count':pending_count,
+        'mdt_team_member':load_team_members,
     }
     
     return render(request,'renewal_sessions.html',context)
