@@ -1,3 +1,4 @@
+from . models import Renewal_Form_Info
 from users.models import Members
 from port.models import Teams
 from system_administration.models import MDT_Data_Access
@@ -159,6 +160,10 @@ class MDT_DATA:
             return True
         else:
             return False
+    
+    def create_form_data_for_particular_renewal_session(renewal_session_id):
+        create_form=Renewal_Form_Info(form_id=renewal_session_id)
+        create_form.save()
 
     
     
