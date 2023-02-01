@@ -51,17 +51,19 @@
                 
                         <div class="p-2 mb-4">
                             <br>
+                            <h6 style="font-size:20px; font-style:italic;">{{form_credentials.form_description}}</h6>
                             <h4
                                 class="p-3 mb-4" style="font-weight:bold;"
                             >
                                 Read the instructions given below carefully Before you submit your Renewal Request:
-                            </h3>
+                            </h4>
                             <ul>
-                                <li style="font-size:15px">To apply for the renewal session please fill this form up only after paying the Renewal Fee. Enter the correct password only for your IEEE account and Enter the e-mail which is associated with your IEEE account!</li>
+                                <li style="font-size:15px">Enter the correct password only for your IEEE account and Enter the e-mail which is associated with your IEEE account!</li>
                                 <li style="font-size:15px">Your password will stay confidential and would not be shared anywhere.</li>
+                                <li style="font-size:15px">If you are a SBC or SBAG member, you must renew both your IEEE and Society Memberships and Subscriptions. If you have already renewed your IEEE Membership then you don't need to pay for that, you just have to pay for the Society Membership renewal</li>
                                 <li style="font-size:15px">If you have Paid by yourself or via any Societies / Affinity Group, write "Self" / "Society / Affinity Group name" in the Transaction ID field</li>
-                                <li style="font-size:15px">If you have a free subscription of any kind, tick mark the option for which you have free subscription and write it under the comment section</li>
-                                <li style="font-size:15px">If you have any further queries, please contact Membership Development Team of IEEE NSU STUDENT BRANCH</li>
+                                <li style="font-size:15px">If you have a free subscription of any kind, tick mark the option for which you have free subscription and Mention it under the comment section</li>
+                                <li style="font-size:15px">If you have any further queries, please contact {{form_credentials.further_contact_member_id.name}}, {{form_credentials.further_contact_member_id.position}}, {{form_credentials.further_contact_member_id.team}} Team, IEEE NSU SB. <a href={{form_credentials.further_contact_member_id.facebook_url}}>Facebook</a>, <a href={{form_credentials.further_contact_member_id.linkedin_url}}>Linkedin</a>, Cell: {{form_credentials.further_contact_member_id.contact_no}}</li>
                             </ul>
                             <br>
                             
@@ -152,6 +154,29 @@
                                 Subscription options
                             </h3>
                             <div class="px-0 px-md-5">
+
+                                <h5 class="" style="font-weight:bold;">Renewal Fee Details:</h5>
+                                <ul>
+                                    <li><span style="font-weight:bold; font-size:15px;">IEEE Membership:</span> <span style="font-style:italic;font-weight:bold;font-size:15px;">{{form_credentials.ieee_membership_amount}}</span> </li>
+                                    <li><span style="font-weight:bold;font-size:15px;">IEEE RAS Membership:</span> <span style="font-style:italic;font-weight:bold;font-size:15px;">{{form_credentials.ieee_ras_membership_amount}}</span> </li>
+                                    <li><span style="font-weight:bold;font-size:15px;">IEEE IAS Membership:</span> <span style="font-style:italic;font-weight:bold;font-size:15px;">{{form_credentials.ieee_ias_membership_amount}}</span> </li>
+                                    <li><span style="font-weight:bold;font-size:15px;">IEEE PES Membership:</span> <span style="font-style:italic;font-weight:bold;font-size:15px;">{{form_credentials.ieee_pes_membership_amount}}</span> </li>
+                                    <li><span style="font-weight:bold;font-size:15px;">IEEE WIE Membership:</span> <span style="font-style:italic;font-weight:bold;font-size:15px;">{{form_credentials.ieee_wie_membership_amount}}</span> </li>
+
+                                </ul>
+                                <h5 class="" style="font-weight:bold;">Payment Options and Method (via Bkash):</h5>
+                                <ol>
+                                    <li><span style="font-weight:bold;font-size:15px;">Bkash Number:</span><span style="font-weight:bold;font-style:italic;font-size:15px;"> {{form_credentials.bkash_payment_number}}</span></li>
+                                    <li><span style="font-size:15px;">During payment, add </span> <span style="font-weight:bold; font-size:15px;">referrence</span> <span style="font-size:15px;">note: </span><span style="font-weight:bold; font-size:15px;">"Renewal IEEE NSU"</span></li>
+                                    <li><span style="font-size:15px;">After payment, please assure by </span> <span style="font-weight:bold; font-size:15px;">calling</span> <span style="font-size:15px;">the number you have made the payment.</span>></li>
+                                    
+                                    <li><span style="font-size:15px;">Provide your</span><span style="font-weight:bold; font-size:15px;"> "Bkash Transaction ID"</span></li>
+
+                                </ol>
+
+
+
+                            
 
                                 <div class="row my-0">
                                     <div class="col-md-2 mt-1">Options:</div>

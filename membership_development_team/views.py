@@ -166,9 +166,16 @@ def membership_renewal(request):
 def membership_renewal_form(request,pk):
     
     session_name=renewal_data.get_renewal_session_name(pk)
+    
+    #load renewal form credentials
+    form_credentials=renderData.MDT_DATA.load_form_data_for_particular_renewal_session(renewal_session_id=pk)
+    if(form_credentials==False):
+        messages.info(request,"No Form Data was Updates. Please Update form data from the session page")
+    
+    
     context={
         'session_name':session_name,
-        
+        'form_credentials':form_credentials,    
     }
     
     if request.method=="POST":
@@ -229,7 +236,6 @@ def membership_renewal_form_success(request,pk):
 @login_required
 def renewal_session_data(request,pk):
     '''This view function loads all data for the renewal session including the members registered'''
-    renewal_data.get_renewal_session_name(pk)
     session_name=renewal_data.get_renewal_session_name(pk)
     session_id=renewal_data.get_renewal_session_id(session_name=session_name)
     get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_personal','contact_no',).order_by('-id')
@@ -245,6 +251,12 @@ def renewal_session_data(request,pk):
     
     #form link for particular sessions
     form_link=f"{request.META['HTTP_HOST']}/membership_development_team/renewal_form/"+str(session_id)
+    
+    #try loading form data to notify user if form credentials has been updated or not for that session with button glow in "Update Form Credentials"
+    has_form_data=False
+    if(renderData.MDT_DATA.load_form_data_for_particular_renewal_session(renewal_session_id=pk)==False):
+        has_form_data=True
+    
     
     if request.method=="POST":
         if request.POST.get('update_form_credentials'):
@@ -279,6 +291,7 @@ def renewal_session_data(request,pk):
         'renewed_count':renewed_count,
         'pending_count':pending_count,
         'mdt_team_member':load_team_members,
+        'has_form_data':has_form_data,
     }
     
     return render(request,'renewal_sessions.html',context)
