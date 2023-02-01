@@ -164,6 +164,7 @@ class MDT_DATA:
             return False
     
     def create_form_data_for_particular_renewal_session(renewal_session_id,form_description,ieee_membership_amount,ieee_ras_membership_amount,ieee_pes_membership_amount,ieee_ias_membership_amount,ieee_wie_membership_amount,bkash_payment_number,further_contact_member_id):
+        '''Creates and Updates Form data For Renewal Forms (Session Wise)'''
         create_form=Renewal_Form_Info(form_id=renewal_session_id, #in models the form id is primary key. Sending the renewal session id as primary key also to identify every form unique to a renewal session
                                       session=Renewal_Sessions.objects.get(id=renewal_session_id),
                                       form_description=form_description,
@@ -177,7 +178,16 @@ class MDT_DATA:
                                       
                                       )
         create_form.save()
-
+    
+    def load_form_data_for_particular_renewal_session(renewal_session_id):
+        '''Loads data for paritcular renewal session. Takes the id of the renewal session as the parameter'''
+        try:
+            form_credentials=Renewal_Form_Info.objects.get(form_id=renewal_session_id)
+            return form_credentials
+        except Renewal_Form_Info.DoesNotExist:
+            return False
+        except:
+            return False
     
     
             

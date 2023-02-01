@@ -32,7 +32,7 @@ class LoggedinUser:
             'gender':get_Member_details.gender,
             'major':get_Member_details.major,
             'joining_session':get_Member_details.session,
-            'last_renewal':get_Member_details.last_renewal,
+            'last_renewal':get_Member_details.last_renewal_session,
             'profile_picture':'/media_files/'+str(get_Member_details.user_profile_picture),
         
         }
