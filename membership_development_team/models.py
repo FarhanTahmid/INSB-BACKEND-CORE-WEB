@@ -50,7 +50,10 @@ class Renewal_requests(models.Model):
 
 #Table For renewal Form information datas
 class Renewal_Form_Info(models.Model):
-    form_id=models.ForeignKey(Renewal_Sessions,on_delete=models.CASCADE,null=True,blank=True)
+    #primary key of each form will be the primary key of renewal session
+    form_id=models.IntegerField(primary_key=True,null=False,blank=False,default=0)
+    #to identify the form with session name we are using this session
+    session=models.ForeignKey(Renewal_Sessions,on_delete=models.CASCADE,null=True,blank=True)
     #details of the form
     form_description=models.CharField(null=True,blank=True,max_length=700)
     #membership payment amount details

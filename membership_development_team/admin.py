@@ -12,4 +12,4 @@ class Joining_Requests(admin.ModelAdmin):
     list_display=['ieee_id','name','position','team']
 @admin.register(Renewal_Form_Info)
 class Renewal_Form_Info(admin.ModelAdmin):
-    list_display=['id','form_description']
+    list_display=['form_id','session']
