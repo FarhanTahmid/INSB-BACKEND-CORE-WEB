@@ -140,6 +140,10 @@ def membership_renewal(request):
     '''This function is responsible for the data handling for renewal Process and loads all the sessions'''
     #Load all sessions at first
     sessions=Renewal_Sessions.objects.order_by('-id')
+
+    
+
+
     context={
         'sessions':sessions
     }
@@ -170,7 +174,7 @@ def membership_renewal_form(request,pk):
     #load renewal form credentials
     form_credentials=renderData.MDT_DATA.load_form_data_for_particular_renewal_session(renewal_session_id=pk)
     if(form_credentials==False):
-        messages.info(request,"No Form Data was Updates. Please Update form data from the session page")
+        messages.info(request,"No Form Data was Updated. Please Update form data from the session page")
     
     
     context={
@@ -255,6 +259,8 @@ def renewal_session_data(request,pk):
     #try loading form data to notify user if form credentials has been updated or not for that session with button glow in "Update Form Credentials"
     has_form_data=False
     if(renderData.MDT_DATA.load_form_data_for_particular_renewal_session(renewal_session_id=pk)==False):
+        has_form_data=False
+    else:
         has_form_data=True
     
     
@@ -281,7 +287,7 @@ def renewal_session_data(request,pk):
                 bkash_payment_number=bkash_payment_number,
                 further_contact_member_id=further_contact_member_id
             )
-            
+    print(has_form_data)     
     context={
         'session_name':session_name,
         'session_id':session_id,
