@@ -287,7 +287,7 @@ def renewal_session_data(request,pk):
                 bkash_payment_number=bkash_payment_number,
                 further_contact_member_id=further_contact_member_id
             )
-    print(has_form_data)     
+            return redirect('membership_development_team:renewal_session_data',pk) 
     context={
         'session_name':session_name,
         'session_id':session_id,
