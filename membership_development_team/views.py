@@ -20,14 +20,14 @@ from django.conf import settings
 from system_administration.render_access import Access_Render
 from django.core.mail import send_mail
 import socket
+from . import email_sending
 
 
 
 # Create your views here.
 def md_team_homepage(request):
     '''Loads the data for homepage of MDT TEAM'''
-    
-    
+
     #Loading data of the co-ordinators, co ordinator id is 9,
     co_ordinators=renderData.MDT_DATA.get_member_with_postion(9)
     #Loading data of the incharges, incharge id is 10
@@ -552,6 +552,7 @@ def data_access(request):
         return render(request,'data_access_table.html',context=context)
     else:
         return render(request,'access_denied.html')
+    
 @login_required
 def site_registration_request_home(request):
     
@@ -606,8 +607,8 @@ def site_registration_request_details(request,ieee_id):
         if request.POST.get('register_to_database'):
             try:
                 #Creating record for the new Member. If the IEEE already exists in the database it will already update that particualr record with new Information
-                
-                new_member=Members(
+                if(get_request.team==None):
+                    new_member=Members(
                     ieee_id=get_request.ieee_id,
                     name=get_request.name,
                     nsu_id=get_request.nsu_id,
@@ -620,29 +621,49 @@ def site_registration_request_details(request,ieee_id):
                     gender=get_request.gender,
                     facebook_url=get_request.facebook_url,
                     linkedin_url=get_request.linkedin_url,
-                    team=Teams.objects.get(id=get_request.team.id),
+                    #if team=None then it will not create the record
                     position=Roles_and_Position.objects.get(id=get_request.position.id)
 
-                )
-                new_member.save()
-                
-                try:
-                    #Send an Email now
-                    subject="Site Registration Request Approved"
-                    #Getting the site domain
-                    site_domain=request.META['HTTP_HOST']
-                    message=f"Dear {new_member.name}, Welcome aboard!\nYour request to join IEEE NSU SB's new Portal Website has been Approved! Please redirect to the site to Signup With your IEEE ID using this link: {site_domain}/users/signup\nThank You."
-                    email_from=settings.EMAIL_HOST_USER
-                    recipient_list=[new_member.email_personal,]
-                    send_mail(
-                        subject,message,email_from,recipient_list
                     )
-                except SMTPException as e:
-                    messages.info(request,"Email could not be sent to the user!\n")
+                    new_member.save()
+                    if(email_sending.send_email_on_site_registration_verification_to_user(request,new_member.name,new_member.email_personal)==False):
+                        messages.info(request,"Couldn't Send Verification Email")
+                    else:
+                        messages.info(request,"User Notified via Email")
                 
-                #Updating application status
-                Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).update(application_status=True)
-                messages.info(request,"Member Successfully Updated to the Main Database")
+                    #Updating application status
+                    Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).update(application_status=True)
+                    messages.info(request,"Member Successfully Updated to the Main Database")
+                    
+                else:
+                    #create with team id
+                    new_member=Members(
+                        ieee_id=get_request.ieee_id,
+                        name=get_request.name,
+                        nsu_id=get_request.nsu_id,
+                        email_ieee=get_request.email_ieee,
+                        email_personal=get_request.email_personal,
+                        major=get_request.major,
+                        contact_no=get_request.contact_no,
+                        home_address=get_request.home_address,
+                        date_of_birth=get_request.date_of_birth,
+                        gender=get_request.gender,
+                        facebook_url=get_request.facebook_url,
+                        linkedin_url=get_request.linkedin_url,
+                        team=Teams.objects.get(id=get_request.team.id),
+                        position=Roles_and_Position.objects.get(id=get_request.position.id)
+
+                    )
+                    new_member.save()
+                
+                    if(email_sending.send_email_on_site_registration_verification_to_user(request,new_member.name,new_member.email_personal)==False):
+                        messages.info(request,"Couldn't Send Verification Email")
+                    else:
+                        messages.info(request,"User Notified via Email")
+                
+                    #Updating application status
+                    Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).update(application_status=True)
+                    messages.info(request,"Member Successfully Updated to the Main Database")
             except:
                 messages.info(request,"Something went wrong! Please try Again")
         if request.POST.get('delete_request'):
@@ -661,7 +682,9 @@ def site_registration_request_details(request,ieee_id):
 
 
 
+
 from . models import Portal_Joining_Requests
+
 def site_registration_form(request):
     load_all_teams=Teams.objects.all()
     positions=Roles_and_Position.objects.all()
@@ -673,7 +696,7 @@ def site_registration_form(request):
     if request.method=="POST":
         
         if request.POST.get('apply'):
-            
+            messages.info(request,"Please wait a moment. The process might take some time.")
             if(request.POST.get('team')=="null"):
                 try:
                     registration_request=Portal_Joining_Requests(
@@ -693,6 +716,12 @@ def site_registration_form(request):
                         position=Roles_and_Position.objects.get(id=request.POST.get('position')) 
                     )
                     registration_request.save()
+                    mdt_officials = renderData.MDT_DATA.load_officials_of_MDT()
+                    for official in mdt_officials:
+                        if(email_sending.send_emails_to_officials_upon_site_registration_request(request,registration_request.name,registration_request.ieee_id,registration_request.position,registration_request.team,official.name,official.email_ieee)==False):
+                            print("Email couldn't be sent")
+                        else:
+                            print(f"Email sent to {official.email_ieee}")                    
                     return redirect('membership_development_team:confirmation')
                 except:
                     messages.info(request,"Some Error Occured! Please contact the System Administrator")
@@ -716,6 +745,12 @@ def site_registration_form(request):
                         position=Roles_and_Position.objects.get(id=request.POST.get('position')) 
                     )
                     registration_request.save()
+                    
+                    for official in mdt_officials:
+                        if(email_sending.send_emails_to_officials_upon_site_registration_request(request,registration_request.name,registration_request.ieee_id,registration_request.position,registration_request.team,official.name,official.email_ieee)==False):
+                            print("Email couldn't be sent")
+                        else:
+                            print(f"Email sent to {official.email_ieee}")
                     return redirect('membership_development_team:confirmation')
                 except:
                     messages.info(request,"Some Error Occured! Please contact the System Administrator")
