@@ -626,6 +626,7 @@ def site_registration_request_details(request,ieee_id):
 
                     )
                     new_member.save()
+                    #sending mails to MDT team officials to verify the request, primarily sent to their ieee mail
                     if(email_sending.send_email_on_site_registration_verification_to_user(request,new_member.name,new_member.email_personal)==False):
                         messages.info(request,"Couldn't Send Verification Email")
                     else:
@@ -655,7 +656,7 @@ def site_registration_request_details(request,ieee_id):
 
                     )
                     new_member.save()
-                
+
                     if(email_sending.send_email_on_site_registration_verification_to_user(request,new_member.name,new_member.email_personal)==False):
                         messages.info(request,"Couldn't Send Verification Email")
                     else:
@@ -697,6 +698,7 @@ def site_registration_form(request):
         
         if request.POST.get('apply'):
             messages.info(request,"Please wait a moment. The process might take some time.")
+            #first check if the team is null or not
             if(request.POST.get('team')=="null"):
                 try:
                     registration_request=Portal_Joining_Requests(
@@ -718,6 +720,7 @@ def site_registration_form(request):
                     registration_request.save()
                     mdt_officials = renderData.MDT_DATA.load_officials_of_MDT()
                     for official in mdt_officials:
+                        #sending mails to MDT team officials to verify the request, primarily sent to their ieee mail
                         if(email_sending.send_emails_to_officials_upon_site_registration_request(request,registration_request.name,registration_request.ieee_id,registration_request.position,registration_request.team,official.name,official.email_ieee)==False):
                             print("Email couldn't be sent")
                         else:
@@ -747,6 +750,7 @@ def site_registration_form(request):
                     registration_request.save()
                     
                     for official in mdt_officials:
+                        #sending mails to MDT team officials to verify the request, primarily sent to their ieee mail
                         if(email_sending.send_emails_to_officials_upon_site_registration_request(request,registration_request.name,registration_request.ieee_id,registration_request.position,registration_request.team,official.name,official.email_ieee)==False):
                             print("Email couldn't be sent")
                         else:
