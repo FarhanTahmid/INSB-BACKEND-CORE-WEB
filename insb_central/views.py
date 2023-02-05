@@ -14,6 +14,7 @@ from system_administration.render_access import Access_Render
 from insb_central.renderData import Branch
 from events_and_management_team.renderData import Events_And_Management_Team
 from logistics_and_operations_team.renderData import LogisticsTeam
+from . models import Events
 
 
 # Create your views here.
@@ -37,7 +38,7 @@ def event_control(request):
     return render(request,'event_page.html')
 
 @login_required
-def event_creation_form(request):
+def event_creation_form_page1(request):
     
     #######load data to show in the form boxes#########
     
@@ -59,31 +60,61 @@ def event_creation_form(request):
     }
     
     if(request.method=="POST"):
-        if(request.POST.get('create')):
+        if(request.POST.get('next')):
             super_event_name=request.POST.get('super_event')
             
             if(super_event_name=="null"):
+                
                 #now create the event as super event is null
                 event_name=request.POST['event_name']
                 event_description=request.POST['event_description']
-                 
-                inter_branch_collaboration=request.POST.get('inter_branch_collaboration')#this stores multiple option so keep the place for that
-                intra_branch_collaboration=request.POST['intra_branch_collaboration']
+                probable_date=request.POST['probable_date']
+                final_date=request.POST['final_date']
                 
-                if(inter_branch_collaboration=="null"):
-                    #dont create an instance of InterBranchCollaborations table which is in insb_central models
-                    pass
-                else:
-                    pass
-                
-                print(super_event_name )
+                print(f"Event Name: {event_name}")
+                print(f"Event Description: {event_description}")
+                print(f"Probable Date: {probable_date}")
+                print(f"Finale Date: {final_date}")
+                new_event=Events(
+                    event_name=event_name,
+                    event_description=event_description,
+                    probable_date=probable_date,
+                    final_date=final_date
+                )
+                new_event.save()
+                print("Created Event")
+
                 
             else:
-                print(super_event_name)
-                #create the event with super event id
+                #now create the event as super event in the event models
+                
+                event_name=request.POST['event_name']
+                event_description=request.POST['event_description']
+                probable_date=request.POST['probable_date']
+                final_date=request.POST['final_date']
+
+                print(f"Super Event Name: {super_event_name}")
+                print(f"Event Name: {event_name}")
+                print(f"Event Description: {event_description}")
+                print(f"Probable Date: {probable_date}")
+                print(f"Finale Date: {final_date}")
+                new_event=Events(
+                    super_event_name=super_event_name,
+                    event_name=event_name,
+                    event_description=event_description,
+                    probable_date=probable_date,
+                    final_date=final_date
+                )
+                new_event.save()
+                print("Created in else")
+                
+                
     
-    #
-    return render(request,'event_creation_form.html',context)
+    return render(request,'event_creation_form1.html',context)
+
+@login_required
+def event_creation_form_page2(request):
+    return render(request,'event_creation_form2.html')
 
 
 
