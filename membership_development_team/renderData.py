@@ -187,4 +187,19 @@ class MDT_DATA:
         except Renewal_Form_Info.DoesNotExist:
             return False
         except:
-            return False     
+            return False
+    
+    def load_officials_of_MDT():
+        load_incharges=Members.objects.filter(team=MDT_DATA.get_team_id(),position=10)
+        load_co_ordinators=Members.objects.filter(team=MDT_DATA.get_team_id(),position=9)
+        
+        mdt_officials=[]
+        for i in range(len(load_incharges)):
+            mdt_officials.append(load_incharges[i])
+        
+        for i in range(len(load_co_ordinators)):
+            mdt_officials.append(load_co_ordinators[i])
+        
+        return mdt_officials
+            
+            
