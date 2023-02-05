@@ -12,24 +12,13 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
-
-
         body{
             font-family: 'Poppins', sans-serif;
-
         }
         .navLi{
             color: whitesmoke;
         }
         .navLi:hover{
-            color: #FFC107;
-            transition: .2s;
-        }
-        .navL{
-            color: #FFC107;
-          }
-          
-        .navL:hover{
             color: #FFC107;
             transition: .2s;
         }
@@ -71,6 +60,63 @@
             transition: .2s;
         }
 
+        .photoDiv{
+            
+        }
+        .uploadDiv{
+            display: none;
+            
+        }
+        .photoDiv:hover .profileImg{
+            opacity: .1;
+            transition: .2s all;
+        }
+        .photoDiv:hover .uploadDiv{
+            display: block;
+            transition: 1s all;
+        }
+        .uploadField{
+            cursor: pointer;
+        }
+
+        .wrapper
+{
+	padding-bottom: 40px;
+}
+
+.divider
+{
+	position: relative;
+	height: 1px;
+}
+
+.div-transparent:before
+{
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 5%;
+	right: 5%;
+	width: 90%;
+	height: 1px;
+	background-image: linear-gradient(to right, transparent, rgb(48,49,51), transparent);
+}
+
+.div-dot:after
+{
+	content: "";
+	position: absolute;
+	z-index: 1;
+	top: -9px;
+	left: calc(50% - 9px);
+	width: 18px;
+	height: 18px;
+	background-color: #1F8DBC;
+	border: 1px solid rgb(48,49,51);
+	border-radius: 50%;
+	box-shadow: inset 0 0 0 2px white,
+					0 0 0 4px white;
+}
     </style>
 
 </head>
@@ -83,7 +129,7 @@
     <nav style="background-color: #050D3A;" class="navbar navbar-expand-lg border border-5 border-dark border-opacity-25">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
-                <img class="img-fluid" src="{% static 'logo.gif' %}" alt="IEEE_logo" width="40" height="40">
+                <img class="img-fluid" src="https://ieeensusb.org/wp-content/uploads/2021/03/logo.gif" alt="IEEE_logo" width="40" height="40">
             </a> 
           <!-- <a class="navbar-brand" href="#">IEEE</a> -->
           <button class="navbar-toggler bg-warning" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,8 +137,8 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ms-auto">
-              <a class="nav-link navL"  href="{% url 'users:dashboard' %}">Home</a>
-              <a class="nav-link navLi" href="{% url 'insb_central:central_home' %}"><small>Branch</small></a>
+              <a class="nav-link navLi" aria-current="page" href="{% url 'users:dashboard' %}">Dashboard</a>
+              <a class="nav-link navLi" href="{% url 'insb_central:central_home' %}"><small>Central Branch</small></a>
               <a class="nav-link navLi" href="#"><small>Event & Management</small></a>
               <a class="nav-link navLi" href="#"><small>Logistics</small></a>
               <a class="nav-link navLi" href="#"><small>Content</small></a>
@@ -118,7 +164,8 @@
         <div id="page-content-wrapper">
             <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4 mt-6 text-light">
                 <div class="d-flex align-items-center">
-                    <h2 class="fs-2 m-0">Dashboard</h2>
+                    <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
+                    <h2 class="fs-2 m-0">Profile</h2>
                 </div>
 
                 <button  class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -135,7 +182,8 @@
                                 <i class="fas fa-user me-2"></i>Options
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{% url 'users:profile' %}">Profile</a></li>
+                                <!-- <li><a class="dropdown-item" href="#">Profile</a></li> -->
+                                <li><a class="dropdown-item" href="#">Settings</a></li>
                                 <li><a class="dropdown-item" href="{% url 'users:logoutUser' %}">Logout</a></li>
                             </ul>
                         </li>
@@ -151,15 +199,32 @@
             <div class="container-fluid px-3 px-0 px-md-5">
                 <div class="row g-6 my-6 px-0 px-md-5">
                     <div class="col-md-4 mb-3 mb-md-0">
-                        <div style="border-radius: 15px; align-items:center;" class="p-3 bg-white shadow-sm d-flex flex-column-reverse border-dark border-opacity-25 h-100">
-                            <div>
-                                <h2 class="fs-2" style="color:#0840a3; text-align: center;"><b>{{ user_data.name }}</b></h2>
-                                <p class="fs-5" style="color:#0840a3; text-align: center;">{{ user_data.position }}, {{ user_data.team }} </p>
-                                <span class="fs-5"><b>IEEE ID:</b> {{ user_data.ieee_id }}</span><br>
-                                <span class="fs-5"><b>Email:</b> {{ user_data.email }}</span>
-                                <p class="fs-5"><b>NSU ID:</b> {{ user_data.nsu_id }}</p>
+                        <div style="border-radius: 15px;" class="p-3 bg-white shadow-sm d-flex flex-column-reverse border-dark border-opacity-25 h-100">
+                            <div class="mb-5 mt-2">
+                                <p class="fw-bold">Name: <span class="fw-light ms-2">{{ user_data.name }}</span></p>
+                                <p class="fw-bold">IEEE ID: <span class="fw-light ms-2">{{ user_data.ieee_id }}</span></p>
+                                <p class="fw-bold">Position: <span class="fw-light ms-2">{{ user_data.position }}</span></p>
+                                <p class="fw-bold">Team: <span class="fw-light ms-2">{{ user_data.team }}</span></p>
+                                <p class="fw-bold">IEEE Mail: <span class="fw-light ms-2">{{ user_data.ieee_email }}</span></p>
                             </div>
-                           <img class="img-fluid rounded rounded-circle m-auto border rounded rounded-circle" src="{{ user_data.profile_picture }}" alt="profile pic" width="280px" height="280px">
+                           <form onsubmit="submit" class="text-center" method="POST" enctype="multipart/form-data" id="picture">
+                            {% csrf_token %}
+                            <div class="m-auto position-relative photoDiv">
+                                <img class="img-fluid rounded rounded-circle m-auto border rounded rounded-circle profileImg" src="{{ user_data.profile_picture }}" alt="profile pic" width="160px" height="160px">
+                                <p class="position-absolute bottom-50 w-100 text-center justify-content-center uploadDiv">
+                                    <label class="uploadField" for="uploadField">
+                                        <i class="fa-solid fa-camera"></i>
+                                        Upload Photo
+                                    </label>
+                                    <input class="d-none" type="file" name="profile_picture" id="uploadField">
+                                </p>
+                                <p class="text-center mt-3"><input onclick="submit" class="btn btn-success submit btn-sm disabled" type="submit" value="Update" name="change_profile_pic"></p>
+                                {% for message in messages %}
+                                <p style="color:green;">{{message}}</p>
+                                {% endfor %}
+                            </div>
+                           </form>
+                           
                           
                         </div>
                     </div>
@@ -167,30 +232,33 @@
 
 
                     <div class="col-md-8">
-                        <div style="border-radius: 15px;" class="p-3 bg-white shadow-sm d-flex justify-content-around border-dark border-opacity-25">
-                            <div style="height: 500px; overflow: auto; width: 90%;" class="p-2">
-                                <h3 class="fs-2">Events</h3>
-                                <p class="fs-5"></p>
-
-                                <div class="p-2 my-2 shadow-lg d-flex flex-column-reverse justify-content-around align-items-center rounded m-1 event">
-
-                                    <div>
-                                        <a class="text-decoration-none text-dark" href="list3">
-                                            <h3 class="fs-2">SPAC 2022</h3>
-                                            <p class="fs-5">IEEE NSU Student Branch - INSB - North South University</p>
-                                            <p class="fs-7">Date:24.12.2021</p>
-                                       
-                                    </div>
-                                    <div class="text-center">
-                                        <img class="img-fluid w-75 mb-4" src="{% static 'spac_banner.jpg' %}" alt="profile pic" width="100px" height="150px">
-                                   </div>
-                                    </a>
+                        <div style="border-radius: 15px;" class="p-3 bg-white">
+                            <h3 class="text-center mb-4">Personal Info</h3>
+                            <div class="wrapper">
+                                <div class="divider div-transparent div-dot"></div>
+                            </div>
+                            <div class="row px-3">
+                                <div class="col-md-6">
+                                    <p class="fw-bold">Address: <span class="fw-light ms-2">{{ user_data.home_address }}</span></p>
+                                    <p class="fw-bold">Email: <span class="fw-light ms-2">{{ user_data.email_personal }}</span></p>
+                                    <p class="fw-bold">Contact Info: <span class="fw-light ms-2">{{ user_data.contact_no }}</span></p>
                                 </div>
-
+                                <div class="col-md-6">
+                                    <p class="fw-bold">Date of Birth: <span class="fw-light ms-2">{{ user_data.dob }}</span></p>
+                                    <p class="fw-bold">Gender: <span class="fw-light ms-2">{{ user_data.gender }}</span></p>
+                                    <p class="fw-bold">Major in NSU: <span class="fw-light ms-2">{{ user_data.major }}</span></p>
+                                </div>
                             </div>
 
-                            
+                            <h3 class="text-center my-4">IEEE Info</h3>
+                            <div class="wrapper">
+                                <div class="divider div-transparent div-dot"></div>
+                            </div>
 
+                            <div class="px-3">
+                                <p class="fw-bold">Joining Session: <span class="fw-light ms-2">{{ user_data.joining_session }}</span></p>
+                                <p class="fw-bold">Last Renewal: <span class="fw-light ms-2">{{ user_data.last_renewal }}</span></p>
+                                <p class="fw-bold">Account Status: <span class="fw-light ms-2">Poor (0 BDT)</span></p>
                             </div>
                         </div>
                     </div>
@@ -204,7 +272,7 @@
 
                 <div class="row py-3 px-5">
                     <div class="col-md-3 mx-auto">
-                        <img class="img-fluid" src="{% static 'INSB.png' %}" alt="IEEE_logo" width='100' height='100'>
+                        <img class="img-fluid" src="https://ieeensusb.org/wp-content/uploads/2021/03/INSB.png" alt="IEEE_logo">
                     </div>
                     <div class="col-md-3 mx-auto">
                         <h4 class="mb-3 fw-bold">Follow Us</h4>
@@ -227,11 +295,11 @@
                 </div>
             </div>
 
-             <!-- footer start -->
-            <footer class="py-3 text-white text-center">
-                <small>&copy; All Rights Reserved by IEEE NSU STUDENT BRANCH.</small>
-            </footer>
-            <!-- footer end -->
+            <div style="background-image: linear-gradient(90deg, #2daadb, #0b1261);" class="p-3 text-center">
+
+                © Copyright 2022 INSB – All rights reserved. Developed by <a href="https://ieeensusb.org/web-administrator/" style="color: #FFC936;" class=" fw-bold text-decoration-none">INSB Web Development Team</a>
+            </div>
+
         </footer>
 
        
@@ -248,6 +316,36 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+
+    <script>
+        let photo = document.getElementById('uploadField')
+        
+        document.getElementsByClassName('submit')[0].addEventListener('click', () => {
+            
+            event.preventDefault()
+            let file = document.getElementById('uploadField').files[0]
+            console.log(Number(file.size/1048576))
+            if(Number(file.size/1048576) > 5){
+                alert('File size should less than 5mb')
+            }
+            else{
+                // Database Fetching/Uploading process...
+                document.getElementById("picture").submit();
+                
+            }
+
+            
+        })
+
+        document.getElementsByClassName('uploadField')[0].addEventListener('click', () => {
+             document.getElementsByClassName('submit')[0].classList.remove('disabled')
+        })
+
+        
+
+        
+
+    </script>
 
 </body>
 </html>

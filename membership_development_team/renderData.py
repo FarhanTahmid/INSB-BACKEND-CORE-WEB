@@ -1,3 +1,4 @@
+from . models import Renewal_Form_Info,Renewal_Sessions
 from users.models import Members
 from port.models import Teams
 from system_administration.models import MDT_Data_Access
@@ -31,6 +32,8 @@ class MDT_DATA:
         for i in range(len(load_team_members)):
             team_members.append(load_team_members[i])
         return team_members
+    
+    
     
     def load_mdt_data_access():
         return MDT_Data_Access.objects.all()
@@ -159,8 +162,44 @@ class MDT_DATA:
             return True
         else:
             return False
-
     
+    def create_form_data_for_particular_renewal_session(renewal_session_id,form_description,ieee_membership_amount,ieee_ras_membership_amount,ieee_pes_membership_amount,ieee_ias_membership_amount,ieee_wie_membership_amount,bkash_payment_number,further_contact_member_id):
+        '''Creates and Updates Form data For Renewal Forms (Session Wise)'''
+        create_form=Renewal_Form_Info(form_id=renewal_session_id, #in models the form id is primary key. Sending the renewal session id as primary key also to identify every form unique to a renewal session
+                                      session=Renewal_Sessions.objects.get(id=renewal_session_id),
+                                      form_description=form_description,
+                                      ieee_membership_amount=ieee_membership_amount,
+                                      ieee_ras_membership_amount=ieee_ras_membership_amount,
+                                      ieee_pes_membership_amount=ieee_pes_membership_amount,
+                                      ieee_ias_membership_amount=ieee_ias_membership_amount,
+                                      ieee_wie_membership_amount=ieee_wie_membership_amount,
+                                      bkash_payment_number=bkash_payment_number,
+                                      further_contact_member_id=Members.objects.get(ieee_id=further_contact_member_id) 
+                                      
+                                      )
+        create_form.save()
+        
+    def load_form_data_for_particular_renewal_session(renewal_session_id):
+        '''Loads data for paritcular renewal session. Takes the id of the renewal session as the parameter'''
+        try:
+            form_credentials=Renewal_Form_Info.objects.get(form_id=renewal_session_id)
+            return form_credentials
+        except Renewal_Form_Info.DoesNotExist:
+            return False
+        except:
+            return False
     
+    def load_officials_of_MDT():
+        load_incharges=Members.objects.filter(team=MDT_DATA.get_team_id(),position=10)
+        load_co_ordinators=Members.objects.filter(team=MDT_DATA.get_team_id(),position=9)
+        
+        mdt_officials=[]
+        for i in range(len(load_incharges)):
+            mdt_officials.append(load_incharges[i])
+        
+        for i in range(len(load_co_ordinators)):
+            mdt_officials.append(load_co_ordinators[i])
+        
+        return mdt_officials
             
             

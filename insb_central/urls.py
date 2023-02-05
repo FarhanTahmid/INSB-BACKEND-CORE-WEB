@@ -12,8 +12,10 @@ urlpatterns = [
     path('',views.central_home, name='central_home'),
     #Event control page 
     path('event_control',views.event_control, name='event_control'),
-    #Event Creation Form
-    path('create_event',views.event_creation_form,name='event_creation_form'),
+    #Event Creation Form page 1
+    path('create_event/page-1',views.event_creation_form_page1,name='event_creation_form1'),
+    #Event Creation Form Page 2
+    path("create_event/page-2", views.event_creation_form_page2, name="event_creation_form2"),
     #teams page
     path('teams',views.teams,name='teams'),
     #team details page

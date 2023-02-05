@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branch-Event Creation Form- Part-1</title>
+</head>
+<body>
+    <h1>
+        Event Creation Form
+    </h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="">Mother Event</label>
+        <select name="event_under">
+            <option value="null" selected>----------</option>
+            {% for super_event in super_events %}
+                <option value={{super_event.id}}>{{super_event.super_event_name}}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+        <label>Name:</label>
+        <input type="text" name="event_name">
+        <br>
+        <br>
+        <label>Description</label><br>
+        <input type="text" name="event_description" style="height: 250px; width:500px;" placeholder="Write with in 500 words">
+        <br><br>
+
+        <label for="">Add a Probable Date For the Event</label>
+        <input type="date" name="probable_date">
+        <br><br>
+        <label for="">Add Final Date For the Event (If finalised)</label>
+        <input type="date" name="final_date">
+        <br>
+        <br>
+
+        <input type="submit" name="cancel" value="Cancel">
+        <input type="submit" value="Next" name="next">
+        
+    </form>
+</body>
+</html>

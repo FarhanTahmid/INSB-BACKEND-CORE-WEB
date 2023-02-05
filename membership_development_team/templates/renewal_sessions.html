@@ -69,7 +69,40 @@
             background-color:  rgba(44, 167, 216, .1);
             transition: .2s;
         }
-
+        .form_data_label{
+          color:black
+        }
+        .glowButton {
+          background-color: #1c87c9;
+          -webkit-border-radius: 60px;
+          border-radius: 5px;
+          border: none;
+          color: #eeeeee;
+          cursor: pointer;
+          display: inline-block;
+          font-family: sans-serif;
+          font-size: 15px;
+          padding: 15px;
+          text-align: center;
+          text-decoration: none;
+      }
+        @keyframes glowing {
+          0% {
+            background-color: #ff0000;
+            box-shadow: 0 0 3px #ff0000;
+          }
+          50% {
+            background-color: #ff5050;
+            box-shadow: 0 0 10px #ff5050;
+          }
+          100% {
+            background-color:  #ff6666;
+            box-shadow: 0 0 3px #ff6666;
+          }
+        }
+        .glowButton {
+          animation: glowing 1300ms infinite;
+      }
     </style>
 
 </head>
@@ -117,6 +150,11 @@
        <!-- SESSION start -->
       <div class="btn-group w-100 justify-content-center justify-content-center m-3" role="group" aria-label="Basic example">
         <a href="{% url 'membership_development_team:renewal_form' session_id %}" class="btn btn-primary rounded m-1">View Renewal Form</a>
+        {% if has_form_data %}
+          <button type="button" data-bs-toggle="modal" data-bs-target="#form_data"  class="btn btn-warning rounded m-1">Edit Renewal Form Credentials</button>
+        {% else %}
+        <button type="button" data-bs-toggle="modal" data-bs-target="#form_data"  class="btn glowButton rounded m-1">Edit Renewal Form Credentials</button>
+        {% endif %}
         <a href="{% url "membership_development_team:export_excel_renewal_request" session_id %}" class="btn btn-success rounded m-1">Generate Excel Sheet of this Session</a> 
         <a href="{% url "membership_development_team:membership_renewal" %}" class="btn btn-info rounded m-1">View sessions</a>
       </div>
@@ -199,6 +237,100 @@
             </div>
         </div>
     </section>
+
+
+    {% comment %} Modals {% endcomment %}
+          <div
+            class="modal fade"
+            id="form_data"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            tabindex="-1"
+            aria-labelledby="staticBackdropLabel"
+            aria-hidden="true"
+          >
+          <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">
+                            Edit Form Data
+                        </h5>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                  <form method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        
+                      <label class="form_data_label" for="form_description">Form Description:</label>
+                      <input style="height:100px; width:350px;" type="text" name="form_description" id="form_description" placeholder="Maximum 300 Words">
+                      <br>
+                      <br>
+                      <label class="form_data_label" for="ieee_membership_amount">IEEE Membership Fee:</label>
+                      <input type="text" name="ieee_membership_amount" id="ieee_membership_amount">
+                      
+                      <br>
+                      <br>
+                      <label class="form_data_label" for="ieee_ras_membership_amount">IEEE RAS Membership Fee:</label>
+                      <input type="text" name="ieee_ras_membership_amount" id="ieee_ras_membership_amount">
+                      
+                      <br>
+                      <br>
+                      <label class="form_data_label" for="ieee_ias_membership_amount">IEEE IAS Membership Fee:</label>
+                      <input type="text" name="ieee_ias_membership_amount" id="ieee_ias_membership_amount">
+                      
+                      <br>
+                      <br>
+                      <label class="form_data_label" for="ieee_pes_membership_amount">IEEE PES Membership Fee:</label>
+                      <input type="text" name="ieee_pes_membership_amount" id="ieee_pes_membership_amount">
+                      
+                      <br>
+                      <br>
+                      <label class="form_data_label" for="ieee_wie_membership_amount">IEEE WIE Membership Fee:</label>
+                      <input type="text" name="ieee_wie_membership_amount" id="ieee_wie_membership_amount">
+                      
+                      <br>
+                      <br>
+                      <label class="form_data_label" for="bkash_payment_number">Bkash Payment Number:</label>
+                      <input type="text" name="bkash_payment_number" id="bkash_payment_number">
+                      
+                      <br>
+                      <br>
+                      <label class="form_data_label" for="further_details">Further Contact With:</label>
+                      <select id="further_details" name="further_contact_member_id">
+                        {% for member in mdt_team_member %}
+                          <option value={{member.ieee_id}}>{{member.name}}</option>
+                        {% endfor %}
+                      </select>
+                        
+                      
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <input
+                            type="submit"
+                            class="btn btn-success"
+                            data-bs-dismiss="modal"
+                            name="update_form_credentials"
+                            value="Update"
+                        >
+                    </div>
+                  </form>
+                </div>
+          </div>
+        </div>
+
+
     
     
     <!-- footer start -->

@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from users.models import Members
 from port.models import Teams, Roles_and_Position
 
 # Create your models here.
@@ -45,6 +46,33 @@ class Renewal_requests(models.Model):
         verbose_name="Renewal Requests"
     def __str__(self) -> str:
         return self.name
+
+
+#Table For renewal Form information datas
+class Renewal_Form_Info(models.Model):
+    #primary key of each form will be the primary key of renewal session
+    form_id=models.IntegerField(primary_key=True,null=False,blank=False,default=0)
+    #to identify the form with session name we are using this session
+    session=models.ForeignKey(Renewal_Sessions,on_delete=models.CASCADE,null=True,blank=True)
+    #details of the form
+    form_description=models.CharField(null=True,blank=True,max_length=700)
+    #membership payment amount details
+    ieee_membership_amount=models.CharField(null=True,blank=True,max_length=50)
+    ieee_ras_membership_amount=models.CharField(null=True,blank=True,max_length=50)
+    ieee_pes_membership_amount=models.CharField(null=True,blank=True,max_length=50)
+    ieee_ias_membership_amount=models.CharField(null=True,blank=True,max_length=50)
+    ieee_wie_membership_amount=models.CharField(null=True,blank=True,max_length=50)
+    #payment method details
+    bkash_payment_number=models.CharField(null=True,blank=True,max_length=20)
+    #further contact member id
+    further_contact_member_id=models.ForeignKey(Members,null=True,blank=True,on_delete=models.CASCADE)
+    
+    class Meta:
+        verbose_name="Renewal Form Detail"
+    def __str__(self) -> str:
+        return self.form_description
+        
+
 
 #TABLE FOR WEBSITE JOINING REQUEST
 

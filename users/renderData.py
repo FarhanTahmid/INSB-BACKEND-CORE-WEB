@@ -24,7 +24,17 @@ class LoggedinUser:
             'ieee_id':get_Member_details.ieee_id,
             'email':get_Member_details.email_ieee,
             'nsu_id':get_Member_details.nsu_id,
+            'ieee_email':get_Member_details.email_ieee,
+            'email_personal':get_Member_details.email_personal,
+            'home_address':get_Member_details.home_address,
+            'contact_no':get_Member_details.contact_no,
+            'dob':get_Member_details.date_of_birth,
+            'gender':get_Member_details.gender,
+            'major':get_Member_details.major,
+            'joining_session':get_Member_details.session,
+            'last_renewal':get_Member_details.last_renewal_session,
             'profile_picture':'/media_files/'+str(get_Member_details.user_profile_picture),
+        
         }
         except Members.DoesNotExist:
             try:
