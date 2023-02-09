@@ -14,7 +14,7 @@ from system_administration.render_access import Access_Render
 from insb_central.renderData import Branch
 from events_and_management_team.renderData import Events_And_Management_Team
 from logistics_and_operations_team.renderData import LogisticsTeam
-from . models import Events
+from . models import Events,InterBranchCollaborations,IntraBranchCollaborations
 
 
 # Create your views here.
@@ -130,7 +130,7 @@ def event_creation_form_page1(request):
                         return redirect('insb_central:event_creation_form2',new_event.id)
                     except:
                         messages.info(request,"Database Error Occured! Please try again later.")    
-        if(request.POST.get('cancel')):
+        elif(request.POST.get('cancel')):
             return redirect('insb_central:event_control')
     return render(request,'event_creation_form1.html',context)
 
@@ -141,6 +141,22 @@ def event_creation_form_page2(request,event_id):
     context={
         'inter_branch_collaboration_options':inter_branch_collaboration_options,
     }
+    if request.method=="POST":
+        if(request.POST.get('next')):
+            inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
+            intra_branch_collaboration=request.POST['intra_branch_collaboration']
+            if(inter_branch_collaboration_list[0]=="null"):
+                if(intra_branch_collaboration==""):
+                    print("both null") #go to the third page
+            else:
+
+                for id in inter_branch_collaboration_list:
+                    pass
+
+        elif(request.POST.get('cancel')):
+            return redirect('insb_central:event_control')
+
+
     return render(request,'event_creation_form2.html',context)
 
 
