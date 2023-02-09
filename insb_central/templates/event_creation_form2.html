@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branch-Event Creation Form- Part-2</title>
+</head>
+<body>
+    <h1>Select collaboration Options</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="">Inter Branch Collaboration With: (Press CTRL to select multiple items)</label><br>
+        <select name="inter_branch_collaboration" multiple>
+            <option value="null" selected>----------</option>
+            {% for inter_branch_collaboration_option in inter_branch_collaboration_options %}
+                <option value={{inter_branch_collaboration_option.id}}>{{inter_branch_collaboration_option.group_name}}</option>
+            {% endfor %}
+            
+        </select>
+    <br>
+    <br>
+    <label for="">Intra Branch Collaboration:</label>
+    <input type="text" style="width:300px;" name="intra_branch_collaboration" id="" placeholder="Enter Organization Names">
+    <br>
+    <br>
+    <input type="submit" name="go_back" value="Go back">
+    <input type="submit" name="next" value="Next">
+    </form>
+</body>
+</html>
