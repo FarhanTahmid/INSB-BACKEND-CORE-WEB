@@ -14,7 +14,7 @@ from system_administration.render_access import Access_Render
 from insb_central.renderData import Branch
 from events_and_management_team.renderData import Events_And_Management_Team
 from logistics_and_operations_team.renderData import LogisticsTeam
-from . models import Events
+from . models import Events,InterBranchCollaborations,IntraBranchCollaborations
 
 
 # Create your views here.
@@ -44,8 +44,7 @@ def event_creation_form_page1(request):
     
     #loading super/mother event at first
     super_events=Branch.load_all_mother_events()
-    #loading all inter branch collaboration Options
-    inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+    
     #loading all venues from the venue list from event management team database
     venues=Events_And_Management_Team.getVenues()
     #loading all the permission criterias from event management team database
@@ -54,7 +53,7 @@ def event_creation_form_page1(request):
     
     context={
         'super_events':super_events,
-        'inter_branch_collaboration_options':inter_branch_collaboration_options,
+        
         'venues':venues,
         'permission_criterias':permission_criterias,
     }
@@ -71,50 +70,94 @@ def event_creation_form_page1(request):
                 probable_date=request.POST['probable_date']
                 final_date=request.POST['final_date']
                 
-                print(f"Event Name: {event_name}")
-                print(f"Event Description: {event_description}")
-                print(f"Probable Date: {probable_date}")
-                print(f"Finale Date: {final_date}")
-                new_event=Events(
-                    event_name=event_name,
-                    event_description=event_description,
-                    probable_date=probable_date,
-                    final_date=final_date
-                )
-                new_event.save()
-                print("Created Event")
-
-                
+                if(final_date==''):
+                    
+                    try:
+                        new_event=Events(
+                        super_event_name=super_event_name,
+                        event_name=event_name,
+                        event_description=event_description,
+                        probable_date=probable_date
+                        )
+                        new_event.save()
+                        return redirect('insb_central:event_creation_form2',new_event.id)
+                    except:
+                        messages.info(request,"Database Error Occured! Please try again later.")
+                else:
+                    try:
+                        new_event=Events(
+                        super_event_name=super_event_name,
+                        event_name=event_name,
+                        event_description=event_description,
+                        probable_date=probable_date,
+                        final_date=final_date
+                        )
+                        new_event.save()
+                        return redirect('insb_central:event_creation_form2',new_event.id)
+                    except:
+                        messages.info(request,"Database Error Occured! Please try again later.")    
             else:
-                #now create the event as super event in the event models
+                 #now create the event as super event in the event models
                 
                 event_name=request.POST['event_name']
                 event_description=request.POST['event_description']
                 probable_date=request.POST['probable_date']
                 final_date=request.POST['final_date']
-
-                print(f"Super Event Name: {super_event_name}")
-                print(f"Event Name: {event_name}")
-                print(f"Event Description: {event_description}")
-                print(f"Probable Date: {probable_date}")
-                print(f"Finale Date: {final_date}")
-                new_event=Events(
-                    super_event_name=super_event_name,
-                    event_name=event_name,
-                    event_description=event_description,
-                    probable_date=probable_date,
-                    final_date=final_date
-                )
-                new_event.save()
-                print("Created in else")
                 
-                
-    
+                if(final_date==''):
+                    
+                    try:
+                        new_event=Events(
+                        super_event_name=super_event_name,
+                        event_name=event_name,
+                        event_description=event_description,
+                        probable_date=probable_date
+                        )
+                        new_event.save()
+                        return redirect('insb_central:event_creation_form2',new_event.id)
+                    except:
+                        messages.info(request,"Database Error Occured! Please try again later.")
+                else:
+                    try:
+                        new_event=Events(
+                        super_event_name=super_event_name,
+                        event_name=event_name,
+                        event_description=event_description,
+                        probable_date=probable_date,
+                        final_date=final_date
+                        )
+                        new_event.save()
+                        return redirect('insb_central:event_creation_form2',new_event.id)
+                    except:
+                        messages.info(request,"Database Error Occured! Please try again later.")    
+        elif(request.POST.get('cancel')):
+            return redirect('insb_central:event_control')
     return render(request,'event_creation_form1.html',context)
 
 @login_required
-def event_creation_form_page2(request):
-    return render(request,'event_creation_form2.html')
+def event_creation_form_page2(request,event_id):
+    #loading all inter branch collaboration Options
+    inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+    context={
+        'inter_branch_collaboration_options':inter_branch_collaboration_options,
+    }
+    if request.method=="POST":
+        if(request.POST.get('next')):
+            inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
+            intra_branch_collaboration=request.POST['intra_branch_collaboration']
+            if(inter_branch_collaboration_list[0]=="null"):
+                if(intra_branch_collaboration==""):
+                    print("both null") #go to the third page
+            else:
+
+                for id in inter_branch_collaboration_list:
+                    pass
+
+        elif(request.POST.get('cancel')):
+            return redirect('insb_central:event_control')
+
+
+    return render(request,'event_creation_form2.html',context)
 
 
 
