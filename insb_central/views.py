@@ -145,13 +145,22 @@ def event_creation_form_page2(request,event_id):
         if(request.POST.get('next')):
             inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
             intra_branch_collaboration=request.POST['intra_branch_collaboration']
-            if(inter_branch_collaboration_list[0]=="null"):
-                if(intra_branch_collaboration==""):
-                    print("both null") #go to the third page
+            
+            #first check if both the collaboration options are null. If so, do register nothing on database and redirect to the next page
+            if(inter_branch_collaboration_list[0]=="null" and intra_branch_collaboration==""):
+                print("Dont collab for anything") #go to the third page
+            #check if any intra branch collab is entered while inter branch collab option is still set to null. If so, then only register for intra branch collaboration option
+            elif(inter_branch_collaboration_list[0]=="null" and intra_branch_collaboration!=""):
+                print("Do the intra branch collab only")
+            #now checking for the criterias where there are inter branch collaboration
             else:
-
-                for id in inter_branch_collaboration_list:
-                    pass
+                #checking if the intra branch collab option is still null. If null, only register for intra branch collaboration
+                if(intra_branch_collaboration==""):
+                    for id in inter_branch_collaboration_list:
+                        print(f"Do inter branch collab for {id}")
+                #now register for the both collaboration option when both are filled
+                else:
+                    print("Do collab for both")
 
         elif(request.POST.get('cancel')):
             return redirect('insb_central:event_control')
