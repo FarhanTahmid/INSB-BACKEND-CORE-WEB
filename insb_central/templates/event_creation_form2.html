@@ -28,5 +28,8 @@
     <input type="submit" name="go_back" value="Go back">
     <input type="submit" name="next" value="Next">
     </form>
+    {% for message in messages %}
+    <p>{{message}}</p>
+    {% endfor %}
 </body>
 </html>
