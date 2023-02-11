@@ -41,5 +41,8 @@
         <input type="submit" value="Next" name="next">
         
     </form>
+    {% for message in messages %}
+    <p>{{message}}</p>
+    {% endfor %}
 </body>
 </html>

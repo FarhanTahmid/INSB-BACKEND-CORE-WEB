@@ -64,72 +64,28 @@ def event_creation_form_page1(request):
         if(request.POST.get('next')):
             super_event_name=request.POST.get('super_event')
             
-            if(super_event_name=="null"):
-                
-                #now create the event as super event is null
-                event_name=request.POST['event_name']
-                event_description=request.POST['event_description']
-                probable_date=request.POST['probable_date']
-                final_date=request.POST['final_date']
-                
-                if(final_date==''):
-                    
-                    try:
-                        new_event=Events(
-                        event_name=event_name,
-                        event_description=event_description,
-                        probable_date=probable_date
-                        )
-                        new_event.save()
-                        return redirect('insb_central:event_creation_form2',new_event.id)
-                    except:
-                        messages.info(request,"Database Error Occured! Please try again later.")
-                else:
-                    try:
-                        new_event=Events(
-                        event_name=event_name,
-                        event_description=event_description,
-                        probable_date=probable_date,
-                        final_date=final_date
-                        )
-                        new_event.save()
-                        return redirect('insb_central:event_creation_form2',new_event.id)
-                    except:
-                        messages.info(request,"Database Error Occured! Please try again later.")    
+            event_name=request.POST['event_name']
+            event_description=request.POST['event_description']
+            probable_date=request.POST['probable_date']
+            final_date=request.POST['final_date']
+            
+            get_event=renderData.Branch.register_event_page1(
+                super_event_name=super_event_name,
+                event_name=event_name,
+                event_description=event_description,
+                probable_date=probable_date,
+                final_date=final_date)
+            
+            if(get_event)==False:
+                messages.info(request,"Database Error Occured! Please try again later.")
             else:
-                 #now create the event under super event in the event models
+                #if the method returns true, it will redirect to the new page
+                return redirect('insb_central:event_creation_form2',get_event)
+
+
                 
-                event_name=request.POST['event_name']
-                event_description=request.POST['event_description']
-                probable_date=request.POST['probable_date']
-                final_date=request.POST['final_date']
+            
                 
-                if(final_date==''):
-                    
-                    try:
-                        new_event=Events(
-                        super_event_name=super_event_name,
-                        event_name=event_name,
-                        event_description=event_description,
-                        probable_date=probable_date
-                        )
-                        new_event.save()
-                        return redirect('insb_central:event_creation_form2',new_event.id)
-                    except:
-                        messages.info(request,"Database Error Occured! Please try again later.")
-                else:
-                    try:
-                        new_event=Events(
-                        super_event_name=super_event_name,
-                        event_name=event_name,
-                        event_description=event_description,
-                        probable_date=probable_date,
-                        final_date=final_date
-                        )
-                        new_event.save()
-                        return redirect('insb_central:event_creation_form2',new_event.id)
-                    except:
-                        messages.info(request,"Database Error Occured! Please try again later.")    
         elif(request.POST.get('cancel')):
             return redirect('insb_central:event_control')
     return render(request,'event_creation_form1.html',context)
@@ -146,82 +102,15 @@ def event_creation_form_page2(request,event_id):
             inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
             intra_branch_collaboration=request.POST['intra_branch_collaboration']
             
-            #first check if both the collaboration options are null. If so, do register nothing on database and redirect to the next page
-            if(inter_branch_collaboration_list[0]=="null" and intra_branch_collaboration==""):
-                print("Dont collab for anything") #go to the third page
-            #check if any intra branch collab is entered while inter branch collab option is still set to null. If so, then only register for intra branch collaboration option
-            elif(inter_branch_collaboration_list[0]=="null" and intra_branch_collaboration!=""):
-                print("Do the intra branch collab only")
-                
-                    
-                #check if an event exists with the same id. if so just update the collaboration_with field
-                check_for_existing_events=IntraBranchCollaborations.objects.filter(event_id=event_id)
-                if(check_for_existing_events.exists()):
-                    check_for_existing_events.update(collaboration_with=intra_branch_collaboration)
-                    print('intra branch collab updated, now go to third page')
-                else:
-                    #if the event does not exist in the intra branch collaboration table, just register for a new collaboration in the database
-                    new_event_intra_branch_collaboration=IntraBranchCollaborations(
-                        event_id=Events.objects.get(id=event_id),
-                        collaboration_with=intra_branch_collaboration
-                    )
-                    new_event_intra_branch_collaboration.save()
-                    print('intra branch collab created, now go to third page')
-                
-                
-            #now checking for the criterias where there are inter branch collaboration
+            if(renderData.Branch.register_event_page2(
+                inter_branch_collaboration_list=inter_branch_collaboration_list,
+                intra_branch_collaboration=intra_branch_collaboration,
+                event_id=event_id)):
+                print("go to next page")
             else:
-                #checking if the intra branch collab option is still null. If null, only register for intra branch collaboration
-                if(intra_branch_collaboration==""):
-                    for id in inter_branch_collaboration_list:
-                        
-                            #check for existing events with the same inter branch collab
-                            check_for_existing_events=InterBranchCollaborations.objects.filter(event_id=event_id,collaboration_with=id)
-                            if(check_for_existing_events.exists()):
-                                check_for_existing_events.update(collaboration_with=id) #this piece of code is really not needed just used to avoid errors and usage of extra memory
-                            else:
-                            #if there is no previous record of this event with particular collab option, register a new one
-                                new_event_inter_branch_collaboration=InterBranchCollaborations(
-                                    event_id=Events.objects.get(id=event_id),
-                                    collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(id=id)
-                                )   
-                                new_event_inter_branch_collaboration.save()
-                        
-                #now register for the both collaboration option when both are filled
-                else:
-                    #firstly for inter branch collaboration option, register for events as usual
-                    for id in inter_branch_collaboration_list:
-                        
-                            #check for existing events with the same inter branch collab
-                            check_for_existing_events=InterBranchCollaborations.objects.filter(event_id=event_id,collaboration_with=id)
-                            if(check_for_existing_events.exists()):
-                                check_for_existing_events.update(collaboration_with=id) #this piece of code is really not needed just used to avoid errors and usage of extra memory
-                            else:
-                            #if there is no previous record of this event with particular collab option, register a new one
-                                new_event_inter_branch_collaboration=InterBranchCollaborations(
-                                    event_id=Events.objects.get(id=event_id),
-                                    collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(id=id) 
-                                )   
-                                new_event_inter_branch_collaboration.save()
-                        
-                            
-                    #secondly for intra branch collaboration options
-                    
-                    
-                    #check if an event exists with the same id. if so just update the collaboration_with field
-                    check_for_existing_events=IntraBranchCollaborations.objects.filter(event_id=event_id)
-                    if(check_for_existing_events.exists()):
-                        check_for_existing_events.update(collaboration_with=intra_branch_collaboration)
-                        print('intra branch collab updated, now go to third page')
-                    else:
-                        #if the event does not exist in the intra branch collaboration table, just register for a new collaboration in the database
-                        new_event_intra_branch_collaboration=IntraBranchCollaborations(
-                            event_id=Events.objects.get(id=event_id),
-                            collaboration_with=intra_branch_collaboration
-                        )
-                        new_event_intra_branch_collaboration.save()
-                        print('intra branch collab created, now go to third page')
-                    
+                messages.info(request,"Database Error Occured! Please try again later.")
+
+                              
                     
 
         elif(request.POST.get('cancel')):
