@@ -16,7 +16,7 @@ from insb_central.renderData import Branch
 from events_and_management_team.renderData import Events_And_Management_Team
 from logistics_and_operations_team.renderData import LogisticsTeam
 from . models import Events,InterBranchCollaborations,IntraBranchCollaborations
-
+from events_and_management_team.models import Venue_List,Permission_criteria
 
 
 # Create your views here.
@@ -46,18 +46,11 @@ def event_creation_form_page1(request):
     
     #loading super/mother event at first
     super_events=Branch.load_all_mother_events()
-    
-    #loading all venues from the venue list from event management team database
-    venues=Events_And_Management_Team.getVenues()
-    #loading all the permission criterias from event management team database
-    permission_criterias=Events_And_Management_Team.getPermissionCriterias()
+
 
     
     context={
         'super_events':super_events,
-        
-        'venues':venues,
-        'permission_criterias':permission_criterias,
     }
     
     if(request.method=="POST"):
@@ -106,7 +99,7 @@ def event_creation_form_page2(request,event_id):
                 inter_branch_collaboration_list=inter_branch_collaboration_list,
                 intra_branch_collaboration=intra_branch_collaboration,
                 event_id=event_id)):
-                print("go to next page")
+                return redirect('insb_central:event_creation_form3',event_id)
             else:
                 messages.info(request,"Database Error Occured! Please try again later.")
 
@@ -119,7 +112,28 @@ def event_creation_form_page2(request,event_id):
 
     return render(request,'event_creation_form2.html',context)
 
+def event_creation_form_page3(request,event_id):
+     #loading all venues from the venue list from event management team database
+    venues=Events_And_Management_Team.getVenues()
+    #loading all the permission criterias from event management team database
+    permission_criterias=Events_And_Management_Team.getPermissionCriterias()
 
+    context={
+        'venues':venues,
+        'permission_criterias':permission_criterias,
+    }
+    if request.method=="POST":
+        if request.POST.get('next'):
+            venue_list_for_event=request.POST.getlist('event_venues')
+            permission_criterias_list_for_event=request.POST.getlist('permission_criteria')
+            
+            renderData.Branch.register_event_page3(venue_list=venue_list_for_event,permission_criteria_list=permission_criterias_list_for_event,event_id=event_id)
+            messages.info(request, "Updated")
+
+
+
+
+    return render(request,'event_creation_form3.html',context)
 
 def teams(request):
     
