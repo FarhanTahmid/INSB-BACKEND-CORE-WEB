@@ -65,6 +65,7 @@ class Branch:
     def register_event_page1(super_event_name,event_name,event_description,probable_date,final_date):
         '''This method creates an event and registers data which are provided in event page1. Returns the id of the event if the method can create a new event successfully
         TAKES SUPER EVENT NAME, EVENT NAME, EVENT DESCRIPTION AS STRING. TAKES PROBABLE & FINAL DATE ALSO AS INPUT'''
+        
         if(super_event_name=="null"):
                 
                 #now create the event as super event is null
@@ -124,10 +125,6 @@ class Branch:
                         return new_event.id
                     except:
                         return False
-    
-    
-    def provide_event_id_upon_registering_event_in_page1(event_id):
-        return event_id
     
     def register_event_page2(inter_branch_collaboration_list,intra_branch_collaboration,event_id):
         
@@ -216,19 +213,52 @@ class Branch:
     def register_event_page3(venue_list,permission_criteria_list,event_id):
         '''This method creates venues and permissions related to the events and registers data which are provided in event page3
         TAKES LISTS OF VENUES AND PERMISSIONS AS PARAMETER. Also takes event id to register with respect to it'''
-        for venue in venue_list:
-            register_venue=Event_Venue(
-                event_id=Events.objects.get(id=event_id),
-                venue_id=Venue_List.objects.get(id=venue)
-            )
-            register_venue.save()
-        for permission in permission_criteria_list:
-            register_permission_criteria=Event_Permission(
-                event_id=Events.objects.get(id=event_id),
-                permission_id=Permission_criteria.objects.get(id=permission)
-            )
-            register_permission_criteria.save()
         
+        #to update venues first check if the length is greater than 0. It confirms atleast one venue was selected
+        if(len(venue_list)>0):
+            #if the condition is correct now extract the values from the list, and register with the corresponding event id and venue id to the models.
+            #this data is stored in the Event_Venue Models inside insb_centrals models.py
+            for venue in venue_list:
+                try:
+                    #check for already existing record with same event_id and venue
+                    check_for_existing_venue=Event_Venue.objects.filter(event_id=event_id,venue_id=venue)
+                    if(check_for_existing_venue.exists()):
+                        print("Exists")
+                        check_for_existing_venue.update(venue_id=venue) #this piece of code is really not needed just used to avoid errors and usage of extra memory
+                    else:
+                        print("Doesn't")
+                        #now register the venue with the corresponding event_id
+                        register_venue=Event_Venue(
+                            event_id=Events.objects.get(id=event_id),
+                            venue_id=Venue_List.objects.get(id=venue)
+                            )
+                        register_venue.save()
+                except:
+                    return False #return False if anything goes wrong with the database setting process
+        else:
+            pass
+        
+        
+        for permission in permission_criteria_list:
+                #checking if null was selected for the process
+                if(permission!="null"):
+                    try:
+                        #check if same record exists
+                        check_for_existing_permission=Event_Permission.objects.filter(event_id=event_id,permission_id=permission)
+                        if(check_for_existing_permission.exists()):
+                            check_for_existing_permission.update(permission_id=permission) #this piece of code is really not needed just used to avoid errors and usage of extra memory
+                
+                        else:
+                            register_permission_criteria=Event_Permission(
+                                event_id=Events.objects.get(id=event_id),
+                                permission_id=Permission_criteria.objects.get(id=permission)
+                            )
+                            register_permission_criteria.save()
+                    except:
+                        return False
+                else:
+                    pass
+            
     
     
     
