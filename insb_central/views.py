@@ -99,7 +99,7 @@ def event_creation_form_page2(request,event_id):
                 inter_branch_collaboration_list=inter_branch_collaboration_list,
                 intra_branch_collaboration=intra_branch_collaboration,
                 event_id=event_id)):
-                print("go to next page")
+                return redirect('insb_central:event_creation_form3',event_id)
             else:
                 messages.info(request,"Database Error Occured! Please try again later.")
 
@@ -122,7 +122,17 @@ def event_creation_form_page3(request,event_id):
         'venues':venues,
         'permission_criterias':permission_criterias,
     }
-    
+    if request.method=="POST":
+        if request.POST.get('next'):
+            venue_list_for_event=request.POST.getlist('event_venues')
+            permission_criterias_list_for_event=request.POST.getlist('permission_criteria')
+            
+            renderData.Branch.register_event_page3(venue_list=venue_list_for_event,permission_criteria_list=permission_criterias_list_for_event,event_id=event_id)
+            messages.info(request, "Updated")
+
+
+
+
     return render(request,'event_creation_form3.html',context)
 
 def teams(request):

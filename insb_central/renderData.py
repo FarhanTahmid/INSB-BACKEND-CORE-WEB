@@ -2,7 +2,8 @@ from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_G
 from users.models import Members
 from django.db import DatabaseError
 from system_administration.models import MDT_Data_Access
-from . models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations
+from . models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission
+from events_and_management_team.models import Venue_List, Permission_criteria
 
 
 
@@ -62,7 +63,8 @@ class Branch:
     
     
     def register_event_page1(super_event_name,event_name,event_description,probable_date,final_date):
-        '''This method creates an event and registers data which are provided in event page1. Returns the id of the event if the method can create a new event successfully'''
+        '''This method creates an event and registers data which are provided in event page1. Returns the id of the event if the method can create a new event successfully
+        TAKES SUPER EVENT NAME, EVENT NAME, EVENT DESCRIPTION AS STRING. TAKES PROBABLE & FINAL DATE ALSO AS INPUT'''
         if(super_event_name=="null"):
                 
                 #now create the event as super event is null
@@ -129,7 +131,8 @@ class Branch:
     
     def register_event_page2(inter_branch_collaboration_list,intra_branch_collaboration,event_id):
         
-            '''This method creates an event and registers data which are provided in event page1'''
+            '''This method creates collaborations related to the events and registers data which are provided in event page2
+            TAKES INTER BRANCH COLLABORATION LIST, INTRA BRANCH COLLABORATION STRING AND EVENT ID AS PARAMETER'''
 
         
         #first check if both the collaboration options are null. If so, do register nothing on database and redirect to the next page
@@ -209,6 +212,22 @@ class Branch:
                         new_event_intra_branch_collaboration.save()
                         return True # intra branch collab created, now go to third page
     
+
+    def register_event_page3(venue_list,permission_criteria_list,event_id):
+        '''This method creates venues and permissions related to the events and registers data which are provided in event page3
+        TAKES LISTS OF VENUES AND PERMISSIONS AS PARAMETER. Also takes event id to register with respect to it'''
+        for venue in venue_list:
+            register_venue=Event_Venue(
+                event_id=Events.objects.get(id=event_id),
+                venue_id=Venue_List.objects.get(id=venue)
+            )
+            register_venue.save()
+        for permission in permission_criteria_list:
+            register_permission_criteria=Event_Permission(
+                event_id=Events.objects.get(id=event_id),
+                permission_id=Permission_criteria.objects.get(id=permission)
+            )
+            register_permission_criteria.save()
         
     
     

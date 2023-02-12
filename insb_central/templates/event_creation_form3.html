@@ -22,10 +22,10 @@
         <br><br>
 
         <label for="">Select Permission Criterias For the Event</label><br>
-        <select name="collaboration_with" multiple>
-            <option value="null" name="permission_criteria" selected>----------</option>
+        <select name="permission_criteria" multiple>
+            <option value="null" selected>----------</option>
             {% for permission in permission_criterias %}
-                <option value={{permission.id}} name="permission_criteria">{{permission.permission_name}}</option>
+                <option value={{permission.id}}>{{permission.permission_name}}</option>
             {% endfor %}
         </select>
         <br><br>
