@@ -103,9 +103,6 @@ def event_creation_form_page2(request,event_id):
             else:
                 messages.info(request,"Database Error Occured! Please try again later.")
 
-                              
-                    
-
         elif(request.POST.get('cancel')):
             return redirect('insb_central:event_control')
 
@@ -113,7 +110,7 @@ def event_creation_form_page2(request,event_id):
     return render(request,'event_creation_form2.html',context)
 
 def event_creation_form_page3(request,event_id):
-     #loading all venues from the venue list from event management team database
+    #loading all venues from the venue list from event management team database
     venues=Events_And_Management_Team.getVenues()
     #loading all the permission criterias from event management team database
     permission_criterias=Events_And_Management_Team.getPermissionCriterias()
@@ -124,11 +121,18 @@ def event_creation_form_page3(request,event_id):
     }
     if request.method=="POST":
         if request.POST.get('next'):
+            #getting the venues for the event
             venue_list_for_event=request.POST.getlist('event_venues')
+            #getting the permission criterias for the event
             permission_criterias_list_for_event=request.POST.getlist('permission_criteria')
             
-            renderData.Branch.register_event_page3(venue_list=venue_list_for_event,permission_criteria_list=permission_criterias_list_for_event,event_id=event_id)
-            messages.info(request, "Updated")
+            #updating data collected from part3 for the event
+            update_event_details=renderData.Branch.register_event_page3(venue_list=venue_list_for_event,permission_criteria_list=permission_criterias_list_for_event,event_id=event_id)
+            #if return value is false show an error message
+            if(update_event_details==False):
+                messages.info(request, "An error Occured! Please Try again!")
+            else:
+                print("go to next page")
 
 
 
