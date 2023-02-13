@@ -54,6 +54,9 @@ class Branch:
         except:
             return DatabaseError
     
+    def load_all_events():
+        return Events.objects.all()
+
     def load_all_mother_events():
         '''This method loads all the mother/Super events'''
         return SuperEvents.objects.all()
