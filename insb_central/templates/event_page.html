@@ -19,6 +19,66 @@
         <h1>Central event control page for INSB</h1>
         <button><a href="{% url 'insb_central:event_creation_form1' %}" class="">Create a new Event</a></button>
         <button><a href="" class="">Create a new Super Event</a></button>
-        <script src="" async defer></script>
+        <br><br>
+        <h1>Event List</h1>
+        
+        <label>Search: </label>
+        <input type="text" onkeyup="searchfunction()" id="search" placeholder="Search with any credentials">
+        
+        <br>
+        <table id="event_table">
+            <thead>
+                <tr id="table_row">
+                    <th>Event Name</th>
+                    <th>Event Organiser</th>
+                    <th>Probable Date of Event</th>
+                    <th>Final Date of Event</th>
+                    
+                </tr>
+            </thead>
+        {% comment %} This block is responsible for loading all the members recruited on that session and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
+        {% for event in events %}
+            <tr>
+                <td><a href="">{{event.event_name }}</a></td>
+                <td>{{ event.event_organiser }}</td>
+                <td>{{ event.probable_date }}</td>
+                <td>{{ event.final_date }}</td>
+                
+            </tr>
+        {% endfor %}
+        </table>
+        <p id="no_data"></p>
+
+        <script>
+            function searchfunction(){
+                let input,filter,table,tr,td,j;
+                input=document.getElementById("search");
+                filter=input.value.toUpperCase();
+                table=document.getElementById("event_table");
+                tr=table.getElementsByTagName("tr");
+                
+                for(j=0;j<tr.length;j++){
+                    td=tr[j].getElementsByTagName("td");
+                    message=document.getElementById("no_data");
+        
+                    if(td.length > 0){
+                        if(td[0].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
+                        td[1].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
+                        td[2].innerHTML.toLocaleUpperCase().indexOf(filter)> -1 ||
+                        td[3].innerHTML.toLocaleUpperCase().indexOf(filter)> -1){
+                        tr[j].style.display="";
+                        message.innerHTML="";
+                    }
+                            else{
+                                tr[j].style.display="none";
+                            }
+                    
+                    }        
+                    if(td.length==0){
+                        message.innerHTML="Event not found!";
+                    }
+                }
+            }
+        </script>
     </body>
 </html>

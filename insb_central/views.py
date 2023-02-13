@@ -32,12 +32,15 @@ def central_home(request):
 
 @login_required
 def event_control(request):
-    
+    all_insb_events=renderData.Branch.load_all_events()
+    context={
+        'events':all_insb_events,
+    }
     if(request.method=="POST"):
         if request.POST.get('create_new_event'):
             print("Create")
     
-    return render(request,'event_page.html')
+    return render(request,'event_page.html',context)
 
 @login_required
 def event_creation_form_page1(request):
