@@ -39,7 +39,7 @@
         {% comment %} This block is responsible for loading all the members recruited on that session and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
         {% for event in events %}
             <tr>
-                <td><a href="">{{event.event_name }}</a></td>
+                <td><a href="{% url 'insb_central:event_homepage' event.id %}">{{event.event_name }}</a></td>
                 <td>{{ event.event_organiser }}</td>
                 <td>{{ event.probable_date }}</td>
                 <td>{{ event.final_date }}</td>

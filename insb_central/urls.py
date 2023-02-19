@@ -18,7 +18,8 @@ urlpatterns = [
     path("create_event/<int:event_id>/page-2", views.event_creation_form_page2, name="event_creation_form2"),
     #Event creation page 3
     path("create_event/<int:event_id>/page-3", views.event_creation_form_page3, name="event_creation_form3"),
-
+    #Event control homepage
+    path("event_control/event_home/<int:event_id>", views.event_control_homepage,name="event_homepage"),
     #teams page
     path('teams',views.teams,name='teams'),
     #team details page

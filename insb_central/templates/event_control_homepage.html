@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branch-Event Creation Form</title>
+</head>
+<body>
+    <h1>
+        Event Creation Form
+    </h1>
+    <form method="POST">
+        {% csrf_token %}
+        
+        <label for="">Mother Event</label>
+        <select name="super_event">
+            <option value="null" selected>----------</option>
+            {% for super_event in super_events %}
+                <option value={{super_event.id}}>{{super_event.super_event_name}}</option>
+            {% endfor %}
+            
+            
+        </select>
+        <br><br>
+        <label>Name:</label>
+        <input type="text" name="event_name">
+        <br>
+        <br>
+        <label>Description</label><br>
+        <input type="text" name="event_description" style="height: 250px; width:500px;" placeholder="Write with in 500 words">
+        <br><br>
+        <label for="">Inter Branch Collaboration With:</label><br>
+        <select name="inter_branch_collaboration" multiple>
+            <option value="null" selected>----------</option>
+            {% for inter_branch_collaboration_option in inter_branch_collaboration_options %}
+                <option value={{inter_branch_collaboration_option.id}}>{{inter_branch_collaboration_option.group_name}}</option>
+            {% endfor %}
+            
+            
+        </select>
+        <br>
+        <br>
+        <label for="">Intra Branch Collaboration:</label>
+        <input type="text" name="intra_branch_collaboration" id="" placeholder="Enter Organization Names">
+        <br>
+        <br>
+        
+        <label for="">Select Probable Venues For the Event</label><br>
+        <select name="event_venues" multiple>
+            {% for venue  in venues %}
+                <option value={{venue.id}}>{{venue.venue_name}}</option>
+            {% endfor %}
+            
+            
+        </select>
+        <br><br>
+
+        <label for="">Select Permission Criterias For the Event</label><br>
+        <select name="collaboration_with" multiple>
+            <option value="null" name="permission_criteria" selected>----------</option>
+            {% for permission in permission_criterias %}{% endfor %}
+            <option value={{permission.id}} name="permission_criteria">{{permission.permission_name}}</option>
+            
+        </select>
+        <br><br>
+        
+        
+        <br>
+        <br>
+        
+        <label for="">Add a Probable Date For the Event</label>
+        <input type="date" name="probable_date">
+        <br><br>
+        <label for="">Add Final Date For the Event (If finalised)</label>
+        <input type="date" name="final_date">
+        <br>
+        <br>
+        <label for="">Is there any registration fee for this event?</label><br>
+        <input type="radio" name="paid_unpaid" value="Yes">
+        <label for="">Yes</label>
+        <input type="radio" name="paid_unpaid" value="No">
+        <label for="">No</label>
+        <br><br>
+        <input type="submit" value="Create Event" name="create">
+        <input type="button" name="cancel" id="" value="Cancel">
+    </form>
+</body>
+</html>
