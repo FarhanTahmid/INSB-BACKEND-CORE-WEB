@@ -135,12 +135,14 @@ def event_creation_form_page3(request,event_id):
             if(update_event_details==False):
                 messages.info(request, "An error Occured! Please Try again!")
             else:
-                print("go to next page")
-
-
-
+                return redirect('insb_central:event_control')
 
     return render(request,'event_creation_form3.html',context)
+
+
+def event_control_homepage(request,event_id):
+    
+    return render(request,'event_control_homepage.html')
 
 def teams(request):
     
