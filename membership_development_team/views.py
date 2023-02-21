@@ -526,7 +526,8 @@ def data_access(request):
                 ieee_id=ieee_id,insb_member_details_permission=insb_member_details_permission,recruitment_session_permission=recruitment_session_permission,
                 recruited_member_details_permission=recruited_member_details_permission,renewal_data_access_permission=renewal_data_access_permission
             )):
-                messages.info(request,f"Permission Details Was updated For the Member with {ieee_id}")
+                permission_updated_for=Members.objects.get(ieee_id=ieee_id)
+                messages.info(request,f"Permission Details Was Updated for {permission_updated_for.name}")
             
             else:
                 messages.info(request,f"Something Went Wrong! Please Contact System Administrator about this issue")
