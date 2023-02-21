@@ -70,6 +70,37 @@
             background-color:  rgba(44, 167, 216, .1);
             transition: .2s;
         }
+        
+        .raise-error .message{
+          color: #EFD033;
+          font-size: 30px;
+        }
+        div.scroll{
+            display: block;
+            border: 0px solid black;
+            padding: 5px;
+            margin-top: 5px;
+            width: 795px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+        .insb_member_table {
+            margin: auto;
+            border: 1px solid black !important;
+            border-collapse: collapse;
+          }
+        .insb_member_table_head{
+            border: 1px solid black;
+            text-align: center;
+            color: black;
+        }
+        .insb_member_table_data{
+            border: 1px solid black;
+            color: black;
+            text-align: center;
+            padding: auto;
+          }
+
 
     </style>
 
@@ -229,7 +260,8 @@
                       </td>
                     
                     <td>
-                            <input class="button" name="access_update" type="submit" value="Update">
+                            <input class="btn btn-warning" name="access_update" type="submit" value="Update">
+                            <input class="btn btn-danger" name="access_remove" type="submit" value="Remove">
                             <input type="hidden" name="access_ieee_id" value={{data_access.ieee_id}}>
                         </form>
                     </td>
@@ -238,8 +270,8 @@
                 </tbody>
               </table>
             </div><!--end of .table-responsive-->
-            {% for messages in messages %}
-              <p class="text-white text-center">{{messages}}</p>
+            {% for message in messages %}
+              <p class="text-white text-center">{{message}}</p>
             {% endfor %}
           </div>
         </div>
@@ -255,7 +287,7 @@
       aria-labelledby="staticBackdropLabel"
       aria-hidden="true"
     >
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
           <div class="modal-content">
               <div class="modal-header">
                   <h5 class="modal-title" id="staticBackdropLabel">
@@ -273,13 +305,43 @@
                 <br>
                 <label>Search</label>
                 <br>
-                <input onkeyup="searchfunction()" id="search" class="form-control mr-sm-2 w-100" type="text" placeholder="Search Members" aria-label="Search">
+                <input onkeyup="searchfunction_data_access()" id="search" class="form-control mr-sm-2 w-100" type="text" placeholder="Search Members" aria-label="Search">
             </div>
 
             <form method="POST">
               {% csrf_token %}
-              
-              
+              <div class="scroll" style="justify-content:center;">
+                <div>
+                    <table id="registered_member_table" class="insb_member_table">
+                        <h3 style="text-align:center">Members</h3>
+                        <thead>
+                            <tr id="table_row">
+                                <th class="insb_member_table_head">Name</th>
+                                <th class="insb_member_table_head">IEEE ID</th>
+                                <th class="insb_member_table_head">Team</th>
+                                <th class="insb_member_table_head">Current Position</th>
+                                <th class="insb_member_table_head">E-mail</th>
+                                <th class="insb_member_table_head">Select Member</th>
+                                
+                            </tr>
+                        </thead>
+                    {% comment %} This block is responsible for loading all the members recruited on that session and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
+                    {% for member in insb_members %}
+                        <tr>
+                            <td class="insb_member_table_data">{{ member.name }}</td>
+                            <td class="insb_member_table_data">{{ member.ieee_id }}</td>
+                            <td class="insb_member_table_data">{{ member.team }}</td>
+                            <td class="insb_member_table_data">{{ member.position }}</td>
+                            <td class="insb_member_table_data">{{ member.email_ieee }}</td>
+                            <td class="insb_member_table_data">
+                                <input type="checkbox" id="select" name="member_select" value={{member.ieee_id}}>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                    <p  id="no_data1" style="text-align:center;"></p>
+                </div>
+            </div>
               <div class="modal-footer">
                   <button
                       type="button"
@@ -292,7 +354,7 @@
                       type="submit"
                       class="btn btn-success"
                       data-bs-dismiss="modal"
-                      name="update_form_credentials"
+                      name="update_data_access_member"
                       value="Update"
                   >
               </div>
@@ -317,6 +379,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
-
+    <script src="{% static 'data_access.js' %}"></script>
 </body>
 </html>
