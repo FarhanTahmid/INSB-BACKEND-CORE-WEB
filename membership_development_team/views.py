@@ -503,6 +503,10 @@ def data_access(request):
     data_access=renderData.MDT_DATA.load_mdt_data_access()
     team_members=renderData.MDT_DATA.load_team_members()
     
+    #load all insb members
+    all_insb_members=Members.objects.all()
+    
+    
     if request.method=="POST":
         if request.POST.get('access_update'):
             
@@ -531,7 +535,19 @@ def data_access(request):
             
             else:
                 messages.info(request,f"Something Went Wrong! Please Contact System Administrator about this issue")
+        
+        if request.POST.get('access_remove'):
+            '''To remove record from data access table'''
+            
+            ieeeId=request.POST['access_ieee_id']
+            if(renderData.MDT_DATA.remove_member_from_data_access(ieee_id=ieeeId)):
+                messages.info(request,"Removed member from Data Access Table")
+                return redirect('membership_development_team:data_access')
+            else:
+                messages.info(request,"Something went wrong!")
+                
         if request.POST.get('remove_member'):
+            '''To remove member from team table'''
             try:
                 Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
                 try:
@@ -541,12 +557,27 @@ def data_access(request):
                 return redirect('membership_development_team:data_access')
             except:
                 pass
+        
+        if request.POST.get('update_data_access_member'):
+            
+            new_data_access_member_list=request.POST.getlist('member_select')
+            
+            if(len(new_data_access_member_list)>0):
+                for ieeeID in new_data_access_member_list:
+                    if(renderData.MDT_DATA.add_member_to_data_access(ieeeID)=="exists"):
+                        messages.info(request,f"The member with IEEE Id: {ieeeID} already exists in the Data Access Table")
+                    elif(renderData.MDT_DATA.add_member_to_data_access(ieeeID)==False):
+                        messages.info(request,"Something Went wrong! Please try again")
+                    elif(renderData.MDT_DATA.add_member_to_data_access(ieeeID)==True):
+                        messages.info(request,f"Member with {ieeeID} was added to the Data Access table!")
+                        return redirect('membership_development_team:data_access')
             
            
 
     context={
         'data_access':data_access,
         'members':team_members,
+        'insb_members':all_insb_members,
         
     }
     if(has_access):

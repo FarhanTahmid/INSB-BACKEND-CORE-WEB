@@ -201,5 +201,26 @@ class MDT_DATA:
             mdt_officials.append(load_co_ordinators[i])
         
         return mdt_officials
+    
+    def add_member_to_data_access(ieee_id):
+        try:
+            if(MDT_Data_Access.objects.filter(ieee_id=ieee_id).exists()):
+                return "exists"
+            else:
+            
+                new_access=MDT_Data_Access(
+                    ieee_id=Members.objects.get(ieee_id=ieee_id)
+                )
+                new_access.save()
+            return True
+        except:
+            return False
+    def remove_member_from_data_access(ieee_id):
+        try:
+            MDT_Data_Access.objects.get(ieee_id=ieee_id).delete()
+            return True
+        except:
+            return False
+        
             
             
