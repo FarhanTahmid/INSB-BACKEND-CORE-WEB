@@ -1,6 +1,6 @@
 from . models import Renewal_Form_Info,Renewal_Sessions
 from users.models import Members
-from port.models import Teams
+from port.models import Teams,Roles_and_Position
 from system_administration.models import MDT_Data_Access
 from system_administration.render_access import Access_Render
 
@@ -201,5 +201,28 @@ class MDT_DATA:
             mdt_officials.append(load_co_ordinators[i])
         
         return mdt_officials
+    
+    def add_member_to_data_access(ieee_id):
+        try:
+            if(MDT_Data_Access.objects.filter(ieee_id=ieee_id).exists()):
+                return "exists"
+            else:
+            
+                new_access=MDT_Data_Access(
+                    ieee_id=Members.objects.get(ieee_id=ieee_id)
+                )
+                new_access.save()
+            return True
+        except:
+            return False
+    def remove_member_from_data_access(ieee_id):
+        try:
+            MDT_Data_Access.objects.get(ieee_id=ieee_id).delete()
+            return True
+        except:
+            return False
+    def add_member_to_team(ieee_id,position):
+        team_id=MDT_DATA.get_team_id()
+        Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
             
             

@@ -19,7 +19,7 @@ from port.models import Roles_and_Position,Teams
 from django.conf import settings
 from system_administration.render_access import Access_Render
 from django.core.mail import send_mail
-import socket
+from insb_central.renderData import Branch
 from . import email_sending
 
 
@@ -502,6 +502,11 @@ def data_access(request):
     
     data_access=renderData.MDT_DATA.load_mdt_data_access()
     team_members=renderData.MDT_DATA.load_team_members()
+    #load all position for insb members
+    position=Branch.load_roles_and_positions()
+    #load all insb members
+    all_insb_members=Members.objects.all()
+    
     
     if request.method=="POST":
         if request.POST.get('access_update'):
@@ -526,11 +531,24 @@ def data_access(request):
                 ieee_id=ieee_id,insb_member_details_permission=insb_member_details_permission,recruitment_session_permission=recruitment_session_permission,
                 recruited_member_details_permission=recruited_member_details_permission,renewal_data_access_permission=renewal_data_access_permission
             )):
-                messages.info(request,f"Permission Details Was updated For the Member with {ieee_id}")
+                permission_updated_for=Members.objects.get(ieee_id=ieee_id)
+                messages.info(request,f"Permission Details Was Updated for {permission_updated_for.name}")
             
             else:
                 messages.info(request,f"Something Went Wrong! Please Contact System Administrator about this issue")
+        
+        if request.POST.get('access_remove'):
+            '''To remove record from data access table'''
+            
+            ieeeId=request.POST['access_ieee_id']
+            if(renderData.MDT_DATA.remove_member_from_data_access(ieee_id=ieeeId)):
+                messages.info(request,"Removed member from Data Access Table")
+                return redirect('membership_development_team:data_access')
+            else:
+                messages.info(request,"Something went wrong!")
+                
         if request.POST.get('remove_member'):
+            '''To remove member from team table'''
             try:
                 Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
                 try:
@@ -540,12 +558,36 @@ def data_access(request):
                 return redirect('membership_development_team:data_access')
             except:
                 pass
+        
+        if request.POST.get('update_data_access_member'):
             
-           
+            new_data_access_member_list=request.POST.getlist('member_select')
+            
+            if(len(new_data_access_member_list)>0):
+                for ieeeID in new_data_access_member_list:
+                    if(renderData.MDT_DATA.add_member_to_data_access(ieeeID)=="exists"):
+                        messages.info(request,f"The member with IEEE Id: {ieeeID} already exists in the Data Access Table")
+                    elif(renderData.MDT_DATA.add_member_to_data_access(ieeeID)==False):
+                        messages.info(request,"Something Went wrong! Please try again")
+                    elif(renderData.MDT_DATA.add_member_to_data_access(ieeeID)==True):
+                        messages.info(request,f"Member with {ieeeID} was added to the Data Access table!")
+                        return redirect('membership_development_team:data_access')
+
+        if request.POST.get('add_member_to_team'):
+            #get selected members
+            members_to_add=request.POST.getlist('member_select1')
+            #get position
+            position=request.POST.get('position')
+
+            for member in members_to_add:
+                renderData.MDT_DATA.add_member_to_team(member,position)
+            return redirect('membership_development_team:data_access')
 
     context={
         'data_access':data_access,
         'members':team_members,
+        'insb_members':all_insb_members,
+        'positions':position,
         
     }
     if(has_access):

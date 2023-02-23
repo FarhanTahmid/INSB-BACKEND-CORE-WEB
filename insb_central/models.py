@@ -95,9 +95,9 @@ class Event_Venue(models.Model):
     
 #Table For Permissions for specific events
 class Event_Permission(models.Model):
-        event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
-        permission_id=models.ForeignKey(Permission_criteria,on_delete=models.CASCADE)
-        permission_status=models.BooleanField(null=False,blank=False,default=False)
+    event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
+    permission_id=models.ForeignKey(Permission_criteria,on_delete=models.CASCADE)
+    permission_status=models.BooleanField(null=False,blank=False,default=False)
 
 #Table For Permissions for specific events
 class Event_Logistic_Items(models.Model):

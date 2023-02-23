@@ -3,9 +3,10 @@ from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from . import renderData
-from port.models import Teams
+from port.models import Teams,Chapters_Society_and_Affinity_Groups
 from django.db import connection
 from django.db.utils import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
 from recruitment.models import recruited_members
 import csv,datetime
 from users.ActiveUser import ActiveUser
@@ -14,7 +15,9 @@ from system_administration.render_access import Access_Render
 from insb_central.renderData import Branch
 from events_and_management_team.renderData import Events_And_Management_Team
 from logistics_and_operations_team.renderData import LogisticsTeam
-from . models import Events
+from . models import Events,InterBranchCollaborations,IntraBranchCollaborations
+from events_and_management_team.models import Venue_List,Permission_criteria
+from insb_central.renderData import Branch
 
 
 # Create your views here.
@@ -30,12 +33,15 @@ def central_home(request):
 
 @login_required
 def event_control(request):
-    
+    all_insb_events=renderData.Branch.load_all_events()
+    context={
+        'events':all_insb_events,
+    }
     if(request.method=="POST"):
         if request.POST.get('create_new_event'):
             print("Create")
     
-    return render(request,'event_page.html')
+    return render(request,'event_page.html',context)
 
 @login_required
 def event_creation_form_page1(request):
@@ -44,79 +50,100 @@ def event_creation_form_page1(request):
     
     #loading super/mother event at first
     super_events=Branch.load_all_mother_events()
-    #loading all inter branch collaboration Options
-    inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
-    #loading all venues from the venue list from event management team database
-    venues=Events_And_Management_Team.getVenues()
-    #loading all the permission criterias from event management team database
-    permission_criterias=Events_And_Management_Team.getPermissionCriterias()
+
 
     
     context={
         'super_events':super_events,
-        'inter_branch_collaboration_options':inter_branch_collaboration_options,
-        'venues':venues,
-        'permission_criterias':permission_criterias,
     }
     
     if(request.method=="POST"):
         if(request.POST.get('next')):
             super_event_name=request.POST.get('super_event')
             
-            if(super_event_name=="null"):
-                
-                #now create the event as super event is null
-                event_name=request.POST['event_name']
-                event_description=request.POST['event_description']
-                probable_date=request.POST['probable_date']
-                final_date=request.POST['final_date']
-                
-                print(f"Event Name: {event_name}")
-                print(f"Event Description: {event_description}")
-                print(f"Probable Date: {probable_date}")
-                print(f"Finale Date: {final_date}")
-                new_event=Events(
-                    event_name=event_name,
-                    event_description=event_description,
-                    probable_date=probable_date,
-                    final_date=final_date
-                )
-                new_event.save()
-                print("Created Event")
-
-                
+            event_name=request.POST['event_name']
+            event_description=request.POST['event_description']
+            probable_date=request.POST['probable_date']
+            final_date=request.POST['final_date']
+            
+            get_event=renderData.Branch.register_event_page1(
+                super_event_name=super_event_name,
+                event_name=event_name,
+                event_description=event_description,
+                probable_date=probable_date,
+                final_date=final_date)
+            
+            if(get_event)==False:
+                messages.info(request,"Database Error Occured! Please try again later.")
             else:
-                #now create the event as super event in the event models
-                
-                event_name=request.POST['event_name']
-                event_description=request.POST['event_description']
-                probable_date=request.POST['probable_date']
-                final_date=request.POST['final_date']
+                #if the method returns true, it will redirect to the new page
+                return redirect('insb_central:event_creation_form2',get_event)
 
-                print(f"Super Event Name: {super_event_name}")
-                print(f"Event Name: {event_name}")
-                print(f"Event Description: {event_description}")
-                print(f"Probable Date: {probable_date}")
-                print(f"Finale Date: {final_date}")
-                new_event=Events(
-                    super_event_name=super_event_name,
-                    event_name=event_name,
-                    event_description=event_description,
-                    probable_date=probable_date,
-                    final_date=final_date
-                )
-                new_event.save()
-                print("Created in else")
+
                 
+            
                 
-    
+        elif(request.POST.get('cancel')):
+            return redirect('insb_central:event_control')
     return render(request,'event_creation_form1.html',context)
 
 @login_required
-def event_creation_form_page2(request):
-    return render(request,'event_creation_form2.html')
+def event_creation_form_page2(request,event_id):
+    #loading all inter branch collaboration Options
+    inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+    context={
+        'inter_branch_collaboration_options':inter_branch_collaboration_options,
+    }
+    if request.method=="POST":
+        if(request.POST.get('next')):
+            inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
+            intra_branch_collaboration=request.POST['intra_branch_collaboration']
+            
+            if(renderData.Branch.register_event_page2(
+                inter_branch_collaboration_list=inter_branch_collaboration_list,
+                intra_branch_collaboration=intra_branch_collaboration,
+                event_id=event_id)):
+                return redirect('insb_central:event_creation_form3',event_id)
+            else:
+                messages.info(request,"Database Error Occured! Please try again later.")
+
+        elif(request.POST.get('cancel')):
+            return redirect('insb_central:event_control')
 
 
+    return render(request,'event_creation_form2.html',context)
+
+def event_creation_form_page3(request,event_id):
+    #loading all venues from the venue list from event management team database
+    venues=Events_And_Management_Team.getVenues()
+    #loading all the permission criterias from event management team database
+    permission_criterias=Events_And_Management_Team.getPermissionCriterias()
+
+    context={
+        'venues':venues,
+        'permission_criterias':permission_criterias,
+    }
+    if request.method=="POST":
+        if request.POST.get('next'):
+            #getting the venues for the event
+            venue_list_for_event=request.POST.getlist('event_venues')
+            #getting the permission criterias for the event
+            permission_criterias_list_for_event=request.POST.getlist('permission_criteria')
+            
+            #updating data collected from part3 for the event
+            update_event_details=renderData.Branch.register_event_page3(venue_list=venue_list_for_event,permission_criteria_list=permission_criterias_list_for_event,event_id=event_id)
+            #if return value is false show an error message
+            if(update_event_details==False):
+                messages.info(request, "An error Occured! Please Try again!")
+            else:
+                return redirect('insb_central:event_control')
+
+    return render(request,'event_creation_form3.html',context)
+
+
+def event_control_homepage(request,event_id):
+    
+    return render(request,'event_control_homepage.html')
 
 def teams(request):
     
