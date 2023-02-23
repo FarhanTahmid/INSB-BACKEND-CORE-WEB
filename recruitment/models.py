@@ -35,8 +35,8 @@ class recruited_members(models.Model):
     recruited_by=models.CharField(null=True,blank=True,max_length=30)
     cash_payment_status=models.BooleanField(null=True,blank=True,default=False)
     ieee_payment_status=models.BooleanField(null=False,blank=False,default=False)
-    comment=models.CharField(null=True,blank=True,max_length=500)
-    
+    comment=models.CharField(null=True,blank=True,max_length=500,default="")
+
     class Meta:
         verbose_name="Recruited Members"
     
