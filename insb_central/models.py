@@ -136,7 +136,7 @@ class meeting_minutes_team_info(models.Model):
     def __str__(self) -> str:
         return self.mm_team_id
 
-class meeting_minutes_team_info(models.Model):
+class meeting_minutes_branch_info(models.Model):
     mm_branch_id=models.ForeignKey(branch_meeting_minutes, on_delete=models.CASCADE)
 
     class Meta:
