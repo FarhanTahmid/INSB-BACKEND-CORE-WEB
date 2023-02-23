@@ -66,7 +66,13 @@
                                 <li style="font-size:15px">If you have any further queries, Please refer to: <b>{{further_contact.name}}, {{further_contact.position}}, {{further_contact.team}} Team, IEEE NSU SB</b>.<br>Contact Informations:<br> <a href={{further_contact.facebook_url}}>Facebook</a>, <a href={{further_contact.linkedin_url}}>Linkedin</a>, Cell: {{further_contact.contact_no}}</li>
                             </ul>
                             <br>
+                            <div class="py-3 text-center">
                             
+                                {% for message in messages %}
+                                    <p style="font-size:25px;color:red;" class="message">{{message}}</p>
+                                {% endfor %}
+                                
+                            </div>
                             
                             <div class="px-0 px-md-5">
                                 <div class="row my-3">
@@ -267,12 +273,7 @@
                                 </button>
                             </div>
                         
-                            <div class="py-3 text-center">
                             
-                                {% for message in messages %}
-                                    <p class="message">{{message}}</p>
-                                {% endfor %}
-                            </div>
                         </div>
                     </div>
 

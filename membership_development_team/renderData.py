@@ -13,13 +13,13 @@ class MDT_DATA:
 
         try:
             get_member=Members.objects.get(ieee_id=ieee_id)
-            get_last_renewal_time=get_member.last_renewal_time
+            get_last_renewal_session=get_member.last_renewal_session
             
-            if(get_last_renewal_time is None):
-                get_recruitment_time=get_member.session.session_time
+            if(get_last_renewal_session is None):
+                get_recruitment_time=get_member.session
                 print(get_recruitment_time)
             else:
-                print(get_last_renewal_time)
+                print(get_last_renewal_session)
                 
         except:
             print("Duitar ektao nai")
