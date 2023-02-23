@@ -3,6 +3,8 @@ from users.models import Members
 from port.models import Teams,Roles_and_Position
 from system_administration.models import MDT_Data_Access
 from system_administration.render_access import Access_Render
+from datetime import date
+from datetime import datetime
 
 class MDT_DATA:
     
@@ -11,18 +13,34 @@ class MDT_DATA:
         return Members.objects.get(ieee_id=ieee_id)
     def get_member_account_status(ieee_id):
 
-        try:
+        #try:
+            today=date.today()
+            print(f"Today is {today}")
             get_member=Members.objects.get(ieee_id=ieee_id)
             get_last_renewal_session=get_member.last_renewal_session
             
             if(get_last_renewal_session is None):
-                get_recruitment_time=get_member.session
-                print(get_recruitment_time)
-            else:
-                print(get_last_renewal_session)
+                get_recruitment_session=get_member.session
+                print(f"Recruitment Time: {get_recruitment_session.session_time}")
+                #getting the difference of time
+                difference_of_time=(datetime.strptime(str(today), "%Y-%m-%d") - datetime.strptime(str((get_recruitment_session.session_time)), "%Y-%m-%d")).days
                 
-        except:
-            print("Duitar ektao nai")
+                if(difference_of_time<365):
+                    print("Membership is active")
+                elif(difference_of_time>365):
+                  print(f"Membership Expired")  
+
+            else:
+                print(f"Last Renewal Date: {get_last_renewal_session.session_time}")
+                difference_of_time=(datetime.strptime(str(today), "%Y-%m-%d") - datetime.strptime(str(get_last_renewal_session.session_time), "%Y-%m-%d")).days
+                
+                if(difference_of_time<365):
+                    print("Membership is active")
+                elif(difference_of_time>365):
+                  print(f"Membership Expired")
+                
+        # except:
+        #     print("Duitar ektao nai")
             
     def get_team_id():
         
