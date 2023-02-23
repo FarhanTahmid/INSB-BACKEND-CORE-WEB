@@ -230,7 +230,7 @@
                                         <div class="col-md-8">
                                             <input
                                                 class="form-control w-75"
-                                                type="url" placeholder="Enter Facebook URL" required name="facebook_url" value="{{ data.facebook_url }}"
+                                                type="text" placeholder="Enter Facebook URL" name="facebook_url" value="{{ data.facebook_url }}"
                                             />
                                         </div>
                                     </div>
@@ -242,7 +242,7 @@
                                         <div class="col-md-8">
                                             <input
                                                 class="form-control w-75"
-                                                type="text" placeholder="Enter Address" required name="home_address" value="{{address}}"
+                                                type="text" placeholder="Enter Address" name="home_address" value="{{address}}"
                                                 
                                             />
                                         </div>
@@ -346,12 +346,25 @@
                                             {% endif %}
 
                                         </div>
+                                        <div class="row my-3">
+                                            <div class="col-md-2 mt-1">
+                                                Comment (MD Team):
+                                            </div>
+                                            <div class="col-md-8">
+                                                <input
+                                                    class="form-control w-75 h-100"
+                                                    type="text" placeholder="Write a comment if you want" name="comment" value="{{ data.comment }}"
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
+                                    
+
                        
-                            <div class="p-2 mb-4">
+                            <div class="p-2 mb-4 text-center">
                                 
                                
-                                <input type="submit" class="btn btn-warning mt-3 mt-md-0" name="save_edit"
+                                <input type="submit" class="btn btn-warning mt-3 mt-md-0 " name="save_edit"
                                     value="Save Edits"
                                 >
                                 
@@ -382,7 +395,7 @@
                             <div class="p-2 mb-4">
                                 
                                 <input type="button"
-                                class="btn btn-danger me-3"
+                                class="btn btn-danger me-3 text-right"
                                 data-bs-toggle="modal"
                                 data-bs-target="#delete"
                                 
