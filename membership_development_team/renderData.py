@@ -10,7 +10,15 @@ class MDT_DATA:
         '''Returning INSB MEMBERS DATA'''
         return Members.objects.get(ieee_id=ieee_id)
     def get_member_account_status(ieee_id):
-        pass 
+
+        get_member=Members.objects.get(ieee_id=ieee_id)
+        get_last_renewal_time=get_member.last_renewal_time
+        get_recruitment_time=get_member.session
+        
+        if(get_last_renewal_time is None):
+            if((type(get_recruitment_time))==None):
+                print("Duitai nai")
+
     def get_team_id():
         
         '''Gets the team id from the database only for Membership Development Team. Not the right approach'''
@@ -224,5 +232,5 @@ class MDT_DATA:
     def add_member_to_team(ieee_id,position):
         team_id=MDT_DATA.get_team_id()
         Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
-            
+
             
