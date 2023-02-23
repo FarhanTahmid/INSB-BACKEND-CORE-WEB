@@ -122,7 +122,8 @@ def recruitee_details(request,session_id,nsu_id):
                 'ieee_id': request.POST['ieee_id'],
                 'recruited_by': request.POST['recruited_by'],
                 'cash_payment_status': cash_payment_status,
-                'ieee_payment_status': ieee_payment_status
+                'ieee_payment_status': ieee_payment_status,
+                'comment':request.POST['comment']
             }
             
 
