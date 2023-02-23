@@ -11,14 +11,19 @@ class MDT_DATA:
         return Members.objects.get(ieee_id=ieee_id)
     def get_member_account_status(ieee_id):
 
-        get_member=Members.objects.get(ieee_id=ieee_id)
-        get_last_renewal_time=get_member.last_renewal_time
-        get_recruitment_time=get_member.session
-        
-        if(get_last_renewal_time is None):
-            if((type(get_recruitment_time))==None):
-                print("Duitai nai")
-
+        try:
+            get_member=Members.objects.get(ieee_id=ieee_id)
+            get_last_renewal_session=get_member.last_renewal_session
+            
+            if(get_last_renewal_session is None):
+                get_recruitment_time=get_member.session
+                print(get_recruitment_time)
+            else:
+                print(get_last_renewal_session)
+                
+        except:
+            print("Duitar ektao nai")
+            
     def get_team_id():
         
         '''Gets the team id from the database only for Membership Development Team. Not the right approach'''
@@ -182,7 +187,7 @@ class MDT_DATA:
                                       ieee_ias_membership_amount=ieee_ias_membership_amount,
                                       ieee_wie_membership_amount=ieee_wie_membership_amount,
                                       bkash_payment_number=bkash_payment_number,
-                                      further_contact_member_id=Members.objects.get(ieee_id=further_contact_member_id) 
+                                      further_contact_member_id=further_contact_member_id 
                                       
                                       )
         create_form.save()

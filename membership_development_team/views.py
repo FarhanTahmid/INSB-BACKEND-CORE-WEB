@@ -174,13 +174,20 @@ def membership_renewal_form(request,pk):
     
     #load renewal form credentials
     form_credentials=renderData.MDT_DATA.load_form_data_for_particular_renewal_session(renewal_session_id=pk)
+    #performing try catch because the form might not contain credential data
+    try:
+        form_credentials_further_contact_info=Members.objects.get(ieee_id=form_credentials.further_contact_member_id)
+    except:
+        form_credentials_further_contact_info="none"
+    
     if(form_credentials==False):
-        messages.info(request,"No Form Data was Updated. Please Update form data from the session page")
+        messages.info(request,"No Form Data was Updated. Please Update form data from the Renewal Session page, Edit Renewal Form Credentials")
     
     
     context={
         'session_name':session_name,
-        'form_credentials':form_credentials,    
+        'form_credentials':form_credentials,
+        'further_contact':form_credentials_further_contact_info,  
     }
     
     if request.method=="POST":
@@ -340,8 +347,8 @@ def renewal_request_details(request,pk,request_id):
                     
                 #update data in main registered Members database
                 get_renewal_session=Renewal_Sessions.objects.get(id=pk)
-                Members.objects.filter(ieee_id=ieee_id).update(last_renewal_time=get_renewal_session.session_time)
-                Members.objects.filter(ieee_id=ieee_id).update(last_renewal_session=get_renewal_session.session_name)
+                
+                Members.objects.filter(ieee_id=ieee_id).update(last_renewal_session=Renewal_Sessions.objects.get(id=get_renewal_session.id))
                 
                 # #Update in renewal requests database.
                 Renewal_requests.objects.filter(id=request_id).update(renewal_status=True)
