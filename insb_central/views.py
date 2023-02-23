@@ -17,6 +17,7 @@ from events_and_management_team.renderData import Events_And_Management_Team
 from logistics_and_operations_team.renderData import LogisticsTeam
 from . models import Events,InterBranchCollaborations,IntraBranchCollaborations
 from events_and_management_team.models import Venue_List,Permission_criteria
+from insb_central.renderData import Branch
 
 
 # Create your views here.

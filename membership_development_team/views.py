@@ -19,7 +19,7 @@ from port.models import Roles_and_Position,Teams
 from django.conf import settings
 from system_administration.render_access import Access_Render
 from django.core.mail import send_mail
-import socket
+from insb_central.renderData import Branch
 from . import email_sending
 
 
@@ -502,7 +502,8 @@ def data_access(request):
     
     data_access=renderData.MDT_DATA.load_mdt_data_access()
     team_members=renderData.MDT_DATA.load_team_members()
-    
+    #load all position for insb members
+    position=Branch.load_roles_and_positions()
     #load all insb members
     all_insb_members=Members.objects.all()
     
@@ -571,13 +572,22 @@ def data_access(request):
                     elif(renderData.MDT_DATA.add_member_to_data_access(ieeeID)==True):
                         messages.info(request,f"Member with {ieeeID} was added to the Data Access table!")
                         return redirect('membership_development_team:data_access')
-            
-           
+
+        if request.POST.get('add_member_to_team'):
+            #get selected members
+            members_to_add=request.POST.getlist('member_select1')
+            #get position
+            position=request.POST.get('position')
+
+            for member in members_to_add:
+                renderData.MDT_DATA.add_member_to_team(member,position)
+            return redirect('membership_development_team:data_access')
 
     context={
         'data_access':data_access,
         'members':team_members,
         'insb_members':all_insb_members,
+        'positions':position,
         
     }
     if(has_access):

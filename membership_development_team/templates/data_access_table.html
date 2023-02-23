@@ -136,7 +136,10 @@
 
       
       <div class="justify-content-center">
-        <h2>Current Team Members
+        <h2>Current Team Members</h2>
+        <div class="btn-group w-100 justify-content-center justify-content-center m-3" role="group" aria-label="Basic example">
+          <button type="button" data-bs-toggle="modal" data-bs-target="#form_data2"  class="btn btn-success rounded m-1">Add New Member to Membership Development Team</button>
+        </div>
         </div>
       <div class="container">
         <div class="row">
@@ -362,6 +365,102 @@
           </div>
     </div>
   </div>
+
+
+
+  {% comment %} Modals {% endcomment %}
+  <div
+  class="modal fade"
+  id="form_data2"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+<div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">
+                  Add Member to Membership Development Team
+              </h5>
+              <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+              ></button>
+          </div>
+
+        <div class="search">
+            <br>
+            <label>Search</label>
+            <br>
+            <input onkeyup="searchfunction_add_member()" id="search3" class="form-control mr-sm-2 w-100" type="text" placeholder="Search Members" aria-label="Search">
+            <br>
+        
+          </div>
+
+        <form method="POST">
+          {% csrf_token %}
+          <label style="margin-left:5px;">Select Position</label>
+                    <select id="position" name="position">
+                        {% for position in positions %}
+                            <option value={{position.id}}>{{ position.role }}</option>
+                        {% endfor %} 
+                    </select>
+          <br>
+          <div class="scroll" style="justify-content:center;">
+            <div>
+                <table id="registered_member_table3" class="insb_member_table2">
+                    <h3 style="text-align:center">Members</h3>
+                    <thead>
+                        <tr id="table_row2">
+                            <th class="insb_member_table_head">Name</th>
+                            <th class="insb_member_table_head">IEEE ID</th>
+                            <th class="insb_member_table_head">Team</th>
+                            <th class="insb_member_table_head">Current Position</th>
+                            <th class="insb_member_table_head">E-mail</th>
+                            <th class="insb_member_table_head">Select Member</th>
+                            
+                        </tr>
+                    </thead>
+                {% comment %} This block is responsible for loading all the members recruited on that session and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
+                {% for member in insb_members %}
+                    <tr id="table_row2">
+                        <td class="insb_member_table_data"><a href="{% url 'membership_development_team:member_details' member.ieee_id %}">{{ member.name }}</a></td>                        <td class="insb_member_table_data">{{ member.ieee_id }}</td>
+                        <td class="insb_member_table_data">{{ member.team }}</td>
+                        <td class="insb_member_table_data">{{ member.position }}</td>
+                        <td class="insb_member_table_data">{{ member.email_ieee }}</td>
+                        <td class="insb_member_table_data">
+                            <input type="checkbox" id="select" name="member_select1" value={{member.ieee_id}}>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </table>
+                <p  id="no_data3" style="text-align:center;"></p>
+            </div>
+        </div>
+          <div class="modal-footer">
+              <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+              >
+                  Close
+              </button>
+              <input
+                  type="submit"
+                  class="btn btn-success"
+                  data-bs-dismiss="modal"
+                  name="add_member_to_team"
+                  value="Add"
+              >
+          </div>
+        </form>
+      </div>
+</div>
+</div>
 
    
       <!-- footer start -->
