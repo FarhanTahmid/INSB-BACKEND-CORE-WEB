@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from users.models import Members
+
 from port.models import Teams, Roles_and_Position
 
 # Create your models here.
@@ -65,7 +65,7 @@ class Renewal_Form_Info(models.Model):
     #payment method details
     bkash_payment_number=models.CharField(null=True,blank=True,max_length=20)
     #further contact member id
-    further_contact_member_id=models.ForeignKey(Members,null=True,blank=True,on_delete=models.CASCADE)
+    further_contact_member_id=models.CharField(null=True,blank=True,max_length=50)
     
     class Meta:
         verbose_name="Renewal Form Detail"

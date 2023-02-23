@@ -174,13 +174,16 @@ def membership_renewal_form(request,pk):
     
     #load renewal form credentials
     form_credentials=renderData.MDT_DATA.load_form_data_for_particular_renewal_session(renewal_session_id=pk)
+    form_credentials_further_contact_info=Members.objects.get(ieee_id=form_credentials.further_contact_member_id)
+    
     if(form_credentials==False):
         messages.info(request,"No Form Data was Updated. Please Update form data from the session page")
     
     
     context={
         'session_name':session_name,
-        'form_credentials':form_credentials,    
+        'form_credentials':form_credentials,
+        'further_contact':form_credentials_further_contact_info,  
     }
     
     if request.method=="POST":
