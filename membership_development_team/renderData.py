@@ -13,34 +13,44 @@ class MDT_DATA:
         return Members.objects.get(ieee_id=ieee_id)
     def get_member_account_status(ieee_id):
 
-        #try:
+        try:
             today=date.today()
-            print(f"Today is {today}")
+            
             get_member=Members.objects.get(ieee_id=ieee_id)
             get_last_renewal_session=get_member.last_renewal_session
             
+            #the logic here is to find the last renewal session of the Member
+            #so first we check if the member has a last renewal session.
+            # if the last renewal session is none, we then check the recruitment session of the user.
+            #we then compare the time of today and time of recruitment/renewal session with a time span of 365 days(As ieee membership is of 1 year)
+             
             if(get_last_renewal_session is None):
+                #if renewal session is none get the recruitment session
                 get_recruitment_session=get_member.session
-                print(f"Recruitment Time: {get_recruitment_session.session_time}")
-                #getting the difference of time
+                #getting the difference of time of today and recruitment session time
                 difference_of_time=(datetime.strptime(str(today), "%Y-%m-%d") - datetime.strptime(str((get_recruitment_session.session_time)), "%Y-%m-%d")).days
                 
                 if(difference_of_time<365):
-                    print("Membership is active")
+                    #returning true if the difference of time is less than 365 days (1 year)
+                    return True
                 elif(difference_of_time>365):
-                  print(f"Membership Expired")  
+                    #returning false if difference of time is grater than 365 days (1year)
+                    return False  
 
             else:
-                print(f"Last Renewal Date: {get_last_renewal_session.session_time}")
+                #if renewal session exists we only compare present date and last renewal session date and nothing else
                 difference_of_time=(datetime.strptime(str(today), "%Y-%m-%d") - datetime.strptime(str(get_last_renewal_session.session_time), "%Y-%m-%d")).days
                 
                 if(difference_of_time<365):
-                    print("Membership is active")
+                    #returning true if the difference of time is less than 365 days (1 year)
+                    return True
                 elif(difference_of_time>365):
-                  print(f"Membership Expired")
+                    #returning false if difference of time is grater than 365 days (1year)
+                    return False 
                 
-        # except:
-        #     print("Duitar ektao nai")
+        except:
+            #now for some member the status would be unknown if both recruitment session and renewal session is not available. for this reason we  return a False Status
+            return False
             
     def get_team_id():
         

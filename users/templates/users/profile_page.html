@@ -258,7 +258,12 @@
                             <div class="px-3">
                                 <p class="fw-bold">Joining Session: <span class="fw-light ms-2">{{ user_data.joining_session }}</span></p>
                                 <p class="fw-bold">Last Renewal: <span class="fw-light ms-2">{{ user_data.last_renewal }}</span></p>
-                                <p class="fw-bold">Account Status: <span class="fw-light ms-2">Poor (0 BDT)</span></p>
+                                {% if active_status %}
+                                    <p class="fw-bold">Account Status: <span style="color:green;" class="fw-light ms-2"><b>Active</b></span></p>
+                                {% else %}
+                                    <p class="fw-bold">Account Status: <span style="color:red;" class="fw-light ms-2"><b>Expired</b></span></p>
+                                {% endif %}
+
                             </div>
                         </div>
                     </div>

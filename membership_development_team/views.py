@@ -81,7 +81,9 @@ def member_details(request,ieee_id):
     dob = datetime.datetime.strptime(str(
         member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
     sessions=recruitment_session.objects.all()
-    renderData.MDT_DATA.get_member_account_status(ieee_id=ieee_id)
+    #getting the ieee account active status of the member
+    active_status=renderData.MDT_DATA.get_member_account_status(ieee_id=ieee_id)
+        
     renewal_session=Renewal_Sessions.objects.all()
     context={
         
@@ -89,7 +91,8 @@ def member_details(request,ieee_id):
         'dob':dob,
         'sessions':sessions,
         'renewal_session':renewal_session,
-        'media_url':settings.MEDIA_URL
+        'media_url':settings.MEDIA_URL,
+        'active_status':active_status
     }
     if request.method=="POST":
         if request.POST.get('save_edit'):
