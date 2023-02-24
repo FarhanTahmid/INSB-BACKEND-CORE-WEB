@@ -33,3 +33,43 @@ class MDT_Data_Access(models.Model):
         verbose_name="Membership Development Team Data Access"
     def __str__(self) -> str:
         return str(self.ieee_id)
+
+#these are for developers database
+class Developer_criteria(models.Model):
+    '''This class defines the developer types'''
+    developer_type=models.CharField(null=False,blank=False,max_length=50)
+    class Meta:
+        verbose_name="Developer Criteria"
+    def __str__(self)->str:
+        return str(self.developer_type)
+        
+class Project_leads(models.Model):
+    name=models.CharField(null=False,blank=False,max_length=50)
+    developer_type=models.ForeignKey(Developer_criteria,null=True,blank=True,on_delete=models.CASCADE)
+    developer_decription=models.CharField(null=True,blank=True,max_length=200)
+    developers_picture=models.ImageField(null=True,blank=True,default='user_profile_pictures/default_profile_picture.png',upload_to='Admin/developers_pictures')
+    facebook_url=models.URLField(null=True,blank=True,max_length=200)
+    linkedin_url=models.URLField(null=True,blank=True,max_length=200)
+    github_url=models.URLField(null=True,blank=True,max_length=200)
+    
+    class Meta:
+        verbose_name="Project Lead"
+    def __str__(self)->str:
+        return str(self.name)
+
+class Project_Developers(models.Model):
+    name=models.CharField(null=False,blank=False,max_length=50)
+    developer_type=models.ForeignKey(Developer_criteria,null=True,blank=True,on_delete=models.CASCADE)
+    developer_decription=models.CharField(null=True,blank=True,max_length=200)
+    developers_picture=models.ImageField(null=True,blank=True,default='user_profile_pictures/default_profile_picture.png',upload_to='Admin/developers_pictures')
+    facebook_url=models.URLField(null=True,blank=True,max_length=200)
+    linkedin_url=models.URLField(null=True,blank=True,max_length=200)
+    github_url=models.URLField(null=True,blank=True,max_length=200)
+    reputation_point=models.IntegerField(null=False,blank=False,default=0)
+    
+    class Meta:
+        verbose_name="Project Developers"
+    def __str__(self)->str:
+        return str(self.name)
+
+

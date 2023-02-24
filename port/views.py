@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
-import datetime
+from system_administration.models import Project_leads,Project_Developers
+from django.conf import settings
 
 
 # Create your views here.
@@ -12,4 +13,13 @@ def homepage(request):
         return render(request,'port/landing_page.html')
 
 def developed_by(request):
-    return render(request,'port/developers_intro.html')
+    '''This function loads and shows all the developers for the site'''
+    #load leads and the developers of the project
+    project_leads=Project_leads.objects.all()
+    project_developers=Project_Developers.objects.all().order_by('-reputation_point')
+    context={
+        'project_leads':project_leads,
+        'project_developers':project_developers,
+        'media':settings.MEDIA_URL
+    }
+    return render(request,'port/developers_intro.html',context)
