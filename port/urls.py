@@ -7,8 +7,8 @@ app_name='port'
 ##defining the urls to work with
 
 urlpatterns = [
-    #include default auth urls
-    #path('', include('django.contrib.auth.urls')),
-    #loginpage
+    #landing_page
     path('',views.homepage, name='homepage'),
+    #developed by
+    path('/developers',views.developed_by,name='developers')
 ]

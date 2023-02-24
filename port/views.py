@@ -10,3 +10,6 @@ def homepage(request):
         return redirect('users:dashboard')
     else:
         return render(request,'port/landing_page.html')
+
+def developed_by(request):
+    return render(request,'port/developers_intro.html')
