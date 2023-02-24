@@ -267,7 +267,7 @@
                                             Recruitment Session:
                                         </div>
                                         <div class="col-md-2 mt-1">
-                                            {{member_data.session.session}}
+                                            {{member_data.session}}
                                         </div>
                                     </div>
                                     <div class="row my-3">
@@ -283,7 +283,16 @@
                                         <div class="col-md-2 mt-1">
                                             IEEE Account Status:
                                         </div>
-
+                                        {% if active_status %}
+                                            <div class="col-md-2 mt-1">
+                                                <b><p style="color:green;">Active</p></b>
+                                            </div>
+                                            {% else %}
+                                            <div class="col-md-2 mt-1">
+                                                <b><p style="color:red;">Expired</p></b>
+                                            </div>
+                                        {% endif %}
+                                        
                                         
                                     </div>
                                 </div>

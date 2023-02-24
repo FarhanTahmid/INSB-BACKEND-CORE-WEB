@@ -11,6 +11,7 @@ import csv,datetime
 from django.db import DatabaseError
 from . import renderData
 from django.utils.datastructures import MultiValueDictKeyError
+from membership_development_team.renderData import MDT_DATA
 
 
 # Create your views here.
@@ -106,8 +107,11 @@ def profile_page(request):
     '''This function loads all the view for User profile View'''
 
     current_user=renderData.LoggedinUser(request.user)
+    
     profile_data=current_user.getUserData()
-
+    #get user account active status
+    account_active_status=MDT_DATA.get_member_account_status(profile_data['ieee_id'])
+    
     if request.method=="POST":
         
         try:
@@ -126,6 +130,7 @@ def profile_page(request):
             
     context={
         'user_data':profile_data,
+        'active_status':account_active_status
     }
     
     return render(request,"users/profile_page.html",context)
