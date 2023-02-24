@@ -10,5 +10,5 @@ urlpatterns = [
     #landing_page
     path('',views.homepage, name='homepage'),
     #developed by
-    path('/developers',views.developed_by,name='developers')
+    path('developers',views.developed_by,name='developers')
 ]
