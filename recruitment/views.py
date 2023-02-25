@@ -269,7 +269,7 @@ def recruit_member(request, session_name):
                     )
                     recruited_member.save()  # Saving the member to the database
                     messages.info(request, "Registered Member Successfully!")
-                    return render(request, "membership_form.html", context=context)
+                    return redirect('recruitment:recruitee', getSessionId['session'][0]['id'])
 
                 except IntegrityError:  # Checking if same id exist and handling the exception
                     messages.info(
