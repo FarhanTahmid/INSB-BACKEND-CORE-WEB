@@ -110,8 +110,10 @@ def profile_page(request):
     
     profile_data=current_user.getUserData()
     #get user account active status
-    account_active_status=MDT_DATA.get_member_account_status(profile_data['ieee_id'])
-    
+    try:
+        account_active_status=MDT_DATA.get_member_account_status(profile_data['ieee_id'])
+    except:
+        account_active_status=True
     if request.method=="POST":
         
         try:
