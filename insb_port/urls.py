@@ -26,6 +26,7 @@ urlpatterns = [
     path('recruitment/',include('recruitment.urls',namespace="recruitment")),
     path('insb_central/',include('insb_central.urls',namespace='insb_central')),
     path('membership_development_team/',include('membership_development_team.urls',namespace='membership_development_team')),
+    path('public_relation_team/',include('public_relation_team.urls',namespace='public_relation_team')),
     path('system_administration',include('system_administration.urls',namespace='system_administration')),
     
 ]
