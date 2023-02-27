@@ -688,6 +688,7 @@ def site_registration_request_details(request,ieee_id):
                     #Updating application status
                     Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).update(application_status=True)
                     messages.info(request,"Member Successfully Updated to the Main Database")
+                    return redirect('membership_development_team:site_registration')
                     
                 else:
                     #create with team id
@@ -718,6 +719,7 @@ def site_registration_request_details(request,ieee_id):
                     #Updating application status
                     Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).update(application_status=True)
                     messages.info(request,"Member Successfully Updated to the Main Database")
+                    return redirect('membership_development_team:site_registration')
             except:
                 messages.info(request,"Something went wrong! Please try Again")
         if request.POST.get('delete_request'):
