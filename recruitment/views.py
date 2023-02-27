@@ -259,7 +259,7 @@ def recruit_member(request, session_name):
                         gender=request.POST['gender'],
                         facebook_url=request.POST['facebook_url'],
                         home_address=request.POST['home_address'],
-                        major=request.POST['major'],
+                        major=request.POST.get('major'),
                         graduating_year=request.POST['graduating_year'],
                         session_id=getSessionId['session'][0]['id'],
                         recruitment_time=time,
@@ -268,7 +268,7 @@ def recruit_member(request, session_name):
                         ieee_payment_status=ieee_payment_status
                     )
                     recruited_member.save()  # Saving the member to the database
-                    messages.info(request, "Registered Member Successfully!")
+                    
                     return redirect('recruitment:recruitee', getSessionId['session'][0]['id'])
 
                 except IntegrityError:  # Checking if same id exist and handling the exception

@@ -92,6 +92,11 @@
                             >
                                 Student Copy
                             </h3>
+                            <div class="py-3 text-center">
+                                {% for message in messages %}
+                                    <p style="color:red" class="message">{{message}}</p>
+                                {% endfor %}
+                            </div>
                             <div class="px-0 px-md-5">
                                 <div class="row my-3">
                                     <div class="col-md-2 mt-1">NSU ID<span style="color:red">*</span>:</div>
@@ -234,12 +239,12 @@
                                 <div class="row my-3">
                                     <div class="col-md-2 mt-1">Major<span style="color:red">*</span>:</div>
                                     <div class="col-md-8">
-                                        <input
-                                            class="form-control w-75"
-                                            type="text"
-                                            autocomplete="off"
-                                            required name="major"
-                                        />
+                                        <select class="form-select" name="major" id="major">
+                                            <option value="CSE">CSE</option>
+                                            <option value="EEE">EEE</option>
+                                            <option value="ETE">ETE</option>
+                                            
+                                          </select>
                                     </div>
                                 </div>
 
@@ -340,11 +345,7 @@
 
                     </form>
 
-                        <div class="py-3 text-center">
-                            {% for message in messages %}
-                                <p class="message">{{message}}</p>
-                            {% endfor %}
-                        </div>
+                        
                     </div>
                 </div>
             </div>
