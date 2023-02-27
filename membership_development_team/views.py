@@ -753,7 +753,7 @@ def site_registration_form(request):
             messages.info(request,"Please wait a moment. The process might take some time.")
             #first check if the team is null or not
             if(request.POST.get('team')=="null"):
-                
+                try:
                     registration_request=Portal_Joining_Requests(
                         ieee_id=request.POST['ieee_id'],
                         name=request.POST['name'],
@@ -779,11 +779,11 @@ def site_registration_form(request):
                         else:
                             print(f"Email sent to {official.email_personal}")                    
                     return redirect('membership_development_team:confirmation')
-                # except:
-                #     messages.info(request,"Some Error Occured! Please contact the System Administrator")
-                #     return redirect('membership_development_team:site_registration_form')
+                except:
+                    messages.info(request,"Some Error Occured! Please contact the System Administrator")
+                    return redirect('membership_development_team:site_registration_form')
             else:
-                
+                try:
                     registration_request=Portal_Joining_Requests(
                         ieee_id=request.POST['ieee_id'],
                         name=request.POST['name'],
@@ -809,9 +809,9 @@ def site_registration_form(request):
                         else:
                             print(f"Email sent to {official.email_personal}")
                     return redirect('membership_development_team:confirmation')
-                # except:
-                #     messages.info(request,"Some Error Occured! Please contact the System Administrator")
-                #     return redirect('membership_development_team:site_registration_form')
+                except:
+                    messages.info(request,"Some Error Occured! Please contact the System Administrator")
+                    return redirect('membership_development_team:site_registration_form')
     
     return render(request,'site_registration_form.html',context)
 def confirmation_of_form_submission(request):
