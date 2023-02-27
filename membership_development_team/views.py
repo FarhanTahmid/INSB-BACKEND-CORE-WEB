@@ -753,7 +753,7 @@ def site_registration_form(request):
             messages.info(request,"Please wait a moment. The process might take some time.")
             #first check if the team is null or not
             if(request.POST.get('team')=="null"):
-                try:
+                
                     registration_request=Portal_Joining_Requests(
                         ieee_id=request.POST['ieee_id'],
                         name=request.POST['name'],
@@ -779,11 +779,11 @@ def site_registration_form(request):
                         else:
                             print(f"Email sent to {official.email_personal}")                    
                     return redirect('membership_development_team:confirmation')
-                except:
-                    messages.info(request,"Some Error Occured! Please contact the System Administrator")
-                    return redirect('membership_development_team:site_registration_form')
+                # except:
+                #     messages.info(request,"Some Error Occured! Please contact the System Administrator")
+                #     return redirect('membership_development_team:site_registration_form')
             else:
-                try:
+                
                     registration_request=Portal_Joining_Requests(
                         ieee_id=request.POST['ieee_id'],
                         name=request.POST['name'],
@@ -801,7 +801,7 @@ def site_registration_form(request):
                         position=Roles_and_Position.objects.get(id=request.POST.get('position')) 
                     )
                     registration_request.save()
-                    
+                    mdt_officials = renderData.MDT_DATA.load_officials_of_MDT()
                     for official in mdt_officials:
                         #sending mails to MDT team officials to verify the request, primarily sent to their personal mail
                         if(email_sending.send_emails_to_officials_upon_site_registration_request(request,registration_request.name,registration_request.ieee_id,registration_request.position,registration_request.team,official.name,official.email_personal)==False):
@@ -809,9 +809,9 @@ def site_registration_form(request):
                         else:
                             print(f"Email sent to {official.email_personal}")
                     return redirect('membership_development_team:confirmation')
-                except:
-                    messages.info(request,"Some Error Occured! Please contact the System Administrator")
-                    return redirect('membership_development_team:site_registration_form')
+                # except:
+                #     messages.info(request,"Some Error Occured! Please contact the System Administrator")
+                #     return redirect('membership_development_team:site_registration_form')
     
     return render(request,'site_registration_form.html',context)
 def confirmation_of_form_submission(request):
