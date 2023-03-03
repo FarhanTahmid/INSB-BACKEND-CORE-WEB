@@ -22,6 +22,7 @@ class recruited_members(models.Model):
     middle_name=models.CharField(null=True,blank=True,max_length=50)
     last_name=models.CharField(null=True,blank=True,max_length=50)
     contact_no=models.CharField(null=True,blank=True,max_length=15)
+    emergency_contact_no=models.CharField(null=True,blank=True,max_length=15)
     date_of_birth=models.DateField(null=True,blank=True)
     email_personal=models.EmailField(null=True,blank=True,max_length=50)
     gender=models.CharField(null=True,blank=True,max_length=8)
