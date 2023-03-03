@@ -611,7 +611,7 @@ def site_registration_request_home(request):
     
     '''This loads data for site joining request'''
     
-    get_requests=Portal_Joining_Requests.objects.all()
+    get_requests=Portal_Joining_Requests.objects.all().order_by('application_status')
     #loading all the unviewed request count
     notification_count=Portal_Joining_Requests.objects.filter(view_status=False).count()
     #counting the renewed requests
