@@ -5,7 +5,6 @@ from system_administration.models import MDT_Data_Access
 from system_administration.render_access import Access_Render
 from datetime import date
 from datetime import datetime
-
 class MDT_DATA:
     
     def get_member_data(ieee_id):
@@ -231,6 +230,7 @@ class MDT_DATA:
             return False
     
     def load_officials_of_MDT():
+        '''This function loads all the officials of mdt and returns a list of their ieee id'''
         load_incharges=Members.objects.filter(team=MDT_DATA.get_team_id(),position=10)
         load_co_ordinators=Members.objects.filter(team=MDT_DATA.get_team_id(),position=9)
         
@@ -265,5 +265,17 @@ class MDT_DATA:
     def add_member_to_team(ieee_id,position):
         team_id=MDT_DATA.get_team_id()
         Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
+    
+    def get_officials_access(ieee_id):
+        try:
+            ieee_id=str(ieee_id)
+            load_member=Members.objects.get(ieee_id=ieee_id)
+            print(load_member.position.id)
+            if(load_member.position.id==10 or load_member.position.id==9):
+                return True
+            else:
+                return False
+        except:
+            return False
 
             
