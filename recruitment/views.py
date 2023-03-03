@@ -13,6 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import xlwt,csv
 from django.db.utils import IntegrityError
 from membership_development_team.renderData import MDT_DATA
+from membership_development_team import email_sending
 from system_administration.render_access import Access_Render
 # Create your views here.
 
@@ -269,6 +270,15 @@ def recruit_member(request, session_name):
                     )
                     recruited_member.save()  # Saving the member to the database
                     
+                    #send an email now to the recruited member
+                    email_status=email_sending.send_email_to_recruitees_upon_recruitment(
+                        recruited_member.first_name,recruited_member.nsu_id,recruited_member.email_personal,session_name)
+                    
+                    if(email_status)==False:
+                        messages.info(request,"The system could not send email to the recruited member due to some errors! Please contact the system administrator")
+                    elif(email_status):
+                        messages.info(request,"E-mail sent to the newly recruited member!")
+                        
                     return redirect('recruitment:recruitee', getSessionId['session'][0]['id'])
 
                 except IntegrityError:  # Checking if same id exist and handling the exception
@@ -276,9 +286,9 @@ def recruit_member(request, session_name):
                         request, f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database!")
                     return render(request, "membership_form.html", context=context)
 
-                except:  # Handling all errors
-                    messages.info(request, "Something went Wrong! Please try again")
-                    return render(request, "membership_form.html", context=context)
+                # except:  # Handling all errors
+                #     messages.info(request, "Something went Wrong! Please try again")
+                #     return render(request, "membership_form.html", context=context)
                 
                 
 
