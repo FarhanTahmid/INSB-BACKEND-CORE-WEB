@@ -275,15 +275,15 @@ def recruit_member(request, session_name):
                         recruited_member.first_name,recruited_member.nsu_id,recruited_member.email_personal,session_name)
                     
                     if(email_status)==False:
-                        messages.info(request,"The system could not send email to the recruited member due to some errors! Please contact the system administrator")
+                        messages.info(request,"The system could not send email to the previous recruited member due to some errors! Please contact the system administrator")
                     elif(email_status):
-                        messages.info(request,"E-mail sent to the newly recruited member!")
+                        messages.info(request,"E-mail was sent to the previous recruited member!")
                         
                     return redirect('recruitment:recruitee', getSessionId['session'][0]['id'])
 
                 except IntegrityError:  # Checking if same id exist and handling the exception
                     messages.info(
-                        request, f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database!")
+                        request, f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database! It is prohibited to recruit another member with same NSU ID under one recruitment session.")
                     return render(request, "membership_form.html", context=context)
 
                 # except:  # Handling all errors
