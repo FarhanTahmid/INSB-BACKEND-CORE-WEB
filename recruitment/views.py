@@ -115,6 +115,7 @@ def recruitee_details(request,session_id,nsu_id):
                 'middle_name': request.POST['middle_name'],
                 'last_name': request.POST['last_name'],
                 'contact_no': request.POST['contact_no'],
+                'emergency_contact_no':request.POST['emergency_contact_no'],
                 'date_of_birth': request.POST['date_of_birth'],
                 'email_personal': request.POST['email_personal'],
                 'facebook_url': request.POST['facebook_url'],
@@ -255,6 +256,7 @@ def recruit_member(request, session_name):
                         middle_name=request.POST['middle_name'],
                         last_name=request.POST['last_name'],
                         contact_no=request.POST['contact_no'],
+                        emergency_contact_no=request.POST['emergency_contact_no'],
                         date_of_birth=request.POST['date_of_birth'],
                         email_personal=request.POST['email_personal'],
                         gender=request.POST['gender'],
@@ -268,6 +270,7 @@ def recruit_member(request, session_name):
                         cash_payment_status=cash_payment_status,
                         ieee_payment_status=ieee_payment_status
                     )
+                    
                     recruited_member.save()  # Saving the member to the database
                     
                     #send an email now to the recruited member
@@ -286,9 +289,9 @@ def recruit_member(request, session_name):
                         request, f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database! It is prohibited to recruit another member with same NSU ID under one recruitment session.")
                     return render(request, "membership_form.html", context=context)
 
-                # except:  # Handling all errors
-                #     messages.info(request, "Something went Wrong! Please try again")
-                #     return render(request, "membership_form.html", context=context)
+                except:  # Handling all errors
+                    messages.info(request, "Something went Wrong! Please try again")
+                    return render(request, "membership_form.html", context=context)
                 
                 
 
