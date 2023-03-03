@@ -53,7 +53,7 @@ def insb_members_list(request):
     '''This function is responsible to display all the member data in the page'''
     if request.method=="POST":
         if request.POST.get("site_register"):
-            print("Getting")
+            
             return redirect('membership_development_team:site_registration')
         
     members=Members.objects.order_by('position')
@@ -641,8 +641,7 @@ from smtplib import SMTPException
 def site_registration_request_details(request,ieee_id):
     #gaining access data at first
     user=request.user
-    has_access=Access_Render.system_administrator_superuser_access(user.username)
-    
+    has_access=Access_Render.system_administrator_superuser_access(user.username) or renderData.MDT_DATA.get_officials_access(request.user)
     
     '''Get the request data'''
     get_request=Portal_Joining_Requests.objects.get(ieee_id=ieee_id)
