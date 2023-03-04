@@ -106,3 +106,8 @@ class Recruitment:
     def getTotalNumberOfMembers(session_id):
         return recruited_members.objects.filter(session_id=session_id).count()
     
+    def getTotalCountofIEEE_payment_complete(session_id):
+        return recruited_members.objects.filter(session_id=session_id,ieee_payment_status=True).count()
+    
+    def getTotalCountofIEEE_payment_incomplete(session_id):
+        return recruited_members.objects.filter(session_id=session_id,ieee_payment_status=False).count()
