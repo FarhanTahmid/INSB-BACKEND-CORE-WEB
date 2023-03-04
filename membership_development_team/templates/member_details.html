@@ -31,7 +31,7 @@
         <main>
             <nav class="navbar navbar-expand-lg">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#">
+                    <a class="navbar-brand" href="{% url 'users:dashboard' %}">
                         <img
                             class="img-fluid"
                             src="{% static 'logo.gif' %}"
@@ -318,7 +318,7 @@
                                 data-bs-toggle="modal"
                                 data-bs-target="#delete"
                             
-                                value="Delete Recruited Member"
+                                value="Delete Registered Member"
                             >
                         </div>
                         </div>

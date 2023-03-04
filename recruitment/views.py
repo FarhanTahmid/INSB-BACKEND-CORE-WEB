@@ -13,6 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import xlwt,csv
 from django.db.utils import IntegrityError
 from membership_development_team.renderData import MDT_DATA
+from membership_development_team import email_sending
 from system_administration.render_access import Access_Render
 # Create your views here.
 
@@ -114,6 +115,7 @@ def recruitee_details(request,session_id,nsu_id):
                 'middle_name': request.POST['middle_name'],
                 'last_name': request.POST['last_name'],
                 'contact_no': request.POST['contact_no'],
+                'emergency_contact_no':request.POST['emergency_contact_no'],
                 'date_of_birth': request.POST['date_of_birth'],
                 'email_personal': request.POST['email_personal'],
                 'facebook_url': request.POST['facebook_url'],
@@ -254,12 +256,13 @@ def recruit_member(request, session_name):
                         middle_name=request.POST['middle_name'],
                         last_name=request.POST['last_name'],
                         contact_no=request.POST['contact_no'],
+                        emergency_contact_no=request.POST['emergency_contact_no'],
                         date_of_birth=request.POST['date_of_birth'],
                         email_personal=request.POST['email_personal'],
                         gender=request.POST['gender'],
                         facebook_url=request.POST['facebook_url'],
                         home_address=request.POST['home_address'],
-                        major=request.POST['major'],
+                        major=request.POST.get('major'),
                         graduating_year=request.POST['graduating_year'],
                         session_id=getSessionId['session'][0]['id'],
                         recruitment_time=time,
@@ -267,13 +270,23 @@ def recruit_member(request, session_name):
                         cash_payment_status=cash_payment_status,
                         ieee_payment_status=ieee_payment_status
                     )
+                    
                     recruited_member.save()  # Saving the member to the database
-                    messages.info(request, "Registered Member Successfully!")
-                    return render(request, "membership_form.html", context=context)
+                    
+                    #send an email now to the recruited member
+                    email_status=email_sending.send_email_to_recruitees_upon_recruitment(
+                        recruited_member.first_name,recruited_member.nsu_id,recruited_member.email_personal,session_name)
+                    
+                    if(email_status)==False:
+                        messages.info(request,"The system could not send email to the previous recruited member due to some errors! Please contact the system administrator")
+                    elif(email_status):
+                        messages.info(request,"E-mail was sent to the previous recruited member!")
+                        
+                    return redirect('recruitment:recruitee', getSessionId['session'][0]['id'])
 
                 except IntegrityError:  # Checking if same id exist and handling the exception
                     messages.info(
-                        request, f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database!")
+                        request, f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database! It is prohibited to recruit another member with same NSU ID under one recruitment session.")
                     return render(request, "membership_form.html", context=context)
 
                 except:  # Handling all errors

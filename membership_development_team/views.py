@@ -53,7 +53,7 @@ def insb_members_list(request):
     '''This function is responsible to display all the member data in the page'''
     if request.method=="POST":
         if request.POST.get("site_register"):
-            print("Getting")
+            
             return redirect('membership_development_team:site_registration')
         
     members=Members.objects.order_by('position')
@@ -611,7 +611,7 @@ def site_registration_request_home(request):
     
     '''This loads data for site joining request'''
     
-    get_requests=Portal_Joining_Requests.objects.all()
+    get_requests=Portal_Joining_Requests.objects.all().order_by('application_status')
     #loading all the unviewed request count
     notification_count=Portal_Joining_Requests.objects.filter(view_status=False).count()
     #counting the renewed requests
@@ -641,8 +641,7 @@ from smtplib import SMTPException
 def site_registration_request_details(request,ieee_id):
     #gaining access data at first
     user=request.user
-    has_access=Access_Render.system_administrator_superuser_access(user.username)
-    
+    has_access=Access_Render.system_administrator_superuser_access(user.username) or renderData.MDT_DATA.get_officials_access(request.user)
     
     '''Get the request data'''
     get_request=Portal_Joining_Requests.objects.get(ieee_id=ieee_id)
@@ -688,6 +687,7 @@ def site_registration_request_details(request,ieee_id):
                     #Updating application status
                     Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).update(application_status=True)
                     messages.info(request,"Member Successfully Updated to the Main Database")
+                    return redirect('membership_development_team:site_registration')
                     
                 else:
                     #create with team id
@@ -718,6 +718,7 @@ def site_registration_request_details(request,ieee_id):
                     #Updating application status
                     Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).update(application_status=True)
                     messages.info(request,"Member Successfully Updated to the Main Database")
+                    return redirect('membership_development_team:site_registration')
             except:
                 messages.info(request,"Something went wrong! Please try Again")
         if request.POST.get('delete_request'):
@@ -801,7 +802,7 @@ def site_registration_form(request):
                         position=Roles_and_Position.objects.get(id=request.POST.get('position')) 
                     )
                     registration_request.save()
-                    
+                    mdt_officials = renderData.MDT_DATA.load_officials_of_MDT()
                     for official in mdt_officials:
                         #sending mails to MDT team officials to verify the request, primarily sent to their personal mail
                         if(email_sending.send_emails_to_officials_upon_site_registration_request(request,registration_request.name,registration_request.ieee_id,registration_request.position,registration_request.team,official.name,official.email_personal)==False):

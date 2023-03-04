@@ -35,7 +35,7 @@ class Recruitment:
     def getRecruitedMembers(session_id):
         '''This function returns all the recruited members on that particular session'''
         return{
-            'member': recruited_members.objects.filter(session_id=session_id).values()
+            'member': recruited_members.objects.filter(session_id=session_id).order_by('-id').values()
         }
  
  
@@ -49,6 +49,7 @@ class Recruitment:
             member.middle_name = values['middle_name']
             member.last_name = values['last_name']
             member.contact_no = values['contact_no']
+            member.emergency_contact_no=values['emergency_contact_no']
             member.date_of_birth = values['date_of_birth']
             member.email_personal = values['email_personal']
             member.facebook_url = values['facebook_url']
