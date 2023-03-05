@@ -49,3 +49,13 @@ td{
 .searchbar{
   margin-left: 11px;
 }
+
+div.scroll{
+  display: block;
+  border: 0px solid black;
+  padding: 5px;
+  margin-top: 5px;
+  width: 650px;
+  height: 200px;
+  overflow-y: scroll;
+}
