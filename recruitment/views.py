@@ -6,7 +6,7 @@ from users.models import Members
 from . import renderData
 from django.contrib.auth.decorators import login_required
 from . forms import StudentForm
-from . models import recruited_members
+from . models import recruited_members,recruitment_session
 from django.contrib import messages
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
@@ -156,6 +156,23 @@ def recruitee_details(request,session_id,nsu_id):
                     request, "Something went wrong. Please Try again")
                 return redirect('recruitment:recruitee_details', session_id,nsu_id)
 
+        ##Resending recruitment mail
+        if request.POST.get('resend_email'):
+            name=request.POST['first_name']
+            nsu_id=request.POST['nsu_id']
+            recruited_member_email=request.POST['email_personal']
+            recruitment_session_name=recruitment_session.objects.get(id=session_id)
+            
+            email_sending_status=email_sending.send_email_to_recruitees_upon_recruitment(
+                name=name,nsu_id=nsu_id,recruited_member_email=recruited_member_email,recruitment_session=recruitment_session_name
+            )
+            if(email_sending_status):
+                messages.info(request,f"Email was successfully sent to {recruited_member_email}.")
+            else:
+                messages.info(request,f"Could not send email to {recruited_member_email}.")
+        
+        
+        
         # ##### DELETING RECRUITEES#######
         if request.POST.get('delete_member'):
             
