@@ -45,18 +45,23 @@ def recruitee(request, pk):
     '''
     #check the users view access
     user=request.user
-    has_access=(MDT_DATA.recruitment_session_view_access_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
+    has_access=(MDT_DATA.recruitment_session_view_access_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
     
     getSession = renderData.Recruitment.getSession(session_id=pk)
     getMemberCount = renderData.Recruitment.getTotalNumberOfMembers(int(pk))
     getRecruitedMembers = renderData.Recruitment.getRecruitedMembers(
         session_id=pk)
 
+    get_total_count_of_ieee_payment_completed=renderData.Recruitment.getTotalCountofIEEE_payment_complete(session_id=pk) 
+    get_total_count_of_ieee_payment_incomplete=renderData.Recruitment.getTotalCountofIEEE_payment_incomplete(session_id=pk) 
+    
     context = {
         'pk':pk,
         'memberCount': getMemberCount,
         'session': getSession,
         'members': getRecruitedMembers,
+        'ieee_payment_complete':get_total_count_of_ieee_payment_completed,
+        'ieee_payment_incomplete':get_total_count_of_ieee_payment_incomplete,
     }
     if(has_access):
         return render(request, 'session_recruitees.html', context=context)
@@ -68,7 +73,7 @@ def recruitee_details(request,session_id,nsu_id):
     """Preloads all the data of the recruitees who are registered in the particular session, here we can edit and save the data of the recruitee"""
     #Checking user access
     user=request.user
-    has_access=(MDT_DATA.recruited_member_details_view_access(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
+    has_access=(MDT_DATA.recruited_member_details_view_access(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
     try:
 
         data = renderData.Recruitment.getRecruitedMemberDetails(nsu_id=nsu_id,session_id=session_id)
