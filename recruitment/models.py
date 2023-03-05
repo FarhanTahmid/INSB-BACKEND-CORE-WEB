@@ -25,6 +25,7 @@ class recruited_members(models.Model):
     emergency_contact_no=models.CharField(null=True,blank=True,max_length=15)
     date_of_birth=models.DateField(null=True,blank=True)
     email_personal=models.EmailField(null=True,blank=True,max_length=50)
+    email_nsu=models.EmailField(null=True,blank=True,max_length=50)
     gender=models.CharField(null=True,blank=True,max_length=8)
     facebook_url=models.CharField(null=True,blank=True,max_length=100)
     home_address=models.CharField(null=True,blank=True,max_length=300)

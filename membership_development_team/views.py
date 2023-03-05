@@ -99,6 +99,7 @@ def member_details(request,ieee_id):
             date_of_birth=request.POST['date_of_birth']
             email_ieee=request.POST['email_ieee']
             email_personal=request.POST['email_personal']
+            email_nsu=request.POST['email_nsu']
             facebook_url=request.POST['facebook_url']
             
             home_address=request.POST['home_address']
@@ -112,6 +113,7 @@ def member_details(request,ieee_id):
                                                                date_of_birth=date_of_birth,
                                                                email_ieee=email_ieee,
                                                                email_personal=email_personal,
+                                                               email_nsu=email_nsu,
                                                                facebook_url=facebook_url,
                                                                
                                                                home_address=home_address,

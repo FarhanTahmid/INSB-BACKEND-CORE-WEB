@@ -57,7 +57,7 @@ def send_email_to_recruitees_upon_recruitment(name,nsu_id,recruited_member_email
         message=message_header+message_body+message_footer+message_footer2
         
         email_from=settings.EMAIL_HOST_USER
-        recipient_list=[recruited_member_email,]
+        recipient_list=[recruited_member_email]
         send_mail(
             subject,message,email_from,recipient_list
         )

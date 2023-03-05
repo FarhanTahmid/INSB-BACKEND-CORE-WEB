@@ -52,6 +52,7 @@ class Recruitment:
             member.emergency_contact_no=values['emergency_contact_no']
             member.date_of_birth = values['date_of_birth']
             member.email_personal = values['email_personal']
+            member.email_nsu=values['email_nsu']
             member.facebook_url = values['facebook_url']
             member.home_address = values['home_address']
             member.major = values['major']
@@ -67,8 +68,7 @@ class Recruitment:
                 return True
         except IntegrityError:
             return IntegrityError
-        except:
-            return InternalError
+        
         
         
     
