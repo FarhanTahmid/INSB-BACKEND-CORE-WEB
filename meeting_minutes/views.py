@@ -3,6 +3,9 @@ from . import renderData
 from meeting_minutes.renderData import team_mm_info,branch_mm_info
 
 # Create your views here.
+def meeting_minutes_homepage(request):
+    return render(request,'meeting_minutes_homepage.html')
+
 def team_meeting_minutes(request):
     '''
     Loads all the teams' exisitng meeting minutes
@@ -38,3 +41,5 @@ def branch_meeting_minutes(request):
         'team':branch_mm_list
     }
     return render(request,'branch_meeting_minutes.html')
+
+
