@@ -12,12 +12,12 @@ import csv,datetime
 from users.ActiveUser import ActiveUser
 from django.db import DatabaseError
 from system_administration.render_access import Access_Render
-from insb_central.renderData import Branch
+from central_branch.renderData import Branch
 from events_and_management_team.renderData import Events_And_Management_Team
 from logistics_and_operations_team.renderData import LogisticsTeam
 from . models import Events,InterBranchCollaborations,IntraBranchCollaborations
 from events_and_management_team.models import Venue_List,Permission_criteria
-from insb_central.renderData import Branch
+
 
 
 # Create your views here.
@@ -77,14 +77,14 @@ def event_creation_form_page1(request):
                 messages.info(request,"Database Error Occured! Please try again later.")
             else:
                 #if the method returns true, it will redirect to the new page
-                return redirect('insb_central:event_creation_form2',get_event)
+                return redirect('central_branch:event_creation_form2',get_event)
 
 
                 
             
                 
         elif(request.POST.get('cancel')):
-            return redirect('insb_central:event_control')
+            return redirect('central_branch:event_control')
     return render(request,'event_creation_form1.html',context)
 
 @login_required
@@ -103,12 +103,12 @@ def event_creation_form_page2(request,event_id):
                 inter_branch_collaboration_list=inter_branch_collaboration_list,
                 intra_branch_collaboration=intra_branch_collaboration,
                 event_id=event_id)):
-                return redirect('insb_central:event_creation_form3',event_id)
+                return redirect('central_branch:event_creation_form3',event_id)
             else:
                 messages.info(request,"Database Error Occured! Please try again later.")
 
         elif(request.POST.get('cancel')):
-            return redirect('insb_central:event_control')
+            return redirect('central_branch:event_control')
 
 
     return render(request,'event_creation_form2.html',context)
@@ -136,7 +136,7 @@ def event_creation_form_page3(request,event_id):
             if(update_event_details==False):
                 messages.info(request, "An error Occured! Please Try again!")
             else:
-                return redirect('insb_central:event_control')
+                return redirect('central_branch:event_control')
 
     return render(request,'event_creation_form3.html',context)
 
@@ -190,7 +190,7 @@ def team_details(request,pk,name):
                         messages.info(request,"Member couldn't be added!")
                     elif(renderData.Branch.add_member_to_team(ieee_id=member,team=pk,position=position)==DatabaseError):
                         messages.info(request,"An internal Database Error Occured! Please try again!")
-                return redirect('insb_central:team_details',pk,name)
+                return redirect('central_branch:team_details',pk,name)
 
     context={
         'team_name':name,

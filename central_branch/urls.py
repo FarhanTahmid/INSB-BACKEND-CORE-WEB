@@ -2,7 +2,7 @@ import imp
 from django.urls import path,include
 from . import views
 
-app_name='insb_central'
+app_name='central_branch'
 
 ##defining the urls to work with
 

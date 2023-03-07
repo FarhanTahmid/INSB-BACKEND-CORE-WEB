@@ -16,6 +16,12 @@ event_proposal_files=FileSystemStorage(location='Event Proposals')
 
 ####### THIS BLOCK OF CODES REPRESENTS THE TABLES FOR SPECIFIC CREATED EVENTS #########
 
+
+#Event type table
+class Event_type(models.Model):
+    event_type=models.CharField(null=False,blank=False,max_length=60)
+
+
 #Super event table. A super event is like IEEE Day events. Lots of events are done under this
 #Super events primary key is the auto generated id
 class SuperEvents(models.Model):
@@ -35,6 +41,7 @@ class SuperEvents(models.Model):
 #The events table. Primary key is the id
 class Events(models.Model):
     event_name=models.CharField(null=False,blank=False,max_length=150)
+    event_type=models.ForeignKey(Event_type,null=True,blank=True,on_delete=models.CASCADE)
     super_event_name=models.ForeignKey(SuperEvents,null=True,blank=True,on_delete=models.CASCADE)
     event_description=models.CharField(null=True,blank=True,max_length=1000)
     event_organiser=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE,default=5)#Default is set to 5 to keep branch as default organizer of events, If a new database is created change this number according to the id of the branch

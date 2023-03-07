@@ -17,7 +17,7 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <h1>Central event control page for INSB</h1>
-        <button><a href="{% url 'insb_central:event_creation_form1' %}" class="">Create a new Event</a></button>
+        <button><a href="{% url 'central_branch:event_creation_form1' %}" class="">Create a new Event</a></button>
         <button><a href="" class="">Create a new Super Event</a></button>
         <br><br>
         <h1>Event List</h1>
@@ -39,7 +39,7 @@
         {% comment %} This block is responsible for loading all the members recruited on that session and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
         {% for event in events %}
             <tr>
-                <td><a href="{% url 'insb_central:event_homepage' event.id %}">{{event.event_name }}</a></td>
+                <td><a href="{% url 'central_branch:event_homepage' event.id %}">{{event.event_name }}</a></td>
                 <td>{{ event.event_organiser }}</td>
                 <td>{{ event.probable_date }}</td>
                 <td>{{ event.final_date }}</td>

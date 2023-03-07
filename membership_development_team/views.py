@@ -19,7 +19,6 @@ from port.models import Roles_and_Position,Teams
 from django.conf import settings
 from system_administration.render_access import Access_Render
 from django.core.mail import send_mail
-from insb_central.renderData import Branch
 from . import email_sending
 
 

@@ -29,7 +29,7 @@
         <br>
         <ul id="ul">
             {% for team in team %}
-            <li id="li"><a href="{% url 'insb_central:team_details' team.id team.team_name %}" >{{team.team_name}}</a></li>
+            <li id="li"><a href="{% url 'central_branch:team_details' team.id team.team_name %}" >{{team.team_name}}</a></li>
             {% endfor %}
         </ul>
         <script>

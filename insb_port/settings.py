@@ -42,17 +42,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'central_branch',
     'membership_development_team',
     'port',
     'users',
     'system_administration',
     'recruitment',
     'api',
-    
     'logistics_and_operations_team',
     'events_and_management_team',
     'public_relation_team',
-    'insb_central',
     'meeting_minutes',
 ]
 
