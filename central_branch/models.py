@@ -21,6 +21,13 @@ event_proposal_files=FileSystemStorage(location='Event Proposals')
 class Event_type(models.Model):
     event_type=models.CharField(null=False,blank=False,max_length=60)
 
+    class Meta:
+        verbose_name="Event Type"
+    def __str__(self) -> str:
+        return self.event_type
+    def get_absolute_url(self):
+        return reverse("event_type", kwargs={"pk": self.id})
+    
 
 #Super event table. A super event is like IEEE Day events. Lots of events are done under this
 #Super events primary key is the auto generated id
