@@ -1,11 +1,11 @@
 from django.contrib import admin
-from . models import Events,SuperEvents
+from . models import Events,SuperEvents,Event_type
 # Register your models here.
 
 #Creating customized View For DJANGO Admin
-# @admin.register(SuperEvents)
-# class Eve(admin.ModelAdmin):
-#     list_display=['super_event_name','start_date','end_date']
+@admin.register(Event_type)
+class Event_Type(admin.ModelAdmin):
+    list_display=['id','event_type']
 @admin.register(SuperEvents)
 class Super_Events(admin.ModelAdmin):
     list_display=['super_event_name','start_date','end_date']

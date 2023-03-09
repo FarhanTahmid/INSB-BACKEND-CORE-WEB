@@ -25,10 +25,19 @@
         <input type="text" name="event_name">
         <br>
         <br>
-        <label>Description</label><br>
-        <input type="text" name="event_description" style="height: 250px; width:500px;" placeholder="Write with in 500 words">
+        <label>Event Type</label>
+        <select name="event_type">
+            <option value="null" selected>----------</option>
+            {% for event_type in event_types %}
+                <option value={{super_event.id}}>{{super_event.super_event_name}}</option>
+            {% endfor %}
+        </select>
         <br><br>
-
+        <label>Description</label><br>
+        <textarea type="text" name="event_description" style="height: 250px; width:500px;" placeholder="Write with in 500 words"></textarea>
+        <br><br>
+        
+        
         <label for="">Add a Probable Date For the Event</label>
         <input type="date" name="probable_date">
         <br><br>
