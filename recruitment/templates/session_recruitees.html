@@ -157,6 +157,7 @@
                             <th data-priority="1">Recruitment Time</th>
                             <th data-priority="1">Recruited By</th>
                             <th data-priority="1">Payment Status</th>
+                            <th data-priority="1">Comment</th>
                           </tr>
                         </thead>
 
@@ -175,6 +176,7 @@
                                 {% else %}
                                 <td><img src="/static/admin/img/icon-no.svg" alt="False"></td>
                                 {% endif %}
+                                <td>{{ count.comment }}</td>
                             </tr>
                             {% endfor %}    
                           {% endfor %}
