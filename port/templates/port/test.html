@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <title>Developed By</title>
+    </head>
+    <body style="background-image: linear-gradient(90deg, #2daadb, #050d3a)">
+        
+        <div class="container flex justify-center mx-auto pt-16">
+            <div class="mb-8">
+                <h1
+                    class="xl:text-4xl text-3xl text-center text-gray-800 dark:text-white font-extrabold pb-6 sm:w-4/6 w-5/6 mx-auto text-white"
+                >
+                    Developed by IEEE NSU Student Branch
+                </h1>
+                <p
+                    class="text-gray-300 dark:text-gray-200 text-lg text-center font-normal pb-3 mb-10"
+                >
+                    We’re a dynamic group of individuals who are passionate
+                    about what we do.
+                </p>
+            </div>
+        </div>
+        
+        <div class="container flex justify-center mx-auto pt-16">
+            <div class="mb-8">
+                <h1
+                    class="xl:text-4xl text-3xl text-center text-gray-800 dark:text-white font-extrabold pb-6 sm:w-4/6 w-5/6 mx-auto text-white"
+                >
+                    Project Lead
+                </h1>
+            </div>
+        </div>
+
+        <div class="w-full px-10 pt-10">
+            <div class="container mx-auto">
+
+                
+                <div
+                    role="list"
+                    aria-label="Behind the scenes People "
+                    class="lg:flex md:flex sm:flex items-center xl:justify-between flex-wrap md:justify-around sm:justify-around lg:justify-around"
+                >
+                {% for lead in project_leads %}
+                    <div
+                        role="listitem"
+                        class="xl:w-1/3 sm:w-3/4 md:w-2/5 relative mt-16 mb-32 sm:mb-24 xl:max-w-sm lg:w-2/5 "
+                        style="width: 100%; margin: auto;"
+                    >
+                        <div
+                            class="rounded overflow-hidden shadow-md bg-white dark:bg-gray-900"
+                        >
+                            <div
+                                class="absolute -mt-20 w-full flex justify-center"
+                            >
+                                <div class="h-32 w-32">
+                                    <img
+                                        src="{{ media }}{{ lead.developers_picture }}"
+                                        alt="Display Picture of Andres Berlin"
+                                        role="img"
+                                        class="rounded-full object-cover h-full w-full shadow-md"
+                                    />
+                                </div>
+                            </div>
+                            <div class="px-6 mt-16">
+                                <h1
+                                    class="font-bold dark:text-white text-3xl text-center mb-1"
+                                >
+                                    {{lead.name}}
+                            </h1>
+                                <p
+                                    class="text-gray-800 dark:text-white text-sm text-center"
+                                >
+                                {{lead.developer_type}}                                </p>
+                                <p
+                                    class="text-center text-gray-600 dark:text-gray-200 text-base pt-3 font-normal"
+                                >
+                                {{lead.developer_decription}}                                </p>
+                                <div
+                                    class="w-full flex justify-center pt-5 pb-5"
+                                >
+                                    <a href="{{lead.github_url}}" class="mx-5">
+                                        <div aria-label="Github" role="img">
+                                            <img
+                                                src="https://tuk-cdn.s3.amazonaws.com/can-uploader/gray-bg-with-description-svg1.svg"
+                                                alt="github"
+                                            />
+                                        </div>
+                                    </a>
+                                    <a href="{{lead.linkedin_url}}" class="mx-5">
+                                        <div aria-label="Linkedin" role="img">
+                                            <img
+                                                src="https://tuk-cdn.s3.amazonaws.com/can-uploader/gray-bg-with-description-svg2.svg"
+                                                alt="linkedin"
+                                            />
+                                        </div>
+                                    </a>
+                                    <a href="{{lead.facebook_url}}" class="mx-5">
+                                        <div aria-label="Instagram" role="img">
+                                            <img
+                                                src="https://tuk-cdn.s3.amazonaws.com/can-uploader/gray-bg-with-description-svg3.svg"
+                                                alt="instagram"
+                                            />
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+        <div class="container flex justify-center mx-auto pt-16 mt-8">
+            <div class="">
+                <h1
+                    class="xl:text-4xl text-3xl text-center text-gray-800 dark:text-white font-extrabold pb-6 sm:w-4/6 w-5/6 mx-auto text-white"
+                >
+                    Meet Our Developers
+                </h1>
+
+            </div>
+        </div>
+        <div class="w-full px-10 pt-10">
+            <div class="container mx-auto">
+                <div
+                    role="list"
+                    aria-label="Behind the scenes People "
+                    class="lg:flex md:flex sm:flex items-center xl:justify-between flex-wrap md:justify-around sm:justify-around lg:justify-around"
+                >
+                {% for developer in project_developers %}
+
+                    <div
+                        role="listitem"
+                        class="xl:w-1/3 sm:w-3/4 md:w-2/5 relative mt-16 mb-32 sm:mb-24 xl:max-w-sm lg:w-2/5"
+                    >
+                        <div
+                            class="rounded overflow-hidden shadow-md bg-white dark:bg-gray-900"
+                        >
+                            <div
+                                class="absolute -mt-20 w-full flex justify-center"
+                            >
+                                <div class="h-32 w-32">
+                                    <img
+                                        src="{{ media }}{{ developer.developers_picture }}"
+                                        alt="Display Picture of Andres Berlin"
+                                        role="img"
+                                        class="rounded-full object-cover h-full w-full shadow-md"
+                                    />
+                                </div>
+                            </div>
+                            <div class="px-6 mt-16">
+                                <h1
+                                    class="font-bold dark:text-white text-3xl text-center mb-1"
+                                >
+                                {{developer.name}}
+                            </h1>
+                                <p
+                                    class="text-gray-800 dark:text-white text-sm text-center"
+                                >
+                                {{developer.developer_type}}
+                            </p>
+                                <p
+                                    class="text-center text-gray-600 dark:text-gray-200 text-base pt-3 font-normal"
+                                >
+                                {{developer.developer_decription}}
+                            </p>
+                                <div
+                                    class="w-full flex justify-center pt-5 pb-5"
+                                >
+                                    <a href="{{developer.github_url}}" class="mx-5">
+                                        <div aria-label="Github" role="img">
+                                            <img
+                                                src="https://tuk-cdn.s3.amazonaws.com/can-uploader/gray-bg-with-description-svg1.svg"
+                                                alt="github"
+                                            />
+                                        </div>
+                                    </a>
+                                    <a href="{{developer.linkedin_url}}" class="mx-5">
+                                        <div aria-label="Linkedin" role="img">
+                                            <img
+                                                src="https://tuk-cdn.s3.amazonaws.com/can-uploader/gray-bg-with-description-svg2.svg"
+                                                alt="linkedin"
+                                            />
+                                        </div>
+                                    </a>
+                                    <a href="{{developer.facebook_url}}" class="mx-5">
+                                        <div aria-label="Facebook" role="img">
+                                            <img
+                                                src="https://tuk-cdn.s3.amazonaws.com/can-uploader/gray-bg-with-description-svg3.svg"
+                                                alt="facebook"
+                                            />
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Second Part -->
+
+        <!-- Container for demo purpose -->
+        {% comment %} <div class="my-0 mx-auto md:px-6">
+            <!-- Section: Design Block -->
+            <section class="mb-32 text-center">
+                <div class="mb-8">
+                    <h1
+                        class="xl:text-4xl text-3xl text-center text-gray-800 dark:text-white font-extrabold pb-6 sm:w-4/6 w-5/6 mx-auto text-white"
+                    >
+                        Meet Our Team
+                    </h1>
+                    <p
+                        class="text-gray-300 dark:text-gray-200 text-lg text-center font-normal pb-3"
+                    >
+                        We’re a dynamic group of individuals who are passionate
+                        about what we do.
+                    </p>
+                </div>
+                <div class="">
+                    <div
+                        class="lg:gap-xl-12 grid gap-x-6 md:grid-cols-3 xl:grid-cols-4"
+                    >
+                        <div class="mb-12">
+                            <img
+                                src="https://mdbcdn.b-cdn.net/img/new/avatars/2.jpg"
+                                class="mx-auto mb-4 rounded-full shadow-lg dark:shadow-black/20"
+                                alt=""
+                                style="max-width: 100px"
+                            />
+
+                            <p class="mb-2 font-bold text-neutral-100 dark:text-neutral-300">John Doe</p>
+                            <p class="">
+                                Frontend Developer
+                            </p>
+                        </div>
+
+                        <div class="mb-12">
+                            <img
+                                src="https://mdbcdn.b-cdn.net/img/new/avatars/5.jpg"
+                                class="mx-auto mb-4 rounded-full shadow-lg dark:shadow-black/20"
+                                alt=""
+                                style="max-width: 100px"
+                            />
+
+                            <p class="mb-2 font-bold text-neutral-100 dark:text-neutral-300">Lisa Ferrol</p>
+                            <p class="">
+                                Web designer
+                            </p>
+                        </div>
+
+                        <div class="mb-12">
+                            <img
+                                src="https://mdbcdn.b-cdn.net/img/new/avatars/6.jpg"
+                                class="mx-auto mb-4 rounded-full shadow-lg dark:shadow-black/20"
+                                alt=""
+                                style="max-width: 100px"
+                            />
+                            <p class="mb-2 font-bold text-neutral-100 dark:text-neutral-300">Maria Smith</p>
+                            <p class="">
+                                Frontend Developer
+                            </p>
+                        </div>
+                        <div class="mb-12">
+                            <img
+                                src="https://mdbcdn.b-cdn.net/img/new/avatars/7.jpg"
+                                class="mx-auto mb-4 rounded-full shadow-lg dark:shadow-black/20"
+                                alt=""
+                                style="max-width: 100px"
+                            />
+                            <p class="mb-2 font-bold text-neutral-100 dark:text-neutral-300">Agatha Bevos</p>
+                            <p class="">
+                                Backend Developer
+                            </p>
+                        </div>
+
+                        <div class="mb-12">
+                            <img
+                                src="https://mdbcdn.b-cdn.net/img/new/avatars/8.jpg"
+                                class="mx-auto mb-4 rounded-full shadow-lg dark:shadow-black/20"
+                                alt=""
+                                style="max-width: 100px"
+                            />
+                            <p class="mb-2 font-bold text-neutral-100 dark:text-neutral-300">Darren Randolph</p>
+                            <p class="">
+                                Frontend Developer
+                            </p>
+                        </div>
+
+                        <div class="mb-12">
+                            <img
+                                src="https://mdbcdn.b-cdn.net/img/new/avatars/9.jpg"
+                                class="mx-auto mb-4 rounded-full shadow-lg dark:shadow-black/20"
+                                alt=""
+                                style="max-width: 100px"
+                            />
+                            <p class="mb-2 font-bold text-neutral-100 dark:text-neutral-300">Soraya Letto</p>
+                            <p class="">
+                                Backend Developer
+                            </p>
+                        </div>
+
+                        <div class="mb-12">
+                            <img
+                                src="https://mdbcdn.b-cdn.net/img/new/avatars/10.jpg"
+                                class="mx-auto mb-4 rounded-full shadow-lg dark:shadow-black/20"
+                                alt=""
+                                style="max-width: 100px"
+                            />
+                            <p class="mb-2 font-bold text-neutral-100 dark:text-neutral-300">Maliha Welch</p>
+                            <p class="">
+                                Web designer
+                            </p>
+                        </div>
+
+                        <div class="mb-12">
+                            <img
+                                src="https://mdbcdn.b-cdn.net/img/new/avatars/11.jpg"
+                                class="mx-auto mb-4 rounded-full shadow-lg dark:shadow-black/20"
+                                alt=""
+                                style="max-width: 100px"
+                            />
+                            <p class="mb-2 font-bold text-neutral-100 dark:text-neutral-300">Zeynep Dudley</p>
+                            <p class="">
+                               Backend Developer
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Section: Design Block -->
+        </div> {% endcomment %}
+        <!-- Container for demo purpose -->
+    </body>
+</html>
