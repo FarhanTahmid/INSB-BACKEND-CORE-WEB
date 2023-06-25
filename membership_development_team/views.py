@@ -20,7 +20,7 @@ from django.conf import settings
 from system_administration.render_access import Access_Render
 from django.core.mail import send_mail
 from . import email_sending
-
+from central_branch.renderData import Branch
 
 
 # Create your views here.
