@@ -324,8 +324,7 @@
                     </thead>
                     <tbody>
                         {% comment %} This block is responsible for loading all the members recruited on that session
-                        and passes their id to the url as well as their data to the recruitee_details function {%
-                        endcomment %}
+                        and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
                         {% for event in events %}
                         <tr>
                             <td><a href="{% url 'central_branch:event_homepage' event.id %}">{{event.event_name }}</a>
