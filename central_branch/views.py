@@ -15,8 +15,9 @@ from system_administration.render_access import Access_Render
 from central_branch.renderData import Branch
 from events_and_management_team.renderData import Events_And_Management_Team
 from logistics_and_operations_team.renderData import LogisticsTeam
-from . models import Events,InterBranchCollaborations,IntraBranchCollaborations
+from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,Event_type
 from events_and_management_team.models import Venue_List,Permission_criteria
+
 
 
 
@@ -50,11 +51,12 @@ def event_creation_form_page1(request):
     
     #loading super/mother event at first
     super_events=Branch.load_all_mother_events()
-
+    event_types=Branch.load_all_event_type()
 
     
     context={
         'super_events':super_events,
+        'event_types':event_types,
     }
     
     if(request.method=="POST"):
