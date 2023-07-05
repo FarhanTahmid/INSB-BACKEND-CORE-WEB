@@ -40,7 +40,7 @@
                         <select name="event_type">
                             <option value="null" selected>----------</option>
                             {% for event_type in event_types %}
-                            <option value={{super_event.id}}>{{super_event.super_event_name}}</option>
+                            <option value={{event_type.id}}>{{event_type.event_type}}</option>
                             {% endfor %}
                         </select>
                     </div>
