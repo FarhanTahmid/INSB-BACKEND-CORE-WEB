@@ -622,7 +622,7 @@
                                 <div class="team_inputfield">
                                     <label for="">Team Name</label>
                                     <div class="custom_select">
-                                        <select name="team_under" onkeyup="searchfunction()">
+                                        <select name="team_under">
                                             <option value="null" selected>----------</option>
                                             {% for i in team_names%}
                                             <option value="{{i.id}}">{{i.team_name}}</option>
