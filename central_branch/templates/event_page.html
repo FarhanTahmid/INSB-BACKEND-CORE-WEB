@@ -327,7 +327,7 @@
                         and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
                         {% for event in events %}
                         <tr>
-                            <td><a href="{% url 'central_branch:event_homepage' event.id %}">{{event.event_name }}</a>
+                            <td><a href="{% url 'central_branch:event_dashboard' event.id %}">{{event.event_name }}</a>
                             </td>
                             <td>{{ event.event_organiser }}</td>
                             <td>{{ event.probable_date }}</td>
