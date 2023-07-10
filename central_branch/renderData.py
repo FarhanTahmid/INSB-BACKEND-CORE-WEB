@@ -2,7 +2,7 @@ from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_G
 from users.models import Members
 from django.db import DatabaseError
 from system_administration.models import MDT_Data_Access
-from . models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission
+from . models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_type
 from events_and_management_team.models import Venue_List, Permission_criteria
 
 
@@ -63,6 +63,8 @@ class Branch:
         '''This loads all the chapters and Societies of the branch'''
         return Chapters_Society_and_Affinity_Groups.objects.all()
     
+    def load_all_event_type():
+        return Event_type.objects.all()
     
     def register_event_page1(super_event_name,event_name,event_description,probable_date,final_date):
         '''This method creates an event and registers data which are provided in event page1. Returns the id of the event if the method can create a new event successfully
