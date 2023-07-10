@@ -15,11 +15,7 @@ from system_administration.render_access import Access_Render
 from central_branch.renderData import Branch
 from events_and_management_team.renderData import Events_And_Management_Team
 from logistics_and_operations_team.renderData import LogisticsTeam
-<<<<<<< HEAD
 from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,Event_type,Event_Venue
-=======
-from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,Event_type
->>>>>>> ed18113bf9f0af81564d9bcd76435d7cf67a1ed8
 from events_and_management_team.models import Venue_List,Permission_criteria
 
 
