@@ -51,20 +51,12 @@ def event_creation_form_page1(request):
     
     #loading super/mother event at first
     super_events=Branch.load_all_mother_events()
-<<<<<<< HEAD
-    event_types = Event_type.objects.all()
-    
-    context={
-        'super_events':super_events,
-        'event_types':event_types
-=======
     event_types=Branch.load_all_event_type()
 
     
     context={
         'super_events':super_events,
         'event_types':event_types,
->>>>>>> ed18113bf9f0af81564d9bcd76435d7cf67a1ed8
     }
     
     
