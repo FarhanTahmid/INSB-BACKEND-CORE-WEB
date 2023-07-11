@@ -112,6 +112,7 @@ linux_env2/
 nashrat_insb_port/ 
 meem_venv/
 .virtualenvs/
+ieeeworld/
 
 #files
 credentials.json

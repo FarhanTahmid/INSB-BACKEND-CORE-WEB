@@ -15,7 +15,7 @@ from system_administration.render_access import Access_Render
 from central_branch.renderData import Branch
 from events_and_management_team.renderData import Events_And_Management_Team
 from logistics_and_operations_team.renderData import LogisticsTeam
-from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,Event_type
+from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,Event_type,Event_Venue
 from events_and_management_team.models import Venue_List,Permission_criteria
 
 
@@ -58,6 +58,7 @@ def event_creation_form_page1(request):
         'super_events':super_events,
         'event_types':event_types,
     }
+    
     
     if(request.method=="POST"):
         if(request.POST.get('next')):
@@ -202,3 +203,26 @@ def team_details(request,pk,name):
         
     }
     return render(request,'team_details_page.html',context=context)
+@login_required
+def event_dashboard(request,event_id):
+    '''Details page for registered events'''
+    
+    context={}
+    get_all_team_name = renderData.Branch.load_teams()
+    get_event_details = Events.objects.get(id = event_id)
+    get_inter_branch_collaboration = InterBranchCollaborations.objects.filter(event_id=get_event_details.id)
+    get_intra_branch_collaboration = IntraBranchCollaborations.objects.filter(event_id = get_event_details.id)
+    get_event_venue = Event_Venue.objects.filter(event_id = get_event_details.id)  
+    if request.method == "POST":
+        team_under = request.POST.get('team_under')
+        member_under = request.POST.get('memeber_under')
+        probable_date = request.POST.get('probable_date')
+        progress = request.POST.get('progression')    
+    context={
+        'event_details':get_event_details,
+        'inter_branch_details':get_inter_branch_collaboration,
+        'intra_branch_details':get_intra_branch_collaboration,
+        'event_venue':get_event_venue,
+        'team_names':get_all_team_name
+    }
+    return render(request,"event_dashboard.html",context)

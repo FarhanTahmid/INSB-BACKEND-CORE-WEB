@@ -43,7 +43,7 @@ class LoggedinUser:
                 'name':get_Member_details.name,
                 'email':get_Member_details.email,
                 'profile_picture':'/media_files/'+str(get_Member_details.profile_picture),
-                }
+                }           
             except adminUsers.DoesNotExist:
                 return False
         except ValueError:
