@@ -5,6 +5,7 @@ from port.models import Chapters_Society_and_Affinity_Groups
 from logistics_and_operations_team.models import Logistic_Item_List
 from events_and_management_team.models import Venue_List,Permission_criteria
 from meeting_minutes.models import team_meeting_minutes, branch_meeting_minutes
+from autoslug import AutoSlugField
 # Create your models here.
 
 ###### THESE MODELS ARE SPECIFICALLY USED FOR EVENT HANDLING PURPOSE ####
@@ -55,6 +56,7 @@ class Events(models.Model):
     probable_date=models.DateField(null=True,blank=True) #Must add probable date for an event
     final_date=models.DateField(null=True,blank=True)
     registration_fee=models.BooleanField(null=False,blank=False,default=False)
+    slug = AutoSlugField(populate_from="event_name",unique=True,null=True,default=None)
     
     class Meta:
         verbose_name="Registered Event"

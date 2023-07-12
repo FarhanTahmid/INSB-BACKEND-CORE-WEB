@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Events - IEEE NSU SB</title>
+    </head>
+    <body>
+        <h1>Previous Events</h1>
+        <br>
+        <br>
+        <ul>
+            {% for event in events%}
+            <li><a href="{% url 'main_website:event-details' event.slug %}">{{event.event_name}}</a></li>
+            {% endfor %}
+        </ul>
+
+    </body>
+
+
+
+</html>
+
+
