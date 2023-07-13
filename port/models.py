@@ -7,7 +7,12 @@ class Teams(models.Model):
     def __str__(self) -> str:
         return self.team_name
 
+class BlogCategory(models.Model):
+    blog_category = models.CharField(max_length=40,null=False,blank=False)
 
+    def __str__(self):
+        return self.blog_category
+    
 class Chapters_Society_and_Affinity_Groups(models.Model):
     group_name=models.CharField(null=False,blank=False,max_length=150)
 

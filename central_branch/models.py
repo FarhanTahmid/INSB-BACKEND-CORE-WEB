@@ -6,6 +6,7 @@ from logistics_and_operations_team.models import Logistic_Item_List
 from events_and_management_team.models import Venue_List,Permission_criteria
 from meeting_minutes.models import team_meeting_minutes, branch_meeting_minutes
 from autoslug import AutoSlugField
+from port.models import Chapters_Society_and_Affinity_Groups,BlogCategory
 # Create your models here.
 
 ###### THESE MODELS ARE SPECIFICALLY USED FOR EVENT HANDLING PURPOSE ####
@@ -51,7 +52,7 @@ class Events(models.Model):
     event_name=models.CharField(null=False,blank=False,max_length=150)
     event_type=models.ForeignKey(Event_type,null=True,blank=True,on_delete=models.CASCADE)
     super_event_name=models.ForeignKey(SuperEvents,null=True,blank=True,on_delete=models.CASCADE)
-    event_description=models.CharField(null=True,blank=True,max_length=1000)
+    event_description=models.CharField(null=True,blank=True,max_length=5000)
     event_organiser=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE,default=5)#Default is set to 5 to keep branch as default organizer of events, If a new database is created change this number according to the id of the branch
     probable_date=models.DateField(null=True,blank=True) #Must add probable date for an event
     final_date=models.DateField(null=True,blank=True)
@@ -159,3 +160,28 @@ class meeting_minutes_branch_info(models.Model):
         verbose_name="Meeting Minutes Information of Societies"
     def __str__(self) -> str:
         return self.mm_branch_id
+
+#Table for Research Papers
+class ResearchPaper(models.Model):
+    Title = models.CharField(null=False,blank=False,max_length=500)
+    Research_picture = models.ImageField(null=True,blank=True,default='Central Branch/Research_pictures/default_research_picture.png',upload_to='Central Branch/Research_pictures/')
+    Author_names = models.CharField(null=False,blank=False,max_length=1000)
+    Publication_link = models.URLField(null=False)
+
+    class Meta:
+        verbose_name = "Research Paper"
+    def __str__(self):
+        return f"{self.Title} {self.Author_names}"
+    
+#Table for Blogs
+class Blog(models.Model):
+    Title = models.CharField(null=False,blank=False,max_length=500)
+    Date = models.DateField()
+    Category = models.ForeignKey(BlogCategory,null=True,blank=True,on_delete=models.CASCADE)
+    Publisher = models.CharField(null=False,blank=False,max_length=160)
+    Society_Affinity = models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
+    
+    class Meta:
+        verbose_name = "Blog"
+    def __str__(self):
+        return self.Title

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Research papers - IEEE NSU SB</title>
+    </head>
+    <body>
+        <h1>Reseach Papers </h1>
+        <br><br><br>
+        {% for research in rpaper%}
+        <div>
+            <img src="/media_files/{{research.Research_picture}}" alt="Reseach Picture" width="280px" height="280px">
+        </div>
+        <div>
+            {{research.Title}}
+        </div>
+        <div>
+            Writers:
+            {{research.Author_names}}
+        </div>
+        <div>
+            <a href="{{research.Publication_link}}">Read the Paper</a>
+        </div>
+        {% endfor %}
+        
+        <br><br>
+    </body>
+</html>

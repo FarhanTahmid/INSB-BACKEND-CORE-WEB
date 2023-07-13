@@ -15,7 +15,7 @@ from system_administration.render_access import Access_Render
 from central_branch.renderData import Branch
 from events_and_management_team.renderData import Events_And_Management_Team
 from logistics_and_operations_team.renderData import LogisticsTeam
-from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,Event_type,Event_Venue
+from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,Event_type,Event_Venue,ResearchPaper
 from events_and_management_team.models import Venue_List,Permission_criteria
 
 
@@ -226,3 +226,26 @@ def event_dashboard(request,event_id):
         'team_names':get_all_team_name
     }
     return render(request,"event_dashboard.html",context)
+
+@login_required
+def others(request):
+    return render(request,"others.html")
+@login_required
+def add_research(request):
+    if request.method == "POST":
+        if request.POST.get('title') == "" or request.POST.get('author_name') == "" or request.POST.get('url')=="":
+            return render(request,"research_papers.html",{
+                "error":True
+            })
+        else:
+            title = request.POST.get('title')
+            author_names = request.POST.get('author_name')
+            research_pic = request.POST.get('filename')
+            url = request.POST.get('url')
+            save_research_paper = ResearchPaper(Title=title,Research_picture=research_pic,Author_names=author_names,Publication_link=url)
+            save_research_paper.save()
+            return render(request,"research_papers.html",{
+                "saved":True
+            })
+
+    return render(request,"research_papers.html")

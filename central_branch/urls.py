@@ -25,6 +25,10 @@ urlpatterns = [
     #team details page
     path('team_details/<str:pk>/<str:name>',views.team_details,name='team_details'),
     #event dashboard team
-    path('event_dashboard/<int:event_id>',views.event_dashboard,name='event_dashboard')
+    path('event_dashboard/<int:event_id>',views.event_dashboard,name='event_dashboard'),
+    #others page
+    path('others/',views.others,name="others"),
+    #addresearch page
+    path('add_research/',views.add_research,name="add_research")
     
 ]
