@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from central_branch.models import Events,ResearchPaper
+from central_branch.models import Events,ResearchPaper,Blog
 from central_branch.renderData import Branch
 
 
@@ -37,4 +37,9 @@ def Research_Paper(request):
     get_all_research_papers = ResearchPaper.objects.all() 
     return render(request,"All_Research_Papers.html",{
         "rpaper":get_all_research_papers
+    })
+def Blogs(request):
+    get_all_blog= Blog.objects.all()
+    return render(request,"Blogs.html",{
+        "blogs":get_all_blog
     })

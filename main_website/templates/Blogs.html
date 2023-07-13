@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Blogs- IEEE NSU SB</title>
+    </head>
+    <body>
+        <h1>Blogs </h1>
+        <br><br><br>
+        {% for blog in blogs %}
+        <div>
+            <img src="media_files/{blog.Blog_picture}}" alt="Blog Picture">
+        </div>
+        <br>
+        <div>
+            Blog title: {{blog.Title}}<br>
+            Blog Date:{{blog.Date}}, Blog Category: {{blog.Category}}
+            Published By:{{blog.Publisher}}<br>
+            By, {{blog.Society_Affinity}}
+        </div>
+        <br><br>
+        {% endfor %}  
+        <br><br>
+    </body>
+</html>

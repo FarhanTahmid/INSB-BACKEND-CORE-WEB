@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from insb_port import settings
 from django.core.files.storage import FileSystemStorage
 from port.models import Chapters_Society_and_Affinity_Groups
 from logistics_and_operations_team.models import Logistic_Item_List
@@ -164,7 +165,7 @@ class meeting_minutes_branch_info(models.Model):
 #Table for Research Papers
 class ResearchPaper(models.Model):
     Title = models.CharField(null=False,blank=False,max_length=500)
-    Research_picture = models.ImageField(null=True,blank=True,default='Central Branch/Research_pictures/default_research_picture.png',upload_to='Central Branch/Research_pictures/')
+    Research_picture = models.ImageField(null=True,blank=True,default='Central_Branch/Research_pictures/default_research_picture.png',upload_to='Central_Branch/Research_pictures/')
     Author_names = models.CharField(null=False,blank=False,max_length=1000)
     Publication_link = models.URLField(null=False)
 
@@ -177,10 +178,12 @@ class ResearchPaper(models.Model):
 class Blog(models.Model):
     Title = models.CharField(null=False,blank=False,max_length=500)
     Date = models.DateField()
+    Blog_picture = models.ImageField(null=True,blank=True,default='Central_Branch/Blog_pictures/default_blog_picture.png',upload_to='Central_Branch/Blog_pictures/')
     Category = models.ForeignKey(BlogCategory,null=True,blank=True,on_delete=models.CASCADE)
     Publisher = models.CharField(null=False,blank=False,max_length=160)
     Society_Affinity = models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
-    
+    slug = AutoSlugField(populate_from="Title",unique=True,null=True,default=None)
+
     class Meta:
         verbose_name = "Blog"
     def __str__(self):

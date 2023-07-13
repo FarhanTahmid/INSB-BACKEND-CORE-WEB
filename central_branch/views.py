@@ -3,7 +3,7 @@ from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from . import renderData
-from port.models import Teams,Chapters_Society_and_Affinity_Groups
+from port.models import Teams,Chapters_Society_and_Affinity_Groups,BlogCategory
 from django.db import connection
 from django.db.utils import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
@@ -15,7 +15,7 @@ from system_administration.render_access import Access_Render
 from central_branch.renderData import Branch
 from events_and_management_team.renderData import Events_And_Management_Team
 from logistics_and_operations_team.renderData import LogisticsTeam
-from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,Event_type,Event_Venue,ResearchPaper
+from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,Event_type,Event_Venue,ResearchPaper,Blog
 from events_and_management_team.models import Venue_List,Permission_criteria
 
 
@@ -232,6 +232,11 @@ def others(request):
     return render(request,"others.html")
 @login_required
 def add_research(request):
+
+
+    '''function for adding new Research paper'''
+
+
     if request.method == "POST":
         if request.POST.get('title') == "" or request.POST.get('author_name') == "" or request.POST.get('url')=="":
             return render(request,"research_papers.html",{
@@ -249,3 +254,51 @@ def add_research(request):
             })
 
     return render(request,"research_papers.html")
+
+@login_required
+def add_blogs(request):
+
+    '''function to add new blog to the page'''
+
+    load_blog_category = BlogCategory.objects.all()
+    load_Chapters = Chapters_Society_and_Affinity_Groups.objects.all()
+    if request.method=="POST":
+        if request.POST.get('title') == "" or request.POST.get('date') == ""  or request.POST.get('Pname') == "":
+            return render(request,"add_blogs.html",{
+                "error":True,
+                "category":load_blog_category,
+                "CSAG":load_Chapters
+            }) 
+        else:
+            title =  request.POST.get('title')
+            date = request.POST.get('date')
+            blog_pic = request.POST.get('filename')
+            cat = request.POST.get('category')
+            pname = request.POST.get('Pname')
+            CSAG = request.POST.get('soc')
+            if cat=="" and CSAG!="":
+                CSAG = Chapters_Society_and_Affinity_Groups.objects.get(id=CSAG)
+                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = pname,Society_Affinity=CSAG)
+                save_blog.save()
+            elif cat!="" and CSAG=="":
+                cat = BlogCategory.objects.get(id=cat)
+                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = pname,Category=cat)
+                save_blog.save()
+            elif cat=="" and CSAG=="":
+                    save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = pname)
+                    save_blog.save()
+            else:
+                cat = BlogCategory.objects.get(id=cat)
+                CSAG = Chapters_Society_and_Affinity_Groups.objects.get(id=CSAG)
+                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = pname,Category=cat,Society_Affinity=CSAG)
+                save_blog.save()
+            
+            return render(request,"add_blogs.html",{
+                "saved":True,
+                "category":load_blog_category,
+                "CSAG":load_Chapters
+            })
+    return render(request,"add_blogs.html",{
+        "category":load_blog_category,
+        "CSAG":load_Chapters
+    })

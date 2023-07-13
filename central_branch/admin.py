@@ -17,7 +17,7 @@ class ResearchPaper(admin.ModelAdmin):
     list_display = ['id','Title','Author_names','Research_picture']
 @admin.register(Blog)
 class Blog(admin.ModelAdmin):
-    list_display=('Title','Date','Category','Publisher','Society_Affinity')
+    list_display=('Title','Date','Category','Publisher','Society_Affinity','Blog_picture')
 @admin.register(BlogCategory)
 class BlogCategory(admin.ModelAdmin):
     list_display=['blog_category',]
