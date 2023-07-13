@@ -208,12 +208,19 @@ def event_dashboard(request,event_id):
     '''Details page for registered events'''
     
     context={}
+
+    '''loading the dropdown menu options from database for the page'''
+
     get_all_team_name = renderData.Branch.load_teams()
+
+    '''Getting all the data regarding the Event page from the database  '''
+
     get_event_details = Events.objects.get(id = event_id)
     get_inter_branch_collaboration = InterBranchCollaborations.objects.filter(event_id=get_event_details.id)
     get_intra_branch_collaboration = IntraBranchCollaborations.objects.filter(event_id = get_event_details.id)
     get_event_venue = Event_Venue.objects.filter(event_id = get_event_details.id)  
     if request.method == "POST":
+        '''Not done yet'''
         team_under = request.POST.get('team_under')
         member_under = request.POST.get('memeber_under')
         probable_date = request.POST.get('probable_date')
@@ -238,6 +245,11 @@ def add_research(request):
 
 
     if request.method == "POST":
+
+        '''Checking to see if all the mandatory fields have been entered by user or not once
+        the submit button has been clicked. If not then sending error message to the page else
+        render data to the page'''
+        
         if request.POST.get('title') == "" or request.POST.get('author_name') == "" or request.POST.get('url')=="":
             return render(request,"research_papers.html",{
                 "error":True
@@ -261,45 +273,50 @@ def add_blogs(request):
     '''function to add new blog to the page'''
 
     load_blog_category = BlogCategory.objects.all()
-    load_Chapters = Chapters_Society_and_Affinity_Groups.objects.all()
+    load_Chapters_Society_And_Affinity_Groups = Chapters_Society_and_Affinity_Groups.objects.all()
+    '''When the submit button is clicked'''
     if request.method=="POST":
         if request.POST.get('title') == "" or request.POST.get('date') == ""  or request.POST.get('Pname') == "":
             return render(request,"add_blogs.html",{
                 "error":True,
                 "category":load_blog_category,
-                "CSAG":load_Chapters
+                "chapterSocietyAndAffinityGroups":load_Chapters_Society_And_Affinity_Groups
             }) 
         else:
             title =  request.POST.get('title')
             date = request.POST.get('date')
-            blog_pic = request.POST.get("filename")
-            print(blog_pic)
-            cat = request.POST.get('category')
-            pname = request.POST.get('Pname')
-            CSAG = request.POST.get('soc')
-            if cat=="" and CSAG!="":
-                CSAG = Chapters_Society_and_Affinity_Groups.objects.get(id=CSAG)
-                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = pname,Society_Affinity=CSAG)
+            blog_pic = request.POST.get('filename')
+            category = request.POST.get('category')
+            publisherName = request.POST.get('Pname')
+            chapterSocietyAndAffinityGroups = request.POST.get('chapterSocietyAndAffinityGroups')
+
+            '''Checking conditions regarding when either of the two fields is empty or full
+            and saving the data to the database on the basis of the conditions, where other fields
+            apart from category and chapterSocietyAndAffinityGroups is mandatorys'''
+
+            if category=="" and chapterSocietyAndAffinityGroups!="":
+                chapterSocietyAndAffinityGroups = Chapters_Society_and_Affinity_Groups.objects.get(id=chapterSocietyAndAffinityGroups)
+                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Society_Affinity=chapterSocietyAndAffinityGroups)
                 save_blog.save()
-            elif cat!="" and CSAG=="":
-                cat = BlogCategory.objects.get(id=cat)
-                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = pname,Category=cat)
+            elif category!="" and chapterSocietyAndAffinityGroups=="":
+                category = BlogCategory.objects.get(id=category)
+                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Category=category)
                 save_blog.save()
-            elif cat=="" and CSAG=="":
-                    save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = pname)
+            elif category=="" and chapterSocietyAndAffinityGroups=="":
+                    save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName)
                     save_blog.save()
             else:
-                cat = BlogCategory.objects.get(id=cat)
-                CSAG = Chapters_Society_and_Affinity_Groups.objects.get(id=CSAG)
-                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = pname,Category=cat,Society_Affinity=CSAG)
+                category = BlogCategory.objects.get(id=category)
+                chapterSocietyAndAffinityGroups = Chapters_Society_and_Affinity_Groups.objects.get(id=chapterSocietyAndAffinityGroups)
+                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Category=category,Society_Affinity=chapterSocietyAndAffinityGroups)
                 save_blog.save()
             
             return render(request,"add_blogs.html",{
                 "saved":True,
                 "category":load_blog_category,
-                "CSAG":load_Chapters
+                "chapterSocietyAndAffinityGroups":load_Chapters_Society_And_Affinity_Groups
             })
     return render(request,"add_blogs.html",{
         "category":load_blog_category,
-        "CSAG":load_Chapters
+        "chapterSocietyAndAffinityGroups":load_Chapters_Society_And_Affinity_Groups
     })

@@ -40,8 +40,6 @@ def Research_Paper(request):
     })
 def Blogs(request):
     get_all_blog= Blog.objects.all()
-    pic=get_all_blog.first().Blog_picture
-    print(pic)
     return render(request,"Blogs.html",{
         "blogs":get_all_blog
     })

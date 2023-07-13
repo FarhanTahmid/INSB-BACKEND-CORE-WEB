@@ -181,6 +181,7 @@ class Blog(models.Model):
     Blog_picture = models.ImageField(null=True,blank=True,default='Central_Branch/Blog_pictures/default_blog_picture.png',upload_to='Central_Branch/Blog_pictures/')
     Category = models.ForeignKey(BlogCategory,null=True,blank=True,on_delete=models.CASCADE)
     Publisher = models.CharField(null=False,blank=False,max_length=160)
+    Description = models.TextField(null=False,blank=False,max_length=5000,default="None")
     Society_Affinity = models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
     slug = AutoSlugField(populate_from="Title",unique=True,null=True,default=None)
 
