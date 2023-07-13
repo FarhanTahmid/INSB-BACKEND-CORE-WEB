@@ -16,7 +16,8 @@ def All_Events(request):
 
     get_all_events = Branch.load_all_events()
     return render(request,"All_Events.html",{
-        "events":get_all_events
+        "events":get_all_events,
+        "Latest_event":get_all_events.last()
     })
 
 def Event_Details(request,event_name):

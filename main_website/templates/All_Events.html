@@ -4,6 +4,12 @@
         <title>Events - IEEE NSU SB</title>
     </head>
     <body>
+        <h1>Latest Event</h1>
+        <br>
+        <br>
+        <a href = "{% url 'main_website:event-details' Latest_event.slug %}">{{Latest_event.event_name}}</a>
+        <br>
+        <br>
         <h1>Previous Events</h1>
         <br>
         <br>
