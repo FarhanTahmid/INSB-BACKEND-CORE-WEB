@@ -36,3 +36,4 @@ class Blog(models.Model):
         verbose_name = "Blog"
     def __str__(self):
         return self.title
+    asdsadsad
