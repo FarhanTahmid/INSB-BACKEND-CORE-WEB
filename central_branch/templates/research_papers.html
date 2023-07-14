@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Research papers - IEEE NSU SB</title>
+    </head>
+    <body>
+        <h1>Reseach Paper </h1>
+        <br><br><br>
+        {% if error %}
+        <div>Please complete Title and Author Name and URL Fields</div>
+        {% endif %}
+        {% if saved %}
+        <div>Details Saved</div>
+        {% endif %}
+        <br>
+        <form method = "POST" action = "{% url 'central_branch:add_research' %}">
+            {% csrf_token %}
+            Reseach paper title:
+            <input type = "text" name="title" placeholder="Title" required>
+            <br><br><br>
+            Picture (if any):
+            <input type="file"  name="research_banner_picture">
+            <br><br><br>
+            Author Names:
+            <input type="text" name="author_name" required>
+            <br><br><br>
+            Publication link:
+            <input type= "url" name = "url">
+            <br><br><br>
+            <input type = "submit">
+        </form>
+    </body>
+</html>
