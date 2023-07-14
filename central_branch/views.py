@@ -296,19 +296,19 @@ def add_blogs(request):
 
             if category=="" and chapterSocietyAndAffinityGroups!="":
                 chapterSocietyAndAffinityGroups = Chapters_Society_and_Affinity_Groups.objects.get(id=chapterSocietyAndAffinityGroups)
-                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Society_Affinity=chapterSocietyAndAffinityGroups,Description=description)
+                save_blog = Blog(title=title,date=date,blog_banner_picture=blog_pic,publisher = publisherName,chapter_society_affinity=chapterSocietyAndAffinityGroups,description=description)
                 save_blog.save()
             elif category!="" and chapterSocietyAndAffinityGroups=="":
                 category = Blog_Category.objects.get(id=category)
-                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Category=category,Description=description)
+                save_blog = Blog(title=title,date=date,blog_banner_picture=blog_pic,publisher = publisherName,category=category,description=description)
                 save_blog.save()
             elif category=="" and chapterSocietyAndAffinityGroups=="":
-                    save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Description=description)
+                    save_blog = Blog(title=title,date=date,blog_banner_picture=blog_pic,publisher = publisherName,description=description)
                     save_blog.save()
             else:
                 category = Blog_Category.objects.get(id=category)
                 chapterSocietyAndAffinityGroups = Chapters_Society_and_Affinity_Groups.objects.get(id=chapterSocietyAndAffinityGroups)
-                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Category=category,Society_Affinity=chapterSocietyAndAffinityGroups,Description=description)
+                save_blog = Blog(title=title,date=date,blog_banner_picture=blog_pic,publisher = publisherName,category=category,chapter_society_affinity=chapterSocietyAndAffinityGroups,description=description)
                 save_blog.save()
             
             return render(request,"add_blogs.html",{

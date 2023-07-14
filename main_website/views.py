@@ -52,7 +52,7 @@ def Blogs(request):
     })
 
 def blog_Description(request,blog_id):
-    load_specific_blog = Blog.objects.get(id=id)
+    load_specific_blog = Blog.objects.get(id=blog_id)
     return render(request,"Blog_Details.html",{
         "blog_details":load_specific_blog
     })
