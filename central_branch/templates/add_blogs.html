@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Blogs - IEEE NSU SB</title>
+    </head>
+    <body>
+        <h1>Blog - IEEE NSU SB </h1>
+        <br><br><br>
+        {% if error %}
+        <div>Please complete required Fields</div>
+        {% endif %}
+        {% if saved %}
+        <div>Details Saved</div>
+        {% endif %}
+        <br>
+        <form method = "POST" action = "{% url 'central_branch:add_blogs' %}">
+            {% csrf_token %}
+            Blog title:
+            <input type = "text" name="title" placeholder="Title" required>
+            <br><br><br>
+            Picture (if any):
+            <input type="file" name="filename">
+            <br><br><br>
+            Date:
+            <input type="date" name="date" required>
+            <br><br><br>
+            Category:
+            <select name="category">
+                <option  value="" selected>Uncatagorized</option>
+                {% for i in category%}
+                <option value="{{i.id}}">{{i.blog_category}}</option>
+                {% endfor %}
+            </select>
+            <br><br><br>
+            Publisher's Name:
+            <input type="text" name="Pname" required>
+            <br><br><br>
+            From Society:
+            <select name="chapterSocietyAndAffinityGroups">
+                <option  value="" selected>--------------------------------------</option>
+                {% for i in chapterSocietyAndAffinityGroups %}
+                <option value="{{i.id}}">{{i.group_name}}</option>
+                {% endfor %}
+            </select>
+            <br><br><br>
+            Description:
+            <input type="text" name="description" required>
+            <br><br><br>
+            <input type = "submit">
+        </form>
+    </body>
+</html>

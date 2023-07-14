@@ -5,7 +5,7 @@ from port.models import Chapters_Society_and_Affinity_Groups
 from logistics_and_operations_team.models import Logistic_Item_List
 from events_and_management_team.models import Venue_List,Permission_criteria
 from meeting_minutes.models import team_meeting_minutes, branch_meeting_minutes
-from autoslug import AutoSlugField
+
 # Create your models here.
 
 ###### THESE MODELS ARE SPECIFICALLY USED FOR EVENT HANDLING PURPOSE ####
