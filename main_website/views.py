@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from central_branch.models import Events
 from central_branch.renderData import Branch
+from main_website.models import Research_Papers
 
 
 # Create your views here.
@@ -29,4 +30,14 @@ def Event_Details(request,event_id):
     return render(request,"Event.html",{
         "event":get_event
         
+    })
+
+def Research_Paper(request):
+
+    '''Loads all research papers for the corresponding page'''
+
+
+    get_all_research_papers = Research_Papers.objects.all() 
+    return render(request,"All_Research_Papers.html",{
+        "research_paper":get_all_research_papers
     })

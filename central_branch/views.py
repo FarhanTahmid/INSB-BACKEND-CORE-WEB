@@ -250,7 +250,7 @@ def add_research(request):
         else:
             title = request.POST.get('title')
             author_names = request.POST.get('author_name')
-            research_banner_pic = request.FILES['research_banner_picture']
+            research_banner_pic = request.POST.get('research_banner_picture')
             url = request.POST.get('url')
             save_research_paper = Research_Papers(title=title,research_banner_picture=research_banner_pic,author_names=author_names,publication_link=url)
             save_research_paper.save()

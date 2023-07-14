@@ -7,20 +7,21 @@
     <body>
         <h1>Reseach Papers </h1>
         <br><br><br>
-        {% for research in rpaper%}
+        {% for research in research_paper %}
         <div>
-            <img src="/media_files/{{research.Research_picture}}" alt="Reseach Picture" width="280px" height="280px">
+            <img src="/media_files/{{research.research_banner_picture}}" alt="Reseach Picture" width="280px" height="280px">
         </div>
         <div>
-            {{research.Title}}
+            {{research.title}}
         </div>
         <div>
             Writers:
-            {{research.Author_names}}
+            {{research.author_names}}
         </div>
         <div>
-            <a href="{{research.Publication_link}}">Read the Paper</a>
+            <a href="{{research.publication_link}}">Read the Paper</a>
         </div>
+        <br><br>
         {% endfor %}
         
         <br><br>
