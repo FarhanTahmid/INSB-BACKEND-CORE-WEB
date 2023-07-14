@@ -9,12 +9,17 @@
         <br><br><br>
         {% for blog in blogs %}
         <div>
-            <img src="/media_files/{{blog.Blog_picture}}" alt="Blog Picture">
+            <img src="/User Files/{{blog.Blog_picture}}" alt="Blog Picture">
         </div>
         <br>
         <div>
-            Blog title: {{blog.Title}}<br>
-            Blog Date:{{blog.Date}}, Blog Category: {{blog.Category}}
+            Blog title:<a href="{% url 'main_website:blog_Description' blog.slug %}"> {{blog.Title}}</a><br>
+            Blog Date:{{blog.Date}} <br>
+            {% if blog.Category == None %}
+            Blog Category: Uncatagorized <br>
+            {% else %}
+            Blog Category: {{blog.Category}} <br>
+            {% endif %}
             Published By:{{blog.Publisher}}<br>
             By, {{blog.Society_Affinity}}
         </div>

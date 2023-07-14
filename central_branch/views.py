@@ -274,9 +274,15 @@ def add_blogs(request):
 
     load_blog_category = BlogCategory.objects.all()
     load_Chapters_Society_And_Affinity_Groups = Chapters_Society_and_Affinity_Groups.objects.all()
+
     '''When the submit button is clicked'''
+
     if request.method=="POST":
-        if request.POST.get('title') == "" or request.POST.get('date') == ""  or request.POST.get('Pname') == "":
+
+        '''Checking for essential fields to be filled. If incomplete, error will be loaded
+        on the form page'''
+
+        if request.POST.get('title') == "" or request.POST.get('date') == ""  or request.POST.get('Pname') == "" or request.POST.get('description')== "":
             return render(request,"add_blogs.html",{
                 "error":True,
                 "category":load_blog_category,
@@ -289,6 +295,7 @@ def add_blogs(request):
             category = request.POST.get('category')
             publisherName = request.POST.get('Pname')
             chapterSocietyAndAffinityGroups = request.POST.get('chapterSocietyAndAffinityGroups')
+            description = request.POST.get('description')
 
             '''Checking conditions regarding when either of the two fields is empty or full
             and saving the data to the database on the basis of the conditions, where other fields
@@ -296,19 +303,19 @@ def add_blogs(request):
 
             if category=="" and chapterSocietyAndAffinityGroups!="":
                 chapterSocietyAndAffinityGroups = Chapters_Society_and_Affinity_Groups.objects.get(id=chapterSocietyAndAffinityGroups)
-                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Society_Affinity=chapterSocietyAndAffinityGroups)
+                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Society_Affinity=chapterSocietyAndAffinityGroups,Description=description)
                 save_blog.save()
             elif category!="" and chapterSocietyAndAffinityGroups=="":
                 category = BlogCategory.objects.get(id=category)
-                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Category=category)
+                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Category=category,Description=description)
                 save_blog.save()
             elif category=="" and chapterSocietyAndAffinityGroups=="":
-                    save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName)
+                    save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Description=description)
                     save_blog.save()
             else:
                 category = BlogCategory.objects.get(id=category)
                 chapterSocietyAndAffinityGroups = Chapters_Society_and_Affinity_Groups.objects.get(id=chapterSocietyAndAffinityGroups)
-                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Category=category,Society_Affinity=chapterSocietyAndAffinityGroups)
+                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Category=category,Society_Affinity=chapterSocietyAndAffinityGroups,Description=description)
                 save_blog.save()
             
             return render(request,"add_blogs.html",{

@@ -39,7 +39,16 @@ def Research_Paper(request):
         "rpaper":get_all_research_papers
     })
 def Blogs(request):
+
+    '''Loads the blog page where all blog is shown'''
+
     get_all_blog= Blog.objects.all()
     return render(request,"Blogs.html",{
         "blogs":get_all_blog
+    })
+
+def blog_Description(request,blog_title):
+    load_specific_blog = Blog.objects.get(slug=blog_title)
+    return render(request,"Blog_Details.html",{
+        "blog_details":load_specific_blog
     })
