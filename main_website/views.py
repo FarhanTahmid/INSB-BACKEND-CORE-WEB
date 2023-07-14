@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from central_branch.models import Events
 from central_branch.renderData import Branch
-from main_website.models import Research_Papers
+from main_website.models import Research_Papers,Blog
 
 
 # Create your views here.
@@ -40,4 +40,19 @@ def Research_Paper(request):
     get_all_research_papers = Research_Papers.objects.all() 
     return render(request,"All_Research_Papers.html",{
         "research_paper":get_all_research_papers
+    })
+
+def Blogs(request):
+
+    '''Loads the blog page where all blog is shown'''
+
+    get_all_blog= Blog.objects.all()
+    return render(request,"Blogs.html",{
+        "blogs":get_all_blog
+    })
+
+def blog_Description(request,blog_id):
+    load_specific_blog = Blog.objects.get(id=id)
+    return render(request,"Blog_Details.html",{
+        "blog_details":load_specific_blog
     })

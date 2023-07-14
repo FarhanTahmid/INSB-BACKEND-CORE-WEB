@@ -1,7 +1,13 @@
 from django.contrib import admin
-from .models import Research_Papers
+from .models import Research_Papers,Blog_Category,Blog
 # Register your models here.
 
 @admin.register(Research_Papers)
 class ResearchPaper(admin.ModelAdmin):
     list_display = ['id','title','author_names','research_banner_picture','publication_link']
+@admin.register(Blog_Category)
+class Blog_Category(admin.ModelAdmin):
+    list_display=['id','blog_category']
+@admin.register(Blog)
+class Blog(admin.ModelAdmin):
+    list_display=['id','title','date','blog_banner_picture','category','publisher','description','chapter_society_affinity']

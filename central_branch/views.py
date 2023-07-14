@@ -17,7 +17,7 @@ from events_and_management_team.renderData import Events_And_Management_Team
 from logistics_and_operations_team.renderData import LogisticsTeam
 from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,Event_type,Event_Venue
 from events_and_management_team.models import Venue_List,Permission_criteria
-from main_website.models import Research_Papers
+from main_website.models import Research_Papers,Blog_Category,Blog
 
 
 
@@ -259,3 +259,65 @@ def add_research(request):
             })
 
     return render(request,"research_papers.html")
+
+@login_required
+def add_blogs(request):
+
+    '''function to add new blog to the page'''
+
+    load_blog_category = Blog_Category.objects.all()
+    load_Chapters_Society_And_Affinity_Groups = Chapters_Society_and_Affinity_Groups.objects.all()
+
+    '''When the submit button is clicked'''
+
+    if request.method=="POST":
+
+        '''Checking for essential fields to be filled. If incomplete, error will be loaded
+        on the form page'''
+
+        if request.POST.get('title') == "" or request.POST.get('date') == ""  or request.POST.get('Pname') == "" or request.POST.get('description')== "":
+            return render(request,"add_blogs.html",{
+                "error":True,
+                "category":load_blog_category,
+                "chapterSocietyAndAffinityGroups":load_Chapters_Society_And_Affinity_Groups
+            }) 
+        else:
+            title =  request.POST.get('title')
+            date = request.POST.get('date')
+            blog_pic = request.POST.get('filename')
+            category = request.POST.get('category')
+            publisherName = request.POST.get('Pname')
+            chapterSocietyAndAffinityGroups = request.POST.get('chapterSocietyAndAffinityGroups')
+            description = request.POST.get('description')
+
+            '''Checking conditions regarding when either of the two fields is empty or full
+            and saving the data to the database on the basis of the conditions, where other fields
+            apart from category and chapterSocietyAndAffinityGroups is mandatorys'''
+
+            if category=="" and chapterSocietyAndAffinityGroups!="":
+                chapterSocietyAndAffinityGroups = Chapters_Society_and_Affinity_Groups.objects.get(id=chapterSocietyAndAffinityGroups)
+                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Society_Affinity=chapterSocietyAndAffinityGroups,Description=description)
+                save_blog.save()
+            elif category!="" and chapterSocietyAndAffinityGroups=="":
+                category = Blog_Category.objects.get(id=category)
+                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Category=category,Description=description)
+                save_blog.save()
+            elif category=="" and chapterSocietyAndAffinityGroups=="":
+                    save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Description=description)
+                    save_blog.save()
+            else:
+                category = Blog_Category.objects.get(id=category)
+                chapterSocietyAndAffinityGroups = Chapters_Society_and_Affinity_Groups.objects.get(id=chapterSocietyAndAffinityGroups)
+                save_blog = Blog(Title=title,Date=date,Blog_picture=blog_pic,Publisher = publisherName,Category=category,Society_Affinity=chapterSocietyAndAffinityGroups,Description=description)
+                save_blog.save()
+            
+            return render(request,"add_blogs.html",{
+                "saved":True,
+                "category":load_blog_category,
+                "chapterSocietyAndAffinityGroups":load_Chapters_Society_And_Affinity_Groups
+            })
+    return render(request,"add_blogs.html",{
+        "category":load_blog_category,
+        "chapterSocietyAndAffinityGroups":load_Chapters_Society_And_Affinity_Groups
+    })
+

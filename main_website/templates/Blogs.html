@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Blogs- IEEE NSU SB</title>
+    </head>
+    <body>
+        <h1>Blogs </h1>
+        <br><br><br>
+        {% for blog in blogs %}
+        <div>
+            <img src="/User Files/{{blog.Blog_banner_picture}}" alt="Blog Picture">
+        </div>
+        <br>
+        <div>
+            Blog title:<a href="{% url 'main_website:blog_description' blog.id %}"> {{blog.title}}</a><br>
+            Blog Date:{{blog.date}} <br>
+            {% if blog.Category == None %}
+            Blog Category: Uncatagorized <br>
+            {% else %}
+            Blog Category: {{blog.category}} <br>
+            {% endif %}
+            Published By:{{blog.publisher}}<br>
+            By, {{blog.chapter_society_affinity}}
+        </div>
+        <br><br>
+        {% endfor %}  
+        <br><br>
+    </body>
+</html>
