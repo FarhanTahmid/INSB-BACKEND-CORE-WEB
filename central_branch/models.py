@@ -56,7 +56,6 @@ class Events(models.Model):
     probable_date=models.DateField(null=True,blank=True) #Must add probable date for an event
     final_date=models.DateField(null=True,blank=True)
     registration_fee=models.BooleanField(null=False,blank=False,default=False)
-    slug = AutoSlugField(populate_from="event_name",unique=True,null=True,default=None)
     
     class Meta:
         verbose_name="Registered Event"

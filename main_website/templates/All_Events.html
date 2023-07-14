@@ -4,12 +4,15 @@
         <title>Events - IEEE NSU SB</title>
     </head>
     <body>
+        <h1>LAtest Events</h1>
+        <br>
+        <a href="{% url 'main_website:event-details' last_event.id %}">{{last_event.event_name}}</a>
         <h1>Previous Events</h1>
         <br>
         <br>
         <ul>
             {% for event in events%}
-            <li><a href="{% url 'main_website:event-details' event.slug %}">{{event.event_name}}</a></li>
+            <li><a href="{% url 'main_website:event-details' event.id %}">{{event.event_name}}</a></li>
             {% endfor %}
         </ul>
 
