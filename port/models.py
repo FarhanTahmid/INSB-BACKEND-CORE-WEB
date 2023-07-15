@@ -18,6 +18,7 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
 
 class Roles_and_Position(models.Model):
     role=models.CharField(max_length=40,null=False,blank=False)
+    panel_member = models.BooleanField(default=False)
     
     class Meta:
         verbose_name='Registered positions'

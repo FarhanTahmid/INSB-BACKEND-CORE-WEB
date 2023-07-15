@@ -31,6 +31,8 @@ urlpatterns = [
     #addresearch page
     path('add_research/',views.add_research,name="add_research"),
     #addblogs page
-    path('add_blogs/',views.add_blogs,name="add_blogs")
+    path('add_blogs/',views.add_blogs,name="add_blogs"),
+    #Super Event Creation Form
+    path('create_super_event/',views.super_event_creation,name="super_event_creation")
     
 ]

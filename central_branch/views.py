@@ -15,7 +15,7 @@ from system_administration.render_access import Access_Render
 from central_branch.renderData import Branch
 from events_and_management_team.renderData import Events_And_Management_Team
 from logistics_and_operations_team.renderData import LogisticsTeam
-from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,Event_type,Event_Venue
+from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,Event_type,Event_Venue,SuperEvents
 from events_and_management_team.models import Venue_List,Permission_criteria
 from main_website.models import Research_Papers,Blog_Category,Blog
 
@@ -320,4 +320,29 @@ def add_blogs(request):
         "category":load_blog_category,
         "chapterSocietyAndAffinityGroups":load_Chapters_Society_And_Affinity_Groups
     })
+@login_required
+def super_event_creation(request):
+
+    '''function for creating super event'''
+
+    if request.method == "POST":
+
+        '''Checking to see if either of the submit or cancelled button has been clicked'''
+
+        if (request.POST.get('Submit')):
+
+            '''Getting data from page and saving them in database'''
+
+            super_event_name = request.POST.get('super_event_name')
+            super_event_description = request.POST.get('super_event_description')
+            start_date = request.POST.get('probable_date')
+            end_date = request.POST.get('final_date')
+            saving_data = SuperEvents(super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date,end_date=end_date)
+            saving_data.save()
+            return redirect('central_branch:event_control')
+        
+        elif (request.POST.get('cancel')):
+            return redirect('central_branch:event_control')
+        
+    return render(request,"super_event_creation_form.html")
 
