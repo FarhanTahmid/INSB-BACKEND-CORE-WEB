@@ -121,7 +121,6 @@ class Branch:
                         return False #general Error
                 else:
                     try:
-                        print(super_event_name)
                         get_super_event_id = SuperEvents.objects.get(id = super_event_name)
                         print(get_super_event_id.super_event_name)
                         new_event=Events(
