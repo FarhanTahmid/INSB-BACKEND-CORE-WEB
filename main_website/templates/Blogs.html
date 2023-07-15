@@ -9,11 +9,10 @@
         <h1>Blogs </h1>
         <br><br><br>
         {% for blog in blogs %}
+        
+        
         <div>
-            <img src="/User Files/{{blog.Blog_banner_picture}}" alt="Blog Picture">
-        </div>
-        <br>
-        <div>
+            <img src="media_files/{{blog.blog_banner_picture}}" alt="Blog Picture"><br>
             Blog title:<a href="{% url 'main_website:blog_description' blog.id %}"> {{blog.title}}</a><br>
             Blog Date:{{blog.date}} <br>
             {% if blog.Category == None %}

@@ -284,7 +284,7 @@ def add_blogs(request):
         else:
             title =  request.POST.get('title')
             date = request.POST.get('date')
-            blog_pic = request.POST.get('filename')
+            blog_pic = request.FILES['filename']
             category = request.POST.get('category')
             publisherName = request.POST.get('Pname')
             chapterSocietyAndAffinityGroups = request.POST.get('chapterSocietyAndAffinityGroups')
