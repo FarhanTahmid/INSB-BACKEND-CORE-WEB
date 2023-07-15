@@ -21,7 +21,7 @@
         
         
         <div>
-            <img src="{{ blog.blog_banner_picture }}" alt="Blog Picture"><br>
+            <img src="/media_files/{{ blog.blog_banner_picture }}" alt="Blog Picture"><br>
             Blog title:<a href="{% url 'main_website:blog_description' blog.id %}"> {{blog.title}}</a><br>
             Blog Date:{{blog.date}} <br>
             {% if blog.Category == None %}

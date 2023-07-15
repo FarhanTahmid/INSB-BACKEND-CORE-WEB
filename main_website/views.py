@@ -47,9 +47,10 @@ def Blogs(request):
     '''Loads the blog page where all blog is shown'''
 
     get_all_blog= Blog.objects.all()
-    return render(request,"Blogs.html",{
-        "blogs":get_all_blog
-    })
+    context={
+        'blogs':get_all_blog,
+    }
+    return render(request,"blogs.html",context=context)
 
 def blog_Description(request,blog_id):
     load_specific_blog = Blog.objects.get(id=blog_id)
