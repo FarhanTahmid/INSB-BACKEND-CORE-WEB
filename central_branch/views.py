@@ -3,7 +3,7 @@ from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from . import renderData
-from port.models import Teams,Chapters_Society_and_Affinity_Groups
+from port.models import Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position
 from django.db import connection
 from django.db.utils import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
@@ -25,13 +25,13 @@ from main_website.models import Research_Papers,Blog_Category,Blog
 # Create your views here.
 
 def central_home(request):
-    user=request.user
+    '''user=request.user
     has_access=Access_Render.system_administrator_superuser_access(user.username)
     if (has_access):
-        #renderData.Branch.test_google_form()
-        return render(request,'central_home.html')
-    else:
-        return render(request,"access_denied2.html")
+        #renderData.Branch.test_google_form()'''
+    return render(request,'central_home.html')
+    '''else:
+    return render(request,"access_denied2.html")'''
 
 @login_required
 def event_control(request):
@@ -64,7 +64,6 @@ def event_creation_form_page1(request):
     if(request.method=="POST"):
         if(request.POST.get('next')):
             super_event_name=request.POST.get('super_event')
-            
             event_name=request.POST['event_name']
             event_description=request.POST['event_description']
             probable_date=request.POST['probable_date']
@@ -206,26 +205,35 @@ def team_details(request,pk,name):
     return render(request,'team_details_page.html',context=context)
 @login_required
 def event_dashboard(request,event_id):
-    '''Details page for registered events'''
+
+    '''Checking to see whether the user has access to view events on portal and edit them'''
+    user = request.user
+    has_access = renderData.Branch.event_page_access(user)
+    if has_access:
+
+        '''Details page for registered events'''
     
-    context={}
-    get_all_team_name = renderData.Branch.load_teams()
-    get_event_details = Events.objects.get(id = event_id)
-    get_inter_branch_collaboration = InterBranchCollaborations.objects.filter(event_id=get_event_details.id)
-    get_intra_branch_collaboration = IntraBranchCollaborations.objects.filter(event_id = get_event_details.id)
-    get_event_venue = Event_Venue.objects.filter(event_id = get_event_details.id)  
-    if request.method == "POST":
-        team_under = request.POST.get('team_under')
-        member_under = request.POST.get('memeber_under')
-        probable_date = request.POST.get('probable_date')
-        progress = request.POST.get('progression')    
-    context={
-        'event_details':get_event_details,
-        'inter_branch_details':get_inter_branch_collaboration,
-        'intra_branch_details':get_intra_branch_collaboration,
-        'event_venue':get_event_venue,
-        'team_names':get_all_team_name
-    }
+        context={}
+        get_all_team_name = renderData.Branch.load_teams()
+        get_event_details = Events.objects.get(id = event_id)
+        #print(get_event_details.super_event_name.id)
+        get_inter_branch_collaboration = InterBranchCollaborations.objects.filter(event_id=get_event_details.id)
+        get_intra_branch_collaboration = IntraBranchCollaborations.objects.filter(event_id = get_event_details.id)
+        get_event_venue = Event_Venue.objects.filter(event_id = get_event_details.id)  
+        if request.method == "POST":
+            team_under = request.POST.get('team_under')
+            member_under = request.POST.get('memeber_under')
+            probable_date = request.POST.get('probable_date')
+            progress = request.POST.get('progression')    
+        context={
+            'event_details':get_event_details,
+            'inter_branch_details':get_inter_branch_collaboration,
+            'intra_branch_details':get_intra_branch_collaboration,
+            'event_venue':get_event_venue,
+            'team_names':get_all_team_name
+        }
+    else:
+        return redirect('main_website:all-events')
     return render(request,"event_dashboard.html",context)
 @login_required
 def others(request):

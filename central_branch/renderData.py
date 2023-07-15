@@ -4,6 +4,8 @@ from django.db import DatabaseError
 from system_administration.models import MDT_Data_Access
 from . models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_type
 from events_and_management_team.models import Venue_List, Permission_criteria
+from system_administration.render_access import Access_Render
+
 
 
 
@@ -106,8 +108,9 @@ class Branch:
                 if(final_date==''):
                     
                     try:
+                        get_super_event_id = SuperEvents.objects.get(id = super_event_name)
                         new_event=Events(
-                        super_event_name=super_event_name,
+                        super_event_name=get_super_event_id,
                         event_name=event_name,
                         event_description=event_description,
                         probable_date=probable_date
@@ -118,8 +121,11 @@ class Branch:
                         return False #general Error
                 else:
                     try:
+                        print(super_event_name)
+                        get_super_event_id = SuperEvents.objects.get(id = super_event_name)
+                        print(get_super_event_id.super_event_name)
                         new_event=Events(
-                        super_event_name=super_event_name,
+                        super_event_name=get_super_event_id,
                         event_name=event_name,
                         event_description=event_description,
                         probable_date=probable_date,
@@ -262,3 +268,26 @@ class Branch:
                         return False
                 else:
                     pass
+    
+    def event_page_access(user):
+
+        '''function for acceessing particular memebers into event page through
+        portal'''
+
+        try:
+            user_id = user.username
+            member = Members.objects.get(ieee_id=int(user_id))
+            roles_and_positions = Roles_and_Position.objects.get(id = member.position.id)
+            if roles_and_positions.panel_member:
+                return True
+            else:
+                return False
+        except:
+            
+            '''Super users and staff users can access'''
+
+            has_access= Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username)
+            return has_access
+        
+            
+        

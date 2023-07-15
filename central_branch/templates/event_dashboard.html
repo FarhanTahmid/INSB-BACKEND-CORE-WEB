@@ -496,10 +496,10 @@
                         <input type="radio" name="accordion" id="first">
                         <label for="first">Mother Event</label>
                         <div class="context">
-                            {% if event_details.super_event_name == "" %}
+                            {% if event_details.super_event_name.super_event_name == "" %}
                             <p>Not Available</p>
                             {% else %}
-                            <p>{{event_details.super_event_name}}</p>
+                            <p>{{event_details.super_event_name.super_event_name}}</p>
                             {% endif %}
                         </div>
                     </li>
