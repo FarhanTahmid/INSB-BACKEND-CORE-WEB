@@ -1,18 +1,27 @@
-
 <!DOCTYPE html>
-
+{% load static %}
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
     <head>
-        <title>Blogs- IEEE NSU SB</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
     </head>
     <body>
+        
         <h1>Blogs </h1>
         <br><br><br>
         {% for blog in blogs %}
         
         
         <div>
-            <img src="media_files/{{blog.blog_banner_picture}}" alt="Blog Picture"><br>
+            <img src="{{ blog.blog_banner_picture }}" alt="Blog Picture"><br>
             Blog title:<a href="{% url 'main_website:blog_description' blog.id %}"> {{blog.title}}</a><br>
             Blog Date:{{blog.date}} <br>
             {% if blog.Category == None %}
@@ -26,5 +35,7 @@
         <br><br>
         {% endfor %}  
         <br><br>
+        
+        <script src="" async defer></script>
     </body>
 </html>

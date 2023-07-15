@@ -13,7 +13,7 @@
         <div>Details Saved</div>
         {% endif %}
         <br>
-        <form method = "POST" action = "{% url 'central_branch:add_blogs' %}">
+        <form method = "POST" action = "{% url 'central_branch:add_blogs' %}" enctype="multipart/form-data">
             {% csrf_token %}
             Blog title:
             <input type = "text" name="title" placeholder="Title" required>
