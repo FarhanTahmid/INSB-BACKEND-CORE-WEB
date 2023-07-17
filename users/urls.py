@@ -20,4 +20,7 @@ urlpatterns = [
     path('logout/',views.logoutUser,name='logoutUser'),
     #user Profile
     path('profile',views.profile_page,name='profile'),
+    #forgot password
+    path('username_validation',views.forgotPassword_getUsername,name="fp_validation") #fp=forgot password, this page just checks if the username is registered or not
+    
 ]

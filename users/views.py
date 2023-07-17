@@ -143,4 +143,23 @@ def profile_page(request):
 @login_required
 def logoutUser(request):
     auth.logout(request)
-    return redirect('/users/login') 
+    return redirect('/users/login')
+
+
+def forgotPassword_getUsername(request):
+    
+    if request.method=="POST":
+        getUsername=request.POST.get('username')
+        
+        try:
+            if not User.objects.filter(username=getUsername).first():
+                messages.error(request,"No user is registered with this IEEE ID")
+                return redirect('users:fp_validation')
+            else:
+                #send an email to the user, show the mail with aesterik.
+                pass
+        except Exception as e:
+            print(e)
+    
+    
+    return render(request,"users/forgot_password1.html")
