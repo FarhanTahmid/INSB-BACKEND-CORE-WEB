@@ -2,7 +2,7 @@
 {% load static %}
 <html lang="en">
   <head>
-    <title>Forgot Password - Username</title>
+    <title>Forgot Password - Invalid</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,25 +19,8 @@
         </div>
         <div class="Form d-grid p-3">
               <form method="POST">
-                {% csrf_token %}
-                <div class="d-grid pt-3">
-                    <input type="text" placeholder="IEEE ID" class="Form-cont form-control border usernameInp my-1 p-3" Required name='username'>
-                </div>
-
-                <div class="d-grid pt-3">
-                   <button type="submit" class="log-btn btn-outline-dark" onclick='users:fp_validation'>
-                        Submit
-                   </button>
-                </div>
-                   <br>
-                {% for message in messages %}
-                   <p class="message" style="color:#941910; text-align: center;">{{message}}</p>
-                 {% endfor %}
-                 <span class="login_text" style="margin-left: 42px;">Didn't Signup yet? </span><span class="login_text"><a href="{% url 'users:signup' %}">Signup</a></span>
-                <br>
-                <a href="{% url 'users:login' %}" style="margin-left: 95px;" >Login</a>
-                <br>
                 
+                <h3>You have entered an Invalid or used URL<h3>
                 
               </form>
         </div>

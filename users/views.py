@@ -6,13 +6,13 @@ from users import registerUser
 from django.db import connection
 from django.db.utils import IntegrityError
 from recruitment.models import recruited_members
-from . models import Members
+from . models import Members,ResetPasswordTokenTable
 import csv,datetime
 from django.db import DatabaseError
 from . import renderData
 from django.utils.datastructures import MultiValueDictKeyError
 from membership_development_team.renderData import MDT_DATA
-
+from . import email_handler
 
 # Create your views here.
 def login(request):
@@ -147,7 +147,7 @@ def logoutUser(request):
 
 
 def forgotPassword_getUsername(request):
-    
+    '''this function is used to get the username for password resetting and sending them an email with reset link'''
     if request.method=="POST":
         getUsername=request.POST.get('username')
         
@@ -156,10 +156,72 @@ def forgotPassword_getUsername(request):
                 messages.error(request,"No user is registered with this IEEE ID")
                 return redirect('users:fp_validation')
             else:
-                #send an email to the user, show the mail with aesterik.
-                pass
+                #get the user from User Table
+                getUser=User.objects.get(username=getUsername)
+                #get the token sent to the user in email and check if the mail was sent
+                token,mail_sent=email_handler.EmailHandler.sendForgetPasswordLinkToUserViaEmail(request,getUser.email,getUsername)
+                if(mail_sent):
+                    try:
+                        # if the mail was sent to the user, delete all the previous tokens the user generated for password reset
+                        ResetPasswordTokenTable.objects.filter(user=getUser).delete()
+                    except Exception as e:
+                        print(e)
+                        messages.error(request,"An internal database error occured! Try again")
+                    
+                    #create a new row for the user with the generated to cross match later
+                    new_user_request=ResetPasswordTokenTable.objects.create(user=getUser,token=token)
+                    new_user_request.save()
+                    messages.success(request,"An email has been sent to your email. Further intstructions for resetting your password are given there.")
+                    return redirect('users:fp_validation')
+                else:
+                    #handles the error of if email was not send to the user.
+                    messages.error(request,"Sorry, we could not process your request at this moment.")
+                    return redirect('users:fp_validation')
         except Exception as e:
             print(e)
     
     
     return render(request,"users/forgot_password1.html")
+
+def forgotPassword_resetPassword(request,username,token):
+    '''Resets user password by validating the token and link'''
+    
+    #gets the username from link generated and user clicked from their mail.
+    try:
+        #searches fro user entry, used get as their will be only one instance(must) per user. if there are multiple the process wont work
+        getUserTokenInfo=ResetPasswordTokenTable.objects.get(user=User.objects.get(username=username))
+    except:
+        return redirect('users:invalid_url')
+    #validating the token by cross matching with the database
+    if(getUserTokenInfo.token==token):
+        if request.method=="POST":
+            new_password=request.POST.get('password')
+            confirm_password=request.POST.get('confirm_password')
+            
+            #password length must be greater than 6 characters
+            if(len(new_password)>6):
+                #if new and confirmed password matches:
+                if(new_password==confirm_password):
+                    try:
+                        #changing the user password , thus resetting it
+                        user=User.objects.get(username=username)
+                        user.set_password(new_password)
+                        user.save()
+                        #deleting the used token so that it can not be used later. Thus, clicking on the same URL will show that it was invalid
+                        getUserTokenInfo.delete()
+                        return redirect('users:login')
+                    except Exception as e:
+                        print(e)
+                        messages.error(request,"Password Changing Failed")
+                else:
+                    messages.error(request,"Two passwords did not match! Please Try again.")
+            else:
+                messages.error(request,"Your password must be greater than 6 characters!")
+    else:
+        return redirect('users:invalid_url')
+    
+    return render(request,"users/forgot_password2.html")
+
+def invalidURL(request):
+    '''shows the invalid URL Page'''
+    return render(request,'users/invalid_url.html')
