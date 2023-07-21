@@ -4,7 +4,7 @@
         <title>Events - IEEE NSU SB</title>
     </head>
     <body>
-        <h1>LAtest Events</h1>
+        <h1>Latest Events</h1>
         <br>
         <a href="{% url 'main_website:event-details' last_event.id %}">{{last_event.event_name}}</a>
         <h1>Previous Events</h1>
@@ -15,7 +15,36 @@
             <li><a href="{% url 'main_website:event-details' event.id %}">{{event.event_name}}</a></li>
             {% endfor %}
         </ul>
+        <br>
+        ----------------------------------------------------------------------------------
+        <br>
+        Here it shows latest 6 events including flagship events
 
+        <h1>Flagship Events</h1>
+        <br>
+        <ol>
+        {% if flagship_event|length > 0%}
+        {% for flagship_event in flagship_event %}
+        <li><a href="{% url 'main_website:event-details' flagship_event.id %}">{{flagship_event.event_name}}</a></li>
+        {% endfor %}
+        {% else %}
+        No Flagship Event Available
+        {% endif %}
+        </ol>
+        <h1>Normal Events</h1>
+        <br>
+        <ul>
+            {% if normal_event|length > 0%}
+            {% for event in normal_event%}
+            <li><a href="{% url 'main_website:event-details' event.id %}">{{event.event_name}}</a></li>
+            {% endfor %}
+            {% else %}
+            No Normal Event
+            {% endif %}
+            
+        </ul>
+        <br>
+        
     </body>
 
 
