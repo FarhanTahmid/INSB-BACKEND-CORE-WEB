@@ -9,6 +9,7 @@ from insb_port import settings
 from port.models import Teams,Roles_and_Position
 from recruitment.models import recruitment_session
 from membership_development_team.models import Renewal_Sessions
+from django.contrib.auth.models import User
 # from membership_development_team.models import Renewal_Sessions
 # Create your models here.
 
@@ -82,4 +83,14 @@ class Executive_commitee_members(models.Model):
     position=models.ForeignKey(Roles_and_Position,on_delete=models.CASCADE)
     
     class Meta:
-        verbose_name="Executive Commitee Members"  
+        verbose_name="Executive Commitee Members" 
+
+class ResetPasswordTokenTable(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    token=models.CharField(max_length=100,null= False,blank=False)
+    
+    class Meta:
+        verbose_name="User Reset Password Tokens"
+    def __str__(self) -> str:
+        return str(self.pk)
+    

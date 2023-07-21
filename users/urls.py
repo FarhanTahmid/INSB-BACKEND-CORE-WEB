@@ -20,4 +20,10 @@ urlpatterns = [
     path('logout/',views.logoutUser,name='logoutUser'),
     #user Profile
     path('profile',views.profile_page,name='profile'),
+    #forgot password
+    path('username_validation',views.forgotPassword_getUsername,name="fp_validation"), #fp=forgot password, this page just checks if the username is registered or not
+    #forgot password
+    path('reset_password/<str:username>/<str:token>/',views.forgotPassword_resetPassword,name="reset_password"),
+    #Invalid URL Handling
+    path('invalid_url',views.invalidURL,name="invalid_url") #this page will prompt if an user has used an "used" or invalid url 
 ]

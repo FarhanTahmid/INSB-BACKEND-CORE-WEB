@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import Members,Ex_panel_members,Executive_commitee,Executive_commitee_members
+from . models import Members,Ex_panel_members,Executive_commitee,Executive_commitee_members,ResetPasswordTokenTable
 
 # Register your models here.
 @admin.register(Members)
@@ -22,4 +22,10 @@ class Executive_Commitee(admin.ModelAdmin):
 class Executive_Commitee_members(admin.ModelAdmin):
     list_display=[
         'member','year','position'
+    ]
+
+@admin.register(ResetPasswordTokenTable)
+class ResetPasswordTokenTable(admin.ModelAdmin):
+    list_display=[
+        'user','token'
     ]
