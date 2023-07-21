@@ -56,6 +56,7 @@ class Events(models.Model):
     probable_date=models.DateField(null=True,blank=True) #Must add probable date for an event
     final_date=models.DateField(null=True,blank=True)
     registration_fee=models.BooleanField(null=False,blank=False,default=False)
+    flagship_event = models.BooleanField(null=False,blank=False,default=False)
     
     class Meta:
         verbose_name="Registered Event"
