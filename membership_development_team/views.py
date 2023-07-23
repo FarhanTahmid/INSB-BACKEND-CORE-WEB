@@ -586,7 +586,6 @@ def data_access(request):
             members_to_add=request.POST.getlist('member_select1')
             #get position
             position=request.POST.get('position')
-
             for member in members_to_add:
                 renderData.MDT_DATA.add_member_to_team(member,position)
             return redirect('membership_development_team:data_access')
