@@ -34,6 +34,19 @@ class MDT_Data_Access(models.Model):
     def __str__(self) -> str:
         return str(self.ieee_id)
 
+
+#class for EMT data access
+class EMT_Data_Access(models.Model):
+
+    ieee_id=models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE,verbose_name="IEEE ID")
+    assign_task_data_access = models.BooleanField(null=False,blank=False,default=False,verbose_name="Task Assign Data Access Permission")
+    manage_team_data_access = models.BooleanField(null=False,blank=False,default=False,verbose_name="Manage Team Permission")
+
+    class Meta:
+        verbose_name="Events and Management Team Data Access"
+    def __str__(self):
+        return str(self.ieee_id)
+
 #these are for developers database
 class Developer_criteria(models.Model):
     '''This class defines the developer types'''

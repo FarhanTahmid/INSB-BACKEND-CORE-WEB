@@ -126,7 +126,7 @@
                 <a class="nav-link navLi" href="{% url 'events_and_management_team:em_team_homepage' %}">Home</a>
                 <a class="nav-link navLi" href=""><small>Assign Task</small></a>
                 <a class="nav-link navLi" href=""><small>Team Manage</small></a>
-                <a class="nav-link navL" href="{% url 'events_and_management_team:em_team_homepage' %}"><small>Data Access</small></a>
+                <a class="nav-link navL" href="{% url 'events_and_management_team:emt_data_access' %}"><small>Data Access</small></a>
             </div>
           </div>
         </div>
@@ -223,25 +223,25 @@
                       
                         
 
-                        {% if data_access.insb_member_details %}
-                        <input type="checkbox" checked="True" class="checkbox" value="insb_member_details" name="insb_member_details">
-                        <label for="insb_member_details">INSB Registered Member Details Permission
+                        {% if data_access.assign_task_data_access %}
+                        <input type="checkbox" checked="True" class="checkbox" value="task_assign" name="task_assign">
+                        <label for="task_assign">Task Assign Permission
                         </label><br>
                         {% else %}
-                        <input type="checkbox" class="checkbox" value="insb_member_details" name="insb_member_details">
-                        <label for="insb_member_details">INSB Registered Member Details Permission</label><br>
+                        <input type="checkbox" class="checkbox" value="task_assign" name="task_assign">
+                        <label for="task_assign">Task Assign Permission</label><br>
                         {% endif %}
 
 
-                        {% if data_access.recruitment_session %}
-                        <input type="checkbox" checked="True" class="checkbox" value="recruitment_session" name="recruitment_session">
-                        <label for="recruitment_session">Recruitment Data View Permission</label><br>
+                        {% if data_access.manage_team_data_access %}
+                        <input type="checkbox" checked="True" class="checkbox" value="manage_team" name="manage_team">
+                        <label for="manage_team">Team Management Permission</label><br>
                         {% else %}
-                        <input type="checkbox" class="checkbox" value="recruitment_session" name="recruitment_session">
-                        <label for="recruitment_session">Recruitment Data View Permission</label><br>
+                        <input type="checkbox" class="checkbox" value="manage_team" name="manage_team">
+                        <label for="manage_team">Team Management Permission</label><br>
                         {% endif %}
 
-
+                        <!---
                         {% if data_access.recruited_member_details %}
                         <input type="checkbox" checked="True" class="checkbox" value="recruited_member_details" name="recruited_member_details">
                         <label for="recruited_member_details">Rectuited Member Details Permission</label><br>
@@ -257,7 +257,7 @@
                         {% else %}
                         <input type="checkbox" class="checkbox" value="renewal_data_access" name="renewal_data_access">
                         <label for="renewal_data_access">Membership Renewal Data Access Permission</label><br>
-                        {% endif %}
+                        {% endif %}-->
                         
                       </td>
                     
@@ -293,7 +293,7 @@
           <div class="modal-content">
               <div class="modal-header">
                   <h5 class="modal-title" id="staticBackdropLabel">
-                      Add Member to Membership Development Team Data Access
+                      Add Member to Events And Maangement Team Data Access
                   </h5>
                   <button
                       type="button"
@@ -381,7 +381,7 @@
       <div class="modal-content">
           <div class="modal-header">
               <h5 class="modal-title" id="staticBackdropLabel">
-                  Add Member to Membership Development Team
+                  Add Member to Events and Management Team
               </h5>
               <button
                   type="button"
