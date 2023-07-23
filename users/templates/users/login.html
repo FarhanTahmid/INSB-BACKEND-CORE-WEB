@@ -38,7 +38,7 @@
                    <br>
                 {% for message in messages %}
                    <p class="message" style="color:#941910; text-align: center;">{{message}}</p>
-                 {% endfor %}
+                {% endfor %}
                  <span class="login_text" style="margin-left: 42px;">Didn't Signup yet? </span><span class="login_text"><a href="{% url 'users:signup' %}">Signup</a></span>
                 <br>
                 <a href="{% url 'users:fp_validation' %}" style="margin-left: 60px;" >Forgot Password?</a>

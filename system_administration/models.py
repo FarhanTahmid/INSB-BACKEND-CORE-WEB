@@ -35,7 +35,7 @@ class MDT_Data_Access(models.Model):
         return str(self.ieee_id)
 
 
-#class for EMT data access
+#class for Events and Management Team data access
 class EMT_Data_Access(models.Model):
 
     ieee_id=models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE,verbose_name="IEEE ID")
