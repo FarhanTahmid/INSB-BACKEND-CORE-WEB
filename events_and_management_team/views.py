@@ -111,4 +111,15 @@ def emt_data_access(request):
     if(has_access):
         return render(request,'emt_data_access_table.html',context=context)
     else:
-        return render(request,"access_denied.html")
+        return render(request,"emt_access_denied.html")
+    
+@login_required
+def emt_task_assign(request):
+
+    user = request.user
+    has_access = renderData.Events_And_Management_Team.task_assign_view_control(user.username)
+    
+    if has_access:
+        return render(request,"emt_task_assign.html")
+    else:
+        return render(request,"emt_access_denied.html")

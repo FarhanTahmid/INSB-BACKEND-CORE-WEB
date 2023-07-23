@@ -93,7 +93,7 @@
             <div class="navbar-nav ms-auto">
               <a class="nav-link navLi" href="{% url 'users:dashboard' %}">Dashboard</a>
                 <a class="nav-link navL" href="{% url 'events_and_management_team:em_team_homepage' %}">Home</a>
-                <a class="nav-link navLi" href=""><small>Assign Task</small></a>
+                <a class="nav-link navLi" href="{% url 'events_and_management_team:emt_task_assign' %}"><small>Assign Task</small></a>
                 <a class="nav-link navLi" href=""><small>Team Manage</small></a>
                 <a class="nav-link navLi" href="{% url 'events_and_management_team:emt_data_access' %}"><small>Data Access</small></a>
             </div>

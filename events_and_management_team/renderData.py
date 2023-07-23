@@ -2,6 +2,7 @@ from . models import Permission_criteria,Venue_List
 from port.models import Teams,Roles_and_Position
 from system_administration.models import EMT_Data_Access
 from users.models import Members
+from system_administration.render_access import Access_Render
 
 class Events_And_Management_Team():
 
@@ -66,3 +67,15 @@ class Events_And_Management_Team():
     def add_member_to_team(ieee_id,position):
         team_id=Events_And_Management_Team.get_team_id()
         Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
+
+    def task_assign_view_control(username):
+        try:
+            ieee_id = int(username)
+            get_memeber_access = EMT_Data_Access.objects.get(ieee_id = ieee_id)
+            if get_memeber_access.assign_task_data_access:
+                return True
+            else:
+                return False 
+        except:
+            Access_Render.system_administrator_superuser_access(username) or Access_Render.system_administrator_staffuser_access(username)
+            return True
