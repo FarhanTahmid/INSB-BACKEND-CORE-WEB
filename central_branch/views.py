@@ -208,6 +208,7 @@ def event_dashboard(request,event_id):
 
 @login_required
 def get_updated_options_for_event_dashboard(request):
+    #this function updates the select box upon the selection of the team in task assignation. takes event id as parameter. from html file, a script hits the api and fetches the returned dictionary
     
     if request.method == 'GET':
         # Retrieve the selected value from the query parameters
@@ -221,6 +222,7 @@ def get_updated_options_for_event_dashboard(request):
         for member in members:
             updated_options.append({'value': member.ieee_id, 'member_name': member.name,'position':member.position.role})
 
+        #returning the dictionary
         return JsonResponse(updated_options, safe=False)
 
 def event_control_homepage(request,event_id):

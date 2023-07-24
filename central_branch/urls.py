@@ -24,7 +24,7 @@ urlpatterns = [
     path('team_details/<str:pk>/<str:name>',views.team_details,name='team_details'),
     #event dashboard team
     path('event_dashboard/<int:event_id>',views.event_dashboard,name='event_dashboard'),
-    #for updating value
+    #for updating value in team member select box in event assigning
     path('get_updated_options/', views.get_updated_options_for_event_dashboard, name='get_updated_options'),
     #others page
     path('others/',views.others,name="others"),
