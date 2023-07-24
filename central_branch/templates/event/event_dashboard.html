@@ -624,7 +624,7 @@
                                 <div class="team_inputfield">
                                     <label for="">Team Name</label>
                                     <div class="custom_select">
-                                        <select name="team_under">
+                                        <select name="team" id="team">
                                             <option value="null" selected>----------</option>
 
                                             {% for i in team_names%}
@@ -636,32 +636,18 @@
                                 <div class="team_inputfield">
                                     <label for="">Team Member Name</label>
                                     <div class="custom_select">
-                                        <select name="member_under">
-                                            <option value="null" selected>----------</option>
-                                            <option value="member_id">Member name</option>
+                                        <select name="member_under" id="team_member">
                                         </select>
                                     </div>
                                 </div>
                                 <div class="team_inputfield">
-                                    <label for="">Task</label>
-                                    <div class="custom_select">
-                                        <select name="task_under">
-                                            <option value="null" selected>----------</option>
-                                            <option value="task_id">Task name</option>
-                                        </select>
-                                    </div>
+                                    <label for="">Task Details</label>
+                                    <textarea id="myTextArea" name="myTextArea" rows="5" cols="50"></textarea>
+                                    
                                 </div>
                                 <div class="team_inputfield">
-                                    <label for="">Task Date</label>
+                                    <label for="">Task Deadline</label>
                                     <input type="date" name="probable_date" class="input">
-                                </div>
-                                <div class="team_inputfield">
-                                    <input type="radio" name="progression" value="Progress">
-                                    <label for="">In Progress</label>
-                                    <input type="radio" name="progression" value="Yes">
-                                    <label for="">Completed</label>
-                                    <input type="radio" name="progression" value="No">
-                                    <label for="">Not Completed</label>
                                 </div>
                                 <div class="team_inputfield">
                                     <input type="submit" value="Assign" name="assign" class="assignbtn">
@@ -711,6 +697,31 @@
         function openEditDialog() {
             dialog.showModal()
         }
+
+        {% comment %} code to update value of team members according to team selection {% endcomment %}
+        document.getElementById('team').addEventListener('change', function() {
+            var team_id = this.value;
+        
+            // Make an AJAX request to the Django view to get the updated options for the second select box
+            
+            fetch('/central_branch/get_updated_options/?team_id=' + encodeURIComponent(team_id))
+              .then(response => response.json())
+              .then(data => {
+                // Update the options in the second select box based on the data received from the server
+                var team_member = document.getElementById('team_member');
+                team_member.innerHTML = '';
+        
+                data.forEach(function(option) {
+                  var optionElement = document.createElement('option');
+                  optionElement.value = option.value;
+                  optionElement.textContent = option.member_name;
+                  team_member.appendChild(optionElement);
+                });
+              })
+              .catch(error => {
+                console.error('Error fetching data:', error);
+              });
+          });
 
     </script>
 </body>

@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
-from django.contrib.auth.models import User,auth
+from django.contrib.auth.models import User
+from django.http import JsonResponse, response
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from . import renderData
@@ -187,9 +188,11 @@ def event_dashboard(request,event_id):
         get_inter_branch_collaboration = InterBranchCollaborations.objects.filter(event_id=get_event_details.id)
         get_intra_branch_collaboration = IntraBranchCollaborations.objects.filter(event_id = get_event_details.id)
         get_event_venue = Event_Venue.objects.filter(event_id = get_event_details.id)  
+        
         if request.method == "POST":
-            team_under = request.POST.get('team_under')
-            member_under = request.POST.get('memeber_under')
+            #FOR TASK ASSIGNING
+            team_under = request.POST.get('team')
+            team_member = request.POST.get('team_member')
             probable_date = request.POST.get('probable_date')
             progress = request.POST.get('progression')    
         context={
@@ -203,9 +206,27 @@ def event_dashboard(request,event_id):
         return redirect('main_website:all-events')
     return render(request,"event/event_dashboard.html",context)
 
+@login_required
+def get_updated_options_for_event_dashboard(request):
+    
+    if request.method == 'GET':
+        # Retrieve the selected value from the query parameters
+        selected_team = request.GET.get('team_id')
+
+        # fetching the team member
+        members=renderData.Branch.load_team_members(selected_team)
+        updated_options = [
+            # Add more options as needed
+        ]
+        for member in members:
+            updated_options.append({'value': member.ieee_id, 'member_name': member.name,'position':member.position.role})
+
+        return JsonResponse(updated_options, safe=False)
+
 def event_control_homepage(request,event_id):
     
-    return render(request,'event/event_control_homepage.html')
+    return render(request,'event_control_homepage.html')
+
 
 def teams(request):
     

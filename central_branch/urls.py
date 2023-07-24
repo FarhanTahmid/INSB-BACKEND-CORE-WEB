@@ -18,14 +18,14 @@ urlpatterns = [
     path("create_event/<int:event_id>/page-2", views.event_creation_form_page2, name="event_creation_form2"),
     #Event creation page 3
     path("create_event/<int:event_id>/page-3", views.event_creation_form_page3, name="event_creation_form3"),
-    #Event control homepage
-    path("event_control/event_home/<int:event_id>", views.event_control_homepage,name="event_homepage"),
     #teams page
     path('teams',views.teams,name='teams'),
     #team details page
     path('team_details/<str:pk>/<str:name>',views.team_details,name='team_details'),
     #event dashboard team
     path('event_dashboard/<int:event_id>',views.event_dashboard,name='event_dashboard'),
+    #for updating value
+    path('get_updated_options/', views.get_updated_options_for_event_dashboard, name='get_updated_options'),
     #others page
     path('others/',views.others,name="others"),
     #addresearch page
