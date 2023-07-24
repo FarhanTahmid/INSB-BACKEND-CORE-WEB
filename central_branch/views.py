@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
-from django.contrib.auth.models import User,auth
+from django.contrib.auth.models import User
+from django.http import JsonResponse, response
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from . import renderData
@@ -43,7 +44,34 @@ def event_control(request):
         if request.POST.get('create_new_event'):
             print("Create")
     
-    return render(request,'event_page.html',context)
+    return render(request,'event/event_page.html',context)
+
+@login_required
+def super_event_creation(request):
+
+    '''function for creating super event'''
+
+    if request.method == "POST":
+
+        '''Checking to see if either of the submit or cancelled button has been clicked'''
+
+        if (request.POST.get('Submit')):
+
+            '''Getting data from page and saving them in database'''
+
+            super_event_name = request.POST.get('super_event_name')
+            super_event_description = request.POST.get('super_event_description')
+            start_date = request.POST.get('probable_date')
+            end_date = request.POST.get('final_date')
+            saving_data = SuperEvents(super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date,end_date=end_date)
+            saving_data.save()
+            return redirect('central_branch:event_control')
+        
+        elif (request.POST.get('cancel')):
+            return redirect('central_branch:event_control')
+        
+    return render(request,"event/super_event_creation_form.html")
+
 
 @login_required
 def event_creation_form_page1(request):
@@ -88,7 +116,7 @@ def event_creation_form_page1(request):
                 
         elif(request.POST.get('cancel')):
             return redirect('central_branch:event_control')
-    return render(request,'event_creation_form1.html',context)
+    return render(request,'event/event_creation_form1.html',context)
 
 @login_required
 def event_creation_form_page2(request,event_id):
@@ -114,7 +142,7 @@ def event_creation_form_page2(request,event_id):
             return redirect('central_branch:event_control')
 
 
-    return render(request,'event_creation_form2.html',context)
+    return render(request,'event/event_creation_form2.html',context)
 
 def event_creation_form_page3(request,event_id):
     #loading all venues from the venue list from event management team database
@@ -141,12 +169,66 @@ def event_creation_form_page3(request,event_id):
             else:
                 return redirect('central_branch:event_control')
 
-    return render(request,'event_creation_form3.html',context)
+    return render(request,'event/event_creation_form3.html',context)
 
+@login_required
+def event_dashboard(request,event_id):
+
+    '''Checking to see whether the user has access to view events on portal and edit them'''
+    user = request.user
+    has_access = renderData.Branch.event_page_access(user)
+    if has_access:
+
+        '''Details page for registered events'''
+    
+        context={}
+        get_all_team_name = renderData.Branch.load_teams()
+        get_event_details = Events.objects.get(id = event_id)
+        #print(get_event_details.super_event_name.id)
+        get_inter_branch_collaboration = InterBranchCollaborations.objects.filter(event_id=get_event_details.id)
+        get_intra_branch_collaboration = IntraBranchCollaborations.objects.filter(event_id = get_event_details.id)
+        get_event_venue = Event_Venue.objects.filter(event_id = get_event_details.id)  
+        
+        if request.method == "POST":
+            #FOR TASK ASSIGNING
+            team_under = request.POST.get('team')
+            team_member = request.POST.get('team_member')
+            probable_date = request.POST.get('probable_date')
+            progress = request.POST.get('progression')    
+        context={
+            'event_details':get_event_details,
+            'inter_branch_details':get_inter_branch_collaboration,
+            'intra_branch_details':get_intra_branch_collaboration,
+            'event_venue':get_event_venue,
+            'team_names':get_all_team_name
+        }
+    else:
+        return redirect('main_website:all-events')
+    return render(request,"event/event_dashboard.html",context)
+
+@login_required
+def get_updated_options_for_event_dashboard(request):
+    #this function updates the select box upon the selection of the team in task assignation. takes event id as parameter. from html file, a script hits the api and fetches the returned dictionary
+    
+    if request.method == 'GET':
+        # Retrieve the selected value from the query parameters
+        selected_team = request.GET.get('team_id')
+
+        # fetching the team member
+        members=renderData.Branch.load_team_members(selected_team)
+        updated_options = [
+            # Add more options as needed
+        ]
+        for member in members:
+            updated_options.append({'value': member.ieee_id, 'member_name': member.name,'position':member.position.role})
+
+        #returning the dictionary
+        return JsonResponse(updated_options, safe=False)
 
 def event_control_homepage(request,event_id):
     
     return render(request,'event_control_homepage.html')
+
 
 def teams(request):
     
@@ -203,41 +285,11 @@ def team_details(request,pk,name):
         
     }
     return render(request,'team_details_page.html',context=context)
-@login_required
-def event_dashboard(request,event_id):
 
-    '''Checking to see whether the user has access to view events on portal and edit them'''
-    user = request.user
-    has_access = renderData.Branch.event_page_access(user)
-    if has_access:
-
-        '''Details page for registered events'''
-    
-        context={}
-        get_all_team_name = renderData.Branch.load_teams()
-        get_event_details = Events.objects.get(id = event_id)
-        #print(get_event_details.super_event_name.id)
-        get_inter_branch_collaboration = InterBranchCollaborations.objects.filter(event_id=get_event_details.id)
-        get_intra_branch_collaboration = IntraBranchCollaborations.objects.filter(event_id = get_event_details.id)
-        get_event_venue = Event_Venue.objects.filter(event_id = get_event_details.id)  
-        if request.method == "POST":
-            team_under = request.POST.get('team_under')
-            member_under = request.POST.get('memeber_under')
-            probable_date = request.POST.get('probable_date')
-            progress = request.POST.get('progression')    
-        context={
-            'event_details':get_event_details,
-            'inter_branch_details':get_inter_branch_collaboration,
-            'intra_branch_details':get_intra_branch_collaboration,
-            'event_venue':get_event_venue,
-            'team_names':get_all_team_name
-        }
-    else:
-        return redirect('main_website:all-events')
-    return render(request,"event_dashboard.html",context)
 @login_required
 def others(request):
     return render(request,"others.html")
+
 @login_required
 def add_research(request):
 
@@ -328,29 +380,4 @@ def add_blogs(request):
         "category":load_blog_category,
         "chapterSocietyAndAffinityGroups":load_Chapters_Society_And_Affinity_Groups
     })
-@login_required
-def super_event_creation(request):
-
-    '''function for creating super event'''
-
-    if request.method == "POST":
-
-        '''Checking to see if either of the submit or cancelled button has been clicked'''
-
-        if (request.POST.get('Submit')):
-
-            '''Getting data from page and saving them in database'''
-
-            super_event_name = request.POST.get('super_event_name')
-            super_event_description = request.POST.get('super_event_description')
-            start_date = request.POST.get('probable_date')
-            end_date = request.POST.get('final_date')
-            saving_data = SuperEvents(super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date,end_date=end_date)
-            saving_data.save()
-            return redirect('central_branch:event_control')
-        
-        elif (request.POST.get('cancel')):
-            return redirect('central_branch:event_control')
-        
-    return render(request,"super_event_creation_form.html")
 
