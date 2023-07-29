@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from central_branch.models import Events
 from central_branch.renderData import Branch
 from main_website.models import Research_Papers,Blog
+from django.db.models import Q
 
 
 # Create your views here.
@@ -17,9 +18,9 @@ def All_Events(request):
     '''Fetching 6 events among which atleast 2 are flagship events.
        If no flagship event exists then all are normal events'''
     count = 0
-    get_flagship_event = Events.objects.filter(flagship_event = True).order_by('-probable_date')[:6]
+    get_flagship_event = Events.objects.filter(Q(flagship_event = True) & Q(publish_in_main_web= True)).order_by('-probable_date')[:6]
     count += len(get_flagship_event)
-    get_event = Events.objects.exclude(flagship_event=True).order_by('-probable_date')[:(6-count)]
+    get_event = Events.objects.filter(Q(flagship_event = False) & Q(publish_in_main_web= True)).order_by('-probable_date')[:(6-count)]
     
     return render(request,"All_Events.html",{
         "events":get_all_events,
