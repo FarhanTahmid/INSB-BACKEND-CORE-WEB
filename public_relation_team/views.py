@@ -3,7 +3,7 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from central_branch import renderData
 from django.contrib.auth.decorators import login_required
-from central_branch.models import SuperEvents,Events
+from central_branch.models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue
 from central_branch.renderData import Branch
 from django.contrib import messages
 from events_and_management_team.renderData import Events_And_Management_Team
@@ -172,3 +172,38 @@ def manage_event(request):
                 messages.info(request,f"Something Went Wrong!")
 
     return render(request,"public_relation_team/event/manage_event.html",context)
+
+@login_required
+def event_dashboard(request,event_id):
+
+    '''Checking to see whether the user has access to view events on portal and edit them'''
+    user = request.user
+    has_access = renderData.Branch.event_page_access(user)
+    if has_access:
+
+        '''Details page for registered events'''
+    
+        context={}
+        get_all_team_name = renderData.Branch.load_teams()
+        get_event_details = Events.objects.get(id = event_id)
+        #print(get_event_details.super_event_name.id)
+        get_inter_branch_collaboration = InterBranchCollaborations.objects.filter(event_id=get_event_details.id)
+        get_intra_branch_collaboration = IntraBranchCollaborations.objects.filter(event_id = get_event_details.id)
+        get_event_venue = Event_Venue.objects.filter(event_id = get_event_details.id)  
+        
+        if request.method == "POST":
+            #FOR TASK ASSIGNING
+            team_under = request.POST.get('team')
+            team_member = request.POST.get('team_member')
+            probable_date = request.POST.get('probable_date')
+            progress = request.POST.get('progression')    
+        context={
+            'event_details':get_event_details,
+            'inter_branch_details':get_inter_branch_collaboration,
+            'intra_branch_details':get_intra_branch_collaboration,
+            'event_venue':get_event_venue,
+            'team_names':get_all_team_name
+        }
+    else:
+        return redirect('main_website:all-events')
+    return render(request,"public_relation_team/event/event_dashboard.html",context)

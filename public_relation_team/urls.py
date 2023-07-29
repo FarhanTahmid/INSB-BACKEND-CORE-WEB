@@ -18,5 +18,7 @@ urlpatterns = [
     #Super Event Creation Form
     path('create_super_event/',views.super_event_creation,name="super_event_creation"),
     #Manage Event page
-    path('manage_event/',views.manage_event,name="manage_event")
+    path('manage_event/',views.manage_event,name="manage_event"),
+    #Event Dashboard
+    path('event_dashboard/<int:event_id>',views.event_dashboard,name='event_dashboard')
 ]

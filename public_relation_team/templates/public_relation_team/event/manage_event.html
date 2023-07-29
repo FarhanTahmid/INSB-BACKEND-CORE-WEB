@@ -331,7 +331,7 @@
                         <tr>
                             <form method="POST">
                                 {% csrf_token %}
-                            <td><a href="#">{{event.event_name }}</a></td>
+                            <td><a href="{% url 'public_relation_team:event_dashboard' event.id %}">{{event.event_name }}</a></td>
                             <td>{{ event.event_organiser }}</td>
                             <td>{{ event.probable_date }}</td>
                             <td>{{ event.final_date }}</td>
