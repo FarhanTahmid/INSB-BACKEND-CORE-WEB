@@ -1,0 +1,61 @@
+
+h2 {
+    text-align: center;
+    padding: 20px 0;
+    color: white;
+  }
+  
+.table-bordered {
+    margin: auto;
+    padding: 50%;
+    border: 1px solid #ddd !important;
+  }
+th{
+    text-align: center;
+    color: white;
+}
+td{
+    color: white;
+    text-align: center;
+    padding: auto;
+  }
+  table caption {
+      padding: .5em 0;
+  }
+  .button{
+    background-color: #FFC936;
+    border-radius: 7px;
+  }
+ 
+  @media screen and (max-width: 767px) {
+    table caption {
+      display: none;
+    }
+  }
+  
+  .p {
+    text-align: center;
+    padding-top: 140px;
+    font-size: 14px;
+  }
+.search{
+  margin: auto;
+  width: 50%;
+}
+.label_text{
+  color: yellow;
+  margin-left: 11px;
+}
+.searchbar{
+  margin-left: 11px;
+}
+
+div.scroll{
+  display: block;
+  border: 0px solid black;
+  padding: 5px;
+  margin-top: 5px;
+  width: 650px;
+  height: 200px;
+  overflow-y: scroll;
+}

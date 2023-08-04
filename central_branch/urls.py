@@ -19,9 +19,16 @@ urlpatterns = [
     #Event creation page 3
     path("create_event/<int:event_id>/page-3", views.event_creation_form_page3, name="event_creation_form3"),
     #teams page
-    path('teams',views.teams,name='teams'),
+    path('teams_and_panels',views.teams,name='teams'),
     #team details page
     path('team_details/<str:pk>/<str:name>',views.team_details,name='team_details'),
+    #manage team Page
+    path('manage_team/<str:pk>/<str:team_name>',views.manage_team,name="manage_team"),
+    
+    #PANEL
+    #panel details
+    path('panel_details/<int:pk>',views.panel_details,name="panel_details"),
+    
     #event dashboard team
     path('event_dashboard/<int:event_id>',views.event_dashboard,name='event_dashboard'),
     #for updating value in team member select box in event assigning

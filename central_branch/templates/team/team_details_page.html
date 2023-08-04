@@ -15,6 +15,8 @@
         {% csrf_token %}
         <a href="#divOne" class="btn">Add Member to team</a>
         </form>
+
+        <a href="{% url 'central_branch:manage_team' team_id team_name %}" class="btn">Manage Team</a>
         
         <h3>Current Team Members:</h3>
         <label>Search: </label>
