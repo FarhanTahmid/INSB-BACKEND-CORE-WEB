@@ -310,7 +310,7 @@ def renewal_session_data(request,pk):
     
     return render(request,'renewal_sessions.html',context)
 
-@login_required
+
 def renewal_request_details(request,pk,request_id):
     
     '''This function loads the datas for particular renewal requests'''

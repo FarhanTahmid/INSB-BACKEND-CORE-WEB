@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <h1>Page For Teams</h1>
+        <form method="POST" action=''>
+            {% csrf_token %}
+            <div class="d-grid pt-3">
+                <input type="text" placeholder="Create New Team" class="Form-cont my-1 p-1" Required name='recruitment_session'>
+            </div>
+            <button type="submit" class="log-btn" onclick=''>
+                Create
+           </button>
+        </form>
+        <br>
+        
+        <br>
+        <label>Search Sessions: </label>
+        <input type="text" onkeyup="searchfunction()" id="search" placeholder="Enter session">
+    
+        <br>
+        <ul id="ul">
+            {% for team in team %}
+            <li id="li"><a href="{% url 'central_branch:team_details' team.id team.team_name %}" >{{team.team_name}}</a></li>
+            {% endfor %}
+        </ul>
+        <script>
+            function searchfunction(){
+                let input,filter,j;
+                input=document.getElementById("search");
+                filter=input.value.toUpperCase();
+                let ul=document.getElementById("ul");
+                let li=ul.getElementsByTagName("li");
+
+                for(j=0;j<li.length;j++){
+                    message=document.getElementById("no_data");
+                    let a=li[j].getElementsByTagName('a')[0];
+                    let textValue=a.textContent || a.innerHTML;
+                    if(textValue.toUpperCase().indexOf(filter) > -1){
+                        li[j].style.display='';
+                        
+                    }                           
+                    else{
+                        li[j].style.display="none";
+
+                    }
+
+                }
+            }
+        
+        </script>
+    </body>
+</html>
