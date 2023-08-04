@@ -229,13 +229,15 @@ def event_control_homepage(request,event_id):
     
     return render(request,'event_control_homepage.html')
 
-
+#Panel and Team Management
 def teams(request):
     
     '''
     Loads all the existing teams in the branch
     Gives option to add or delete a team
     '''
+    #load panel lists
+    panels=renderData.Branch.load_ex_com_panel_list()
     
     #load teams from database
     
@@ -244,10 +246,12 @@ def teams(request):
     for team in teams:
         team_list.append(team)
     context={
-        'team':team_list
+        'team':team_list,
+        'panels':panels
     }
     
-    return render(request,'teams.html',context=context)
+    return render(request,'team/teams.html',context=context)
+
 def team_details(request,pk,name):
     
     '''Detailed panel for the team'''
@@ -278,13 +282,27 @@ def team_details(request,pk,name):
                 return redirect('central_branch:team_details',pk,name)
 
     context={
+        'team_id':pk,
         'team_name':name,
         'team_members':team_members,
         'positions':positions,
         'insb_members':insb_members,
         
     }
-    return render(request,'team_details_page.html',context=context)
+    return render(request,'team/team_details_page.html',context=context)
+
+@login_required
+def manage_team(request,pk,team_name):
+    context={
+        'team_id':pk,
+        'team_name':team_name,
+    }
+    return render(request,'team/team_management.html',context=context)
+
+#PANEL WORS
+@login_required
+def panel_details(request,pk):
+    return render(request,"ex_com_panels/panel_details.html")
 
 @login_required
 def others(request):

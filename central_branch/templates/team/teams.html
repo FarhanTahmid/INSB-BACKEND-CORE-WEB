@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <h1>Page For Panels and Teams</h1>
+        {% comment %} For PANEL {% endcomment %}
+        <form method="POST" action=''>
+            {% csrf_token %}
+            <div class="d-grid pt-3">
+                <input type="text" placeholder="Create New Team" class="Form-cont my-1 p-1" Required name='recruitment_session'>
+            </div>
+            <button type="submit" class="log-btn" onclick=''>
+                Create a new Executive Committee Panel
+           </button>
+        </form>
+        <br>
+        
+        <br>
+        <label>Search Ex-Com Panels: </label>
+        <input type="text" onkeyup="searchPanels()" id="search" placeholder="Ex-Com Panels">
+    
+        <br>
+        <ul id="ul">
+            {% for i in panels %}
+            <li id="li"><a href="{% url 'central_branch:panel_details' i.pk %}" >Executive Committee - {{i.year}}</a></li>
+            {% endfor %}
+        </ul>
+
+        {% comment %} FOR TEAM {% endcomment %}
+        <form method="POST" action=''>
+            {% csrf_token %}
+            <div class="d-grid pt-3">
+                <input type="text" placeholder="Create New Team" class="Form-cont my-1 p-1" Required name='recruitment_session'>
+            </div>
+            <button type="submit" class="log-btn" onclick=''>
+                Create
+           </button>
+        </form>
+        <br>
+        
+        <br>
+        <label>Search Teams: </label>
+        <input type="text" onkeyup="searchTeams()" id="search" placeholder="Team name">
+    
+        <br>
+        <ul id="ul">
+            {% for team in team %}
+            <li id="li"><a href="{% url 'central_branch:team_details' team.id team.team_name %}" >{{team.team_name}}</a></li>
+            {% endfor %}
+        </ul>
+        <script>
+            function searchTeams(){
+                let input,filter,j;
+                input=document.getElementById("search");
+                filter=input.value.toUpperCase();
+                let ul=document.getElementById("ul");
+                let li=ul.getElementsByTagName("li");
+
+                for(j=0;j<li.length;j++){
+                    message=document.getElementById("no_data");
+                    let a=li[j].getElementsByTagName('a')[0];
+                    let textValue=a.textContent || a.innerHTML;
+                    if(textValue.toUpperCase().indexOf(filter) > -1){
+                        li[j].style.display='';
+                        
+                    }                           
+                    else{
+                        li[j].style.display="none";
+
+                    }
+
+                }
+            }
+
+            function searchTeams(){
+                let input,filter,j;
+                input=document.getElementById("search");
+                filter=input.value.toUpperCase();
+                let ul=document.getElementById("ul");
+                let li=ul.getElementsByTagName("li");
+
+                for(j=0;j<li.length;j++){
+                    message=document.getElementById("no_data");
+                    let a=li[j].getElementsByTagName('a')[0];
+                    let textValue=a.textContent || a.innerHTML;
+                    if(textValue.toUpperCase().indexOf(filter) > -1){
+                        li[j].style.display='';
+                        
+                    }                           
+                    else{
+                        li[j].style.display="none";
+
+                    }
+
+                }
+            }
+        
+        </script>
+    </body>
+</html>
