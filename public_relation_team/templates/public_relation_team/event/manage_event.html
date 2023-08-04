@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+{% load static %}
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Manage Event</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: linear-gradient(90deg, #67b8e4, #060c4d)
+        }
+
+        /* navbar */
+        header {
+            background-color: #050D3A;
+        }
+        
+        .navbar li {
+            list-style: none;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .navbar {
+            min-height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            transition: 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: rgb(255, 183, 0);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+        .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            -webkit-transition: all 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
+            background-color: #fff;
+        }
+
+        @media(max-width: 1560px) {
+            .hamburger {
+                display: block;
+            }
+
+            .hamburger.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active .bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .hamburger.active .bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+
+            .nav-menu {
+                position: absolute;
+                top: -1070px;
+                left: 0;
+                width: 100%;
+                gap: 0;
+                flex-direction: column;
+                background-color: #050D3A;
+                text-align: left;
+                transition: 0.7s;
+                padding: 0 20px;
+            }
+
+            .nav-item {
+                margin: 16px 0;
+            }
+
+            .nav-menu.active {
+                top: 70px;
+            }
+
+            .container {
+                padding-top: 0px;
+                transition: 0.8s;
+            }
+
+            .container.active {
+                padding-top: 700px;
+            }
+        }
+       
+
+        /* body */
+        .header {
+            padding: 60px 40px;
+            text-align: center;
+            color: rgb(255, 255, 255);
+            text-transform: capitalize;
+        }
+
+        .create_event_button {
+            display: flex;
+            flex-direction: row;
+            column-gap: 2rem;
+            row-gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .create_event_button button {
+            width: 230px;
+            height: 50px;
+            background-color: #050D3A;
+            border: 2px solid black;
+            box-shadow: 3px 9px 10px 1px rgba(0, 0, 0, 0.68);
+            transition: 0.3s;
+        }
+
+        .create_event_button button a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 15px bold;
+            text-transform: capitalize;
+        }
+
+        .create_event_button button:hover {
+            background-color: #050D3A;
+            scale: 1.2;
+        }
+
+        .create_event_button button a:hover {
+            color: rgb(255, 223, 40);
+            transition: all 0.2s;
+        }
+
+        .event {
+            display: flex;
+            margin: 20px;
+            max-height: 55vh;
+            border-radius: .8rem;
+            flex-direction: column;
+            background-color: #fff;
+            box-shadow: 0 .4rem .8rem #0005;
+            backdrop-filter: blur(7px);
+            overflow: hidden;
+        }
+
+        .event_header {
+            width: 100%;
+            height: 18%;
+            background-color: #fff4;
+            padding: .8rem 1rem;
+        }
+
+        .event_search {
+            padding: 10px 0;
+        }
+
+        .event_search label {
+            font-size: 20px;
+        }
+
+        .event_search input {
+            font-size: 20px;
+            width: 70%;
+            max-width: 50vh;
+        }
+
+        .event_info {
+            width: 95%;
+            max-width: calc(89% - .8rem);
+            margin: .4rem auto;
+            border-radius: .6rem;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .event_info::--webkit-scrollbar-thumb {
+            border-radius: .5rem;
+            background-color: #0004;
+            visibility: hidden;
+        }
+
+        .event_info:hover::--webkit-scrollbar-thumb {
+            visibility: visible;
+        }
+
+        .event_info table,
+        th,
+        td {
+            border-collapse: collapse;
+            padding: 1rem;
+        }
+
+        .event_info thead th {
+            position: sticky;
+            top: 0;
+            left: 0;
+            text-align: left;
+            background-color: #050D3A;
+            color: #fff;
+        }
+
+        .event_info tbody tr:nth-child(even) {
+            background-color: #0000000b;
+        }
+
+        .event_info tbody tr:hover {
+            background-color: rgba(142, 181, 220, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="#" class="nav-logo"><img src="{% static 'logo.gif' %}" alt="IEEE_logo" width="40" height="40"></a>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Central Branch</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Event & Management</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Logistics</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Content</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Promotion</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Membership Development</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Website Development</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Media</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Graphics</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Finance</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Public Relation</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <h1 class="header">Manage Events</h1>
+        <div class="event">
+            <section class="event_header">
+                <h1>Event List</h1>
+                <div class="event_search">
+                    <label>Search: </label>
+                    <input type="text" onkeyup="searchfunction()" id="search" placeholder="Search with any credentials">
+                </div>
+            </section>
+            <br>
+            {% for messages in messages %}
+                <p class="text-white text-center">{{messages}}</p>
+            {% endfor %}
+            <section class="event_info">
+                <table id="event_table">
+                    <thead>
+                        <tr id="table_row">
+                            <th>Event Name</th>
+                            <th>Event Organiser</th>
+                            <th>Probable Date of Event</th>
+                            <th>Final Date of Event</th>
+                            <th>Publish to Web</th>
+                            <th>        </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% comment %} This block is responsible for loading all the members recruited on that session
+                        and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
+                        {% for event in events %}
+                        <tr>
+                            <form method="POST">
+                                {% csrf_token %}
+                            <td><a href="{% url 'public_relation_team:event_dashboard' event.id %}">{{event.event_name }}</a></td>
+                            <td>{{ event.event_organiser }}</td>
+                            <td>{{ event.probable_date }}</td>
+                            <td>{{ event.final_date }}</td>
+                            
+                            <td>
+                                {% if event.publish_in_main_web %}
+                                    <input type="checkbox" checked="True" class="checkbox" value="publish_in_main_web" name="publish_in_main_web">
+                                    <br>
+                                {% else %}
+                                    <input type="checkbox" class="checkbox" value="publish_in_main_web" name="publish_in_main_web">
+                                    <br>
+                                {% endif %}  
+                            </td>
+                            <td>
+                                <input class="btn btn-warning" name="update" type="submit" value="Update">
+                                <input type="hidden" name="event_id" value={{event.id}}>
+                            </td>
+                        </form>
+                        </tr>
+                        {% endfor %}
+                        
+                   
+                    </tbody>
+                </table>
+                
+                <p id="no_data"></p>
+            </section>
+        </div>
+    </div>
+
+    <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+    <script>
+        const hamburger = document.querySelector(".hamburger");
+        const navMenu = document.querySelector(".nav-menu");
+        const container = document.querySelector(".container");
+
+        hamburger.addEventListener("click", () => {
+            hamburger.classList.toggle("active");
+            navMenu.classList.toggle("active");
+            container.classList.toggle("active");
+        })
+
+        document.querySelectorAll(".navlink").forEach(n => n.addEventListener("click", () => {
+            hamburger.classList.remove("active");
+            navMenu.classList.remove("active");
+            container.classList.toggle("active");
+        }))
+        function searchfunction() {
+            let input, filter, table, tr, td, j;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("event_table");
+            tr = table.getElementsByTagName("tr");
+
+            for (j = 0; j < tr.length; j++) {
+                td = tr[j].getElementsByTagName("td");
+                message = document.getElementById("no_data");
+
+                if (td.length > 0) {
+                    if (td[0].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+                        td[1].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+                        td[2].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+                        td[3].innerHTML.toLocaleUpperCase().indexOf(filter) > -1) {
+                        tr[j].style.display = "";
+                        message.innerHTML = "";
+                    }
+                    else {
+                        tr[j].style.display = "none";
+                    }
+
+                }
+                if (td.length == 0) {
+                    message.innerHTML = "Event not found!";
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

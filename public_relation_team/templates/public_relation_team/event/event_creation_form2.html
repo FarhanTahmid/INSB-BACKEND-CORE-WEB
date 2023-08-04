@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branch-Event Creation Form- Part-2</title>
+    <link rel="stylesheet" href="{% static 'event_form.css' %}">
+</head>
+
+<body>
+    <div class="event_form">
+        <div class="title">
+            Select collaboration Options
+        </div>
+        <div class="form">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="inputfield">
+                    <label for="">Inter Branch Collaboration With: (Press CTRL to select multiple items)</label>
+                    <div class="custom_select multiple">
+                        <select name="inter_branch_collaboration" multiple>
+                            <option value="null" selected>----------</option>
+                            {% for inter_branch_collaboration_option in inter_branch_collaboration_options %}
+                            <option value={{inter_branch_collaboration_option.id}}>
+                                {{inter_branch_collaboration_option.group_name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="inputfield">
+                    <label for="">Intra Branch Collaboration:</label>
+                    <input type="text" name="intra_branch_collaboration" id="" placeholder="Enter Organization Names"
+                        class="input">
+                </div>
+                <div class="inputfield btn">
+                    <input type="submit" name="go_back" value="Go back" class="btn">
+                    <input type="submit" name="next" value="Next" class="btn">
+                </div>
+            </form>
+        </div>
+        {% for message in messages %}
+        <p>{{message}}</p>
+        {% endfor %}
+    </div>
+</body>
+
+</html>

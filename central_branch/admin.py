@@ -11,6 +11,6 @@ class Super_Events(admin.ModelAdmin):
     list_display=['super_event_name','start_date','end_date']
 @admin.register(Events)
 class Events(admin.ModelAdmin):
-    list_display=['id','event_name','super_event_name','event_organiser','final_date','registration_fee','flagship_event']
+    list_display=['id','event_name','super_event_name','event_organiser','final_date','registration_fee','flagship_event','publish_in_main_web']
 
 
