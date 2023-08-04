@@ -19,6 +19,7 @@ from logistics_and_operations_team.renderData import LogisticsTeam
 from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,Event_type,Event_Venue,SuperEvents
 from events_and_management_team.models import Venue_List,Permission_criteria
 from main_website.models import Research_Papers,Blog_Category,Blog
+from users.models import Members
 
 
 
@@ -232,22 +233,35 @@ def event_control_homepage(request,event_id):
 
 def teams(request):
     
-    '''
-    Loads all the existing teams in the branch
-    Gives option to add or delete a team
-    '''
+    user = request.user
+
+    '''Checking if user is EB/faculty or not, and the calling the function event_page_access
+    which was previously called for providing access to Eb's/faculty only to event page'''
+
+    has_access = renderData.Branch.event_page_access(user)
+    if has_access:
+        '''
+        Loads all the existing teams in the branch
+        Gives option to add or delete a team
+        '''
     
-    #load teams from database
-    
-    teams=renderData.Branch.load_teams()
-    team_list=[]
-    for team in teams:
-        team_list.append(team)
-    context={
-        'team':team_list
-    }
-    
-    return render(request,'teams.html',context=context)
+        #load teams from database
+
+        if request.method == "POST":
+            if request.POST.get('recruitment_session'):
+                team_name = request.POST.get('recruitment_session')
+                new_team = Teams(team_name = team_name)
+                new_team.save()
+
+        teams=renderData.Branch.load_teams()
+        team_list=[]
+        for team in teams:
+            team_list.append(team)
+        context={
+            'team':team_list
+        }
+        return render(request,'Executive Panels and team.html',context=context)
+    return render(request,"access_denied2.html")
 def team_details(request,pk,name):
     
     '''Detailed panel for the team'''
@@ -276,7 +290,31 @@ def team_details(request,pk,name):
                     elif(renderData.Branch.add_member_to_team(ieee_id=member,team=pk,position=position)==DatabaseError):
                         messages.info(request,"An internal Database Error Occured! Please try again!")
                 return redirect('central_branch:team_details',pk,name)
+        if(request.POST.get('remove_member')):
+            '''To remove member from team table'''
+            try:
+                Members.objects.filter(ieee_id=request.POST['access_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
+                return redirect('central_branch:team_details',pk,name)
+            except:
+                pass
+        if (request.POST.get('update')):
+            '''To update member's position in a team'''
+            ieee_id=request.POST.get('access_ieee_id')
+            position = request.POST.get('position')
+            Members.objects.filter(ieee_id = ieee_id).update(position = position)
+            return redirect('central_branch:team_details',pk,name)
+        if (request.POST.get('reset_team')):
+            '''To remove all members in the team and assigning them as general memeber'''
+            all_memebers_in_team = Members.objects.filter(team = pk)
+            all_memebers_in_team.update(team=None,position = Roles_and_Position.objects.get(id=13))
+            return redirect('central_branch:team_details',pk,name)
 
+            
+            
+
+
+
+    
     context={
         'team_name':name,
         'team_members':team_members,
