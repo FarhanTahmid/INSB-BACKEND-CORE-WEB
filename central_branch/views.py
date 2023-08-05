@@ -264,7 +264,6 @@ def teams(request):
             team_list.append(team)
         context={
             'team':team_list,
-            'panels':panels
         }
         return render(request,'team/teams.html',context=context)
     return render(request,"access_denied2.html")
