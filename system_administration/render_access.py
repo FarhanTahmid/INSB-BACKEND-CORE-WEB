@@ -5,7 +5,7 @@ class Access_Render:
     def faculty_advisor_access(username):
         try:
             get_faculty=Members.objects.get(ieee_id=int(username))
-            if(get_faculty.position.id==14):
+            if(get_faculty.position.is_faculty):
                 return True
             else:
                 False
@@ -16,7 +16,7 @@ class Access_Render:
     def eb_access(username):
         try:
             get_eb=Members.objects.get(ieee_id=int(username))
-            if(get_eb.position.id<=8):
+            if(get_eb.position.is_eb_member):
                 return True
             else:
                 False
@@ -29,7 +29,7 @@ class Access_Render:
         try:
             get_co_ordinator=Members.objects.get(ieee_id=int(username))
             
-            if(get_co_ordinator.position.id==9):
+            if(get_co_ordinator.position.is_officer):
                 return True
             else:
                 return False
@@ -41,7 +41,7 @@ class Access_Render:
         try:
             get_co_ordinator=Members.objects.get(ieee_id=int(username))
             
-            if(get_co_ordinator.position.id==9 and (get_co_ordinator.team.id==team_id)):
+            if(get_co_ordinator.position.is_officer and (get_co_ordinator.team.id==team_id)):
                 return True
             else:
                 return False
@@ -49,6 +49,7 @@ class Access_Render:
             return False
         except:
             return False
+        
     def system_administrator_superuser_access(username):
         try:
             access=User.objects.get(username=username)

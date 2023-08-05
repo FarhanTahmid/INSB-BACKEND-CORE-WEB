@@ -93,7 +93,7 @@ class MDT_DATA:
 
     
     def insb_member_details_view_control(username):
-        
+        '''in here all the username = ieee_id '''
         faculty_advisor_access=Access_Render.faculty_advisor_access(username=username)
         eb_access=Access_Render.eb_access(username=username)
         team_co_ordinator_access=Access_Render.team_co_ordinator_access(team_id=MDT_DATA.get_team_id(),username=username)
@@ -122,6 +122,7 @@ class MDT_DATA:
             return False
         
     def renewal_data_access_view_control(username):
+        '''in here all the username = ieee_id '''
         faculty_advisor_access=Access_Render.faculty_advisor_access(username=username)
         eb_access=Access_Render.eb_access(username=username)
         team_co_ordinator_access=Access_Render.team_co_ordinator_access(team_id=MDT_DATA.get_team_id(),username=username)
@@ -150,6 +151,7 @@ class MDT_DATA:
             return False
     
     def recruitment_session_view_access_control(username):
+        '''in here all the username = ieee_id '''
         faculty_advisor_access=Access_Render.faculty_advisor_access(username=username)
         eb_access=Access_Render.eb_access(username=username)
         team_co_ordinator_access=Access_Render.team_co_ordinator_access(team_id=MDT_DATA.get_team_id(),username=username)
@@ -177,6 +179,7 @@ class MDT_DATA:
         else:
             return False
     def recruited_member_details_view_access(username):
+        '''in here all the username = ieee_id '''
         faculty_advisor_access=Access_Render.faculty_advisor_access(username=username)
         eb_access=Access_Render.eb_access(username=username)
         team_co_ordinator_access=Access_Render.team_co_ordinator_access(team_id=MDT_DATA.get_team_id(),username=username)
@@ -231,6 +234,7 @@ class MDT_DATA:
             return False
     
     def load_officials_of_MDT():
+        ''''''
         '''This function loads all the officials of mdt and returns a list of their ieee id'''
         load_incharges=Members.objects.filter(team=MDT_DATA.get_team_id(),position=10)
         load_co_ordinators=Members.objects.filter(team=MDT_DATA.get_team_id(),position=9)
@@ -268,6 +272,7 @@ class MDT_DATA:
         Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
     
     def get_officials_access(ieee_id):
+        ''''''
         try:
             ieee_id=str(ieee_id)
             load_member=Members.objects.get(ieee_id=ieee_id)

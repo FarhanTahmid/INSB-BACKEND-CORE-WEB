@@ -17,8 +17,11 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
         return self.group_name    
 
 class Roles_and_Position(models.Model):
+    id=models.IntegerField(null=False,blank=False,default=0,primary_key=True)
     role=models.CharField(max_length=40,null=False,blank=False)
-    panel_member = models.BooleanField(default=False)
+    is_eb_member = models.BooleanField(default=False)
+    is_officer=models.BooleanField(default=False)
+    is_faculty=models.BooleanField(default=False)
     
     class Meta:
         verbose_name='Registered positions'
