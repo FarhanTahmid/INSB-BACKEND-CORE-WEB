@@ -233,6 +233,12 @@ def event_control_homepage(request,event_id):
 #Panel and Team Management
 def teams(request):
     
+    '''
+    Loads all the existing teams in the branch
+    Gives option to add or delete a team
+    '''
+    #load panel lists
+    panels=renderData.Branch.load_ex_com_panel_list()
     user = request.user
 
     '''Checking if user is EB/faculty or not, and the calling the function event_page_access
@@ -244,24 +250,25 @@ def teams(request):
         Loads all the existing teams in the branch
         Gives option to add or delete a team
         '''
-    
-        #load teams from database
-
         if request.method == "POST":
             if request.POST.get('recruitment_session'):
                 team_name = request.POST.get('recruitment_session')
                 new_team = Teams(team_name = team_name)
                 new_team.save()
-
+    
+        #load teams from database
+    
         teams=renderData.Branch.load_teams()
         team_list=[]
         for team in teams:
             team_list.append(team)
         context={
-            'team':team_list
+            'team':team_list,
         }
-        return render(request,'Executive Panels and team.html',context=context)
+        return render(request,'team/teams.html',context=context)
     return render(request,"access_denied2.html")
+
+
 def team_details(request,pk,name):
     
     '''Detailed panel for the team'''
