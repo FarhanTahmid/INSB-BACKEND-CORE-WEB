@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSB-Public Relation Team</title>
+    <link rel="stylesheet" href="{% static 'data_access_table.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+
+        body{
+            font-family: 'Poppins', sans-serif;
+
+        }
+        .navLi{
+            color: whitesmoke;
+        }
+        
+        .navLi:hover{
+            color: #FFC107;
+            transition: .2s;
+        }
+        .navL{
+          color: #FFC107;
+      }
+      .navL:hover{
+          color: #FFC107;
+          transition: .2s;
+        }
+
+        .fb, .twitter, .yt, .insta, .linkedin, .footer_mail{
+            color: whitesmoke;
+        }
+        .fb:hover{
+            color: #1977F3;
+            transition: .2s;
+        }
+        .insta:hover{
+            color: #F60C52;
+            transition: .2s;
+        }
+        .linkedin:hover{
+            color: #0077B5;
+            transition: .2s;
+        }
+        .yt:hover{
+            color: #FE0202;
+            transition: .2s;
+        }
+        .twitter:hover{
+            color: #1DA1F2;
+            transition: .2s;
+        }
+        .footer_mail:hover{
+            color: #FFC936;
+            transition: .2s;
+        }
+        .event{
+            scale: 1;
+           
+        }
+        .event:hover{
+            scale: 1.01;
+            background-color:  rgba(44, 167, 216, .1);
+            transition: .2s;
+        }
+        
+        .raise-error .message{
+          color: #EFD033;
+          font-size: 30px;
+        }
+        div.scroll{
+            display: block;
+            border: 0px solid black;
+            padding: 5px;
+            margin-top: 5px;
+            width: 795px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+        .insb_member_table {
+            margin: auto;
+            border: 1px solid black !important;
+            border-collapse: collapse;
+          }
+        .insb_member_table_head{
+            border: 1px solid black;
+            text-align: center;
+            color: black;
+        }
+        .insb_member_table_data{
+            border: 1px solid black;
+            color: black;
+            text-align: center;
+            padding: auto;
+          }
+
+
+    </style>
+
+</head>
+
+
+<body style="background-image: linear-gradient(90deg, #2280b3, #0b1261);" class="">
+
+    <!-- Section for nav-bar -->
+
+    <nav style="background-color: #050D3A;" class="navbar navbar-expand-lg border border-5 border-dark border-opacity-25">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'users:dashboard' %}">
+                <img class="img-fluid" src="{% static 'logo.gif' %}" alt="IEEE_logo" width="40" height="40">
+            </a> 
+          <!-- <a class="navbar-brand" href="#">IEEE</a> -->
+          <button class="navbar-toggler bg-warning" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+              <a class="nav-link navLi" href="{% url 'users:dashboard' %}">Dashboard</a>
+                <a class="nav-link navL" href="{% url 'public_relation_team:team_homepage' %}">Home</a>
+                <a class="nav-link navLi" href="{% url 'public_relation_team:team_homepage' %}">Send E-mails</a>
+                <a class="nav-link navLi" href="{% url 'public_relation_team:event_control' %}"><small>Create Events</small></a>
+                <a class="nav-link navLi" href="{% url 'public_relation_team:manage_event' %}"><small>Manage Events</small></a>
+                <a class="nav-link navLi" href="{% url 'public_relation_team:manage_team' %}">Manage Teams</a>
+                <a class="nav-link navLi" href=""><small>Data Access</small></a>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div class="justify-content-center">
+        <h2>Current Team Members</h2>
+        <div class="btn-group w-100 justify-content-center justify-content-center m-3" role="group" aria-label="Basic example">
+          <button type="button" data-bs-toggle="modal" data-bs-target="#form_data2"  class="btn btn-success rounded m-1">Add New Member to Public Relation Team</button>
+        </div>
+        </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="table-responsive" data-pattern="priority-columns">
+              <table class="table table-bordered">
+                
+                <thead>
+                  
+                  <tr>
+                    <th data-priority="1" style="text-align:center;">Name</th>
+                    <th style="text-align:center;">IEEE ID</th>
+                    <th style="text-align:center;">NSU ID</th>
+                    <th data-priority="2" style="text-align:center;">Current Position</th>
+                    <th data-priority="3" style="text-align:center;">Email</th>
+                    <th data-priority="3" style="text-align:center;">Contact</th>
+                    
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for member in members %}
+                    <tr>
+                      <td><a style="text-decoration:none;color:yellow;" href="{% url 'membership_development_team:member_details' member.ieee_id %}">{{ member.name  }}</a></td>
+                      <td>{{member.ieee_id}}</td>
+                      <td>{{member.nsu_id}}</td>
+                      <td>{{member.position}}</td>
+                      <td>{{member.email_ieee}}</td>
+                      <td>{{member.contact_no}}</td>
+                      <td>
+                        <form method="POST">
+                          {% csrf_token %}
+                              <input class="btn btn-danger" name="remove_member" type="submit" value="Remove Member">
+                              <input type="hidden" name="remove_ieee_id" value={{member.ieee_id}}>
+                          </form>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+            </div><!--end of .table-responsive-->
+            {% for messages in messages %}
+              <p class="text-white text-center">{{messages}}</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <h2>Access Control For Managing Team</h2>
+    
+    <div class="btn-group w-100 justify-content-center justify-content-center m-3" role="group" aria-label="Basic example">
+      <button type="button" data-bs-toggle="modal" data-bs-target="#form_data"  class="btn btn-warning rounded m-1">Add New Member to Access Managing Team</button>
+    </div>
+    
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="table-responsive" data-pattern="priority-columns">
+            <table class="table table-bordered">
+              
+              <thead>
+                
+                <tr>
+                  <th style="text-align:center;">IEEE ID</th>
+                  <th data-priority="1" style="text-align:center;">Name</th>
+                  <th data-priority="2" style="text-align:center;">Current Position</th>
+                  <th data-priority="3" style="text-align:center;">Permission Criterias</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                {% for data_access in data_access %}
+                <tr>
+                  <td>{{data_access.ieee_id}}</td>
+                  <td>{{data_access.ieee_id.name}}</td>
+                  <td>{{data_access.ieee_id.position}}</td>
+                  
+                  <td>
+                    <form method="POST">
+                        {% csrf_token %}
+                    
+                      
+
+                      {% if data_access.manage_team_access %}
+                      <input type="checkbox" checked="True" class="checkbox" value="manage_team_access" name="manage_team_access">
+                      <label for="manage_team_access">Provide Access
+                      </label><br>
+                      {% else %}
+                      <input type="checkbox" class="checkbox" value="manage_team_access" name="manage_team_access">
+                      <label for="manage_team_access">Provide Access</label><br>
+                      {% endif %}
+
+
+                    </td>
+                  
+                  <td>
+                          <input class="btn btn-warning" name="access_update" type="submit" value="Update">
+                          <input class="btn btn-danger" name="access_remove" type="submit" value="Remove">
+                          <input type="hidden" name="access_ieee_id" value={{data_access.ieee_id}}>
+                      </form>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div><!--end of .table-responsive-->
+          {% for message in messages %}
+            <p class="text-white text-center">{{message}}</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    {% comment %} Modals {% endcomment %}
+    <div
+    class="modal fade"
+    id="form_data"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">
+                    Add Member to Manage Team
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+
+          <div class="search">
+              <br>
+              <label>Search</label>
+              <br>
+              <input onkeyup="searchfunction_data_access()" id="search" class="form-control mr-sm-2 w-100" type="text" placeholder="Search Members" aria-label="Search">
+          </div>
+
+          <form method="POST">
+            {% csrf_token %}
+            <div style="justify-content:center;">
+              <div class="scroll">
+                  <table id="registered_member_table" class="insb_member_table">
+                      <h3 style="text-align:center">Members</h3>
+                      <thead>
+                          <tr id="table_row">
+                              <th class="insb_member_table_head">Name</th>
+                              <th class="insb_member_table_head">IEEE ID</th>
+                              <th class="insb_member_table_head">Team</th>
+                              <th class="insb_member_table_head">Current Position</th>
+                              <th class="insb_member_table_head">E-mail</th>
+                              <th class="insb_member_table_head">Select Member</th>
+                              
+                          </tr>
+                      </thead>
+                  {% comment %} This block is responsible for loading all the members recruited on that session and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
+                  {% for member in insb_members %}
+                      <tr>
+                          <td class="insb_member_table_data">{{ member.name }}</td>
+                          <td class="insb_member_table_data">{{ member.ieee_id }}</td>
+                          <td class="insb_member_table_data">{{ member.team }}</td>
+                          <td class="insb_member_table_data">{{ member.position }}</td>
+                          <td class="insb_member_table_data">{{ member.email_ieee }}</td>
+                          <td class="insb_member_table_data">
+                              <input type="checkbox" id="select" name="member_select" value={{member.ieee_id}}>
+                          </td>
+                      </tr>
+                  {% endfor %}
+                  </table>
+                  <p  id="no_data1" style="text-align:center;"></p>
+              </div>
+          </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    Close
+                </button>
+                <input
+                    type="submit"
+                    class="btn btn-success"
+                    data-bs-dismiss="modal"
+                    name="update_data_access_member"
+                    value="Update"
+                >
+            </div>
+          </form>
+        </div>
+  </div>
+</div>
+
+
+
+{% comment %} Modals {% endcomment %}
+<div
+class="modal fade"
+id="form_data2"
+data-bs-backdrop="static"
+data-bs-keyboard="false"
+tabindex="-1"
+aria-labelledby="staticBackdropLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">
+                Add Member to Public Relation Team
+            </h5>
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+            ></button>
+        </div>
+
+      <div class="search">
+          <br>
+          <label>Search</label>
+          <br>
+          <input onkeyup="searchfunction_add_member()" id="search3" class="form-control mr-sm-2 w-100" type="text" placeholder="Search Members" aria-label="Search">
+          <br>
+      
+        </div>
+
+      <form method="POST">
+        {% csrf_token %}
+        <label style="margin-left:5px;">Select Position</label>
+                  <select id="position" name="position">
+                      {% for position in positions %}
+                          <option value={{position.id}}>{{ position.role }}</option>
+                      {% endfor %} 
+                  </select>
+        <br>
+        <div style="justify-content:center;">
+          <div class="scroll">
+              <table id="registered_member_table3" class="insb_member_table2">
+                  <h3 style="text-align:center">Members</h3>
+                  <thead>
+                      <tr id="table_row2">
+                          <th class="insb_member_table_head">Name</th>
+                          <th class="insb_member_table_head">IEEE ID</th>
+                          <th class="insb_member_table_head">Team</th>
+                          <th class="insb_member_table_head">Current Position</th>
+                          <th class="insb_member_table_head">E-mail</th>
+                          <th class="insb_member_table_head">Select Member</th>
+                          
+                      </tr>
+                  </thead>
+              {% comment %} This block is responsible for loading all the members recruited on that session and passes their id to the url as well as their data to the recruitee_details function {% endcomment %}
+              {% for member in insb_members %}
+                  <tr id="table_row2">
+                      <td class="insb_member_table_data"><a href="{% url 'membership_development_team:member_details' member.ieee_id %}">{{ member.name }}</a></td>                        <td class="insb_member_table_data">{{ member.ieee_id }}</td>
+                      <td class="insb_member_table_data">{{ member.team }}</td>
+                      <td class="insb_member_table_data">{{ member.position }}</td>
+                      <td class="insb_member_table_data">{{ member.email_ieee }}</td>
+                      <td class="insb_member_table_data">
+                          <input type="checkbox" id="select" name="member_select1" value={{member.ieee_id}}>
+                      </td>
+                  </tr>
+              {% endfor %}
+              </table>
+              <p  id="no_data3" style="text-align:center;"></p>
+          </div>
+      </div>
+        <div class="modal-footer">
+            <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+            >
+                Close
+            </button>
+            <input
+                type="submit"
+                class="btn btn-success"
+                data-bs-dismiss="modal"
+                name="add_member_to_team"
+                value="Add"
+            >
+        </div>
+      </form>
+    </div>
+</div>
+</div>
+
+      
+      
+
+      <!-- footer start -->
+    <footer class="py-3 text-white text-center">
+        <small>&copy; All Rights Reserved by IEEE NSU STUDENT BRANCH.</small>
+    </footer>
+    <!-- footer end -->
+
+       
+
+   
+
+
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+    <script src="{% static 'data_access.js' %}"></script>
+</body>
+</html>

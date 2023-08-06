@@ -286,7 +286,7 @@ class Branch:
             user_id = user.username
             member = Members.objects.get(ieee_id=int(user_id))
             roles_and_positions = Roles_and_Position.objects.get(id = member.position.id)
-            if roles_and_positions.panel_member:
+            if roles_and_positions.is_eb_member:
                 return True
             else:
                 return False
