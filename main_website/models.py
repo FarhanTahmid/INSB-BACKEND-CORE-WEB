@@ -3,6 +3,8 @@ from django.core.files.storage import FileSystemStorage
 from port.models import Chapters_Society_and_Affinity_Groups
 # Create your models here.
 
+# Table for Homepage
+
 #Table for Research Papers
 class Research_Papers(models.Model):
     title = models.CharField(null=False,blank=False,max_length=500)
