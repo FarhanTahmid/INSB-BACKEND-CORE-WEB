@@ -109,7 +109,7 @@
                         <nav class="gdlr-navigation" id="gdlr-main-navigation">
                             <ul id="menu-main-menu-1" class="sf-menu gdlr-main-menu">
                                 <li class="menu-item menu-item-home current-menu-item  gdlr-normal-menu"><a
-                                        href="index.html">Home</a></li>
+                                        href="{% url 'main_website:homepage' %}">Home</a></li>
                                 <li class="menu-item menu-item-has-children gdlr-normal-menu"><a href="#"
                                         class="sf-with-ul-pre">Activities</a>
                                     <ul class="sub-menu">
@@ -190,10 +190,10 @@
 
                                     <!-- MasterSlider Main -->
                                     <div id="MS5bab48b0b8b8a" class="master-slider ms-skin-default">
-
+                                        {% comment %} Pictures here {% endcomment %}
                                         <div class="ms-slide" data-delay="7" data-fill-mode="fill">
-                                            <img src="masterslider/public/assets/css/blank.gif" alt="" title=""
-                                                data-src="upload/slider-1.jpg" />
+                                            <img src="{% static 'masterslider/public/assets/css/blank.gif' %}" alt="" title=""
+                                                data-src="{% static 'upload/slider-1.jpg'%}" />
 
                                             <div class="ms-layer  msp-cn-11-1"
                                                 style="font-size: 30px; margin-left: 15%;"
@@ -226,8 +226,8 @@
 
                                         </div>
                                         <div class="ms-slide" data-delay="7" data-fill-mode="fill">
-                                            <img src="masterslider/public/assets/css/blank.gif" alt="" title=""
-                                                data-src="upload/slider-2.jpg" />
+                                            <img src="{% static 'masterslider/public/assets/css/blank.gif' %}" alt="" title=""
+                                                data-src="{% static 'upload/slider-2.jpg' %}" />
 
                                             <div class="ms-layer  msp-cn-11-1"
                                                 style="font-size: 30px; margin-left: 15%;"
@@ -261,8 +261,8 @@
 
                                         </div>
                                         <div class="ms-slide" data-delay="7" data-fill-mode="fill">
-                                            <img src="masterslider/public/assets/css/blank.gif" alt="" title=""
-                                                data-src="upload/slider-2.jpg" />
+                                            <img src="{% static 'masterslider/public/assets/css/blank.gif' %}" alt="" title=""
+                                                data-src="{% static 'upload/slider-2.jpg' %}" />
 
                                             <div class="ms-layer  msp-cn-11-1"
                                                 style="font-size: 30px; margin-left: 15%;"
@@ -321,7 +321,7 @@
                                 <div class="four columns">
                                     <div class="gdlr-ux column-service-ux">
                                         <div class="gdlr-item gdlr-column-service-item gdlr-type-1">
-                                            <div class="column-service-image"><img src="upload/icon-service-1.png"
+                                            <div class="column-service-image"><img src="{% static 'upload/icon-service-1.png' %}"
                                                     alt="" width="70" height="70" /></div>
                                             <div class="column-service-content-wrapper">
                                                 <h3 class="column-service-title">LEARNING</h3>
@@ -338,7 +338,7 @@
                                 <div class="four columns">
                                     <div class="gdlr-ux column-service-ux">
                                         <div class="gdlr-item gdlr-column-service-item gdlr-type-1">
-                                            <div class="column-service-image"><img src="upload/icon-service-2.png"
+                                            <div class="column-service-image"><img src="{% static 'upload/icon-service-2.png'%}"
                                                     alt="" width="70" height="70" /></div>
                                             <div class="column-service-content-wrapper">
                                                 <h3 class="column-service-title">NETWORKING</h3>
@@ -355,7 +355,7 @@
                                 <div class="four columns">
                                     <div class="gdlr-ux column-service-ux">
                                         <div class="gdlr-item gdlr-column-service-item gdlr-type-1">
-                                            <div class="column-service-image"><img src="upload/icon-service-4.png"
+                                            <div class="column-service-image"><img src="{% static 'upload/icon-service-4.png'%}"
                                                     alt="" width="70" height="70" /></div>
                                             <div class="column-service-content-wrapper">
                                                 <h3 class="column-service-title">COMPETITIONS</h3>
@@ -372,7 +372,7 @@
                                 <div class="four columns">
                                     <div class="gdlr-ux column-service-ux">
                                         <div class="gdlr-item gdlr-column-service-item gdlr-type-1">
-                                            <div class="column-service-image"><img src="upload/icon-service-3.png"
+                                            <div class="column-service-image"><img src="{% static 'upload/icon-service-3.png'%}"
                                                     alt="" width="70" height="70" /></div>
                                             <div class="column-service-content-wrapper">
                                                 <h3 class="column-service-title">SKILL BUILDING</h3>
@@ -388,7 +388,7 @@
                                 <div class="four columns">
                                     <div class="gdlr-ux column-service-ux">
                                         <div class="gdlr-item gdlr-column-service-item gdlr-type-1">
-                                            <div class="column-service-image"><img src="upload/icon-service-5.png"
+                                            <div class="column-service-image"><img src="{% static 'upload/icon-service-5.png'%}"
                                                     alt="" width="70" height="70" /></div>
                                             <div class="column-service-content-wrapper">
                                                 <h3 class="column-service-title">EVENTS</h3>
@@ -404,7 +404,7 @@
                                 <div class="four columns">
                                     <div class="gdlr-ux column-service-ux">
                                         <div class="gdlr-item gdlr-column-service-item gdlr-type-1">
-                                            <div class="column-service-image"><img src="upload/icon-service-6.png"
+                                            <div class="column-service-image"><img src="{% static 'upload/icon-service-6.png' %}"
                                                     alt="" width="70" height="70" /></div>
                                             <div class="column-service-content-wrapper">
                                                 <h3 class="column-service-title">ACHIEVEMENTS</h3>
@@ -428,34 +428,34 @@
                     <section id="content-section-8">
                         <div class="gdlr-parallax-wrapper gdlr-background-image gdlr-show-all no-skin"
                             id="gdlr-parallax-wrapper-2" data-bgspeed="0.1"
-                            style="background-image: url('upload/wood-skill-bg.jpg'); padding-top: 100px; padding-bottom: 70px; ">
+                            style="background-image: url('{% static 'upload/wood-skill-bg.jpg' %}'); padding-top: 100px; padding-bottom: 70px; ">
                             <div class="container">
                                 <div class="three columns">
                                     <div class="gdlr-skill-item-wrapper gdlr-skin-content gdlr-item gdlr-style-1">
-                                        <div class="gdlr-skill-item-title" style="color: #ffffff;">500</div>
+                                        <div class="gdlr-skill-item-title" style="color: #FFC72C;">500</div>
                                         <div class="gdlr-skill-item-divider" style="border-color: #ffffff;"></div>
-                                        <div class="gdlr-skill-item-caption" style="color: #ffffff;">Members</div>
+                                        <div class="gdlr-skill-item-caption" style="color: #FFC72C;">Members</div>
                                     </div>
                                 </div>
                                 <div class="three columns">
                                     <div class="gdlr-skill-item-wrapper gdlr-skin-content gdlr-item gdlr-style-1">
-                                        <div class="gdlr-skill-item-title" style="color: #ffffff;">4</div>
+                                        <div class="gdlr-skill-item-title" style="color: #FFC72C;">4</div>
                                         <div class="gdlr-skill-item-divider" style="border-color: #ffffff;"></div>
-                                        <div class="gdlr-skill-item-caption" style="color: #ffffff;">Chapters & AG</div>
+                                        <div class="gdlr-skill-item-caption" style="color: #FFC72C;">Chapters & AG</div>
                                     </div>
                                 </div>
                                 <div class="three columns">
                                     <div class="gdlr-skill-item-wrapper gdlr-skin-content gdlr-item gdlr-style-1">
-                                        <div class="gdlr-skill-item-title" style="color: #ffffff;">200</div>
+                                        <div class="gdlr-skill-item-title" style="color: #FFC72C;">200</div>
                                         <div class="gdlr-skill-item-divider" style="border-color: #ffffff;"></div>
-                                        <div class="gdlr-skill-item-caption" style="color: #ffffff;">Events</div>
+                                        <div class="gdlr-skill-item-caption" style="color: #FFC72C;">Events</div>
                                     </div>
                                 </div>
                                 <div class="three columns">
                                     <div class="gdlr-skill-item-wrapper gdlr-skin-content gdlr-item gdlr-style-1">
-                                        <div class="gdlr-skill-item-title" style="color: #ffffff;">50</div>
+                                        <div class="gdlr-skill-item-title" style="color: #FFC72C;">50</div>
                                         <div class="gdlr-skill-item-divider" style="border-color: #ffffff;"></div>
-                                        <div class="gdlr-skill-item-caption" style="color: #ffffff;">Achievements</div>
+                                        <div class="gdlr-skill-item-caption" style="color: #FFC72C;">Achievements</div>
                                     </div>
                                 </div>
                                 <div class="clear"></div>
@@ -470,6 +470,7 @@
                                 <div class="gdlr-item-title-container container">
                                     <div class="gdlr-item-title-head">
                                         <h3 class="gdlr-item-title gdlr-skin-title gdlr-skin-border">Featured Events
+                                            {% comment %} All event page link goes here {% endcomment %}
                                         </h3><a class="gdlr-item-title-link" href="#">View All Events</a>
                                     </div>
                                 </div>
@@ -478,147 +479,17 @@
                                 <div class="portfolio-item-holder gdlr-item-no-space gdlr-portfolio-column-3">
                                     <div class="gdlr-isotope" data-type="portfolio" data-layout="fitRows">
                                         <div class="clear"></div>
+                                        {% comment %} Event list from backend {% endcomment %}
                                         <div class="four columns">
                                             <div class="gdlr-item gdlr-portfolio-item gdlr-modern-portfolio">
                                                 <div class="gdlr-ux gdlr-modern-portfolio-ux">
                                                     <div class="portfolio-thumbnail gdlr-image"><img
-                                                            src="upload/SPAC-2022.png" alt="" width="700"
+                                                            src="{% static 'upload/SPAC-2022.png' %}" alt="" width="700"
                                                             height="400" /><span class="portfolio-overlay">&nbsp;</span>
                                                         <div class="portfolio-overlay-content">
-                                                            <h3 class="portfolio-title"><a href="#">SPAC 2022</a></h3>
-                                                            
+                                                            {% comment %} Implement event links here {% endcomment %}
+                                                            <h3 class="portfolio-title"><a href="#">SPAC 2022</a></h3> 
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="four columns">
-                                            <div class="gdlr-item gdlr-portfolio-item gdlr-modern-portfolio">
-                                                <div class="gdlr-ux gdlr-modern-portfolio-ux">
-                                                    <div class="portfolio-thumbnail gdlr-image"><img
-                                                            src="upload/shutterstock_179829281-700x400.jpg" alt=""
-                                                            width="700" height="400" /><span
-                                                            class="portfolio-overlay">&nbsp;</span>
-                                                        <div class="portfolio-overlay-content">
-                                                            <h3 class="portfolio-title"><a href="#">Mixed Plywood</a>
-                                                            </h3>
-                                                            <div class="gdlr-portfolio-info">
-                                                                <div class="portfolio-info portfolio-tag"><span
-                                                                        class="info-head gdlr-title">Tags </span><a
-                                                                        href="#" rel="tag">Furniture</a><span
-                                                                        class="sep">,</span> <a href="#"
-                                                                        rel="tag">Works</a></div>
-                                                                <div class="clear"></div>
-                                                            </div>
-                                                        </div><a class="portfolio-overlay-icon" href="#"><span
-                                                                class="portfolio-icon"><i
-                                                                    class="fa fa-link"></i></span></a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="four columns">
-                                            <div class="gdlr-item gdlr-portfolio-item gdlr-modern-portfolio">
-                                                <div class="gdlr-ux gdlr-modern-portfolio-ux">
-                                                    <div class="portfolio-thumbnail gdlr-image"><img
-                                                            src="upload/shutterstock_166099589-700x400.jpg" alt=""
-                                                            width="700" height="400" /><span
-                                                            class="portfolio-overlay">&nbsp;</span>
-                                                        <div class="portfolio-overlay-content">
-                                                            <h3 class="portfolio-title"><a
-                                                                    href="https://vimeo.com/35208721"
-                                                                    data-rel="fancybox" data-fancybox-type="iframe">Wood
-                                                                    Flooring</a></h3>
-                                                            <div class="gdlr-portfolio-info">
-                                                                <div class="portfolio-info portfolio-tag"><span
-                                                                        class="info-head gdlr-title">Tags </span><a
-                                                                        href="#" rel="tag">Hand Craft</a><span
-                                                                        class="sep">,</span> <a href="#"
-                                                                        rel="tag">Wooden</a></div>
-                                                                <div class="clear"></div>
-                                                            </div>
-                                                        </div><a class="portfolio-overlay-icon"
-                                                            href="https://vimeo.com/35208721" data-rel="fancybox"
-                                                            data-fancybox-type="iframe"><span class="portfolio-icon"><i
-                                                                    class="fa fa-film"></i></span></a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="clear"></div>
-                                        <div class="four columns">
-                                            <div class="gdlr-item gdlr-portfolio-item gdlr-modern-portfolio">
-                                                <div class="gdlr-ux gdlr-modern-portfolio-ux">
-                                                    <div class="portfolio-thumbnail gdlr-image"><img
-                                                            src="upload/photodune-6191983-kitchen-m-700x400.jpg" alt=""
-                                                            width="700" height="400" /><span
-                                                            class="portfolio-overlay">&nbsp;</span>
-                                                        <div class="portfolio-overlay-content">
-                                                            <h3 class="portfolio-title"><a href="#">Built in Living
-                                                                    Room</a></h3>
-                                                            <div class="gdlr-portfolio-info">
-                                                                <div class="portfolio-info portfolio-tag"><span
-                                                                        class="info-head gdlr-title">Tags </span><a
-                                                                        href="#" rel="tag">Carpenter</a><span
-                                                                        class="sep">,</span> <a href="#" rel="tag">Wax
-                                                                        Finish</a></div>
-                                                                <div class="clear"></div>
-                                                            </div>
-                                                        </div><a class="portfolio-overlay-icon" href="#"><span
-                                                                class="portfolio-icon"><i
-                                                                    class="fa fa-link"></i></span></a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="four columns">
-                                            <div class="gdlr-item gdlr-portfolio-item gdlr-modern-portfolio">
-                                                <div class="gdlr-ux gdlr-modern-portfolio-ux">
-                                                    <div class="portfolio-thumbnail gdlr-image"><img
-                                                            src="upload/shutterstock_21271114-700x400.jpg" alt=""
-                                                            width="700" height="400" /><span
-                                                            class="portfolio-overlay">&nbsp;</span>
-                                                        <div class="portfolio-overlay-content">
-                                                            <h3 class="portfolio-title"><a href="#">Video inside this
-                                                                    post</a></h3>
-                                                            <div class="gdlr-portfolio-info">
-                                                                <div class="portfolio-info portfolio-tag"><span
-                                                                        class="info-head gdlr-title">Tags </span><a
-                                                                        href="#" rel="tag">Carpenter</a><span
-                                                                        class="sep">,</span> <a href="#"
-                                                                        rel="tag">Works</a></div>
-                                                                <div class="clear"></div>
-                                                            </div>
-                                                        </div><a class="portfolio-overlay-icon" href="#"><span
-                                                                class="portfolio-icon"><i
-                                                                    class="fa fa-link"></i></span></a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="four columns">
-                                            <div class="gdlr-item gdlr-portfolio-item gdlr-modern-portfolio">
-                                                <div class="gdlr-ux gdlr-modern-portfolio-ux">
-                                                    <div class="portfolio-thumbnail gdlr-image"><img
-                                                            src="upload/shutterstock_125357699-700x400.jpg" alt=""
-                                                            width="700" height="400" /><span
-                                                            class="portfolio-overlay">&nbsp;</span>
-                                                        <div class="portfolio-overlay-content">
-                                                            <h3 class="portfolio-title"><a
-                                                                    href="upload/shutterstock_125357699.jpg"
-                                                                    data-rel="fancybox">Flooring Design</a></h3>
-                                                            <div class="gdlr-portfolio-info">
-                                                                <div class="portfolio-info portfolio-tag"><span
-                                                                        class="info-head gdlr-title">Tags </span><a
-                                                                        href="#" rel="tag">Finishing</a><span
-                                                                        class="sep">,</span> <a href="#"
-                                                                        rel="tag">Flooring</a></div>
-                                                                <div class="clear"></div>
-                                                            </div>
-                                                        </div><a class="portfolio-overlay-icon"
-                                                            href="upload/shutterstock_125357699.jpg"
-                                                            data-rel="fancybox"><span class="portfolio-icon"><i
-                                                                    class="fa fa-search"></i></span></a>
                                                     </div>
                                                 </div>
                                             </div>
