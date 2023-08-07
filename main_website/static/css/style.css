@@ -1411,6 +1411,7 @@ body.search .page-not-found-block {
 	margin-top: 8px;
 	font-size: 14px;
 	display: block;
+	
 }
 
 .gdlr-item-title-wrapper.gdlr-center {
@@ -1445,6 +1446,7 @@ body.search .page-not-found-block {
 	font-style: normal;
 	text-transform: uppercase;
 	letter-spacing: 1px;
+	color: #FFC72C;
 }
 
 .gdlr-title-item {
