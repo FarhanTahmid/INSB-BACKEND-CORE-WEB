@@ -7,8 +7,8 @@ from django.db.models import Q
 
 
 # Create your views here.
-def index(request):
-    return HttpResponse("IEEE main Website")
+def homepage(request):
+    return render(request,"homepage.html")
 
 def All_Events(request):
 

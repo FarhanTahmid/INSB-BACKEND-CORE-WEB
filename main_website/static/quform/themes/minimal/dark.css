@@ -1,0 +1,309 @@
+/*
+ * Theme Name: Quform Minimal Dark
+ * Description: A minimal theme with a dark design.
+ * Version: 1.0 (For Quform PHP)
+ * Author: ThemeCatcher
+ * Author URI: http://www.themecatcher.net
+ */
+
+/*****************************************************
+1: Form heading and description
+******************************************************/
+/*Set global fonts*/
+.quform-theme-minimal-dark {
+	color: #fff;
+}
+/*Form heading*/
+.quform-theme-minimal-dark h3.quform-title {
+	color: #fff;
+}
+/*Form description*/
+.quform-theme-minimal-dark p.quform-description {
+	color: #eee;
+}
+
+/*****************************************************
+2: Elements and labels
+******************************************************/
+
+/*Required - this is the text that is used to indicate a required field*/
+.quform-theme-minimal-dark .quform-element label span.quform-required {
+	color: #cc0101;
+}
+/*Element description*/
+.quform-theme-minimal-dark .quform-element p.quform-description {
+	color: #eee;
+}
+/*Default state input, selects and textareas*/
+.quform-theme-minimal-dark .quform-elements .quform-element-text input,
+.quform-theme-minimal-dark .quform-elements .quform-element-captcha input,
+.quform-theme-minimal-dark .quform-elements .quform-element-password input,
+.quform-theme-minimal-dark .quform-elements .quform-element select,
+.quform-theme-minimal-dark .quform-elements .quform-element textarea {
+	color: #bbb;
+	border: solid 1px #000;
+	padding: 2px;
+	background: #161616;
+}
+.quform-theme-minimal-dark .quform-elements .quform-element select {padding: 1px;}
+/*Fix Chrome select (no background image sorry!)*/
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	.quform-theme-minimal-dark .quform-elements .quform-element select {background: #161616;}
+}
+/*Hover element*/
+.quform-theme-minimal-dark .quform-elements .quform-element-text input:hover,
+.quform-theme-minimal-dark .quform-elements .quform-element-captcha input:hover,
+.quform-theme-minimal-dark .quform-elements .quform-element-password input:hover,
+.quform-theme-minimal-dark .quform-elements .quform-element select:hover,
+.quform-theme-minimal-dark .quform-elements .quform-element textarea:hover {
+	border: solid 1px #0a0a0a;
+}
+/*Active element*/
+.quform-theme-minimal-dark .quform-elements .quform-element-text input:active,
+.quform-theme-minimal-dark .quform-elements .quform-element-captcha input:active,
+.quform-theme-minimal-dark .quform-elements .quform-element-password input:active,
+.quform-theme-minimal-dark .quform-elements .quform-element select:active,
+.quform-theme-minimal-dark .quform-elements .quform-element textarea:active {
+}
+/*Focused element*/
+.quform-theme-minimal-dark .quform-elements .quform-element-text input:focus,
+.quform-theme-minimal-dark .quform-elements .quform-element-captcha input:focus,
+.quform-theme-minimal-dark .quform-elements .quform-element-password input:focus,
+.quform-theme-minimal-dark .quform-elements .quform-element select:focus,
+.quform-theme-minimal-dark .quform-elements .quform-element textarea:focus {
+	color: #fff;
+	background: #1E1E1E;
+	border: solid 1px #000;
+}
+/*Fix Chrome select (no background image sorry!)*/
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	.quform-theme-minimal-dark .quform-elements .quform-element select:focus {background: #1E1E1E;}
+}
+
+/* Default Label*/
+.quform-theme-minimal-dark .quform-element > .quform-spacer > label {
+	color: #fff;
+}
+/*Label for checkboxes and radio buttons*/
+.quform-theme-minimal-dark .quform-options .quform-option label {
+	color: #eee;
+}
+.quform-theme-minimal-dark select option {
+	color: #eee;
+	padding-right: 10px;
+}
+.quform-theme-minimal-dark select[multiple="multiple"] option {
+	padding: 0 5px;
+}
+/*Tooltip icon*/
+.quform-theme-minimal-dark .quform-tooltip-icon {
+	background: url(images/help-icon-dark.png) no-repeat 0 0;
+}
+/*****************************************************
+4: Captcha
+******************************************************/
+
+/*Refresh captcha icon background*/
+.quform-theme-minimal-dark .quform-captcha-inner {
+	margin-top: 3px;
+	border: 1px solid #000;
+}
+/*****************************************************
+5: Element groups
+******************************************************/
+
+/*Group title & description wrap plain*/
+.quform-theme-minimal-dark .quform-group-style-plain > .quform-group-elements .quform-group-title-description-wrap {
+	margin-bottom: 15px;
+	padding-bottom: 5px;
+}
+/*Group title plain*/
+.quform-theme-minimal-dark .quform-group-style-plain > .quform-group-elements .quform-group-title {
+	color: #fff;
+	padding: 5px 0 0;
+	font-weight: normal;
+}
+/*Group description plain*/
+.quform-theme-minimal-dark .quform-group-style-plain > .quform-group-elements p.quform-group-description {
+	color: #eee;
+	padding: 0;
+	font-size: 11px;
+}
+/*IE fix for negative margins used below*/
+.quform-theme-minimal-dark .quform-group-style-bordered > .quform-group-elements {min-width: 1px;}
+/*Group title & description wrap bordered*/
+.quform-theme-minimal-dark .quform-group-style-bordered > .quform-group-elements .quform-group-title-description-wrap {
+	margin: -10px -10px 10px -10px;
+	border-bottom: solid 1px #000;
+	background: #292929;
+	padding-bottom: 5px;
+}
+/*Group title bordered*/
+.quform-theme-minimal-dark .quform-group-style-bordered > .quform-group-elements .quform-group-title {
+	color: #fff;
+	padding: 5px 10px 0;
+	font-size: 14px;
+	margin: 0;
+}
+/*Group description bordered*/
+.quform-theme-minimal-dark .quform-group-style-bordered > .quform-group-elements p.quform-group-description {
+	color: #eee;
+	font-size: 11px;
+	padding: 2px 10px 0;
+	margin: 0;
+}
+/*Bordered style group*/
+.quform-theme-minimal-dark .quform-group-style-bordered > .quform-group-elements {
+	border: solid 1px #000;
+	background: #292929;
+}
+.quform-theme-minimal-dark .quform-group-style-bordered > .quform-group-row {
+}
+/*One row inside a group*/
+.quform-theme-minimal-dark .quform-group-style-bordered > .quform-group-elements .quform-group-row {
+	border-bottom: 1px solid #000;
+	margin-bottom: 10px;
+}
+.quform-theme-minimal-dark .quform-group-style-plain > .quform-group-elements .quform-group-row {
+	background: none;
+	margin-bottom: 0;
+}
+.quform-theme-minimal-dark .quform-group-style-bordered .quform-group-row:last-child {
+	background: none;
+	margin-bottom: 0;
+	border-bottom: none;
+}
+
+/*****************************************************
+6: Submit button and related
+******************************************************/
+/*Note: Submit button is designed so you can use rounded cornered image backgrounds that can be fluid size*/
+.quform-theme-minimal-dark .quform-submit button {border: 1px outset #ccc;} /* optional - IE7 fix */
+/*Submit button wrap*//*You might want to use float:right here. Change loading icon wrap below too*/
+.quform-theme-minimal-dark .quform-submit-inner {}
+/*Submit button hide*/
+.quform-theme-minimal-dark .quform-submit button {
+	border: none;
+	background: none;
+	text-align: center;
+	width: auto;
+	overflow: visible;
+	white-space: nowrap;
+	padding: 0;
+	margin: 0;
+	height: auto;
+	cursor: pointer;
+	max-width: 100%;
+}
+/*Submit button default state*/
+.quform-theme-minimal-dark .quform-submit button span {
+	color: #333;
+}
+/*Default*/
+.quform-theme-minimal-dark .quform-submit button span {
+	background: #afafaf; /*Left image*/
+}
+/*Hover*/
+.quform-theme-minimal-dark .quform-submit button:hover span {
+	background: #afafaf; /*Left image*/
+}
+/*Active*/
+.quform-theme-minimal-dark .quform-submit button:active span {
+	background: #c8c8c8; /*Left image*/
+}
+/*Default*/
+.quform-theme-minimal-dark .quform-submit button em {
+	background: transparent;/*right image*/
+}
+/*Hover*/
+.quform-theme-minimal-dark .quform-submit button:hover em {
+	background: transparent;/*right image*/
+	color: #000;
+}
+/*Active*/
+.quform-theme-minimal-dark .quform-submit button:active em {
+	background: transparent;/*right image*/
+	color: #000;
+}
+/*Loading the submit*//*You will want this float:right if the button is right*/
+.quform-theme-minimal-dark .quform-loading-wrap {margin-top: 9px;}
+.quform-theme-minimal-dark .quform-button-fat .quform-loading-wrap {margin-top: 18px;}
+/*Loading gif image*/
+.quform-theme-minimal-dark .quform-loading-wrap .quform-loading {
+	background: transparent url(images/loading-dark.gif) no-repeat center center;
+}
+/*****************************************************
+7: Messages for user
+******************************************************/
+
+/*Errors*/
+.quform-theme-minimal-dark .quform-errors > .quform-error {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	text-shadow: 1px 1px 0 #f3d6d4;
+	border: 1px solid #000;
+}
+/*File upload errors*/
+.quform-theme-minimal-dark .quform-queue-errors-list > .quform-queue-error {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	border: 1px solid #000;
+	text-shadow: 1px 1px 0 #f3d6d4;
+}
+
+/*Success message*/
+.quform-theme-minimal-dark .quform-success-message {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	text-shadow: 1px 1px 0 #e0fdc3;
+}
+/*quform referal link*/
+.quform-theme-minimal-dark .quform-referral-link a:link,
+.quform-theme-minimal-dark .quform-referral-link a:visited {
+	color: #0F83CA;
+}
+.quform-theme-minimal-dark .quform-referral-link a:hover {
+	color: #fff;
+}
+/*****************************************************
+8: Quform PHP specific
+******************************************************/
+/*Dark close button*/
+.quform-theme-minimal-dark.quform-outer a.quform-cancel-button {
+	background: url(images/close-dark.png) no-repeat 0 0;
+}
+
+/*****************************************************
+9: Responsive
+******************************************************/
+/* Smaller than standard 960 (devices and browsers) */
+@media only screen and (max-width: 959px) {
+
+}
+
+/* Tablet Portrait size to standard 960 (devices and browsers) */
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+
+}
+
+/* Tablet Portrait and below (devices and browser) */
+@media only screen and (max-width: 768px) {
+	/* Make radio and checkboxes a bit easier to select on touch devices */
+	.quform-theme-minimal-dark .quform-options .quform-option {
+		border: solid 1px #000;
+		background: #161616;
+	}
+}
+
+/* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+
+}
+
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
+@media only screen and (max-width: 479px) {
+
+}
