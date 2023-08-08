@@ -296,6 +296,9 @@ def manage_team(request):
         return render(request,"public_relation_team/manage_team.html",context=context)
     else:
         return render(request,'public_relation_team/access_denied.html')
-
+    
+@login_required
+def manageWebsiteHome(request):
+    return render(request,"public_relation_team/manage_website/manage_website_home.html")
 
     

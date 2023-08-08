@@ -15,7 +15,7 @@
             font-family: 'Poppins', sans-serif;
         }
         body{
-            background-image: linear-gradient(90deg, #67b8e4, #060c4d)
+            {% comment %} background-image: linear-gradient(90deg, #67b8e4, #060c4d) {% endcomment %}
         }
         header{
             background-color: #050D3A;
@@ -24,7 +24,7 @@
             list-style: none;
         }
         .navbar a{
-            color: #fff;
+            color: #ffff;
             text-decoration: none;
         }
         .navbar{
@@ -40,7 +40,7 @@
         }
         .nav-link{
             transition: 0.3s ease;
-        }
+        }        
         .nav-link:hover{
             color: rgb(255, 183, 0);
         }
@@ -85,6 +85,7 @@
             .nav-item{
                 margin: 16px 0;
             }
+            
             .nav-menu.active{
                 top: 70px;
             }
@@ -102,44 +103,14 @@
 <body>
     <header>
         <nav class="navbar">
-            <a href="{% url 'main_website:homepage' %}" class="nav-logo"><img src="{% static 'main_website/static/logos/logo.gif' %}"  alt="IEEE_logo" width="40" height="40"></a>
+            <a href="{% url 'main_website:homepage' %}" class="nav-logo"><img src="{% static 'logos/logo.gif' %}"  alt="IEEE_logo" width="40" height="40"></a>
 
             <ul class="nav-menu">
                 <li class="nav-item">
-                    <a href="#" class="nav-link">Home</a>
+                    <a href="#" class="nav-link">Team Home</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">Central Branch</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">Event & Management</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">Logistics</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">Content</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">Promotion</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">Membership Development</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">Website Development</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">Media</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">Graphics</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">Finance</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">Public Relation</a>
+                    <a href="#" class="nav-link" style="color: rgb(255, 183, 0);">Manage Website Home</a>
                 </li>
             </ul>
             <div class="hamburger">
