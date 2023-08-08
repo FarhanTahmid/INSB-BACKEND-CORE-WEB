@@ -50,10 +50,10 @@ def super_event_creation(request):
             end_date = request.POST.get('final_date')
             saving_data = SuperEvents(super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date,end_date=end_date)
             saving_data.save()
-            return redirect('public_relation_team:event_control')
+            return redirect('public_relation_team:manage_event')
         
         elif (request.POST.get('cancel')):
-            return redirect('public_relation_team:event_control')
+            return redirect('public_relation_team:manage_event')
         
     return render(request,"public_relation_team/event/super_event_creation_form.html")
 @login_required
@@ -98,7 +98,7 @@ def event_creation_form_page1(request):
             
                 
         elif(request.POST.get('cancel')):
-            return redirect('public_relation_team:event_control')
+            return redirect('public_relation_team:manage_event')
     return render(request,'public_relation_team/event/event_creation_form1.html',context)
 
 @login_required
@@ -122,7 +122,7 @@ def event_creation_form_page2(request,event_id):
                 messages.info(request,"Database Error Occured! Please try again later.")
 
         elif(request.POST.get('cancel')):
-            return redirect('public_relation_team:event_control')
+            return redirect('public_relation_team:manage_event')
 
 
     return render(request,'public_relation_team/event/event_creation_form2.html',context)
@@ -150,7 +150,7 @@ def event_creation_form_page3(request,event_id):
             if(update_event_details==False):
                 messages.info(request, "An error Occured! Please Try again!")
             else:
-                return redirect('public_relation_team:event_control')
+                return redirect('public_relation_team:manage_event')
 
     return render(request,'public_relation_team/event/event_creation_form3.html',context)
 
