@@ -9,7 +9,7 @@ class HomepageBannerPictureWithText(models.Model):
     first_layer_text=models.CharField(null=False,blank=False,default="FOCUSING LIMELIGHT ON",max_length=50)
     second_layer_text=models.CharField(null=False,blank=False,default="THE",max_length=20)
     second_layer_text_colored=models.CharField(null=False,blank=False,default="MASTERMINDS",max_length=20)
-    third_layer_text=models.CharField(null=False,blank=False,max_length=500)
+    third_layer_text=models.TextField(null=False,blank=False,max_length=500)
     
     class Meta:
         verbose_name='Homepage Banner Picture With Texts'

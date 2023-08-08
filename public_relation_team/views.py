@@ -12,7 +12,7 @@ from system_administration.render_access import Access_Render
 from users.models import Members
 from port.models import Roles_and_Position
 from .models import Manage_Team
-
+from main_website.forms import HomePageBannerWithTextForm
 
 # Create your views here.
 
@@ -299,6 +299,9 @@ def manage_team(request):
     
 @login_required
 def manageWebsiteHome(request):
-    return render(request,"public_relation_team/manage_website/manage_website_home.html")
+    context={
+        'form':HomePageBannerWithTextForm(),
+    }
+    return render(request,"public_relation_team/manage_website/manage_website_home.html",context)
 
     

@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Public Relations Team - IEEE NSU SB</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
@@ -121,7 +122,11 @@
         </nav>
     </header>
     <div class="container">
-        <!-- body -->
+        <form method = "post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Add</button>
+        </form>
     </div>
     <script>
         const hamburger = document.querySelector(".hamburger");
