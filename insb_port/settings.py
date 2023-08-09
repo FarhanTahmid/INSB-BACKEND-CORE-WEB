@@ -55,7 +55,8 @@ INSTALLED_APPS = [
     'events_and_management_team',
     'public_relation_team',
     'meeting_minutes',
-    'main_website'
+    'main_website',
+    'content_writing_and_publications_team'
 ]
 
 MIDDLEWARE = [
