@@ -21,7 +21,7 @@ class LogisticsTeam:
     
     def load_team_members():
         
-        '''This function loads all the team members for the public relation team'''
+        '''This function loads all the team members for the logistics and operations team'''
 
         load_team_members=Members.objects.filter(team=LogisticsTeam.get_team_id()).order_by('position')
         team_members=[]
