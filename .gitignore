@@ -108,6 +108,8 @@ env.bak/
 venv.bak/
 farhan_insb_port/
 farhan_insb_port2/
+windows_env/
+linux_env/
 linux_env2/
 nashrat_insb_port/ 
 meem_venv/
