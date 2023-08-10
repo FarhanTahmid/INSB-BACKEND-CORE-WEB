@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import adminUsers,MDT_Data_Access,Developer_criteria,Project_Developers,Project_leads,LAO_Data_Access,CWP_Data_Access
+from . models import adminUsers,MDT_Data_Access,Developer_criteria,Project_Developers,Project_leads,LAO_Data_Access,CWP_Data_Access,Promotions_Data_Access
 # Register your models here.
 @admin.register(adminUsers)
 class Admin(admin.ModelAdmin):
@@ -26,3 +26,7 @@ class LAO_Data_Access(admin.ModelAdmin):
 @admin.register(CWP_Data_Access)
 class CWP_Data_Access(admin.ModelAdmin):
     list_display=['ieee_id','manage_team_access']
+@admin.register(Promotions_Data_Access)
+class Prmotions_Data_Access(admin.ModelAdmin):
+    list_display = ['ieee_id','manage_team_access']
+
