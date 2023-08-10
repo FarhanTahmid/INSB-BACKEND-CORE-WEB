@@ -22,5 +22,8 @@ urlpatterns = [
     #Event Dashboard
     path('event_dashboard/<int:event_id>',views.event_dashboard,name='event_dashboard'),
     #Manage Team
-    path('manage_team/',views.manage_team,name="manage_team")
+    path('manage_team/',views.manage_team,name="manage_team"),
+    #Manage website Homepage
+    path('manage_website/',views.manageWebsiteHome,name="manage_website_home"),
+    
 ]
