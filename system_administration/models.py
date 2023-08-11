@@ -113,6 +113,19 @@ class Graphics_Data_Access(models.Model):
     def __str__(self):
         return str(self.ieee_id)
     
+# Class for Finance and Corporate Team data access
+class FCT_Data_Access(models.Model):
+
+    ieee_id = models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE,verbose_name="IEEE ID")
+    manage_team_access = models.BooleanField(default=False,null=False,blank=False,verbose_name="Access")
+
+    class Meta:
+
+        verbose_name = "Manage Team Access - Finance and Corporate Team"
+
+    def __str__(self):
+        return str(self.ieee_id)
+    
 #class for Events and Management Team data access
 class EMT_Data_Access(models.Model):
 

@@ -60,7 +60,8 @@ INSTALLED_APPS = [
     'promotions_team',
     'website_development_team',
     'media_team',
-    'graphics_team'
+    'graphics_team',
+    'finance_and_corporate_team'
 ]
 
 MIDDLEWARE = [
