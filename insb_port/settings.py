@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     'main_website',
     'content_writing_and_publications_team',
     'promotions_team',
-    'website_development_team'
+    'website_development_team',
+    'media_team'
 ]
 
 MIDDLEWARE = [

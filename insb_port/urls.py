@@ -33,7 +33,8 @@ urlpatterns = [
     path('logistics_and_operations_team/',include('logistics_and_operations_team.urls',namespace="logistics_and_operations_team")),
     path('content_writing_and_publications_team/',include('content_writing_and_publications_team.urls',namespace="content_writing_and_publications_team")),
     path('promotions_team/',include('promotions_team.urls',namespace="promotions_team")),
-    path('website_development_team/',include('website_development_team.urls',namespace='website_development_team'))
+    path('website_development_team/',include('website_development_team.urls',namespace='website_development_team')),
+    path('media_team/',include('media_team.urls',namespace='media_team'))
     
 ]
 urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
