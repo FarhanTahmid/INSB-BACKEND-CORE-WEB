@@ -32,7 +32,8 @@ urlpatterns = [
     path('events_and_management_team/',include('events_and_management_team.urls',namespace="events_and_management_team")),
     path('logistics_and_operations_team/',include('logistics_and_operations_team.urls',namespace="logistics_and_operations_team")),
     path('content_writing_and_publications_team/',include('content_writing_and_publications_team.urls',namespace="content_writing_and_publications_team")),
-    path('promotions_team/',include('promotions_team.urls',namespace="promotions_team"))
+    path('promotions_team/',include('promotions_team.urls',namespace="promotions_team")),
+    path('website_development_team/',include('website_development_team.urls',namespace='website_development_team'))
     
 ]
 urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
