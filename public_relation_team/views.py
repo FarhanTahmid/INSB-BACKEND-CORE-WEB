@@ -298,4 +298,6 @@ def manage_team(request):
         return render(request,'public_relation_team/access_denied.html')
 
 
+def send_email(request):
+    return render(request,'public_relation_team/email/compose_email.html')
     
