@@ -13,6 +13,9 @@ from . import renderData
 from django.utils.datastructures import MultiValueDictKeyError
 from membership_development_team.renderData import MDT_DATA
 from . import email_handler
+from port.models import Teams
+from central_branch.models import Events
+from django.db.models import Q
 
 # Create your views here.
 def login(request):
@@ -94,9 +97,56 @@ def dashboard(request):
     user_data=current_user.getUserData() #getting user data as dictionary file
     if(user_data==False):
         return DatabaseError
+    
+    #Number of users on the system
+    members = len(Members.objects.all())
+
+    #Number of Team
+    teams = len(Teams.objects.all())
+
+    #Number of Events and Flagship events
+    events = len(Events.objects.all())
+    flag_ship_events = len(Events.objects.filter(flagship_event=True))
+
+    #Backend For the Event Graphs
+
+    #For events and flagship events
+    #For months
+    current_year = datetime.datetime.year
+    events_number_per_months = []
+    events_in_a_month = []
+    for i in range(12):
+        events_in_a_month.append(i+1)
+        events_in_a_month.append(len(Events.objects.filter(Q(probable_date__year=current_year) and Q(probable_date__month = i+1))))
+        events_number_per_months.append(events_in_a_month)
+        events_in_a_month = []
+    
+    flagship_events_number_per_month = []
+    flagship_events_in_a_month = []
+    length = []
+    for i in range(12):
+        flagship_events_in_a_month.append(i+1)
+        flagship_events_in_a_month.append(len(Events.objects.filter(Q(probable_date__year=current_year) and Q(probable_date__month = i+1) and Q(flagship_event= True))))
+        flagship_events_number_per_month.append(flagship_events_in_a_month)
+        flagship_events_in_a_month = []
+        length.append(i+1)
+
+    
+    
+
+
+
     context={
-        'user_data':user_data
+        'user_data':user_data,
+        'total_user':members,
+        'total_team':teams,
+        'event':events,
+        'fevent':flag_ship_events,
+        'data_for_event_graph':[events_number_per_months,flagship_events_number_per_month],
+        'length':length
     }
+
+    
 
     
     return render(request,"users/dashboard.html",context=context) 
