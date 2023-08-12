@@ -23,6 +23,8 @@
   <link rel="stylesheet" href="{% static '/assets/glyphicons/glyphicons.css' %}" type="text/css" />
   <link rel="stylesheet" href="{% static '/assets/font-awesome/css/font-awesome.min.css' %}" type="text/css" />
   <link rel="stylesheet" href="{% static '/assets/material-design-icons/material-design-icons.css' %}" type="text/css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
 
   <link rel="stylesheet" href="{% static '/assets/bootstrap/dist/css/bootstrap.min.css' %}" type="text/css" />
   <!-- build:css ../assets/styles/app.min.css -->
@@ -466,12 +468,12 @@
                     <div ui-include="'../views/blocks/dropdown.new.html'"></div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link" href data-toggle="dropdown">
-                        <i class="fa-regular fa-calendar"></i>
-                      <span>Manage Events</span>
-                    </a>
-                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
-                </li>
+                  <a class="nav-link" href data-toggle="dropdown">
+                    <i class="fas fa-regular fa-calendar"></i>
+                    <span style="color:#FFA300">Manage Events</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" href data-toggle="dropdown">
                       <i class="fa fa-fw fa-plus text-muted"></i>
