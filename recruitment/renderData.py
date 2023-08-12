@@ -1,5 +1,5 @@
 #this file is solely responsible for collecting all the related data for recruitment site
-from pymysql import NULL
+
 from . models import recruitment_session,recruited_members
 from django.db import IntegrityError
 from django.db import InternalError
