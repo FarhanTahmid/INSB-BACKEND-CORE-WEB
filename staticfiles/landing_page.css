@@ -1,0 +1,274 @@
+
+
+ @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Ubuntu:wght@400;500;700&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+.max-width{
+  max-width: 1300px;
+  padding: 0 80px;
+  margin: auto;
+}
+
+.navbar{
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+  padding: 30px 0;
+  font-family: 'Ubuntu', sans-serif;
+  transition: all 0.3s ease;
+  padding: 15px 0;
+  background-color: none;
+}
+
+.navbar .max-width{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.navbar .logo a{
+  color: #fff;
+  font-size: 30px;
+  font-weight: 400;
+}
+
+
+.navbar .logo a span{
+
+  color: #EFD033;
+  transition: all 0.3s ease;
+}
+
+.navbar .menu li{
+  list-style: none;
+  display: inline-block;
+}
+.navbar .menu li a{
+  color: #fff;
+  font-size: 20px;
+  font-weight: 500;
+  margin-left: 25px;
+  transition: color 0.3s ease;
+}
+
+.navbar .menu li a:hover{
+  color: #EFD033;
+}
+
+
+.home{
+  display: flex;
+  /* background: url("logo-removebg.png"); */
+  background-image: linear-gradient(90deg, #0e7eaa, #0b1261);
+  height: 100vh;
+  color: #FDF5DF;
+  min-height: 500px;
+  background-size: cover;
+  background-attachment: fixed;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.home .max-width{
+  margin: auto 0 auto 40px;
+}
+
+.home .home-content .text-1{
+  font-size: 27px;
+}
+
+.home .home-content .text-2{
+  font-size: 45px;
+  font-weight: 600;
+  margin-left: -3px;
+}
+
+.home .home-content .text-2 span
+{
+  color: #EFD033;
+}
+
+.home .home-content .text-3{
+  font-size: 40px;
+  margin: 5px 0;
+}
+
+.home .home-content .text-3 span
+{
+  color: #EFD033;
+  font-weight: 500;
+}
+
+.home .home-content a{
+  display: inline-block;
+  background: #EFD033;
+  color: rgba(255, 255, 255, 0.822);
+  font-size: 25px;
+  padding: 12px 36px;
+  margin-top: 20px;
+  margin-right: 20px;;
+  border-radius: 30px;
+  border: 2px solid #EFD033;
+  transition: all 0.3s ease;
+  justify-content: space-between;
+}
+
+.home .home-content a:hover{
+  color: #EFD033;
+  background: none;
+}
+
+
+/* responsive media query start */
+@media (max-width: 1300px){
+  .home .max-width{
+    margin-left: 0px;
+  }
+}
+
+@media (max-width: 991px){
+  .max-width{
+    padding: 0 50px;
+  }
+}
+
+@media (max-width: 947px){
+  .max-width{
+    padding: 0 50px;
+  }
+
+  .menu-btn{
+    display: block;
+    z-index: 999;
+  }
+
+  .menu-btn i.active:before{
+    content: "\f00d";
+  }
+
+  .navbar .menu{
+    position: fixed;
+    height: 100vh;
+    width: 100%;
+    left: -100%;
+    top: 0;
+    background: #111;
+    text-align: center;
+    padding-top: 80px;
+    transition: all 0.3s ease;
+  }
+
+  .navbar .menu.active{
+    left: 0;
+  }
+
+  .navbar .menu li{
+    display: block;
+  }
+  .navbar .menu li a{
+    display: inline-block;
+    margin: 20px 0;
+    font-size: 25px;
+  }
+
+  .home .home-content .text-2{
+    font-size: 70px;
+  }
+
+  .home .home-content .text-3{
+    font-size: 35px;
+  }
+
+  .home .home-content a{
+    font-size: 23px;
+    padding: 10px 30px;
+  }
+
+  .max-width{
+    max-width: 800px;
+  }
+
+}
+
+section{
+  padding: 100px 0;
+}
+
+.about, .services, .qualifications, .skills, .contact, footer{
+  font-family: 'Poppins', sans-serif;
+}
+
+.about .about-content,
+.services .serv-content,
+.skills .skills-content{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+section .title{
+  position: relative;
+  text-align: center;
+  font-size: 40px;
+  font-weight: 500;
+  margin-bottom: 60px;
+  padding-bottom: 20px;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+section .title::before{
+  content: "";
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  width: 180px;
+  height: 3px;
+  background: #fff;
+  transform: translateX(-50%);
+}
+
+section .title::after{
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  font-size: 20px;
+  color: #EFD033;
+  padding: 5px;
+  background: #fff;
+  transform: translateX(-50%);
+}
+
+@media (max-width: 690px){
+  .max-width{
+    padding: 0 23px;
+  }
+
+  .home .home-content .text-2{
+    font-size: 60px;
+  }
+
+  .home .home-content .text-3{
+    font-size: 32px;
+  }
+
+  .home .home-content a{
+    font-size: 20px;
+  }
+
+}
+
+@media (max-width: 500px){
+
+  .home .home-content .text-2{
+    font-size: 50px;
+  }
+
+  .home .home-content .text-3{
+    font-size: 27px;
+  }
+
+}
