@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-image: linear-gradient(90deg, #67b8e4, #060c4d);
+}
+
+.event_form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 500px;
+    width: 100%;
+    background: #fff;
+    margin: 20px auto;
+    box-shadow: 5px 5px 16px 0px rgba(0, 0, 0, 0.86);
+    padding: 30px;
+}
+
+.event_form .title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #050D3A;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.event_form .form {
+    width: 100%;
+}
+
+.event_form .form .inputfield {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.event_form .form .inputfield label {
+    width: 200px;
+    color: #000000;
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+.event_form .form .inputfield .input,
+.event_form .form .inputfield .textarea {
+    width: 100%;
+    outline: none;
+    border: 1px solid #d5dbd9;
+    font-size: 15px;
+    padding: 8px 10px;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.event_form .form .inputfield .textarea {
+    width: 100%;
+    height: 125px;
+    resize: none;
+}
+
+.event_form .form .inputfield .custom_select {
+    position: relative;
+    width: 100%;
+    height: 37px;
+}
+.event_form .form .inputfield .custom_select.multiple {
+    height: 100px;
+}
+
+.event_form .form .inputfield .custom_select:before {
+    content: "";
+    position: absolute;
+    top: 12px;
+    right: 10px;
+    border: 8px solid;
+    border-color: #d5dbd9 transparent transparent transparent;
+    pointer-events: none;
+}
+
+.event_form .form .inputfield .custom_select select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none;
+    width: 100%;
+    height: 100%;
+    border: 0px;
+    padding: 8px 10px;
+    font-size: 15px;
+    border: 1px solid #d5dbd9;
+    border-radius: 3px;
+}
+
+
+.event_form .form .inputfield .input:focus,
+.event_form .form .inputfield .textarea:focus,
+.event_form .form .inputfield .custom_select select:focus {
+    border: 1px solid #fec107;
+}
+
+
+.event_form .form .inputfield .btn {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 15px;
+    border: 0px;
+    background: #050D3A;
+    color: #ffcc00;
+    cursor: pointer;
+    border-radius: 3px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.event_form .form .inputfield.btn {
+    column-gap: 1rem;
+}
+
+.event_form .form .inputfield .btn:hover {
+    scale: 1.1;
+}
+
+.event_form .form .inputfield:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width:430px) {
+    .event_form .form .inputfield {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .event_form .form .inputfield label {
+        margin-bottom: 5px;
+    }
+
+    .event_form .form .inputfield.btn {
+        gap: 1rem;
+        row-gap: 1rem;
+    }
+}

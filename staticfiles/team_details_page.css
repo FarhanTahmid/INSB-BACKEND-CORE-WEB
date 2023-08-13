@@ -1,0 +1,295 @@
+
+ .navbar .menu li{
+   list-style: none;
+   display: inline-block;
+ }
+ .navbar .menu li a{
+   color: #fff;
+   font-size: 20px;
+   font-weight: 500;
+   margin-left: 25px;
+   transition: color 0.3s ease;
+ }
+ 
+ .navbar .menu li a:hover{
+   color: #EFD033;
+ }
+ 
+ 
+
+
+ 
+ /* responsive media query start */
+ @media (max-width: 1300px){
+   .home .max-width{
+     margin-left: 0px;
+   }
+ }
+ 
+ @media (max-width: 991px){
+   .max-width{
+     padding: 0 50px;
+   }
+ }
+ 
+ @media (max-width: 947px){
+   .max-width{
+     padding: 0 50px;
+   }
+ 
+   .menu-btn{
+
+   }
+ 
+   .menu-btn i.active:before{
+     content: "\f00d";
+   }
+ 
+   .navbar .menu{
+     position: fixed;
+     height: 100vh;
+     width: 100%;
+     left: -100%;
+     top: 0;
+     background: #111;
+     text-align: center;
+     padding-top: 80px;
+     transition: all 0.3s ease;
+   }
+ 
+   .navbar .menu.active{
+     left: 0;
+   }
+ 
+   .navbar .menu li{
+     display: block;
+   }
+   .navbar .menu li a{
+     display: inline-block;
+     margin: 20px 0;
+     font-size: 25px;
+   }
+ 
+   .home .home-content .text-2{
+     font-size: 70px;
+   }
+ 
+   .home .home-content .text-3{
+     font-size: 35px;
+   }
+ 
+   .home .home-content a{
+     font-size: 23px;
+     padding: 10px 30px;
+   }
+ 
+   .max-width{
+     max-width: 800px;
+   }
+ 
+ }
+
+ @media (max-width:770px){
+  .marketplace-wrapper{
+    padding: 20px;
+
+  }
+ }
+ 
+ @media (max-width: 690px){
+   .max-width{
+     padding: 0 23px;
+   }
+ 
+   .home .home-content .text-2{
+     font-size: 60px;
+   }
+ 
+   .home .home-content .text-3{
+     font-size: 32px;
+   }
+ 
+   .home .home-content a{
+     font-size: 20px;
+   }
+ 
+ }
+ 
+ @media (max-width: 500px){
+ 
+   .home .home-content .text-2{
+     font-size: 50px;
+   }
+ 
+   .home .home-content .text-3{
+     font-size: 27px;
+   }
+ 
+ }
+ 
+
+ 
+ /* thead{
+   background-color: white;
+ 
+ }
+ 
+ td, th{
+   border: 1px solid #cccc;
+   padding: 10px;
+ }
+ 
+ th{
+   font-weight: bold;
+   text-transform: uppercase;
+ }
+ 
+ tr:nth-child(even){
+   background-color: white;
+ }
+ 
+ tr:hover {
+   background-color: black;
+   color: white;
+ }
+  */
+.marketplace-wrapper{
+  margin: 10px auto;
+  padding: 0 10%;
+  padding-bottom: 10px;
+  text-transform: capitalize; 
+}
+.container{
+  display: flex;  
+}
+.box{
+  height: 330px;
+  width: 350px;
+  text-align: center;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
+  margin-left: 15px;
+  
+}
+.box img{
+  height: 200px;
+  width: 350px;
+}
+.box h3{
+  color: #EFD033;
+  padding: 10 px 0;
+  font-size: 40px;
+}
+.box p{
+  color: #111;
+  font-size: 18px;
+  line-height: 1.6  ;
+}
+.home .price{
+  margin-top: -5px;
+  color: #ff6666;
+  font-size: 20px;
+}
+.box:hover{
+  transform: scale(1.03);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.3);
+}
+.overlay {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.8);
+	transition: opacity 500ms;
+	visibility: hidden;
+	opacity: 0;
+}
+.overlay:target {
+	visibility: visible;
+	opacity: 1;
+}
+.wrapper {
+	margin: 70px auto;
+	padding: 20px;
+	background: #e7e7e7;
+	border-radius: 5px;
+	width: 35%;
+	position: relative;
+	transition: all 5s ease-in-out;
+}
+.wrapper h2 {
+	margin-top: 0;
+	color: #333;
+}
+.wrapper .close {
+	position: absolute;
+	top: 20px;
+	right: 30px;
+	transition: all 200ms;
+	font-size: 30px;
+	font-weight: bold;
+	text-decoration: none;
+	color: #333;
+}
+.wrapper .close:hover {
+	color: #06D85F;
+}
+.wrapper .content {
+	max-height: 30%;
+	overflow: auto;
+}
+/*form*/
+
+.container {
+	border-radius: 5px;
+	align-items: center;
+	padding: 20px 0;
+}
+form label {
+  color: black;
+}
+.pd{
+  color: black;
+}
+input[type=text], select, textarea {
+	
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+	margin-top: 6px;
+	margin-bottom: 16px;
+	resize: vertical;
+}
+
+
+.raise-error .message{
+  color: #EFD033;
+  font-size: 30px;
+}
+div.scroll{
+    display: block;
+    border: 0px solid black;
+    padding: 5px;
+    margin-top: 5px;
+    width: 650px;
+    height: 200px;
+    overflow-y: scroll;
+}
+.insb_member_table {
+    margin: auto;
+    border: 1px solid black !important;
+    border-collapse: collapse;
+  }
+.insb_member_table_head{
+    border: 1px solid black;
+    text-align: center;
+    color: black;
+}
+.insb_member_table_data{
+    border: 1px solid black;
+    color: black;
+    text-align: center;
+    padding: auto;
+  }
