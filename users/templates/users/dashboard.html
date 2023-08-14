@@ -19,16 +19,16 @@
   
   <!-- style -->
   <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
-  <link rel="stylesheet" href="{% static 'css/animate.min.css'%}" type="text/css" />
-  <link rel="stylesheet" href="{% static 'css/glyphicons.css'%}" type="text/css" />
-  <link rel="stylesheet" href="{% static 'css/font-awesome.min.css'%}" type="text/css" />
-  <link rel="stylesheet" href="{% static 'css/material-design-icons.css'%}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/animate.css/animate.min.css'%}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/glyphicons/glyphicons.css'%}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/font-awesome/css/font-awesome.min.css'%}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/material-design-icons/material-design-icons.css'%}" type="text/css" />
 
-  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/bootstrap/dist/css/bootstrap.min.css'%}" type="text/css" />
   <!-- build:css ../assets/styles/app.min.css -->
-  <link rel="stylesheet" href="{% static 'css/app.css'%}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/styles/app.css'%}" type="text/css" />
   <!-- endbuild -->
-  <link rel="stylesheet" href="{% static 'css/font.css'%}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/styles/font.css'%}" type="text/css" />
 </head>
 <body>
   <div class="app" id="app">
@@ -1608,14 +1608,17 @@
   </div>
 <!-- build:js scripts/app.html.js -->
 <!-- jQuery -->
-  <script src="{% static 'script/jquery.js'%}"></script>
+  <script src="{% static '/libs/jquery/jquery/dist/jquery.js'%}"></script>
+  <script src="{% static '/libs/jquery/screenfull/dist/screenfull.min.js'%}"></script>
+
+
 <!-- Bootstrap -->
-  <script src="{% static 'script/tether.min.js'%}"></script>
-  <script src="{% static 'script/bootstrap.js'%}"></script>
+  <script src="{% static '/libs/jquery/tether/dist/js/tether.min.js'%}"></script>
+  <script src="{% static '/libs/jquery/bootstrap/dist/js/bootstrap.js'%}"></script>
 <!-- core -->
-  <script src="{% static 'script/underscore-min.js'%}"></script>
-  <script src="{% static 'script/jquery.storageapi.min.js'%}"></script>
-  <script src="{% static 'script/pace.min.js'%}"></script>
+  <script src="{% static '/libs/jquery/underscore/underscore-min.js'%}"></script>
+  <script src="{% static '/libs/jquery/jQuery-Storage-API/jquery.storageapi.min.js'%}"></script>
+  <script src="{% static '/libs/jquery/PACE/pace.min.js'%}"></script>
 
   {% comment %} <script src="{% static 'script/config.lazyload.js'%}"></script> {% endcomment %}
 
