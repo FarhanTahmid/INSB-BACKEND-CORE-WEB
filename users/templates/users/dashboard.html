@@ -523,6 +523,7 @@
 </div>
 <div class="padding">
 	<div class="row">
+<<<<<<< HEAD
 		<div class="col-xl-4">
 			<div class="card bg-primary">
 				<div class="card-body">
@@ -539,6 +540,506 @@
 							</div>
 					   </div>
 					</div>
+=======
+		<div class="col-xs-12 col-sm-4">
+	        <div class="box p-a">
+	          <div class="pull-left m-r">
+	            <span class="w-48 rounded  accent">
+	              <i class="material-icons">&#xe151;</i>
+	            </span>
+	          </div>
+	          <div class="clear">
+	            <h4 class="m-0 text-lg _300"><a href>{{event}} <span class="text-sm">Events</span></a></h4>
+	            <small class="text-muted">{{fevent}} Flagship Events.</small>
+	          </div>
+	        </div>
+	    </div>
+	    <div class="col-xs-6 col-sm-4">
+	        <div class="box p-a">
+	          <div class="pull-left m-r">
+	            <span class="w-48 rounded primary">
+	              <i class="material-icons">&#xe54f;</i>
+	            </span>
+	          </div>
+	          <div class="clear">
+	            <h4 class="m-0 text-lg _300"><a href>{{total_user}} <span class="text-sm">Users</span></a></h4>
+	            <small class="text-muted">{{total_teams}} Teams</small>
+	          </div>
+	        </div>
+	    </div>
+	    <div class="col-xs-6 col-sm-4">
+	        <div class="box p-a">
+	          <div class="pull-left m-r">
+	            <span class="w-48 rounded warn">
+	              <i class="material-icons">&#xe8d3;</i>
+	            </span>
+	          </div>
+	          <div class="clear">
+	            <h4 class="m-0 text-lg _300"><a href>600 <span class="text-sm">Users</span></a></h4>
+	            <small class="text-muted">632 vips.</small>
+	          </div>
+	        </div>
+	    </div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 col-md-4">
+	        <div class="box">
+	          <div class="box-header">
+	            <h3>Events monitor</h3>
+	            <small>Calculated over a year</small>
+	          </div>
+	          <div class="box-tool">
+		        <ul class="nav">
+		          <li class="nav-item inline">
+		            <a class="nav-link">
+		              <i class="material-icons md-18">&#xe863;</i>
+		            </a>
+		          </li>
+		          <li class="nav-item inline dropdown">
+		            <a class="nav-link" data-toggle="dropdown">
+		              <i class="material-icons md-18">&#xe5d4;</i>
+		            </a>
+		            <div class="dropdown-menu dropdown-menu-scale pull-right">
+		              <a class="dropdown-item" href>This week</a>
+		              <a class="dropdown-item" href>This month</a>
+		              <a class="dropdown-item" href>This week</a>
+		              <div class="dropdown-divider"></div>
+		              <a class="dropdown-item">Today</a>
+		            </div>
+		          </li>
+		        </ul>
+		      </div>
+	          <div class="box-body">
+	          	<div class="text-center m-b">
+	          		<div class="btn-group" data-toggle="buttons">
+					  <label class="btn btn-sm white">
+					    <input type="radio" name="month" autocomplete="off"> Month
+					  </label>
+					  <label class="btn btn-sm white">
+					    <input type="radio" name="day" autocomplete="off"> Day
+					  </label>
+					</div>
+	          	</div>
+	            <div ui-jp="plot" ui-refresh="app.setting.color" ui-options="
+	              [
+				  {% for i in data_for_event_graph %}
+	                { data: {{i}}, 
+	                  points: { show: true, radius: 0}, 
+                  	  splines: { show: true, tension: 0.45, lineWidth: 2, fill: 1 }
+	                },
+	              ]
+				  {% endfor %}, 
+	              {
+	                colors: ['#a88add','#0cc2aa'],
+	                series: { shadowSize: 3 },
+	                xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
+	                yaxis:{ show: true, font: { color: '#ccc' }},
+	                grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+	                tooltip: true,
+	                tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+	              }
+	            " style="height:188px;padding: 0px;position:relative;" >
+				<canvas class="flot-base" width="441" height="235" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 353px; height: 188px;"></canvas>
+				<div class="flot-text" style="position: absolute; inset: 0px; font-size: smaller; color: rgb(84, 84, 84);">
+					<div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; inset: 0px; display: block;">
+						<div style="position: absolute; max-width: 56px; top: 175px; font: 400 11px / 13px Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; color: rgb(204, 204, 204); left: 8px; text-align: center;">1</div>
+					</div>
+					<div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; inset: 0px; display: block;">
+						<div style="position: absolute; top: 164px; font: 400 11px / 13px Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; color: rgb(204, 204, 204); left: 0px; text-align: right;">1</div>
+					</div>
+					<canvas class="flot-overlay" width="441" height="235" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 353px; height: 188px;"></canvas>
+				</div>
+				</div>
+	          </div>
+	        </div>
+	    </div>
+	    <div class="col-sm-6 col-md-4">
+	        <div class="box">
+	          <div class="box-header">
+	            <h3>Tasks</h3>
+	            <small>Calculated in last 7 days</small>
+	          </div>
+	          <div class="box-tool">
+		        <ul class="nav">
+		          <li class="nav-item inline">
+		            <a class="nav-link">
+		              <i class="material-icons md-18">&#xe863;</i>
+		            </a>
+		          </li>
+		          <li class="nav-item inline dropdown">
+		            <a class="nav-link" data-toggle="dropdown">
+		              <i class="material-icons md-18">&#xe5d4;</i>
+		            </a>
+		            <div class="dropdown-menu dropdown-menu-scale pull-right">
+		              <a class="dropdown-item" href>This week</a>
+		              <a class="dropdown-item" href>This month</a>
+		              <a class="dropdown-item" href>This week</a>
+		              <div class="dropdown-divider"></div>
+		              <a class="dropdown-item">Today</a>
+		            </div>
+		          </li>
+		        </ul>
+		      </div>
+	          <div class="box-body">
+	          	<div class="text-center m-b">
+	          		<div class="btn-group" data-toggle="buttons">
+					  <label class="btn btn-sm rounded white">
+					    <input type="radio" name="options" autocomplete="off"> This Month
+					  </label>
+					  <label class="btn btn-sm rounded white">
+					    <input type="radio" name="options" autocomplete="off"> This Week
+					  </label>
+					</div>
+	          	</div>
+	            <div ui-jp="plot" ui-refresh="app.setting.color" ui-options="
+	              [
+	                { data: [[1, 2], [2, 4], [3, 5], [4, 7], [5, 6], [6, 4], [7, 5], [8, 4]] }
+	              ], 
+	              {
+	                bars: { show: true, fill: true,  barWidth: 0.25, lineWidth: 1, fillColor: { colors: [{ opacity: 0.8 }, { opacity: 1}] }, align: 'center' },
+	                colors: ['#a88add'],
+	                series: { shadowSize: 3 },
+	                xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
+	                yaxis:{ show: true, font: { color: '#ccc' }},
+	                grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+	                tooltip: true,
+	                tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+	              }
+	            " style="height:188px" >
+	            </div>
+	          </div>
+	        </div>
+	    </div>
+	    <div class="col-sm-12 col-md-4">
+	    	<div class="box">
+	          <div class="box-header">
+	            <h3>Sales</h3>
+	            <small>Calculated in last 7 days</small>
+	          </div>
+	          <div class="box-tool">
+		        <ul class="nav">
+		          <li class="nav-item inline">
+		            <a class="nav-link">
+		              <i class="material-icons md-18">&#xe863;</i>
+		            </a>
+		          </li>
+		          <li class="nav-item inline dropdown">
+		            <a class="nav-link" data-toggle="dropdown">
+		              <i class="material-icons md-18">&#xe5d4;</i>
+		            </a>
+		            <div class="dropdown-menu dropdown-menu-scale pull-right">
+		              <a class="dropdown-item" href>This week</a>
+		              <a class="dropdown-item" href>This month</a>
+		              <a class="dropdown-item" href>This week</a>
+		              <div class="dropdown-divider"></div>
+		              <a class="dropdown-item">Today</a>
+		            </div>
+		          </li>
+		        </ul>
+		      </div>
+	          <div class="box-body">
+	          	<div class="text-center m-b">
+	          		<div class="btn-group" data-toggle="buttons">
+					  <label class="btn btn-sm rounded white">
+					    <input type="radio" name="options" autocomplete="off"> Market
+					  </label>
+					  <label class="btn btn-sm rounded white">
+					    <input type="radio" name="options" autocomplete="off"> Referral
+					  </label>
+					</div>
+	          	</div>
+		    	<div ui-jp="plot" ui-refresh="app.setting.color" ui-options="
+	              [
+	                { data: [[3, 1], [2, 2], [6, 3], [5, 4], [7, 5]] }
+	              ], 
+	              {
+	                bars: { horizontal: true, show: true, fill: true,  barWidth: 0.3, lineWidth: 1, fillColor: { colors: [{ opacity: 0.8 }, { opacity: 1}] }, align: 'center' },
+	                colors: ['#0cc2aa'],
+	                series: { shadowSize: 3 },
+	                xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
+	                yaxis:{ show: true, font: { color: '#ccc' }},
+	                grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+	                tooltip: true,
+	                tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+	              }
+	            " style="height:188px" >
+	            </div>
+	          </div>
+	        </div>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="col-sm-12 col-md-6">
+	    	<div class="box">
+	    		<div class="box-header">
+	    			<h3>Open Projects <span class="label warning">9</span></h3>
+	    			<small>Your data status</small>
+	    		</div>
+		    	<ul class="list inset">
+			        <li class="list-item">
+			          <a herf class="list-left">
+			          	<span class="w-40 r-2x _600 text-lg accent">
+			            	B
+			            </apan>
+			          </a>
+			          <div class="list-body">
+			          	<div class="m-y-sm pull-right">
+			            	<a href class="btn btn-xs white">Manage</a>
+			            	<a href class="btn btn-xs white btn-icon"><i class="fa fa-pencil"></i></a>
+		            	</div>
+			            <div><a href>Broadcast web app mockup</a></div>
+			            <div class="text-sm">
+			            	<span class="text-muted"><strong>5</strong> tasks, <strong>3</strong> issues</span> 
+			            	<span class="label"></span>
+			            </div>
+			          </div>
+			        </li>
+			        <li class="list-item">
+			          <a herf class="list-left">
+			          	<span class="w-40 r-2x _600 text-lg success">
+			            	G
+			            </apan>
+			          </a>
+			          <div class="list-body">
+			          	<div class="m-y-sm pull-right">
+			            	<a href class="btn btn-xs white">Manage</a>
+			            	<a href class="btn btn-xs white btn-icon"><i class="fa fa-pencil"></i></a>
+		            	</div>
+			            <div><a href>GoodDesign Bootstrap 4 migration</a></div>
+			            <div class="text-sm">
+			            	<span class="text-muted"><strong>35</strong> tasks, <strong>6</strong> issues</span> 
+			            	<span class="label"></span>
+			            </div>
+			          </div>
+			        </li>
+			        <li class="list-item">
+			          <a herf class="list-left">
+			          	<span class="w-40 r-2x _600 text-lg purple">
+			            	#
+			            </apan>
+			          </a>
+			          <div class="list-body">
+			          	<div class="m-y-sm pull-right">
+			            	<a href class="btn btn-xs white">Manage</a>
+			            	<a href class="btn btn-xs white btn-icon"><i class="fa fa-pencil"></i></a>
+		            	</div>
+			            <div><a href>#Hashtag android app develop</a></div>
+			            <div class="text-sm">
+			            	<span class="text-muted"><strong>52</strong> tasks, <strong>13</strong> issues</span> 
+			            	<span class="label"></span>
+			            </div>
+			          </div>
+			        </li>
+			        <li class="list-item">
+			          <a herf class="list-left">
+			          	<span class="w-40 r-2x _600 blue">
+			            	<i class="fa fa-lg fa-google"></i>
+			            </apan>
+			          </a>
+			          <div class="list-body">
+			          	<div class="m-y-sm pull-right">
+			            	<a href class="btn btn-xs white">Manage</a>
+			            	<a href class="btn btn-xs white btn-icon"><i class="fa fa-pencil"></i></a>
+		            	</div>
+			            <div><a href>Google material design application</a></div>
+			            <div class="text-sm">
+			            	<span class="text-muted"><strong>15</strong> tasks, <strong>3</strong> issues</span> 
+			            	<span class="label"></span>
+			            </div>
+			          </div>
+			        </li>
+			        <li class="list-item">
+			          <a herf class="list-left">
+			          	<span class="w-40 r-2x _600 blue-800">
+			            	<i class="fa fa-lg fa-facebook"></i>
+			            </apan>
+			          </a>
+			          <div class="list-body">
+			          	<div class="m-y-sm pull-right">
+			            	<a href class="btn btn-xs white">Manage</a>
+			            	<a href class="btn btn-xs white btn-icon"><i class="fa fa-pencil"></i></a>
+		            	</div>
+			            <div><a href>Facebook connection web application</a></div>
+			            <div class="text-sm">
+			            	<span class="text-muted"><strong>30</strong> tasks, <strong>5</strong> issues</span> 
+			            	<span class="label"></span>
+			            </div>
+			          </div>
+			        </li>
+			    </ul>
+		    </div>
+	    </div>
+	    <div class="col-sm-12 col-md-6">
+	    	<div class="box">
+		      <div class="box-header">
+		        <h3>Stats</h3>
+		        <small>Your data status</small>
+		      </div>
+		      <div class="box-tool">
+		        <ul class="nav">
+		          <li class="nav-item inline">
+		            <a class="nav-link">
+		              <i class="material-icons md-18">&#xe863;</i>
+		            </a>
+		          </li>
+		          <li class="nav-item inline dropdown">
+		            <a class="nav-link" data-toggle="dropdown">
+		              <i class="material-icons md-18">&#xe5d4;</i>
+		            </a>
+		            <div class="dropdown-menu dropdown-menu-scale pull-right">
+		              <a class="dropdown-item" href>This week</a>
+		              <a class="dropdown-item" href>This month</a>
+		              <a class="dropdown-item" href>This week</a>
+		              <div class="dropdown-divider"></div>
+		              <a class="dropdown-item">Today</a>
+		            </div>
+		          </li>
+		        </ul>
+		      </div>
+		      <table class="table">
+		        <thead>
+		          <tr>
+		            <th style="width:60px;" class="text-center">Graph</th>
+		            <th>Item</th>                    
+		            <th style="width:70px;"></th>
+		          </tr>
+		        </thead>
+		        <tbody>
+		          <tr>
+		            <td>
+		              <div ui-jp="sparkline" ui-refresh="app.setting.color" ui-options="[ 16,15,15,14,17,18,16,15,16 ], {type:'bar', height:19, barWidth:4, barSpacing:2, barColor:'#0cc2aa'}" class="sparkline inline">loading...</div>
+		            </td>
+		            <td>App downloads</td>
+		            <td class="text-success">
+		              <i class="fa fa-level-up"></i> 40%
+		            </td>
+		          </tr>
+		          <tr>
+		            <td class="text-center">
+		              <div ui-jp="sparkline" ui-refresh="app.setting.color" ui-options="[ 60,30,10 ], {type:'pie', height:19, sliceColors:['#fcc100','#fff','#0cc2aa']}" class="sparkline inline">loading...</div>
+		            </td>
+		            <td>Social connection</td>
+		            <td class="text-success">
+		              <i class="fa fa-level-up"></i> 20%
+		            </td>
+		          </tr>
+		          <tr>                    
+		            <td>
+		              <div ui-jp="sparkline" ui-refresh="app.setting.color" ui-options="[ 16,15,15,14,17,18,16,15,16 ], {type:'line', height:19, width:60, lineColor:'#0cc2aa', fillColor:'transparent'}" class="sparkline inline">loading...</div>
+		            </td>
+		            <td>Revenue</td>
+		            <td class="text-warning">
+		              <i class="fa fa-level-down"></i> 5%
+		            </td>
+		          </tr>
+		          <tr>                    
+		            <td>
+		              <div ui-jp="sparkline" ui-refresh="app.setting.color" ui-options="[ 16,15,15,14,17,18,16,15,16 ], {type:'discrete', height:19, width:60, lineColor:'#6cc788'}" class="sparkline inline">loading...</div>
+		            </td>
+		            <td>Customer increase</td>
+		            <td class="text-danger">
+		              <i class="fa fa-level-down"></i> 20%
+		            </td>
+		          </tr>
+		          <tr>                    
+		            <td>
+		              <div ui-jp="sparkline" ui-refresh="app.setting.color" ui-options="[ 16,15,15,14,17,18,16,15,16 ], {type:'line', height:19, width:60, lineColor:'#fcc100', fillColor:'#fcc100'}" class="sparkline inline">loading...</div>
+		            </td>
+		            <td>Order placed</td>
+		            <td class="text-warning">
+		              <i class="fa fa-level-down"></i> 5%
+		            </td>
+		          </tr>
+		          <tr>
+		            <td>
+		              <div ui-jp="sparkline" ui-refresh="app.setting.color" ui-options="[ 16,15,15,16,15,16,14,17,18 ], {type:'line', height:19, width:60, lineColor:'#fcc100', fillColor:'transparent'}" class="sparkline inline">loading...</div>
+		            </td>
+		            <td>Visitors</td>
+		            <td class="text-warning">
+		              <i class="fa fa-level-down"></i> 8%
+		            </td>
+		          </tr>
+		        </tbody>
+		      </table>
+		    </div>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="col-sm-6 col-md-4">
+	        <div class="box">
+	            <div class="box-header">
+	              <h3>Members</h3>
+	            </div>
+	            <ul class="list no-border p-b">
+	              <li class="list-item">
+	                <a herf class="list-left">
+	                	<span class="w-40 avatar">
+		                  <img src="../assets/images/a4.jpg" alt="...">
+		                  <i class="on b-white bottom"></i>
+	                    </span>
+	                </a>
+	                <div class="list-body">
+	                  <div><a href>Chris Fox</a></div>
+	                  <small class="text-muted text-ellipsis">Designer, Blogger</small>
+	                </div>
+	              </li>
+	              <li class="list-item">
+	                <a herf class="list-left">
+	                  <span class="w-40 avatar">
+		                  <img src="../assets/images/a5.jpg" alt="...">
+		                  <i class="on b-white bottom"></i>
+	                  </span>
+	                </a>
+	                <div class="list-body">
+	                  <div><a href>Mogen Polish</a></div>
+	                  <small class="text-muted text-ellipsis">Writter, Mag Editor</small>
+	                </div>
+	              </li>
+	              <li class="list-item">
+	                <a herf class="list-left">
+	                  <span class="w-40 avatar">
+		                  <img src="../assets/images/a6.jpg" alt="...">
+		                  <i class="away b-white bottom"></i>
+	                  </span>
+	                </a>
+	                <div class="list-body">
+	                  <div><a href>Joge Lucky</a></div>
+	                  <small class="text-muted text-ellipsis">Art director, Movie Cut</small>
+	                </div>
+	              </li>
+	              <li class="list-item">
+	                <a herf class="list-left">
+	                  <span class="w-40 avatar">
+		                  <img src="../assets/images/a7.jpg" alt="...">
+		                  <i class="busy b-white bottom"></i>
+	                  </span>
+	                </a>
+	                <div class="list-body">
+	                  <div><a href>Folisise Chosielie</a></div>
+	                  <small class="text-muted text-ellipsis">Musician, Player</small>
+	                </div>
+	              </li>
+	              <li class="list-item">
+	                <a herf class="list-left">
+	                	<span class="w-40 avatar success">
+		                  <span>P</span>
+		                  <i class="away b-white bottom"></i>
+		                </span>
+	                </a>
+	                <div class="list-body">
+	                  <div><a href>Peter</a></div>
+	                  <small class="text-muted text-ellipsis">Musician, Player</small>
+	                </div>
+	              </li>
+	            </ul>
+	        </div>
+	    </div>
+	    <div class="col-sm-6 col-md-4">
+			<div class="box">
+				<div class="box-header">
+					<h3>Tasks</h3>
+					<small>20 finished, 5 remaining</small>
+>>>>>>> ec9babfd83bc3d84bf3228ea463c7128104490c9
 				</div>
 			</div>
 		</div>
@@ -1629,7 +2130,7 @@
   <script src="{% static 'script/ui-device.js'%}"></script>
   <script src="{% static 'script/ui-form.js'%}"></script>
   <script src="{% static 'script/ui-nav.js'%}"></script>
-  <script src="{% static 'script/ui-screenfull.js'%}"></script>
+  <script src="{% static 'script/ui-screenfull.min.js'%}"></script>
   <script src="{% static 'script/ui-scroll-to.js'%}"></script>
   <script src="{% static 'script/ui-toggle-class.js'%}"></script>
   {% comment %} <script src="{% static 'script/screenfull.min.js'%}"></script> {% endcomment %}

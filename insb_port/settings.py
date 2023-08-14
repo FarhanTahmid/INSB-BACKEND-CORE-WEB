@@ -100,7 +100,7 @@ DATABASES = {
         
         # #********MYSQL SERVER ON LOCALHOST*********
         # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'insb_port',
+        # 'NAME': 'insb_portal',
         # 'USER': 'root',
         # 'PASSWORD': '',
         # 'HOST':'localhost',
