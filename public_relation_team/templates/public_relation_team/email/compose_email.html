@@ -444,10 +444,13 @@
     </div>
     <div class="b-t">
       <div class="nav-fold">
-        <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
-            <span class="avatar w-32">
-              <img src="{{ user_data.profile_picture }}" alt="...">
-              <i class="on b-white bottom"></i>
+        <a href="{% url 'users:profile' %}">
+            <span class="pull-left">
+              <img src="{{ user_data.profile_picture }}" alt="..." class="w-40 img-circle">
+            </span>
+            <span class="clear hidden-folded p-x">
+              <span class="block _500">{{user_data.name}}</span>
+              <small class="block text-muted"><i class="fa fa-circle text-success m-r-sm"></i>online</small>
             </span>
         </a>
       </div>
@@ -526,9 +529,9 @@
                 <div ui-include="'../views/blocks/dropdown.notification.html'"></div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link p-0 clear" href="#" data-toggle="dropdown">
+                <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
                   <span class="avatar w-32">
-                    <img src="../assets/images/a0.jpg" alt="...">
+                    <img src="{{ user_data.profile_picture }}" alt="...">
                     <i class="on b-white bottom"></i>
                   </span>
                 </a>

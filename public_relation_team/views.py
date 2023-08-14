@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from google.oauth2.credentials import Credentials
+from django.conf import settings
 from googleapiclient.discovery import build
 from central_branch import renderData
 from django.contrib.auth.decorators import login_required
@@ -12,12 +12,24 @@ from system_administration.render_access import Access_Render
 from users.models import Members
 from port.models import Roles_and_Position
 from .models import Manage_Team
-
-
+from users import renderData
+from users.renderData import LoggedinUser
 # Create your views here.
 
 def team_home_page(request):
-    return render(request,"public_relation_team/team_homepage.html")
+    
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    
+    context={
+        'co_ordinators':PRT_Data.getTeamCoOrdinators(),
+        'incharges':PRT_Data.getTeamIncharges(),
+        'core_volunteers':PRT_Data.getTeamCoreVolunteers(),
+        'volunteers':PRT_Data.getTeamVolunteers(),
+        'user_data':user_data,
+        'media_url':settings.MEDIA_URL,
+    }
+    return render(request,"public_relation_team/team_homepage.html",context)
 
 @login_required
 def event_control(request):
@@ -299,5 +311,11 @@ def manage_team(request):
 
 
 def send_email(request):
-    return render(request,'public_relation_team/email/compose_email.html')
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    context={
+        'user_data':user_data,
+        'media_url':settings.MEDIA_URL,
+    }
+    return render(request,'public_relation_team/email/compose_email.html',context)
     

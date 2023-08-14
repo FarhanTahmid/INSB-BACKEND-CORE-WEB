@@ -440,9 +440,9 @@
               </ul>
           </nav>
       </div>
-      <div class="b-t">
+    <div class="b-t">
         <div class="nav-fold">
-        	<a href="profile.html">
+        	<a href="{% url 'users:profile' %}">
         	    <span class="pull-left">
         	      <img src="{{ user_data.profile_picture }}" alt="..." class="w-40 img-circle">
         	    </span>
@@ -452,7 +452,7 @@
         	    </span>
         	</a>
         </div>
-      </div>
+    </div>
     </div>
   </div>
   <!-- END OF SIDE BAR -->
@@ -499,7 +499,7 @@
                   </span>
                 </a>
                 <div ui-include="'../views/blocks/dropdown.user.html'"></div>
-              </li>
+            </li>
               <li class="nav-item hidden-md-up">
                 <a class="nav-link pl-2" data-toggle="collapse" data-target="#collapse">
                   <i class="material-icons">&#xe5d4;</i>
