@@ -459,14 +459,17 @@
     </div>
     <div class="b-t">
       <div class="nav-fold">
-        <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
-            <span class="avatar w-32">
-              <img src="{{ user_data.profile_picture }}" alt="...">
-              <i class="on b-white bottom"></i>
+        <a href="{% url 'users:profile' %}">
+            <span class="pull-left">
+              <img src="{{ user_data.profile_picture }}" alt="..." class="w-40 img-circle">
+            </span>
+            <span class="clear hidden-folded p-x">
+              <span class="block _500">{{user_data.name}}</span>
+              <small class="block text-muted"><i class="fa fa-circle text-success m-r-sm"></i>online</small>
             </span>
         </a>
       </div>
-    </div>
+  </div>
   </div>
 </div>
 <!-- / -->
@@ -541,9 +544,9 @@
                 <div ui-include="'../views/blocks/dropdown.notification.html'"></div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link p-0 clear" href="#" data-toggle="dropdown">
+                <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
                   <span class="avatar w-32">
-                    <img src="../assets/images/a0.jpg" alt="...">
+                    <img src="{{ user_data.profile_picture }}" alt="...">
                     <i class="on b-white bottom"></i>
                   </span>
                 </a>
@@ -563,43 +566,164 @@
 
 <!-- ############ PAGE START-->
 <br>
-<h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to The Public Relations Team of IEEE NSU Student Branch </h2>
-<h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our Co-Ordinators </h3>
+<h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to <span style="color:#00629B;"> <b>The Public Relations Team</b></span> of <b><span style="color:#00629B;">IEEE NSU Student Branch</b></span> </h2>
+
+<!--CO ORDINATORS-->
+<h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our <span><b>Co-Ordinators</b></span> </h3>
 
 <div class="row" style="margin-bottom:15px;">
     <div class="col-xs-6 col-sm-12 col-md-6" >
+      {% for i in co_ordinators %}
+        <div class="box">
+            <div class="item">
+              <div class="item-bg">
+                <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
+              </div>
+              <div class="p-a-lg pos-rlt text-center">
+                <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
+              </div>
+            </div>
+            <div class="p-a text-center">
+              <a href class="text-md m-t block">{{i.name}}</a>
+              <p><small>NSU ID: {{i.nsu_id}}</small></p>
+              <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
+                <i class="fa fa-facebook"></i>
+                <i class="fa fa-facebook indigo"></i>
+              </a>
+              <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
+                <i class="fa fa-envelope-o"></i>
+                <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
+              </a>
+              <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
+                <i class="fa fa-linkedin"></i>
+                <i class="fa fa-linkedin light-blue-800"></i>
+              </a>
+              <div class="text-xs">
+                <em>Contact: <strong>{{i.contact_no}}</strong></em>
+              </div>
+            </div>
+        </div>
+      {% endfor %}
+    </div>
+</div>
+
+<!--INCHARGES-->
+<h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our <span><b>Incharges</b></span> </h3>
+
+<div class="row" style="margin-bottom:15px;">
+  <div class="col-xs-6 col-sm-12 col-md-6" >
+    {% for i in incharges %}
       <div class="box">
           <div class="item">
             <div class="item-bg">
-              <img src="../assets/images/a3.jpg" class="blur">
+              <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
             </div>
             <div class="p-a-lg pos-rlt text-center">
-              <img src="../assets/images/a3.jpg" class="img-circle w-56" style="margin-bottom: -7rem">
+              <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
             </div>
-        </div>
+          </div>
           <div class="p-a text-center">
-            <a href class="text-md m-t block">Jack Perez</a>
-            <p><small>Designer, Blogger</small></p>
-            <a href class="btn btn-icon btn-social white" title="Facebook" >
+            <a href class="text-md m-t block">{{i.name}}</a>
+            <p><small>NSU ID: {{i.nsu_id}}</small></p>
+            <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
               <i class="fa fa-facebook"></i>
               <i class="fa fa-facebook indigo"></i>
             </a>
-            <a href class="btn btn-icon btn-social white" title="Facebook" >
+            <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
               <i class="fa fa-envelope-o"></i>
               <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
             </a>
-            <a href class="btn btn-icon btn-social white" title="LinkedIn" >
+            <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
               <i class="fa fa-linkedin"></i>
               <i class="fa fa-linkedin light-blue-800"></i>
             </a>
             <div class="text-xs">
-              <em>Contact: <strong>32</strong>
+              <em>Contact: <strong>{{i.contact_no}}</strong></em>
             </div>
           </div>
       </div>
-    </div>
+    {% endfor %}
+  </div>
 </div>
 
+<!--CORE Volunteers-->
+<h3 style="justify-content:center;text-align:center;margin-bottom:15px;">Meet our <span><b>Core Volunteers</b></span> </h3>
+
+<div class="row" style="margin-bottom:15px;">
+  <div class="col-xs-6 col-sm-12 col-md-6" >
+    {% for i in core_volunteers %}
+      <div class="box">
+          <div class="item">
+            <div class="item-bg">
+              <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
+            </div>
+            <div class="p-a-lg pos-rlt text-center">
+              <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
+            </div>
+          </div>
+          <div class="p-a text-center">
+            <a href class="text-md m-t block">{{i.name}}</a>
+            <p><small>NSU ID: {{i.nsu_id}}</small></p>
+            <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
+              <i class="fa fa-facebook"></i>
+              <i class="fa fa-facebook indigo"></i>
+            </a>
+            <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
+              <i class="fa fa-envelope-o"></i>
+              <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
+            </a>
+            <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
+              <i class="fa fa-linkedin"></i>
+              <i class="fa fa-linkedin light-blue-800"></i>
+            </a>
+            <div class="text-xs">
+              <em>Contact: <strong>{{i.contact_no}}</strong></em>
+            </div>
+          </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+<!--VOLUNTEERS-->
+<h3 style="justify-content:center;text-align:center;margin-bottom:15px;">Meet our <span><b>Volunteers</b></span> </h3>
+
+<div class="row" style="margin-bottom:15px;">
+  <div class="col-xs-6 col-sm-12 col-md-6" >
+    {% for i in volunteers %}
+      <div class="box">
+          <div class="item">
+            <div class="item-bg">
+              <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
+            </div>
+            <div class="p-a-lg pos-rlt text-center">
+              <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
+            </div>
+          </div>
+          <div class="p-a text-center">
+            <a href class="text-md m-t block">{{i.name}}</a>
+            <p><small>NSU ID: {{i.nsu_id}}</small></p>
+            <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
+              <i class="fa fa-facebook"></i>
+              <i class="fa fa-facebook indigo"></i>
+            </a>
+            <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
+              <i class="fa fa-envelope-o"></i>
+              <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
+            </a>
+            <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
+              <i class="fa fa-linkedin"></i>
+              <i class="fa fa-linkedin light-blue-800"></i>
+            </a>
+            <div class="text-xs">
+              <em>Contact: <strong>{{i.contact_no}}</strong></em>
+            </div>
+          </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
 
 
 
