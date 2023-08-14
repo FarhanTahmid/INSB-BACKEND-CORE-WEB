@@ -43,7 +43,7 @@
   <div class="left navside dark dk" data-layout="column">
       <div class="navbar no-radius">
       <!-- brand -->
-      <a class="navbar-brand" href="">
+      <a class="navbar-brand" href="{% url 'users:dashboard' %}">
           <div ui-include="'logos/logo.gif'"></div>
           <img src="{% static 'logos/logo.gif'%}" alt=".">
           <span class="hidden-folded inline"><br><br> IEEE NSU SB</span>
@@ -65,7 +65,7 @@
                       <span ui-include="'../assets/images/i_0.svg'"></span>
                     </i>
                   </span>
-                  <span class="nav-text">Dashboard</span>
+                  <span class="">Dashboard</span>
                 </a>
               </li>
           
@@ -204,6 +204,26 @@
                     <li>
                       <a href="{% url 'public_relation_team:team_homepage' %}" >
                         <span class="nav-text">Home</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'public_relation_team:send_email' %}" >
+                        <span class="nav-text">Send Email</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'public_relation_team:manage_event' %}" >
+                        <span class="nav-text">Manage Events</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'public_relation_team:team_homepage' %}" >
+                        <span class="nav-text">Manage Website</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'public_relation_team:manage_team' %}" >
+                        <span class="nav-text">Manage Team</span>
                       </a>
                     </li>
                     
@@ -454,36 +474,37 @@
               <!-- link and dropdown -->
               <ul class="nav navbar-nav mr-auto">
                 <li class="nav-item dropdown">
-                    <a class="nav-link" href data-toggle="dropdown">
-                      <i class="fa fa-fw fa-plus text-muted"></i>
+                    <a class="nav-link" href="{% url 'public_relation_team:team_homepage' %}">
+                      <i class="fa-solid fa-house"></i>
                       <span>Home</span>
                     </a>
                     <div ui-include="'../views/blocks/dropdown.new.html'"></div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link" href data-toggle="dropdown">
+                    <a class="nav-link" href="{% url 'public_relation_team:send_email' %}">
                       <i class="fa fa-envelope text-muted"></i>
                       <span style="color:#FFA300">Send Email</span>
                     </a>
                     <div ui-include="'../views/blocks/dropdown.new.html'"></div>
                 </li>
                 <li class="nav-item dropdown">
-                  <a class="nav-link" href data-toggle="dropdown">
+                  <a class="nav-link" href="{% url 'public_relation_team:manage_event' %}">
                     <i class="fas fa-regular fa-calendar"></i>
                     <span>Manage Events</span>
                   </a>
                   <div ui-include="'../views/blocks/dropdown.new.html'"></div>
               </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link" href data-toggle="dropdown">
-                      <i class="fa fa-fw fa-plus text-muted"></i>
+                    <a class="nav-link" href="" data-toggle="dropdown">
+                      <img src={% static 'images/website.png' %} width="20px" height="20px">
+                        <i class="fa-fa-user"></i>
                       <span>Manage Website</span>
                     </a>
                     <div ui-include="'../views/blocks/dropdown.new.html'"></div>
                 </li>
                 <li class="nav-item dropdown">
-                  <a class="nav-link" href data-toggle="dropdown">
-                    <i class="fa fa-fw fa-plus text-muted"></i>
+                  <a class="nav-link" href="{% url 'public_relation_team:manage_team' %}">
+                    <i class="fa-solid fa-people-roof"></i>
                     <span>Manage Team</span>
                   </a>
                   <div ui-include="'../views/blocks/dropdown.new.html'"></div>
@@ -582,33 +603,37 @@
   </div>
 <!-- build:js scripts/app.html.js -->
 <!-- jQuery -->
-  <script src="{% static '/libs/jquery/jquery/dist/jquery.js'%}"></script>
+<script src="{% static 'script/jquery.js'%}"></script>
 <!-- Bootstrap -->
-  <script src="{% static '/libs/jquery/tether/dist/js/tether.min.js'%}"></script>
-  <script src="{% static '/libs/jquery/bootstrap/dist/js/bootstrap.js'%}"></script>
+  <script src="{% static 'script/tether.min.js'%}"></script>
+  <script src="{% static 'script/bootstrap.js'%}"></script>
 <!-- core -->
-  <script src="{% static '/libs/jquery/underscore/underscore-min.js'%}"></script>
-  <script src="{% static '/libs/jquery/jQuery-Storage-API/jquery.storageapi.min.js'%}"></script>
-  <script src="{% static '/libs/jquery/PACE/pace.min.js'%}"></script>
+  <script src="{% static 'script/underscore-min.js'%}"></script>
+  <script src="{% static 'script/jquery.storageapi.min.js'%}"></script>
+  <script src="{% static 'script/pace.min.js'%}"></script>
 
-  <script src="{% static 'scripts/config.lazyload.js'%}"></script>
+  {% comment %} <script src="{% static 'script/config.lazyload.js'%}"></script> {% endcomment %}
 
-  <script src="{% static 'scripts/palette.js'%}"></script>
-  <script src="{% static 'scripts/ui-load.js'%}"></script>
-  <script src="{% static 'scripts/ui-jp.js'%}"></script>
-  <script src="{% static 'scripts/ui-include.js'%}"></script>
-  <script src="{% static 'scripts/ui-device.js'%}"></script>
-  <script src="{% static 'scripts/ui-form.js'%}"></script>
-  <script src="{% static 'scripts/ui-nav.js'%}"></script>
-  <script src="{% static 'scripts/ui-screenfull.js'%}"></script>
-  <script src="{% static 'scripts/ui-scroll-to.js'%}"></script>
-  <script src="{% static 'scripts/ui-toggle-class.js'%}"></script>
-
-  <script src="{% static 'scripts/app.js'%}"></script>
-
+  <script src="{% static 'script/palette.js'%}"></script>
+  <script src="{% static 'script/ui-load.js'%}"></script>
+  <script src="{% static 'script/ui-jp.js' %}"></script>
+  <script src="{% static 'script/ui-include.js'%}"></script>
+  <script src="{% static 'script/ui-device.js'%}"></script>
+  <script src="{% static 'script/ui-form.js'%}"></script>
+  <script src="{% static 'script/ui-nav.js'%}"></script>
+  <script src="{% static 'script/ui-screenfull.js'%}"></script>
+  <script src="{% static 'script/ui-scroll-to.js'%}"></script>
+  <script src="{% static 'script/ui-toggle-class.js'%}"></script>
+  {% comment %} <script src="{% static 'script/screenfull.min.js'%}"></script> {% endcomment %}
+  <script src="{% static 'script/app.js'%}"></script>
+  <!-- apexcharts -->
+  <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
+  <!-- Chart JS -->
+  <script src="{% static 'scripts/chartjs.js' %}"></script>
+  <script src="{% static 'scripts/dashboard.init.js' %}"></script>
   <!-- ajax -->
-  <script src="{% static '/libs/jquery/jquery-pjax/jquery.pjax.js'%}"></script>
-  <script src="{% static 'scripts/ajax.js'%}"></script>
+  {% comment %} <script src="{% static 'script/jquery.pjax.js'%}"></script> {% endcomment %}
+  <script src="{% static 'script/ajax.js'%}"></script>
 <!-- endbuild -->
 </body>
 </html>
