@@ -41,7 +41,7 @@
     <div class="left navside dark dk" data-layout="column">
   	  <div class="navbar no-radius">
         <!-- brand -->
-        <a class="navbar-brand" href="">
+        <a class="navbar-brand" href="{% url 'users:dashboard' %}">
         	<div ui-include="'logos/logo.gif'"></div>
         	<img src="{% static 'logos/logo.gif'%}" alt=".">
         	<span class="hidden-folded inline"><br><br> IEEE NSU SB</span>
@@ -202,6 +202,26 @@
                       <li>
                         <a href="{% url 'public_relation_team:team_homepage' %}" >
                           <span class="nav-text">Home</span>
+                        </a>
+                      </li>
+					  <li>
+                        <a href="{% url 'public_relation_team:send_email' %}" >
+                          <span class="nav-text">Send Email</span>
+                        </a>
+                      </li>
+					  <li>
+                        <a href="{% url 'public_relation_team:manage_event' %}" >
+                          <span class="nav-text">Manage Events</span>
+                        </a>
+                      </li>
+					  <li>
+                        <a href="{% url 'public_relation_team:team_homepage' %}" >
+                          <span class="nav-text">Manage Website</span>
+                        </a>
+                      </li>
+					  <li>
+                        <a href="{% url 'public_relation_team:manage_team' %}" >
+                          <span class="nav-text">Manage Team</span>
                         </a>
                       </li>
                       
@@ -1597,7 +1617,7 @@
   <script src="{% static 'script/jquery.storageapi.min.js'%}"></script>
   <script src="{% static 'script/pace.min.js'%}"></script>
 
-  <script src="{% static 'script/config.lazyload.js'%}"></script>
+  {% comment %} <script src="{% static 'script/config.lazyload.js'%}"></script> {% endcomment %}
 
   <script src="{% static 'script/palette.js'%}"></script>
   <script src="{% static 'script/ui-load.js'%}"></script>
@@ -1617,7 +1637,7 @@
   <script src="{% static 'scripts/chartjs.js' %}"></script>
   <script src="{% static 'scripts/dashboard.init.js' %}"></script>
   <!-- ajax -->
-  <script src="{% static 'script/jquery.pjax.js'%}"></script>
+  {% comment %} <script src="{% static 'script/jquery.pjax.js'%}"></script> {% endcomment %}
   <script src="{% static 'script/ajax.js'%}"></script>
 <!-- endbuild -->
 </body>
