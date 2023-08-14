@@ -1578,7 +1578,8 @@ html {
 body {
   height: auto;
   min-height: 100%;
-  position: relative; }
+  position: relative; 
+}
 
 .app-aside {
   position: fixed !important;
@@ -1601,7 +1602,8 @@ body {
   margin: inherit;
   z-index: 1020; }
   .app-header ~ .app-body {
-    padding-top: 3.5rem; }
+    padding-top: 3.5rem;
+  }
   .app-header.navbar-md ~ .app-body {
     padding-top: 4rem; }
   .app-header.navbar-sm ~ .app-body {

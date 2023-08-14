@@ -474,42 +474,42 @@
               <!-- link and dropdown -->
               <ul class="nav navbar-nav mr-auto">
                 <li class="nav-item dropdown">
-                    <a class="nav-link" href="{% url 'public_relation_team:team_homepage' %}">
-                      <i class="fa-solid fa-house"></i>
-                      <span>Home</span>
-                    </a>
-                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                  <a class="nav-link" href="{% url 'public_relation_team:team_homepage' %}">
+                    <i class="fa fa-home"></i>
+                    <span>Home</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link" href="{% url 'public_relation_team:send_email' %}">
-                      <i class="fa fa-envelope text-muted"></i>
-                      <span style="color:#FFA300">Send Email</span>
-                    </a>
-                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                  <a class="nav-link" href="{% url 'public_relation_team:send_email' %}">
+                    <i class="fa fa-envelope text-muted"></i>
+                    <span style="color:#FFA300">Send Email</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
                 </li>
                 <li class="nav-item dropdown">
-                  <a class="nav-link" href="{% url 'public_relation_team:manage_event' %}">
-                    <i class="fas fa-regular fa-calendar"></i>
-                    <span>Manage Events</span>
+                <a class="nav-link" href="{% url 'public_relation_team:manage_event' %}">
+                  <i class="fa fa-calendar"></i>
+                  <span>Manage Events</span>
+                </a>
+                <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+              <li class="nav-item dropdown">
+                  <a class="nav-link" href="" data-toggle="dropdown">
+                    <img src={% static 'images/website.png' %} width="20px" height="20px">
+                      <i class="fa-fa-user"></i>
+                    <span>Manage Website</span>
                   </a>
                   <div ui-include="'../views/blocks/dropdown.new.html'"></div>
               </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="" data-toggle="dropdown">
-                      <img src={% static 'images/website.png' %} width="20px" height="20px">
-                        <i class="fa-fa-user"></i>
-                      <span>Manage Website</span>
-                    </a>
-                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
-                </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link" href="{% url 'public_relation_team:manage_team' %}">
-                    <i class="fa-solid fa-people-roof"></i>
-                    <span>Manage Team</span>
-                  </a>
-                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
-                </li>
-              </ul>
+              <li class="nav-item dropdown">
+                <a class="nav-link" href="{% url 'public_relation_team:manage_team' %}">
+                  <i class="fa fa-group"></i>
+                  <span>Manage Team</span>
+                </a>
+                <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+            </ul>
         
               <div ui-include="'../views/blocks/navbar.form.html'"></div>
               <!-- / -->
