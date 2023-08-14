@@ -3,7 +3,7 @@ from . models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Grou
 # Register your models here.
 @admin.register(Teams)
 class Teams(admin.ModelAdmin):
-    list_display=['id','team_name']
+    list_display=['id','team_name','primary']
 @admin.register(Roles_and_Position)
 class Roles(admin.ModelAdmin):
     list_display= ['id','role','is_eb_member','is_officer','is_faculty']

@@ -29,7 +29,10 @@ urlpatterns = [
     path('public_relation_team/',include('public_relation_team.urls',namespace='public_relation_team')),
     path('system_administration',include('system_administration.urls',namespace='system_administration')),
     path('main_website/',include('main_website.urls',namespace='main_website')),
-    path('events_and_management_team/',include('events_and_management_team.urls',namespace="events_and_management_team.urls"))
+    path('events_and_management_team/',include('events_and_management_team.urls',namespace="events_and_management_team")),
+    path('logistics_and_operations_team/',include('logistics_and_operations_team.urls',namespace="logistics_and_operations_team")),
+    path('content_writing_and_publications_team/',include('content_writing_and_publications_team.urls',namespace="content_writing_and_publications_team")),
+    path('promotions_team/',include('promotions_team.urls',namespace="promotions_team"))
     
 ]
 urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

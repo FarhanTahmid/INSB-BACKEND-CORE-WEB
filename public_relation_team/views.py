@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from google.oauth2.credentials import Credentials
+from django.conf import settings
 from googleapiclient.discovery import build
 from central_branch import renderData
 from django.contrib.auth.decorators import login_required
@@ -14,10 +14,24 @@ from port.models import Roles_and_Position
 from .models import Manage_Team
 from main_website.forms import HomePageBannerWithTextForm
 
+from users import renderData
+from users.renderData import LoggedinUser
 # Create your views here.
 
 def team_home_page(request):
-    return render(request,"public_relation_team/team_homepage.html")
+    
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    
+    context={
+        'co_ordinators':PRT_Data.getTeamCoOrdinators(),
+        'incharges':PRT_Data.getTeamIncharges(),
+        'core_volunteers':PRT_Data.getTeamCoreVolunteers(),
+        'volunteers':PRT_Data.getTeamVolunteers(),
+        'user_data':user_data,
+        'media_url':settings.MEDIA_URL,
+    }
+    return render(request,"public_relation_team/team_homepage.html",context)
 
 @login_required
 def event_control(request):
@@ -50,10 +64,10 @@ def super_event_creation(request):
             end_date = request.POST.get('final_date')
             saving_data = SuperEvents(super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date,end_date=end_date)
             saving_data.save()
-            return redirect('public_relation_team:event_control')
+            return redirect('public_relation_team:manage_event')
         
         elif (request.POST.get('cancel')):
-            return redirect('public_relation_team:event_control')
+            return redirect('public_relation_team:manage_event')
         
     return render(request,"public_relation_team/event/super_event_creation_form.html")
 @login_required
@@ -98,7 +112,7 @@ def event_creation_form_page1(request):
             
                 
         elif(request.POST.get('cancel')):
-            return redirect('public_relation_team:event_control')
+            return redirect('public_relation_team:manage_event')
     return render(request,'public_relation_team/event/event_creation_form1.html',context)
 
 @login_required
@@ -122,7 +136,7 @@ def event_creation_form_page2(request,event_id):
                 messages.info(request,"Database Error Occured! Please try again later.")
 
         elif(request.POST.get('cancel')):
-            return redirect('public_relation_team:event_control')
+            return redirect('public_relation_team:manage_event')
 
 
     return render(request,'public_relation_team/event/event_creation_form2.html',context)
@@ -150,7 +164,7 @@ def event_creation_form_page3(request,event_id):
             if(update_event_details==False):
                 messages.info(request, "An error Occured! Please Try again!")
             else:
-                return redirect('public_relation_team:event_control')
+                return redirect('public_relation_team:manage_event')
 
     return render(request,'public_relation_team/event/event_creation_form3.html',context)
 
@@ -304,4 +318,12 @@ def manageWebsiteHome(request):
     }
     return render(request,"public_relation_team/manage_website/manage_website_home.html",context)
 
+def send_email(request):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    context={
+        'user_data':user_data,
+        'media_url':settings.MEDIA_URL,
+    }
+    return render(request,'public_relation_team/email/compose_email.html',context)
     

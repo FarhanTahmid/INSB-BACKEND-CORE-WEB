@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from users.models import Members
 # Create your models here.
 
 
@@ -13,3 +14,4 @@ class Logistic_Item_List(models.Model):
         return self.item_list
     def get_absolute_url(self):
         return reverse("logistic_item_list", kwargs={"item": self.item_list})
+

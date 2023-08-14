@@ -300,6 +300,14 @@
     </header>
     <div class="container">
         <h1 class="header">Manage Events</h1>
+        <div class="container">
+            <div class="create_event_button">
+                <button><a href="{% url 'public_relation_team:event_creation_form1' %}" class="">Create a new Event</a></button>
+                <button><a href="{% url 'public_relation_team:super_event_creation' %}" class="">Create a new Super Event</a></button>
+            </div>
+            <br><br>
+            
+        </div>
         <div class="event">
             <section class="event_header">
                 <h1>Event List</h1>
