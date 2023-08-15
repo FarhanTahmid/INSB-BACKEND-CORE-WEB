@@ -191,111 +191,46 @@
                                     <!-- MasterSlider Main -->
                                     <div id="MS5bab48b0b8b8a" class="master-slider ms-skin-default">
                                         {% comment %} Pictures here {% endcomment %}
+                                        {% for i in banner_item %}
                                         <div class="ms-slide" data-delay="7" data-fill-mode="fill">
                                             <img src="{% static 'masterslider/public/assets/css/blank.gif' %}" alt="" title=""
-                                                data-src="{% static 'upload/slider-1.jpg'%}" />
+                                                data-src="{{media_url}}{{i.banner_picture}}"
+                                                style="opacity: 0.5;" />
+
 
                                             <div class="ms-layer  msp-cn-11-1"
-                                                style="font-size: 30px; margin-left: 15%;"
+                                                style="font-family: 'Poppins', sans-serif; font-size: 30px; margin-left: 15%;"
                                                 data-effect="t(true,n,n,500,n,n,n,n,n,n,n,n,n,n,n)" data-duration="387"
                                                 data-ease="easeOutQuint" data-offset-x="-2" data-offset-y="-144"
                                                 data-origin="ml" data-position="normal">
-                                                FOCUSING LIMELIGHT ON</div>
+                                                {{i.first_layer_text}}</div>
 
                                             <div class="ms-layer  msp-cn-11-2"
-                                                style="font-size: 80px; font-weight: bolder; margin-top: -40px; margin-left: 10%;"
+                                                style="font-family: 'Poppins', sans-serif; font-size: 80px; font-weight: bolder; margin-top: -40px; margin-left: 10%;"
                                                 data-effect="t(true,n,n,-500,n,n,n,n,n,n,n,n,n,n,n)" data-duration="387"
                                                 data-delay="387" data-ease="easeOutQuint" data-offset-x="2"
                                                 data-offset-y="-33" data-origin="ml" data-position="normal">
-                                                THE <span style="color: #ffe02f;">MASTERMINDS!</span></div>
+                                                {{i.second_layer_text}} <span style="color: #ffe02f;">{{i.second_layer_text_colored}}</span></div>
 
                                             <div class="ms-layer  msp-cn-11-7"
-                                                style="font-size: 17px; margin-top: -40px;margin-left: 10%;"
+                                                style="font-family: 'Poppins', sans-serif; font-size: 17px; margin-top: -40px;margin-left: 10%;"
                                                 data-effect="t(true,n,n,-500,n,n,n,n,n,n,n,n,n,n,n)" data-duration="400"
                                                 data-delay="750" data-ease="easeOutQuint" data-offset-x="3"
                                                 data-offset-y="396" data-origin="tl" data-position="normal">
-                                                Our community welcomes you to boast your innovativeness through<br> tech
-                                                competitions and informative conferences. <br>Moreover, expanding your
-                                                leadership, communication and <br>networking competencies.</div>
+                                                {{i.third_layer_text}}
+                                            </div>
 
                                             <a href="" target="_self" style="margin-left: 10%; color: "
                                                 class="ms-layer ms-btn ms-btn-round ms-btn-n msp-preset-btn-159"
                                                 data-duration="437" data-delay="1112" data-ease="easeOutQuint"
                                                 data-type="button" data-offset-x="3" data-offset-y="132"
-                                                data-origin="ml" data-position="normal">About INSB</a>
+                                                data-origin="ml" data-position="normal">{{i.button_text}}</a>
 
                                         </div>
-                                        <div class="ms-slide" data-delay="7" data-fill-mode="fill">
-                                            <img src="{% static 'masterslider/public/assets/css/blank.gif' %}" alt="" title=""
-                                                data-src="{% static 'upload/slider-2.jpg' %}" />
-
-                                            <div class="ms-layer  msp-cn-11-1"
-                                                style="font-size: 30px; margin-left: 15%;"
-                                                data-effect="t(true,n,n,500,n,n,n,n,n,n,n,n,n,n,n)" data-duration="387"
-                                                data-ease="easeOutQuint" data-offset-x="-2" data-offset-y="-144"
-                                                data-origin="ml" data-position="normal">
-                                                REACH EXPERTS WORLDWIDE TO BUILD &</div>
-
-                                            <div class="ms-layer  msp-cn-11-2"
-                                                style="font-size: 80px; font-weight: bolder; margin-top: -40px; margin-left: 10%;"
-                                                data-effect="t(true,n,n,-500,n,n,n,n,n,n,n,n,n,n,n)" data-duration="387"
-                                                data-delay="387" data-ease="easeOutQuint" data-offset-x="2"
-                                                data-offset-y="-33" data-origin="ml" data-position="normal">
-                                                BOOST <span style="color: #ffe02f;">BRILLIANCE!</span></div>
-
-                                            <div class="ms-layer  msp-cn-11-7"
-                                                style="font-size: 17px; margin-top: -40px;margin-left: 10%;"
-                                                data-effect="t(true,n,n,-500,n,n,n,n,n,n,n,n,n,n,n)" data-duration="400"
-                                                data-delay="750" data-ease="easeOutQuint" data-offset-x="3"
-                                                data-offset-y="396" data-origin="tl" data-position="normal">
-                                                INSB serves you the opportunity to connect with diverse people,
-                                                share<br> ideas through exclusive publications, seminars, professional
-                                                and<br> educational activities engaging you to unlock your true
-                                                potential.</div>
-
-                                            <a href="" target="_self" style="margin-left: 10%;"
-                                                class="ms-layer ms-btn ms-btn-round ms-btn-n msp-preset-btn-159"
-                                                data-duration="437" data-delay="1112" data-ease="easeOutQuint"
-                                                data-type="button" data-offset-x="3" data-offset-y="132"
-                                                data-origin="ml" data-position="normal">Our Events</a>
-
-                                        </div>
-                                        <div class="ms-slide" data-delay="7" data-fill-mode="fill">
-                                            <img src="{% static 'masterslider/public/assets/css/blank.gif' %}" alt="" title=""
-                                                data-src="{% static 'upload/slider-2.jpg' %}" />
-
-                                            <div class="ms-layer  msp-cn-11-1"
-                                                style="font-size: 30px; margin-left: 15%;"
-                                                data-effect="t(true,n,n,500,n,n,n,n,n,n,n,n,n,n,n)" data-duration="387"
-                                                data-ease="easeOutQuint" data-offset-x="-2" data-offset-y="-144"
-                                                data-origin="ml" data-position="normal">
-                                                ARE YOU</div>
-
-                                            <div class="ms-layer  msp-cn-11-2"
-                                                style="font-size: 80px; font-weight: bolder; margin-top: -40px; margin-left: 10%;"
-                                                data-effect="t(true,n,n,-500,n,n,n,n,n,n,n,n,n,n,n)" data-duration="387"
-                                                data-delay="387" data-ease="easeOutQuint" data-offset-x="2"
-                                                data-offset-y="-33" data-origin="ml" data-position="normal">
-                                                TECH <span style="color: #ffe02f;">SAVVY?</span></div>
-
-                                            <div class="ms-layer  msp-cn-11-7"
-                                                style="font-size: 17px; margin-top: -40px;margin-left: 10%;"
-                                                data-effect="t(true,n,n,-500,n,n,n,n,n,n,n,n,n,n,n)" data-duration="400"
-                                                data-delay="750" data-ease="easeOutQuint" data-offset-x="3"
-                                                data-offset-y="396" data-origin="tl" data-position="normal">
-                                                We are a medium through which you can present your tech
-                                                ideas,<br>discover your abilities and get those aha moments!</div>
-
-                                            <a href="" target="_self" style="margin-left: 10%;"
-                                                class="ms-layer ms-btn ms-btn-round ms-btn-n msp-preset-btn-159"
-                                                data-duration="437" data-delay="1112" data-ease="easeOutQuint"
-                                                data-type="button" data-offset-x="3" data-offset-y="132"
-                                                data-origin="ml" data-position="normal">Our Achievements</a>
-
-                                        </div>
-
+                                        {% endfor %}
                                         
                                     </div>
+                                    
                                     <!-- END MasterSlider Main -->
 
                                 </div>

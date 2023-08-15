@@ -1,16 +1,18 @@
 from django.db import models
 from django.core.files.storage import FileSystemStorage
 from port.models import Chapters_Society_and_Affinity_Groups
+from django_resized import ResizedImageField
 # Create your models here.
 
 # Tables for Homepage
 class HomepageBannerPictureWithText(models.Model):
-    banner_picture=models.ImageField(null=False,blank=False,upload_to='main_website_files/homepage/banner_pictures')
+    banner_picture=ResizedImageField(null=False,blank=False,upload_to='main_website_files/homepage/banner_pictures')
     first_layer_text=models.CharField(null=False,blank=False,default="FOCUSING LIMELIGHT ON",max_length=50)
     second_layer_text=models.CharField(null=False,blank=False,default="THE",max_length=20)
     second_layer_text_colored=models.CharField(null=False,blank=False,default="MASTERMINDS",max_length=20)
     third_layer_text=models.TextField(null=False,blank=False,max_length=500)
-    
+    button_text=models.CharField(null=False,blank=False,max_length=50,default="About INSB")
+    button_url=models.CharField(null=False,blank=False,default="#",max_length=200)
     class Meta:
         verbose_name='Homepage Banner Picture With Texts'
     def __str__(self) -> str:
