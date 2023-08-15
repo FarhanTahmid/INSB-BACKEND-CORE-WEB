@@ -161,7 +161,6 @@ def getRecruitmentStats():
         for i in recruitment_session.objects.all().order_by('-id')[:5]:
             recruitee_count=recruited_members.objects.filter(session_id=i.id).count()
             recruitment_stats.update({i.session:recruitee_count})
-        print(recruitment_stats)
         return recruitment_stats
     except:
         return False    
