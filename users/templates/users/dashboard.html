@@ -653,24 +653,14 @@
 			<div class="card">
 				<div class="card-body">
 					<div class="d-flex flex-wrap align-items-center mb-3">
-						<h5 class="card-title mb-0">Sales Statistics</h5>
-						<div class="ms-auto">
-							<div class="dropdown">
-								<a class="dropdown-toggle text-reset" href="#" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<span class="text-muted font-size-12">Sort By:</span> <span class="fw-medium">Weekly<i class="mdi mdi-chevron-down ms-1"></i></span>
-								</a>
-								<div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-									<a class="dropdown-item" href="#">Monthly</a>
-									<a class="dropdown-item" href="#">Yearly</a>
-								</div>
-							</div>
-						</div>
+						<h5 class="card-title mb-0">Recruitment Statistics</h5>
+						
 					</div>
 
 				   <div class="row align-items-center">
 					<div class="col-xl-8">
 						<div>
-							 <div id="sales-statistics" data-colors='["#eff1f3","#eff1f3","#eff1f3","#eff1f3","#33a186","#3980c0","#eff1f3","#eff1f3","#eff1f3", "#eff1f3"]' class="apex-chart"></div>
+							 <div id="recruitment-statistics" data-colors='["#33a186","#3980c0","#33a186","#3980c0","#33a186","#3980c0"]' class="apex-chart"></div>
 						</div>
 					  </div>
 					   <div class="col-xl-4">
@@ -1638,7 +1628,7 @@
   <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
   <!-- Chart JS -->
   <script src="{% static 'scripts/chartjs.js' %}"></script>
-  <script src="{% static 'scripts/dashboard.init.js' %}"></script>
+  <script src="{% static 'scripts/dashboard.js' %}"></script>
   <!-- ajax -->
   {% comment %} <script src="{% static 'script/jquery.pjax.js'%}"></script> {% endcomment %}
   <script src="{% static 'script/ajax.js'%}"></script>

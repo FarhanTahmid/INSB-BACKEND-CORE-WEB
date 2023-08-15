@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect
+from django.http import HttpResponseBadRequest, JsonResponse
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -88,7 +89,7 @@ def dashboard(request):
     '''This function loads all the dashboard activities for the program'''
     
     #### LOOK into registerUser.py for manual input of data from csv. Templates are created there.
-
+    
     #Loading current user data from renderData.py
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
@@ -100,6 +101,18 @@ def dashboard(request):
 
     
     return render(request,"users/dashboard.html",context=context) 
+
+@login_required
+def getDashboardStats(request):
+    if request.method=="GET":
+        #First get what the api is requesting form dashboard.init.js
+        info_type=request.GET.get('stat_type')
+        if(info_type=="recruitment_stat"):
+            recruitmentStat=renderData.getRecruitmentStats()
+            return JsonResponse(recruitmentStat)
+        else:
+            return HttpResponseBadRequest
+    
 
 
 def profile_page(request):
@@ -225,3 +238,4 @@ def forgotPassword_resetPassword(request,username,token):
 def invalidURL(request):
     '''shows the invalid URL Page'''
     return render(request,'users/invalid_url.html')
+
