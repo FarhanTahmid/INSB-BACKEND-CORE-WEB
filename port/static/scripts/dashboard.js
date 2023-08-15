@@ -194,48 +194,79 @@ chart.render();
 
 
 //  Sales Statistics
-var barchartColors = getChartColorsArray("sales-statistics");
-var options = {
-    series: [{
-        data: [7, 11, 15, 20, 18, 23, 17,20, 22, 19]
-    }],
-    chart: {
-        toolbar: {
-            show: false,
-        },
-        height: 350,
-        type: 'bar',
-        events: {
-            click: function (chart, w, e) {
-            }
-        }
-    },
-    plotOptions: {
-        bar: {
-            columnWidth: '70%',
-            distributed: true,
-        }
-    },
-    dataLabels: {
-        enabled: false
-    },
-    legend: {
-        show: false
-    },
-    colors: barchartColors,
-    xaxis: {
-        categories: ['Jan', 'Feb','Mar','Apr','May', 'jun', 'Jul','Aug', 'Sep', 'Oct'],
-        labels: {
-            style: {
-                colors: barchartColors,
-                fontSize: '12px'
-            }
-        }
-    }
-};
+// Function to fetch data from Django API
+async function fetchData() {
+  try {
+      const response = await fetch('/users/get_dashboard_stats/?stat_type=' + encodeURIComponent('recruitment_stat'));
+      const data = await response.json();
+      return data;
+  } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error; // Rethrow the error for further handling
+  }
+}
 
-var chart = new ApexCharts(document.querySelector("#sales-statistics"), options);
-chart.render();
+// Asynchronous function to initialize the chart
+async function initializeChart() {
+  try {
+      var barchartColors = getChartColorsArray("recruitment-statistics");
+
+      var options = {
+          series: [{
+              data: []
+          }],
+          chart: {
+              toolbar: {
+                  show: false,
+              },
+              height: 350,
+              type: 'bar',
+              events: {
+                  click: function (chart, w, e) {
+                      // Handle click event if needed
+                  }
+              }
+          },
+          plotOptions: {
+              bar: {
+                  columnWidth: '70%',
+                  distributed: true,
+              }
+          },
+          dataLabels: {
+              enabled: false
+          },
+          legend: {
+              show: false
+          },
+          colors: barchartColors,
+          xaxis: {
+              categories: [], // Categories will be populated dynamically
+              labels: {
+                  style: {
+                      colors: barchartColors,
+                      fontSize: '12px'
+                  }
+              }
+          }
+      };
+
+      // Fetch data and update chart options
+      const data = await fetchData();
+      options.xaxis.categories = Object.keys(data);
+      options.series[0].data = Object.values(data);
+      console.log(data)
+      // Create and render the chart
+      var chart = new ApexCharts(document.querySelector("#recruitment-statistics"), options);
+      chart.render();
+  } catch (error) {
+      console.error('Error initializing chart:', error);
+  }
+}
+
+// Call the asynchronous function to initialize the chart
+initializeChart();
+
 
 
 // Sales Category

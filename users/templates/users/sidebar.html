@@ -1,0 +1,443 @@
+{% load static %}
+
+{% block sidebar %}
+
+    <!-- fluid app aside -->
+  <div class="left navside dark dk" data-layout="column">
+      <div class="navbar no-radius">
+      <!-- brand -->
+      <a class="navbar-brand" href="{% url 'users:dashboard' %}">
+          <div ui-include="'logos/logo.gif'"></div>
+          <img src="{% static 'logos/logo.gif'%}" alt=".">
+          <span class="hidden-folded inline"><br><br> IEEE NSU SB</span>
+      </a>
+      <!-- / brand -->
+    </div>
+    <div class="hide-scroll" data-flex>
+        <nav class="scroll nav-light">
+          
+            <ul class="nav" ui-nav>
+              <li class="nav-header hidden-folded">
+                <small class="text-muted">Main</small>
+              </li>
+              
+              <li>
+                <a href="{% url 'users:dashboard' %}" >
+                  <span class="nav-icon">
+                    <i class="material-icons">&#xe3fc;
+                      <span ui-include="'../assets/images/i_0.svg'"></span>
+                    </i>
+                  </span>
+                  <span class="nav-text">Dashboard</span>
+                </a>
+              </li>
+          
+          
+              <li class="nav-header hidden-folded">
+                <small class="text-muted">Teams</small>
+              </li>
+              <li>
+                  <a>
+                    <span class="nav-caret">
+                      <i class="fa fa-caret-down"></i>
+                    </span>
+                    
+                    <span class="nav-icon">
+                      <img src={% static 'images/logo.gif' %} width="20px" height="20px">
+                      <i class="fa-fa-user">
+                      </i>
+                    </span>
+                    <span class="nav-text">IEEE NSU Student Branch</span>
+                  </a>
+                  <ul class="nav-sub nav-mega nav-mega-3">
+                    <li>
+                      <a href={% url 'central_branch:central_home' %}>
+                        <span class="nav-text">Home</span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+              <li>
+                <a>
+                  <span class="nav-caret">
+                    <i class="fa fa-caret-down"></i>
+                  </span>
+                  
+                  <span class="nav-icon">
+                      <img src={% static 'images/content.png' %} width="20px" height="20px">
+                      <i class="fa-fa-user">
+                      </i>
+                  </span>
+                  <span class="nav-text">Content Writing and Publications</span>
+                </a>
+                <ul class="nav-sub nav-mega nav-mega-3">
+                  <li>
+                    <a href="arrow.html" >
+                      <span class="nav-text">Home</span>
+                    </a>
+                  </li>
+                  
+                </ul>
+              </li>
+          
+              <li>
+                  <a>
+                    <span class="nav-caret">
+                      <i class="fa fa-caret-down"></i>
+                    </span>
+                    
+                    <span class="nav-icon">
+                      <img src={% static 'images/event.png' %} width="20px" height="20px">
+                      <i class="fa-fa-user">
+                      </i>
+                    </span>
+                    <span class="nav-text">Event and Management</span>
+                  </a>
+                  <ul class="nav-sub nav-mega nav-mega-3">
+                    <li>
+                      <a href="{% url 'events_and_management_team:em_team_homepage' %}" >
+                        <span class="nav-text">Home</span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+
+                <li>
+                  <a>
+                    <span class="nav-caret">
+                      <i class="fa fa-caret-down"></i>
+                    </span>
+                    
+                  <span class="nav-icon">
+                      <img src={% static 'images/logistics.png' %} width="20px" height="20px">
+                      <i class="fa-fa-user">
+                      </i>
+                  </span>
+                    <span class="nav-text">Logistics and Operations</span>
+                  </a>
+                  <ul class="nav-sub nav-mega nav-mega-3">
+                    <li>
+                      <a href="arrow.html" >
+                        <span class="nav-text">Arrow</span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+
+                <li>
+                  <a>
+                    <span class="nav-caret">
+                      <i class="fa fa-caret-down"></i>
+                    </span>
+                    
+                  <span class="nav-icon">
+                      <img src={% static 'images/promotion.png' %} width="20px" height="20px">
+                      <i class="fa-fa-user">
+                      </i>
+                  </span>
+                    <span class="nav-text">Promotions</span>
+                  </a>
+                  <ul class="nav-sub nav-mega nav-mega-3">
+                    <li>
+                      <a href="arrow.html" >
+                        <span class="nav-text">Arrow</span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+
+                <li>
+                  <a>
+                    <span class="nav-caret">
+                      <i class="fa fa-caret-down"></i>
+                    </span>
+                    
+                  <span class="nav-icon">
+                      <img src={% static 'images/pr.png' %} width="20px" height="20px">
+                      <i class="fa-fa-user">
+                      </i>
+                  </span>
+                    <span class="nav-text">Public Relations</span>
+                  </a>
+                  <ul class="nav-sub nav-mega nav-mega-3">
+                    <li>
+                      <a href="{% url 'public_relation_team:team_homepage' %}" >
+                        <span class="nav-text">Home</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'public_relation_team:send_email' %}" >
+                        <span class="nav-text">Send Email</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'public_relation_team:manage_event' %}" >
+                        <span class="nav-text">Manage Events</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'public_relation_team:team_homepage' %}" >
+                        <span class="nav-text">Manage Website</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'public_relation_team:manage_team' %}" >
+                        <span class="nav-text">Manage Team</span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+                <li>
+                  <a>
+                    <span class="nav-caret">
+                      <i class="fa fa-caret-down"></i>
+                    </span>
+                    
+                  <span class="nav-icon">
+                      <img src={% static 'images/membership.png' %} width="20px" height="20px">
+                      <i class="fa-fa-user">
+                      </i>
+                  </span>
+                    <span class="nav-text">Membership Development</span>
+                  </a>
+                  <ul class="nav-sub nav-mega nav-mega-3">
+                    <li>
+                      <a href="{% url 'membership_development_team:md_team_homepage' %}" >
+                        <span class="nav-text">Home</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'membership_development_team:members_list' %}" >
+                        <span class="nav-text">INSB Members</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'recruitment:recruitment_home' %}" >
+                        <span class="nav-text">Recruitment</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'membership_development_team:membership_renewal' %}" >
+                        <span class="nav-text">Membership Renewal</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'membership_development_team:data_access' %}" >
+                        <span class="nav-text">Manage Team</span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+
+                <li>
+                  <a>
+                    <span class="nav-caret">
+                      <i class="fa fa-caret-down"></i>
+                    </span>
+                    
+                  <span class="nav-icon">
+                      <img src={% static 'images/website.png' %} width="20px" height="20px">
+                      <i class="fa-fa-user">
+                      </i>
+                  </span>
+                    <span class="nav-text">Website Development</span>
+                  </a>
+                  <ul class="nav-sub nav-mega nav-mega-3">
+                    <li>
+                      <a href="arrow.html" >
+                        <span class="nav-text">Arrow</span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+
+                <li>
+                  <a>
+                    <span class="nav-caret">
+                      <i class="fa fa-caret-down"></i>
+                    </span>
+                    
+                    <span class="nav-icon">
+                      <img src={% static 'images/media.gif' %} width="20px" height="20px">
+                      <i class="fa-fa-user">
+                      </i>
+                  </span>
+                    <span class="nav-text">Media</span>
+                  </a>
+                  <ul class="nav-sub nav-mega nav-mega-3">
+                    <li>
+                      <a href="arrow.html" >
+                        <span class="nav-text">Arrow</span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+
+                <li>
+                  <a>
+                    <span class="nav-caret">
+                      <i class="fa fa-caret-down"></i>
+                    </span>
+                    
+                    <span class="nav-icon">
+                      <img src={% static 'images/graphics.png' %} width="20px" height="20px">
+                      <i class="fa-fa-user">
+                      </i>
+                  </span>
+                    <span class="nav-text">Graphics</span>
+                  </a>
+                  <ul class="nav-sub nav-mega nav-mega-3">
+                    <li>
+                      <a href="arrow.html" >
+                        <span class="nav-text">Arrow</span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+
+                <li>
+                  <a>
+                    <span class="nav-caret">
+                      <i class="fa fa-caret-down"></i>
+                    </span>
+                    
+                    <span class="nav-icon">
+                      <img src={% static 'images/finance.png' %} width="20px" height="20px">
+                      <i class="fa-fa-user">
+                      </i>
+                  </span>
+                    <span class="nav-text">Finance and Corporate</span>
+                  </a>
+                  <ul class="nav-sub nav-mega nav-mega-3">
+                    <li>
+                      <a href="arrow.html" >
+                        <span class="nav-text">Arrow</span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+                <ul class="nav" ui-nav>
+                  <li class="nav-header hidden-folded">
+                    <small class="text-muted">Chapters and Affinity Group</small>
+                  </li>
+                  
+                  <li>
+                      <a>
+                        <span class="nav-caret">
+                          <i class="fa fa-caret-down"></i>
+                        </span>
+                        
+                        <span class="nav-icon">
+                          <img src={% static 'logos/PES.png' %} width="20px" height="20px">
+                          <i class="fa-fa-user">
+                          </i>
+                      </span>
+                        <span class="nav-text">IEEE NSU PES SBC</span>
+                      </a>
+                      <ul class="nav-sub nav-mega nav-mega-3">
+                        <li>
+                          <a href="arrow.html" >
+                            <span class="nav-text">Arrow</span>
+                          </a>
+                        </li>
+                        
+                      </ul>
+                  </li>
+
+                  <li>
+                      <a>
+                        <span class="nav-caret">
+                          <i class="fa fa-caret-down"></i>
+                        </span>
+                        
+                        <span class="nav-icon">
+                          <img src={% static 'logos/RAS.png' %} width="20px" height="20px">
+                          <i class="fa-fa-user">
+                          </i>
+                      </span>
+                        <span class="nav-text">IEEE NSU RAS SBC</span>
+                      </a>
+                      <ul class="nav-sub nav-mega nav-mega-3">
+                        <li>
+                          <a href="arrow.html" >
+                            <span class="nav-text">Arrow</span>
+                          </a>
+                        </li>
+                        
+                      </ul>
+                  </li>
+
+                  <li>
+                      <a>
+                        <span class="nav-caret">
+                          <i class="fa fa-caret-down"></i>
+                        </span>
+                        
+                        <span class="nav-icon">
+                          <img src={% static 'logos/IAS.png' %} width="20px" height="20px">
+                          <i class="fa-fa-user">
+                          </i>
+                      </span>
+                        <span class="nav-text">IEEE NSU IAS SBC</span>
+                      </a>
+                      <ul class="nav-sub nav-mega nav-mega-3">
+                        <li>
+                          <a href="arrow.html" >
+                            <span class="nav-text">Arrow</span>
+                          </a>
+                        </li>
+                        
+                      </ul>
+                  </li>
+
+                  <li>
+                      <a>
+                        <span class="nav-caret">
+                          <i class="fa fa-caret-down"></i>
+                        </span>
+                        
+                        <span class="nav-icon">
+                          <img src={% static 'logos/WIE.png' %} width="20px" height="20px">
+                          <i class="fa-fa-user">
+                          </i>
+                      </span>
+                        <span class="nav-text">IEEE WIE AG</span>
+                      </a>
+                      <ul class="nav-sub nav-mega nav-mega-3">
+                        <li>
+                          <a href="arrow.html" >
+                            <span class="nav-text">Arrow</span>
+                          </a>
+                        </li>
+                        
+                      </ul>
+                  </li>
+            </ul>
+        </nav>
+    </div>
+  <div class="b-t">
+      <div class="nav-fold">
+          <a href="{% url 'users:profile' %}">
+              <span class="pull-left">
+                <img src="{{ user_data.profile_picture }}" alt="..." class="w-40 img-circle">
+              </span>
+              <span class="clear hidden-folded p-x">
+                <span class="block _500">{{user_data.name}}</span>
+                <small class="block text-muted"><i class="fa fa-circle text-success m-r-sm"></i>online</small>
+              </span>
+          </a>
+      </div>
+  </div>
+  </div>
+
+{% endblock sidebar %}
