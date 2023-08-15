@@ -55,7 +55,9 @@ INSTALLED_APPS = [
     'events_and_management_team',
     'public_relation_team',
     'meeting_minutes',
-    'main_website'
+    'main_website',
+    'content_writing_and_publications_team',
+    'promotions_team'
 ]
 
 MIDDLEWARE = [
@@ -98,7 +100,7 @@ DATABASES = {
         
         # #********MYSQL SERVER ON LOCALHOST*********
         # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'insb_port',
+        # 'NAME': 'insb_portal',
         # 'USER': 'root',
         # 'PASSWORD': '',
         # 'HOST':'localhost',
@@ -190,3 +192,13 @@ EMAIL_PORT=587
 EMAIL_HOST_USER=os.environ.get('email_user')
 EMAIL_HOST_PASSWORD=os.environ.get('email_password')
 EMAIL_USE_TLS=True
+
+
+# RESIZING IMAGE
+DJANGORESIZED_DEFAULT_SIZE = [1920, 1080]
+DJANGORESIZED_DEFAULT_SCALE = 1.0
+DJANGORESIZED_DEFAULT_QUALITY = 80
+DJANGORESIZED_DEFAULT_KEEP_META = True
+DJANGORESIZED_DEFAULT_FORCE_FORMAT = 'JPEG'
+DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {'JPEG': ".jpg"}
+DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True

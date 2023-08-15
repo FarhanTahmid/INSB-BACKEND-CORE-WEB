@@ -9,6 +9,7 @@ body{
 	-ms-animation: 10s linear 0s normal none infinite animate;
 	-o-animation: 10s linear 0s normal none infinite animate;
 	animation: 10s linear 0s normal none infinite animate;
+    box-sizing: border-box;
  
 }
  
@@ -38,15 +39,15 @@ body{
 }
 
 
-
+.container .login_text{
+    align-items: center;
+}
 .container{
-
-    position: absolute;
-    left: 750px;
-    top: 150px;
-    padding: 25px; 
-    border-radius: 10px;     
-
+    margin: 60px 0px;
+    padding: 20px; 
+    border-radius: 10px;
+    width: 100%; 
+    height: auto; 
 }
 
 div img{
@@ -72,4 +73,15 @@ div img{
 }
 .log-btn:hover{
     background: linear-gradient(rgb(73, 123, 180),rgb(31, 97, 184));
+}
+
+.usernameInp:focus, .passwordInp:focus{
+
+   /* background-color: #EEE; */
+
+}
+
+.usernameInp, .passwordInp{
+    
+    
 }

@@ -4,7 +4,7 @@ from django.core.files.storage import FileSystemStorage
 from port.models import Chapters_Society_and_Affinity_Groups
 from logistics_and_operations_team.models import Logistic_Item_List
 from events_and_management_team.models import Venue_List,Permission_criteria
-from meeting_minutes.models import team_meeting_minutes, branch_meeting_minutes
+
 
 # Create your models here.
 
@@ -145,18 +145,18 @@ class Graphics_Files(models.Model):
     graphics_file=models.FileField(null=True,blank=True,upload_to='Graphics Items/')
 ######################################################################################
 
-class meeting_minutes_team_info(models.Model):
-    mm_team_id=models.ForeignKey(team_meeting_minutes, on_delete=models.CASCADE)
+# class meeting_minutes_team_info(models.Model):
+#     mm_team_id=models.ForeignKey(team_meeting_minutes, on_delete=models.CASCADE)
 
-    class Meta:
-        verbose_name="Meeting Minutes Information of Teams"
-    def __str__(self) -> str:
-        return self.mm_team_id
+#     class Meta:
+#         verbose_name="Meeting Minutes Information of Teams"
+#     def __str__(self) -> str:
+#         return self.mm_team_id
 
-class meeting_minutes_branch_info(models.Model):
-    mm_branch_id=models.ForeignKey(branch_meeting_minutes, on_delete=models.CASCADE)
+# class meeting_minutes_branch_info(models.Model):
+#     mm_branch_id=models.ForeignKey(branch_meeting_minutes, on_delete=models.CASCADE)
 
-    class Meta:
-        verbose_name="Meeting Minutes Information of Societies"
-    def __str__(self) -> str:
-        return self.mm_branch_id
+#     class Meta:
+#         verbose_name="Meeting Minutes Information of Societies"
+#     def __str__(self) -> str:
+#         return self.mm_branch_id

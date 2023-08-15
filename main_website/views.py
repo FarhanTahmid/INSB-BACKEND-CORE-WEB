@@ -4,11 +4,16 @@ from central_branch.models import Events
 from central_branch.renderData import Branch
 from main_website.models import Research_Papers,Blog
 from django.db.models import Q
-
-
+from .renderData import HomepageItems
+from django.conf import settings
 # Create your views here.
 def homepage(request):
-    return render(request,"homepage.html")
+    bannerItems=HomepageItems.getHomepageBannerItems()
+    context={
+        'banner_item':bannerItems,
+        'media_url':settings.MEDIA_URL,
+    }
+    return render(request,"homepage.html",context)
 
 def All_Events(request):
 

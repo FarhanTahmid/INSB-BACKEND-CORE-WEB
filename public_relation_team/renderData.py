@@ -16,7 +16,7 @@ class PRT_Data:
         
         '''Gets the team id from the database only for Public Relation Team. Not the right approach'''
         
-        team=Teams.objects.get(team_name="Public Relation (PR)")
+        team=Teams.objects.get(primary=6)
         return team.id
     
     def load_manage_team_access():
@@ -31,6 +31,38 @@ class PRT_Data:
         for i in range(len(load_team_members)):
             team_members.append(load_team_members[i])
         return team_members
+    
+    def getTeamCoOrdinators():
+        team_members=PRT_Data.load_team_members()
+        co_ordinator=[]
+        for member in team_members:
+            if(member.position.id==9):
+                co_ordinator.append(member)
+        return co_ordinator
+    
+    def getTeamIncharges():
+        team_members=PRT_Data.load_team_members()
+        incharges=[]
+        for member in team_members:
+            if(member.position.id==10):
+                incharges.append(member)
+        return incharges
+    
+    def getTeamCoreVolunteers():
+        team_members=PRT_Data.load_team_members()
+        core_volunteers=[]
+        for member in team_members:
+            if(member.position.id==11):
+                core_volunteers.append(member)
+        return core_volunteers
+    
+    def getTeamVolunteers():
+        team_members=PRT_Data.load_team_members()
+        volunteers=[]
+        for member in team_members:
+            if(member.position.id==12):
+                volunteers.append(member)
+        return volunteers
     
     def add_member_to_team(ieee_id,position):
         team_id=PRT_Data.get_team_id()
