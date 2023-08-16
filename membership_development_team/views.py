@@ -60,7 +60,7 @@ def insb_members_list(request):
     has_view_permission=True
     context={'members':members,'totalNumber':totalNumber,'has_view_permission':has_view_permission}
     
-    return render(request,'insb_member_list.html',context=context)
+    return render(request,'INSB Members/members_list.html',context=context)
 
 @login_required
 def member_details(request,ieee_id):
