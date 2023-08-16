@@ -60,7 +60,7 @@ def insb_members_list(request):
     has_view_permission=True
     context={'members':members,'totalNumber':totalNumber,'has_view_permission':has_view_permission}
     
-    return render(request,'insb_member_list.html',context=context)
+    return render(request,'INSB Members/members_list.html',context=context)
 
 @login_required
 def member_details(request,ieee_id):
@@ -480,7 +480,7 @@ def generateExcelSheet_membersList(request):
     # reverting font style to default
     font_style = xlwt.XFStyle()
 
-    # getting all the values of members as rows with same session
+    # getting all the values of members as rows ORDERED BY POSITION
     rows = Members.objects.all().values_list('ieee_id',
                                              'nsu_id',
                                              'name',
@@ -491,7 +491,7 @@ def generateExcelSheet_membersList(request):
                                              'home_address',
                                              'date_of_birth',
                                              'gender',
-                                             'facebook_url')
+                                             'facebook_url').order_by('position')
     for row in rows:
         row_num += 1
         for col_num in range(len(row)):
