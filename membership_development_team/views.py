@@ -131,7 +131,7 @@ def member_details(request,ieee_id):
               
             
     if(has_access):
-        return render(request,'member_details.html',context=context)
+        return render(request,'INSB Members/member_details.html',context=context)
     else:
         return render(request,'access_denied.html')
     
