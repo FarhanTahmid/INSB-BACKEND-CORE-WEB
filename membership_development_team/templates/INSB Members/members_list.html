@@ -3,20 +3,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Home | Membership Development Team</title>
+  <title>INSB Registered Members | Membership Development Team</title>
   <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <!-- for ios 7 style, multi-resolution icon of 152x152 -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
-  <link rel="apple-touch-icon" href="../assets/images/logo.png">
-  <meta name="apple-mobile-web-app-title" content="Flatkit">
-  <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <link rel="shortcut icon" sizes="196x196" href="../assets/images/logo.png">
-  
   <!-- style -->
   <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
   <link rel="stylesheet" href="{% static '/assets/animate.css/animate.min.css' %}" type="text/css" />
@@ -38,12 +29,10 @@
       align-items: center;
       justify-content: center;
     }
-
     .row {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100%;
     }
   </style>
 </head>
@@ -82,14 +71,14 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="{% url 'membership_development_team:md_team_homepage' %}">
                       <i class="fa fa-home"></i>
-                      <span style="color:#FFA300">Home</span>
+                      <span>Home</span>
                     </a>
                     <div ui-include="'../views/blocks/dropdown.new.html'"></div>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="{% url 'membership_development_team:members_list' %}">
                       <i class="fa fa-user text-muted"></i>
-                      <span>INSB Members</span>
+                      <span style="color:#FFA300">INSB Members</span>
                     </a>
                     <div ui-include="'../views/blocks/dropdown.new.html'"></div>
                 </li>
@@ -108,12 +97,12 @@
                     <div ui-include="'../views/blocks/dropdown.new.html'"></div>
                 </li>
                 <li class="nav-item dropdown">
-                  <a class="nav-link" href="{% url 'membership_development_team:site_registration' %}">
-                    <i class="fa fa-reorder"></i>
-                    <span>Portal Registration</span>
-                  </a>
-                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
-                </li>
+                    <a class="nav-link" href="{% url 'membership_development_team:site_registration' %}">
+                      <i class="fa fa-reorder"></i>
+                      <span>Portal Registration</span>
+                    </a>
+                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                  </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link" href="{% url 'membership_development_team:data_access' %}">
                     <i class="fa fa-group"></i>
@@ -158,170 +147,77 @@
     
 <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
 
-<!-- ############ PAGE START-->
-<br>
-<h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to <span style="color:#00629B;"> <b>The Membership Development Team</b></span> of <b><span style="color:#00629B;">IEEE NSU Student Branch</b></span> </h2>
-
-<!--CO ORDINATORS-->
-<h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our <span><b>Co-Ordinators</b></span> </h3>
-
-<div class="row" style="margin-bottom:15px;">
-    <div class="col-xs-6 col-sm-12 col-md-6" >
-      {% for i in co_ordinators %}
-        <div class="box">
-            <div class="item">
-              <div class="item-bg">
-                <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
-              </div>
-              <div class="p-a-lg pos-rlt text-center">
-                <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
-              </div>
-            </div>
-            <div class="p-a text-center">
-              <a href class="text-md m-t block">{{i.name}}</a>
-              <p><small>NSU ID: {{i.nsu_id}}</small></p>
-              <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
-                <i class="fa fa-facebook"></i>
-                <i class="fa fa-facebook indigo"></i>
-              </a>
-              <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
-                <i class="fa fa-envelope-o"></i>
-                <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
-              </a>
-              <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
-                <i class="fa fa-linkedin"></i>
-                <i class="fa fa-linkedin light-blue-800"></i>
-              </a>
-              <div class="text-xs">
-                <em>Contact: <strong>{{i.contact_no}}</strong></em>
-              </div>
-            </div>
-        </div>
-      {% endfor %}
+    <!-- ############ PAGE START-->
+    <br>
+    <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> IEEE NSU SB Registered Members List </h2>
+    <h4 style="justify-content:center;text-align:center;margin-bottom:30px;"> Total Registered Member in System: <span style="color:#00629B;"><b>{{totalNumber}}</b></span> </h4>
+    
+    <div style="justify-content:center;text-align:center;">  
+        <p class="btn-groups">
+            <button class="btn btn-outline b-success text-success">Generate Excel Sheet of All Registered Members</button>
+        </p>
     </div>
-</div>
 
-<!--INCHARGES-->
-<h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our <span><b>Incharges</b></span> </h3>
-
-<div class="row" style="margin-bottom:15px;">
-  <div class="col-xs-6 col-sm-12 col-md-6" >
-    {% for i in incharges %}
-      <div class="box">
-          <div class="item">
-            <div class="item-bg">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
-            </div>
-            <div class="p-a-lg pos-rlt text-center">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
-            </div>
-          </div>
-          <div class="p-a text-center">
-            <a href class="text-md m-t block">{{i.name}}</a>
-            <p><small>NSU ID: {{i.nsu_id}}</small></p>
-            <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
-              <i class="fa fa-facebook"></i>
-              <i class="fa fa-facebook indigo"></i>
-            </a>
-            <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
-              <i class="fa fa-envelope-o"></i>
-              <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
-            </a>
-            <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
-              <i class="fa fa-linkedin"></i>
-              <i class="fa fa-linkedin light-blue-800"></i>
-            </a>
-            <div class="text-xs">
-              <em>Contact: <strong>{{i.contact_no}}</strong></em>
-            </div>
-          </div>
-      </div>
-    {% endfor %}
-  </div>
-</div>
-
-<!--CORE Volunteers-->
-<h3 style="justify-content:center;text-align:center;margin-bottom:15px;">Meet our <span><b>Core Volunteers</b></span> </h3>
-
-<div class="row" style="margin-bottom:15px;">
-  <div class="col-xs-6 col-sm-12 col-md-6" >
-    {% for i in core_volunteers %}
-      <div class="box">
-          <div class="item">
-            <div class="item-bg">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
-            </div>
-            <div class="p-a-lg pos-rlt text-center">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
-            </div>
-          </div>
-          <div class="p-a text-center">
-            <a href class="text-md m-t block">{{i.name}}</a>
-            <p><small>NSU ID: {{i.nsu_id}}</small></p>
-            <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
-              <i class="fa fa-facebook"></i>
-              <i class="fa fa-facebook indigo"></i>
-            </a>
-            <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
-              <i class="fa fa-envelope-o"></i>
-              <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
-            </a>
-            <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
-              <i class="fa fa-linkedin"></i>
-              <i class="fa fa-linkedin light-blue-800"></i>
-            </a>
-            <div class="text-xs">
-              <em>Contact: <strong>{{i.contact_no}}</strong></em>
+    <div style="justify-content:center;text-align:center; margin-top=30px;">  
+        <div class="padding">
+            <div class="box">
+              <div class="box-header">
+                <h2>Members List</h2>
+                <small>This Table holds all the informations for INSB members registered in the System</small>
+              </div>
+              <div class="box-body">
+                Search: <input id="filter" type="text" class="form-control input-sm w-auto inline m-r"/>
+              </div>
+              <div>
+                <table class="table m-b-none" ui-jp="footable" data-filter="#filter" data-page-size="5">
+                  <thead>
+                    <tr>
+                        <th data-toggle="true" style="text-align:center;">
+                            IEEE ID
+                        </th>
+                        <th style="text-align:center;">
+                            Name
+                        </th>
+                        <th data-hide="phone,tablet" style="text-align:center;">
+                            IEEE Email
+                        </th>
+                        <th data-hide="phone,tablet" style="text-align:center;">
+                            Contact No.
+                        </th>
+                        <th data-hide="phone,tablet" data-name="Date Of Birth" style="text-align:center;">
+                            Current Position
+                        </th>
+                        <th data-hide="phone" style="text-align:center;">
+                            Current Team
+                        </th>
+                    </tr>
+                  </thead>
+                <tbody>
+                    {% for member in members %}
+                        <tr>
+                          <td style="color:#00629B"><a href="{% url 'membership_development_team:member_details' member.ieee_id %}">{{ member.ieee_id  }}</a></td>
+                          <td>{{ member.nsu_id }}</td>
+                          <td>{{ member.name  }}</td>
+                          <td>{{ member.email_ieee }}</td>
+                          <td>{{ member.position.role }}</td>
+                          <td>{{ member.team.team_name }}</td>
+                          <td>{{ member.contact_no }}</td>
+                        </tr>
+                    {% endfor %}
+                    
+                </tbody>
+                  <tfoot class="hide-if-no-paging">
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            <ul class="pagination"></ul>
+                        </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
             </div>
           </div>
-      </div>
-    {% endfor %}
-  </div>
-</div>
-
-
-<!--VOLUNTEERS-->
-<h3 style="justify-content:center;text-align:center;margin-bottom:15px;">Meet our <span><b>Volunteers</b></span> </h3>
-
-<div class="row" style="margin-bottom:15px;">
-  <div class="col-xs-6 col-sm-12 col-md-6" >
-    {% for i in volunteers %}
-      <div class="box">
-          <div class="item">
-            <div class="item-bg">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
-            </div>
-            <div class="p-a-lg pos-rlt text-center">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
-            </div>
-          </div>
-          <div class="p-a text-center">
-            <a href class="text-md m-t block">{{i.name}}</a>
-            <p><small>NSU ID: {{i.nsu_id}}</small></p>
-            <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
-              <i class="fa fa-facebook"></i>
-              <i class="fa fa-facebook indigo"></i>
-            </a>
-            <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
-              <i class="fa fa-envelope-o"></i>
-              <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
-            </a>
-            <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
-              <i class="fa fa-linkedin"></i>
-              <i class="fa fa-linkedin light-blue-800"></i>
-            </a>
-            <div class="text-xs">
-              <em>Contact: <strong>{{i.contact_no}}</strong></em>
-            </div>
-          </div>
-      </div>
-    {% endfor %}
-  </div>
-</div>
-
-
-
-
+    </div>
 
 </div>
 
@@ -385,7 +281,7 @@
   <script src="{% static 'script/jquery.storageapi.min.js'%}"></script>
   <script src="{% static 'script/pace.min.js'%}"></script>
 
-  {% comment %} <script src="{% static 'script/config.lazyload.js'%}"></script> {% endcomment %}
+  <script src="{% static 'script/config.lazyload.js'%}"></script>
 
   <script src="{% static 'script/palette.js'%}"></script>
   <script src="{% static 'script/ui-load.js'%}"></script>
@@ -397,15 +293,14 @@
   <script src="{% static 'script/ui-screenfull.js'%}"></script>
   <script src="{% static 'script/ui-scroll-to.js'%}"></script>
   <script src="{% static 'script/ui-toggle-class.js'%}"></script>
-  {% comment %} <script src="{% static 'script/screenfull.min.js'%}"></script> {% endcomment %}
+  <script src="{% static 'script/screenfull.min.js'%}"></script>
   <script src="{% static 'script/app.js'%}"></script>
   <!-- apexcharts -->
   <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
   <!-- Chart JS -->
   <script src="{% static 'scripts/chartjs.js' %}"></script>
-  <script src="{% static 'scripts/dashboard.init.js' %}"></script>
   <!-- ajax -->
-  {% comment %} <script src="{% static 'script/jquery.pjax.js'%}"></script> {% endcomment %}
+  <script src="{% static 'script/jquery.pjax.js'%}"></script>
   <script src="{% static 'script/ajax.js'%}"></script>
 <!-- endbuild -->
 </body>
