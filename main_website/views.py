@@ -15,6 +15,9 @@ def homepage(request):
     }
     return render(request,"homepage.html",context)
 
+def rasPage(request):
+    return render(request,'Society_AG/ras.html')
+
 def All_Events(request):
 
     '''Loads all events up untill today on Event page'''
