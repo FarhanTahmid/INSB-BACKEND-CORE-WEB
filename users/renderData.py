@@ -5,7 +5,7 @@ import os
 from django.conf import settings
 from django.db import DatabaseError
 from PIL import Image
-
+from recruitment.models import recruitment_session,recruited_members
 
 class LoggedinUser:
     
@@ -149,4 +149,20 @@ class LoggedinUser:
                     return True
                 
             except adminUsers.DoesNotExist:
-                return False 
+                return False
+        
+
+def getRecruitmentStats():
+    """Returns a dictionary of the recruitment stats for the last 5 sessions. In the dictionary the key is the recruitment session and the value is
+    the number of people recruited"""
+    recruitment_stats={}
+    
+    try:
+        for i in recruitment_session.objects.all().order_by('-id')[:5]:
+            recruitee_count=recruited_members.objects.filter(session_id=i.id).count()
+            recruitment_stats.update({i.session:recruitee_count})
+        return recruitment_stats
+    except:
+        return False    
+    
+

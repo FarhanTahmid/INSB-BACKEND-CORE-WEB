@@ -1,0 +1,63 @@
+table th , table td{
+    text-align: center;
+}
+
+table tr:nth-child(even){
+    background-color: #e4e3e3
+}
+
+th {
+  background: #333;
+  color: #fff;
+}
+
+.pagination {
+  margin: 0;
+}
+
+.pagination li:hover{
+    cursor: pointer;
+}
+
+.header_wrap {
+  padding:50px 0;
+}
+.num_rows {
+  width: 20%;
+  float:right;
+}
+.tb_search{
+  width: 40%;
+  float:left;
+}
+/* Style for pagination container */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  /* Style for pagination list items */
+  .pagination li {
+    display: inline-block;
+    margin: 0 3px;
+    padding: 5px 10px;
+    border: 1px solid #00629B;
+    background-color: transparent;
+    color: #00629B;
+    cursor: pointer;
+  }
+
+  /* Style for current active page */
+  .pagination li.active {
+    background-color: #00629B;
+    color: #ffffff;
+  }
+
+  /* Style for rows count section */
+  .rows_count {
+    color: #00629B;
+    font-size: 14px;
+    margin-top: 10px;
+}
