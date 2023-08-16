@@ -75,11 +75,11 @@ def member_details(request,ieee_id):
     member_data=renderData.MDT_DATA.get_member_data(ieee_id=ieee_id)
     dob = datetime.datetime.strptime(str(
         member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
-    sessions=recruitment_session.objects.all()
+    sessions=recruitment_session.objects.all().order_by('-id')
     #getting the ieee account active status of the member
     active_status=renderData.MDT_DATA.get_member_account_status(ieee_id=ieee_id)
         
-    renewal_session=Renewal_Sessions.objects.all()
+    renewal_session=Renewal_Sessions.objects.all().order_by('-id')
     context={
         
         'member_data':member_data,
@@ -100,13 +100,18 @@ def member_details(request,ieee_id):
             email_personal=request.POST['email_personal']
             email_nsu=request.POST['email_nsu']
             facebook_url=request.POST['facebook_url']
-            
             home_address=request.POST['home_address']
-            major=request.POST['major']
+            major=request.POST['major_label']
+            recruitment_session_value=request.POST['recruitment']
+            renewal_session_value=request.POST['renewal']
             
-            #updating member Details
-            try:
-                Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+            #This whole thing can be done with Exception Handling which will be better
+            #Whole Logic is created from getting 0 from "----" selection. But if the selection has None selected in the field, it returns value of '' (empty streing)
+            if((renewal_session_value=='0'and recruitment_session_value=='0') or (renewal_session_value==''and recruitment_session_value=='0')):
+                # Logic: if renewal and recruitment is "----" or renewal is none and recruitment is "---" then to handle this scenario both will be None type. But these are all to handle the exception.
+                
+                try:
+                    Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
                                                                name=name,
                                                                contact_no=contact_no,
                                                                date_of_birth=date_of_birth,
@@ -114,14 +119,107 @@ def member_details(request,ieee_id):
                                                                email_personal=email_personal,
                                                                email_nsu=email_nsu,
                                                                facebook_url=facebook_url,
-                                                               
                                                                home_address=home_address,
-                                                               major=major)
+                                                               major=major,
+                                                               session=None,
+                                                               last_renewal_session=None 
+                                                               )
                 
-                messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
-                return redirect('membership_development_team:member_details',ieee_id)
-            except Members.DoesNotExist:
-                messages.info(request,"Sorry! Something went wrong! Try Again.")            
+                    messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                    return redirect('membership_development_team:member_details',ieee_id)
+                except Members.DoesNotExist:
+                    messages.info(request,"Sorry! Something went wrong! Try Again.")
+            
+            elif((renewal_session_value=='0'and recruitment_session_value=='0') or (renewal_session_value=='0'and recruitment_session_value=='')):
+                #Logic: if renewal and recruitment is "----" or renewal is "----" and recruitment is None, then to handle the scenario both will be none
+                try:
+                    Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+                                                               name=name,
+                                                               contact_no=contact_no,
+                                                               date_of_birth=date_of_birth,
+                                                               email_ieee=email_ieee,
+                                                               email_personal=email_personal,
+                                                               email_nsu=email_nsu,
+                                                               facebook_url=facebook_url,
+                                                               home_address=home_address,
+                                                               major=major,
+                                                               session=None,
+                                                               last_renewal_session=None 
+                                                               )
+                
+                    messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                    return redirect('membership_development_team:member_details',ieee_id)
+                except Members.DoesNotExist:
+                    messages.info(request,"Sorry! Something went wrong! Try Again.")  
+            
+            elif ((recruitment_session_value=='0' and renewal_session_value!='0') or (recruitment_session_value=='' and renewal_session_value!='0')):
+                # Logic: recruitment session is "----" and renewal has session or recruitment session is None and renewal session has value,
+                #for this recruitment session will be None
+                try:
+                    Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+                                                               name=name,
+                                                               contact_no=contact_no,
+                                                               date_of_birth=date_of_birth,
+                                                               email_ieee=email_ieee,
+                                                               email_personal=email_personal,
+                                                               email_nsu=email_nsu,
+                                                               facebook_url=facebook_url,
+                                                               home_address=home_address,
+                                                               major=major,
+                                                               session=None,
+                                                               last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value) 
+                                                               )
+                
+                    messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                    return redirect('membership_development_team:member_details',ieee_id)
+                except Members.DoesNotExist:
+                    messages.info(request,"Sorry! Something went wrong! Try Again.")      
+            
+            elif ((recruitment_session_value!='0' and renewal_session_value=='0') or (recruitment_session_value!='0' and renewal_session_value=='')):
+                #logic: recruitment has session and renewal session is "-----" or recruitment session has value and renewal session is None
+                #then renewal session will be None
+                try:
+                    Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+                                                               name=name,
+                                                               contact_no=contact_no,
+                                                               date_of_birth=date_of_birth,
+                                                               email_ieee=email_ieee,
+                                                               email_personal=email_personal,
+                                                               email_nsu=email_nsu,
+                                                               facebook_url=facebook_url,
+                                                               home_address=home_address,
+                                                               major=major,
+                                                               session=recruitment_session.objects.get(id=recruitment_session_value),
+                                                               last_renewal_session=None 
+                                                            )
+                
+                    messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                    return redirect('membership_development_team:member_details',ieee_id)
+                except Members.DoesNotExist:
+                    messages.info(request,"Sorry! Something went wrong! Try Again.")
+            
+            else:
+                #logic: Renewal and Recruitment bot has session
+            #updating member Details
+                try:
+                    Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+                                                               name=name,
+                                                               contact_no=contact_no,
+                                                               date_of_birth=date_of_birth,
+                                                               email_ieee=email_ieee,
+                                                               email_personal=email_personal,
+                                                               email_nsu=email_nsu,
+                                                               facebook_url=facebook_url,
+                                                               home_address=home_address,
+                                                               major=major,
+                                                               session=recruitment_session.objects.get(id=recruitment_session_value),
+                                                               last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value) 
+                                                               )
+                
+                    messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                    return redirect('membership_development_team:member_details',ieee_id)
+                except Members.DoesNotExist:
+                    messages.info(request,"Sorry! Something went wrong! Try Again.")            
             
         if request.POST.get('delete_member'):
             #Deleting a member from database
