@@ -25,7 +25,6 @@ def recruitment_home(request):
         this passes all the datas into the template file    
     '''
     
-        
     numberOfSessions = renderData.Recruitment.loadSession()
     if request.method == "POST":
         session_name = request.POST["recruitment_session"]

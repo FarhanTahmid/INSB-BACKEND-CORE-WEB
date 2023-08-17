@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{member_data.ieee_id}} - Member Details | Membership Development Team</title>
+  <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- for ios 7 style, multi-resolution icon of 152x152 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
+  <link rel="apple-touch-icon" href="../assets/images/logo.png">
+  <meta name="apple-mobile-web-app-title" content="Flatkit">
+  <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="shortcut icon" sizes="196x196" href="../assets/images/logo.png">
+  
+  <!-- style -->
+  <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+  <link rel="stylesheet" href="{% static '/assets/animate.css/animate.min.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/glyphicons/glyphicons.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/font-awesome/css/font-awesome.min.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/material-design-icons/material-design-icons.css' %}" type="text/css" />
+  
+
+  <link rel="stylesheet" href="{% static '/assets/bootstrap/dist/css/bootstrap.min.css' %}" type="text/css" />
+  <!-- build:css ../assets/styles/app.min.css -->
+  <link rel="stylesheet" href="{% static '/assets/styles/app.css' %}" type="text/css" />
+  <!-- endbuild -->
+  <link rel="stylesheet" href="{% static '/assets/styles/font.css' %}" type="text/css" />
+  <style>
+    body, html {
+      
+      margin: 0;
+      
+      align-items: center;
+      justify-content: center;
+    }
+
+    .row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+
+<!-- ############ LAYOUT START-->
+
+<!-- aside -->
+<div id="aside" class="app-aside modal nav-dropdown">
+  <div id="aside" class="app-aside modal nav-dropdown">
+  	{% block sidebar %}
+	  {% include 'users/sidebar.html' %}
+  	{% endblock %}
+  </div>
+</div>
+<!-- / -->
+  
+  <!-- content -->
+<div id="content" class="app-content box-shadow-z0" role="main">
+    <div class="app-header white box-shadow">
+        <div class="navbar navbar-toggleable-sm flex-row align-items-center">
+            <!-- Open side - Naviation on mobile -->
+            <a data-toggle="modal" data-target="#aside" class="hidden-lg-up mr-3">
+              <i class="material-icons">&#xe5d2;</i>
+            </a>
+            <!-- / -->
+        
+            <!-- Page title - Bind to $state's title -->
+            <div class="mb-0 h5 no-wrap" ng-bind="$state.current.data.title" id="pageTitle"></div>
+        
+            <!-- navbar collapse -->
+            <div class="collapse navbar-collapse" id="collapse">
+              <!-- link and dropdown -->
+              <ul class="nav navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="{% url 'membership_development_team:md_team_homepage' %}">
+                      <i class="fa fa-home"></i>
+                      <span>Home</span>
+                    </a>
+                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="{% url 'membership_development_team:members_list' %}">
+                      <i class="fa fa-user text-muted"></i>
+                      <span style="color:#FFA300">INSB Members</span>
+                    </a>
+                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'recruitment:recruitment_home' %}">
+                    <i class="fa fa-plus"></i>
+                    <span>Recruitment</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'membership_development_team:membership_renewal' %}">
+                    <i class="fa fa-refresh"></i>
+                    <span>Membership Renewal</span>
+                  </a>
+                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'membership_development_team:site_registration' %}">
+                    <i class="fa fa-reorder"></i>
+                    <span>Portal Registration</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'membership_development_team:data_access' %}">
+                    <i class="fa fa-group"></i>
+                    <span>Manage Team</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                </li>
+              </ul>
+        
+              <div ui-include="'../views/blocks/navbar.form.html'"></div>
+              <!-- / -->
+            </div>
+            <!-- / navbar collapse -->
+        
+            <!-- navbar right -->
+            <ul class="nav navbar-nav ml-auto flex-row">
+              <li class="nav-item dropdown pos-stc-xs">
+                <a class="nav-link mr-2" href data-toggle="dropdown">
+                  <i class="material-icons">&#xe7f5;</i>
+                  <span class="label label-sm up warn">3</span>
+                </a>
+                <div ui-include="'../views/blocks/dropdown.notification.html'"></div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
+                  <span class="avatar w-32">
+                    <img src="{{ user_data.profile_picture }}" alt="...">
+                    <i class="on b-white bottom"></i>
+                  </span>
+                </a>
+                <div ui-include="'../views/blocks/dropdown.user.html'"></div>
+              </li>
+              <li class="nav-item hidden-md-up">
+                <a class="nav-link pl-2" data-toggle="collapse" data-target="#collapse">
+                  <i class="material-icons">&#xe5d4;</i>
+                </a>
+              </li>
+            </ul>
+            <!-- / navbar right -->
+        </div>
+</div>
+    
+<div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+  <!-- ############ PAGE START-->
+
+  <br>
+  <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Detailed Information of <span style="color:#00629B;"> <br> {{member_data.name}} </span></br> </h2>
+
+  <div class="container">
+    <div class="padding">
+        <div class="row" >
+          <div class="col-md-12">
+            <div class="logo">
+                <img src="{{media_url}}{{member_data.user_profile_picture}}" alt="picture" style="width:15%;">
+            </div>
+            <div class="box">
+              <div class="box-header" style="text-align:center;">
+                <h1>General Details</h1>
+              </div>
+              <div class="box-divider m-0"></div>
+              <div class="box-body">
+                <form method="POST" autocomplete="off">
+                    {% csrf_token %}
+                  <div class="form-group">
+                    <div class="row m-b">
+                        <div class="col-sm-6">
+                          <label>NSU ID</label>
+                          <input class="form-control" type="number" placeholder="NSU ID" required name="nsu_id" value="{{ member_data.nsu_id }}"/>
+                        </div>
+                        <div class="col-sm-6">
+                          <label>IEEE ID</label>
+                          <input class="form-control" type="number" placeholder="IEEE ID" name="ieee_id" value="{{ member_data.ieee_id }}"/>
+                        </div>
+                    </div>
+                    <div class="box-header" style="text-align:center;">
+                        <h1>Personal Details</h1>
+                    </div>
+                    
+                    <br>
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">Name</label>
+                      <input class="form-control" type="text" required name="name" value="{{ member_data.name }}"/>
+                    </div>
+                    
+                    <div class="row m-b">
+                      <div class="col-sm-6">
+                        <label>Contact No.</label>
+                        <input
+                        class="form-control w-75"
+                        type="text" placeholder="Contact no." required name="contact_no" value="{{ member_data.contact_no }}"/>                      
+                      </div>
+                      <div class="col-sm-6">
+                        <label>Date Of Birth</label>
+                        <input
+                        class="form-control w-75"
+                          type="date" placeholder="Date of Birth" required name="date_of_birth" value="{{ dob }}"
+                        />
+                    </div>
+                    <br>
+                  </div>
+                  <div class="row m-b" style="margin-left:-15.78%">
+                    <div class="col-xs-4 col-md-3 col-lg-3">
+                      <label>Email (IEEE)</label>
+                      <input
+                      class="form-control"
+                      type="text" placeholder="IEEE E-Mail" name="email_ieee" value="{{ member_data.email_ieee }}"/>
+                    </div>
+                    <div class="col-xs-5 col-md-3">
+                      <label>Email (NSU)</label>
+                      <input
+                      class="form-control"
+                      type="text" placeholder="NSU E-Mail" required name="email_nsu" value="{{ member_data.email_nsu }}"
+                      />
+                    </div>
+                    <div class="col-xs-6 col-md-3">
+                      <label>Email (Personal)</label>
+                      <input
+                      class="form-control"
+                      type="email" placeholder="Personal E-Mail" required name="email_personal" value="{{ member_data.email_personal }}"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Facebook URL</label>
+                    <input
+                    class="form-control"
+                    type="url" placeholder="Enter Facebook URL" name="facebook_url" value="{{ member_data.facebook_url }}"
+                    />                  
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Address</label>
+                    <input
+                    class="form-control"
+                    type="text" placeholder="Enter Address" required name="home_address" value="{{ member_data.home_address }}"
+                    />
+                  </div>
+                  <div class="box-header" style="text-align:center;">
+                    <h1>Academic Details</h1>
+                  </div>
+                  <div class="form-group">
+                    <label>Major</label>
+                    <input class="form-control" type="text" placeholder="Major" required name="major_label" value="{{ member_data.major }}"
+                    />
+                  </div>
+
+                  <div class="box-header" style="text-align:center;">
+                    <h1>Membership Details</h1>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Recruitment Session:</label>
+                    <div class="col-md-2 mt-1" style="display: inline-block;">
+                      <select class="form-control" name="recruitment" id="recruitment">
+                        <option selected value="{{member_data.session.id}}">{{member_data.session}}</option>
+                        {% for i in sessions %}
+                          <option value="{{i.id}}">{{i.session}}</option>
+                        {% endfor %}
+                        <option value="0">--------</option>
+                      </select>
+                    </div>
+                    <br>
+                    <label>Last Renewal Session:</label>
+                    <div class="col-md-2 mt-1" style="display: inline-block;margin-left:-7px">
+                      <select class="form-control" name="renewal" id="renewal">
+                        <option selected value="{{member_data.last_renewal_session.id}}">{{member_data.last_renewal_session}}</option>
+                        {% for i in renewal_session %}
+                          <option value="{{i.id}}">{{i.session_name}}</option>
+                        {% endfor %}
+                        <option value="0">--------</option>
+                      </select>
+                    </div>
+                    <br>
+                    <br>
+                    <label>IEEE Account Status:</label>
+                    {% if active_status %}
+                    <div class="col-md-2 mt-1" style="display: inline-block;margin-left:0px;font-size:17px">
+                      <b><p style="color:green;">Active</p></b>
+                    </div>
+                    {% else %}
+                    <div class="col-md-2 mt-1" style="display: inline-block;margin-left:-7px">
+                      <b><p style="color:red;">Expired</p></b>
+                    </div>
+                    {% endif %}
+                    <br>
+                  </div>
+                  <div style="text-align: center;">
+                    <button class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-a-a" ui-toggle-class="bounce" ui-target="#animate">Delete Member</button>
+                    <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Save Edits</button>
+                  </div>
+
+
+                  <!-- Save modal -->
+                  <div id="m-s-a" class="modal fade animate" data-backdrop="true">
+                    <div class="modal-dialog" id="animate">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Warning!</h5>
+                        </div>
+                        <div class="modal-body text-left p-lg">
+                          <p>Are you sure that you want to execute this action? This will update the members informations in INSB Database.
+                          <p>Data related to the Member will change accordingly.</p>
+                          <p>Member Name: {{member_data.name}}</p>
+                          <p>Member IEEE ID: {{member_data.ieee_id}}</p>
+                          <p>Current Team: {{member_data.team}}</p>
+                          <p>Current Position: {{member_data.position}}</p>
+                          </p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                          <input
+                          type="submit"
+                          class="btn btn-success"
+                          data-bs-dismiss="modal"
+                          name="save_edit"
+                          value="Yes, Update"
+                          >                        
+                        </div>
+                      </div><!-- /.modal-content -->
+                    </div>
+                  </div>
+                  <!-- / .modal -->
+
+
+                  <!-- Delete modal -->
+                  <div id="m-a-a" class="modal fade animate" data-backdrop="true">
+                    <div class="modal-dialog" id="animate">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Warning!</h5>
+                        </div>
+                        <div class="modal-body text-left p-lg">
+                          <p>Are you sure that you want to execute this action? This will Delete the member from INSB Database.
+                          <p>All the data related to this Member will also be Deleted.</p>
+                          <p>Member Name: {{member_data.name}}</p>
+                          <p>Member IEEE ID: {{member_data.ieee_id}}</p>
+                          <p>Current Team: {{member_data.team}}</p>
+                          <p>Current Position: {{member_data.position}}</p>
+                          </p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                          <input
+                          type="submit"
+                          class="btn btn-danger"
+                          data-bs-dismiss="modal"
+                          name="delete_member"
+                          value="Yes, Delete"
+                          >                        
+                        </div>
+                      </div><!-- /.modal-content -->
+                    </div>
+                  </div>
+                  <!-- / .modal -->
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+<!-- ############ PAGE END-->
+
+    </div>
+  </div>
+  <!-- / -->
+
+  <!-- theme switcher -->
+  <div id="switcher">
+    <div class="switcher box-color dark-white text-color" id="sw-theme">
+      <a href ui-toggle-class="active" target="#sw-theme" class="box-color dark-white text-color sw-btn">
+        <i class="fa fa-gear"></i>
+      </a>
+      <div class="box-header">
+        <h2>Theme Switcher</h2>
+      </div>
+      <div class="box-divider"></div>
+      <div class="box-body">
+        <p class="hidden-md-down">
+          <label class="md-check m-y-xs"  data-target="folded">
+            <input type="checkbox">
+            <i class="green"></i>
+            <span class="hidden-folded">Folded Aside</span>
+          </label>
+          
+        </p>
+        
+        <p>Themes:</p>
+        <div data-target="bg" class="row no-gutter text-u-c text-center _600 clearfix">
+          <label class="p-a col-sm-6 light pointer m-0">
+            <input type="radio" name="theme" value="" hidden>
+            Light
+          </label>
+          
+          <label class="p-a col-sm-6 dark pointer m-0">
+            <input type="radio" name="theme" value="dark" hidden>
+            Dark
+          </label>
+          
+        </div>
+      </div>
+    </div>
+
+    </div>
+  </div>
+  <!-- / -->
+
+<!-- ############ LAYOUT END-->
+
+  </div>
+<!-- build:js scripts/app.html.js -->
+<!-- jQuery -->
+<script src="{% static 'script/jquery.js'%}"></script>
+<!-- Bootstrap -->
+  <script src="{% static 'script/tether.min.js'%}"></script>
+  <script src="{% static 'script/bootstrap.js'%}"></script>
+<!-- core -->
+  <script src="{% static 'script/underscore-min.js'%}"></script>
+  <script src="{% static 'script/jquery.storageapi.min.js'%}"></script>
+  <script src="{% static 'script/pace.min.js'%}"></script>
+
+  {% comment %} <script src="{% static 'script/config.lazyload.js'%}"></script> {% endcomment %}
+
+  <script src="{% static 'script/palette.js'%}"></script>
+  <script src="{% static 'script/ui-load.js'%}"></script>
+  <script src="{% static 'script/ui-jp.js' %}"></script>
+  <script src="{% static 'script/ui-include.js'%}"></script>
+  <script src="{% static 'script/ui-device.js'%}"></script>
+  <script src="{% static 'script/ui-form.js'%}"></script>
+  <script src="{% static 'script/ui-nav.js'%}"></script>
+  <script src="{% static 'script/ui-screenfull.js'%}"></script>
+  <script src="{% static 'script/ui-scroll-to.js'%}"></script>
+  <script src="{% static 'script/ui-toggle-class.js'%}"></script>
+  {% comment %} <script src="{% static 'script/screenfull.min.js'%}"></script> {% endcomment %}
+  <script src="{% static 'script/app.js'%}"></script>
+  <!-- apexcharts -->
+  <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
+  <!-- Chart JS -->
+  <script src="{% static 'scripts/chartjs.js' %}"></script>
+  <!-- ajax -->
+  {% comment %} <script src="{% static 'script/jquery.pjax.js'%}"></script> {% endcomment %}
+  <script src="{% static 'script/ajax.js'%}"></script>
+<!-- endbuild -->
+</body>
+</html>
