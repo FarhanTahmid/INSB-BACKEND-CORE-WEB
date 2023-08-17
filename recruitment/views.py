@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.db import DatabaseError, IntegrityError, InternalError
-from django.http import HttpResponseServerError, HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponseServerError, HttpResponseBadRequest, HttpResponse,JsonResponse
 from recruitment.models import recruitment_session, recruited_members
 from users.models import Members
 from . import renderData
@@ -66,6 +66,19 @@ def recruitee(request, pk):
         return render(request, 'session_recruitees.html', context=context)
     else:
         return render(request,'access_denied.html')
+
+@login_required
+def getPaymentStats(request):
+    if request.method=="GET":
+        session_id=request.GET.get('session_id')
+        get_total_count_of_ieee_payment_completed=renderData.Recruitment.getTotalCountofIEEE_payment_complete(session_id=session_id) 
+        get_total_count_of_ieee_payment_incomplete=renderData.Recruitment.getTotalCountofIEEE_payment_incomplete(session_id=session_id) 
+        context={
+            "labels":["Complete Payments","Incomplete Payments"],
+            "values":[get_total_count_of_ieee_payment_completed,get_total_count_of_ieee_payment_incomplete]
+        }
+        return JsonResponse(context)    
+
 
 @login_required
 def recruitee_details(request,session_id,nsu_id):
