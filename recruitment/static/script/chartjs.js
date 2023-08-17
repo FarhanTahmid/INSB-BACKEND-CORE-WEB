@@ -21,8 +21,10 @@ function getChartColorsArray(chartId) {
 // Function to fetch data from Django API
 async function fetchData() {
   try {
-    
-    const response = await fetch('/recruitment/getPaymentStats/?session_id=' + encodeURIComponent(6));
+    var x='{{session.session.id}}';
+    console.log(x)
+    x=Integer.parseInt(x)
+    const response = await fetch('/recruitment/getPaymentStats/?session_id=' + encodeURIComponent(x));
     const data = await response.json();
     console.log(data)
     return data;
