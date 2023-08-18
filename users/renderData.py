@@ -6,6 +6,10 @@ from django.conf import settings
 from django.db import DatabaseError
 from PIL import Image
 from recruitment.models import recruitment_session,recruited_members
+from central_branch.models import Event_type,Events
+from system_administration.render_access import Access_Render
+import datetime
+from django.db.models import Q
 
 class LoggedinUser:
     
@@ -150,7 +154,12 @@ class LoggedinUser:
                 
             except adminUsers.DoesNotExist:
                 return False
-        
+def is_eb_or_admin(user):
+    has_access = Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username)
+    if has_access:
+        return True
+    else:
+        return False
 
 def getRecruitmentStats():
     """Returns a dictionary of the recruitment stats for the last 5 sessions. In the dictionary the key is the recruitment session and the value is
@@ -163,6 +172,41 @@ def getRecruitmentStats():
             recruitment_stats.update({i.session:recruitee_count})
         return recruitment_stats
     except:
-        return False    
+        return False  
+
+def getEventStats():
+    event_stats ={}
+    all_event_type=Event_type.objects.all()
+
+    for i in all_event_type:
+        event_count = Events.objects.filter(event_type = i.event_type).count()
+        event_stats.update({i.event_type:event_count})
+    return event_stats
+
+
+def getEventNumberStat():
+    event_num = {}
+    year = datetime.date.today().year
+    print(year)
+    for i in range(5):
+        count = Events.objects.filter(probable_date__year=(year-i)).count()
+        event_num.update({year-i:count})
+    print(event_num)
+    return event_num
+def getEventNumberStatYear():
+    year_list =[]
+    year = datetime.date.today().year
+    for i in range(5):
+        year_list.append(year-i)
+    year_list.reverse()
+    return year_list
+
+
+
+
+
+
+
+      
     
 

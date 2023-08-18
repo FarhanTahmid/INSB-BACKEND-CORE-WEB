@@ -2,6 +2,7 @@ from django.urls import path,include
 from django.contrib.auth.views import LogoutView
 from . import views
 from django.conf import settings
+from .Statistics import eventcountviews,eventtypeviews
 
 app_name='users'
 
@@ -27,5 +28,9 @@ urlpatterns = [
     #Invalid URL Handling
     path('invalid_url',views.invalidURL,name="invalid_url"), #this page will prompt if an user has used an "used" or invalid url
     #GET STATISTIC URL
-    path('get_dashboard_stats/',views.getDashboardStats,name="dashboard_stats")
+    path('get_dashboard_stats/',views.getDashboardStats,name="dashboard_stats"),
+    #Get stat for mini chart 1
+    path('get_dashboard_mini_chart1_stats/',eventcountviews.getDashboardMiniChart1Stats,name = "get_dashboard_mini_chart1_stats"),
+    #Get stat for event type
+    path('get_dashboard_event_type_stats/',eventtypeviews.getDashboardEventTypeStats,name="get_dashboard_event_type_stats")
 ]
