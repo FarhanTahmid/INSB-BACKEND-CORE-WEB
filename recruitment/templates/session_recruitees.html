@@ -159,7 +159,7 @@
 </div>
     
 <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
-  <input type="hidden" id="session_value" value="{{ session.id }}">
+  
 
 <!-- ############ PAGE START-->
     <br>
@@ -185,34 +185,6 @@
     <!--END OF STAT-->
     <br>
     <h5 class="text-center"><span style="color:#00629B;">Recruited Members</span></h5>
-
-        <!-- Create Session modal -->
-    <div id="m-s-a" class="modal fade animate" data-backdrop="true">
-        <form method="POST">
-            {% csrf_token %}
-            <div class="modal-dialog" id="animate">
-                <div class="modal-content">
-                    <div class="modal-header">
-                    <h5 class="modal-title">Create A New Recruitment Session</h5>
-                    </div>
-                    
-                    <div class="modal-body text-left p-lg">
-                        
-                        <div class="form-group">
-                                <label>Session Name</label>
-                                <input class="form-control" type="text" placeholder="Session Name" Required name='recruitment_session'>
-                        </div>
-                        
-                    </div>
-                    <div class="modal-footer">
-                    <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                    <button type="submit" class="btn btn-success p-x-md">Create Session</button>                  
-                    </div>
-                </div><!-- /.modal-content -->
-            </div>
-        </form>
-      </div>
-      <!-- / .modal -->
 
 
 </div>
@@ -243,15 +215,15 @@
   
       <thead>
         <tr>
-            <th data-priority="1">NSU ID</th>
-            <th data-priority="1">Name</th>
-            <th data-priority="1">Email (Personal)</th>
-            <th data-priority="1">Contact No.</th>
-            <th data-priority="1">Major</th>
-            <th data-priority="1">Recruitment Time (GMT 0:00)</th>
-            <th data-priority="1">Recruited By</th>
-            <th data-priority="1">Comment</th>
-            <th data-priority="1">Payment Status</th>
+            <th>NSU ID</th>
+            <th>Name</th>
+            <th>Email (Personal)</th>
+            <th>Contact No.</th>
+            <th>Major</th>
+            <th>Recruitment Time (GMT 0:00)</th>
+            <th>Recruited By</th>
+            <th>Comment</th>
+            <th>Payment Status</th>
         </tr>
       </thead>
       <tbody>
