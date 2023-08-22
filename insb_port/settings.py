@@ -57,7 +57,11 @@ INSTALLED_APPS = [
     'meeting_minutes',
     'main_website',
     'content_writing_and_publications_team',
-    'promotions_team'
+    'promotions_team',
+    'website_development_team',
+    'media_team',
+    'graphics_team',
+    'finance_and_corporate_team'
 ]
 
 MIDDLEWARE = [

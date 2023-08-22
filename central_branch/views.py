@@ -95,12 +95,15 @@ def event_creation_form_page1(request):
             super_event_name=request.POST.get('super_event')
             event_name=request.POST['event_name']
             event_description=request.POST['event_description']
+            event_type = request.POST['event_type']
             probable_date=request.POST['probable_date']
             final_date=request.POST['final_date']
+    
             
             get_event=renderData.Branch.register_event_page1(
                 super_event_name=super_event_name,
                 event_name=event_name,
+                event_type=event_type,
                 event_description=event_description,
                 probable_date=probable_date,
                 final_date=final_date)

@@ -77,7 +77,7 @@ class Branch:
     def load_all_event_type():
         return Event_type.objects.all()
     
-    def register_event_page1(super_event_name,event_name,event_description,probable_date,final_date):
+    def register_event_page1(super_event_name,event_name,event_type,event_description,probable_date,final_date):
         '''This method creates an event and registers data which are provided in event page1. Returns the id of the event if the method can create a new event successfully
         TAKES SUPER EVENT NAME, EVENT NAME, EVENT DESCRIPTION AS STRING. TAKES PROBABLE & FINAL DATE ALSO AS INPUT'''
         
@@ -91,6 +91,7 @@ class Branch:
                         new_event=Events(
                         event_name=event_name,
                         event_description=event_description,
+                        event_type = Event_type.objects.get(id = int(event_type)),
                         probable_date=probable_date
                         )
                         new_event.save()
@@ -104,6 +105,7 @@ class Branch:
                         new_event=Events(
                         event_name=event_name,
                         event_description=event_description,
+                        event_type = Event_type.objects.get(id = int(event_type)),
                         probable_date=probable_date,
                         final_date=final_date
                         )
@@ -122,6 +124,7 @@ class Branch:
                         super_event_name=get_super_event_id,
                         event_name=event_name,
                         event_description=event_description,
+                        event_type = Event_type.objects.get(id = int(event_type)),
                         probable_date=probable_date
                         )
                         new_event.save()
@@ -136,6 +139,7 @@ class Branch:
                         super_event_name=get_super_event_id,
                         event_name=event_name,
                         event_description=event_description,
+                        event_type = Event_type.objects.get(id = int(event_type)),
                         probable_date=probable_date,
                         final_date=final_date
                         )

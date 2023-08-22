@@ -15,6 +15,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from membership_development_team.renderData import MDT_DATA
 from . import email_handler
 
+
 # Create your views here.
 def login(request):
     
@@ -89,14 +90,20 @@ def dashboard(request):
     '''This function loads all the dashboard activities for the program'''
     
     #### LOOK into registerUser.py for manual input of data from csv. Templates are created there.
-    
+
+    is_eb_or_admin = renderData.is_eb_or_admin(request.user)
+    years = renderData.getEventNumberStatYear()
+
+
     #Loading current user data from renderData.py
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     if(user_data==False):
         return DatabaseError
     context={
-        'user_data':user_data
+        'user_data':user_data,
+        'eb_member':is_eb_or_admin,
+        'years':years
     }
 
     

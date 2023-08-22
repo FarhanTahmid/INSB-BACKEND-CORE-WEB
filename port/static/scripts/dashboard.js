@@ -23,13 +23,23 @@ function getChartColorsArray(chartId) {
         });
     }
 }
-
-
+async function fetchData2() {
+  try {
+      const response = await fetch('/users/get_dashboard_mini_chart1_stats/?event_stat=' + encodeURIComponent('event_number'));
+      const data = await response.json();
+      return data;
+  } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error; // Rethrow the error for further handling
+  }
+}
 // mini-1
+async function initializeMiniChart1() {
+  try {
 var barchartColors = getChartColorsArray("mini-1");
 var options = {
     series: [{
-      data: [2, 36, 22, 30, 12, 38]
+      data: []
     }],
     chart: {
       type: 'line',
@@ -62,9 +72,18 @@ var options = {
       }
     }
   };
-
+      const data = await fetchData2();
+      options.x = Object.keys(data);
+      options.series[0].data = Object.values(data);
+      console.log(data)
   var chart = new ApexCharts(document.querySelector("#mini-1"), options);
 chart.render();
+} catch (error) {
+  
+}
+}
+
+initializeMiniChart1();
 
 // mini-2
 var barchartColors = getChartColorsArray("mini-2");
@@ -270,6 +289,7 @@ initializeChart();
 
 
 // Sales Category
+
 var barchartColors = getChartColorsArray("earning-item");
 var options = {
     series: [
@@ -348,6 +368,7 @@ var options = {
   chart.render();
 
   // Sales Category
+  
   Chart.pluginService.register({
     afterUpdate: function (chart) {
       for (var i = 1; i < chart.config.data.labels.length; i++) {
@@ -402,14 +423,27 @@ var options = {
       ctx.restore();
     },
   });
+
+  async function fetchData3() {
+    try {
+        const response = await fetch('/users/get_dashboard_event_type_stats/?event_stat=' + encodeURIComponent('event_number'));
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        throw error; // Rethrow the error for further handling
+    }
+  }
   // round corners
+  async function initializePieChart() {
+    try {
   var salescategorycolors = getChartColorsArray('sales-category');
   var config = {
     type: 'doughnut',
     data: {
       labels: ['Watch', 'Iphone', 'Book', 'TV'],
       datasets: [{
-        data: [35, 15, 8, 7, 20],
+        data: [35, 20, 8, 7, 10],
         backgroundColor: salescategorycolors,
         hoverBackgroundColor: salescategorycolors,
         borderWidth: 0,
@@ -437,4 +471,11 @@ var options = {
   var ctx = document.getElementById('sales-category');
   
   window.myDoughnut = new Chart(ctx, config);
+    const data = await fetchData3();
+      
+      console.log(data)
   // window.myDoughnut.generateLegend();
+} catch (error) {
+  console.error('Error initializing chart:', error);
+}
+}

@@ -74,6 +74,58 @@ class Promotions_Data_Access(models.Model):
     def __str__(self):
         return str(self.ieee_id)
     
+# Class for Website Development Team data access
+class WDT_Data_Access(models.Model):
+
+    ieee_id = models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE,verbose_name="IEEE ID")
+    manage_team_access = models.BooleanField(default=False,null=False,blank=False,verbose_name="Access")
+
+    class Meta:
+
+        verbose_name = "Manage Team Access - Website Development Team"
+
+    def __str__(self):
+        return str(self.ieee_id)
+    
+# Class for Media Team data access
+class Media_Data_Access(models.Model):
+
+    ieee_id = models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE,verbose_name="IEEE ID")
+    manage_team_access = models.BooleanField(default=False,null=False,blank=False,verbose_name="Access")
+
+    class Meta:
+
+        verbose_name = "Manage Team Access - Media Team"
+
+    def __str__(self):
+        return str(self.ieee_id)
+    
+# Class for Graphics Team data access
+class Graphics_Data_Access(models.Model):
+
+    ieee_id = models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE,verbose_name="IEEE ID")
+    manage_team_access = models.BooleanField(default=False,null=False,blank=False,verbose_name="Access")
+
+    class Meta:
+
+        verbose_name = "Manage Team Access - Graphics Team"
+
+    def __str__(self):
+        return str(self.ieee_id)
+    
+# Class for Finance and Corporate Team data access
+class FCT_Data_Access(models.Model):
+
+    ieee_id = models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE,verbose_name="IEEE ID")
+    manage_team_access = models.BooleanField(default=False,null=False,blank=False,verbose_name="Access")
+
+    class Meta:
+
+        verbose_name = "Manage Team Access - Finance and Corporate Team"
+
+    def __str__(self):
+        return str(self.ieee_id)
+    
 #class for Events and Management Team data access
 class EMT_Data_Access(models.Model):
 
