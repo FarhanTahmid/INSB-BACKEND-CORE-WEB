@@ -32,7 +32,7 @@ def recruitment_home(request):
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     context={
-        'numberOfSessions':numberOfSessions,
+        'sessions':numberOfSessions,
         "user_data":user_data
     }
     if request.method == "POST":
