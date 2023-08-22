@@ -16,7 +16,7 @@ class Branch:
         
         '''This function returns all the teams in the database'''
         
-        teams=Teams.objects.all().values('id','team_name') #returns a list of dictionaryies with the id and team name
+        teams=Teams.objects.all().values('primary','team_name') #returns a list of dictionaryies with the id and team name
         return teams
     
     def load_ex_com_panel_list():
@@ -27,10 +27,11 @@ class Branch:
         
         return ex_com_panel_list
         
-    def load_team_members(team_id):
+    def load_team_members(team_primary):
         
         '''This function loads all the team members from the database'''
-
+        team=Teams.objects.get(primary=team_primary)
+        team_id=team.id
         team_members=Members.objects.order_by('position').filter(team=team_id)
         return team_members
     
@@ -40,11 +41,12 @@ class Branch:
     def load_all_insb_members():
         insb_members=Members.objects.all().order_by('nsu_id')
         return insb_members
-    def add_member_to_team(ieee_id,team,position):
+    def add_member_to_team(ieee_id,team_primary,position):
         '''This function adds member to the team'''
-        
+        getTeam=Teams.objects.get(primary=team_primary)
+        team=getTeam.id
         try:
-            if(team=="12"): #Checking if the team is MDT as its id is 12
+            if(team_primary==7): #Checking if the team is MDT as its id is 12
                 
                 Members.objects.filter(ieee_id=ieee_id).update(team=team,position=position)
                 

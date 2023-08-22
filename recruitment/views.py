@@ -15,6 +15,8 @@ from django.db.utils import IntegrityError
 from membership_development_team.renderData import MDT_DATA
 from membership_development_team import email_sending
 from system_administration.render_access import Access_Render
+from users.renderData import LoggedinUser
+
 # Create your views here.
 
 
@@ -26,6 +28,13 @@ def recruitment_home(request):
     '''
     
     numberOfSessions = renderData.Recruitment.loadSession()
+    
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    context={
+        'numberOfSessions':numberOfSessions,
+        "user_data":user_data
+    }
     if request.method == "POST":
         session_name = request.POST["recruitment_session"]
         session_time=datetime.datetime.now()
@@ -34,7 +43,7 @@ def recruitment_home(request):
             add_session.save()
         except DatabaseError:
             return DatabaseError
-    return render(request, 'recruitment_homepage.html', numberOfSessions)
+    return render(request, 'recruitment_homepage.html', context)
 
 
 @login_required
@@ -53,7 +62,8 @@ def recruitee(request, pk):
 
     get_total_count_of_ieee_payment_completed=renderData.Recruitment.getTotalCountofIEEE_payment_complete(session_id=pk) 
     get_total_count_of_ieee_payment_incomplete=renderData.Recruitment.getTotalCountofIEEE_payment_incomplete(session_id=pk) 
-    
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     context = {
         'pk':pk,
         'memberCount': getMemberCount,
@@ -61,6 +71,7 @@ def recruitee(request, pk):
         'members': getRecruitedMembers,
         'ieee_payment_complete':get_total_count_of_ieee_payment_completed,
         'ieee_payment_incomplete':get_total_count_of_ieee_payment_incomplete,
+        'user_data':user_data,
     }
     if(has_access):
         return render(request, 'session_recruitees.html', context=context)
@@ -299,6 +310,7 @@ def recruit_member(request, session_name):
                         email_nsu=request.POST['email_nsu'],
                         gender=request.POST['gender'],
                         facebook_url=request.POST['facebook_url'],
+                        facebook_username=request.POST['facebook_username'],
                         home_address=request.POST['home_address'],
                         major=request.POST.get('major'),
                         graduating_year=request.POST['graduating_year'],
@@ -325,16 +337,16 @@ def recruit_member(request, session_name):
                 except IntegrityError:  # Checking if same id exist and handling the exception
                     messages.info(
                         request, f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database! It is prohibited to recruit another member with same NSU ID under one recruitment session.")
-                    return render(request, "membership_form.html", context=context)
+                    return render(request, "recruitment_form.html", context=context)
 
                 except:  # Handling all errors
                     messages.info(request, "Something went Wrong! Please try again")
-                    return render(request, "membership_form.html", context=context)
+                    return render(request, "recruitment_form.html", context=context)
                 
                 
 
     else:
-        return render(request, "membership_form.html", context=context)
+        return render(request, "recruitment_form.html", context=context)
 
 
 @login_required

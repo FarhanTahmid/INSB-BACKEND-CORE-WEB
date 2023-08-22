@@ -1,5 +1,7 @@
 table th , table td{
     text-align: center;
+    font-weight: normal; /* or inherit, depending on your preference */
+
 }
 
 table tr:nth-child(even){
