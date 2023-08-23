@@ -4,10 +4,26 @@ from central_branch.models import Events
 from central_branch.renderData import Branch
 from main_website.models import Research_Papers,Blog
 from django.db.models import Q
-
+from users.models import User
 
 # Create your views here.
 def index(request):
+
+    def get_ip_address(request):
+        address = request.META.get('HTTP_X_FORWARDED_FOR')
+        if address:
+            ip = address.split(',')[-1].strip()
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
+    ip = get_ip_address(request)
+    user =User(ip_address = ip)
+    result = User.objects.filter(ip_address = ip)
+    if len(result)>=1:
+        pass
+    else:
+        user.save()
+
     return HttpResponse("IEEE main Website")
 
 def All_Events(request):

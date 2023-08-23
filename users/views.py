@@ -16,6 +16,7 @@ from membership_development_team.renderData import MDT_DATA
 from . import email_handler
 
 
+
 # Create your views here.
 def login(request):
     
@@ -92,7 +93,18 @@ def dashboard(request):
     #### LOOK into registerUser.py for manual input of data from csv. Templates are created there.
 
     is_eb_or_admin = renderData.is_eb_or_admin(request.user)
+    #getting year list for the last 5 years event chart
     years = renderData.getEventNumberStatYear()
+    #getting data for the number of events over last 5 years
+    event_number_over_5_years = renderData.getEventNumberStat()
+    #getting data for the daily hit count
+    hit_count_daily = renderData.getHitCountDaily()
+    #getting data for the recruitment stats graph
+    recruitement_stat = renderData.getRecruitmentStats()
+    #getting data for the circular graph on portal
+    type_of_events_stat = renderData.getTypeOfEventStats()
+    
+
 
 
     #Loading current user data from renderData.py
@@ -103,7 +115,14 @@ def dashboard(request):
     context={
         'user_data':user_data,
         'eb_member':is_eb_or_admin,
-        'years':years
+        'years':years,
+        'event_number_over_5_years':event_number_over_5_years,
+        'hit_count_daily':hit_count_daily,
+        'recruitment_stat_key':recruitement_stat[0],
+        'recruitment_stat_values':recruitement_stat[1],
+        'type_of_event_stats_keys':type_of_events_stat[0],
+        'type_of_event_stats_values':type_of_events_stat[1],
+        'event_percentage':type_of_events_stat[2]
     }
 
     

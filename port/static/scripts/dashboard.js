@@ -23,9 +23,12 @@ function getChartColorsArray(chartId) {
         });
     }
 }
-async function fetchData2() {
+// mini-1
+
+
+async function fetchData4() {
   try {
-      const response = await fetch('/users/get_dashboard_mini_chart1_stats/?event_stat=' + encodeURIComponent('event_number'));
+      const response = await fetch('/users/get_dashboard_hit_count_stats/?hit_count_stat=' + encodeURIComponent('hit_count'));
       const data = await response.json();
       return data;
   } catch (error) {
@@ -33,63 +36,13 @@ async function fetchData2() {
       throw error; // Rethrow the error for further handling
   }
 }
-// mini-1
-async function initializeMiniChart1() {
-  try {
-var barchartColors = getChartColorsArray("mini-1");
-var options = {
-    series: [{
-      data: []
-    }],
-    chart: {
-      type: 'line',
-      height: 61,
-      sparkline: {
-        enabled: true
-      }  
-    },
-    colors: barchartColors,
-    stroke: {
-      curve: 'smooth',
-      width: 2.5,
-    },
-    tooltip: {
-      fixed: {
-        enabled: false
-      },
-      x: {
-        show: false
-      },
-      y: {
-        title: {
-          formatter: function (seriesName) {
-            return ''
-          }
-        }
-      },
-      marker: {
-        show: false
-      }
-    }
-  };
-      const data = await fetchData2();
-      options.x = Object.keys(data);
-      options.series[0].data = Object.values(data);
-      console.log(data)
-  var chart = new ApexCharts(document.querySelector("#mini-1"), options);
-chart.render();
-} catch (error) {
-  
-}
-}
-
-initializeMiniChart1();
-
 // mini-2
+async function initializeMiniChart2() {
+  try {
 var barchartColors = getChartColorsArray("mini-2");
 var options = {
     series: [{
-      data: [36, 12, 30, 20, 36, 14]
+      data: [50]
     }],
     chart: {
       type: 'line',
@@ -122,16 +75,26 @@ var options = {
       }
     }
   };
-
+  const data = await fetchData4();
+      options.x = Object.keys(data);
+      options.series[0].data = Object.values(data);
+      console.log(data)
   var chart = new ApexCharts(document.querySelector("#mini-2"), options);
 chart.render();
+} catch (error) {
+  console.error('Error fetching data:', error);
+  throw error; // Rethrow the error for further handling
+  
+}
+}
+initializeMiniChart2();
 
 
 // mini-3
 var barchartColors = getChartColorsArray("mini-3");
 var options = {
     series: [{
-      data: [14, 40, 14, 46, 28, 38]
+      data: []
     }],
     chart: {
       type: 'line',
@@ -173,7 +136,7 @@ chart.render();
 var barchartColors = getChartColorsArray("mini-4");
 var options = {
     series: [{
-      data: [34, 2, 30, 12, 35, 20]
+      data: []
     }],
     chart: {
       type: 'line',
@@ -226,65 +189,7 @@ async function fetchData() {
 }
 
 // Asynchronous function to initialize the chart
-async function initializeChart() {
-  try {
-      var barchartColors = getChartColorsArray("recruitment-statistics");
 
-      var options = {
-          series: [{
-              data: []
-          }],
-          chart: {
-              toolbar: {
-                  show: false,
-              },
-              height: 350,
-              type: 'bar',
-              events: {
-                  click: function (chart, w, e) {
-                      // Handle click event if needed
-                  }
-              }
-          },
-          plotOptions: {
-              bar: {
-                  columnWidth: '70%',
-                  distributed: true,
-              }
-          },
-          dataLabels: {
-              enabled: false
-          },
-          legend: {
-              show: false
-          },
-          colors: barchartColors,
-          xaxis: {
-              categories: [], // Categories will be populated dynamically
-              labels: {
-                  style: {
-                      colors: barchartColors,
-                      fontSize: '12px'
-                  }
-              }
-          }
-      };
-
-      // Fetch data and update chart options
-      const data = await fetchData();
-      options.xaxis.categories = Object.keys(data);
-      options.series[0].data = Object.values(data);
-      console.log(data)
-      // Create and render the chart
-      var chart = new ApexCharts(document.querySelector("#recruitment-statistics"), options);
-      chart.render();
-  } catch (error) {
-      console.error('Error initializing chart:', error);
-  }
-}
-
-// Call the asynchronous function to initialize the chart
-initializeChart();
 
 
 
