@@ -93,6 +93,8 @@ def getPaymentStats(request):
 
 @login_required
 def recruitee_details(request,session_id,nsu_id):
+    
+    
     """Preloads all the data of the recruitees who are registered in the particular session, here we can edit and save the data of the recruitee"""
     #Checking user access
     user=request.user
@@ -106,7 +108,9 @@ def recruitee_details(request,session_id,nsu_id):
             data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
         address=data.home_address
         
-     
+        checkIfMemberIsRegistered=Members.objects.filter(nsu_id=nsu_id).exists()
+    
+
     except ObjectDoesNotExist:
         # if object doesnot exist...
         messages.info(request, "Member does not exist!")
@@ -121,6 +125,7 @@ def recruitee_details(request,session_id,nsu_id):
         'data': data,
         'dob': dob,
         'address':address,
+        'memberExists':checkIfMemberIsRegistered,
     }
 
     if request.method == "POST":
@@ -148,6 +153,7 @@ def recruitee_details(request,session_id,nsu_id):
                 'email_personal': request.POST['email_personal'],
                 'email_nsu':request.POST['email_nsu'],
                 'facebook_url': request.POST['facebook_url'],
+                'facebook_username':request.POST['facebook_username'],
                 'home_address': request.POST['home_address'],
                 'major': request.POST['major'], 'graduating_year': request.POST['graduating_year'],
                 'ieee_id': request.POST['ieee_id'],
@@ -161,21 +167,21 @@ def recruitee_details(request,session_id,nsu_id):
              # Getting returned values and handling the exceptions
 
             if (renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id, values=info_dict) == "no_ieee_id"):
-                messages.info(
+                messages.error(
                     request, "Please Enter IEEE ID if you have completed payment")
                 return redirect('recruitment:recruitee_details', session_id,nsu_id)
             elif (renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id, values=info_dict) == IntegrityError):
-                messages.info(
+                messages.error(
                     request, "There is already a member registered with this IEEE ID")
                 return redirect('recruitment:recruitee_details',session_id, nsu_id)
             elif (renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id, values=info_dict) == InternalError):
-                messages.info(request, "A Server Error Occured!")
+                messages.error(request, "A Server Error Occured!")
                 return redirect('recruitment:recruitee_details',session_id ,nsu_id)
             elif (renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id, values=info_dict)):
-                messages.info(request, "Information Updated")
+                messages.success(request, "Information Updated")
                 return redirect('recruitment:recruitee_details', session_id,nsu_id)
             else:
-                messages.info(
+                messages.error(
                     request, "Something went wrong. Please Try again")
                 return redirect('recruitment:recruitee_details', session_id,nsu_id)
 
@@ -190,9 +196,9 @@ def recruitee_details(request,session_id,nsu_id):
                 name=name,nsu_id=nsu_id,recruited_member_email=recruited_member_email,recruitment_session=recruitment_session_name
             )
             if(email_sending_status):
-                messages.info(request,f"Email was successfully sent to {recruited_member_email}.")
+                messages.success(request,f"Email was successfully sent to {recruited_member_email}.")
             else:
-                messages.info(request,f"Could not send email to {recruited_member_email}.")
+                messages.error(request,f"Could not send email to {recruited_member_email}.")
         
         
         
@@ -202,7 +208,7 @@ def recruitee_details(request,session_id,nsu_id):
             # if(renderData.Recruitment.deleteMember(nsu_id=nsu_id)=="both_database"):
             #     messages.info(request,f"Member Deleted Successfully from recruitment process and also from INSB Database with the id {nsu_id}")
             if (renderData.Recruitment.deleteMember(nsu_id=nsu_id,session_id=data.session_id) == ObjectDoesNotExist):
-                messages.info(
+                messages.success(
                     request, f"The member with the id {nsu_id} was deleted!")
                 return redirect('recruitment:recruitee', session)
             elif (renderData.Recruitment.deleteMember(nsu_id=nsu_id,session_id=data.session_id)):
@@ -253,18 +259,18 @@ def recruitee_details(request,session_id,nsu_id):
                     session=recruitment_session.objects.get(id=int(getMember[0]['session_id']))
                 )
                 newMember.save()
-                messages.info(request, "Member Updated in INSB Database")
+                messages.success(request, "Member Updated in INSB Database")
                 return redirect('recruitment:recruitee_details',session_id, nsu_id)
             except IntegrityError:
-                messages.info(
-                    "An Error Occured! The member is already registered in INSB Database or you have not entered IEEE ID of the member!")
+                messages.error(
+                    "The member is already registered in INSB Database or you have not entered IEEE ID of the member!")
                 return redirect('recruitment:recruitee_details',session_id, nsu_id)
             # except:
             #     messages.info(
             #         request, "Something went wrong! Please Try again!")
             #     return redirect('recruitment:recruitee_details', nsu_id)
     if(has_access):
-        return render(request, "recruitee_details.html", context=context)
+        return render(request, "recruited_member_details.html", context=context)
     else:
         return render(request,'access_denied.html')
 
