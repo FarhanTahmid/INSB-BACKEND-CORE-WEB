@@ -76,7 +76,7 @@ def recruitee(request, pk):
     if(has_access):
         return render(request, 'session_recruitees.html', context=context)
     else:
-        return render(request,'access_denied.html')
+        return render(request,'access_denied.html',context)
 
 @login_required
 def getPaymentStats(request):
@@ -272,7 +272,7 @@ def recruitee_details(request,session_id,nsu_id):
     if(has_access):
         return render(request, "recruited_member_details.html", context=context)
     else:
-        return render(request,'access_denied.html')
+        return render(request,'access_denied.html',context)
 
 @login_required
 def recruit_member(request, session_name):
