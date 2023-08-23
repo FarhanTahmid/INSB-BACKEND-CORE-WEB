@@ -240,7 +240,7 @@ def member_details(request,ieee_id):
     if(has_access):
         return render(request,'INSB Members/member_details.html',context=context)
     else:
-        return render(request,'access_denied.html')
+        return render(request,'access_denied.html',context)
     
 @login_required
 def membership_renewal(request):
