@@ -141,12 +141,12 @@
 							<p class="text-muted mt-4 mb-0">Events over 5 Years</p>
 							<h4 class="mt-1 mb-0" <sup class="text-success fw-medium font-size-14"><i class="mdi mdi-arrow-down"></i></sup></h4>
 							<div>
-								<div class="py-3 my-1">
-									<div id="mini-1" data-colors='["#3980c0"]'></div>
+								<div class="py-3 my-1" >
+									<div id="mini-1" data-colors='["#3980c0"]' onload="initializeMiniChart1()"></div>
 								</div>
 								<ul class="list-inline d-flex justify-content-between justify-content-center mb-0">
 									{% for i in years %}
-									<li class="list-inline-item"><a href="" class="text-muted"></a>{{i}}</li>
+									<li class="list-inline-item"><a href="#" class="text-muted"></a>{{i}}</li>
 									{% endfor %}
 								</ul>
 							</div>
@@ -162,14 +162,14 @@
 									<i class="mdi mdi-eye-outline text-success font-size-24"></i>
 								</span>
 							</div>
-							<p class="text-muted mt-4 mb-0">Today Visitor</p>
-							<h4 class="mt-1 mb-0">1,648,29 <sup class="text-danger fw-medium font-size-14"><i class="mdi mdi-arrow-down"></i> 19%</sup></h4>
+							<p class="text-muted mt-4 mb-0">Page Visitor</p>
+							<h4 class="mt-1 mb-0"><sup class="text-danger fw-medium font-size-14"><i class="mdi mdi-arrow-down"></i></sup></h4>
 							<div>
 								<div class="py-3 my-1">
-									<div id="mini-2" data-colors='["#33a186"]'></div>
+									<div id="mini-2" data-colors='["#33a186"]' onload="initializeMiniChart2()"></div>
 								</div>
 								<ul class="list-inline d-flex justify-content-between justify-content-center mb-0">
-									<li class="list-inline-item"><a href="" class="text-muted">Day</a></li>
+									<li class="list-inline-item"><a href="" class="text-muted">Days</a></li>
 									<li class="list-inline-item"><a href="" class="text-muted">Week</a></li>
 									<li class="list-inline-item"><a href="" class="text-muted">Month</a></li>
 									<li class="list-inline-item"><a href="" class="text-muted">Year</a></li>
@@ -178,7 +178,7 @@
 						</div>
 					</div>
 				</div>
-
+				<!--
 				<div class="col-lg-3 col-md-6">
 					<div class="card">
 						<div class="card-body">
@@ -227,7 +227,7 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 
 			</div>
 		</div>
@@ -238,17 +238,18 @@
 			<div class="card">
 				<div class="card-body">
 					<div class="d-flex flex-wrap align-items-center mb-3">
+						<br><br><br><br><br><br>
 						<h5 class="card-title mb-0">Recruitment Statistics</h5>
 						
 					</div>
 
 				   <div class="row align-items-center">
-					<div class="col-xl-8">
+					<div class="col-xl-8" >
 						<div>
-							 <div id="recruitment-statistics" data-colors='["#33a186","#3980c0","#33a186","#3980c0","#33a186","#3980c0"]' class="apex-chart"></div>
+							 <div id="recruitment-statistics" data-colors='["#33a186","#3980c0","#33a186","#3980c0","#33a186","#3980c0"]' onload="initializeChart()" class="apex-chart"></div>
 						</div>
 					  </div>
-					   <div class="col-xl-4">
+					   <!--<div class="col-xl-4">
 						   <div class="">
 								<div>
 									<div class="d-flex justify-content-between align-items-center">
@@ -310,7 +311,7 @@
 									</div>
 								</div>
 						   </div>
-					   </div>
+					   </div>-->
 					   
 				   </div>
 
@@ -324,69 +325,38 @@
 					<div class="d-flex flex-wrap align-items-center">
 						<h5 class="card-title mb-0">Events</h5>
 						<div class="ms-auto">
-							<div class="dropdown">
+							<!--<div class="dropdown">
 								<a class="dropdown-toggle text-reset" href="#" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<span class="text-muted font-size-12"> Sort By:</span> <span class="fw-medium">Weekly<i class="mdi mdi-chevron-down ms-1"></i></span>
+									<span class="text-muted font-size-12"> Sort By:</span> <span class="fw-medium"><i class="mdi mdi-chevron-down ms-1"></i></span>
 								</a>
 								<div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
 									<a class="dropdown-item" href="#">Monthly</a>
 									<a class="dropdown-item" href="#">Yearly</a>
 								</div>
-							</div>
+							</div>-->
 						</div>
 					</div>
 
 					<div class="text-center mt-4">
-						<canvas class="mx-auto" id="sales-category" height="281" data-colors='["#3980c0","#51af98", "#4bafe1", "#B4B4B5", "#f1f3f4"]'></canvas>
+						<canvas class="mx-auto" id="sales-category" height="281" data-colors='["#9dc6d8","#00b3ca", "#7dd0b6", "#1d4e89", "#d2b29b","#e38690","#f69256"]'></canvas>
 					</div>
 					
 					<div class="row mt-4">
 						<div class="col">
 							<div class="px-2">
+								{% for key, value in event_percentage.items %}
 								<div class="d-flex align-items-center mt-sm-0 mt-2">
 									<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
 									<div class="flex-grow-1 ms-2">
-										<p class="mb-0 text-truncate">Watch OS 8</p>
+										<p class="mb-0 text-truncate">{{key}}</p>
 									</div>
 									<div class="flex-shrink-0">
-										<span class="fw-bold">35.0%</span>
+										<span class="fw-bold">{{value}}%</span>
 									</div>
 								</div>
-
-								<div class="d-flex align-items-center mt-2">
-									<i class="mdi mdi-circle font-size-10 mt-1 text-success"></i>
-										<div class="flex-grow-1 ms-2">
-											<p class="mb-0 text-truncate">Iphone 12</p>
-										</div>
-									<div class="flex-shrink-0">
-										<span class="fw-bold">15.0%</span>
-									</div>
-								</div>
+								{% endfor %}
 								
 							</div>
-						</div>
-						<div class="col">
-						   <div class="px-2">
-								<div class="d-flex align-items-center mt-sm-0 mt-2">
-										<i class="mdi mdi-circle font-size-10 mt-1 text-info"></i>
-										<div class="flex-grow-1 ms-2">
-											<p class="mb-0 text-truncate">Horror Book</p>
-										</div>
-										<div class="flex-shrink-0">
-											<span class="fw-bold">8.0%</span>
-										</div>
-								</div>
-
-								<div class="d-flex align-items-center mt-2">
-										<i class="mdi mdi-circle font-size-10 mt-1 text-secondary"></i>
-										<div class="flex-grow-1 ms-2">
-											<p class="mb-0 text-truncate">Smart 4k TV</p>
-										</div>
-										<div class="flex-shrink-0">
-											<span class="fw-bold">7.0%</span>
-										</div>
-								</div>
-						   </div>
 						</div>
 					</div>
 				</div>
@@ -1221,5 +1191,269 @@
   {% comment %} <script src="{% static 'script/jquery.pjax.js'%}"></script> {% endcomment %}
   <script src="{% static 'script/ajax.js'%}"></script>
 <!-- endbuild -->
+<script>
+
+	function getChartColorsArray(chartId) {
+		if (document.getElementById(chartId) !== null) {
+			var colors = document.getElementById(chartId).getAttribute("data-colors");
+			colors = JSON.parse(colors);
+			return colors.map(function (value) {
+				var newValue = value.replace(" ", "");
+				if (newValue.indexOf("--") != -1) {
+					var color = getComputedStyle(document.documentElement).getPropertyValue(
+						newValue
+					);
+					if (color) return color;
+				} else {
+					return newValue;
+				}
+			});
+		}
+	}
+	async function initializeMiniChart1() {
+		try {
+			var barchartColors = getChartColorsArray("mini-1");
+			var options = {
+				series: [{
+				  data: {{event_number_over_5_years}}
+				}],
+				chart: {
+				  type: 'line',
+				  height: 61,
+				  sparkline: {
+					enabled: true
+				  }  
+				},
+				colors: barchartColors,
+				stroke: {
+				  curve: 'smooth',
+				  width: 2.5,
+				},
+				tooltip: {
+				  fixed: {
+					enabled: false
+				  },
+				  x: {
+					show: false
+				  },
+				  y: {
+					title: {
+					  formatter: function (seriesName) {
+						return ''
+					  }
+					}
+				  },
+				  marker: {
+					show: false
+				  }
+				}
+			  };
+			
+			  var chart = new ApexCharts(document.querySelector("#mini-1"), options);
+			chart.render();
+	  } catch (error) {
+		
+	  }
+	  }
+	  initializeMiniChart1();
+
+	async function initializeMiniChart2() {
+		try {
+			var barchartColors = getChartColorsArray("mini-2");
+var options = {
+    series: [{
+      data: {{hit_count_daily}}
+    }],
+    chart: {
+      type: 'line',
+      height: 61,
+      sparkline: {
+        enabled: true
+      }  
+    },
+    colors: barchartColors,
+    stroke: {
+      curve: 'smooth',
+      width: 2.5,
+    },
+    tooltip: {
+      fixed: {
+        enabled: false
+      },
+      x: {
+        show: false
+      },
+      y: {
+        title: {
+          formatter: function (seriesName) {
+            return ''
+          }
+        }
+      },
+      marker: {
+        show: false
+      }
+    }
+  };
+
+  var chart = new ApexCharts(document.querySelector("#mini-2"), options);
+chart.render();
+} catch (error) {
+		
+}
+}
+initializeMiniChart2();
+
+async function initializeChart() {
+	try {
+		var barchartColors = getChartColorsArray("recruitment-statistics");
+		var options = {
+			series: [{
+				data: {{recruitment_stat_values}}
+			}],
+			chart: {
+				toolbar: {
+					show: false,
+				},
+				height: 350,
+				type: 'bar',
+				events: {
+					click: function (chart, w, e) {
+						// Handle click event if needed
+					}
+				}
+			},
+			plotOptions: {
+				bar: {
+					columnWidth: '70%',
+					distributed: true,
+				}
+			},
+			dataLabels: {
+				enabled: false
+			},
+			legend: {
+				show: false
+			},
+			colors: barchartColors,
+			xaxis: {
+				categories:{{recruitment_stat_key | safe}}, // Categories will be populated dynamically
+				labels: {
+					style: {
+						colors: barchartColors,
+						fontSize: '12px'
+					}
+				}
+			}
+		};
+		var chart = new ApexCharts(document.querySelector("#recruitment-statistics"), options);
+		chart.render();
+	} catch (error) {
+		console.error('Error initializing chart:', error);
+	}
+  }
+  initializeChart();
+
+ async function initializeCircleChart(){
+	try {
+
+ Chart.pluginService.register({
+    afterUpdate: function (chart) {
+      for (var i = 1; i < chart.config.data.labels.length; i++) {
+        var arc = chart.getDatasetMeta(0).data[i];
+        arc.round = {
+          x: (chart.chartArea.left + chart.chartArea.right) / 2,
+          y: (chart.chartArea.top + chart.chartArea.bottom) / 2,
+          radius: (chart.outerRadius + chart.innerRadius) / 2,
+          thickness: (chart.outerRadius - chart.innerRadius) / 2 - 1,
+          backgroundColor: arc._model.backgroundColor
+        }
+      }
+      // Draw rounded corners for first item
+      var arc = chart.getDatasetMeta(0).data[0];
+      arc.round = {
+        x: (chart.chartArea.left + chart.chartArea.right) / 2,
+        y: (chart.chartArea.top + chart.chartArea.bottom) / 2,
+        radius: (chart.outerRadius + chart.innerRadius) / 2,
+        thickness: (chart.outerRadius - chart.innerRadius) / 2 - 1,
+        backgroundColor: arc._model.backgroundColor
+      }
+    },
+  
+    afterDraw: function (chart) {
+      for (var i = 1; i < chart.config.data.labels.length; i++) {
+        var ctx = chart.chart.ctx;
+        arc = chart.getDatasetMeta(0).data[i];
+        var startAngle = Math.PI / 2 - arc._view.startAngle;
+        var endAngle = Math.PI / 2 - arc._view.endAngle;
+        ctx.save();
+        ctx.translate(arc.round.x, arc.round.y);
+        ctx.fillStyle = arc.round.backgroundColor;
+        ctx.beginPath();
+        ctx.arc(arc.round.radius * Math.sin(endAngle), arc.round.radius * Math.cos(endAngle), arc.round.thickness, 0, 2 * Math.PI);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+      // Draw rounded corners for first item
+      var ctx = chart.chart.ctx;
+      arc = chart.getDatasetMeta(0).data[0];
+      var startAngle = Math.PI / 2 - arc._view.startAngle;
+      var endAngle = Math.PI / 2 - arc._view.endAngle;
+      ctx.save();
+      ctx.translate(arc.round.x, arc.round.y);
+      ctx.fillStyle = arc.round.backgroundColor;
+      ctx.beginPath();
+      // ctx.arc(arc.round.radius * Math.sin(startAngle), arc.round.radius * Math.cos(startAngle), arc.round.thickness, 0, 2 * Math.PI);
+      ctx.arc(arc.round.radius * Math.sin(endAngle), arc.round.radius * Math.cos(endAngle), arc.round.thickness, 0, 2 * Math.PI);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    },
+  });
+  // round corners
+  var salescategorycolors = getChartColorsArray('sales-category');
+  
+  var config = {
+    type: 'doughnut',
+    data: {
+      labels:{{type_of_event_stats_keys | safe}},
+      datasets: [{
+        data: {{type_of_event_stats_values}},
+        backgroundColor: salescategorycolors,
+        hoverBackgroundColor: salescategorycolors,
+        borderWidth: 0,
+        borderColor: salescategorycolors,
+        hoverBorderWidth: 0,
+      }]
+    },
+    options: {
+      responsive: false,
+      legend: {
+        display: false //This will do the task
+      },
+      tooltips: {
+        enabled: true,
+      },
+      cutoutPercentage: 75,
+      rotation: -0.5 * Math.PI,
+      circumference: 2 * Math.PI,
+      title: {
+        display: false
+      },
+    }
+  };
+  var ctx = document.getElementById('sales-category');
+  
+  window.myDoughnut = new Chart(ctx, config);
+  // window.myDoughnut.generateLegend();
+} catch (error) {
+	console.error('Error initializing chart:', error);
+}
+}
+initializeCircleChart();
+
+
+</script>
 </body>
 </html>

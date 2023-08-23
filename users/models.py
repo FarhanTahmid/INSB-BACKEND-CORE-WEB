@@ -10,6 +10,8 @@ from port.models import Teams,Roles_and_Position
 from recruitment.models import recruitment_session
 from membership_development_team.models import Renewal_Sessions
 from django.contrib.auth.models import User
+import datetime
+
 # from membership_development_team.models import Renewal_Sessions
 # Create your models here.
 
@@ -93,4 +95,13 @@ class ResetPasswordTokenTable(models.Model):
         verbose_name="User Reset Password Tokens"
     def __str__(self) -> str:
         return str(self.pk)
+    
+'''This class is for the number of daily hits on the page'''
+class User(models.Model):
+    ip_address = models.TextField(default=None)
+    created_at = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.ip_address
+
     

@@ -10,6 +10,8 @@ from central_branch.models import Event_type,Events
 from system_administration.render_access import Access_Render
 import datetime
 from django.db.models import Q
+from users.models import User
+import math
 
 class LoggedinUser:
     
@@ -162,44 +164,78 @@ def is_eb_or_admin(user):
         return False
 
 def getRecruitmentStats():
-    """Returns a dictionary of the recruitment stats for the last 5 sessions. In the dictionary the key is the recruitment session and the value is
-    the number of people recruited"""
-    recruitment_stats={}
+    
+    """Returns a lists of the recruitment stats for the last 5 sessions.
+    Return the seesion name and the number of people per session in seperate lists"""
+
+    recruitment_stats_key=[]
+    recruitment_stats_values=[]
     
     try:
         for i in recruitment_session.objects.all().order_by('-id')[:5]:
             recruitee_count=recruited_members.objects.filter(session_id=i.id).count()
-            recruitment_stats.update({i.session:recruitee_count})
-        return recruitment_stats
+            recruitment_stats_key.append(i.session)
+            recruitment_stats_values.append(recruitee_count)
+        return recruitment_stats_key,recruitment_stats_values
     except:
         return False  
 
-def getEventStats():
-    event_stats ={}
-    all_event_type=Event_type.objects.all()
+def getTypeOfEventStats():
 
+    '''This fucntion is for the circular chart that shows the total events of each type
+    and their corresponding percentages on poral'''
+
+    event_stats_keys =[]
+    event_stats_values=[]
+    all_event_type=Event_type.objects.all()
+    all_events_number = Events.objects.all().count()
+    event_percentage ={}
     for i in all_event_type:
-        event_count = Events.objects.filter(event_type = i.event_type).count()
-        event_stats.update({i.event_type:event_count})
-    return event_stats
+        event_count = Events.objects.filter(event_type = i.pk).count()
+        percentage = (event_count/all_events_number*1.0)*100
+        percentage = round(percentage,1)
+        event_stats_keys.append(i.event_type)
+        event_stats_values.append(event_count)
+        event_percentage.update({i.event_type:percentage})
+    return event_stats_keys,event_stats_values,event_percentage
 
 
 def getEventNumberStat():
-    event_num = {}
+
+    '''Returns a dictionary that counts the number of all events that occured over the past
+    5 years including current year'''
+
+    event_num = []
     year = datetime.date.today().year
     print(year)
     for i in range(5):
         count = Events.objects.filter(probable_date__year=(year-i)).count()
-        event_num.update({year-i:count})
-    print(event_num)
+        event_num.append(count)
+    event_num.reverse()
     return event_num
+
 def getEventNumberStatYear():
+
+    '''Return the last 5 years including today as a list, so that it could be
+    displayed for the x-axis values on the graph in the django template for the
+    chart 'Event for 6 years' '''
+    
     year_list =[]
     year = datetime.date.today().year
     for i in range(5):
         year_list.append(year-i)
     year_list.reverse()
     return year_list
+
+def getHitCountDaily():
+    '''
+    For the time being shows daily hit page count only which is seen on the Page visitor chart'''
+    daily = []
+    count_daily = User.objects.filter(created_at__day = datetime.datetime.now().day).count()
+    daily.append(count_daily)
+    return daily
+
+    
 
 
 

@@ -27,13 +27,13 @@ from users.models import Members
 # Create your views here.
 
 def central_home(request):
-    '''user=request.user
+    user=request.user
     has_access=Access_Render.system_administrator_superuser_access(user.username)
     if (has_access):
         #renderData.Branch.test_google_form()'''
-    return render(request,'central_home.html')
-    '''else:
-    return render(request,"access_denied2.html")'''
+        return render(request,'central_home.html')
+    else:
+        return render(request,"access_denied2.html")
 
 @login_required
 def event_control(request):
