@@ -388,7 +388,7 @@
 									</div>
 				
 									<div class="text-center mt-4">
-										<canvas onload = "initializeCircleChart2()" class="mx-auto" id="Category2" height="281" data-colors='["#9dc6d8","#00b3ca", "#7dd0b6", "#1d4e89", "#d2b29b","#e38690","#f69256"]'></canvas>
+										<canvas onload = "initializeCircleChart2()" class="mx-auto" id="Category2" height="281" data-colors='["#3367d6","#4285f4","#7baaf7","#c6dafc"]'></canvas>
 									</div>
 									
 									<div class="row mt-4">
@@ -1212,7 +1212,7 @@
 			var barchartColors = getChartColorsArray("mini-2");
 var options = {
     series: [{
-      data: {{hit_count_daily}}
+      data: {{hit_count_monthly | safe}}
     }],
     chart: {
       type: 'line',

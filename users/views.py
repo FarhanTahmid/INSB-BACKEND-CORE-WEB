@@ -98,7 +98,7 @@ def dashboard(request):
     #getting data for the number of events over last 5 years
     event_number_over_5_years = renderData.getEventNumberStat()
     #getting data for the daily hit count
-    hit_count_daily = renderData.getHitCountDaily()
+    hit_count_monthly = renderData.getHitCountMonthly()
     #getting data for the recruitment stats graph
     recruitement_stat = renderData.getRecruitmentStats()
     #getting data for the circular graph on portal
@@ -120,7 +120,8 @@ def dashboard(request):
         'eb_member':is_eb_or_admin,
         'years':years,
         'event_number_over_5_years':event_number_over_5_years,
-        'hit_count_daily':hit_count_daily,
+        'hit_count_monthly':hit_count_monthly[1],
+        'month_name':hit_count_monthly[0],
         'recruitment_stat_key':recruitement_stat[0],
         'recruitment_stat_values':recruitement_stat[1],
         'type_of_event_stats_keys':type_of_events_stat[0],

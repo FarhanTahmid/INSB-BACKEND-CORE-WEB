@@ -231,13 +231,19 @@ def getEventNumberStatYear():
     year_list.reverse()
     return year_list
 
-def getHitCountDaily():
+def getHitCountMonthly():
     '''
     For the time being shows daily hit page count only which is seen on the Page visitor chart'''
     daily = []
-    count_daily = User.objects.filter(created_at__day = datetime.datetime.now().day).count()
-    daily.append(count_daily)
-    return daily
+    for i in range(32):
+        number_of_people_per_day = User.objects.filter(Q(created_at__day=(i+1)), Q(created_at__month=datetime.datetime.now().month)).count()   
+        if number_of_people_per_day>0:
+            print(number_of_people_per_day)
+            daily.append(number_of_people_per_day)
+    monthly_visitor=datetime.datetime.now().month
+    #count_daily = User.objects.filter(created_at__day = datetime.datetime.now().day).count()
+    #daily.append(count_daily)
+    return monthly_visitor,daily
 
 def getMaleFemaleRationAndActiveStatusStats():
 
