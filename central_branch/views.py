@@ -258,6 +258,11 @@ def teams(request):
                 team_name = request.POST.get('recruitment_session')
                 new_team = Teams(team_name = team_name)
                 new_team.save()
+            if (request.POST.get('reset_all_teams')):
+                '''To remove all members in all teams and assigning them as general memeber'''
+                all_memebers_in_team = Members.objects.all()
+                all_memebers_in_team.update(team=None,position = Roles_and_Position.objects.get(id=13))
+                return redirect('central_branch:teams')
     
         #load teams from database
     

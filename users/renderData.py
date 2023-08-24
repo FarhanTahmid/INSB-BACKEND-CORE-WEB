@@ -11,6 +11,7 @@ from system_administration.render_access import Access_Render
 import datetime
 from django.db.models import Q
 from users.models import User
+from recruitment.models import recruited_members
 import math
 
 class LoggedinUser:
@@ -234,6 +235,26 @@ def getHitCountDaily():
     count_daily = User.objects.filter(created_at__day = datetime.datetime.now().day).count()
     daily.append(count_daily)
     return daily
+
+def getMaleFemaleRationAndActiveStatusStats():
+
+    '''This function is for the seconf circular chart'''
+
+    all_females = Members.objects.filter(gender="Female").count()
+    all_males = Members.objects.filter(gender="Male").count()
+    active_members = recruited_members.objects.filter(ieee_payment_status=True).count()
+    inactive_members = recruited_members.objects.all().count() - active_members
+    total_members = Members.objects.all().count()
+    total_list_keys = ['Males','Females','Active Members','Inactive Members']
+    total_list_values = [all_males,all_females,active_members,inactive_members]
+    dic = {
+        'Males':(round(((all_males/total_members*1.0)*100),1)),
+        'Females':(round(((all_females/total_members*1.0)*100),1)),   
+        'Active Members':(round(((active_members/total_members*1.0)*100),1)),
+        'Inactive Members': (round(((inactive_members/total_members*1.0)*100),1))
+    } 
+    return total_list_keys,total_list_values,dic
+
 
     
 

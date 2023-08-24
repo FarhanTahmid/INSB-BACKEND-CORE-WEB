@@ -104,6 +104,9 @@ def dashboard(request):
     #getting data for the circular graph on portal
     type_of_events_stat = renderData.getTypeOfEventStats()
     
+    male_female_active_inactive_stats = renderData.getMaleFemaleRationAndActiveStatusStats()
+
+    
 
 
 
@@ -122,7 +125,10 @@ def dashboard(request):
         'recruitment_stat_values':recruitement_stat[1],
         'type_of_event_stats_keys':type_of_events_stat[0],
         'type_of_event_stats_values':type_of_events_stat[1],
-        'event_percentage':type_of_events_stat[2]
+        'event_percentage':type_of_events_stat[2],
+        'gender_active_inactive_users_labels':male_female_active_inactive_stats[0],
+        'gender_active_inactive_users_data':male_female_active_inactive_stats[1],
+        'gender_active_inactive_users_dic':male_female_active_inactive_stats[2]
     }
 
     
