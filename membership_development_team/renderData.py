@@ -56,7 +56,8 @@ class MDT_DATA:
         
         '''Gets the team id from the database only for Membership Development Team. Not the right approach'''
         
-        team=Teams.objects.get(team_name="Membership Development")
+        team=Teams.objects.get(primary=7)
+        
         return team.id
     
     def get_member_with_postion(position):

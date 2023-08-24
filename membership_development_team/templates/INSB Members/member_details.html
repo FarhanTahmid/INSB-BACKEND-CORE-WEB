@@ -214,26 +214,32 @@
                     </div>
                     <br>
                   </div>
-                  <div class="row m-b" style="margin-left:-15.78%">
-                    <div class="col-xs-4 col-md-3 col-lg-3">
-                      <label>Email (IEEE)</label>
-                      <input
-                      class="form-control"
-                      type="text" placeholder="IEEE E-Mail" name="email_ieee" value="{{ member_data.email_ieee }}"/>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>Email (IEEE)</label>
+                        <input
+                        class="form-control"
+                        type="text" placeholder="IEEE E-Mail" name="email_ieee" value="{{ member_data.email_ieee }}"/>
+                      </div>  
                     </div>
-                    <div class="col-xs-5 col-md-3">
-                      <label>Email (NSU)</label>
-                      <input
-                      class="form-control"
-                      type="text" placeholder="NSU E-Mail" required name="email_nsu" value="{{ member_data.email_nsu }}"
-                      />
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>Email (NSU)</label>
+                        <input
+                        class="form-control"
+                        type="text" placeholder="NSU E-Mail" required name="email_nsu" value="{{ member_data.email_nsu }}"
+                        />
+                      </div>
                     </div>
-                    <div class="col-xs-6 col-md-3">
-                      <label>Email (Personal)</label>
-                      <input
-                      class="form-control"
-                      type="email" placeholder="Personal E-Mail" required name="email_personal" value="{{ member_data.email_personal }}"
-                      />
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>Email (Personal)</label>
+                        <input
+                        class="form-control"
+                        type="email" placeholder="Personal E-Mail" required name="email_personal" value="{{ member_data.email_personal }}"
+                        />
+                      </div>
                     </div>
                   </div>
                   <div class="form-group">

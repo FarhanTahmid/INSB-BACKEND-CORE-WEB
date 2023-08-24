@@ -21,6 +21,7 @@ from system_administration.render_access import Access_Render
 from django.core.mail import send_mail
 from . import email_sending
 from central_branch.renderData import Branch
+from users.renderData import LoggedinUser
 
 
 # Create your views here.
@@ -35,13 +36,16 @@ def md_team_homepage(request):
     core_volunteers=renderData.MDT_DATA.get_member_with_postion(11)
     #Loading data of the cor-volunteers, volunteer id is 12
     volunteers=renderData.MDT_DATA.get_member_with_postion(12)
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     
     context={
         'co_ordinators':co_ordinators,
         'incharges':in_charges,
         'core_volunteers':core_volunteers,
         'volunteers':volunteers,
-        'media_url':settings.MEDIA_URL
+        'media_url':settings.MEDIA_URL,
+        'user_data':user_data,
     }    
     
     return render(request,'md_team_homepage.html',context=context)
@@ -58,7 +62,9 @@ def insb_members_list(request):
     members=Members.objects.order_by('position')
     totalNumber=Members.objects.all().count()
     has_view_permission=True
-    context={'members':members,'totalNumber':totalNumber,'has_view_permission':has_view_permission}
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    context={'members':members,'totalNumber':totalNumber,'has_view_permission':has_view_permission,'user_data':user_data}
     
     return render(request,'INSB Members/members_list.html',context=context)
 
@@ -80,6 +86,8 @@ def member_details(request,ieee_id):
     active_status=renderData.MDT_DATA.get_member_account_status(ieee_id=ieee_id)
         
     renewal_session=Renewal_Sessions.objects.all().order_by('-id')
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     context={
         
         'member_data':member_data,
@@ -87,7 +95,8 @@ def member_details(request,ieee_id):
         'sessions':sessions,
         'renewal_session':renewal_session,
         'media_url':settings.MEDIA_URL,
-        'active_status':active_status
+        'active_status':active_status,
+        'user_data':user_data,
     }
     if request.method=="POST":
         if request.POST.get('save_edit'):
@@ -231,7 +240,7 @@ def member_details(request,ieee_id):
     if(has_access):
         return render(request,'INSB Members/member_details.html',context=context)
     else:
-        return render(request,'access_denied.html')
+        return render(request,'access_denied.html',context)
     
 @login_required
 def membership_renewal(request):
@@ -240,11 +249,13 @@ def membership_renewal(request):
     #Load all sessions at first
     sessions=Renewal_Sessions.objects.order_by('-id')
 
-    
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
 
 
     context={
-        'sessions':sessions
+        'sessions':sessions,
+        'user_data':user_data,
     }
     if request.method=="POST":
         #MUST PERFORM TRY CATCH

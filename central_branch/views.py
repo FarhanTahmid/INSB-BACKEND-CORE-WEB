@@ -270,6 +270,7 @@ def teams(request):
         team_list=[]
         for team in teams:
             team_list.append(team)
+            
         context={
             'team':team_list,
         }
@@ -277,12 +278,12 @@ def teams(request):
     return render(request,"access_denied2.html")
 
 
-def team_details(request,pk,name):
+def team_details(request,primary,name):
     
     '''Detailed panel for the team'''
     
     #load data of current team Members
-    team_members=renderData.Branch.load_team_members(pk)
+    team_members=renderData.Branch.load_team_members(primary)
     #load all the roles and positions from database
     positions=renderData.Branch.load_roles_and_positions()
     #loading all members of insb
@@ -298,18 +299,18 @@ def team_details(request,pk,name):
                 position=request.POST.get('position')
                 #ADDING MEMBER TO TEAM
                 for member in members_to_add:
-                    if(renderData.Branch.add_member_to_team(ieee_id=member,team=pk,position=position)):
+                    if(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)):
                         messages.info(request,"Member Added to the team!")
-                    elif(renderData.Branch.add_member_to_team(ieee_id=member,team=pk,position=position)==False):
+                    elif(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)==False):
                         messages.info(request,"Member couldn't be added!")
-                    elif(renderData.Branch.add_member_to_team(ieee_id=member,team=pk,position=position)==DatabaseError):
+                    elif(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)==DatabaseError):
                         messages.info(request,"An internal Database Error Occured! Please try again!")
-                return redirect('central_branch:team_details',pk,name)
+                return redirect('central_branch:team_details',primary,name)
         if(request.POST.get('remove_member')):
             '''To remove member from team table'''
             try:
-                Members.objects.filter(ieee_id=request.POST['access_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
-                return redirect('central_branch:team_details',pk,name)
+                Members.objects.filter(ieee_id=request.POST['access_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13)) #ID 13 means general member
+                return redirect('central_branch:team_details',primary,name)
             except:
                 pass
         if (request.POST.get('update')):
@@ -317,12 +318,12 @@ def team_details(request,pk,name):
             ieee_id=request.POST.get('access_ieee_id')
             position = request.POST.get('position')
             Members.objects.filter(ieee_id = ieee_id).update(position = position)
-            return redirect('central_branch:team_details',pk,name)
+            return redirect('central_branch:team_details',primary,name)
         if (request.POST.get('reset_team')):
             '''To remove all members in the team and assigning them as general memeber'''
-            all_memebers_in_team = Members.objects.filter(team = pk)
+            all_memebers_in_team = Members.objects.filter(team = primary)
             all_memebers_in_team.update(team=None,position = Roles_and_Position.objects.get(id=13))
-            return redirect('central_branch:team_details',pk,name)
+            return redirect('central_branch:team_details',primary,name)
 
             
             
@@ -331,7 +332,7 @@ def team_details(request,pk,name):
 
     
     context={
-        'team_id':pk,
+        'team_id':primary,
         'team_name':name,
         'team_members':team_members,
         'positions':positions,

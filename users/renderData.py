@@ -193,11 +193,14 @@ def getTypeOfEventStats():
     event_percentage ={}
     for i in all_event_type:
         event_count = Events.objects.filter(event_type = i.pk).count()
-        percentage = (event_count/all_events_number*1.0)*100
-        percentage = round(percentage,1)
-        event_stats_keys.append(i.event_type)
-        event_stats_values.append(event_count)
-        event_percentage.update({i.event_type:percentage})
+        try:
+            percentage = (event_count/all_events_number*1.0)*100
+            percentage = round(percentage,1)
+            event_stats_keys.append(i.event_type)
+            event_stats_values.append(event_count)
+            event_percentage.update({i.event_type:percentage})
+        except:
+            pass
     return event_stats_keys,event_stats_values,event_percentage
 
 
