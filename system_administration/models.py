@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 from port.models import Teams
 from users.models import Members
-
+from django_resized import ResizedImageField
 # Create your models here.
 
 #if you want to create an admin, go to django admin, insert data in this model, then register in users as superuser
@@ -10,7 +10,7 @@ from users.models import Members
 class adminUsers(models.Model):
     username=models.CharField(primary_key=True,null=False,blank=False,max_length=30,default='Undetermined')
     name=models.CharField(null=False,blank=False,max_length=60,default="Undetermined")
-    profile_picture=models.ImageField(null=False,blank=False,default='Admin/admin_profile_pictures/default_profile_picture.png',upload_to='Admin/admin_profile_pictures/')
+    profile_picture=ResizedImageField(null=False,blank=False,default='Admin/admin_profile_pictures/default_profile_picture.png',upload_to='Admin/admin_profile_pictures/')
     email=models.EmailField(null=False,blank=False,max_length=50)
     class Meta:
         verbose_name="Admin User"
