@@ -147,7 +147,7 @@
 								</div>
 								<ul class="list-inline d-flex justify-content-between justify-content-center mb-0">
 									{% for i in years %}
-									<li class="list-inline-item"><a href="#" class="text-muted"></a>{{i}}</li>
+									<li class="list-inline-item" style="font-size:11px;><a href="#" class="text-muted"></a>{{i}}</li>
 									{% endfor %}
 								</ul>
 							</div>
@@ -163,23 +163,22 @@
 									<i class="mdi mdi-eye-outline text-success font-size-24"></i>
 								</span>
 							</div>
-							<p class="text-muted mt-4 mb-0">Website Visitor</p>
+							<p class="text-muted mt-4 mb-0">Website Visitor ({{month_name}})</p>
 							<h4 class="mt-1 mb-0"><sup class="text-danger fw-medium font-size-14"><i class="mdi mdi-arrow-down"></i></sup></h4>
 							<div>
 								<div class="py-3 my-1">
 									<div id="mini-2" data-colors='["#33a186"]' onload="initializeMiniChart2()"></div>
 								</div>
-								<ul class="list-inline d-flex justify-content-between justify-content-center mb-0">
-									<li class="list-inline-item"><a href="" class="text-muted">Days</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Week</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Month</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Year</a></li>
-								</ul>
+								<div class="list-inline d-flex justify-content-between justify-content-center mb-0">
+									{% for i in days_of_month %}
+									<li class="list-inline-item" style=font-size:11px;"><a href="#" class="text-muted"></a>{{i}}</li>
+									{% endfor %}
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<!--
+				
 				<div class="col-lg-3 col-md-6">
 					<div class="card">
 						<div class="card-body">
@@ -188,23 +187,21 @@
 									<i class="mdi mdi-rocket-outline text-primary font-size-24"></i>
 								</span>
 							</div>
-							<p class="text-muted mt-4 mb-0">Total Expense</p>
-							<h4 class="mt-1 mb-0">6,48,249 <sup class="text-success fw-medium font-size-14"><i class="mdi mdi-arrow-down"></i> 22%</sup></h4>
+							<p class="text-muted mt-4 mb-0">Website Visitor ({{current_year}})</p>
 							<div>
 								<div class="py-3 my-1">
-									<div id="mini-3" data-colors='["#3980c0"]'></div>
+									<div id="mini-3" data-colors='["#3980c0"]' onload="initializeMiniChart3()"></div>
 								</div>
 								<ul class="list-inline d-flex justify-content-between justify-content-center mb-0">
-									<li class="list-inline-item"><a href="" class="text-muted">Day</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Week</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Month</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Year</a></li>
+									{% for i in current_year_month_name %}
+									<li class="list-inline-item" style="font-size:11px;"><a href="#" class="text-muted"></a>{{i}}</li>
+									{% endfor %}
 								</ul>
 							</div>
 						</div>
 					</div>
 				</div>
-
+				
 				<div class="col-lg-3 col-md-6">
 					<div class="card">
 						<div class="card-body">
@@ -213,22 +210,21 @@
 									<i class="mdi mdi-account-multiple-outline text-success font-size-24"></i>
 								</span>
 							</div>
-							<p class="text-muted mt-4 mb-0">New Users</p>
-							<h4 class="mt-1 mb-0">$5,265,3 <sup class="text-danger fw-medium font-size-14"><i class="mdi mdi-arrow-down"></i> 18%</sup></h4>
+							<p class="text-muted mt-4 mb-0">Website Visitor (5 years)</p>
+							<h4 class="mt-1 mb-0"><sup class="text-danger fw-medium font-size-14"><i class="mdi mdi-arrow-down"></i></sup></h4>
 							<div>
 								<div class="py-3 my-1">
-									<div id="mini-4" data-colors='["#33a186"]'></div>
+									<div id="mini-4" data-colors='["#33a186"]' onload="initializeMiniChart4()"></div>
 								</div>
 								<ul class="list-inline d-flex justify-content-between justify-content-center mb-0">
-									<li class="list-inline-item"><a href="" class="text-muted">Day</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Week</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Month</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Year</a></li>
+									{% for i in years %}
+									<li class="list-inline-item" style="font-size:11px;><a href="#" class="text-muted"></a>{{i}}</li>
+									{% endfor %}
 								</ul>
 							</div>
 						</div>
 					</div>
-				</div> -->
+				</div> 
 
 			</div>
 		</div>
@@ -1206,6 +1202,100 @@
 	  }
 	  }
 	  initializeMiniChart1();
+
+	  async function initializeMiniChart3() {
+		try {
+			var barchartColors = getChartColorsArray("mini-3");
+			var options = {
+				series: [{
+				  data: {{hit_count_monthly_data}}
+				}],
+				chart: {
+				  type: 'line',
+				  height: 61,
+				  sparkline: {
+					enabled: true
+				  }  
+				},
+				colors: barchartColors,
+				stroke: {
+				  curve: 'smooth',
+				  width: 2.5,
+				},
+				tooltip: {
+				  fixed: {
+					enabled: false
+				  },
+				  x: {
+					show: false
+				  },
+				  y: {
+					title: {
+					  formatter: function (seriesName) {
+						return ''
+					  }
+					}
+				  },
+				  marker: {
+					show: false
+				  }
+				}
+			  };
+			
+			  var chart = new ApexCharts(document.querySelector("#mini-3"), options);
+			chart.render();
+	  } catch (error) {
+		
+	  }
+	  }
+	  initializeMiniChart3();
+
+	  async function initializeMiniChart4() {
+		try {
+			var barchartColors = getChartColorsArray("mini-4");
+			var options = {
+				series: [{
+				  data: {{hit_count_over_5_years}}
+				}],
+				chart: {
+				  type: 'line',
+				  height: 61,
+				  sparkline: {
+					enabled: true
+				  }  
+				},
+				colors: barchartColors,
+				stroke: {
+				  curve: 'smooth',
+				  width: 2.5,
+				},
+				tooltip: {
+				  fixed: {
+					enabled: false
+				  },
+				  x: {
+					show: false
+				  },
+				  y: {
+					title: {
+					  formatter: function (seriesName) {
+						return ''
+					  }
+					}
+				  },
+				  marker: {
+					show: false
+				  }
+				}
+			  };
+			
+			  var chart = new ApexCharts(document.querySelector("#mini-4"), options);
+			chart.render();
+	  } catch (error) {
+		
+	  }
+	  }
+	  initializeMiniChart4();
 
 	async function initializeMiniChart2() {
 		try {
