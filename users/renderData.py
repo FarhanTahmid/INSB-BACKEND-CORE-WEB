@@ -236,7 +236,7 @@ def getHitCountMonthly():
     For the time being shows monthly hit page count only which is seen on the Page visitor chart'''
     daily = []
     days_of_month=[]
-    for i in range(32):
+    for i in range(31):
         number_of_people_per_day = User.objects.filter(Q(created_at__day=(i+1)), Q(created_at__month=datetime.datetime.now().month), Q(created_at__year=datetime.datetime.now().year)).count()   
         if number_of_people_per_day>0:
             daily.append(number_of_people_per_day)
