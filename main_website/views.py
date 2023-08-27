@@ -18,7 +18,9 @@ def index(request):
         return ip
     ip = get_ip_address(request)
     user =User(ip_address = ip)
+    print(f"Current user ip address {user}")
     result = User.objects.filter(ip_address = ip)
+    print(f"User exists in database {result}")
     if len(result)>=1:
         pass
     else:

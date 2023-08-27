@@ -103,7 +103,8 @@ class User(models.Model):
     ip_address = models.TextField(default=None)
     created_at = models.DateField(auto_now_add=True)
 
-
+    class Meta:
+        verbose_name = "Visitors on Main Website"
     def __str__(self):
         return self.ip_address
 
