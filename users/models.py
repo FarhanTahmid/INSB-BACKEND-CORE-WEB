@@ -12,6 +12,7 @@ from membership_development_team.models import Renewal_Sessions
 from django.contrib.auth.models import User
 from django_resized import ResizedImageField
 import datetime
+from django.contrib.postgres.fields import ArrayField
 
 # from membership_development_team.models import Renewal_Sessions
 # Create your models here.
@@ -102,6 +103,8 @@ class User(models.Model):
     ip_address = models.TextField(default=None)
     created_at = models.DateField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = "Visitors on Main Website"
     def __str__(self):
         return self.ip_address
 

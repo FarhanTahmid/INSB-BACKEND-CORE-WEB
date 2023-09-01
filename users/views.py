@@ -98,11 +98,18 @@ def dashboard(request):
     #getting data for the number of events over last 5 years
     event_number_over_5_years = renderData.getEventNumberStat()
     #getting data for the daily hit count
-    hit_count_daily = renderData.getHitCountDaily()
+    hit_count_per_day_in_a_month = renderData.getHitCountMonthly()
     #getting data for the recruitment stats graph
     recruitement_stat = renderData.getRecruitmentStats()
     #getting data for the circular graph on portal
     type_of_events_stat = renderData.getTypeOfEventStats()
+    #getting male female active inactive numbers
+    male_female_active_inactive_stats = renderData.getMaleFemaleRationAndActiveStatusStats()
+    #getting montly page view for the year
+    hit_count_monthly = renderData.getHitCountYearly()
+    #getting visitors on main website over last 5 years
+    hit_count_over_5_years = renderData.getHitCountOver5Years()
+
     
 
 
@@ -117,12 +124,21 @@ def dashboard(request):
         'eb_member':is_eb_or_admin,
         'years':years,
         'event_number_over_5_years':event_number_over_5_years,
-        'hit_count_daily':hit_count_daily,
+        'hit_count_monthly':hit_count_per_day_in_a_month[2],
+        'month_name':hit_count_per_day_in_a_month[0],
+        'days_of_month':hit_count_per_day_in_a_month[1],
         'recruitment_stat_key':recruitement_stat[0],
         'recruitment_stat_values':recruitement_stat[1],
         'type_of_event_stats_keys':type_of_events_stat[0],
         'type_of_event_stats_values':type_of_events_stat[1],
-        'event_percentage':type_of_events_stat[2]
+        'event_percentage':type_of_events_stat[2],
+        'gender_active_inactive_users_labels':male_female_active_inactive_stats[0],
+        'gender_active_inactive_users_data':male_female_active_inactive_stats[1],
+        'gender_active_inactive_users_dic':male_female_active_inactive_stats[2],
+        'current_year':hit_count_monthly[0],
+        'current_year_month_name':hit_count_monthly[1],
+        'hit_count_monthly_data':hit_count_monthly[2],
+        'hit_count_over_5_years':hit_count_over_5_years
     }
 
     

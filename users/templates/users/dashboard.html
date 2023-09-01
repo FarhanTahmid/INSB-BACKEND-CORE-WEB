@@ -147,7 +147,7 @@
 								</div>
 								<ul class="list-inline d-flex justify-content-between justify-content-center mb-0">
 									{% for i in years %}
-									<li class="list-inline-item"><a href="#" class="text-muted"></a>{{i}}</li>
+									<li class="list-inline-item" style="font-size:11px;><a href="#" class="text-muted"></a>{{i}}</li>
 									{% endfor %}
 								</ul>
 							</div>
@@ -163,23 +163,22 @@
 									<i class="mdi mdi-eye-outline text-success font-size-24"></i>
 								</span>
 							</div>
-							<p class="text-muted mt-4 mb-0">Website Visitor</p>
+							<p class="text-muted mt-4 mb-0">Website Visitor ({{month_name}})</p>
 							<h4 class="mt-1 mb-0"><sup class="text-danger fw-medium font-size-14"><i class="mdi mdi-arrow-down"></i></sup></h4>
 							<div>
 								<div class="py-3 my-1">
 									<div id="mini-2" data-colors='["#33a186"]' onload="initializeMiniChart2()"></div>
 								</div>
-								<ul class="list-inline d-flex justify-content-between justify-content-center mb-0">
-									<li class="list-inline-item"><a href="" class="text-muted">Days</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Week</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Month</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Year</a></li>
-								</ul>
+								<div class="list-inline d-flex justify-content-between justify-content-center mb-0">
+									{% for i in days_of_month %}
+									<li class="list-inline-item" style=font-size:11px;"><a href="#" class="text-muted"></a>{{i}}</li>
+									{% endfor %}
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<!--
+				
 				<div class="col-lg-3 col-md-6">
 					<div class="card">
 						<div class="card-body">
@@ -188,23 +187,21 @@
 									<i class="mdi mdi-rocket-outline text-primary font-size-24"></i>
 								</span>
 							</div>
-							<p class="text-muted mt-4 mb-0">Total Expense</p>
-							<h4 class="mt-1 mb-0">6,48,249 <sup class="text-success fw-medium font-size-14"><i class="mdi mdi-arrow-down"></i> 22%</sup></h4>
+							<p class="text-muted mt-4 mb-0">Website Visitor ({{current_year}})</p>
 							<div>
 								<div class="py-3 my-1">
-									<div id="mini-3" data-colors='["#3980c0"]'></div>
+									<div id="mini-3" data-colors='["#3980c0"]' onload="initializeMiniChart3()"></div>
 								</div>
 								<ul class="list-inline d-flex justify-content-between justify-content-center mb-0">
-									<li class="list-inline-item"><a href="" class="text-muted">Day</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Week</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Month</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Year</a></li>
+									{% for i in current_year_month_name %}
+									<li class="list-inline-item" style="font-size:11px;"><a href="#" class="text-muted"></a>{{i}}</li>
+									{% endfor %}
 								</ul>
 							</div>
 						</div>
 					</div>
 				</div>
-
+				
 				<div class="col-lg-3 col-md-6">
 					<div class="card">
 						<div class="card-body">
@@ -213,22 +210,21 @@
 									<i class="mdi mdi-account-multiple-outline text-success font-size-24"></i>
 								</span>
 							</div>
-							<p class="text-muted mt-4 mb-0">New Users</p>
-							<h4 class="mt-1 mb-0">$5,265,3 <sup class="text-danger fw-medium font-size-14"><i class="mdi mdi-arrow-down"></i> 18%</sup></h4>
+							<p class="text-muted mt-4 mb-0">Website Visitor (5 years)</p>
+							<h4 class="mt-1 mb-0"><sup class="text-danger fw-medium font-size-14"><i class="mdi mdi-arrow-down"></i></sup></h4>
 							<div>
 								<div class="py-3 my-1">
-									<div id="mini-4" data-colors='["#33a186"]'></div>
+									<div id="mini-4" data-colors='["#33a186"]' onload="initializeMiniChart4()"></div>
 								</div>
 								<ul class="list-inline d-flex justify-content-between justify-content-center mb-0">
-									<li class="list-inline-item"><a href="" class="text-muted">Day</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Week</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Month</a></li>
-									<li class="list-inline-item"><a href="" class="text-muted">Year</a></li>
+									{% for i in years %}
+									<li class="list-inline-item" style="font-size:11px;><a href="#" class="text-muted"></a>{{i}}</li>
+									{% endfor %}
 								</ul>
 							</div>
 						</div>
 					</div>
-				</div> -->
+				</div> 
 
 			</div>
 		</div>
@@ -339,7 +335,7 @@
 					</div>
 
 					<div class="text-center mt-4">
-						<canvas class="mx-auto" id="sales-category" height="281" data-colors='["#9dc6d8","#00b3ca", "#7dd0b6", "#1d4e89", "#d2b29b","#e38690","#f69256"]'></canvas>
+						<canvas onload = "initializeCircleChart()" class="mx-auto" id="sales-category" height="281" data-colors='["#023E8A","#0077B6", "#0096C7", "#00B4DB", "#48CAE4","#90E0EF","#ADE8F4"]'></canvas>
 					</div>
 					
 					<div class="row mt-4">
@@ -349,7 +345,7 @@
 								<div class="d-flex align-items-center mt-sm-0 mt-2">
 									<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
 									<div class="flex-grow-1 ms-2">
-										<p class="mb-0 text-truncate">{{key}}</p>
+										<p class="mb-0 text-truncate">{{key}}:&nbsp</p>
 									</div>
 									<div class="flex-shrink-0">
 										<span class="fw-bold">{{value}}%</span>
@@ -365,101 +361,50 @@
 		</div>
 	</div>
 	<br>
-	{% if eb_member %}
+	
 	<div class="row">
 	   <div class="col-xl-8">
 				<div class="row">
 					<div class="col-lg-5">
 							<div class="card">
-								<div class="card-header">
+								<div class="card-body">
 									<div class="d-flex flex-wrap align-items-center">
-										<h5 class="card-title mb-0">Order Activity</h5>
+										<h5 class="card-title mb-0">Ratios</h5>
 										<div class="ms-auto">
-											<div class="dropdown">
-												<a class="font-size-16 text-muted dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-													<i class="mdi mdi-dots-horizontal"></i>
+											<!--<div class="dropdown">
+												<a class="dropdown-toggle text-reset" href="#" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+													<span class="text-muted font-size-12"> Sort By:</span> <span class="fw-medium"><i class="mdi mdi-chevron-down ms-1"></i></span>
 												</a>
-												<div class="dropdown-menu">
-													<a class="dropdown-item" href="#">Action</a>
-													<a class="dropdown-item" href="#">Another action</a>
-													<a class="dropdown-item" href="#">Something else here</a>
+												<div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+													<a class="dropdown-item" href="#">Monthly</a>
+													<a class="dropdown-item" href="#">Yearly</a>
 												</div>
+											</div>-->
+										</div>
+									</div>
+				
+									<div class="text-center mt-4">
+										<canvas onload = "initializeCircleChart2()" class="mx-auto" id="Category2" height="281" data-colors='["#3367d6","#4285f4","#7baaf7","#c6dafc"]'></canvas>
+									</div>
+									
+									<div class="row mt-4">
+										<div class="col">
+											<div class="px-2">
+												{% for key, value in gender_active_inactive_users_dic.items %}
+												<div class="d-flex align-items-center mt-sm-0 mt-2">
+													<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
+													<div class="flex-grow-1 ms-2">
+														<p class="mb-0 text-truncate">{{key}}: &nbsp</p>
+													</div>
+													<div class="flex-shrink-0">
+														<span class="fw-bold">{{value}}%</span>
+													</div>
+												</div>
+												{% endfor %}
+												
 											</div>
 										</div>
 									</div>
-								</div>
-								<div class="card-body px-0">
-									<ol class="activity-feed mb-0 px-4" data-simplebar style="max-height: 377px;">
-										<li class="feed-item">
-											<div class="d-flex justify-content-between feed-item-list">
-												<div>
-													<h5 class="font-size-15 mb-1">Your Manager Posted</h5>
-													<p class="text-muted mt-0 mb-0">James Raphael</p>
-												</div>
-												<div>
-													<p class="text-muted mb-0">1 hour ago</p>
-												</div>
-											</div>
-										</li>
-										<li class="feed-item">
-											<div class="d-flex justify-content-between feed-item-list">
-												<div>
-													<h5 class="font-size-15 mb-1">You have 5 pending order.</h5>
-													<p class="text-muted mt-0 mb-0">Delivered</p>
-												</div>
-												<div>
-													<p class="text-muted mb-0">6 hour ago</p>
-												</div>
-											</div>
-										</li>
-										<li class="feed-item">
-											<div class="d-flex justify-content-between feed-item-list">
-												<div>
-													<h5 class="font-size-15 mb-1">New Order Received</h5>
-													<p class="text-muted mt-0 mb-0">Pick Up</p>
-												</div>
-												<div>
-													<p class="text-muted mb-0">1 day ago</p>
-												</div>
-											</div>
-										</li>
-										<li class="feed-item">
-											<div class="d-flex justify-content-between feed-item-list">
-												<div>
-													<h5 class="font-size-15 mb-1">Your Manager Posted</h5>
-													<p class="text-muted mt-0 mb-0">In Transit</p>
-												</div>
-												<div>
-													<p class="text-muted mb-0">Yesterday</p>
-												</div>
-											</div>
-										</li>
-					
-										<li class="feed-item">
-											<div class="d-flex justify-content-between feed-item-list">
-												<div>
-													<h5 class="font-size-15 mb-1">You have 1 pending order.</h5>
-													<p class="text-muted mt-0 mb-0">Dispatched</p>
-												</div>
-												<div>
-													<p class="text-muted mb-0">2 hour ago</p>
-												</div>
-											</div>
-										</li>
-										<li class="feed-item pb-1">
-											<div class="d-flex justify-content-between feed-item-list">
-												<div>
-													<h5 class="font-size-15 mb-1">New Order Received</h5>
-													<p class="text-muted mt-0 mb-0">Order Received</p>
-												</div>
-												<div>
-													<p class="text-muted mb-0">Today</p>
-												</div>
-											</div>
-										</li>
-					
-									</ol>
-
 								</div>
 							</div>
 					</div>
@@ -871,6 +816,7 @@
 			</div>
 			
 		</div>
+		{% if eb_member %}
 		<div class="col-xl-8">
 			<div class="card">
 				<div class="card-header">
@@ -1258,12 +1204,106 @@
 	  }
 	  initializeMiniChart1();
 
+	  async function initializeMiniChart3() {
+		try {
+			var barchartColors = getChartColorsArray("mini-3");
+			var options = {
+				series: [{
+				  data: {{hit_count_monthly_data}}
+				}],
+				chart: {
+				  type: 'line',
+				  height: 61,
+				  sparkline: {
+					enabled: true
+				  }  
+				},
+				colors: barchartColors,
+				stroke: {
+				  curve: 'smooth',
+				  width: 2.5,
+				},
+				tooltip: {
+				  fixed: {
+					enabled: false
+				  },
+				  x: {
+					show: false
+				  },
+				  y: {
+					title: {
+					  formatter: function (seriesName) {
+						return ''
+					  }
+					}
+				  },
+				  marker: {
+					show: false
+				  }
+				}
+			  };
+			
+			  var chart = new ApexCharts(document.querySelector("#mini-3"), options);
+			chart.render();
+	  } catch (error) {
+		
+	  }
+	  }
+	  initializeMiniChart3();
+
+	  async function initializeMiniChart4() {
+		try {
+			var barchartColors = getChartColorsArray("mini-4");
+			var options = {
+				series: [{
+				  data: {{hit_count_over_5_years}}
+				}],
+				chart: {
+				  type: 'line',
+				  height: 61,
+				  sparkline: {
+					enabled: true
+				  }  
+				},
+				colors: barchartColors,
+				stroke: {
+				  curve: 'smooth',
+				  width: 2.5,
+				},
+				tooltip: {
+				  fixed: {
+					enabled: false
+				  },
+				  x: {
+					show: false
+				  },
+				  y: {
+					title: {
+					  formatter: function (seriesName) {
+						return ''
+					  }
+					}
+				  },
+				  marker: {
+					show: false
+				  }
+				}
+			  };
+			
+			  var chart = new ApexCharts(document.querySelector("#mini-4"), options);
+			chart.render();
+	  } catch (error) {
+		
+	  }
+	  }
+	  initializeMiniChart4();
+
 	async function initializeMiniChart2() {
 		try {
 			var barchartColors = getChartColorsArray("mini-2");
 var options = {
     series: [{
-      data: {{hit_count_daily}}
+      data: {{hit_count_monthly | safe}}
     }],
     chart: {
       type: 'line',
@@ -1453,6 +1493,104 @@ async function initializeChart() {
 }
 }
 initializeCircleChart();
+
+async function initializeCircleChart2(){
+	try {
+		Chart.pluginService.register({
+			afterUpdate: function (chart) {
+			  for (var i = 1; i < chart.config.data.labels.length; i++) {
+				var arc = chart.getDatasetMeta(0).data[i];
+				arc.round = {
+				  x: (chart.chartArea.left + chart.chartArea.right) / 2,
+				  y: (chart.chartArea.top + chart.chartArea.bottom) / 2,
+				  radius: (chart.outerRadius + chart.innerRadius) / 2,
+				  thickness: (chart.outerRadius - chart.innerRadius) / 2 - 1,
+				  backgroundColor: arc._model.backgroundColor
+				}
+			  }
+			  // Draw rounded corners for first item
+			  var arc = chart.getDatasetMeta(0).data[0];
+			  arc.round = {
+				x: (chart.chartArea.left + chart.chartArea.right) / 2,
+				y: (chart.chartArea.top + chart.chartArea.bottom) / 2,
+				radius: (chart.outerRadius + chart.innerRadius) / 2,
+				thickness: (chart.outerRadius - chart.innerRadius) / 2 - 1,
+				backgroundColor: arc._model.backgroundColor
+			  }
+			},
+		  
+			afterDraw: function (chart) {
+			  for (var i = 1; i < chart.config.data.labels.length; i++) {
+				var ctx = chart.chart.ctx;
+				arc = chart.getDatasetMeta(0).data[i];
+				var startAngle = Math.PI / 2 - arc._view.startAngle;
+				var endAngle = Math.PI / 2 - arc._view.endAngle;
+				ctx.save();
+				ctx.translate(arc.round.x, arc.round.y);
+				ctx.fillStyle = arc.round.backgroundColor;
+				ctx.beginPath();
+				ctx.arc(arc.round.radius * Math.sin(endAngle), arc.round.radius * Math.cos(endAngle), arc.round.thickness, 0, 2 * Math.PI);
+				ctx.closePath();
+				ctx.fill();
+				ctx.restore();
+			  }
+			  // Draw rounded corners for first item
+			  var ctx = chart.chart.ctx;
+			  arc = chart.getDatasetMeta(0).data[0];
+			  var startAngle = Math.PI / 2 - arc._view.startAngle;
+			  var endAngle = Math.PI / 2 - arc._view.endAngle;
+			  ctx.save();
+			  ctx.translate(arc.round.x, arc.round.y);
+			  ctx.fillStyle = arc.round.backgroundColor;
+			  ctx.beginPath();
+			  // ctx.arc(arc.round.radius * Math.sin(startAngle), arc.round.radius * Math.cos(startAngle), arc.round.thickness, 0, 2 * Math.PI);
+			  ctx.arc(arc.round.radius * Math.sin(endAngle), arc.round.radius * Math.cos(endAngle), arc.round.thickness, 0, 2 * Math.PI);
+			  ctx.closePath();
+			  ctx.fill();
+			  ctx.restore();
+			},
+		  });
+		  // round corners
+		  var salescategorycolors = getChartColorsArray('Category2');
+		  
+		  var config = {
+			type: 'doughnut',
+			data: {
+			  labels:{{gender_active_inactive_users_labels | safe}},
+			  datasets: [{
+				data: {{gender_active_inactive_users_data}},
+				backgroundColor: salescategorycolors,
+				hoverBackgroundColor: salescategorycolors,
+				borderWidth: 0,
+				borderColor: salescategorycolors,
+				hoverBorderWidth: 0,
+			  }]
+			},
+			options: {
+			  responsive: false,
+			  legend: {
+				display: false //This will do the task
+			  },
+			  tooltips: {
+				enabled: true,
+			  },
+			  cutoutPercentage: 75,
+			  rotation: -0.5 * Math.PI,
+			  circumference: 2 * Math.PI,
+			  title: {
+				display: false
+			  },
+			}
+		  };
+		  var ctx = document.getElementById('Category2');
+		  
+		  window.myDoughnut = new Chart(ctx, config);
+		  // window.myDoughnut.generateLegend();
+		} catch (error) {
+			console.error('Error initializing chart:', error);
+		}
+		}
+		initializeCircleChart2();
 
 
 </script>

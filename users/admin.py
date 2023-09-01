@@ -4,7 +4,7 @@ from . models import Members,Ex_panel_members,Executive_commitee,Executive_commi
 # Register your models here.
 @admin.register(Members)
 class Members(admin.ModelAdmin):
-    list_display=['ieee_id','name','email_ieee','team','position','facebook_url']
+    list_display=['ieee_id','name','gender','email_ieee','team','position','facebook_url']
 
 @admin.register(Ex_panel_members)
 class Ex_Panel_Members(admin.ModelAdmin):
