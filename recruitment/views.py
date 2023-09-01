@@ -375,7 +375,7 @@ def generateExcelSheet(request, session_name):
     font_style.font.bold = True
 
     # Defining columns that will stay in the first row
-    columns = ['NSU ID', 'First Name', 'Middle Name', 'Last Name', 'Email (personal)', 'Contact No', 'IEEE ID', 'Gender', 'Date Of Birth', 'Facebook Url',
+    columns = ['NSU ID', 'First Name', 'Middle Name', 'Last Name', 'Email (personal)', 'Email (NSU)', 'Contact No', 'IEEE ID', 'Gender', 'Date Of Birth', 'Facebook Url',
                'Address', 'Major', 'Graduating Year', 'Recruitment Time', 'Recruited By', 'Cash Payment Status', 'IEEE Payment Status']
 
     # Defining first column
@@ -391,7 +391,7 @@ def generateExcelSheet(request, session_name):
     # getting all the values of members as rows with same session
     rows = recruited_members.objects.filter(session_id=getSession['session'][0]['id']).values_list('nsu_id',
                                                                                                    'first_name', 'middle_name', 'last_name',
-                                                                                                   'email_personal',
+                                                                                                   'email_personal','email_nsu',
                                                                                                    'contact_no',
                                                                                                    'ieee_id',
                                                                                                    'gender',
