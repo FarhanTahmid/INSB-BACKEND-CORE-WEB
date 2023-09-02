@@ -19,6 +19,10 @@ class PRT_Data:
         team=Teams.objects.get(primary=6)
         return team.id
     
+    def getPublicRelationPromotionTeamID():
+        team = Teams.objects.get(primary=12)
+        return team.id
+    
     def load_manage_team_access():
         return Manage_Team.objects.all()
     
@@ -30,6 +34,14 @@ class PRT_Data:
         team_members=[]
         for i in range(len(load_team_members)):
             team_members.append(load_team_members[i])
+            
+        # This is only for special case where PR and Promotions Team gets Merged
+        if (len(team_members)==0):
+            load_team_members=Members.objects.filter(team=PRT_Data.getPublicRelationPromotionTeamID()).order_by('position')
+            team_members=[]
+            for i in range(len(load_team_members)):
+                team_members.append(load_team_members[i])
+            return team_members
         return team_members
     
     def getTeamCoOrdinators():
