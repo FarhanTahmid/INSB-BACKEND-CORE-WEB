@@ -47,6 +47,25 @@
       align-items: center;
       height: 100%;
     }
+    .btn-container {
+      text-align: center;
+    }
+    
+    .btn {
+      max-width: 100%;
+      width: auto;
+      display: inline-block;
+      white-space: normal; /* Allow text to wrap within the button */
+      word-wrap: break-word; /* Break long words if necessary */
+      font-size: 16px; /* Adjust the font size as needed */
+    }
+    
+    /* Media query for smaller screens (adjust the breakpoint as needed) */
+    @media (max-width: 768px) {
+      .btn {
+        width: 100%; /* Make the button full width on smaller screens */
+      }
+    }
   </style>
 </head>
 <body>
@@ -168,10 +187,10 @@
     <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"> Total Member Recruited <span style="color:#00629B;"> <b>{{ memberCount }}</b></span></h2>
 
     <div style="justify-content:center;text-align:center;">  
-        <p class="btn-groups">
+        <div class="btn-container">
           <a href="{% url "recruitment:recruit_member" session.session %}" class="btn btn-outline b-primary text-primary">Recruit New Member</a>
           <a href="{% url "recruitment:export_excel" session.session %}" class="btn btn-outline b-success text-success">Generate Excel Sheet For this Session</a>
-        </p>
+        </div>
     </div>
     <!--DONUT CHART FOR PAYMENT COMPLETION STATISTICS-->
     <div style="justify-content:center;text-align:center;">
@@ -211,46 +230,47 @@
         <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search.." class="form-control">
       </div>
     </div>
-    <table class="table table-striped table-class" id="table-id">
-  
-      <thead>
-        <tr>
-            <th>NSU ID</th>
-            <th>Name</th>
-            <th>Email (Personal)</th>
-            <th>Contact No.</th>
-            <th>Major</th>
-            <th>Recruitment Time (GMT 0:00)</th>
-            <th>Recruited By</th>
-            <th>Comment</th>
-            <th>Payment Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for member,count in members.items %}
-          {% for count in count %}
-            <tr>
-              <td style="color:#00629B;"><a href="{% url "recruitment:recruitee_details" pk count.nsu_id %}">{{ count.nsu_id }}</a></td>
-              <td>{{ count.first_name }} {{ count.middle_name }} {{ count.last_name }}</td>
-                  <td>{{ count.email_personal }}</td>
-                  <td>{{ count.contact_no }}</td>
-                  <td>{{ count.major }}</td>
-                  <td>{{ count.recruitment_time }}</td>
-                  <td>{{ count.recruited_by }}</td>
-                  <td>{{ count.comment }}</td>
-                  {% if count.ieee_payment_status %}
-                  <td><img src="/static/admin/img/icon-yes.svg" alt="True"></td>
-                  {% else %}
-                  <td><img src="/static/admin/img/icon-no.svg" alt="False"></td>
-                  {% endif %}
-            </tr>
+    <div class="table-responsive">
+      <table class="table table-striped table-class" id="table-id">
+    
+        <thead>
+          <tr>
+              <th>NSU ID</th>
+              <th>Name</th>
+              <th>Email (Personal)</th>
+              <th>Contact No.</th>
+              <th>Major</th>
+              <th>Recruitment Time (GMT 0:00)</th>
+              <th>Recruited By</th>
+              <th>Comment</th>
+              <th>Payment Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for member,count in members.items %}
+            {% for count in count %}
+              <tr>
+                <td style="color:#00629B;"><a href="{% url "recruitment:recruitee_details" pk count.nsu_id %}">{{ count.nsu_id }}</a></td>
+                <td>{{ count.first_name }} {{ count.middle_name }} {{ count.last_name }}</td>
+                    <td>{{ count.email_personal }}</td>
+                    <td>{{ count.contact_no }}</td>
+                    <td>{{ count.major }}</td>
+                    <td>{{ count.recruitment_time }}</td>
+                    <td>{{ count.recruited_by }}</td>
+                    <td>{{ count.comment }}</td>
+                    {% if count.ieee_payment_status %}
+                    <td><img src="/static/admin/img/icon-yes.svg" alt="True"></td>
+                    {% else %}
+                    <td><img src="/static/admin/img/icon-no.svg" alt="False"></td>
+                    {% endif %}
+              </tr>
 
+            {% endfor %}
           {% endfor %}
-        {% endfor %}
-         
-      <tbody>
-    </table>
-  
+          
+        <tbody>
+      </table>
+    </div>
     <!--		Start Pagination -->
     <div class='pagination-container'>
       <nav>
