@@ -252,17 +252,17 @@
               <tr>
                 <td style="color:#00629B;"><a href="{% url "recruitment:recruitee_details" pk count.nsu_id %}">{{ count.nsu_id }}</a></td>
                 <td>{{ count.first_name }} {{ count.middle_name }} {{ count.last_name }}</td>
-                    <td>{{ count.email_personal }}</td>
-                    <td>{{ count.contact_no }}</td>
-                    <td>{{ count.major }}</td>
-                    <td>{{ count.recruitment_time }}</td>
-                    <td>{{ count.recruited_by }}</td>
-                    <td>{{ count.comment }}</td>
-                    {% if count.ieee_payment_status %}
+                  <td>{{ count.email_personal }}</td>
+                  <td>{{ count.contact_no }}</td>
+                  <td>{{ count.major }}</td>
+                  <td>{{ count.recruitment_time }}</td>
+                  <td>{{ count.recruited_by }}</td>
+                  <td>{{ count.comment }}</td>
+                  {% if count.ieee_payment_status %}
                     <td><img src="/static/admin/img/icon-yes.svg" alt="True"></td>
-                    {% else %}
+                  {% else %}
                     <td><img src="/static/admin/img/icon-no.svg" alt="False"></td>
-                    {% endif %}
+                  {% endif %}
               </tr>
 
             {% endfor %}
