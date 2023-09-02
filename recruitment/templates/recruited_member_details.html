@@ -60,6 +60,25 @@
         height: auto; /* Maintain aspect ratio */
         border-radius: 5px; /* Add rounded corners if desired */
     }
+    .btn-container {
+      text-align: center;
+    }
+    
+    .btn {
+      max-width: 100%;
+      width: auto;
+      display: inline-block;
+      white-space: normal; /* Allow text to wrap within the button */
+      word-wrap: break-word; /* Break long words if necessary */
+      font-size: 16px; /* Adjust the font size as needed */
+    }
+    
+    /* Media query for smaller screens (adjust the breakpoint as needed) */
+    @media (max-width: 768px) {
+      .btn {
+        width: 100%; /* Make the button full width on smaller screens */
+      }
+    }
     
   </style>
 </head>
@@ -184,7 +203,9 @@
     <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Detailed Information of <span style="color:#00629B;"> <br><b> {{data.first_name}} {{data.middle_name}} {{data.last_name}}</b></span></br> </h2>
     {% if data.ieee_payment_status and not memberExists %} <!--if ieee payment is done but member is not yet in main database then show the button-->
     <div style="text-align: center;">
+      <div class="btn-container">
         <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-u" ui-toggle-class="bounce" ui-target="#animate">Register Member to IEEE NSU SB Main Database</button>
+      </div>
     </div>
     {% elif data.ieee_payment_status and memberExists %} <!--if ieee payment is done but member is in main database then dont show the button-->
     <div class="text-center">
@@ -402,8 +423,11 @@
                   <!--Start of Buttons-->
                   <br>
                 <div style="text-align: center;">
+                  <div class="btn-container">
                     <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Save Edits</button>
                     <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-d" ui-toggle-class="bounce" ui-target="#animate">Delete Recruited Member</button>
+                
+                  </div>
                 </div>
                 <br>
                 <div style="text-align: center;">
@@ -416,7 +440,7 @@
                 </div>
 
                 
-                  <!-- Save modal -->
+                <!-- Save modal -->
                 <div id="m-s-a" class="modal fade animate" data-backdrop="true">
                     <div class="modal-dialog" id="animate">
                       <div class="modal-content">

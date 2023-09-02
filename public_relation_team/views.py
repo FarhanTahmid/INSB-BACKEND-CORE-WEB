@@ -138,7 +138,7 @@ def event_creation_form_page2(request,event_id):
 
 
     return render(request,'public_relation_team/event/event_creation_form2.html',context)
-
+@login_required
 def event_creation_form_page3(request,event_id):
     #loading all venues from the venue list from event management team database
     venues=Events_And_Management_Team.getVenues()
@@ -309,10 +309,32 @@ def manage_team(request):
     else:
         return render(request,'public_relation_team/access_denied.html')
 
-
+@login_required
 def send_email(request):
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
+    
+    if(request.method=="POST"):
+        if(request.POST.get('send_email')):
+            
+            email_to_list=request.POST.getlist('to')
+            email_cc_list=request.POST.getlist('cc')
+            email_bcc_list=request.POST.getlist('bcc')
+            
+            email_subject=request.POST['subject']
+            
+            email_body=request.POST['body']
+            
+            email_attachment=request.FILES['attachment']
+            
+            print(f"To: {email_to_list}")
+            print(f"Cc: {email_cc_list}")
+            print(f"Bcc: {email_bcc_list}")
+            print(f"Subject: {email_subject}")
+            print(f"Body: {email_body}")
+            print(f"Attachment: {email_attachment}")
+            
+    
     context={
         'user_data':user_data,
         'media_url':settings.MEDIA_URL,

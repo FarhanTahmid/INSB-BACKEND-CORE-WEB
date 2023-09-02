@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Email | Public Relations Team</title>
+  <title>Send Email | Public Relations Team</title>
   <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,6 +31,9 @@
   <link rel="stylesheet" href="{% static '/assets/styles/app.css' %}" type="text/css" />
   <!-- endbuild -->
   <link rel="stylesheet" href="{% static '/assets/styles/font.css' %}" type="text/css" />
+
+  <!--Internal CSS-->
+  <!--Internal CSS End-->
 </head>
 <body>
   <div class="app" id="app">
@@ -133,11 +136,182 @@
         </div>
     </div>
     
-<div ui-view class="app-body" id="view">
+<div ui-view class="app-body" id="view" style="justify-content:center;">
 
 <!-- ############ PAGE START-->
+    <!--Page Intro Start-->
+    <div>
+      <br>
+      <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Send Emails Using The Portal System of IEEE NSU Student Branch </h2>
+    </div>
+    <!--Page Intro End-->
 
+    <!--Instruction Section Start-->
+    <div  style="margin-left:15px;">
+      <br>
+      <h6>Go through the Instructions given below before you start:</h6>
+      <!--List Start-->
+      <div style="margin-right:25px;justify-content:center;text-align:justify;">
+        
+        <ol>
+          <li>The email will be sent with <span style="color:blue;">"ieeensusb.portal@gmail.com"</span> account. This is the central email account for the portal system.</li>
+          <li>If you have selected more than 45 recipients, the system will automatically divide them and determine how many emails should be sent to prevent them from being flagged as spam.</li>
+          <li>The system will automatically filter out the duplicate emails and will only send one email to the address.</li>
+          <li>Scheduled mail will be saved in the Server and will be sent accordingly. Timezone of the server is: GMT +6.00 (Dhaka, Bangladesh).</li>
+          <li><b>Branch Ex-Com Members:</b> All EB's from Branch along with all the Chairs from Society, Chapters and Affinity Groups. The email will be sent to their IEEE mail by default. If IEEE mail is not found it will be sent to their NSU Mail.</li>
+          <li><b>General Members:</b> All members of IEEE NSU SB registered in the Portal whose memberships are <span style="color:green;"><b>Active</b></span>.Their Emails will be sent to their NSU Email By default.</li>
+          <li>To Select multiple options, Press and Hold 'ctrl' and then select the options.</li>
 
+        </ol>
+      </div>
+      <!--List End-->
+    </div>
+    <!--Instruction Section End-->
+
+    <!--Email Section Start-->
+    <div class="container">
+    <div class="padding">
+        <div class="row" >
+          <div class="col-md-12">
+            <div class="box">
+              <div class="box-header" style="text-align:center;">
+                <h1>Compose Email</h1>
+              </div>
+              <div class="box-divider m-0"></div>
+              <div class="box-body">
+                <form method="POST" autocomplete="off" enctype="multipart/form-data">
+                  {% csrf_token %}
+                      <div class="form-group row">
+                        <label class="col-sm-2 form-control-label">To:</label>
+                        <div class="col-lg-4">
+                          <select multiple class="form-control" name="to">
+                            <option selected value="">--------------------</option>
+                            <option value="general_members">All Registered General Members of IEEE NSU SB</option>
+                            <option value="all_officers">All Officers of IEEE NSU SB</option>
+                            <option value="eb_panel">Executive Panel (Branch Only)</option>
+                            <option value="excom_branch">Branch Ex-Com Members</option>
+                            <option value="excom_branch">All Society, Chapters, Affinity Group Executive Body Members</option>
+                            <option value="session_id">Recruits of - </option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                        <label class="col-sm-2 form-control-label">Cc:</label>
+                        <div class="col-lg-4">
+                          <select multiple class="form-control" name="cc">
+                            <option selected value="">--------------------</option>
+                            <option value="general_members">All Registered General Members of IEEE NSU SB</option>
+                            <option value="all_officers">All Officers of IEEE NSU SB</option>
+                            <option value="eb_panel">Executive Panel (Branch Only)</option>
+                            <option value="excom_branch">Branch Ex-Com Members</option>
+                            <option value="excom_branch">All Society, Chapters, Affinity Group Executive Body Members</option>
+                            <option value="session_id">Recruits of - </option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                        <label class="col-sm-2 form-control-label">Bcc:</label>
+                        <div class="col-lg-4">
+                          <select multiple class="form-control" name="bcc">
+                            <option selected value="">--------------------</option>
+                            <option value="general_members">All Registered General Members of IEEE NSU SB</option>
+                            <option value="all_officers">All Officers of IEEE NSU SB</option>
+                            <option value="eb_panel">Executive Panel (Branch Only)</option>
+                            <option value="excom_branch">Branch Ex-Com Members</option>
+                            <option value="excom_branch">All Society, Chapters, Affinity Group Executive Body Members</option>
+                            <option value="session_id">Recruits of - </option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                        <label class="col-sm-2 form-control-label">Subject</label>
+                        <div class="col-sm-10">
+                          <textarea class="form-control" required rows="3" name="subject"></textarea>
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                        <label class="col-sm-2 form-control-label">Body:</label>
+                        <div class="col-sm-10">
+                          <textarea class="form-control" required rows="20" name="body"></textarea>
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                        <label class="col-sm-2 form-control-label">Attachment</label>
+                        <div class="col-sm-10">
+                          <input type="file" id="myFile" name="attachment">
+
+                        </div>
+                      </div>
+                      <div style="text-align: center;">
+                        <div class="btn-container">
+                          <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Send Email</button>
+                          <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-d" ui-toggle-class="bounce" ui-target="#animate">Schedule This E-Mail</button>
+                      
+                        </div>
+                      </div>
+
+                      <!--Modal-->
+                      <div id="m-s-a" class="modal fade animate" data-backdrop="true">
+                        <div class="modal-dialog" id="animate">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">Warning!</h5>
+                            </div>
+                            <div class="modal-body text-left p-lg">
+                              <p>Are you sure that you want to send this E-mail to all the selected email Addresses?</p> 
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                              <input
+                              type="submit"
+                              class="btn btn-success"
+                              data-bs-dismiss="modal"
+                              name="send_email"
+                              value="Yes, Send"
+                              >                        
+                            </div>
+                          </div><!-- /.modal-content -->
+                        </div>
+                      </div>
+                      <!--Schedule mail modal-->
+                      <div id="m-s-d" class="modal fade animate" data-backdrop="true">
+                        <div class="modal-dialog" id="animate">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">Schedule Mail!</h5>
+                            </div>
+                            <div class="modal-body text-left p-lg">
+                              <p>Pick the Date and Time you want to Schedule the mail for:</p>
+                              
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                              <input
+                              type="submit"
+                              class="btn btn-success"
+                              data-bs-dismiss="modal"
+                              name="save_edit"
+                              value="Yes, Send"
+                              >                        
+                            </div>
+                          </div><!-- /.modal-content -->
+                        </div>
+                      </div>
+                      <!--Schedule mail modal-->
+
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <!--Email Section End-->
 
 </div>
 
@@ -215,12 +389,6 @@
   <script src="{% static 'script/ui-toggle-class.js'%}"></script>
   {% comment %} <script src="{% static 'script/screenfull.min.js'%}"></script> {% endcomment %}
   <script src="{% static 'script/app.js'%}"></script>
-  <!-- apexcharts -->
-  <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
-  <!-- Chart JS -->
-  <script src="{% static 'scripts/chartjs.js' %}"></script>
-  <script src="{% static 'scripts/dashboard.init.js' %}"></script>
-  <!-- ajax -->
   {% comment %} <script src="{% static 'script/jquery.pjax.js'%}"></script> {% endcomment %}
   <script src="{% static 'script/ajax.js'%}"></script>
 <!-- endbuild -->
