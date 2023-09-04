@@ -14,6 +14,7 @@ from port.models import Roles_and_Position
 from .models import Manage_Team
 from users import renderData
 from users.renderData import LoggedinUser
+from django.utils.datastructures import MultiValueDictKeyError
 # Create your views here.
 
 def team_home_page(request):
@@ -317,22 +318,34 @@ def send_email(request):
     if(request.method=="POST"):
         if(request.POST.get('send_email')):
             
+            email_single_email=request.POST['email_to']
             email_to_list=request.POST.getlist('to')
             email_cc_list=request.POST.getlist('cc')
             email_bcc_list=request.POST.getlist('bcc')
-            
             email_subject=request.POST['subject']
-            
             email_body=request.POST['body']
             
-            email_attachment=request.FILES['attachment']
+            try:
+                # If there is a file 
+                email_attachment=request.FILES['attachment']
+                print(f"Single Email: {email_single_email}")
+                print(f"To: {email_to_list}")
+                print(f"Cc: {email_cc_list}")
+                print(f"Bcc: {email_bcc_list}")
+                print(f"Subject: {email_subject}")
+                print(f"Body: {email_body}")
+                print(f"Attachment: {email_attachment}")
             
-            print(f"To: {email_to_list}")
-            print(f"Cc: {email_cc_list}")
-            print(f"Bcc: {email_bcc_list}")
-            print(f"Subject: {email_subject}")
-            print(f"Body: {email_body}")
-            print(f"Attachment: {email_attachment}")
+            # IF there is no files
+            except MultiValueDictKeyError:
+                print(f"Single Email: {email_single_email}")
+                print(f"To: {email_to_list}")
+                print(f"Cc: {email_cc_list}")
+                print(f"Bcc: {email_bcc_list}")
+                print(f"Subject: {email_subject}")
+                print(f"Body: {email_body}")
+
+
             
     
     context={
