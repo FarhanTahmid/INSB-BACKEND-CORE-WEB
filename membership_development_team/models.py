@@ -81,6 +81,7 @@ class Portal_Joining_Requests(models.Model):
     name=models.CharField(null=False,blank=False,max_length=100)
     nsu_id=models.IntegerField(null=False, blank=False)
     email_ieee=models.EmailField(null=True,blank=True)
+    email_nsu=models.EmailField(null=True,blank=True)
     email_personal=models.EmailField(null=False,blank=False)
     major=models.CharField(null=True,blank=True,max_length=50)
     contact_no=models.CharField(null=True,blank=True,max_length=16)

@@ -15,6 +15,7 @@ from .models import Manage_Team
 from users import renderData
 from users.renderData import LoggedinUser
 from django.utils.datastructures import MultiValueDictKeyError
+from .render_email import PRT_Email_System
 # Create your views here.
 
 def team_home_page(request):
@@ -314,9 +315,27 @@ def manage_team(request):
 def send_email(request):
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
+    recruitment_sessions=PRT_Data.getAllRecruitmentSessions()
     
     if(request.method=="POST"):
         if(request.POST.get('send_email')):
+            
+            '''
+            The recruitment sessions "option value" from html comes
+            as "recruits_{session_id}. Applied an algorithm that will retrieve
+            session_id from this.
+            
+            If no option is selected, backend will recieve an empty string as value.
+            
+            Settled value for the options in HTML:
+                All Registered Members - "general_members"
+                ALL officers of IEEE NSU SB - "all_officers",
+                Executive Panel (Branch Only) - "eb_panel",
+                Branch Ex-Com Members - "excom_branch",
+                All, Society, Chapters, Affinity Group Ebs - "scag_eb"
+            
+            '''
+            
             
             email_single_email=request.POST['email_to']
             email_to_list=request.POST.getlist('to')
@@ -335,7 +354,11 @@ def send_email(request):
                 print(f"Subject: {email_subject}")
                 print(f"Body: {email_body}")
                 print(f"Attachment: {email_attachment}")
-            
+
+                PRT_Email_System.get_all_selected_emails_from_backend(
+                    email_single_email,email_to_list,email_cc_list,email_bcc_list
+                )
+                
             # IF there is no files
             except MultiValueDictKeyError:
                 print(f"Single Email: {email_single_email}")
@@ -345,12 +368,16 @@ def send_email(request):
                 print(f"Subject: {email_subject}")
                 print(f"Body: {email_body}")
 
+                PRT_Email_System.get_all_selected_emails_from_backend(
+                    email_single_email,email_to_list,email_cc_list,email_bcc_list
+                )
 
             
     
     context={
         'user_data':user_data,
         'media_url':settings.MEDIA_URL,
+        'recruitment_sessions':recruitment_sessions,
     }
     return render(request,'public_relation_team/email/compose_email.html',context)
     

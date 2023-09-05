@@ -2,6 +2,7 @@ from central_branch.models import Events
 from .models import Manage_Team
 from port.models import Teams,Roles_and_Position
 from users.models import Members
+from recruitment.models import recruitment_session
 
 class PRT_Data:
 
@@ -75,6 +76,9 @@ class PRT_Data:
             if(member.position.id==12):
                 volunteers.append(member)
         return volunteers
+    
+    def getAllRecruitmentSessions():
+        return recruitment_session.objects.all().order_by('-id')
     
     def add_member_to_team(ieee_id,position):
         team_id=PRT_Data.get_team_id()
