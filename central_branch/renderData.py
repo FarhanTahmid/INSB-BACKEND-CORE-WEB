@@ -35,6 +35,14 @@ class Branch:
         team_members=Members.objects.order_by('position').filter(team=team_id)
         return team_members
     
+    def load_all_officers_of_branch():
+        members=Members.objects.all()
+        branch_officers=[]
+        for member in members:
+            if member.position.is_officer:
+                branch_officers.append(member)
+        return branch_officers
+    
     def load_roles_and_positions():
         positions=Roles_and_Position.objects.all().order_by('-id')
         return positions
