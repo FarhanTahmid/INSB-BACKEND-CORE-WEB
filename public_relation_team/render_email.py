@@ -10,26 +10,31 @@ class PRT_Email_System:
         
         for email in substrings:
             # Trim leading and trailing whitespaces
-
             single_emails_final_list.extend(email.split())
+ 
         
         # Get the emails of to_email_list 
         to_email_final_list=[]
         # check first if the list has null value in list, it means that there was no email selected
-        if to_email_list[0] is not '':
+        if to_email_list[0] != '':
             for email in to_email_list:
                 if email=="general_members":
                     # get general member emails
-                    pass
+                    general_members=Branch.load_all_active_general_members_of_branch()
+                    for member in general_members:
+                        to_email_final_list.append(member.email_nsu)
                 elif email=="all_officers":
                     # get all officers email
                     branch_officers=Branch.load_all_officers_of_branch()
-                    print("Trying to get branch officers")
                     for officer in branch_officers:
-                        print(officer.email_personal)
+                        to_email_final_list.append(officer.email_nsu)
+                        
                 elif email=="eb_panel":
                     # get all eb panel email
-                    pass
+                    eb_panel=Branch.load_branch_eb_panel()
+                    for eb in eb_panel:
+                        to_email_final_list.append(eb.email_ieee)
+                        
                 elif email=="excom_branch":
                     # get all the email of branch excom. this means all branch EBs + SC & AG chairs(only)
                     pass
@@ -40,17 +45,23 @@ class PRT_Email_System:
         # Get all the cc_email_list
         cc_email_final_list=[]
         # check first if the list has null value in list, it means that there was no email selected
-        if cc_email_list[0] is not '':
-            for email in to_email_list:
+        if cc_email_list[0] != '':
+            for email in cc_email_list:
                 if email=="general_members":
                     # get general member emails
-                    pass
+                    general_members=Branch.load_all_active_general_members_of_branch()
+                    for member in general_members:
+                        cc_email_final_list.append(member.email_nsu)
                 elif email=="all_officers":
                     # get all officers email
-                    pass
+                    branch_officers=Branch.load_all_officers_of_branch()
+                    for officer in branch_officers:
+                        cc_email_final_list.append(officer.email_nsu)
                 elif email=="eb_panel":
                     # get all eb panel email
-                    pass
+                    eb_panel=Branch.load_branch_eb_panel()
+                    for eb in eb_panel:
+                        cc_email_final_list.append(eb.email_ieee)
                 elif email=="excom_branch":
                     # get all the email of branch excom. this means all branch EBs + SC & AG chairs(only)
                     pass
@@ -61,17 +72,23 @@ class PRT_Email_System:
         # get all bcc_email_list
         bcc_email_final_list=[]
         # check first if the list has null value in list, it means that there was no email selected
-        if bcc_email_list[0] is not '':
-            for email in to_email_list:
+        if bcc_email_list[0] != '':
+            for email in bcc_email_list:
                 if email=="general_members":
                     # get general member emails
-                    pass
+                    general_members=Branch.load_all_active_general_members_of_branch()
+                    for member in general_members:
+                        bcc_email_final_list.append(member.email_nsu)
                 elif email=="all_officers":
                     # get all officers email
-                    pass
+                    branch_officers=Branch.load_all_officers_of_branch()
+                    for officer in branch_officers:
+                        bcc_email_final_list.append(officer.email_nsu)
                 elif email=="eb_panel":
                     # get all eb panel email
-                    pass
+                    eb_panel=Branch.load_branch_eb_panel()
+                    for eb in eb_panel:
+                        bcc_email_final_list.append(eb.email_ieee)
                 elif email=="excom_branch":
                     # get all the email of branch excom. this means all branch EBs + SC & AG chairs(only)
                     pass

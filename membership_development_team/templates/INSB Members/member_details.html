@@ -130,6 +130,11 @@
         
             <!-- navbar right -->
             <ul class="nav navbar-nav ml-auto flex-row">
+              <li class="nav-item hidden-md-up">
+                <a class="nav-link pl-2" data-toggle="collapse" data-target="#collapse">
+                  <i class="material-icons">more_horiz</i>
+                </a>
+              </li>
               <li class="nav-item dropdown pos-stc-xs">
                 <a class="nav-link mr-2" href data-toggle="dropdown">
                   <i class="material-icons">&#xe7f5;</i>
@@ -140,16 +145,11 @@
               <li class="nav-item dropdown">
                 <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
                   <span class="avatar w-32">
-                    <img src="{{ user_data.profile_picture }}" alt="...">
+                    <img src="{{ user_data.profile_picture }}" alt="user_profile">
                     <i class="on b-white bottom"></i>
                   </span>
                 </a>
                 <div ui-include="'../views/blocks/dropdown.user.html'"></div>
-              </li>
-              <li class="nav-item hidden-md-up">
-                <a class="nav-link pl-2" data-toggle="collapse" data-target="#collapse">
-                  <i class="material-icons">&#xe5d4;</i>
-                </a>
               </li>
             </ul>
             <!-- / navbar right -->
