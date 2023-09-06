@@ -11,6 +11,7 @@ class Teams(models.Model):
 
 class Chapters_Society_and_Affinity_Groups(models.Model):
     group_name=models.CharField(null=False,blank=False,max_length=150)
+    primary=models.IntegerField(null=False,blank=False,default=0)
 
     class Meta:
         verbose_name="Chapters-Societies-Affinity Group"
