@@ -109,7 +109,9 @@ def recruitee_details(request,session_id,nsu_id):
         address=data.home_address
         
         checkIfMemberIsRegistered=Members.objects.filter(nsu_id=nsu_id).exists()
-    
+
+        
+        
 
     except ObjectDoesNotExist:
         # if object doesnot exist...
@@ -117,7 +119,17 @@ def recruitee_details(request,session_id,nsu_id):
     except:
         # goes to recruitment home if list_index_out_of bound occures
         return redirect('recruitment:recruitment_home')
-
+    
+    # Getting the next member for next button
+    current_member=recruited_members.objects.get(pk=data.pk)
+    next_member=recruited_members.objects.filter(pk__gt=current_member.pk).first()
+    if next_member:
+        next_member_nsu_id=next_member.nsu_id
+        has_next_member=True
+    else:
+        next_member_nsu_id=None
+        has_next_member=False
+        
     # Passing data to the template
     session=data.session_id
     context = {
@@ -126,6 +138,8 @@ def recruitee_details(request,session_id,nsu_id):
         'dob': dob,
         'address':address,
         'memberExists':checkIfMemberIsRegistered,
+        'has_next_member':has_next_member,
+        'next_member_nsu_id':next_member_nsu_id,
     }
 
     if request.method == "POST":
