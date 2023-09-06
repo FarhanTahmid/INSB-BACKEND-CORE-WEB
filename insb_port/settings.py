@@ -61,7 +61,8 @@ INSTALLED_APPS = [
     'website_development_team',
     'media_team',
     'graphics_team',
-    'finance_and_corporate_team'
+    'finance_and_corporate_team',
+    'ieee_nsu_sb_pes_sbc',
 ]
 
 MIDDLEWARE = [
