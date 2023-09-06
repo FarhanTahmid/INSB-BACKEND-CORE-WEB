@@ -6,7 +6,7 @@ from . models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCol
 from events_and_management_team.models import Venue_List, Permission_criteria
 from system_administration.render_access import Access_Render
 from users.models import Executive_commitee,Executive_commitee_members
-
+from membership_development_team.renderData import MDT_DATA
 
 
 
@@ -35,13 +35,41 @@ class Branch:
         team_members=Members.objects.order_by('position').filter(team=team_id)
         return team_members
     
+    def load_branch_eb_panel():
+        '''This function loads all the EB panel members from the branch.
+        Checks if the position of the member is True for is_eb_member'''
+        eb_panel_member=Members.objects.all()
+        eb_panel=[]
+        for member in eb_panel_member:
+            if member.position.is_eb_member:
+                eb_panel.append(member)
+        return eb_panel
+                
     def load_all_officers_of_branch():
+        '''This function loads all the officer members from the branch.
+        Checks if the position of the member is True for is_officer'''
         members=Members.objects.all()
         branch_officers=[]
         for member in members:
             if member.position.is_officer:
                 branch_officers.append(member)
         return branch_officers
+    
+    def load_all_active_general_members_of_branch():
+        '''This function loads all the general members from the branch whose memberships are active
+        '''
+        members=Members.objects.all()
+        general_members=[]
+        
+        for member in members:
+           
+            if (MDT_DATA.get_member_account_status(ieee_id=member.ieee_id)):
+                
+                if(member.position.id==13):
+                    
+                    general_members.append(member)
+        
+        return general_members
     
     def load_roles_and_positions():
         positions=Roles_and_Position.objects.all().order_by('-id')
