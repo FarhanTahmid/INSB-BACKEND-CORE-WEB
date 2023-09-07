@@ -398,7 +398,7 @@ def renewal_session_data(request,pk):
     
     return render(request,'renewal_sessions.html',context)
 
-
+@login_required
 def renewal_request_details(request,pk,request_id):
     
     '''This function loads the datas for particular renewal requests'''
@@ -600,6 +600,11 @@ def data_access(request):
     team_members=renderData.MDT_DATA.load_team_members()
     #load all position for insb members
     position=Branch.load_roles_and_positions()
+    
+
+    for i in position:
+        if(i.is_eb_member or i.is_faculty or i.is_sc_ag_eb_member):
+            pass
     #load all insb members
     all_insb_members=Members.objects.all()
     
