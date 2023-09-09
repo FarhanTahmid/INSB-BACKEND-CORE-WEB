@@ -11,6 +11,10 @@ from membership_development_team.renderData import MDT_DATA
 
 
 class Branch:
+
+    def getBranchID():
+        '''This Method returns the object of Branch from Society chapters and AG Table'''
+        return Chapters_Society_and_Affinity_Groups.objects.get(primary=1)
     
     def load_teams():
         
@@ -72,7 +76,9 @@ class Branch:
         return general_members
     
     def load_roles_and_positions():
-        positions=Roles_and_Position.objects.all().order_by('-id')
+        '''This methods all the Position for Branch Only'''
+        getBranchId=Branch.getBranchID()
+        positions=Roles_and_Position.objects.filter(role_of=getBranchId.pk)
         return positions
     def load_all_insb_members():
         insb_members=Members.objects.all().order_by('nsu_id')
