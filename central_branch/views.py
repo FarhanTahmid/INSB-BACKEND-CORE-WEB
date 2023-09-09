@@ -286,6 +286,10 @@ def team_details(request,primary,name):
     team_members=renderData.Branch.load_team_members(primary)
     #load all the roles and positions from database
     positions=renderData.Branch.load_roles_and_positions()
+    # Excluding position of EB, Faculty and SC-AG members
+    for i in positions:
+        if(i.is_eb_member or i.is_faculty or i.is_sc_ag_eb_member):
+            positions=positions.exclude(pk=i.pk)
     #loading all members of insb
     insb_members=renderData.Branch.load_all_insb_members()
     
