@@ -1,5 +1,10 @@
 {% load static %}
 {% block navbar %}
+    <style>
+        .nav a.active {
+            color: #FFA300;
+        }
+    </style>
     <!--This is scrip is to get the link of the current page and cross match it with the navlink to change colors-->
     <script>
     document.addEventListener("DOMContentLoaded", function () {
