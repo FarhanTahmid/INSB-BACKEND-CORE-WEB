@@ -1,5 +1,22 @@
 {% load static %}
 {% block navbar %}
+    <!--This is scrip is to get the link of the current page and cross match it with the navlink to change colors-->
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get the current page's URL
+        const currentPageUrl = window.location.href;
+      
+        // Find the links in the navigation bar
+        const navLinks = document.querySelectorAll(".nav a");
+      
+        // Loop through the links and add a "active" class to the matching link
+        navLinks.forEach(function (link) {
+          if (link.href === currentPageUrl) {
+            link.classList.add("active");
+          }
+        });
+      });
+    </script>
     <div class="app-header white box-shadow">
         <div class="navbar navbar-toggleable-sm flex-row align-items-center">
             <!-- Open side - Naviation on mobile -->
@@ -18,12 +35,12 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="{% url 'ieee_nsu_sb_pes_sbc:pes_homepage' %}">
                     <i class="fa fa-home"></i>
-                    <span style="color:#FFA300">Home</span>
+                    <span>Home</span>
                     </a>
                     <div ui-include="'../views/blocks/dropdown.new.html'"></div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="{% url 'ieee_nsu_sb_pes_sbc:pes_members' %}">
                     <i class="fa fa-user text-muted"></i>
                     <span>PES Members</span>
                     </a>
