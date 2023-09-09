@@ -604,9 +604,10 @@ def data_access(request):
 
     for i in position:
         if(i.is_eb_member or i.is_faculty or i.is_sc_ag_eb_member):
-            pass
+            position=position.exclude(pk=i.pk)
+    
     #load all insb members
-    all_insb_members=Members.objects.all()
+    all_insb_members=Members.objects.all().order_by('position')
     
     
     if request.method=="POST":
