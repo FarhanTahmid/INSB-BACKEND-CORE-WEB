@@ -21,7 +21,7 @@ urlpatterns = [
     #teams page
     path('teams_and_panels',views.teams,name='teams'),
     #team details page
-    path('team_details/<str:pk>/<str:name>',views.team_details,name='team_details'),
+    path('team_details/<int:primary>/<str:name>',views.team_details,name='team_details'),
     #manage team Page
     path('manage_team/<str:pk>/<str:team_name>',views.manage_team,name="manage_team"),
     

@@ -36,6 +36,25 @@
       align-items: center;
       height:100%;
     }
+    .btn-container {
+      text-align: center;
+    }
+    
+    .btn {
+      max-width: 100%;
+      width: auto;
+      display: inline-block;
+      white-space: normal; /* Allow text to wrap within the button */
+      word-wrap: break-word; /* Break long words if necessary */
+      font-size: 16px; /* Adjust the font size as needed */
+    }
+    
+    /* Media query for smaller screens (adjust the breakpoint as needed) */
+    @media (max-width: 768px) {
+      .btn {
+        width: 100%; /* Make the button full width on smaller screens */
+      }
+    }
   </style>
 </head>
 <body>
@@ -45,11 +64,11 @@
 
 <!-- aside -->
 <div id="aside" class="app-aside modal nav-dropdown">
-  <div id="aside" class="app-aside modal nav-dropdown">
-  	{% block sidebar %}
-	  {% include 'users/sidebar.html' %}
-  	{% endblock %}
-  </div>
+  
+  {% block sidebar %}
+    {% include 'users/sidebar.html' %}
+  {% endblock %}
+
 </div>
 <!-- / -->
   
@@ -121,6 +140,11 @@
         
             <!-- navbar right -->
             <ul class="nav navbar-nav ml-auto flex-row">
+              <li class="nav-item hidden-md-up">
+                <a class="nav-link pl-2" data-toggle="collapse" data-target="#collapse">
+                  <i class="material-icons">more_horiz</i>
+                </a>
+              </li>
               <li class="nav-item dropdown pos-stc-xs">
                 <a class="nav-link mr-2" href data-toggle="dropdown">
                   <i class="material-icons">&#xe7f5;</i>
@@ -131,16 +155,11 @@
               <li class="nav-item dropdown">
                 <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
                   <span class="avatar w-32">
-                    <img src="{{ user_data.profile_picture }}" alt="...">
+                    <img src="{{ user_data.profile_picture }}" alt="user_profile">
                     <i class="on b-white bottom"></i>
                   </span>
                 </a>
                 <div ui-include="'../views/blocks/dropdown.user.html'"></div>
-              </li>
-              <li class="nav-item hidden-md-up">
-                <a class="nav-link pl-2" data-toggle="collapse" data-target="#collapse">
-                  <i class="material-icons">&#xe5d4;</i>
-                </a>
               </li>
             </ul>
             <!-- / navbar right -->
@@ -155,9 +174,9 @@
     <h4 style="justify-content:center;text-align:center;margin-bottom:30px;"> Total Registered Member in System: <span style="color:#00629B;"><b>{{totalNumber}}</b></span> </h4>
     
     <div style="justify-content:center;text-align:center;">  
-        <p class="btn-groups">
+        <div class="btn-container">
           <a href="{% url 'membership_development_team:export_excel' %}" class="btn btn-outline b-success text-success">Generate an Excel Sheet of All Registered INSB Members</a>
-        </p>
+        </div>
     </div>
 
 <div style="justify-content:center;text-align:center; margin-top=30px;">  
@@ -182,39 +201,40 @@
           <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search.." class="form-control">
         </div>
       </div>
-      <table class="table table-striped table-class" id="table-id">
-    
-        <thead>
-          <tr>
-            <th data-priority="1">IEEE ID</th>
-            <th data-priority="1">NSU ID</th>
-            <th data-priority="1">Name</th>
-            <th data-priority="1">Email</th>
-            <th data-priority="1">Current Position</th>
-            <th data-priority="1">Current Team</th>
-            <th data-priority="1">Contact No</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for member in members %}
-                            
+      <div class="table-responsive">
+        <table class="table table-striped table-class" id="table-id">
+      
+          <thead>
             <tr>
-            
-                <td style="color:#00629B"><a href="{% url 'membership_development_team:member_details' member.ieee_id %}">{{ member.ieee_id  }}</a></td>
-                <td>{{ member.nsu_id }}</td>
-                <td>{{ member.name  }}</td>
-                <td>{{ member.email_ieee }}</td>
-                <td>{{ member.position.role }}</td>
-                <td>{{ member.team.team_name }}</td>
-                <td>{{ member.contact_no }}</td>
-                               
+              <th data-priority="1">IEEE ID</th>
+              <th data-priority="1">NSU ID</th>
+              <th data-priority="1">Name</th>
+              <th data-priority="1">Email</th>
+              <th data-priority="1">Current Position</th>
+              <th data-priority="1">Current Team</th>
+              <th data-priority="1">Contact No</th>
             </tr>
-    
-          {% endfor %}
-    
-        <tbody>
-      </table>
-    
+          </thead>
+          <tbody>
+            {% for member in members %}
+                              
+              <tr>
+              
+                  <td style="color:#00629B"><a href="{% url 'membership_development_team:member_details' member.ieee_id %}">{{ member.ieee_id  }}</a></td>
+                  <td>{{ member.nsu_id }}</td>
+                  <td>{{ member.name  }}</td>
+                  <td>{{ member.email_ieee }}</td>
+                  <td>{{ member.position.role }}</td>
+                  <td>{{ member.team.team_name }}</td>
+                  <td>{{ member.contact_no }}</td>
+                                
+              </tr>
+      
+            {% endfor %}
+      
+          <tbody>
+        </table>
+      </div>
       <!--		Start Pagination -->
       <div class='pagination-container'>
         <nav>

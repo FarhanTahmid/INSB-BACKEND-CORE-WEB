@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 from port.models import Teams
 from users.models import Members
-
+from django_resized import ResizedImageField
 # Create your models here.
 
 #if you want to create an admin, go to django admin, insert data in this model, then register in users as superuser
@@ -10,7 +10,7 @@ from users.models import Members
 class adminUsers(models.Model):
     username=models.CharField(primary_key=True,null=False,blank=False,max_length=30,default='Undetermined')
     name=models.CharField(null=False,blank=False,max_length=60,default="Undetermined")
-    profile_picture=models.ImageField(null=False,blank=False,default='Admin/admin_profile_pictures/default_profile_picture.png',upload_to='Admin/admin_profile_pictures/')
+    profile_picture=ResizedImageField(null=False,blank=False,default='Admin/admin_profile_pictures/default_profile_picture.png',upload_to='Admin/admin_profile_pictures/')
     email=models.EmailField(null=False,blank=False,max_length=50)
     class Meta:
         verbose_name="Admin User"
@@ -70,6 +70,58 @@ class Promotions_Data_Access(models.Model):
     class Meta:
 
         verbose_name = "Manage Team Access - Promotions Team"
+
+    def __str__(self):
+        return str(self.ieee_id)
+    
+# Class for Website Development Team data access
+class WDT_Data_Access(models.Model):
+
+    ieee_id = models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE,verbose_name="IEEE ID")
+    manage_team_access = models.BooleanField(default=False,null=False,blank=False,verbose_name="Access")
+
+    class Meta:
+
+        verbose_name = "Manage Team Access - Website Development Team"
+
+    def __str__(self):
+        return str(self.ieee_id)
+    
+# Class for Media Team data access
+class Media_Data_Access(models.Model):
+
+    ieee_id = models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE,verbose_name="IEEE ID")
+    manage_team_access = models.BooleanField(default=False,null=False,blank=False,verbose_name="Access")
+
+    class Meta:
+
+        verbose_name = "Manage Team Access - Media Team"
+
+    def __str__(self):
+        return str(self.ieee_id)
+    
+# Class for Graphics Team data access
+class Graphics_Data_Access(models.Model):
+
+    ieee_id = models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE,verbose_name="IEEE ID")
+    manage_team_access = models.BooleanField(default=False,null=False,blank=False,verbose_name="Access")
+
+    class Meta:
+
+        verbose_name = "Manage Team Access - Graphics Team"
+
+    def __str__(self):
+        return str(self.ieee_id)
+    
+# Class for Finance and Corporate Team data access
+class FCT_Data_Access(models.Model):
+
+    ieee_id = models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE,verbose_name="IEEE ID")
+    manage_team_access = models.BooleanField(default=False,null=False,blank=False,verbose_name="Access")
+
+    class Meta:
+
+        verbose_name = "Manage Team Access - Finance and Corporate Team"
 
     def __str__(self):
         return str(self.ieee_id)

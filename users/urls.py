@@ -3,6 +3,7 @@ from django.contrib.auth.views import LogoutView
 from . import views
 from django.conf import settings
 
+
 app_name='users'
 
 ##defining the urls to work with
@@ -26,6 +27,6 @@ urlpatterns = [
     path('reset_password/<str:username>/<str:token>/',views.forgotPassword_resetPassword,name="reset_password"),
     #Invalid URL Handling
     path('invalid_url',views.invalidURL,name="invalid_url"), #this page will prompt if an user has used an "used" or invalid url
-    #GET STATISTIC URL
-    path('get_dashboard_stats/',views.getDashboardStats,name="dashboard_stats")
+
+ 
 ]

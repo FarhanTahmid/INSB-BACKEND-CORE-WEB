@@ -1,5 +1,6 @@
 from django.contrib import admin
 from . models import adminUsers,MDT_Data_Access,Developer_criteria,Project_Developers,Project_leads,LAO_Data_Access,CWP_Data_Access,Promotions_Data_Access
+from .models import WDT_Data_Access,Media_Data_Access,Graphics_Data_Access,FCT_Data_Access
 # Register your models here.
 @admin.register(adminUsers)
 class Admin(admin.ModelAdmin):
@@ -28,5 +29,17 @@ class CWP_Data_Access(admin.ModelAdmin):
     list_display=['ieee_id','manage_team_access']
 @admin.register(Promotions_Data_Access)
 class Prmotions_Data_Access(admin.ModelAdmin):
+    list_display = ['ieee_id','manage_team_access']
+@admin.register(WDT_Data_Access)
+class WDT_Data_Access(admin.ModelAdmin):
+    list_display = ['ieee_id','manage_team_access']
+@admin.register(Media_Data_Access)
+class Media_Data_Access(admin.ModelAdmin):
+    list_display = ['ieee_id','manage_team_access']
+@admin.register(Graphics_Data_Access)
+class Graphics_Data_Access(admin.ModelAdmin):
+    list_display = ['ieee_id','manage_team_access']
+@admin.register(FCT_Data_Access)
+class FCT_Data_Access(admin.ModelAdmin):
     list_display = ['ieee_id','manage_team_access']
 

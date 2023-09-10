@@ -21,6 +21,7 @@ from system_administration.render_access import Access_Render
 from django.core.mail import send_mail
 from . import email_sending
 from central_branch.renderData import Branch
+from users.renderData import LoggedinUser
 
 
 # Create your views here.
@@ -35,13 +36,16 @@ def md_team_homepage(request):
     core_volunteers=renderData.MDT_DATA.get_member_with_postion(11)
     #Loading data of the cor-volunteers, volunteer id is 12
     volunteers=renderData.MDT_DATA.get_member_with_postion(12)
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     
     context={
         'co_ordinators':co_ordinators,
         'incharges':in_charges,
         'core_volunteers':core_volunteers,
         'volunteers':volunteers,
-        'media_url':settings.MEDIA_URL
+        'media_url':settings.MEDIA_URL,
+        'user_data':user_data,
     }    
     
     return render(request,'md_team_homepage.html',context=context)
@@ -58,7 +62,9 @@ def insb_members_list(request):
     members=Members.objects.order_by('position')
     totalNumber=Members.objects.all().count()
     has_view_permission=True
-    context={'members':members,'totalNumber':totalNumber,'has_view_permission':has_view_permission}
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    context={'members':members,'totalNumber':totalNumber,'has_view_permission':has_view_permission,'user_data':user_data}
     
     return render(request,'INSB Members/members_list.html',context=context)
 
@@ -75,11 +81,13 @@ def member_details(request,ieee_id):
     member_data=renderData.MDT_DATA.get_member_data(ieee_id=ieee_id)
     dob = datetime.datetime.strptime(str(
         member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
-    sessions=recruitment_session.objects.all()
+    sessions=recruitment_session.objects.all().order_by('-id')
     #getting the ieee account active status of the member
     active_status=renderData.MDT_DATA.get_member_account_status(ieee_id=ieee_id)
         
-    renewal_session=Renewal_Sessions.objects.all()
+    renewal_session=Renewal_Sessions.objects.all().order_by('-id')
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     context={
         
         'member_data':member_data,
@@ -87,7 +95,8 @@ def member_details(request,ieee_id):
         'sessions':sessions,
         'renewal_session':renewal_session,
         'media_url':settings.MEDIA_URL,
-        'active_status':active_status
+        'active_status':active_status,
+        'user_data':user_data,
     }
     if request.method=="POST":
         if request.POST.get('save_edit'):
@@ -100,13 +109,27 @@ def member_details(request,ieee_id):
             email_personal=request.POST['email_personal']
             email_nsu=request.POST['email_nsu']
             facebook_url=request.POST['facebook_url']
-            
             home_address=request.POST['home_address']
-            major=request.POST['major']
+            major=request.POST['major_label']
+            recruitment_session_value=request.POST['recruitment']
+            renewal_session_value=request.POST['renewal']
+            
+            #checking if the recruitment and renewal session exists
+            try:
+                recruitment_session.objects.get(id=recruitment_session_value)
+                 
+            except:
+                recruitment_session_value=None          
+            try:
+                Renewal_Sessions.objects.get(id=renewal_session_value)
+                
+            except:
+                renewal_session_value=None 
             
             #updating member Details
-            try:
-                Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+            if (recruitment_session_value==None and renewal_session_value==None):
+                try:
+                    Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
                                                                name=name,
                                                                contact_no=contact_no,
                                                                date_of_birth=date_of_birth,
@@ -114,15 +137,78 @@ def member_details(request,ieee_id):
                                                                email_personal=email_personal,
                                                                email_nsu=email_nsu,
                                                                facebook_url=facebook_url,
-                                                               
                                                                home_address=home_address,
-                                                               major=major)
+                                                               major=major,
+                                                               session=None,
+                                                               last_renewal_session=None 
+                                                               )
                 
-                messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
-                return redirect('membership_development_team:member_details',ieee_id)
-            except Members.DoesNotExist:
-                messages.info(request,"Sorry! Something went wrong! Try Again.")            
+                    messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                    return redirect('membership_development_team:member_details',ieee_id)
+                except Members.DoesNotExist:
+                    messages.info(request,"Sorry! Something went wrong! Try Again.")
+            elif renewal_session_value==None:
+                try:
+                    Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+                                                               name=name,
+                                                               contact_no=contact_no,
+                                                               date_of_birth=date_of_birth,
+                                                               email_ieee=email_ieee,
+                                                               email_personal=email_personal,
+                                                               email_nsu=email_nsu,
+                                                               facebook_url=facebook_url,
+                                                               home_address=home_address,
+                                                               major=major,
+                                                               session=recruitment_session.objects.get(id=recruitment_session_value),
+                                                               last_renewal_session=None 
+                                                               )
+                
+                    messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                    return redirect('membership_development_team:member_details',ieee_id)
+                except Members.DoesNotExist:
+                    messages.info(request,"Sorry! Something went wrong! Try Again.")
             
+            elif(recruitment_session_value==None):
+                try:
+                    Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+                                                               name=name,
+                                                               contact_no=contact_no,
+                                                               date_of_birth=date_of_birth,
+                                                               email_ieee=email_ieee,
+                                                               email_personal=email_personal,
+                                                               email_nsu=email_nsu,
+                                                               facebook_url=facebook_url,
+                                                               home_address=home_address,
+                                                               major=major,
+                                                               session=None,
+                                                               last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value) 
+                                                               )
+                
+                    messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                    return redirect('membership_development_team:member_details',ieee_id)
+                except Members.DoesNotExist:
+                    messages.info(request,"Sorry! Something went wrong! Try Again.")
+            else:
+                try:
+                    Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+                                                               name=name,
+                                                               contact_no=contact_no,
+                                                               date_of_birth=date_of_birth,
+                                                               email_ieee=email_ieee,
+                                                               email_personal=email_personal,
+                                                               email_nsu=email_nsu,
+                                                               facebook_url=facebook_url,
+                                                               home_address=home_address,
+                                                               major=major,
+                                                               session=recruitment_session.objects.get(id=recruitment_session_value),
+                                                               last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value) 
+                                                               )
+                
+                    messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                    return redirect('membership_development_team:member_details',ieee_id)
+                except Members.DoesNotExist:
+                    messages.info(request,"Sorry! Something went wrong! Try Again.")
+                        
         if request.POST.get('delete_member'):
             #Deleting a member from database
             member_to_delete=Members.objects.get(ieee_id=ieee_id)
@@ -131,9 +217,9 @@ def member_details(request,ieee_id):
               
             
     if(has_access):
-        return render(request,'member_details.html',context=context)
+        return render(request,'INSB Members/member_details.html',context=context)
     else:
-        return render(request,'access_denied.html')
+        return render(request,'access_denied.html',context)
     
 @login_required
 def membership_renewal(request):
@@ -142,11 +228,13 @@ def membership_renewal(request):
     #Load all sessions at first
     sessions=Renewal_Sessions.objects.order_by('-id')
 
-    
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
 
 
     context={
-        'sessions':sessions
+        'sessions':sessions,
+        'user_data':user_data,
     }
     if request.method=="POST":
         #MUST PERFORM TRY CATCH
@@ -310,7 +398,7 @@ def renewal_session_data(request,pk):
     
     return render(request,'renewal_sessions.html',context)
 
-
+@login_required
 def renewal_request_details(request,pk,request_id):
     
     '''This function loads the datas for particular renewal requests'''
@@ -512,8 +600,14 @@ def data_access(request):
     team_members=renderData.MDT_DATA.load_team_members()
     #load all position for insb members
     position=Branch.load_roles_and_positions()
+    
+    # Excluding position of EB, Faculty and SC-AG members
+    for i in position:
+        if(i.is_eb_member or i.is_faculty or i.is_sc_ag_eb_member):
+            position=position.exclude(pk=i.pk)
+    
     #load all insb members
-    all_insb_members=Members.objects.all()
+    all_insb_members=Members.objects.all().order_by('position')
     
     
     if request.method=="POST":
@@ -661,6 +755,7 @@ def site_registration_request_details(request,ieee_id):
                     name=get_request.name,
                     nsu_id=get_request.nsu_id,
                     email_ieee=get_request.email_ieee,
+                    email_nsu=get_request.email_nsu,
                     email_personal=get_request.email_personal,
                     major=get_request.major,
                     contact_no=get_request.contact_no,
@@ -692,6 +787,7 @@ def site_registration_request_details(request,ieee_id):
                         name=get_request.name,
                         nsu_id=get_request.nsu_id,
                         email_ieee=get_request.email_ieee,
+                        email_nsu=get_request.email_nsu,
                         email_personal=get_request.email_personal,
                         major=get_request.major,
                         contact_no=get_request.contact_no,
@@ -756,6 +852,7 @@ def site_registration_form(request):
                         name=request.POST['name'],
                         nsu_id=request.POST['nsu_id'],
                         email_ieee=request.POST['email_ieee'],
+                        email_nsu=request.POST['email_nsu'],
                         email_personal=request.POST['email_personal'],
                         major=request.POST['major'],
                         contact_no=request.POST['contact_no'],
@@ -786,6 +883,7 @@ def site_registration_form(request):
                         name=request.POST['name'],
                         nsu_id=request.POST['nsu_id'],
                         email_ieee=request.POST['email_ieee'],
+                        email_nsu=request.POST['email_nsu'],
                         email_personal=request.POST['email_personal'],
                         major=request.POST['major'],
                         contact_no=request.POST['contact_no'],

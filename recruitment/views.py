@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.db import DatabaseError, IntegrityError, InternalError
-from django.http import HttpResponseServerError, HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponseServerError, HttpResponseBadRequest, HttpResponse,JsonResponse
 from recruitment.models import recruitment_session, recruited_members
 from users.models import Members
 from . import renderData
@@ -15,6 +15,8 @@ from django.db.utils import IntegrityError
 from membership_development_team.renderData import MDT_DATA
 from membership_development_team import email_sending
 from system_administration.render_access import Access_Render
+from users.renderData import LoggedinUser
+
 # Create your views here.
 
 
@@ -25,8 +27,14 @@ def recruitment_home(request):
         this passes all the datas into the template file    
     '''
     
-        
     numberOfSessions = renderData.Recruitment.loadSession()
+    
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    context={
+        'sessions':numberOfSessions,
+        "user_data":user_data
+    }
     if request.method == "POST":
         session_name = request.POST["recruitment_session"]
         session_time=datetime.datetime.now()
@@ -35,7 +43,7 @@ def recruitment_home(request):
             add_session.save()
         except DatabaseError:
             return DatabaseError
-    return render(request, 'recruitment_homepage.html', numberOfSessions)
+    return render(request, 'recruitment_homepage.html', context)
 
 
 @login_required
@@ -54,7 +62,8 @@ def recruitee(request, pk):
 
     get_total_count_of_ieee_payment_completed=renderData.Recruitment.getTotalCountofIEEE_payment_complete(session_id=pk) 
     get_total_count_of_ieee_payment_incomplete=renderData.Recruitment.getTotalCountofIEEE_payment_incomplete(session_id=pk) 
-    
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     context = {
         'pk':pk,
         'memberCount': getMemberCount,
@@ -62,14 +71,30 @@ def recruitee(request, pk):
         'members': getRecruitedMembers,
         'ieee_payment_complete':get_total_count_of_ieee_payment_completed,
         'ieee_payment_incomplete':get_total_count_of_ieee_payment_incomplete,
+        'user_data':user_data,
     }
     if(has_access):
         return render(request, 'session_recruitees.html', context=context)
     else:
-        return render(request,'access_denied.html')
+        return render(request,'access_denied.html',context)
+
+@login_required
+def getPaymentStats(request):
+    if request.method=="GET":
+        session_id=request.GET.get('session_id')
+        get_total_count_of_ieee_payment_completed=renderData.Recruitment.getTotalCountofIEEE_payment_complete(session_id=session_id) 
+        get_total_count_of_ieee_payment_incomplete=renderData.Recruitment.getTotalCountofIEEE_payment_incomplete(session_id=session_id) 
+        context={
+            "labels":["Complete Payments","Incomplete Payments"],
+            "values":[get_total_count_of_ieee_payment_completed,get_total_count_of_ieee_payment_incomplete]
+        }
+        return JsonResponse(context)    
+
 
 @login_required
 def recruitee_details(request,session_id,nsu_id):
+    
+    
     """Preloads all the data of the recruitees who are registered in the particular session, here we can edit and save the data of the recruitee"""
     #Checking user access
     user=request.user
@@ -83,14 +108,28 @@ def recruitee_details(request,session_id,nsu_id):
             data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
         address=data.home_address
         
-     
+        checkIfMemberIsRegistered=Members.objects.filter(nsu_id=nsu_id).exists()
+
+        
+        
+
     except ObjectDoesNotExist:
         # if object doesnot exist...
         messages.info(request, "Member does not exist!")
     except:
         # goes to recruitment home if list_index_out_of bound occures
         return redirect('recruitment:recruitment_home')
-
+    
+    # Getting the next member for next button
+    current_member=recruited_members.objects.get(pk=data.pk)
+    next_member=recruited_members.objects.filter(pk__gt=current_member.pk).first()
+    if next_member:
+        next_member_nsu_id=next_member.nsu_id
+        has_next_member=True
+    else:
+        next_member_nsu_id=None
+        has_next_member=False
+        
     # Passing data to the template
     session=data.session_id
     context = {
@@ -98,6 +137,9 @@ def recruitee_details(request,session_id,nsu_id):
         'data': data,
         'dob': dob,
         'address':address,
+        'memberExists':checkIfMemberIsRegistered,
+        'has_next_member':has_next_member,
+        'next_member_nsu_id':next_member_nsu_id,
     }
 
     if request.method == "POST":
@@ -125,6 +167,7 @@ def recruitee_details(request,session_id,nsu_id):
                 'email_personal': request.POST['email_personal'],
                 'email_nsu':request.POST['email_nsu'],
                 'facebook_url': request.POST['facebook_url'],
+                'facebook_username':request.POST['facebook_username'],
                 'home_address': request.POST['home_address'],
                 'major': request.POST['major'], 'graduating_year': request.POST['graduating_year'],
                 'ieee_id': request.POST['ieee_id'],
@@ -138,21 +181,21 @@ def recruitee_details(request,session_id,nsu_id):
              # Getting returned values and handling the exceptions
 
             if (renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id, values=info_dict) == "no_ieee_id"):
-                messages.info(
+                messages.error(
                     request, "Please Enter IEEE ID if you have completed payment")
                 return redirect('recruitment:recruitee_details', session_id,nsu_id)
             elif (renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id, values=info_dict) == IntegrityError):
-                messages.info(
+                messages.error(
                     request, "There is already a member registered with this IEEE ID")
                 return redirect('recruitment:recruitee_details',session_id, nsu_id)
             elif (renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id, values=info_dict) == InternalError):
-                messages.info(request, "A Server Error Occured!")
+                messages.error(request, "A Server Error Occured!")
                 return redirect('recruitment:recruitee_details',session_id ,nsu_id)
             elif (renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id, values=info_dict)):
-                messages.info(request, "Information Updated")
+                messages.success(request, "Information Updated")
                 return redirect('recruitment:recruitee_details', session_id,nsu_id)
             else:
-                messages.info(
+                messages.error(
                     request, "Something went wrong. Please Try again")
                 return redirect('recruitment:recruitee_details', session_id,nsu_id)
 
@@ -167,9 +210,9 @@ def recruitee_details(request,session_id,nsu_id):
                 name=name,nsu_id=nsu_id,recruited_member_email=recruited_member_email,recruitment_session=recruitment_session_name
             )
             if(email_sending_status):
-                messages.info(request,f"Email was successfully sent to {recruited_member_email}.")
+                messages.success(request,f"Email was successfully sent to {recruited_member_email}.")
             else:
-                messages.info(request,f"Could not send email to {recruited_member_email}.")
+                messages.error(request,f"Could not send email to {recruited_member_email}.")
         
         
         
@@ -179,7 +222,7 @@ def recruitee_details(request,session_id,nsu_id):
             # if(renderData.Recruitment.deleteMember(nsu_id=nsu_id)=="both_database"):
             #     messages.info(request,f"Member Deleted Successfully from recruitment process and also from INSB Database with the id {nsu_id}")
             if (renderData.Recruitment.deleteMember(nsu_id=nsu_id,session_id=data.session_id) == ObjectDoesNotExist):
-                messages.info(
+                messages.success(
                     request, f"The member with the id {nsu_id} was deleted!")
                 return redirect('recruitment:recruitee', session)
             elif (renderData.Recruitment.deleteMember(nsu_id=nsu_id,session_id=data.session_id)):
@@ -230,20 +273,20 @@ def recruitee_details(request,session_id,nsu_id):
                     session=recruitment_session.objects.get(id=int(getMember[0]['session_id']))
                 )
                 newMember.save()
-                messages.info(request, "Member Updated in INSB Database")
+                messages.success(request, "Member Updated in INSB Database")
                 return redirect('recruitment:recruitee_details',session_id, nsu_id)
             except IntegrityError:
-                messages.info(
-                    "An Error Occured! The member is already registered in INSB Database or you have not entered IEEE ID of the member!")
+                messages.error(
+                    "The member is already registered in INSB Database or you have not entered IEEE ID of the member!")
                 return redirect('recruitment:recruitee_details',session_id, nsu_id)
             # except:
             #     messages.info(
             #         request, "Something went wrong! Please Try again!")
             #     return redirect('recruitment:recruitee_details', nsu_id)
     if(has_access):
-        return render(request, "recruitee_details.html", context=context)
+        return render(request, "recruited_member_details.html", context=context)
     else:
-        return render(request,'access_denied.html')
+        return render(request,'access_denied.html',context)
 
 @login_required
 def recruit_member(request, session_name):
@@ -287,6 +330,7 @@ def recruit_member(request, session_name):
                         email_nsu=request.POST['email_nsu'],
                         gender=request.POST['gender'],
                         facebook_url=request.POST['facebook_url'],
+                        facebook_username=request.POST['facebook_username'],
                         home_address=request.POST['home_address'],
                         major=request.POST.get('major'),
                         graduating_year=request.POST['graduating_year'],
@@ -313,16 +357,16 @@ def recruit_member(request, session_name):
                 except IntegrityError:  # Checking if same id exist and handling the exception
                     messages.info(
                         request, f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database! It is prohibited to recruit another member with same NSU ID under one recruitment session.")
-                    return render(request, "membership_form.html", context=context)
+                    return render(request, "recruitment_form.html", context=context)
 
                 except:  # Handling all errors
                     messages.info(request, "Something went Wrong! Please try again")
-                    return render(request, "membership_form.html", context=context)
+                    return render(request, "recruitment_form.html", context=context)
                 
                 
 
     else:
-        return render(request, "membership_form.html", context=context)
+        return render(request, "recruitment_form.html", context=context)
 
 
 @login_required
@@ -345,7 +389,7 @@ def generateExcelSheet(request, session_name):
     font_style.font.bold = True
 
     # Defining columns that will stay in the first row
-    columns = ['NSU ID', 'First Name', 'Middle Name', 'Last Name', 'Email (personal)', 'Contact No', 'IEEE ID', 'Gender', 'Date Of Birth', 'Facebook Url',
+    columns = ['NSU ID', 'First Name', 'Middle Name', 'Last Name', 'Email (personal)', 'Email (NSU)', 'Contact No', 'IEEE ID', 'Gender', 'Date Of Birth', 'Facebook Url',
                'Address', 'Major', 'Graduating Year', 'Recruitment Time', 'Recruited By', 'Cash Payment Status', 'IEEE Payment Status']
 
     # Defining first column
@@ -361,7 +405,7 @@ def generateExcelSheet(request, session_name):
     # getting all the values of members as rows with same session
     rows = recruited_members.objects.filter(session_id=getSession['session'][0]['id']).values_list('nsu_id',
                                                                                                    'first_name', 'middle_name', 'last_name',
-                                                                                                   'email_personal',
+                                                                                                   'email_personal','email_nsu',
                                                                                                    'contact_no',
                                                                                                    'ieee_id',
                                                                                                    'gender',
