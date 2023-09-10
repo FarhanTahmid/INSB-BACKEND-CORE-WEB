@@ -32,7 +32,13 @@ urlpatterns = [
     path('events_and_management_team/',include('events_and_management_team.urls',namespace="events_and_management_team")),
     path('logistics_and_operations_team/',include('logistics_and_operations_team.urls',namespace="logistics_and_operations_team")),
     path('content_writing_and_publications_team/',include('content_writing_and_publications_team.urls',namespace="content_writing_and_publications_team")),
-    path('promotions_team/',include('promotions_team.urls',namespace="promotions_team"))
+    path('promotions_team/',include('promotions_team.urls',namespace="promotions_team")),
+    path('website_development_team/',include('website_development_team.urls',namespace='website_development_team')),
+    path('media_team/',include('media_team.urls',namespace='media_team')),
+    path('graphics_team/',include('graphics_team.urls',namespace="graphics_team")),
+    path('finance_and_corporate_team/',include("finance_and_corporate_team.urls",namespace="finanace_and_corporate_team")),
+    path('ieee_nsusb_pes_sbc/',include("ieee_nsu_sb_pes_sbc.urls",namespace="ieee_nsu_pes")),
+    
     
 ]
 urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

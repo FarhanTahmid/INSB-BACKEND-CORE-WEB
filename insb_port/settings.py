@@ -57,7 +57,12 @@ INSTALLED_APPS = [
     'meeting_minutes',
     'main_website',
     'content_writing_and_publications_team',
-    'promotions_team'
+    'promotions_team',
+    'website_development_team',
+    'media_team',
+    'graphics_team',
+    'finance_and_corporate_team',
+    'ieee_nsu_sb_pes_sbc',
 ]
 
 MIDDLEWARE = [
@@ -142,7 +147,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+from django.utils import timezone
+TIME_ZONE = 'Asia/Dhaka'
+USE_TZ = True
 
 USE_I18N = True
 
@@ -192,7 +199,6 @@ EMAIL_PORT=587
 EMAIL_HOST_USER=os.environ.get('email_user')
 EMAIL_HOST_PASSWORD=os.environ.get('email_password')
 EMAIL_USE_TLS=True
-
 
 # RESIZING IMAGE
 DJANGORESIZED_DEFAULT_SIZE = [1920, 1080]

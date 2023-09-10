@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Recruitment Form {{ session.session }} | Membership Development Team</title>
+  <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- for ios 7 style, multi-resolution icon of 152x152 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
+  <link rel="apple-touch-icon" href="../assets/images/logo.png">
+  <meta name="apple-mobile-web-app-title" content="Flatkit">
+  <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="shortcut icon" sizes="196x196" href="../assets/images/logo.png">
+  
+  <!-- style -->
+  <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+  <link rel="stylesheet" href="{% static '/assets/animate.css/animate.min.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/glyphicons/glyphicons.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/font-awesome/css/font-awesome.min.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/material-design-icons/material-design-icons.css' %}" type="text/css" />
+  
+
+  <link rel="stylesheet" href="{% static '/assets/bootstrap/dist/css/bootstrap.min.css' %}" type="text/css" />
+  <!-- build:css ../assets/styles/app.min.css -->
+  <link rel="stylesheet" href="{% static '/assets/styles/app.css' %}" type="text/css" />
+  <!-- endbuild -->
+  <link rel="stylesheet" href="{% static '/assets/styles/font.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+
+  <style>
+    body, html {
+      
+      margin: 0;
+      
+      align-items: center;
+      justify-content: center;
+    }
+
+    .row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+
+<!-- ############ LAYOUT START-->
+
+<!-- aside -->
+<div id="aside" class="app-aside modal nav-dropdown">
+  
+  {% block sidebar %}
+    {% include 'users/sidebar.html' %}
+  {% endblock %}
+
+</div>
+<!-- / -->
+  
+  <!-- content -->
+<div id="content" class="app-content box-shadow-z0" role="main">
+    <div class="app-header white box-shadow">
+        <div class="navbar navbar-toggleable-sm flex-row align-items-center">
+            <!-- Open side - Naviation on mobile -->
+            <a data-toggle="modal" data-target="#aside" class="hidden-lg-up mr-3">
+              <i class="material-icons">&#xe5d2;</i>
+            </a>
+            <!-- / -->
+        
+            <!-- Page title - Bind to $state's title -->
+            <div class="mb-0 h5 no-wrap" ng-bind="$state.current.data.title" id="pageTitle"></div>
+        
+            <!-- navbar collapse -->
+            <div class="collapse navbar-collapse" id="collapse">
+              <!-- link and dropdown -->
+              <ul class="nav navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="{% url 'membership_development_team:md_team_homepage' %}">
+                      <i class="fa fa-home"></i>
+                      <span>Home</span>
+                    </a>
+                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="{% url 'membership_development_team:members_list' %}">
+                      <i class="fa fa-user text-muted"></i>
+                      <span>INSB Members</span>
+                    </a>
+                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'recruitment:recruitment_home' %}">
+                    <i class="fa fa-plus"></i>
+                    <span style="color:#FFA300">Recruitment</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'membership_development_team:membership_renewal' %}">
+                    <i class="fa fa-refresh"></i>
+                    <span>Membership Renewal</span>
+                  </a>
+                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'membership_development_team:site_registration' %}">
+                    <i class="fa fa-reorder"></i>
+                    <span>Portal Registration</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'membership_development_team:data_access' %}">
+                    <i class="fa fa-group"></i>
+                    <span>Manage Team</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                </li>
+              </ul>
+        
+              <div ui-include="'../views/blocks/navbar.form.html'"></div>
+              <!-- / -->
+            </div>
+            <!-- / navbar collapse -->
+        
+            <!-- navbar right -->
+            <ul class="nav navbar-nav ml-auto flex-row">
+              <li class="nav-item hidden-md-up">
+                <a class="nav-link pl-2" data-toggle="collapse" data-target="#collapse">
+                  <i class="material-icons">more_horiz</i>
+                </a>
+              </li>
+              <li class="nav-item dropdown pos-stc-xs">
+                <a class="nav-link mr-2" href data-toggle="dropdown">
+                  <i class="material-icons">&#xe7f5;</i>
+                  <span class="label label-sm up warn">3</span>
+                </a>
+                <div ui-include="'../views/blocks/dropdown.notification.html'"></div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
+                  <span class="avatar w-32">
+                    <img src="{{ user_data.profile_picture }}" alt="user_profile">
+                    <i class="on b-white bottom"></i>
+                  </span>
+                </a>
+                <div ui-include="'../views/blocks/dropdown.user.html'"></div>
+              </li>
+            </ul>
+            <!-- / navbar right -->
+        </div>
+</div>
+    
+<div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
+<!-- ############ PAGE START-->
+    <br>
+    <h1 style="text-align:center;">Recruitment Form For<span style="color:#00629B"> <b>{{ session_name }}</b></span></h1>
+    <div style="justify-content:center;text-align:center;">  
+        <p class="btn-groups">
+          <a href="{% url 'recruitment:recruitee' session_id %}" class="btn btn-outline b-primary text-primary">Back to Recruitment Session</a>
+        </p>
+    </div>
+    <div class="container">
+        <div class="padding">
+            <div class="row" >
+                <div class="col-sm-12">
+                    <div class="box">
+                        <div class="box-header" style="text-align:center;">
+                            <h1>Student Copy</h1>
+                        </div>
+                        <!--Error Message-->
+                        <div class="py-3 text-center">
+                            {% for message in messages %}
+                                <p style="color:red" class="message">{{message}}</p>
+                            {% endfor %}
+                        </div>
+                        <div class="box-divider m-0"></div>
+                        <div class="box-body">
+                        <form method="POST" autocomplete="off">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>NSU ID</label>
+                                <input
+                                    placeholder="NSU ID"
+                                    class="form-control w-75"
+                                    type="number"
+                                    autocomplete="off"
+                                    required
+                                    name="nsu_id"/>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">First Name</label>
+                                        <input
+                                            required
+                                            placeholder="First Name"
+                                            class="form-control w-75"
+                                            type="text"
+                                            autocomplete="off"
+                                            name="first_name"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword2">Middle Name</label>
+                                        <input
+                                            placeholder="Middle Name"
+                                            class="form-control w-75"
+                                            type="text"
+                                            autocomplete="off"
+                                            name="middle_name"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword3">Last Name</label>
+                                        <input
+                                            placeholder="Last Name"
+                                            class="form-control w-75"
+                                            type="text"
+                                            autocomplete="off"
+                                            name="last_name"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Contact no</label>
+                                        <input
+                                            required
+                                            placeholder="Contact no"
+                                            class="form-control w-75"
+                                            type="text"
+                                            autocomplete="off"
+                                            name="contact_no"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword3">Emergency Contact No</label>
+                                        <input
+                                            placeholder="Emergency Contact no"
+                                            class="form-control w-75"
+                                            type="text"
+                                            autocomplete="off"
+                                            name="emergency_contact_no"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword3">Date of Birth</label>
+                                        <input
+                                            placeholder="Date of Birth"
+                                            class="form-control w-75"
+                                            type="date"
+                                            required
+                                            name="date_of_birth"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row m-b">
+                                <div class="col-md-6">
+                                    <label>Email (Personal)</label>
+                                    <input
+                                            class="form-control w-75"
+                                            type="text"
+                                            autocomplete="off"
+                                            placeholder="Personal Email"
+                                            name="email_personal"
+                                    />                      
+                                    </div>
+                                <div class="col-md-6">
+                                    <label>Email (NSU)</label>
+                                    <input
+                                            class="form-control w-75"
+                                            type="text"
+                                            autocomplete="off"
+                                            placeholder="NSU Email"
+                                            name="email_nsu"
+                                    />
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row m-b">
+                                <div class="col-md-6">
+                                    <label>Facebook Link</label>
+                                    <input
+                                            class="form-control w-75"
+                                            type="url"
+                                            autocomplete="off"
+                                            placeholder="Link to Facebook Account"
+                                            name="facebook_url"
+                                    />                
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Facebook Username</label>
+                                    <input
+                                            class="form-control w-75"
+                                            type="text"
+                                            autocomplete="off"
+                                            placeholder="Facebook Account Username"
+                                            name="facebook_username"
+                                    />
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row m-b">
+                                <div class="col-md-6">
+                                    <label for="exampleInputPassword1">Major</label>
+                                    <select class="form-control w-75" name="major" id="major">
+                                        <option value="None">-------------------</option>
+                                        <option value="CSE">CSE</option>
+                                        <option value="EEE">EEE</option>
+                                        <option value="ETE">ETE</option>
+                                    </select>                  
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="exampleInputPassword1">Tentative Graduating Year</label>
+                                    <input
+                                        class="form-control w-75"
+                                        type="number"
+                                        required name="graduating_year"
+                                        placeholder="Graduating Year"
+                                    />  
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Address</label>
+                                <input
+                                    placeholder="Home Address"
+                                    class="form-control w-75"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="home_address"
+                                />                  
+                            </div>
+                            <br>
+                            <div class="form-group row">
+                                <label class="col-sm-2 form-control-label">Gender</label>
+                                <div class="col-sm-10">
+                                  <label class="radio-inline">
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        id="male"
+                                        value="Male"
+                                    > Male
+                                  </label>
+                                  <label class="radio-inline">
+                                    <input 
+                                        type="radio"
+                                        name="gender"
+                                        id="female"
+                                        value="Female"> Female
+                                  </label>
+                                  <label class="radio-inline">
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        id="other"
+                                        value="Other"> Other
+                                  </label>
+                                </div>
+                            </div>
+                            <br>
+                            
+                            <div class="box-header" style="text-align:center;">
+                            <h1>For Official Use</h1>
+                            </div>
+                            <div class="form-group">
+                                <label>Recruited By</label>
+                                <input
+                                    class="form-control w-75"
+                                    type="text"
+                                    placeholder="Recruiter Name" required name="recruited_by"
+                                />
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 form-control-label">Payment</label>
+                                <div class="col-sm-10">
+                                  <label class="radio-inline">
+                                    <input
+                                        type="checkbox"
+                                        name="cash_payment_status" id="cash_payment" value="cash_payment"
+                                    >Cash Payment
+                                  </label>
+            
+                                </div>
+                            </div>
+                            <div style="text-align: center;">
+                                <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Recruit Member</button>
+                            </div>
+
+
+                            <!-- Save modal -->
+                            <div id="m-s-a" class="modal fade animate" data-backdrop="true">
+                            <div class="modal-dialog" id="animate">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Recruiting a new Member!</h5>
+                                </div>
+                                <div class="modal-body text-left p-lg">
+                                    <p>Are you sure that you want to Recruit a Member with the Informations you provided?.</p>
+                                    <p>Data related to the Member will be saved in the Recruitment Session Database.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                                    <input
+                                    type="submit"
+                                    class="btn btn-success"
+                                    data-bs-dismiss="modal"
+                                    name="save_edit"
+                                    value="Yes, Recruit"
+                                    >                        
+                                </div>
+                                </div><!-- /.modal-content -->
+                            </div>
+                            </div>
+                            <!-- / .modal -->
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+<!-- ############ PAGE END-->
+
+    </div>
+  </div>
+  <!-- / -->
+
+  <!-- theme switcher -->
+  <div id="switcher">
+    <div class="switcher box-color dark-white text-color" id="sw-theme">
+      <a href ui-toggle-class="active" target="#sw-theme" class="box-color dark-white text-color sw-btn">
+        <i class="fa fa-gear"></i>
+      </a>
+      <div class="box-header">
+        <h2>Theme Switcher</h2>
+      </div>
+      <div class="box-divider"></div>
+      <div class="box-body">
+        <p class="hidden-md-down">
+          <label class="md-check m-y-xs"  data-target="folded">
+            <input type="checkbox">
+            <i class="green"></i>
+            <span class="hidden-folded">Folded Aside</span>
+          </label>
+          
+        </p>
+        
+        <p>Themes:</p>
+        <div data-target="bg" class="row no-gutter text-u-c text-center _600 clearfix">
+          <label class="p-a col-sm-6 light pointer m-0">
+            <input type="radio" name="theme" value="" hidden>
+            Light
+          </label>
+          
+          <label class="p-a col-sm-6 dark pointer m-0">
+            <input type="radio" name="theme" value="dark" hidden>
+            Dark
+          </label>
+          
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+  <!-- / -->
+
+
+<!-- ############ LAYOUT END-->
+
+  </div>
+<!-- build:js scripts/app.html.js -->
+<!-- jQuery -->
+<script src="{% static 'script/jquery.js'%}"></script>
+<!-- Bootstrap -->
+  <script src="{% static 'script/tether.min.js'%}"></script>
+  <script src="{% static 'script/bootstrap.js'%}"></script>
+<!-- core -->
+  <script src="{% static 'script/underscore-min.js'%}"></script>
+  <script src="{% static 'script/jquery.storageapi.min.js'%}"></script>
+  <script src="{% static 'script/pace.min.js'%}"></script>
+  <script src="{% static 'script/palette.js'%}"></script>
+  <script src="{% static 'script/ui-load.js'%}"></script>
+  <script src="{% static 'script/ui-jp.js' %}"></script>
+  <script src="{% static 'script/ui-include.js'%}"></script>
+  <script src="{% static 'script/ui-device.js'%}"></script>
+  <script src="{% static 'script/ui-form.js'%}"></script>
+  <script src="{% static 'script/ui-nav.js'%}"></script>
+  <script src="{% static 'script/ui-screenfull.js'%}"></script>
+  <script src="{% static 'script/ui-scroll-to.js'%}"></script>
+  <script src="{% static 'script/ui-toggle-class.js'%}"></script>
+  <script src="{% static 'script/app.js'%}"></script>
+  <!-- apexcharts -->
+  <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
+  <script src="{% static 'scripts/chartjs.js' %}"></script>
+
+
+</script>
+
+  <script src="{% static 'script/ajax.js'%}"></script>
+  <script>
+    getPagination('#table-id');
+	$('#maxRows').trigger('change');
+	function getPagination (table){
+
+		  $('#maxRows').on('change',function(){
+		  	$('.pagination').html('');						// reset pagination div
+		  	var trnum = 0 ;									// reset tr counter 
+		  	var maxRows = parseInt($(this).val());			// get Max Rows from select option
+        
+		  	var totalRows = $(table+' tbody tr').length;		// numbers of rows 
+			 $(table+' tr:gt(0)').each(function(){			// each TR in  table and not the header
+			 	trnum++;									// Start Counter 
+			 	if (trnum > maxRows ){						// if tr number gt maxRows
+			 		
+			 		$(this).hide();							// fade it out 
+			 	}if (trnum <= maxRows ){$(this).show();}// else fade in Important in case if it ..
+			 });											//  was fade out to fade it in 
+			 if (totalRows > maxRows){						// if tr total rows gt max rows option
+			 	var pagenum = Math.ceil(totalRows/maxRows);	// ceil total(rows/maxrows) to get ..  
+			 												//	numbers of pages 
+			 	for (var i = 1; i <= pagenum ;){			// for each page append pagination li 
+			 	$('.pagination').append('<li data-page="'+i+'">\
+								      <span>'+ i++ +'<span class="sr-only">(current)</span></span>\
+								    </li>').show();
+			 	}											// end for i 
+     
+         
+			} 												// end if row count > max rows
+			$('.pagination li:first-child').addClass('active'); // add active class to the first li 
+        
+        
+        //SHOWING ROWS NUMBER OUT OF TOTAL DEFAULT
+       showig_rows_count(maxRows, 1, totalRows);
+        //SHOWING ROWS NUMBER OUT OF TOTAL DEFAULT
+
+        $('.pagination li').on('click',function(e){		// on click each page
+        e.preventDefault();
+				var pageNum = $(this).attr('data-page');	// get it's number
+				var trIndex = 0 ;							// reset tr counter
+				$('.pagination li').removeClass('active');	// remove active class from all li 
+				$(this).addClass('active');					// add active class to the clicked 
+        
+        
+        //SHOWING ROWS NUMBER OUT OF TOTAL
+       showig_rows_count(maxRows, pageNum, totalRows);
+        //SHOWING ROWS NUMBER OUT OF TOTAL
+        
+        
+        
+				 $(table+' tr:gt(0)').each(function(){		// each tr in table not the header
+				 	trIndex++;								// tr index counter 
+				 	// if tr index gt maxRows*pageNum or lt maxRows*pageNum-maxRows fade if out
+				 	if (trIndex > (maxRows*pageNum) || trIndex <= ((maxRows*pageNum)-maxRows)){
+				 		$(this).hide();		
+				 	}else {$(this).show();} 				//else fade in 
+				 }); 										// end of for each tr in table
+					});										// end of on click pagination list
+		});
+											// end of on select change 
+		 
+								// END OF PAGINATION 
+    
+	}	
+
+
+			
+
+// SI SETTING
+$(function(){
+	// Just to append id number for each row  
+default_index();
+					
+});
+
+//ROWS SHOWING FUNCTION
+function showig_rows_count(maxRows, pageNum, totalRows) {
+   //Default rows showing
+        var end_index = maxRows*pageNum;
+        var start_index = ((maxRows*pageNum)- maxRows) + parseFloat(1);
+        var string = 'Showing '+ start_index + ' to ' + end_index +' of ' + totalRows + ' entries';               
+        $('.rows_count').html(string);
+}
+
+// CREATING INDEX
+function default_index() {
+  $('table tr:eq(0)').prepend('<th> SL No. </th>')
+
+					var id = 0;
+
+					$('table tr:gt(0)').each(function(){	
+						id++
+						$(this).prepend('<td>'+id+'</td>');
+					});
+}
+
+// All Table search script
+function FilterkeyWord_all_table() {
+  
+// Count td if you want to search on all table instead of specific column
+
+  var count = $('.table').children('tbody').children('tr:first-child').children('td').length; 
+
+        // Declare variables
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("search_input_all");
+  var input_value =     document.getElementById("search_input_all").value;
+        filter = input.value.toLowerCase();
+  if(input_value !=''){
+        table = document.getElementById("table-id");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 1; i < tr.length; i++) {
+          
+          var flag = 0;
+           
+          for(j = 0; j < count; j++){
+            td = tr[i].getElementsByTagName("td")[j];
+            if (td) {
+             
+                var td_text = td.innerHTML;  
+                if (td.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                //var td_text = td.innerHTML;  
+                //td.innerHTML = 'shaban';
+                  flag = 1;
+                } else {
+                  //DO NOTHING
+                }
+              }
+            }
+          if(flag==1){
+                     tr[i].style.display = "";
+          }else {
+             tr[i].style.display = "none";
+          }
+        }
+    }else {
+      //RESET TABLE
+      $('#maxRows').trigger('change');
+    }
+}
+  </script>
+<!-- endbuild -->
+<!-- endbuild -->
+</body>
+</html>

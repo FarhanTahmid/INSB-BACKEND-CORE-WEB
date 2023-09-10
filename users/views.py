@@ -18,6 +18,8 @@ from port.models import Teams
 from central_branch.models import Events
 from django.db.models import Q
 
+
+
 # Create your views here.
 def login(request):
     
@@ -92,7 +94,29 @@ def dashboard(request):
     '''This function loads all the dashboard activities for the program'''
     
     #### LOOK into registerUser.py for manual input of data from csv. Templates are created there.
+
+    is_eb_or_admin = renderData.is_eb_or_admin(request.user)
+    #getting year list for the last 5 years event chart
+    years = renderData.getEventNumberStatYear()
+    #getting data for the number of events over last 5 years
+    event_number_over_5_years = renderData.getEventNumberStat()
+    #getting data for the daily hit count
+    hit_count_per_day_in_a_month = renderData.getHitCountMonthly()
+    #getting data for the recruitment stats graph
+    recruitement_stat = renderData.getRecruitmentStats()
+    #getting data for the circular graph on portal
+    type_of_events_stat = renderData.getTypeOfEventStats()
+    #getting male female active inactive numbers
+    male_female_active_inactive_stats = renderData.getMaleFemaleRationAndActiveStatusStats()
+    #getting montly page view for the year
+    hit_count_monthly = renderData.getHitCountYearly()
+    #getting visitors on main website over last 5 years
+    hit_count_over_5_years = renderData.getHitCountOver5Years()
+
     
+
+
+
     #Loading current user data from renderData.py
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
@@ -139,12 +163,33 @@ def dashboard(request):
 
     context={
         'user_data':user_data,
+<<<<<<< HEAD
         'total_user':members,
         'total_team':teams,
         'event':events,
         'fevent':flag_ship_events,
         'data_for_event_graph':[events_number_per_months,flagship_events_number_per_month],
         'length':length
+=======
+        'eb_member':is_eb_or_admin,
+        'years':years,
+        'event_number_over_5_years':event_number_over_5_years,
+        'hit_count_monthly':hit_count_per_day_in_a_month[2],
+        'month_name':hit_count_per_day_in_a_month[0],
+        'days_of_month':hit_count_per_day_in_a_month[1],
+        'recruitment_stat_key':recruitement_stat[0],
+        'recruitment_stat_values':recruitement_stat[1],
+        'type_of_event_stats_keys':type_of_events_stat[0],
+        'type_of_event_stats_values':type_of_events_stat[1],
+        'event_percentage':type_of_events_stat[2],
+        'gender_active_inactive_users_labels':male_female_active_inactive_stats[0],
+        'gender_active_inactive_users_data':male_female_active_inactive_stats[1],
+        'gender_active_inactive_users_dic':male_female_active_inactive_stats[2],
+        'current_year':hit_count_monthly[0],
+        'current_year_month_name':hit_count_monthly[1],
+        'hit_count_monthly_data':hit_count_monthly[2],
+        'hit_count_over_5_years':hit_count_over_5_years
+>>>>>>> 5b8ff86ffb0af55160ec95e36984f9e4fceb2dc8
     }
 
     

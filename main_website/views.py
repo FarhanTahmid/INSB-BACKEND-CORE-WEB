@@ -17,6 +17,29 @@ def homepage(request):
 
 def rasPage(request):
     return render(request,'Society_AG/ras.html')
+from users.models import User
+
+# Create your views here.
+def index(request):
+
+    def get_ip_address(request):
+        address = request.META.get('HTTP_X_FORWARDED_FOR')
+        if address:
+            ip = address.split(',')[-1].strip()
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
+    ip = get_ip_address(request)
+    user =User(ip_address = ip)
+    print(f"Current user ip address {user}")
+    result = User.objects.filter(ip_address = ip)
+    print(f"User exists in database {result}")
+    if len(result)>=1:
+        pass
+    else:
+        user.save()
+
+    return HttpResponse("IEEE main Website")
 
 def All_Events(request):
 

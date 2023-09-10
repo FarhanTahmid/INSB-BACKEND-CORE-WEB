@@ -22,7 +22,11 @@
            </button>
         </form>
         <br>
-        
+        <form method="POST">
+            {% csrf_token %}
+            <label for="reset_all_teams">Reset All Teams:</label>
+            <input type="submit" name="reset_all_teams" value = "Reset All Teams">
+        </form>
         <br>
         <label>Search Ex-Com Panels: </label>
         <input type="text" onkeyup="searchPanels()" id="search" placeholder="Ex-Com Panels">
@@ -53,7 +57,7 @@
         <br>
         <ul id="ul">
             {% for team in team %}
-            <li id="li"><a href="{% url 'central_branch:team_details' team.id team.team_name %}" >{{team.team_name}}</a></li>
+            <li id="li"><a href="{% url 'central_branch:team_details' team.primary team.team_name %}" >{{team.team_name}}</a></li>
             {% endfor %}
         </ul>
         <script>

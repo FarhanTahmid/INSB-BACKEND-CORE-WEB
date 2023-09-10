@@ -16,6 +16,8 @@ from main_website.forms import HomePageBannerWithTextForm
 
 from users import renderData
 from users.renderData import LoggedinUser
+from django.utils.datastructures import MultiValueDictKeyError
+from .render_email import PRT_Email_System
 # Create your views here.
 
 def team_home_page(request):
@@ -140,7 +142,7 @@ def event_creation_form_page2(request,event_id):
 
 
     return render(request,'public_relation_team/event/event_creation_form2.html',context)
-
+@login_required
 def event_creation_form_page3(request,event_id):
     #loading all venues from the venue list from event management team database
     venues=Events_And_Management_Team.getVenues()
@@ -310,6 +312,7 @@ def manage_team(request):
         return render(request,"public_relation_team/manage_team.html",context=context)
     else:
         return render(request,'public_relation_team/access_denied.html')
+<<<<<<< HEAD
     
 @login_required
 def manageWebsiteHome(request):
@@ -318,12 +321,76 @@ def manageWebsiteHome(request):
     }
     return render(request,"public_relation_team/manage_website/manage_website_home.html",context)
 
+=======
+
+@login_required
+>>>>>>> 5b8ff86ffb0af55160ec95e36984f9e4fceb2dc8
 def send_email(request):
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
+    recruitment_sessions=PRT_Data.getAllRecruitmentSessions()
+    
+    if(request.method=="POST"):
+        if(request.POST.get('send_email')):
+            
+            '''
+            The recruitment sessions "option value" from html comes
+            as "recruits_{session_id}. Applied an algorithm that will retrieve
+            session_id from this.
+            
+            If no option is selected, backend will recieve an empty string as value.
+            
+            Settled value for the options in HTML:
+                All Registered Members - "general_members"
+                ALL officers of IEEE NSU SB - "all_officers",
+                Executive Panel (Branch Only) - "eb_panel",
+                Branch Ex-Com Members - "excom_branch",
+                All, Society, Chapters, Affinity Group Ebs - "scag_eb"
+            
+            '''
+            
+            
+            email_single_email=request.POST['email_to']
+            email_to_list=request.POST.getlist('to')
+            email_cc_list=request.POST.getlist('cc')
+            email_bcc_list=request.POST.getlist('bcc')
+            email_subject=request.POST['subject']
+            email_body=request.POST['body']
+            
+            try:
+                # If there is a file 
+                email_attachment=request.FILES['attachment']
+                print(f"Single Email: {email_single_email}")
+                print(f"To: {email_to_list}")
+                print(f"Cc: {email_cc_list}")
+                print(f"Bcc: {email_bcc_list}")
+                print(f"Subject: {email_subject}")
+                print(f"Body: {email_body}")
+                print(f"Attachment: {email_attachment}")
+
+                PRT_Email_System.get_all_selected_emails_from_backend(
+                    email_single_email,email_to_list,email_cc_list,email_bcc_list
+                )
+                
+            # IF there is no files
+            except MultiValueDictKeyError:
+                print(f"Single Email: {email_single_email}")
+                print(f"To: {email_to_list}")
+                print(f"Cc: {email_cc_list}")
+                print(f"Bcc: {email_bcc_list}")
+                print(f"Subject: {email_subject}")
+                print(f"Body: {email_body}")
+
+                PRT_Email_System.get_all_selected_emails_from_backend(
+                    email_single_email,email_to_list,email_cc_list,email_bcc_list
+                )
+
+            
+    
     context={
         'user_data':user_data,
         'media_url':settings.MEDIA_URL,
+        'recruitment_sessions':recruitment_sessions,
     }
     return render(request,'public_relation_team/email/compose_email.html',context)
     
