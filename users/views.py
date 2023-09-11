@@ -163,14 +163,12 @@ def dashboard(request):
 
     context={
         'user_data':user_data,
-<<<<<<< HEAD
         'total_user':members,
         'total_team':teams,
         'event':events,
         'fevent':flag_ship_events,
         'data_for_event_graph':[events_number_per_months,flagship_events_number_per_month],
-        'length':length
-=======
+        'length':length,
         'eb_member':is_eb_or_admin,
         'years':years,
         'event_number_over_5_years':event_number_over_5_years,
@@ -189,7 +187,6 @@ def dashboard(request):
         'current_year_month_name':hit_count_monthly[1],
         'hit_count_monthly_data':hit_count_monthly[2],
         'hit_count_over_5_years':hit_count_over_5_years
->>>>>>> 5b8ff86ffb0af55160ec95e36984f9e4fceb2dc8
     }
 
     
