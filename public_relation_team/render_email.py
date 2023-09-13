@@ -103,7 +103,10 @@ class PRT_Email_System:
             if to_email_final_list[i] in cc_email_final_list:
                 to_email_final_list.pop(i)
                 to_email_final_list_length-=1
-                i=0
+                continue
+            if to_email_final_list[i] in bcc_email_final_list:
+                to_email_final_list.pop(i)
+                to_email_final_list_length-=1
                 continue
             i+=1 
         print("After processing:")
