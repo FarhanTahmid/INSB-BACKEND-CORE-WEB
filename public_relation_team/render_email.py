@@ -98,7 +98,7 @@ class PRT_Email_System:
         '''Checking if same emails exists in 'to' and 'cc'. If so they will be removed from
            the 'to' and kept in 'cc' '''
         to_email_final_list_length = len(to_email_final_list)
-        i,j=0,0
+        i=0
         while(i<to_email_final_list_length):
             if to_email_final_list[i] in cc_email_final_list:
                 to_email_final_list.pop(i)
@@ -109,6 +109,16 @@ class PRT_Email_System:
                 to_email_final_list_length-=1
                 continue
             i+=1 
+        '''Checking to see if same emails exists in 'bcc' and 'cc'. If so they will removed from
+            'bcc' and kept in 'cc' '''
+        bcc_email_final_list_length = len(bcc_email_final_list)
+        j=0
+        while(j<bcc_email_final_list_length):
+            if bcc_email_final_list[j] in cc_email_final_list:
+                bcc_email_final_list.pop(j)
+                bcc_email_final_list_length-=1
+                continue
+            j+=1 
         print("After processing:")
         print(f"Single Emails:{single_emails_final_list}")
         print(f"To Emails:{to_email_final_list}")
