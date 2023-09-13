@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Home | IEEE NSU PES SBC</title>
+  <title>Members | IEEE NSU PES SBC</title>
   <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,6 +32,10 @@
   <link rel="stylesheet" href="{% static '/assets/styles/app.css' %}" type="text/css" />
   <!-- endbuild -->
   <link rel="stylesheet" href="{% static '/assets/styles/font.css' %}" type="text/css" />
+
+  
+
+
   <style>
     body, html {
       
@@ -50,123 +54,73 @@
     .nav a.active {
         color: #FFA300;
     }
+    
   </style>
 </head>
 <body>
   <div class="app" id="app">
 
-<!-- ############ LAYOUT START-->
+    <!-- ############ LAYOUT START-->
 
-<!-- aside -->
-<div id="aside" class="app-aside modal nav-dropdown">
-  
-  	{% block sidebar %}
-	    {% include 'users/sidebar.html' %}
-  	{% endblock %}
-  
-</div>
-<!-- / -->
-  
-  <!-- content -->
-<div id="content" class="app-content box-shadow-z0" role="main">
-    
-    {% block navbar %}
-        {% include 'PES/pes_navbar.html' %}
-    {% endblock navbar %}
-
-</div>
-    
-<div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
-
-<!-- ############ PAGE START-->
-    <br>
-    <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Manage members of <span style="color:#00629B;"> <b>IEEE NSU </b></span><b><span style="color:#679B41;">Power and Energy Society Student Branch Chapter</b></span> </h2>
-
-
-</div>
-
-<!-- ############ PAGE END-->
-
-    </div>
-  </div>
-  <!-- / -->
-
-  <!-- theme switcher -->
-  <div id="switcher">
-    <div class="switcher box-color dark-white text-color" id="sw-theme">
-      <a href ui-toggle-class="active" target="#sw-theme" class="box-color dark-white text-color sw-btn">
-        <i class="fa fa-gear"></i>
-      </a>
-      <div class="box-header">
-        <h2>Theme Switcher</h2>
+    <!-- aside -->
+      <div id="aside" class="app-aside modal nav-dropdown">
+      
+        {% block sidebar %}
+          {% include 'users/sidebar.html' %}
+        {% endblock %}
+      
       </div>
-      <div class="box-divider"></div>
-      <div class="box-body">
-        <p class="hidden-md-down">
-          <label class="md-check m-y-xs"  data-target="folded">
-            <input type="checkbox">
-            <i class="green"></i>
-            <span class="hidden-folded">Folded Aside</span>
-          </label>
+    <!-- / -->
+  
+    <!-- content -->
+    <div id="content" class="app-content box-shadow-z0" role="main">
+      
+      {% block navbar %}
+          {% include 'PES/pes_navbar.html' %}
+      {% endblock navbar %}
+
+    </div>
+    
+      <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
+        <!-- ############ PAGE START-->
+            <br>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Manage members of <span style="color:#00629B;"> <b>IEEE NSU </b></span><b><span style="color:#679B41;">Power and Energy Society Student Branch Chapter</b></span> </h2>
+
+            
+      
           
-        </p>
-        
-        <p>Themes:</p>
-        <div data-target="bg" class="row no-gutter text-u-c text-center _600 clearfix">
-          <label class="p-a col-sm-6 light pointer m-0">
-            <input type="radio" name="theme" value="" hidden>
-            Light
-          </label>
+
           
-          <label class="p-a col-sm-6 dark pointer m-0">
-            <input type="radio" name="theme" value="dark" hidden>
-            Dark
-          </label>
-          
-        </div>
+        <!-- ############ PAGE END-->
+
       </div>
-    </div>
-
-    </div>
+      <!--End of app body-->
   </div>
-  <!-- / -->
+  <!--End of app-->
 
-<!-- ############ LAYOUT END-->
+  
+
+  <!-- ############ LAYOUT END-->
 
   </div>
-<!-- build:js scripts/app.html.js -->
-<!-- jQuery -->
-<script src="{% static 'script/jquery.js'%}"></script>
-<!-- Bootstrap -->
+  <!-- build:js scripts/app.html.js -->
+  <!-- jQuery -->
+  <script src="{% static 'script/jquery.js'%}"></script>
+  <!-- Bootstrap -->
   <script src="{% static 'script/tether.min.js'%}"></script>
   <script src="{% static 'script/bootstrap.js'%}"></script>
-<!-- core -->
-  <script src="{% static 'script/underscore-min.js'%}"></script>
+  <!-- core -->
   <script src="{% static 'script/jquery.storageapi.min.js'%}"></script>
   <script src="{% static 'script/pace.min.js'%}"></script>
 
-  {% comment %} <script src="{% static 'script/config.lazyload.js'%}"></script> {% endcomment %}
-
   <script src="{% static 'script/palette.js'%}"></script>
   <script src="{% static 'script/ui-load.js'%}"></script>
-  <script src="{% static 'script/ui-jp.js' %}"></script>
-  <script src="{% static 'script/ui-include.js'%}"></script>
   <script src="{% static 'script/ui-device.js'%}"></script>
   <script src="{% static 'script/ui-form.js'%}"></script>
   <script src="{% static 'script/ui-nav.js'%}"></script>
-  <script src="{% static 'script/ui-screenfull.js'%}"></script>
   <script src="{% static 'script/ui-scroll-to.js'%}"></script>
   <script src="{% static 'script/ui-toggle-class.js'%}"></script>
-  {% comment %} <script src="{% static 'script/screenfull.min.js'%}"></script> {% endcomment %}
-  <script src="{% static 'script/app.js'%}"></script>
-  <!-- apexcharts -->
-  <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
-  <!-- Chart JS -->
-  <script src="{% static 'scripts/chartjs.js' %}"></script>
-  <script src="{% static 'scripts/dashboard.init.js' %}"></script>
-  <!-- ajax -->
-  {% comment %} <script src="{% static 'script/jquery.pjax.js'%}"></script> {% endcomment %}
-  <script src="{% static 'script/ajax.js'%}"></script>
-<!-- endbuild -->
+
 </body>
 </html>

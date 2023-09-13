@@ -312,7 +312,6 @@ def manage_team(request):
         return render(request,"public_relation_team/manage_team.html",context=context)
     else:
         return render(request,'public_relation_team/access_denied.html')
-<<<<<<< HEAD
     
 @login_required
 def manageWebsiteHome(request):
@@ -321,10 +320,8 @@ def manageWebsiteHome(request):
     }
     return render(request,"public_relation_team/manage_website/manage_website_home.html",context)
 
-=======
 
 @login_required
->>>>>>> 5b8ff86ffb0af55160ec95e36984f9e4fceb2dc8
 def send_email(request):
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file

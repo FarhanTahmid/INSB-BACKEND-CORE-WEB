@@ -122,55 +122,8 @@ def dashboard(request):
     user_data=current_user.getUserData() #getting user data as dictionary file
     if(user_data==False):
         return DatabaseError
-    
-    #Number of users on the system
-    members = len(Members.objects.all())
-
-    #Number of Team
-    teams = len(Teams.objects.all())
-
-    #Number of Events and Flagship events
-    events = len(Events.objects.all())
-    flag_ship_events = len(Events.objects.filter(flagship_event=True))
-
-    #Backend For the Event Graphs
-
-    #For events and flagship events
-    #For months
-    current_year = datetime.datetime.year
-    events_number_per_months = []
-    events_in_a_month = []
-    for i in range(12):
-        events_in_a_month.append(i+1)
-        events_in_a_month.append(len(Events.objects.filter(Q(probable_date__year=current_year) and Q(probable_date__month = i+1))))
-        events_number_per_months.append(events_in_a_month)
-        events_in_a_month = []
-    
-    flagship_events_number_per_month = []
-    flagship_events_in_a_month = []
-    length = []
-    for i in range(12):
-        flagship_events_in_a_month.append(i+1)
-        flagship_events_in_a_month.append(len(Events.objects.filter(Q(probable_date__year=current_year) and Q(probable_date__month = i+1) and Q(flagship_event= True))))
-        flagship_events_number_per_month.append(flagship_events_in_a_month)
-        flagship_events_in_a_month = []
-        length.append(i+1)
-
-    
-    
-
-
-
     context={
         'user_data':user_data,
-<<<<<<< HEAD
-        'total_user':members,
-        'total_team':teams,
-        'event':events,
-        'fevent':flag_ship_events,
-        'data_for_event_graph':[events_number_per_months,flagship_events_number_per_month],
-        'length':length
-=======
         'eb_member':is_eb_or_admin,
         'years':years,
         'event_number_over_5_years':event_number_over_5_years,
@@ -189,10 +142,7 @@ def dashboard(request):
         'current_year_month_name':hit_count_monthly[1],
         'hit_count_monthly_data':hit_count_monthly[2],
         'hit_count_over_5_years':hit_count_over_5_years
->>>>>>> 5b8ff86ffb0af55160ec95e36984f9e4fceb2dc8
     }
-
-    
 
     
     return render(request,"users/dashboard.html",context=context) 
