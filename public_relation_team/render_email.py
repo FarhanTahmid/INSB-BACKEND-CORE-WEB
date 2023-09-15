@@ -22,7 +22,7 @@ class PRT_Email_System:
                     # get general member emails
                     general_members=Branch.load_all_active_general_members_of_branch()
                     for member in general_members:
-                        to_email_final_list.append(member.email_nsu)
+                        to_email_final_list.append(member.email_nsu) 
                 elif email=="all_officers":
                     # get all officers email
                     branch_officers=Branch.load_all_officers_of_branch()
@@ -40,8 +40,7 @@ class PRT_Email_System:
                     pass
                 elif email=="scag_eb":
                     # get all the society, chapters and AG EBS
-                    pass
-        
+                    pass 
         # Get all the cc_email_list
         cc_email_final_list=[]
         # check first if the list has null value in list, it means that there was no email selected
@@ -95,8 +94,31 @@ class PRT_Email_System:
                 elif email=="scag_eb":
                     # get all the society, chapters and AG EBS
                     pass
-        
-        
+    
+        '''Checking if same emails exists in 'to' and 'cc'. If so they will be removed from
+           the 'to' and kept in 'cc' '''
+        to_email_final_list_length = len(to_email_final_list)
+        i=0
+        while(i<to_email_final_list_length):
+            if to_email_final_list[i] in cc_email_final_list:
+                to_email_final_list.pop(i)
+                to_email_final_list_length-=1
+                continue
+            if to_email_final_list[i] in bcc_email_final_list:
+                to_email_final_list.pop(i)
+                to_email_final_list_length-=1
+                continue
+            i+=1 
+        '''Checking to see if same emails exists in 'bcc' and 'cc'. If so they will removed from
+            'bcc' and kept in 'cc' '''
+        bcc_email_final_list_length = len(bcc_email_final_list)
+        j=0
+        while(j<bcc_email_final_list_length):
+            if bcc_email_final_list[j] in cc_email_final_list:
+                bcc_email_final_list.pop(j)
+                bcc_email_final_list_length-=1
+                continue
+            j+=1 
         print("After processing:")
         print(f"Single Emails:{single_emails_final_list}")
         print(f"To Emails:{to_email_final_list}")
