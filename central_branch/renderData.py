@@ -72,7 +72,6 @@ class Branch:
                 if(member.position.id==13):
                     
                     general_members.append(member)
-        
         return general_members
     
     def load_roles_and_positions():
