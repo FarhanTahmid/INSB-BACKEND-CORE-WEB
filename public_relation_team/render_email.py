@@ -40,7 +40,14 @@ class PRT_Email_System:
                     pass
                 elif email=="scag_eb":
                     # get all the society, chapters and AG EBS
-                    pass 
+                    pass
+        # Removing the mails which are common in single email list and to email list
+        for email in to_email_final_list:
+            if email in single_emails_final_list:
+                single_emails_final_list.remove(email)
+        # concatation of two lists
+        to_email_final_list.extend(single_emails_final_list)
+            
         # Get all the cc_email_list
         cc_email_final_list=[]
         # check first if the list has null value in list, it means that there was no email selected
@@ -120,7 +127,7 @@ class PRT_Email_System:
                 continue
             j+=1 
         print("After processing:")
-        print(f"Single Emails:{single_emails_final_list}")
+        
         print(f"To Emails:{to_email_final_list}")
         print(f"Cc Emails:{cc_email_final_list}")
         print(f"Bcc Emails:{bcc_email_final_list}")
