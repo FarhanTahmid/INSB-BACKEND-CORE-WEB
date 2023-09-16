@@ -1,4 +1,9 @@
 from central_branch.renderData import Branch
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.conf import settings
+from django.core.files.base import ContentFile
+
+
 class PRT_Email_System:
     
     def get_all_selected_emails_from_backend(single_emails,to_email_list,cc_email_list,bcc_email_list):
@@ -40,7 +45,14 @@ class PRT_Email_System:
                     pass
                 elif email=="scag_eb":
                     # get all the society, chapters and AG EBS
-                    pass 
+                    pass
+        # Removing the mails which are common in single email list and to email list
+        for email in to_email_final_list:
+            if email in single_emails_final_list:
+                single_emails_final_list.remove(email)
+        # concatation of two lists
+        to_email_final_list.extend(single_emails_final_list)
+            
         # Get all the cc_email_list
         cc_email_final_list=[]
         # check first if the list has null value in list, it means that there was no email selected
@@ -119,10 +131,43 @@ class PRT_Email_System:
                 bcc_email_final_list_length-=1
                 continue
             j+=1 
-        print("After processing:")
-        print(f"Single Emails:{single_emails_final_list}")
-        print(f"To Emails:{to_email_final_list}")
-        print(f"Cc Emails:{cc_email_final_list}")
-        print(f"Bcc Emails:{bcc_email_final_list}")
         
+        return to_email_final_list,cc_email_final_list,bcc_email_final_list
+    
+    def send_email(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,attachment=None):
+        email_from = settings.EMAIL_HOST_USER
+        
+        
+        if attachment is None:
+            try:
+                email=EmailMultiAlternatives(subject,mail_body,
+                        email_from,
+                        to_email_list,
+                        bcc=bcc_email_list,
+                        cc=cc_email_list
+                        )
+                email.send()
+                return True
+            except Exception as e:
+                print(e)
+                return False    
+        else:
+            try:
+                # Create a ContentFile from the uploaded file
+                content_file = ContentFile(attachment.read())
+                content_file.name = attachment.name  # Set the filename
+                email=EmailMultiAlternatives(subject,mail_body,
+                        email_from,
+                        to_email_list,
+                        bcc=bcc_email_list,
+                        cc=cc_email_list
+                        )
+                email.attach(attachment.name,content_file.read(),attachment.content_type)
+                email.send()
+                return True
+            except Exception as e:
+                print(e)
+                return False
+            
+            
         
