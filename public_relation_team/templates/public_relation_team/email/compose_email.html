@@ -177,6 +177,18 @@
               <div class="box-header" style="text-align:center;">
                 <h1>Compose Email</h1>
               </div>
+               <!--Message section-->
+               {% if messages %}
+
+               {% for message in messages %}
+                 {% if message.tags == 'success' %}
+                   <h4 class="success" style="justify-content:center;text-align:center;margin-bottom:15px;color:green;">{{message}} </h4>
+                 {% else %}
+                   <h4 class="error" style="justify-content:center;text-align:center;margin-bottom:15px;color:red;">{{message}} </h4>
+                 {% endif %}
+               {% endfor %}
+
+             {% endif %}
               <div class="box-divider m-0"></div>
               <div class="box-body">
                 <form method="POST" autocomplete="off" enctype="multipart/form-data">
@@ -260,6 +272,8 @@
 
                         </div>
                       </div>
+                     
+
                       <div style="text-align: center;">
                         <div class="btn-container">
                           <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Send Email</button>
@@ -267,6 +281,9 @@
                       
                         </div>
                       </div>
+
+                      
+
 
                       <!--Modal-->
                       <div id="m-s-a" class="modal fade animate" data-backdrop="true">
