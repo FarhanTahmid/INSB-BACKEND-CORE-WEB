@@ -1,470 +1,690 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 {% load static %}
-<!--[if IE 7]><html class="ie ie7 ltie8 ltie9" lang="en-US"><![endif]-->
-<!--[if IE 8]><html class="ie ie8 ltie9" lang="en-US"><![endif]-->
-<!--[if !(IE 7) | !(IE 8)  ]><!-->
-<html lang="en-US">
-<!--<![endif]-->
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>IEEE NSU Student Branch</title>
-    
-    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+    <title>Events - IEEE NSU SB</title>
+
+    <link rel="icon" href="upload/logo.gif"/>
     <link rel='stylesheet' href="{% static 'css/style.css' %}" type='text/css' media='all' />
-    <link rel='stylesheet' href="{% static 'css/superfish.css' %}" type='text/css' media='all' />
-    <link rel='stylesheet' href="{% static 'css/component.css' %}" type='text/css' media='all' />
-    <link rel='stylesheet' href="{% static 'css/font-awesome.css' %}" type='text/css' media='all' />
-    <link rel='stylesheet' href="{% static 'css/jquery.fancybox.css' %}" type='text/css' media='all' />
-    <link rel='stylesheet' href="{% static 'css/flexslider.css' %}" type='text/css' media='all' />
-    <link rel='stylesheet' href="{% static 'css/style-responsive.css' %}" type='text/css' media='all' />
-    <link rel='stylesheet' href="{% static 'masterslider/public/assets/css/masterslider.main.css' %}" type='text/css' media='all' />
-    <link rel='stylesheet' href="{% static 'css/masterslider-custom.css' %}" type='text/css' media='all' />
-    <link rel='stylesheet' href="{% static 'css/style-custom.css' %}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/superfish.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/component.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/font-awesome.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/jquery.fancybox.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/flexslider.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/style-responsive.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'masterslider/public/assets/css/masterslider.main.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/masterslider-custom.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/style-custom.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/event.css' %}" type='text/css' media='all' />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 
 
     <link href="https://fonts.googleapis.com/css?family=Raleway:300|Lato:regular|Crete+Round:regular" rel="stylesheet"
         property="stylesheet" type="text/css" media="all">
 
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        .wavy {
+            position: relative;
+            width: 100%;
+            /* height: 30vh; */
+            background-color: transparent;
+            background-image: linear-gradient(180deg, #02082b 0%, #519fff 96%);
+            overflow: hidden;
+        }
+
+        .wavy .wave {
+            position: absolute;
+            top: 75%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url(upload/wave.png);
+            background-size: 1000px 100px;
+            background-repeat-y: no-repeat;
+        }
+
+        .wavy .wave.wave1 {
+            animation: animate 30s linear infinite;
+            z-index: 10;
+            opacity: 1;
+            animation-delay: 0s;
+            bottom: 0;
+        }
+
+        .wavy .wave.wave2 {
+            animation: animate2 15s linear infinite;
+            z-index: 9;
+            opacity: 0.5;
+            animation-delay: -5s;
+            bottom: 10px;
+        }
+
+        .wavy .wave.wave3 {
+            animation: animate 30s linear infinite;
+            z-index: 8;
+            opacity: 0.2;
+            animation-delay: -2s;
+            bottom: 15;
+        }
+
+        .wavy .wave.wave4 {
+            animation: animate2 15s linear infinite;
+            z-index: 7;
+            opacity: 0.7;
+            animation-delay: -5s;
+            bottom: 20px;
+        }
+
+        .wavy .title {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            padding: 70px 0 146px;
+            line-height: 0;
+        }
+
+        .wavy .title h2 {
+            font-family: "Poppins", Sans-serif;
+            color: #fff;
+            font-size: 45px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .wavy .title p {
+            font-family: "Poppins", Sans-serif;
+            color: #fff;
+            font-size: 100%;
+        }
+
+        @keyframes animate {
+            0% {
+                background-position-x: 0;
+            }
+
+            100% {
+                background-position-x: 1000px;
+            }
+        }
+
+        @keyframes animate2 {
+            0% {
+                background-position-x: 0;
+            }
+
+            100% {
+                background-position-x: -1000px;
+            }
+        }
+
+
+
+
+        /* event */
+
+
+        .event-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 25px 20px;
+        }
+
+        .event-container h1 {
+            font-size: 40px;
+            margin-bottom: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #334;
+        }
+
+        .event-container .box-container {
+            margin: 50px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 50px;
+            justify-items: center;
+        }
+
+        .event-container .box-container .box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 18rem;
+            border: 2px solid gray;
+            display: none;
+        }
+        .event-container .box-container .gdlr-item.gdlr-blog-grid.gdlr-skin-box{
+            border: 2px solid gray;
+            display: none;
+        }
+
+        .event-container .box-container .gdlr-item.gdlr-blog-grid.gdlr-skin-box:nth-child(1),
+        .event-container .box-container .gdlr-item.gdlr-blog-grid.gdlr-skin-box:nth-child(2),
+        .event-container .box-container .gdlr-item.gdlr-blog-grid.gdlr-skin-box:nth-child(3) {
+            display: inline-block;
+        }
+
+        .event-container .box-container .box .event-box-image {
+            height: 160px;
+            width: 288px;
+            overflow: hidden;
+        }
+
+        .event-container .box-container .box .event-box-image img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .event-container .box-container .box .event-box-date {
+            background-color: #02082b;
+            width: 100%;
+            padding: 2% 0 0 0;
+        }
+
+        .event-container .box-container .box .event-box-content {
+            background-color: #fff;
+            width: 100%;
+            padding-top: 10px;
+        }
+
+        .event-container .box-container .box .event-box-content h3 {
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 30px;
+            color: #000;
+        }
+
+        .event-container .box-container .box .event-box-footer {
+            position: sticky;
+            top: 100%;
+            background-color: rgba(143, 143, 143, 0.5);
+            width: 100%;
+        }
+
+        .event-container .box-container .box .event-box-footer a {
+            color: #000;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .event-container .box-container .box .event-box-footer a:hover {
+            color: #bd8a00;
+        }
+
+        .load-more {
+            display: inline-block;
+            padding: 10px 30px;
+            border: 1px solid #02082b;
+            color: #02082b;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .load-more:hover {
+            background-color: #02082b;
+            border-color: #bd8a00;
+            color: #bd8a00;
+        }
+
+        .event_search {
+            padding: 10px 0;
+        }
+
+        .event_search label {
+            font-size: 20px;
+            color: #02082b;
+        }
+
+        .event_search input {
+            font-size: 20px;
+            width: 70%;
+            max-width: 50vh;
+            color: #02082b;
+        }
+        .event_box{
+
+        }
+    </style>
 
 </head>
 
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
-    <div class="body-wrapper  float-menu" data-home="{% url 'main_website:homepage' %}">
+    <div class="body-wrapper  float-menu">
         
         {% block header %}
             {% include 'header.html' %}
-        {% endblock %}
-
-
-        <!-- is search -->
-        <div class="content-wrapper">
-            <div class="gdlr-content">
-
-                <!-- Above Sidebar Section-->
-                <div class="above-sidebar-wrapper">
-                    <section id="content-section-1">
-                        <div class="gdlr-full-size-wrapper gdlr-show-all no-skin"
-                            style="padding-bottom: 0px;  background-color: #ffffff; ">
-                            <div class="gdlr-master-slider-item gdlr-slider-item gdlr-item" style="margin-bottom: 0px;">
-                                <!-- MasterSlider -->
-                                <div id="P_MS5bab48b0b8b8a" class="master-slider-parent ms-parent-id-11">
-
-                                    <!-- MasterSlider Main -->
-                                    <div id="MS5bab48b0b8b8a" class="master-slider ms-skin-default">
-                                        {% comment %} Pictures here {% endcomment %}
-                                        {% for i in banner_item %}
-                                        <div class="ms-slide" data-delay="7" data-fill-mode="fill">
-                                            <img src="{% static 'masterslider/public/assets/css/blank.gif' %}" alt="" title=""
-                                                data-src="{{media_url}}{{i.banner_picture}}"
-                                                style="opacity: 0.5;" />
-
-
-                                            <div class="ms-layer  msp-cn-11-1"
-                                                style="font-family: 'Poppins', sans-serif; font-size: 30px; margin-left: 15%;"
-                                                data-effect="t(true,n,n,500,n,n,n,n,n,n,n,n,n,n,n)" data-duration="387"
-                                                data-ease="easeOutQuint" data-offset-x="-2" data-offset-y="-144"
-                                                data-origin="ml" data-position="normal">
-                                                {{i.first_layer_text}}</div>
-
-                                            <div class="ms-layer  msp-cn-11-2"
-                                                style="font-family: 'Poppins', sans-serif; font-size: 80px; font-weight: bolder; margin-top: -40px; margin-left: 10%;"
-                                                data-effect="t(true,n,n,-500,n,n,n,n,n,n,n,n,n,n,n)" data-duration="387"
-                                                data-delay="387" data-ease="easeOutQuint" data-offset-x="2"
-                                                data-offset-y="-33" data-origin="ml" data-position="normal">
-                                                {{i.second_layer_text}} <span style="color: #ffe02f;">{{i.second_layer_text_colored}}</span></div>
-
-                                            <div class="ms-layer  msp-cn-11-7"
-                                                style="font-family: 'Poppins', sans-serif; font-size: 17px; margin-top: -40px;margin-left: 10%;"
-                                                data-effect="t(true,n,n,-500,n,n,n,n,n,n,n,n,n,n,n)" data-duration="400"
-                                                data-delay="750" data-ease="easeOutQuint" data-offset-x="3"
-                                                data-offset-y="396" data-origin="tl" data-position="normal">
-                                                {{i.third_layer_text}}
-                                            </div>
-
-                                            <a href="" target="_self" style="margin-left: 10%; color: "
-                                                class="ms-layer ms-btn ms-btn-round ms-btn-n msp-preset-btn-159"
-                                                data-duration="437" data-delay="1112" data-ease="easeOutQuint"
-                                                data-type="button" data-offset-x="3" data-offset-y="132"
-                                                data-origin="ml" data-position="normal">{{i.button_text}}</a>
-
-                                        </div>
-                                        {% endfor %}
-                                        
-                                    </div>
-                                    
-                                    <!-- END MasterSlider Main -->
-
-                                </div>
-                                <!-- END MasterSlider -->
-
-
-
-                            </div>
-                            <div class="clear"></div>
-                            <div class="clear"></div>
-                        </div>
-                        <div class="clear"></div>
-                    </section>
-                </div>
-
-                <!-- Sidebar With Content Section-->
-                <div class="with-sidebar-wrapper">
-                    
-                    <section id="content-section-4">
-                        <div class="gdlr-color-wrapper  gdlr-show-all no-skin"
-                            style="background-color: #ffffff; padding-top: 70px; padding-bottom: 20px; ">
-                            <div class="container">
-                                <div class="four columns">
-                                    <div class="gdlr-ux column-service-ux">
-                                        <div class="gdlr-item gdlr-column-service-item gdlr-type-1">
-                                            <div class="column-service-image"><img src="{% static 'upload/icon-service-1.png' %}"
-                                                    alt="" width="70" height="70" /></div>
-                                            <div class="column-service-content-wrapper">
-                                                <h3 class="column-service-title">LEARNING</h3>
-                                                <div class="column-service-content gdlr-skin-content">
-                                                    <p>We learn about new technologies covering many fields including
-                                                        designing various types of electronics, programming, robotics,
-                                                        etc. Along with that we also conduct different types of
-                                                        researches to help bring progress.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="four columns">
-                                    <div class="gdlr-ux column-service-ux">
-                                        <div class="gdlr-item gdlr-column-service-item gdlr-type-1">
-                                            <div class="column-service-image"><img src="{% static 'upload/icon-service-2.png'%}"
-                                                    alt="" width="70" height="70" /></div>
-                                            <div class="column-service-content-wrapper">
-                                                <h3 class="column-service-title">NETWORKING</h3>
-                                                <div class="column-service-content gdlr-skin-content">
-                                                    <p>Not only does being an INSB member provide you with networking
-                                                        opportunities and the correct exposure for the growth of your
-                                                        professional career, but it also allows you to meet diverse
-                                                        people and make friends.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="four columns">
-                                    <div class="gdlr-ux column-service-ux">
-                                        <div class="gdlr-item gdlr-column-service-item gdlr-type-1">
-                                            <div class="column-service-image"><img src="{% static 'upload/icon-service-4.png'%}"
-                                                    alt="" width="70" height="70" /></div>
-                                            <div class="column-service-content-wrapper">
-                                                <h3 class="column-service-title">COMPETITIONS</h3>
-                                                <div class="column-service-content gdlr-skin-content">
-                                                    <p>Take part in the many beneficial contests organized and made
-                                                        accessible to the students by INSB and boost expertise and
-                                                        experience that add plus points to your CV.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clear"></div>
-                                <div class="four columns">
-                                    <div class="gdlr-ux column-service-ux">
-                                        <div class="gdlr-item gdlr-column-service-item gdlr-type-1">
-                                            <div class="column-service-image"><img src="{% static 'upload/icon-service-3.png'%}"
-                                                    alt="" width="70" height="70" /></div>
-                                            <div class="column-service-content-wrapper">
-                                                <h3 class="column-service-title">SKILL BUILDING</h3>
-                                                <div class="column-service-content gdlr-skin-content">
-                                                    <p>Earn new skills and polish existing ones from a wide range of
-                                                        options like content writing, social media management, graphic
-                                                        design, user interface design and web development.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="four columns">
-                                    <div class="gdlr-ux column-service-ux">
-                                        <div class="gdlr-item gdlr-column-service-item gdlr-type-1">
-                                            <div class="column-service-image"><img src="{% static 'upload/icon-service-5.png'%}"
-                                                    alt="" width="70" height="70" /></div>
-                                            <div class="column-service-content-wrapper">
-                                                <h3 class="column-service-title">EVENTS</h3>
-                                                <div class="column-service-content gdlr-skin-content">
-                                                    <p>INSB arranges various workshops, industrial tours, seminars and
-                                                        competitions that not only offer a plethora of knowledge but
-                                                        also experiences that help build careers.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="four columns">
-                                    <div class="gdlr-ux column-service-ux">
-                                        <div class="gdlr-item gdlr-column-service-item gdlr-type-1">
-                                            <div class="column-service-image"><img src="{% static 'upload/icon-service-6.png' %}"
-                                                    alt="" width="70" height="70" /></div>
-                                            <div class="column-service-content-wrapper">
-                                                <h3 class="column-service-title">ACHIEVEMENTS</h3>
-                                                <div class="column-service-content gdlr-skin-content">
-                                                    <p>From winning the "Best Exemplary Student Branch" award in Region
-                                                        10 for two consecutive years to attaining the first position
-                                                        IEEE R10 Web Contest, INSB has had numerous praiseworthy
-                                                        achievements, proving itself as one of the best IEEE student
-                                                        branches out there!</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clear"></div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                    </section>
-                    
-                    <section id="content-section-8">
-                        <div class="gdlr-parallax-wrapper gdlr-background-image gdlr-show-all no-skin"
-                            id="gdlr-parallax-wrapper-2" data-bgspeed="0.1"
-                            style="background-image: url('{% static 'upload/wood-skill-bg.jpg' %}'); padding-top: 100px; padding-bottom: 70px; ">
-                            <div class="container">
-                                <div class="three columns">
-                                    <div class="gdlr-skill-item-wrapper gdlr-skin-content gdlr-item gdlr-style-1">
-                                        <div class="gdlr-skill-item-title" style="color: #FFC72C;">500</div>
-                                        <div class="gdlr-skill-item-divider" style="border-color: #ffffff;"></div>
-                                        <div class="gdlr-skill-item-caption" style="color: #FFC72C;">Members</div>
-                                    </div>
-                                </div>
-                                <div class="three columns">
-                                    <div class="gdlr-skill-item-wrapper gdlr-skin-content gdlr-item gdlr-style-1">
-                                        <div class="gdlr-skill-item-title" style="color: #FFC72C;">4</div>
-                                        <div class="gdlr-skill-item-divider" style="border-color: #ffffff;"></div>
-                                        <div class="gdlr-skill-item-caption" style="color: #FFC72C;">Chapters & AG</div>
-                                    </div>
-                                </div>
-                                <div class="three columns">
-                                    <div class="gdlr-skill-item-wrapper gdlr-skin-content gdlr-item gdlr-style-1">
-                                        <div class="gdlr-skill-item-title" style="color: #FFC72C;">200</div>
-                                        <div class="gdlr-skill-item-divider" style="border-color: #ffffff;"></div>
-                                        <div class="gdlr-skill-item-caption" style="color: #FFC72C;">Events</div>
-                                    </div>
-                                </div>
-                                <div class="three columns">
-                                    <div class="gdlr-skill-item-wrapper gdlr-skin-content gdlr-item gdlr-style-1">
-                                        <div class="gdlr-skill-item-title" style="color: #FFC72C;">50</div>
-                                        <div class="gdlr-skill-item-divider" style="border-color: #ffffff;"></div>
-                                        <div class="gdlr-skill-item-caption" style="color: #FFC72C;">Achievements</div>
-                                    </div>
-                                </div>
-                                <div class="clear"></div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                    </section>
-                    <section id="content-section-6">
-                        <div class="gdlr-full-size-wrapper gdlr-show-all gdlr-skin-dark-skin"
-                            style="padding-top: 45px; padding-bottom: 0px;  background-color: #02082b; ">
-                            <div class="gdlr-item-title-wrapper gdlr-item  gdlr-center gdlr-medium ">
-                                <div class="gdlr-item-title-container container">
-                                    <div class="gdlr-item-title-head">
-                                        <h3 class="gdlr-item-title gdlr-skin-title gdlr-skin-border">Featured Events
-                                            {% comment %} All event page link goes here {% endcomment %}
-                                        </h3><a class="gdlr-item-title-link" href="#">View All Events</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="portfolio-item-wrapper type-modern-portfolio-no-space" data-ajax="#">
-                                <div class="portfolio-item-holder gdlr-item-no-space gdlr-portfolio-column-3">
-                                    <div class="gdlr-isotope" data-type="portfolio" data-layout="fitRows">
-                                        <div class="clear"></div>
-                                        {% comment %} Event list from backend {% endcomment %}
-                                        <div class="four columns">
-                                            <div class="gdlr-item gdlr-portfolio-item gdlr-modern-portfolio">
-                                                <div class="gdlr-ux gdlr-modern-portfolio-ux">
-                                                    <div class="portfolio-thumbnail gdlr-image"><img
-                                                            src="{% static 'upload/SPAC-2022.png' %}" alt="" width="700"
-                                                            height="400" /><span class="portfolio-overlay">&nbsp;</span>
-                                                        <div class="portfolio-overlay-content">
-                                                            {% comment %} Implement event links here {% endcomment %}
-                                                            <h3 class="portfolio-title"><a href="#">SPAC 2022</a></h3> 
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="clear"></div>
-                                </div>
-                            </div>
-                            <div class="clear"></div>
-                            <div class="clear"></div>
-                        </div>
-                        <div class="clear"></div>
-                    </section>
-                    
-                    <section id="content-section-10">
-                        <div class="gdlr-color-wrapper  gdlr-show-all no-skin"
-                            style="background-color: #f7f7f7; padding-top: 70px; padding-bottom: 10px; ">
-                            <div class="container">
-                                <div
-                                    class="gdlr-item-title-wrapper gdlr-item  gdlr-nav-container gdlr-left gdlr-medium ">
-                                    <div class="gdlr-item-title-container container">
-                                        <div class="gdlr-item-title-head">
-                                            <h3 class="gdlr-item-title gdlr-skin-title gdlr-skin-border">Recent News
-                                            </h3><a class="gdlr-item-title-link" href="#">Read All News</a><span
-                                                class="gdlr-nav-title"><i class="icon-angle-left gdlr-flex-prev"></i><i
-                                                    class="icon-angle-right gdlr-flex-next"></i></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="blog-item-wrapper">
-                                    <div class="blog-item-holder">
-                                        <div class="gdlr-blog-carousel-item gdlr-item">
-                                            <div class="flexslider" data-type="carousel"
-                                                data-nav-container="blog-item-wrapper" data-columns="3">
-                                                <ul class="slides">
-                                                    {% comment %} Dynamic News Starts {% endcomment %}
-                                                    <li class="gdlr-item gdlr-blog-grid gdlr-skin-box">
-                                                        <article id="post-2255"
-                                                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
-                                                            <div class="gdlr-standard-style">
-                                                                <div class="gdlr-blog-thumbnail">
-                                                                    <a href="#"> <img
-                                                                            src="upload/shutterstock_261065933-400x300.jpg"
-                                                                            alt="" width="400" height="300" /></a>
-                                                                </div>
-
-                                                                <div class="gdlr-blog-grid-content">
-                                                                    <header class="post-header">
-                                                                        <div class="gdlr-blog-info">
-                                                                            <div
-                                                                                class="blog-info blog-date gdlr-skin-info">
-                                                                                <span class="gdlr-sep">/</span><a
-                                                                                    href="#">21 Mar 2014</a></div>
-                                                                            <div
-                                                                                class="blog-info blog-author gdlr-skin-info">
-                                                                                <span class="gdlr-sep">/</span>By <a
-                                                                                    href="#" title="Posts by John Doe"
-                                                                                    rel="author">John Doe</a></div>
-                                                                            <div class="clear"></div>
-                                                                        </div>
-
-                                                                        <h3 class="gdlr-blog-title"><a href="#">Sem
-                                                                                Porta Mollis Parturi</a></h3>
-                                                                        <div class="clear"></div>
-                                                                    </header>
-                                                                    <!-- entry-header -->
-
-                                                                    <div class="gdlr-blog-content">Lorem ipsum dolor sit
-                                                                        amet, consectetur adipisici elit, sed eiusmod
-                                                                        tempor incidunt ut labore et dolore magna
-                                                                        aliqua. Idque Caesaris facere voluntate liceret:
-                                                                        sese habere....
-                                                                        <div class="clear"></div><a href="#"
-                                                                            class="excerpt-read-more">Read More</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </article>
-                                                        <!-- #post -->
-                                                    </li>
-                                                </ul>
-                                                <div class="clear"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clear"></div>
-                                <div class="clear"></div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                    </section>
-                    <section id="content-section-10">
-                        <div class="gdlr-color-wrapper  gdlr-show-all no-skin"
-                            style="background-color: #f7f7f7; padding-top: 70px; padding-bottom: 10px; ">
-                            <div class="container">
-                                <div
-                                    class="gdlr-item-title-wrapper gdlr-item  gdlr-nav-container gdlr-left gdlr-medium ">
-                                    <div class="gdlr-item-title-container container">
-                                        <div class="gdlr-item-title-head">
-                                            <h3 class="gdlr-item-title gdlr-skin-title gdlr-skin-border">Recent Blogs
-                                            </h3><a class="gdlr-item-title-link" href="#">Read All Blogs</a><span
-                                                class="gdlr-nav-title"><i class="icon-angle-left gdlr-flex-prev"></i><i
-                                                    class="icon-angle-right gdlr-flex-next"></i></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="blog-item-wrapper">
-                                    <div class="blog-item-holder">
-                                        <div class="gdlr-blog-carousel-item gdlr-item">
-                                            <div class="flexslider" data-type="carousel"
-                                                data-nav-container="blog-item-wrapper" data-columns="3">
-                                                <ul class="slides">
-                                                    {% comment %} Dynamic Blog Starts here {% endcomment %}
-                                                    <li class="gdlr-item gdlr-blog-grid gdlr-skin-box">
-                                                        <article id="post-2255"
-                                                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
-                                                            <div class="gdlr-standard-style">
-                                                                <div class="gdlr-blog-thumbnail">
-                                                                    <a href="#"> <img
-                                                                            src="upload/shutterstock_261065933-400x300.jpg"
-                                                                            alt="" width="400" height="300" /></a>
-                                                                </div>
-
-                                                                <div class="gdlr-blog-grid-content">
-                                                                    <header class="post-header">
-                                                                        <div class="gdlr-blog-info">
-                                                                            <div
-                                                                                class="blog-info blog-date gdlr-skin-info">
-                                                                                <span class="gdlr-sep">/</span><a
-                                                                                    href="#">21 Mar 2014</a></div>
-                                                                            <div
-                                                                                class="blog-info blog-author gdlr-skin-info">
-                                                                                <span class="gdlr-sep">/</span>By <a
-                                                                                    href="#" title="Posts by John Doe"
-                                                                                    rel="author">John Doe</a></div>
-                                                                            <div class="clear"></div>
-                                                                        </div>
-
-                                                                        <h3 class="gdlr-blog-title"><a href="#">Sem
-                                                                                Porta Mollis Parturi</a></h3>
-                                                                        <div class="clear"></div>
-                                                                    </header>
-                                                                    <!-- entry-header -->
-
-                                                                    <div class="gdlr-blog-content">Lorem ipsum dolor sit
-                                                                        amet, consectetur adipisici elit, sed eiusmod
-                                                                        tempor incidunt ut labore et dolore magna
-                                                                        aliqua. Idque Caesaris facere voluntate liceret:
-                                                                        sese habere....
-                                                                        <div class="clear"></div><a href="#"
-                                                                            class="excerpt-read-more">Read More</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </article>
-                                                        <!-- #post -->
-                                                    </li>
-                                                </ul>
-                                                <div class="clear"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clear"></div>
-                                <div class="clear"></div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                    </section>
+        {% endblock header %}
+        
+        <section class="wavy">
+            <div class="title">
+                <h2>Events</h2>
+                <p>All upcoming & previous events of INSB</p>
             </div>
-            <!-- gdlr-content -->
-            <div class="clear"></div>
+            <div class="wave wave1"></div>
+            <div class="wave wave2"></div>
+            <div class="wave wave3"></div>
+            <div class="wave wave4"></div>
+        </section>
+
+        <section style="padding: 50px 0px;" class="">
+            <div>
+            <div class="event_container">
+                
+                <div class="upnext">
+                    <h4 style="margin-bottom: 30px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">UP N</span>EXT</h4>
+                    <img style="border: 1px solid rgb(205, 193, 193); padding: 5px; border-radius: 6px;" src="https://ieeensusb.org/wp-content/uploads/2021/03/157705762_257718782652594_8108325620051204445_n.jpg" width="100%" height="100%" alt="">
+                </div>
+                <div class="event_calender">
+                    <!-- Calender start -->
+                    <h4 style="margin-bottom: 30px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">EVENT C</span>ALENDER</h4>
+                    <div class="calendar">
+                    <div class="header" style="padding: 20px;">
+                    <div style="cursor: pointer;" class="prev-btn"><i class="fa-solid fa-chevron-left"></i></div>
+                    <span class="month-year"></span>
+                    <div style="cursor: pointer;" class="next-btn"><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                    <div class="days-of-week" style="display: flex; justify-content: space-around; padding: 10px 0px; font-weight: bold;">
+                    <span class="day-of-week">Sun</span>
+                    <span class="day-of-week">Mon</span>
+                    <span class="day-of-week">Tue</span>
+                    <span class="day-of-week">Wed</span>
+                    <span class="day-of-week">Thu</span>
+                    <span class="day-of-week">Fri</span>
+                    <span class="day-of-week">Sat</span>
+                    </div>
+                    <div class="days" style="padding: 15px 0px; font-weight: bold;"></div>
+                    </div>
+                    <div class="event-box" style="padding: 20px;">
+                        <h5>Events for <span class="selected-date"></span></h3>
+                        <ul style="list-style-type: disc; margin-top: 15px;" class="events-list"></ul>
+                    </div>
+                    <!-- calender end -->
+                </div>
+            </div>
+        </div>
+        </section>
+
+
+        <!-- Search Section -->
+        <h3 style="text-align: center; margin: 40px 0px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">OUR E</span>VENTS</h3>
+        <div class="search_event">
+            
+            <input
+            type="text"
+            id="eventFilter"
+            onkeyup="eventFilterFunction()"
+            placeholder="Search by event name.."
+            title="Type in a name"
+            />
         </div>
 
-        <!-- Footer section, content wrapper -->
+
+
+
+        <section class="event">
+            <div class="event-container"> 
+                <!-- hello  -->
+                <!-- <div class="event_search">
+                    <label>Search: </label>
+                    <input type="text" onkeyup="searchfunction()" id="search" placeholder="Search with event title">
+                </div> -->
+                <div class="box-container" style="transition: .3s ease-in-out;">
+                    <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255"
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#"> <img
+                                            src="upload/shutterstock_261065933-400x300.jpg"
+                                            alt="" width="100%" /></a>
+                                </div>
+
+                                <div class="gdlr-blog-grid-content">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div
+                                                class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a
+                                                    href="#">21 Mar 2014</a></div>
+                                            <div
+                                                class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a
+                                                    href="#" title="Posts by John Doe"
+                                                    rel="author">John Doe</a></div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <h3 class="gdlr-blog-title event_name"><a href="#">Event 1</a></h3>
+                                        <div class="clear"></div>
+                                    </header>
+                                    <!-- entry-header -->
+
+                                    <div class="gdlr-blog-content">
+                                        Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere....
+                                        <div class="clear"></div><a href="#"
+                                            class="excerpt-read-more">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255"
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#"> <img
+                                            src="upload/shutterstock_261065933-400x300.jpg"
+                                            alt="" width="400" height="300" /></a>
+                                </div>
+
+                                <div class="gdlr-blog-grid-content">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div
+                                                class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a
+                                                    href="#">21 Mar 2014</a></div>
+                                            <div
+                                                class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a
+                                                    href="#" title="Posts by John Doe"
+                                                    rel="author">John Doe</a></div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <h3 class="gdlr-blog-title event_name"><a href="#">Event 2</a></h3>
+                                        <div class="clear"></div>
+                                    </header>
+                                    <!-- entry-header -->
+
+                                    <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                        amet, consectetur adipisici elit, sed eiusmod
+                                        tempor incidunt ut labore et dolore magna
+                                        aliqua. Idque Caesaris facere voluntate liceret:
+                                        sese habere....
+                                        <div class="clear"></div><a href="#"
+                                            class="excerpt-read-more">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255"
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#"> <img
+                                            src="upload/shutterstock_261065933-400x300.jpg"
+                                            alt="" width="400" height="300" /></a>
+                                </div>
+
+                                <div class="gdlr-blog-grid-content">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div
+                                                class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a
+                                                    href="#">21 Mar 2014</a></div>
+                                            <div
+                                                class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a
+                                                    href="#" title="Posts by John Doe"
+                                                    rel="author">John Doe</a></div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <h3 class="gdlr-blog-title event_name"><a href="#">Event 3</a></h3>
+                                        <div class="clear"></div>
+                                    </header>
+                                    <!-- entry-header -->
+
+                                    <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                        amet, consectetur adipisici elit, sed eiusmod
+                                        tempor incidunt ut labore et dolore magna
+                                        aliqua. Idque Caesaris facere voluntate liceret:
+                                        sese habere....
+                                        <div class="clear"></div><a href="#"
+                                            class="excerpt-read-more">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255"
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#"> <img
+                                            src="upload/shutterstock_261065933-400x300.jpg"
+                                            alt="" width="400" height="300" /></a>
+                                </div>
+
+                                <div class="gdlr-blog-grid-content">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div
+                                                class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a
+                                                    href="#">21 Mar 2014</a></div>
+                                            <div
+                                                class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a
+                                                    href="#" title="Posts by John Doe"
+                                                    rel="author">John Doe</a></div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <h3 class="gdlr-blog-title event_name"><a href="#">Event 8</a></h3>
+                                        <div class="clear"></div>
+                                    </header>
+                                    <!-- entry-header -->
+
+                                    <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                        amet, consectetur adipisici elit, sed eiusmod
+                                        tempor incidunt ut labore et dolore magna
+                                        aliqua. Idque Caesaris facere voluntate liceret:
+                                        sese habere....
+                                        <div class="clear"></div><a href="#"
+                                            class="excerpt-read-more">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255"
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#"> <img
+                                            src="upload/shutterstock_261065933-400x300.jpg"
+                                            alt="" width="400" height="300" /></a>
+                                </div>
+
+                                <div class="gdlr-blog-grid-content">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div
+                                                class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a
+                                                    href="#">21 Mar 2014</a></div>
+                                            <div
+                                                class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a
+                                                    href="#" title="Posts by John Doe"
+                                                    rel="author">John Doe</a></div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <h3 class="gdlr-blog-title event_name"><a href="#">Sample Event</a></h3>
+                                        <div class="clear"></div>
+                                    </header>
+                                    <!-- entry-header -->
+
+                                    <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                        amet, consectetur adipisici elit, sed eiusmod
+                                        tempor incidunt ut labore et dolore magna
+                                        aliqua. Idque Caesaris facere voluntate liceret:
+                                        sese habere....
+                                        <div class="clear"></div><a href="#"
+                                            class="excerpt-read-more">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255"
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#"> <img
+                                            src="upload/shutterstock_261065933-400x300.jpg"
+                                            alt="" width="400" height="300" /></a>
+                                </div>
+
+                                <div class="gdlr-blog-grid-content">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div
+                                                class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a
+                                                    href="#">21 Mar 2014</a></div>
+                                            <div
+                                                class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a
+                                                    href="#" title="Posts by John Doe"
+                                                    rel="author">John Doe</a></div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <h3 class="gdlr-blog-title event_name"><a href="#">IEEE Spac 2022</a></h3>
+                                        <div class="clear"></div>
+                                    </header>
+                                    <!-- entry-header -->
+
+                                    <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                        amet, consectetur adipisici elit, sed eiusmod
+                                        tempor incidunt ut labore et dolore magna
+                                        aliqua. Idque Caesaris facere voluntate liceret:
+                                        sese habere....
+                                        <div class="clear"></div><a href="#"
+                                            class="excerpt-read-more">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255"
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#"> <img
+                                            src="upload/shutterstock_261065933-400x300.jpg"
+                                            alt="" width="400" height="300" /></a>
+                                </div>
+
+                                <div class="gdlr-blog-grid-content">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div
+                                                class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a
+                                                    href="#">21 Mar 2014</a></div>
+                                            <div
+                                                class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a
+                                                    href="#" title="Posts by John Doe"
+                                                    rel="author">John Doe</a></div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <h3 class="gdlr-blog-title event_name"><a href="#">Event 5</a></h3>
+                                        <div class="clear"></div>
+                                    </header>
+                                    <!-- entry-header -->
+
+                                    <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                        amet, consectetur adipisici elit, sed eiusmod
+                                        tempor incidunt ut labore et dolore magna
+                                        aliqua. Idque Caesaris facere voluntate liceret:
+                                        sese habere....
+                                        <div class="clear"></div><a href="#"
+                                            class="excerpt-read-more">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255"
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#"> <img
+                                            src="upload/shutterstock_261065933-400x300.jpg"
+                                            alt="" width="400" height="300" /></a>
+                                </div>
+
+                                <div class="gdlr-blog-grid-content">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div
+                                                class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a
+                                                    href="#">21 Mar 2014</a></div>
+                                            <div
+                                                class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a
+                                                    href="#" title="Posts by John Doe"
+                                                    rel="author">John Doe</a></div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <h3 class="gdlr-blog-title event_name"><a href="#">Sem
+                                                Porta Mollis Parturi</a></h3>
+                                        <div class="clear"></div>
+                                    </header>
+                                    <!-- entry-header -->
+
+                                    <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                        amet, consectetur adipisici elit, sed eiusmod
+                                        tempor incidunt ut labore et dolore magna
+                                        aliqua. Idque Caesaris facere voluntate liceret:
+                                        sese habere....
+                                        <div class="clear"></div><a href="#"
+                                            class="excerpt-read-more">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                </div>
+            <div class="load-more">Load More</div>
+                
+            </div>
+        </section>
+
+
+        
+
+        <!-- content wrapper -->
         <footer class="footer-wrapper">
             <div>
                 <div>
@@ -473,30 +693,30 @@
                             <div>
                                 <div>
                                     <section class="wrap-img">
+                                        <div>
                                             <div>
                                                 <div>
                                                     <div>
-                                                        <div>
-                                                            <img width="200" height="84"
-                                                                src="https://ieeensusb.org/wp-content/uploads/2021/03/ieee-mb-blue.png"
-                                                                class="attachment-large size-large wp-image-3430" alt=""
-                                                                loading="lazy">
-                                                        </div>
+                                                        <img width="200" height="84"
+                                                            src="https://ieeensusb.org/wp-content/uploads/2021/03/ieee-mb-blue.png"
+                                                            class="attachment-large size-large wp-image-3430" alt=""
+                                                            loading="lazy">
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div>
                                             <div>
                                                 <div>
                                                     <div>
-                                                        <div>
-                                                            <img width="200" height="84"
-                                                                src="https://ieeensusb.org/wp-content/uploads/2021/03/INSB.png"
-                                                                class="attachment-large size-large wp-image-5155"
-                                                                alt="INSB Logo" loading="lazy">
-                                                        </div>
+                                                        <img width="200" height="84"
+                                                            src="https://ieeensusb.org/wp-content/uploads/2021/03/INSB.png"
+                                                            class="attachment-large size-large wp-image-5155"
+                                                            alt="INSB Logo" loading="lazy">
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
                                     </section>
                                     <section class="footer-container container">
                                         <div class="wrap">
@@ -577,8 +797,7 @@
                                                         <div>
                                                             <ul>
                                                                 <li>
-                                                                    <a href="#"
-                                                                        target="_blank">
+                                                                    <a href="#" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -589,8 +808,7 @@
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#"
-                                                                        target="_blank">
+                                                                    <a href="#" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -601,8 +819,7 @@
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#"
-                                                                        target="_blank">
+                                                                    <a href="#" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -613,8 +830,7 @@
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#"
-                                                                        target="_blank">
+                                                                    <a href="#" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -625,8 +841,7 @@
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#"
-                                                                        target="_blank">
+                                                                    <a href="#" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -637,8 +852,7 @@
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#"
-                                                                        target="_blank">
+                                                                    <a href="#" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -659,8 +873,7 @@
                                                         <div>
                                                             <ul>
                                                                 <li>
-                                                                    <a href="#"
-                                                                        target="_blank">
+                                                                    <a href="#" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -671,8 +884,7 @@
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="all-events.html"
-                                                                        target="_blank">
+                                                                    <a href="all-events.html" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -683,8 +895,7 @@
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#"
-                                                                        target="_blank">
+                                                                    <a href="#" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -695,8 +906,7 @@
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#"
-                                                                        target="_blank">
+                                                                    <a href="#" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -707,8 +917,7 @@
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#"
-                                                                        target="_blank">
+                                                                    <a href="#" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -719,8 +928,7 @@
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#"
-                                                                        target="_blank">
+                                                                    <a href="#" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -741,8 +949,7 @@
                                                         <div>
                                                             <ul>
                                                                 <li>
-                                                                    <a href="#"
-                                                                        target="_blank">
+                                                                    <a href="#" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -753,8 +960,7 @@
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#"
-                                                                        target="_blank">
+                                                                    <a href="#" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -765,8 +971,7 @@
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#"
-                                                                        target="_blank">
+                                                                    <a href="#" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -777,8 +982,7 @@
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#"
-                                                                        target="_blank">
+                                                                    <a href="#" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -789,8 +993,7 @@
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#"
-                                                                        target="_blank">
+                                                                    <a href="#" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -801,8 +1004,7 @@
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#"
-                                                                        target="_blank">
+                                                                    <a href="#" target="_blank">
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i aria-hidden="true"
@@ -833,39 +1035,38 @@
                                                                     <a href="https://www.facebook.com/ieeensusb/"
                                                                         target="_blank">
                                                                         <i class="gdlr-icon fa fa-facebook"
-                                                                        style="vertical-align: middle;  font-size: 20px; "></i>
+                                                                            style="vertical-align: middle;  font-size: 20px; "></i>
                                                                         <!-- <span>Facebook</span> -->
-                                                                         </a>
+                                                                    </a>
                                                                 </span>
                                                                 <span>
-                                                                    <a 
-                                                                        href="https://www.linkedin.com/company/ieeensusb"
+                                                                    <a href="https://www.linkedin.com/company/ieeensusb"
                                                                         target="_blank">
                                                                         <i class="gdlr-icon fa fa-linkedin"
-                                                                        style="vertical-align: middle;  font-size: 20px; "></i>
+                                                                            style="vertical-align: middle;  font-size: 20px; "></i>
                                                                         <!-- <span
                                                                             class="elementor-screen-only">Linkedin</span> -->
-                                                                         </a>
+                                                                    </a>
                                                                 </span>
                                                                 <span>
                                                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-instagram elementor-animation-grow elementor-repeater-item-8c259b8"
                                                                         href="https://instagram.com/ieeensusb?igshid=1g0f6asti4d02"
                                                                         target="_blank">
                                                                         <i class="gdlr-icon fa fa-instagram"
-                                                                        style="vertical-align: middle;  font-size: 20px; "></i>
+                                                                            style="vertical-align: middle;  font-size: 20px; "></i>
                                                                         <!-- <span
                                                                             class="elementor-screen-only">Instagram</span> -->
-                                                                        </a>
+                                                                    </a>
                                                                 </span>
                                                                 <span>
                                                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-twitter elementor-animation-grow elementor-repeater-item-c01fbf2"
                                                                         href="https://www.twitter.com/ieeensusb"
                                                                         target="_blank">
                                                                         <i class="gdlr-icon fa fa-twitter"
-                                                                        style="vertical-align: middle;  font-size: 20px; "></i>
+                                                                            style="vertical-align: middle;  font-size: 20px; "></i>
                                                                         <!-- <span
                                                                             class="elementor-screen-only">Twitter</span> -->
-                                                                        </a>
+                                                                    </a>
                                                                 </span>
                                                                 <span>
                                                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-youtube elementor-animation-grow elementor-repeater-item-a3eee86"
@@ -875,7 +1076,7 @@
                                                                             style="vertical-align: middle;  font-size: 20px; "></i>
                                                                         <!-- <span
                                                                             class="elementor-screen-only">Youtube</span> -->
-                                                                             </a>
+                                                                    </a>
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -888,7 +1089,8 @@
 
                                                                         <span class="elementor-icon-list-icon">
                                                                             <i class="gdlr-icon fa fa-envelope"
-                                                                            style="vertical-align: middle;  font-size: 15px; "></i> </span>
+                                                                                style="vertical-align: middle;  font-size: 15px; "></i>
+                                                                        </span>
                                                                         <span
                                                                             class="elementor-icon-list-text">info@ieeensusb.org</span>
                                                                     </a>
@@ -899,7 +1101,8 @@
 
                                                                         <span>
                                                                             <i class="gdlr-icon fa fa-envelope"
-                                                                            style="vertical-align: middle;  font-size: 15px; "></i> </span>
+                                                                                style="vertical-align: middle;  font-size: 15px; "></i>
+                                                                        </span>
                                                                         <span>contact@ieeensusb.org</span>
                                                                     </a>
                                                                 </li>
@@ -980,9 +1183,8 @@
                                                     <div>
                                                         <div>
                                                             © Copyright 2021 INSB – All rights reserved. Developed
-                                                            by<strong> <a
-                                                                    href="#"
-                                                                    style="color:#FFC936;">INSB Web Development
+                                                            by<strong> <a href="#" style="color:#FFC936;">INSB Web
+                                                                    Development
                                                                     Team</a></strong> </div>
                                                     </div>
                                                 </div>
@@ -996,6 +1198,7 @@
                 </div>
             </div>
         </footer>
+
     </div>
     <!-- body-wrapper -->
     <script type='text/javascript' src="{% static 'js/jquery.js' %}"></script>
@@ -1105,7 +1308,57 @@
             window.masterslider_instances.push(masterslider_8b8a);
         });
     </script>
-    <script type='text/javascript' src="{% static 'masterslider/public/assets/js/masterslider.min.js' %}"></script>
+
+    <!-- event load more button -->
+    <script>
+        const loadMore = document.querySelector('.load-more');
+        let currentItem = 3;
+
+        loadMore.addEventListener('click', (e) => {
+            const elementList = [...document.querySelectorAll('.event-container .box-container .gdlr-item.gdlr-blog-grid.gdlr-skin-box')];
+            for (let i = currentItem; i < currentItem + 3; i++) {
+                if (elementList[i]) {
+                    elementList[i].style.display = 'flex';
+                }
+            }
+            currentItem += 3;
+
+            //hide load more button after fully loaded
+            if (currentItem >= elementList.length) {
+                loadMore.style.display = 'none';
+            }
+        })
+
+
+        function searchfunction() {
+            let input, filter, table, tr, td, j;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.querySelector(".box-container");
+            tr = table.querySelector(".box");
+
+            for (j = 0; j < tr.length; j++) {
+                td = tr[j].getElementsByTagName("div");
+                message = document.getElementById("no_data");
+
+                if (td.length > 0) {
+                    if (td[2].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[j].style.display = "";
+                        message.innerHTML = "";
+                    }
+                    else {
+                        tr[j].style.display = "none";
+                    }
+
+                }
+                if (td.length == 0) {
+                    message.innerHTML = "Event not found!";
+                }
+            }
+        }
+    </script>
+    <script type='text/javascript' src='masterslider/public/assets/js/masterslider.min.js'></script>
+    <script src="{% static './js/event_script.js'%}"></script>
 </body>
 
 </html>

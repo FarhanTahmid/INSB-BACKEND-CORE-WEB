@@ -15,17 +15,17 @@
             <!-- logo -->
             <div class="gdlr-logo">
                 <div class="gdlr-logo-inner">
-                    <a href="index.html">
+                    <a href="{% url 'main_website:homepage' %}">
                         <img src="{% static 'logos/logo.gif' %}" alt="IEEE NSU SB logo" class="logo" /> </a>
                 </div>
                 <div class="gdlr-responsive-navigation dl-menuwrapper" id="gdlr-responsive-navigation">
                     <button class="dl-trigger">Open Menu</button>
                     <ul id="menu-main-menu" class="dl-menu gdlr-main-mobile-menu">
-                        <li class="menu-item menu-item-home current-menu-item "><a href="index.html">Home</a>
+                        <li class="menu-item menu-item-home current-menu-item "><a href="{% url 'main_website:homepage' %}">Home</a>
                         </li>
-                        <li class="menu-item menu-item-has-children menu-item-30"><a href="#">Activities</a>
+                        <li class="menu-item menu-item-has-children menu-item-30">Activities
                             <ul class="dl-submenu">
-                                <li class="menu-item"><a href="{% url 'main_website:ras_home' %}">Events</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:all_events' %}">Events</a></li>
                                 <li class="menu-item"><a href="#">News</a></li>
                                 <li class="menu-item"><a href="#">Achievements</a></li>
                             </ul>
