@@ -4,6 +4,10 @@
 <head>
   <meta charset="utf-8" />
   <title>Home | IEEE NSU PES SBC</title>
+  <link rel="icon" href="{% static 'logos/PES.png' %}"/>
+
+
+
   <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,7 +22,6 @@
   <link rel="shortcut icon" sizes="196x196" href="../assets/images/logo.png">
   
   <!-- style -->
-  <link rel="icon" href="{% static 'logos/PES.png' %}"/>
   <link rel="stylesheet" href="{% static '/assets/animate.css/animate.min.css' %}" type="text/css" />
   <link rel="stylesheet" href="{% static '/assets/glyphicons/glyphicons.css' %}" type="text/css" />
   <link rel="stylesheet" href="{% static '/assets/font-awesome/css/font-awesome.min.css' %}" type="text/css" />
@@ -32,6 +35,9 @@
   <link rel="stylesheet" href="{% static '/assets/styles/app.css' %}" type="text/css" />
   <!-- endbuild -->
   <link rel="stylesheet" href="{% static '/assets/styles/font.css' %}" type="text/css" />
+
+  <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
+
   <style>
     body, html {
       
@@ -55,41 +61,75 @@
 <body>
   <div class="app" id="app">
 
-<!-- ############ LAYOUT START-->
+    <!-- ############ LAYOUT START-->
 
-<!-- aside -->
-<div id="aside" class="app-aside modal nav-dropdown">
+    <!-- aside -->
+    <div id="aside" class="app-aside modal nav-dropdown">
   
-  	{% block sidebar %}
-	    {% include 'users/sidebar.html' %}
-  	{% endblock %}
+  	    {% block sidebar %}
+	        {% include 'users/sidebar.html' %}
+  	    {% endblock %}
   
-</div>
-<!-- / -->
+    </div>
+    <!-- aside end -->
   
-  <!-- content -->
-<div id="content" class="app-content box-shadow-z0" role="main">
+    <!-- content -->
+    <div id="content" class="app-content box-shadow-z0" role="main">
     
-    {% block navbar %}
+      {% block navbar %}
         {% include 'PES/pes_navbar.html' %}
-    {% endblock navbar %}
-
-</div>
-    
-<div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
-
-<!-- ############ PAGE START-->
-    <br>
-    <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Manage members of <span style="color:#00629B;"> <b>IEEE NSU </b></span><b><span style="color:#679B41;">Power and Energy Society Student Branch Chapter</b></span> </h2>
-
-
-</div>
-
-<!-- ############ PAGE END-->
+      {% endblock navbar %}
 
     </div>
+    
+    <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
+      <!-- ############ PAGE START-->
+      <br>
+      <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Manage members of <span style="color:#00629B;"> <b>IEEE NSU </b></span><b><span style="color:#679B41;">Power and Energy Society Student Branch Chapter</b></span> </h2>
+
+      <br>
+      <br>
+      <!--Tab view Start-->
+      <div class="tabs-container">
+        <ul class="tabs">
+            <li class="tab" onclick="showTab('tab1')">Tab 1</li>
+            <li class="tab" onclick="showTab('tab2')">Tab 2</li>
+            <li class="tab" onclick="showTab('tab3')">Tab 3</li>
+            <li class="tab" onclick="showTab('tab3')">Tab 3</li>
+            <li class="tab" onclick="showTab('tab3')">Tab 3</li>
+            <li class="tab" onclick="showTab('tab3')">Tab 3</li>
+        </ul>
+
+        <div id="tab1" class="tab-content">
+            <h2>Tab 1 Content</h2>
+            <p>This is the content of Tab 1.</p>
+        </div>
+
+        <div id="tab2" class="tab-content">
+            <h2>Tab 2 Content</h2>
+            <p>This is the content of Tab 2.</p>
+        </div>
+
+        <div id="tab3" class="tab-content">
+            <h2>Tab 3 Content</h2>
+            <p>This is the content of Tab 3.</p>
+        </div>
+      </div>
+      <!--Tab view end-->
+
+
+    </div>
+
+    
+    
+    
+
+    <!-- ############ PAGE END-->
+
+    
   </div>
-  <!-- / -->
+  <!-- app body end -->
 
   <!-- theme switcher -->
   <div id="switcher">
@@ -149,24 +189,14 @@
 
   <script src="{% static 'script/palette.js'%}"></script>
   <script src="{% static 'script/ui-load.js'%}"></script>
-  <script src="{% static 'script/ui-jp.js' %}"></script>
   <script src="{% static 'script/ui-include.js'%}"></script>
   <script src="{% static 'script/ui-device.js'%}"></script>
   <script src="{% static 'script/ui-form.js'%}"></script>
   <script src="{% static 'script/ui-nav.js'%}"></script>
-  <script src="{% static 'script/ui-screenfull.js'%}"></script>
   <script src="{% static 'script/ui-scroll-to.js'%}"></script>
   <script src="{% static 'script/ui-toggle-class.js'%}"></script>
-  {% comment %} <script src="{% static 'script/screenfull.min.js'%}"></script> {% endcomment %}
-  <script src="{% static 'script/app.js'%}"></script>
-  <!-- apexcharts -->
-  <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
-  <!-- Chart JS -->
-  <script src="{% static 'scripts/chartjs.js' %}"></script>
-  <script src="{% static 'scripts/dashboard.init.js' %}"></script>
-  <!-- ajax -->
-  {% comment %} <script src="{% static 'script/jquery.pjax.js'%}"></script> {% endcomment %}
-  <script src="{% static 'script/ajax.js'%}"></script>
+  <script src="{% static 'tab_view.js'%}"></script>
+
 <!-- endbuild -->
 </body>
 </html>
