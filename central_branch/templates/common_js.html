@@ -1,0 +1,23 @@
+{% load static %}
+{% block common_js %}
+<!-- build:js scripts/app.html.js -->
+<!-- jQuery -->
+<script src="{% static 'script/jquery.js'%}"></script>
+<!-- Bootstrap -->
+  <script src="{% static 'script/tether.min.js'%}"></script>
+  <script src="{% static 'script/bootstrap.js'%}"></script>
+<!-- core -->
+  <script src="{% static 'script/underscore-min.js'%}"></script>
+  <script src="{% static 'script/jquery.storageapi.min.js'%}"></script>
+  <script src="{% static 'script/pace.min.js'%}"></script>
+  <script src="{% static 'script/palette.js'%}"></script>
+  <script src="{% static 'script/ui-load.js'%}"></script>
+  <script src="{% static 'script/ui-include.js'%}"></script>
+  <script src="{% static 'script/ui-device.js'%}"></script>
+  <script src="{% static 'script/ui-form.js'%}"></script>
+  <script src="{% static 'script/ui-nav.js'%}"></script>
+  <script src="{% static 'script/ui-scroll-to.js'%}"></script>
+  <script src="{% static 'script/ui-toggle-class.js'%}"></script>
+
+<!-- endbuild -->
+{% endblock common_js %}
