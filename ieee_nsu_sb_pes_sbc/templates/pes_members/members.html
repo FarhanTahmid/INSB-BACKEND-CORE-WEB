@@ -3,11 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Home | IEEE NSU PES SBC</title>
-  <link rel="icon" href="{% static 'logos/PES.png' %}"/>
-
-
-
+  <title>Members | IEEE NSU PES SBC</title>
   <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -56,11 +52,13 @@
     .nav a.active {
         color: #FFA300;
     }
+    
   </style>
 </head>
 <body>
   <div class="app" id="app">
 
+    <!-- ############ LAYOUT START-->
     <!-- ############ LAYOUT START-->
 
     <!-- aside -->
@@ -80,6 +78,7 @@
         {% include 'PES/pes_navbar.html' %}
       {% endblock navbar %}
 
+    </div>
     </div>
     
     <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
@@ -169,23 +168,22 @@
 
     </div>
   </div>
-  <!-- / -->
+  <!--End of app-->
 
-<!-- ############ LAYOUT END-->
+  
+
+  <!-- ############ LAYOUT END-->
 
   </div>
-<!-- build:js scripts/app.html.js -->
-<!-- jQuery -->
-<script src="{% static 'script/jquery.js'%}"></script>
-<!-- Bootstrap -->
+  <!-- build:js scripts/app.html.js -->
+  <!-- jQuery -->
+  <script src="{% static 'script/jquery.js'%}"></script>
+  <!-- Bootstrap -->
   <script src="{% static 'script/tether.min.js'%}"></script>
   <script src="{% static 'script/bootstrap.js'%}"></script>
-<!-- core -->
-  <script src="{% static 'script/underscore-min.js'%}"></script>
+  <!-- core -->
   <script src="{% static 'script/jquery.storageapi.min.js'%}"></script>
   <script src="{% static 'script/pace.min.js'%}"></script>
-
-  {% comment %} <script src="{% static 'script/config.lazyload.js'%}"></script> {% endcomment %}
 
   <script src="{% static 'script/palette.js'%}"></script>
   <script src="{% static 'script/ui-load.js'%}"></script>

@@ -1,9 +1,11 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
@@ -101,7 +103,7 @@
 <body>
     <header>
         <nav class="navbar">
-            <a href="#" class="nav-logo"><img src="logo.gif"  alt="IEEE_logo" width="40" height="40"></a>
+            <a href="{% url 'main_website:homepage' %}" class="nav-logo"><img src="{% static 'main_website/static/logos/logo.gif' %}"  alt="IEEE_logo" width="40" height="40"></a>
 
             <ul class="nav-menu">
                 <li class="nav-item">
