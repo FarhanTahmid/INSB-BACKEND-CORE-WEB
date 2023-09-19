@@ -12,6 +12,8 @@ from system_administration.render_access import Access_Render
 from users.models import Members
 from port.models import Roles_and_Position
 from .models import Manage_Team
+from main_website.forms import HomePageBannerWithTextForm
+
 from users import renderData
 from users.renderData import LoggedinUser
 from django.utils.datastructures import MultiValueDictKeyError
@@ -310,6 +312,14 @@ def manage_team(request):
         return render(request,"public_relation_team/manage_team.html",context=context)
     else:
         return render(request,'public_relation_team/access_denied.html')
+    
+@login_required
+def manageWebsiteHome(request):
+    context={
+        'form':HomePageBannerWithTextForm(),
+    }
+    return render(request,"public_relation_team/manage_website/manage_website_home.html",context)
+
 
 @login_required
 def send_email(request):

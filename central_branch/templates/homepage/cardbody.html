@@ -1,0 +1,38 @@
+{% load static %}
+{% block cardbody %}
+<div class="row" style="margin-bottom:15px;">
+    <div class="col-xs-6 col-sm-12 col-md-6" >
+        {% for i in co_ordinators %}
+        <div class="box">
+            <div class="item">
+            <div class="item-bg">
+                <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
+            </div>
+            <div class="p-a-lg pos-rlt text-center">
+                <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
+            </div>
+            </div>
+            <div class="p-a text-center">
+            <a href class="text-md m-t block">{{i.name}}</a>
+            <p><small>NSU ID: {{i.nsu_id}}</small></p>
+            <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
+                <i class="fa fa-facebook"></i>
+                <i class="fa fa-facebook indigo"></i>
+            </a>
+            <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
+                <i class="fa fa-envelope-o"></i>
+                <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
+            </a>
+            <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
+                <i class="fa fa-linkedin"></i>
+                <i class="fa fa-linkedin light-blue-800"></i>
+            </a>
+            <div class="text-xs">
+                <em>Contact: <strong>{{i.contact_no}}</strong></em>
+            </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock cardbody %}

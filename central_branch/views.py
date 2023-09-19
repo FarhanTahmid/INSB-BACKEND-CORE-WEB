@@ -31,7 +31,9 @@ def central_home(request):
     has_access=Access_Render.system_administrator_superuser_access(user.username)
     if (has_access):
         #renderData.Branch.test_google_form()'''
-        return render(request,'central_home.html')
+        return render(request,'homepage/branch_homepage.html')
+        # return render(request,'central_home.html')
+
     else:
         return render(request,"access_denied2.html")
 

@@ -4,6 +4,19 @@ from central_branch.models import Events
 from central_branch.renderData import Branch
 from main_website.models import Research_Papers,Blog
 from django.db.models import Q
+from .renderData import HomepageItems
+from django.conf import settings
+# Create your views here.
+def homepage(request):
+    bannerItems=HomepageItems.getHomepageBannerItems()
+    context={
+        'banner_item':bannerItems,
+        'media_url':settings.MEDIA_URL,
+    }
+    return render(request,"homepage.html",context)
+
+def rasPage(request):
+    return render(request,'Society_AG/ras.html')
 from users.models import User
 
 # Create your views here.
