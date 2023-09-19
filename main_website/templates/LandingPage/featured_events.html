@@ -1,0 +1,43 @@
+{% load static %}
+{% block featured_events %}
+<section id="content-section-6">
+    <div class="gdlr-full-size-wrapper gdlr-show-all gdlr-skin-dark-skin"
+        style="padding-top: 45px; padding-bottom: 0px;  background-color: #02082b; ">
+        <div class="gdlr-item-title-wrapper gdlr-item  gdlr-center gdlr-medium ">
+            <div class="gdlr-item-title-container container">
+                <div class="gdlr-item-title-head">
+                    <h3 class="gdlr-item-title gdlr-skin-title gdlr-skin-border">Featured Events
+                        {% comment %} All event page link goes here {% endcomment %}
+                    </h3><a class="gdlr-item-title-link" href="#">View All Events</a>
+                </div>
+            </div>
+        </div>
+        <div class="portfolio-item-wrapper type-modern-portfolio-no-space" data-ajax="#">
+            <div class="portfolio-item-holder gdlr-item-no-space gdlr-portfolio-column-3">
+                <div class="gdlr-isotope" data-type="portfolio" data-layout="fitRows">
+                    <div class="clear"></div>
+                    {% comment %} Event list from backend {% endcomment %}
+                    <div class="four columns">
+                        <div class="gdlr-item gdlr-portfolio-item gdlr-modern-portfolio">
+                            <div class="gdlr-ux gdlr-modern-portfolio-ux">
+                                <div class="portfolio-thumbnail gdlr-image"><img
+                                        src="{% static 'upload/SPAC-2022.png' %}" alt="" width="700"
+                                        height="400" /><span class="portfolio-overlay">&nbsp;</span>
+                                    <div class="portfolio-overlay-content">
+                                        {% comment %} Implement event links here {% endcomment %}
+                                        <h3 class="portfolio-title"><a href="#">SPAC 2022</a></h3> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+</section>
+{% endblock featured_events %}

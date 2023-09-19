@@ -1,0 +1,420 @@
+{% load static %}
+
+<!--YOU MUST IMPORT THE event.css IN THE HTML FILE YOU ARE USING THIS BLOCK. JS IS INTEGRATED IN THIS BLOCK -->
+
+{% block event_container %}
+
+<!-- Search Section -->
+<h3 style="text-align: center; margin: 40px 0px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">OUR E</span>VENTS</h3>
+<div class="search_event">
+    
+    <input
+    type="text"
+    id="eventFilter"
+    onkeyup="eventFilterFunction()"
+    placeholder="Search by event name.."
+    title="Type in a name"
+    />
+</div>
+
+<!--EVENT CARD CONTAINER-->
+
+<section class="event">
+    <div class="event-container"> 
+        <!-- hello  -->
+        <!-- <div class="event_search">
+            <label>Search: </label>
+            <input type="text" onkeyup="searchfunction()" id="search" placeholder="Search with event title">
+        </div> -->
+        <div class="box-container" style="transition: .3s ease-in-out;">
+            <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                <article id="post-2255"
+                    class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                    <div class="gdlr-standard-style">
+                        <div class="gdlr-blog-thumbnail">
+                            <a href="#"> <img
+                                    src="upload/shutterstock_261065933-400x300.jpg"
+                                    alt="" width="100%" /></a>
+                        </div>
+
+                        <div class="gdlr-blog-grid-content">
+                            <header class="post-header">
+                                <div class="gdlr-blog-info">
+                                    <div
+                                        class="blog-info blog-date gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span><a
+                                            href="#">21 Mar 2014</a></div>
+                                    <div
+                                        class="blog-info blog-author gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span>By <a
+                                            href="#" title="Posts by John Doe"
+                                            rel="author">John Doe</a></div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <h3 class="gdlr-blog-title event_name"><a href="#">Event 1</a></h3>
+                                <div class="clear"></div>
+                            </header>
+                            <!-- entry-header -->
+
+                            <div class="gdlr-blog-content">
+                                Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere....
+                                <div class="clear"></div><a href="#"
+                                    class="excerpt-read-more">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                <article id="post-2255"
+                    class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                    <div class="gdlr-standard-style">
+                        <div class="gdlr-blog-thumbnail">
+                            <a href="#"> <img
+                                    src="upload/shutterstock_261065933-400x300.jpg"
+                                    alt="" width="400" height="300" /></a>
+                        </div>
+
+                        <div class="gdlr-blog-grid-content">
+                            <header class="post-header">
+                                <div class="gdlr-blog-info">
+                                    <div
+                                        class="blog-info blog-date gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span><a
+                                            href="#">21 Mar 2014</a></div>
+                                    <div
+                                        class="blog-info blog-author gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span>By <a
+                                            href="#" title="Posts by John Doe"
+                                            rel="author">John Doe</a></div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <h3 class="gdlr-blog-title event_name"><a href="#">Event 2</a></h3>
+                                <div class="clear"></div>
+                            </header>
+                            <!-- entry-header -->
+
+                            <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                amet, consectetur adipisici elit, sed eiusmod
+                                tempor incidunt ut labore et dolore magna
+                                aliqua. Idque Caesaris facere voluntate liceret:
+                                sese habere....
+                                <div class="clear"></div><a href="#"
+                                    class="excerpt-read-more">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                <article id="post-2255"
+                    class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                    <div class="gdlr-standard-style">
+                        <div class="gdlr-blog-thumbnail">
+                            <a href="#"> <img
+                                    src="upload/shutterstock_261065933-400x300.jpg"
+                                    alt="" width="400" height="300" /></a>
+                        </div>
+
+                        <div class="gdlr-blog-grid-content">
+                            <header class="post-header">
+                                <div class="gdlr-blog-info">
+                                    <div
+                                        class="blog-info blog-date gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span><a
+                                            href="#">21 Mar 2014</a></div>
+                                    <div
+                                        class="blog-info blog-author gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span>By <a
+                                            href="#" title="Posts by John Doe"
+                                            rel="author">John Doe</a></div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <h3 class="gdlr-blog-title event_name"><a href="#">Event 3</a></h3>
+                                <div class="clear"></div>
+                            </header>
+                            <!-- entry-header -->
+
+                            <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                amet, consectetur adipisici elit, sed eiusmod
+                                tempor incidunt ut labore et dolore magna
+                                aliqua. Idque Caesaris facere voluntate liceret:
+                                sese habere....
+                                <div class="clear"></div><a href="#"
+                                    class="excerpt-read-more">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                <article id="post-2255"
+                    class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                    <div class="gdlr-standard-style">
+                        <div class="gdlr-blog-thumbnail">
+                            <a href="#"> <img
+                                    src="upload/shutterstock_261065933-400x300.jpg"
+                                    alt="" width="400" height="300" /></a>
+                        </div>
+
+                        <div class="gdlr-blog-grid-content">
+                            <header class="post-header">
+                                <div class="gdlr-blog-info">
+                                    <div
+                                        class="blog-info blog-date gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span><a
+                                            href="#">21 Mar 2014</a></div>
+                                    <div
+                                        class="blog-info blog-author gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span>By <a
+                                            href="#" title="Posts by John Doe"
+                                            rel="author">John Doe</a></div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <h3 class="gdlr-blog-title event_name"><a href="#">Event 8</a></h3>
+                                <div class="clear"></div>
+                            </header>
+                            <!-- entry-header -->
+
+                            <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                amet, consectetur adipisici elit, sed eiusmod
+                                tempor incidunt ut labore et dolore magna
+                                aliqua. Idque Caesaris facere voluntate liceret:
+                                sese habere....
+                                <div class="clear"></div><a href="#"
+                                    class="excerpt-read-more">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                <article id="post-2255"
+                    class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                    <div class="gdlr-standard-style">
+                        <div class="gdlr-blog-thumbnail">
+                            <a href="#"> <img
+                                    src="upload/shutterstock_261065933-400x300.jpg"
+                                    alt="" width="400" height="300" /></a>
+                        </div>
+
+                        <div class="gdlr-blog-grid-content">
+                            <header class="post-header">
+                                <div class="gdlr-blog-info">
+                                    <div
+                                        class="blog-info blog-date gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span><a
+                                            href="#">21 Mar 2014</a></div>
+                                    <div
+                                        class="blog-info blog-author gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span>By <a
+                                            href="#" title="Posts by John Doe"
+                                            rel="author">John Doe</a></div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <h3 class="gdlr-blog-title event_name"><a href="#">Sample Event</a></h3>
+                                <div class="clear"></div>
+                            </header>
+                            <!-- entry-header -->
+
+                            <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                amet, consectetur adipisici elit, sed eiusmod
+                                tempor incidunt ut labore et dolore magna
+                                aliqua. Idque Caesaris facere voluntate liceret:
+                                sese habere....
+                                <div class="clear"></div><a href="#"
+                                    class="excerpt-read-more">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                <article id="post-2255"
+                    class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                    <div class="gdlr-standard-style">
+                        <div class="gdlr-blog-thumbnail">
+                            <a href="#"> <img
+                                    src="upload/shutterstock_261065933-400x300.jpg"
+                                    alt="" width="400" height="300" /></a>
+                        </div>
+
+                        <div class="gdlr-blog-grid-content">
+                            <header class="post-header">
+                                <div class="gdlr-blog-info">
+                                    <div
+                                        class="blog-info blog-date gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span><a
+                                            href="#">21 Mar 2014</a></div>
+                                    <div
+                                        class="blog-info blog-author gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span>By <a
+                                            href="#" title="Posts by John Doe"
+                                            rel="author">John Doe</a></div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <h3 class="gdlr-blog-title event_name"><a href="#">IEEE Spac 2022</a></h3>
+                                <div class="clear"></div>
+                            </header>
+                            <!-- entry-header -->
+
+                            <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                amet, consectetur adipisici elit, sed eiusmod
+                                tempor incidunt ut labore et dolore magna
+                                aliqua. Idque Caesaris facere voluntate liceret:
+                                sese habere....
+                                <div class="clear"></div><a href="#"
+                                    class="excerpt-read-more">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                <article id="post-2255"
+                    class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                    <div class="gdlr-standard-style">
+                        <div class="gdlr-blog-thumbnail">
+                            <a href="#"> <img
+                                    src="upload/shutterstock_261065933-400x300.jpg"
+                                    alt="" width="400" height="300" /></a>
+                        </div>
+
+                        <div class="gdlr-blog-grid-content">
+                            <header class="post-header">
+                                <div class="gdlr-blog-info">
+                                    <div
+                                        class="blog-info blog-date gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span><a
+                                            href="#">21 Mar 2014</a></div>
+                                    <div
+                                        class="blog-info blog-author gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span>By <a
+                                            href="#" title="Posts by John Doe"
+                                            rel="author">John Doe</a></div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <h3 class="gdlr-blog-title event_name"><a href="#">Event 5</a></h3>
+                                <div class="clear"></div>
+                            </header>
+                            <!-- entry-header -->
+
+                            <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                amet, consectetur adipisici elit, sed eiusmod
+                                tempor incidunt ut labore et dolore magna
+                                aliqua. Idque Caesaris facere voluntate liceret:
+                                sese habere....
+                                <div class="clear"></div><a href="#"
+                                    class="excerpt-read-more">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                <article id="post-2255"
+                    class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                    <div class="gdlr-standard-style">
+                        <div class="gdlr-blog-thumbnail">
+                            <a href="#"> <img
+                                    src="upload/shutterstock_261065933-400x300.jpg"
+                                    alt="" width="400" height="300" /></a>
+                        </div>
+
+                        <div class="gdlr-blog-grid-content">
+                            <header class="post-header">
+                                <div class="gdlr-blog-info">
+                                    <div
+                                        class="blog-info blog-date gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span><a
+                                            href="#">21 Mar 2014</a></div>
+                                    <div
+                                        class="blog-info blog-author gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span>By <a
+                                            href="#" title="Posts by John Doe"
+                                            rel="author">John Doe</a></div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <h3 class="gdlr-blog-title event_name"><a href="#">Sem
+                                        Porta Mollis Parturi</a></h3>
+                                <div class="clear"></div>
+                            </header>
+                            <!-- entry-header -->
+
+                            <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                amet, consectetur adipisici elit, sed eiusmod
+                                tempor incidunt ut labore et dolore magna
+                                aliqua. Idque Caesaris facere voluntate liceret:
+                                sese habere....
+                                <div class="clear"></div><a href="#"
+                                    class="excerpt-read-more">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+        </div>
+    <div class="load-more">Load More</div>
+        
+    </div>
+</section>
+
+
+<!-- event load more button -->
+<script>
+    const loadMore = document.querySelector('.load-more');
+    let currentItem = 3;
+
+    loadMore.addEventListener('click', (e) => {
+        const elementList = [...document.querySelectorAll('.event-container .box-container .gdlr-item.gdlr-blog-grid.gdlr-skin-box')];
+        for (let i = currentItem; i < currentItem + 3; i++) {
+            if (elementList[i]) {
+                elementList[i].style.display = 'flex';
+            }
+        }
+        currentItem += 3;
+
+        //hide load more button after fully loaded
+        if (currentItem >= elementList.length) {
+            loadMore.style.display = 'none';
+        }
+    })
+
+    //EVENT SEARCH FUNCTION WITH NAME ONLY
+    function searchfunction() {
+        let input, filter, table, tr, td, j;
+        input = document.getElementById("search");
+        filter = input.value.toUpperCase();
+        table = document.querySelector(".box-container");
+        tr = table.querySelector(".box");
+
+        for (j = 0; j < tr.length; j++) {
+            td = tr[j].getElementsByTagName("div");
+            message = document.getElementById("no_data");
+
+            if (td.length > 0) {
+                if (td[2].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    tr[j].style.display = "";
+                    message.innerHTML = "";
+                }
+                else {
+                    tr[j].style.display = "none";
+                }
+
+            }
+            if (td.length == 0) {
+                message.innerHTML = "Event not found!";
+            }
+        }
+    }
+</script>
+{% endblock event_container %}

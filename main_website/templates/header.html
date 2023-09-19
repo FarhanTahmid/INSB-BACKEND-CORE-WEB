@@ -1,9 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+
 {% block header %}
 <header class="gdlr-header-wrapper header-style-1-wrapper gdlr-header-no-top-bar">
     <!-- top navigation -->
@@ -25,7 +22,7 @@
                         </li>
                         <li class="menu-item menu-item-has-children menu-item-30">Activities
                             <ul class="dl-submenu">
-                                <li class="menu-item"><a href="{% url 'main_website:all_events' %}">Events</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:event_homepage' %}">Events</a></li>
                                 <li class="menu-item"><a href="#">News</a></li>
                                 <li class="menu-item"><a href="#">Achievements</a></li>
                             </ul>
@@ -85,7 +82,7 @@
                         <li class="menu-item menu-item-has-children gdlr-normal-menu"><a href="#"
                                 class="sf-with-ul-pre">Activities</a>
                             <ul class="sub-menu">
-                                <li class="menu-item"><a href="all-events.html">Events</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:event_homepage' %}">Events</a></li>
                                 <li class="menu-item"><a href="#">News</a></li>
                                 <li class="menu-item"><a href="#">Achievements</a></li>
                             </ul>
