@@ -41,7 +41,7 @@ def index(request):
 
     return HttpResponse("IEEE main Website")
 
-def All_Events(request):
+def all_events(request):
 
     '''Loads all events up untill today on Event page'''
     get_all_events = Branch.load_all_events()
@@ -53,13 +53,13 @@ def All_Events(request):
     count += len(get_flagship_event)
     get_event = Events.objects.filter(Q(flagship_event = False) & Q(publish_in_main_web= True)).order_by('-probable_date')[:(6-count)]
     
-    return render(request,"All_Events.html",{
+    context={
         "events":get_all_events,
         "last_event":get_all_events.last(),
         "flagship_event":get_flagship_event,
-        "normal_event":get_event
-
-    })
+        "normal_event":get_event,
+    }
+    return render(request,"Events/events_homepage.html",context)
 
 def Event_Details(request,event_id):
 

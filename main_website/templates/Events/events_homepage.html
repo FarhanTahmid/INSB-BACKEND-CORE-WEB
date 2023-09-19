@@ -6,10 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>IEEE NSU RAS SBC - IEEE NSU SB</title>
+    <title>Events - IEEE NSU SB</title>
 
-    <link rel="icon" href="{% static 'logos/logo.gif'%}"/>
-    <link rel='stylesheet' href="{% static 'css/style.css'%}" type='text/css' media='all' />
+    <link rel="icon" href="upload/logo.gif"/>
+    <link rel='stylesheet' href="{% static 'css/style.css' %}" type='text/css' media='all' />
     <link rel='stylesheet' href="{% static 'css/superfish.css'%}" type='text/css' media='all' />
     <link rel='stylesheet' href="{% static 'css/component.css'%}" type='text/css' media='all' />
     <link rel='stylesheet' href="{% static 'css/font-awesome.css'%}" type='text/css' media='all' />
@@ -19,110 +19,142 @@
     <link rel='stylesheet' href="{% static 'masterslider/public/assets/css/masterslider.main.css'%}" type='text/css' media='all' />
     <link rel='stylesheet' href="{% static 'css/masterslider-custom.css'%}" type='text/css' media='all' />
     <link rel='stylesheet' href="{% static 'css/style-custom.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/event.css' %}" type='text/css' media='all' />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/Rass.css' %}">
+
+
+
     <link href="https://fonts.googleapis.com/css?family=Raleway:300|Lato:regular|Crete+Round:regular" rel="stylesheet"
         property="stylesheet" type="text/css" media="all">
 
-        <style>
-            *{
-                box-sizing: border-box;
-            }
-            .wavy {
-                position: relative;
-                width: 100%;
-                /* height: 30vh; */
-                background-color: transparent;
-                background-image: linear-gradient(180deg, #02082b 0%, #519fff 96%);
-                overflow: hidden;
-            }
-    
-            .wavy .wave {
-                position: absolute;
-                top: 75%;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: url("{% static 'upload/wave.png'%}");
-                background-size: 1000px 100px;
-                background-repeat-y: no-repeat;
-            }
-    
-            .wavy .wave.wave1 {
-                animation: animate 30s linear infinite;
-                z-index: 10;
-                opacity: 1;
-                animation-delay: 0s;
-                bottom: 0;
-            }
-    
-            .wavy .wave.wave2 {
-                animation: animate2 15s linear infinite;
-                z-index: 9;
-                opacity: 0.5;
-                animation-delay: -5s;
-                bottom: 10px;
-            }
-    
-            .wavy .wave.wave3 {
-                animation: animate 30s linear infinite;
-                z-index: 8;
-                opacity: 0.2;
-                animation-delay: -2s;
-                bottom: 15;
-            }
-    
-            .wavy .wave.wave4 {
-                animation: animate2 15s linear infinite;
-                z-index: 7;
-                opacity: 0.7;
-                animation-delay: -5s;
-                bottom: 20px;
-            }
-    
-            .wavy .title {
-                display: flex;
-                flex-direction: column;
-                text-align: center;
-                padding: 70px 0 146px;
-                line-height: 0;
-            }
-    
-            .wavy .title h2 {
-                font-family: "Poppins", Sans-serif;
-                color: #fff;
-                font-size: 45px;
-                font-weight: 600;
-                text-transform: uppercase;
-            }
-    
-            .wavy .title p {
-                font-family: "Poppins", Sans-serif;
-                color: #fff;
-                font-size: 100%;
-            }
-    
-            @keyframes animate {
-                0% {
-                    background-position-x: 0;
-                }
-    
-                100% {
-                    background-position-x: 1000px;
-                }
-            }
-    
-            @keyframes animate2 {
-                0% {
-                    background-position-x: 0;
-                }
-    
-                100% {
-                    background-position-x: -1000px;
-                }
-            }
-        </style>
-        
+        /* event */
+
+
+        .event-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 25px 20px;
+        }
+
+        .event-container h1 {
+            font-size: 40px;
+            margin-bottom: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #334;
+        }
+
+        .event-container .box-container {
+            margin: 50px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 50px;
+            justify-items: center;
+        }
+
+        .event-container .box-container .box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 18rem;
+            border: 2px solid gray;
+            display: none;
+        }
+        .event-container .box-container .gdlr-item.gdlr-blog-grid.gdlr-skin-box{
+            border: 2px solid gray;
+            display: none;
+        }
+
+        .event-container .box-container .gdlr-item.gdlr-blog-grid.gdlr-skin-box:nth-child(1),
+        .event-container .box-container .gdlr-item.gdlr-blog-grid.gdlr-skin-box:nth-child(2),
+        .event-container .box-container .gdlr-item.gdlr-blog-grid.gdlr-skin-box:nth-child(3) {
+            display: inline-block;
+        }
+
+        .event-container .box-container .box .event-box-image {
+            height: 160px;
+            width: 288px;
+            overflow: hidden;
+        }
+
+        .event-container .box-container .box .event-box-image img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .event-container .box-container .box .event-box-date {
+            background-color: #02082b;
+            width: 100%;
+            padding: 2% 0 0 0;
+        }
+
+        .event-container .box-container .box .event-box-content {
+            background-color: #fff;
+            width: 100%;
+            padding-top: 10px;
+        }
+
+        .event-container .box-container .box .event-box-content h3 {
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 30px;
+            color: #000;
+        }
+
+        .event-container .box-container .box .event-box-footer {
+            position: sticky;
+            top: 100%;
+            background-color: rgba(143, 143, 143, 0.5);
+            width: 100%;
+        }
+
+        .event-container .box-container .box .event-box-footer a {
+            color: #000;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .event-container .box-container .box .event-box-footer a:hover {
+            color: #bd8a00;
+        }
+
+        .load-more {
+            display: inline-block;
+            padding: 10px 30px;
+            border: 1px solid #02082b;
+            color: #02082b;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .load-more:hover {
+            background-color: #02082b;
+            border-color: #bd8a00;
+            color: #bd8a00;
+        }
+
+        .event_search {
+            padding: 10px 0;
+        }
+
+        .event_search label {
+            font-size: 20px;
+            color: #02082b;
+        }
+
+        .event_search input {
+            font-size: 20px;
+            width: 70%;
+            max-width: 50vh;
+            color: #02082b;
+        }
+        .event_box{
+
+        }
+    </style>
 
 </head>
 
@@ -133,322 +165,416 @@
             {% include 'header.html' %}
         {% endblock header %}
         
-        <section class="wavy">
-            <div class="title">
-                <h2>IEEE NSU RAS STUDENT BRANCH CHAPTER</h2>
-                <p>Robotics and Automation Society</p>
-            </div>
-            
-            <div class="wave wave1"></div>
-            <div class="wave wave2"></div>
-            <div class="wave wave3"></div>
-            <div class="wave wave4"></div>
+        {% block wave_design %}
+            {% include 'wave.html' %}
+        {% endblock %}
 
-        </section>
-        <!-- end of wAVE PART  -->
-        <div class="bg">
-            <img src="upload/slider-2.jpg" alt="">
-        </div> 
-        <!-- about Ras and logo starts  -->
-
-        <section class="rass_grid_container ras_about">
-            <div class="rass_grid_item">
-                <h2>
-                    <b>ABOUT RAS</b>
-                </h2>
-                <p style="text-align: justify;">
-                <strong>
-                IEEE NSU Robotics and Automation Society Student Chapter is a technical chapter of IEEE NSU Student Branch focusing on the research, study, and exchange of knowledge regarding Robotics & Automation.</strong> <br>
-
-                    <strong> It was established on the 5th January 2017. It is the first Robotics and Automation Society Student Chapter in Bangladesh. </strong><br>
-
-                    <strong> IEEE NSU RAS SB Chapter, since its inception, has played an important role to promote robotics & automation within its local community. It’s constantly evolving itself through training its members to be future leaders in the field of robotics & automation. In the two short years since its commencement, the society has organized a good number of quality technical, general, and professional events to facilitate learning and knowledge in the field of robotics and automation. </strong><br>
-
-                    <strong> Keeping in line with the parent body of IEEE RAS, the IEEE NSU RAS SB Chapter is always dedicated to maintaining good academic standards in research and other literary forms relating to this field.</strong>
-                                    </p>
-            </div>
-            <div style="display: flex;" class="rass_grid_item">
-                <img style="align-items: center; justify-content: center;" src="https://ieeensusb.org/wp-content/uploads/2021/04/admin-ajax-1.png" alt="">
-            </div>
-        </section>
-
-        <!-- about Ras and logo ends  -->
-
-        <!-- featured events starts  -->
-
-            <h2 style="margin: 70px 0px 20px 0px; text-align: center; font-weight: bold;">FEATURE EVENTS</h2>
-
-
-            
-            <!--Featured Events-->
-
-            {% block event_card_body %}
-                {% include 'event_card_body.html' %}
-            {% endblock  %}
-
-
-            <!-- featured events ends  -->
-
-
-            <!-- mission and vision starts -->
-
-
-
-            <section class="rass_grid_container">
-                <div class="rass_grid_item">
-                    <h1>
-                        <b>Mission and vision</b>
-                    </h1>
-                   <p style="text-align: justify;">
-                    <strong>
-                        The mission & vision of IEEE NSU RAS SB Chapter is to make this student chapter a shining beacon of quality, creativity, academic integrity, and innovation. From the very beginning IEEE NSU RAS SB Chapter has been encouraging the dissipation of robotics and automation-related knowledge within the engineering student body of North South University. Since the beginning of IEEE NSU RAS SB Chapter, its members have been actively and enthusiastically bringing into realization workshops on robotics. IEEE NSU RAS SB Chapter aims to
-                    </strong>
-                    <b>
-                        ● Promote and foster the development of robotics and automation in an academic setting<br>
-                        ● Get members interested in robotics and automation to dive deeper and gain practical knowledge<br>
-                        ● Give potentially interested IEEE members adequate exposure to the field of Robotics and Automation<br>
-                        ● Foster research among IEEE NSU student body relating to the field of robotics and automation<br>
-                        ● Produce leaders in the field of engineering through the continued support of IEEE NSU RAS.<br>
-                    </b>
-                   </p>
-                </div>
-                <div class="rass_grid_item"  style="display: flex;">
-                    <img style="align-items: center;; justify-content: center;" src="https://ieeensusb.org/wp-content/uploads/2021/04/Vision.jpg" alt="">
-                </div>
-            </section>
-
-
-            <!-- mission and vision ends  -->
-
-            <!-- EXECUTIVE BODY starts  -->
-
-
-            <h2 style="margin: 70px 0px 20px 0px; text-align: center; font-weight: bold;">MEET OUR EXECUTIVE BODY</h2>
-
-            
-            
-            <div class="ex_row">
-                <div class="column">
-                    <div class="card">
-                    <img src="https://media.istockphoto.com/id/1212782126/photo/smiling-man-outdoors-in-the-city.jpg?s=612x612&w=0&k=20&c=R4PEVKC3kLUycF198ylswBXF8ZKeXRmjED5q5B3H5sc=" alt="Jane" style="width:100%">
-                    <div class="container">
-                        <h4 style="font-weight: bold; margin: 10px 0px;">Jane Doe</h4>
-                        <p class="title" style="font-style: italic;">CEO & Founder</p>
-                        <p>Some text that describes me lorem ipsum ipsum lorem.</p>
-                        <p>example@example.com</p>
-                        <p><button class="button">Contact</button></p>
-                    </div>
-                    </div>
-                </div>
-
-                <div class="column">
-                    <div class="card">
-                    <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Mike" style="width:100%">
-                    <div class="container">
-                        <h4 style="font-weight: bold; margin: 10px 0px;">Mike Ross</h4>
-                        <p class="title" style="font-style: italic;">Art Director</p>
-                        <p>Some text that describes me lorem ipsum ipsum lorem.</p>
-                        <p>example@example.com</p>
-                        <p><button class="button">Contact</button></p>
-                    </div>
-                    </div>
-                </div>
+        <section style="padding: 50px 0px;" class="">
+            <div>
+            <div class="event_container">
                 
-                <div class="column">
-                    <div class="card">
-                    <img src="https://media.istockphoto.com/id/1171169099/photo/man-with-crossed-arms-isolated-on-gray-background.jpg?s=612x612&w=0&k=20&c=_vETAeGc6ooeOx-WZYFyZdUUL5hyDPrvakBpjytN7lM=" alt="John" style="width:100%">
-                    <div class="container">
-                        <h4 style="font-weight: bold; margin: 10px 0px;">John Doe</h4>
-                        <p class="title" style="font-style: italic;">Designer</p>
-                        <p>Some text that describes me lorem ipsum ipsum lorem.</p>
-                        <p>example@example.com</p>
-                        <p><button class="button">Contact</button></p>
-                    </div>
-                    </div>
+                <div class="upnext">
+                    <h4 style="margin-bottom: 30px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">UP N</span>EXT</h4>
+                    <img style="border: 1px solid rgb(205, 193, 193); padding: 5px; border-radius: 6px;" src="https://ieeensusb.org/wp-content/uploads/2021/03/157705762_257718782652594_8108325620051204445_n.jpg" width="100%" height="100%" alt="">
                 </div>
-
-                <!---Add here more column class-->
-                
+                <div class="event_calender">
+                    <!-- Calender start -->
+                    <h4 style="margin-bottom: 30px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">EVENT C</span>ALENDER</h4>
+                    <div class="calendar">
+                    <div class="header" style="padding: 20px;">
+                    <div style="cursor: pointer;" class="prev-btn"><i class="fa-solid fa-chevron-left"></i></div>
+                    <span class="month-year"></span>
+                    <div style="cursor: pointer;" class="next-btn"><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                    <div class="days-of-week" style="display: flex; justify-content: space-around; padding: 10px 0px; font-weight: bold;">
+                    <span class="day-of-week">Sun</span>
+                    <span class="day-of-week">Mon</span>
+                    <span class="day-of-week">Tue</span>
+                    <span class="day-of-week">Wed</span>
+                    <span class="day-of-week">Thu</span>
+                    <span class="day-of-week">Fri</span>
+                    <span class="day-of-week">Sat</span>
+                    </div>
+                    <div class="days" style="padding: 15px 0px; font-weight: bold;"></div>
+                    </div>
+                    <div class="event-box" style="padding: 20px;">
+                        <h5>Events for <span class="selected-date"></span></h3>
+                        <ul style="list-style-type: disc; margin-top: 15px;" class="events-list"></ul>
+                    </div>
+                    <!-- calender end -->
+                </div>
             </div>
-
-    </div>
-    <!-- content wrapper -->
-
-
-            <!-- EXECUTIVE BODY ends  -->
-
-
-
-            <!-- Q&A ofRAs starts -->
-
-                <section class="ras_qa">
-                    <div  class="qa_partition"><h3 class="colorh3">What is RAS?</h3><p id="pid">The IEEE Robotics and Automation Society is known as RAS. Through striving for the advancement of the theory and practice of robotics and automation engineering, it maintains high professional standards among its members. The mission of RAS is to develop and facilitate the exchange of scientific and technological knowledge and thoughts in Robotics and Automation for the benefit of members as well as humanity. The Society also provides aid for promoting close cooperation and exchanging technical information among its Members and Affiliates.</p></div>
-
-                    <div  class="qa_partition"><h3 class="colorh3">Why join RAS?</h3><p id="pid">When you join RAS, you will be joining a professional society of the IEEE that supports the development and the exchange of scientific knowledge in robotics and automation, including applied and theoretical issues. RAS Membership provides you with the resources and opportunities you need to keep yourself updated about the recent technologies and inventions in the field of Robotics and Automation.  Also, you get to network with other professionals near you who share a similar technical interest as you.</p></div>
-
-                    <div  class="qa_partition"><h3 class="colorh3">What activities do we usually do?</h3><p id="pid">We host many events, seminars, workshops, Tech-talks and weekly meetings throughout the year on various topics in robotics and automation. It helps the members to gather more knowledge about Robotics and Automation. Also, the members get the chance to learn new skills and develop those skills by participating in events.</p></div>
-
-                    <div  class="qa_partition"><h3 class="colorh3">How to join IEEE NSU RAS SBC?</h3><p id="pid">To join IEEE NSU RAS SBC, you will have to go through a simple evaluation process. For that, you will have to write us an email answering some easy questions which will be given to you.</p></div>
-                </section>
-
-             <!-- Q&A ofRAS ends  -->
-
-                <!-- contract us starts  -->
-
-
-                     <!-- Sidebar With Content Section-->
-                <div class="with-sidebar-wrapper" style="margin-top: 100px;">
-                    <div class="with-sidebar-container container">
-                        <div class="with-sidebar-left eight columns">
-                            <div class="with-sidebar-content twelve columns">
-                                <section id="content-section-2">
-                                    <div class="section-container container">
-                                        <div class="gdlr-item gdlr-content-item" style="margin-bottom: 60px;"><span class="clear"></span><span class="gdlr-space" style="margin-top: -22px; display: block;"></span>
-                                            <h5 class="gdlr-heading-shortcode " style="font-weight: bold;">Please fulfil the form below. </h5>
-                                            <p> <span class="clear"></span><span class="gdlr-space" style="margin-top: 25px; display: block;"></span>
-                                                <div role="form" class="wpcf7" id="wpcf7-f5-o1" lang="en-US" dir="ltr">
-                                                    <div class="screen-reader-response"></div>
-                                                    <form class="quform" action="quform/process.php" method="post" enctype="multipart/form-data" onclick="">
-
-                                                        <div class="quform-elements">
-                                                            <div class="quform-element">
-                                                                <p>Your Name (required)
-                                                                    <br>
-                                                                    <span class="wpcf7-form-control-wrap your-name">
-                                                                        <input id="name" type="text" name="name" size="40" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required" aria-required="true" aria-invalid="false">
-                                                                    </span> 
-                                                                </p>
-                                                            </div>
-                                                            <div class="quform-element">
-                                                                <p>Your Email (required)
-                                                                    <br>
-                                                                    <span class="wpcf7-form-control-wrap your-email">
-                                                                        <input id="email" type="text" name="email" size="40" class="wpcf7-form-control wpcf7-text wpcf7-email wpcf7-validates-as-required wpcf7-validates-as-email" aria-required="true" aria-invalid="false">
-                                                                    </span> 
-                                                                </p>
-                                                            </div>
-                                                            <div class="quform-element">
-                                                                <p>Your Message
-                                                                    <br>
-                                                                    <span class="wpcf7-form-control-wrap your-message">
-                                                                        <textarea  id="message" name="message" cols="40" rows="10" class="wpcf7-form-control wpcf7-textarea" aria-invalid="false"></textarea>
-                                                                    </span>
-                                                                </p>
-                                                            </div>
-                                                            <p>
-                                                                <!-- Begin Submit button -->
-                                                                <div class="quform-submit">
-                                                                    <div class="quform-submit-inner">
-                                                                        <button type="submit" class="submit-button"><span>Send</span></button>
-                                                                    </div>
-                                                                    <div class="quform-loading-wrap"><span class="quform-loading"></span></div>
-                                                                </div>
-                                                            </p>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </p>
-                                        </div>
-                                        <div class="clear"></div>
-                                    </div>
-                                </section>
-                            </div>
-
-                            <div class="clear"></div>
-                        </div>
-
-                        <div class="gdlr-sidebar gdlr-right-sidebar four columns">
-                            <div class="gdlr-item-start-content sidebar-right-item">
-                                <div id="text-6" class="widget widget_text gdlr-item gdlr-widget">
-                                    <h3 class="gdlr-widget-title">Before Contacting Us</h3>
-                                    <div class="clear"></div>
-                                    <div class="textwidget">Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Non equidem invideo, miror magis posuere velit aliquet.</div>
-                                </div>
-                                <div id="text-7" class="widget widget_text gdlr-item gdlr-widget">
-                                    <h3 class="gdlr-widget-title">Contact Information</h3>
-                                    <div class="clear"></div>
-                                    <div class="textwidget">
-                                        <p>184 Main Collins Street West Victoria 8007 Australia</p>
-                                        <p><i class="gdlr-icon fa fa-phone" style="vertical-align: middle; color: #444444; font-size: 16px; "></i> 1800-222-222</p>
-                                        <p><i class="gdlr-icon fa fa-envelope" style="vertical-align: middle; color: #444444; font-size: 16px; "></i> contact@versatilewptheme.com</p>
-                                        <p><i class="gdlr-icon fa fa-clock-o" style="vertical-align: middle; color: #444444; font-size: 16px; "></i> Everyday 9:00-17:00</p>
-                                    </div>
-                                </div>
-                                <div id="text-8" class="widget widget_text gdlr-item gdlr-widget">
-                                    <h3 class="gdlr-widget-title">Social Media</h3>
-                                    <div class="clear"></div>
-                                    <div class="textwidget"><a href="#"><i class="gdlr-icon fa fa-facebook" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a> <a href="#"><i class="gdlr-icon fa fa-twitter" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a> <a href="#"><i class="gdlr-icon fa fa-dribbble" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a> <a href="#"><i class="gdlr-icon fa fa-pinterest" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a> <a href="#"><i class="gdlr-icon fa fa-google-plus" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a> <a href="#"><i class="gdlr-icon fa fa-instagram" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                    </div>
-                </div>
-
-                <!-- Below Sidebar Section-->
-                <div class="below-sidebar-wrapper">
-                    <section id="content-section-3">
-                        <div class="gdlr-parallax-wrapper gdlr-background-image gdlr-show-all no-skin" id="gdlr-parallax-wrapper-1" data-bgspeed="0.2" style="background-color: #EEE; padding-top: 100px; padding-bottom: 50px; ">
-                            <div class="container">
-                                <div class="four columns">
-                                    <div class="gdlr-box-with-icon-ux gdlr-ux">
-                                        <div class="gdlr-item gdlr-box-with-icon-item pos-top type-circle">
-                                            <div class="box-with-circle-icon" style="background-color: #36bddb;"><i class="fa fa-envelope" style="color:#ffffff;"></i>
-                                                <br>
-                                            </div>
-                                            <h4 class="box-with-icon-title" style="font-weight: bold;">Contact By Email</h4>
-                                            <div class="clear"></div>
-                                            <div class="box-with-icon-caption">
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="four columns">
-                                    <div class="gdlr-box-with-icon-ux gdlr-ux">
-                                        <div class="gdlr-item gdlr-box-with-icon-item pos-top type-circle">
-                                            <div class="box-with-circle-icon" style="background-color: #36bddb"><i class="fa fa-phone" style="color:#ffffff;"></i>
-                                                <br>
-                                            </div>
-                                            <h4 class="box-with-icon-title" style="font-weight: bold;">Contact By Phone</h4>
-                                            <div class="clear"></div>
-                                            <div class="box-with-icon-caption">
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="four columns">
-                                    <div class="gdlr-box-with-icon-ux gdlr-ux">
-                                        <div class="gdlr-item gdlr-box-with-icon-item pos-top type-circle">
-                                            <div class="box-with-circle-icon" style="background-color: #36bddb"><i class="fa fa-home" style="color:#ffffff;"></i>
-                                                <br>
-                                            </div>
-                                            <h4 class="box-with-icon-title" style="font-weight: bold;">Come To See Us</h4>
-                                            <div class="clear"></div>
-                                            <div class="box-with-icon-caption">
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clear"></div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                    </section>
-                </div>
-
-            </div>
-            <!-- gdlr-content -->
-            <div class="clear"></div>
         </div>
-        <!-- content wrapper -->
+        </section>
+
+
+        <!-- Search Section -->
+        <h3 style="text-align: center; margin: 40px 0px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">OUR E</span>VENTS</h3>
+        <div class="search_event">
+            
+            <input
+            type="text"
+            id="eventFilter"
+            onkeyup="eventFilterFunction()"
+            placeholder="Search by event name.."
+            title="Type in a name"
+            />
+        </div>
 
 
 
-                <!-- contract us ends  -->
+
+        <section class="event">
+            <div class="event-container"> 
+                <!-- hello  -->
+                <!-- <div class="event_search">
+                    <label>Search: </label>
+                    <input type="text" onkeyup="searchfunction()" id="search" placeholder="Search with event title">
+                </div> -->
+                <div class="box-container" style="transition: .3s ease-in-out;">
+                    <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255"
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#"> <img
+                                            src="upload/shutterstock_261065933-400x300.jpg"
+                                            alt="" width="100%" /></a>
+                                </div>
+
+                                <div class="gdlr-blog-grid-content">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div
+                                                class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a
+                                                    href="#">21 Mar 2014</a></div>
+                                            <div
+                                                class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a
+                                                    href="#" title="Posts by John Doe"
+                                                    rel="author">John Doe</a></div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <h3 class="gdlr-blog-title event_name"><a href="#">Event 1</a></h3>
+                                        <div class="clear"></div>
+                                    </header>
+                                    <!-- entry-header -->
+
+                                    <div class="gdlr-blog-content">
+                                        Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere....
+                                        <div class="clear"></div><a href="#"
+                                            class="excerpt-read-more">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255"
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#"> <img
+                                            src="upload/shutterstock_261065933-400x300.jpg"
+                                            alt="" width="400" height="300" /></a>
+                                </div>
+
+                                <div class="gdlr-blog-grid-content">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div
+                                                class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a
+                                                    href="#">21 Mar 2014</a></div>
+                                            <div
+                                                class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a
+                                                    href="#" title="Posts by John Doe"
+                                                    rel="author">John Doe</a></div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <h3 class="gdlr-blog-title event_name"><a href="#">Event 2</a></h3>
+                                        <div class="clear"></div>
+                                    </header>
+                                    <!-- entry-header -->
+
+                                    <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                        amet, consectetur adipisici elit, sed eiusmod
+                                        tempor incidunt ut labore et dolore magna
+                                        aliqua. Idque Caesaris facere voluntate liceret:
+                                        sese habere....
+                                        <div class="clear"></div><a href="#"
+                                            class="excerpt-read-more">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255"
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#"> <img
+                                            src="upload/shutterstock_261065933-400x300.jpg"
+                                            alt="" width="400" height="300" /></a>
+                                </div>
+
+                                <div class="gdlr-blog-grid-content">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div
+                                                class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a
+                                                    href="#">21 Mar 2014</a></div>
+                                            <div
+                                                class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a
+                                                    href="#" title="Posts by John Doe"
+                                                    rel="author">John Doe</a></div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <h3 class="gdlr-blog-title event_name"><a href="#">Event 3</a></h3>
+                                        <div class="clear"></div>
+                                    </header>
+                                    <!-- entry-header -->
+
+                                    <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                        amet, consectetur adipisici elit, sed eiusmod
+                                        tempor incidunt ut labore et dolore magna
+                                        aliqua. Idque Caesaris facere voluntate liceret:
+                                        sese habere....
+                                        <div class="clear"></div><a href="#"
+                                            class="excerpt-read-more">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255"
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#"> <img
+                                            src="upload/shutterstock_261065933-400x300.jpg"
+                                            alt="" width="400" height="300" /></a>
+                                </div>
+
+                                <div class="gdlr-blog-grid-content">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div
+                                                class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a
+                                                    href="#">21 Mar 2014</a></div>
+                                            <div
+                                                class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a
+                                                    href="#" title="Posts by John Doe"
+                                                    rel="author">John Doe</a></div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <h3 class="gdlr-blog-title event_name"><a href="#">Event 8</a></h3>
+                                        <div class="clear"></div>
+                                    </header>
+                                    <!-- entry-header -->
+
+                                    <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                        amet, consectetur adipisici elit, sed eiusmod
+                                        tempor incidunt ut labore et dolore magna
+                                        aliqua. Idque Caesaris facere voluntate liceret:
+                                        sese habere....
+                                        <div class="clear"></div><a href="#"
+                                            class="excerpt-read-more">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255"
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#"> <img
+                                            src="upload/shutterstock_261065933-400x300.jpg"
+                                            alt="" width="400" height="300" /></a>
+                                </div>
+
+                                <div class="gdlr-blog-grid-content">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div
+                                                class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a
+                                                    href="#">21 Mar 2014</a></div>
+                                            <div
+                                                class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a
+                                                    href="#" title="Posts by John Doe"
+                                                    rel="author">John Doe</a></div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <h3 class="gdlr-blog-title event_name"><a href="#">Sample Event</a></h3>
+                                        <div class="clear"></div>
+                                    </header>
+                                    <!-- entry-header -->
+
+                                    <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                        amet, consectetur adipisici elit, sed eiusmod
+                                        tempor incidunt ut labore et dolore magna
+                                        aliqua. Idque Caesaris facere voluntate liceret:
+                                        sese habere....
+                                        <div class="clear"></div><a href="#"
+                                            class="excerpt-read-more">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255"
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#"> <img
+                                            src="upload/shutterstock_261065933-400x300.jpg"
+                                            alt="" width="400" height="300" /></a>
+                                </div>
+
+                                <div class="gdlr-blog-grid-content">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div
+                                                class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a
+                                                    href="#">21 Mar 2014</a></div>
+                                            <div
+                                                class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a
+                                                    href="#" title="Posts by John Doe"
+                                                    rel="author">John Doe</a></div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <h3 class="gdlr-blog-title event_name"><a href="#">IEEE Spac 2022</a></h3>
+                                        <div class="clear"></div>
+                                    </header>
+                                    <!-- entry-header -->
+
+                                    <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                        amet, consectetur adipisici elit, sed eiusmod
+                                        tempor incidunt ut labore et dolore magna
+                                        aliqua. Idque Caesaris facere voluntate liceret:
+                                        sese habere....
+                                        <div class="clear"></div><a href="#"
+                                            class="excerpt-read-more">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255"
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#"> <img
+                                            src="upload/shutterstock_261065933-400x300.jpg"
+                                            alt="" width="400" height="300" /></a>
+                                </div>
+
+                                <div class="gdlr-blog-grid-content">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div
+                                                class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a
+                                                    href="#">21 Mar 2014</a></div>
+                                            <div
+                                                class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a
+                                                    href="#" title="Posts by John Doe"
+                                                    rel="author">John Doe</a></div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <h3 class="gdlr-blog-title event_name"><a href="#">Event 5</a></h3>
+                                        <div class="clear"></div>
+                                    </header>
+                                    <!-- entry-header -->
+
+                                    <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                        amet, consectetur adipisici elit, sed eiusmod
+                                        tempor incidunt ut labore et dolore magna
+                                        aliqua. Idque Caesaris facere voluntate liceret:
+                                        sese habere....
+                                        <div class="clear"></div><a href="#"
+                                            class="excerpt-read-more">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255"
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#"> <img
+                                            src="upload/shutterstock_261065933-400x300.jpg"
+                                            alt="" width="400" height="300" /></a>
+                                </div>
+
+                                <div class="gdlr-blog-grid-content">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div
+                                                class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a
+                                                    href="#">21 Mar 2014</a></div>
+                                            <div
+                                                class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a
+                                                    href="#" title="Posts by John Doe"
+                                                    rel="author">John Doe</a></div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <h3 class="gdlr-blog-title event_name"><a href="#">Sem
+                                                Porta Mollis Parturi</a></h3>
+                                        <div class="clear"></div>
+                                    </header>
+                                    <!-- entry-header -->
+
+                                    <div class="gdlr-blog-content">Lorem ipsum dolor sit
+                                        amet, consectetur adipisici elit, sed eiusmod
+                                        tempor incidunt ut labore et dolore magna
+                                        aliqua. Idque Caesaris facere voluntate liceret:
+                                        sese habere....
+                                        <div class="clear"></div><a href="#"
+                                            class="excerpt-read-more">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                </div>
+            <div class="load-more">Load More</div>
+                
+            </div>
+        </section>
+
+
+        
 
         <!-- content wrapper -->
         <footer class="footer-wrapper">
@@ -967,23 +1093,114 @@
 
     </div>
     <!-- body-wrapper -->
-    <script type='text/javascript' src="{% static 'js/jquery.js'%}"></script>
-    <script type='text/javascript' src="{% static 'js/jquery-migrate.min.js'%}"></script>
-    <script type='text/javascript' src="{% static 'js/scripts.js'%}"></script>
-    <script type='text/javascript' src="{% static 'js/superfish.js'%}"></script>
-    <script type='text/javascript' src="{% static 'js/hoverIntent.min.js'%}"></script>
-    <script type='text/javascript' src="{% static 'js/modernizr.custom.js'%}"></script>
-    <script type='text/javascript' src="{% static 'js/jquery.dlmenu.js'%}"></script>
-    <script type='text/javascript' src="{% static 'js/jquery.easing.js'%}"></script>
-    <script type='text/javascript' src="{% static 'js/jquery.fancybox.pack.js'%}"></script>
-    <script type='text/javascript' src="{% static 'js/helpers/jquery.fancybox-media.js'%}"></script>
-    <script type='text/javascript' src="{% static 'js/helpers/jquery.fancybox-thumbs.js'%}"></script>
-    <script type='text/javascript' src="{% static 'js/jquery.flexslider.js'%}"></script>
-    <script type='text/javascript' src="{% static 'js/jquery.isotope.min.js'%}"></script>
-    <script type='text/javascript' src="{% static 'js/gdlr-script.js'%}"></script>
-    <script type='text/javascript' src="{% static 'js/jquery.transit.min.js'%}"></script>
-    <script type='text/javascript' src="{% static 'js/gdlr-portfolio-script.js'%}"></script>
-    <script>var ms_grabbing_curosr = "{% static 'images/grabbing.cur'%}", ms_grab_curosr = "{% static 'images/grab.cur'%}";</script>
+    <script type='text/javascript' src="{% static 'js/jquery.js' %}"></script>
+    <script type='text/javascript' src="{% static 'js/jquery-migrate.min.js' %}"></script>
+    <script type='text/javascript' src="{% static 'js/scripts.js' %}"></script>
+    <script type='text/javascript' src="{% static 'js/superfish.js' %}"></script>
+    <script type='text/javascript' src="{% static 'js/hoverIntent.min.js' %}"></script>
+    <script type='text/javascript' src="{% static 'js/modernizr.custom.js' %}"></script>
+    <script type='text/javascript' src="{% static 'js/jquery.dlmenu.js' %}"></script>
+    <script type='text/javascript' src="{% static 'js/jquery.easing.js' %}"></script>
+    <script type='text/javascript' src="{% static 'js/jquery.fancybox.pack.js' %}"></script>
+    <script type='text/javascript' src="{% static 'js/helpers/jquery.fancybox-media.js' %}"></script>
+    <script type='text/javascript' src="{% static 'js/helpers/jquery.fancybox-thumbs.js' %}"></script>
+    <script type='text/javascript' src="{% static 'js/jquery.flexslider.js' %}"></script>
+    <script type='text/javascript' src="{% static 'js/jquery.isotope.min.js' %}"></script>
+    <script type='text/javascript' src="{% static 'js/gdlr-script.js' %}"></script>
+    <script type='text/javascript' src="{% static 'js/jquery.transit.min.js' %}"></script>
+    <script type='text/javascript' src="{% static 'js/gdlr-portfolio-script.js' %}"></script>
+    <script>var ms_grabbing_curosr = '{% static "images/grabbing.cur" %}', ms_grab_curosr = '{% static "images/grab.cur" %}';</script>
+    <script type="text/javascript">
+        (function (url) {
+            if (/(?:Chrome\/26\.0\.1410\.63 Safari\/537\.31|WordfenceTestMonBot)/.test(navigator.userAgent)) { return; }
+            var addEvent = function (evt, handler) {
+                if (window.addEventListener) {
+                    document.addEventListener(evt, handler, false);
+                } else if (window.attachEvent) {
+                    document.attachEvent('on' + evt, handler);
+                }
+            };
+            var removeEvent = function (evt, handler) {
+                if (window.removeEventListener) {
+                    document.removeEventListener(evt, handler, false);
+                } else if (window.detachEvent) {
+                    document.detachEvent('on' + evt, handler);
+                }
+            };
+            var evts = 'contextmenu dblclick drag dragend dragenter dragleave dragover dragstart drop keydown keypress keyup mousedown mousemove mouseout mouseover mouseup mousewheel scroll'.split(' ');
+            var logHuman = function () {
+                if (window.wfLogHumanRan) { return; }
+                window.wfLogHumanRan = true;
+                var wfscr = document.createElement('script');
+                wfscr.type = 'text/javascript';
+                wfscr.async = true;
+                wfscr.src = url + '&r=' + Math.random();
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(wfscr);
+                for (var i = 0; i < evts.length; i++) {
+                    removeEvent(evts[i], logHuman);
+                }
+            };
+            for (var i = 0; i < evts.length; i++) {
+                addEvent(evts[i], logHuman);
+            }
+        });
+    </script>
+    <script>
+        (window.MSReady = window.MSReady || []).push(function ($) {
+
+            "use strict";
+            var masterslider_8b8a = new MasterSlider();
+
+            // slider controls
+            masterslider_8b8a.control('bullets', {
+                autohide: false,
+                overVideo: true,
+                dir: 'h',
+                align: 'bottom',
+                space: 6,
+                margin: 35
+            });
+            // slider setup
+            masterslider_8b8a.setup("MS5bab48b0b8b8a", {
+                width: 1140,
+                height: 740,
+                minHeight: 0,
+                space: 0,
+                start: 1,
+                grabCursor: true,
+                swipe: false,
+                mouse: false,
+                keyboard: true,
+                layout: "fullwidth",
+                wheel: false,
+                autoplay: true,
+                instantStartLayers: false,
+                mobileBGVideo: false,
+                loop: true,
+                shuffle: false,
+                preload: 0,
+                heightLimit: true,
+                autoHeight: false,
+                smoothHeight: true,
+                endPause: false,
+                overPause: true,
+                fillMode: "fill",
+                centerControls: true,
+                startOnAppear: false,
+                layersMode: "center",
+                autofillTarget: "",
+                hideLayers: false,
+                fullscreenMargin: 0,
+                speed: 20,
+                dir: "h",
+                view: "basic"
+            });
+
+            window.masterslider_instances = window.masterslider_instances || [];
+            window.masterslider_instances.push(masterslider_8b8a);
+        });
+    </script>
+
     <!-- event load more button -->
     <script>
         const loadMore = document.querySelector('.load-more');
@@ -1032,7 +1249,8 @@
             }
         }
     </script>
-    <script src="{% static '/js/event_script.js'%}"></script>
+    <script type='text/javascript' src='masterslider/public/assets/js/masterslider.min.js'></script>
+    <script src="{% static './js/event_script.js'%}"></script>
 </body>
 
 </html>
