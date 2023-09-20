@@ -47,7 +47,7 @@ def event_control(request):
         if request.POST.get('create_new_event'):
             print("Create")
     
-    return render(request,'event/event_page.html',context)
+    return render(request,'Events/event_homepage.html',context)
 
 @login_required
 def super_event_creation(request):
