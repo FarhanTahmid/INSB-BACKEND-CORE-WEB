@@ -18,9 +18,9 @@ function showTab(tabId) {
     }
 
     // Activate the clicked tab
-    const selectedTab = document.querySelector(`.tab[data-tab="${tabId}"]`);
+    const selectedTab = document.querySelector('.tab[data-tab="${tabId}"]');
     if (selectedTab) {
-        selectedTab.classList.toggle('active');
+        selectedTab.classList.add('active');
     }
 }
 

@@ -1,13 +1,20 @@
+/* Container for the grid */
 .tabs-container {
-    display: flex;
-    gap: 0;
+    margin-left: 5px;
+    display: grid;
+    grid-template-columns: auto 1fr; /* Two columns: fixed size for tabs and flexible size for content */
+    grid-gap: 10px; /* Gap between the tabs and content */
+    justify-content: center; /* Center the content horizontally */
+    
 }
 
+/* Basic styling for tabs */
 .tabs {
-    flex: 1;
     list-style: none;
     padding: 0;
     margin: 0;
+    position: sticky;
+    
 }
 
 .tabs li {
@@ -15,33 +22,62 @@
     padding: 10px;
     cursor: pointer;
     background-color: #f0f0f0;
-    border: 2px solid #ddd;
+    border:1px solid #00629B	;
     border-right: none;
-    width: 65%;
-    gap: none;
+    width: 150px; /* Fixed width for the tabs */
+    
+    
 }
 
 .tabs li:hover {
-    background-color: #ddd;
+    background-color: #FFC72C;
 }
 
 .tabs li.active {
-    background-color: #f5f909;
-    border: 2px solid yellow;
+    background-color: #fff;
+    border: 1px solid #ddd;
     border-right: none;
 }
 
 .tab-content {
-    flex: 2;
     padding: 20px;
     border: 1px solid #ddd;
-    text-align: center;
-    
+    margin-right: 10px;
 }
 
 /* Responsive styling */
 @media (max-width: 768px) {
-    .tabs {
-        flex-direction: column;
+    .tabs-container {
+        grid-template-columns: 1fr; /* Single column for small screens */
+    }
+}
+@media (max-width: 800px) {
+    .tabs-container {
+        grid-template-columns: 1fr; /* Single column for small screens */
+    }
+}
+@media (max-width: 900px) {
+    .tabs-container {
+        grid-template-columns: 1fr; /* Single column for small screens */
+    }
+}
+@media (max-width: 1300px) {
+    .tabs-container {
+        grid-template-columns: 1fr; /* Single column for small screens */
+    }
+}
+@media (max-width: 1389px) {
+    .tabs-container {
+        grid-template-columns: 1fr; /* Single column for small screens */
+    }
+}
+@media (max-width: 1400px) {
+    .tabs-container {
+        grid-template-columns: 1fr; /* Single column for small screens */
+    }
+}
+@media (max-width: 1500px) {
+    .tabs-container {
+        grid-template-columns: 1fr; /* Single column for small screens */
     }
 }

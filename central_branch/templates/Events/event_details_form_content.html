@@ -1,0 +1,264 @@
+{% load static %}
+{% block event_details_form %}
+<div id="tab1" class="tab-content">
+    <h2 style="text-align:center">Provide Event Details</h2>
+    <div class="container">
+        <div class="padding">
+            <div class="row" >
+                <div class="col-sm-10">
+                    <div class="box">
+                        
+                        <!--Error Message-->
+                        <div class="py-3 text-center">
+                            {% for message in messages %}
+                                <p style="color:red" class="message">{{message}}</p>
+                            {% endfor %}
+                        </div>
+                        <div class="box-divider m-0"></div>
+                        <div class="box-body">
+                        <form method="POST" autocomplete="off">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>Event Name <span style="color:red">*<span></label>
+                                <input
+                                    placeholder="Event Name"
+                                    class="form-control w-75"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="event_name"/>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label>Super Event of</label>
+                                    <div class="col-lg-4">
+                                        <select multiple class="form-control" name="super_event">
+                                          <option selected value="">--------------------</option>
+                                          {% for super_event in super_events %}
+                                            <option value={{super_event.id}}>{{super_event.super_event_name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Select Event Type <span style="color:red">*<span></label>
+                                    <div class="col-lg-4">
+                                        <select multiple class="form-control" name="event_type">
+                                          <option selected value="">--------------------</option>
+                                            {% for event_type in event_types %}
+                                            <option value={{event_type.id}}>{{event_type.event_type}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Contact no</label>
+                                        <input
+                                            required
+                                            placeholder="Contact no"
+                                            class="form-control w-75"
+                                            type="text"
+                                            autocomplete="off"
+                                            name="contact_no"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword3">Emergency Contact No</label>
+                                        <input
+                                            placeholder="Emergency Contact no"
+                                            class="form-control w-75"
+                                            type="text"
+                                            autocomplete="off"
+                                            name="emergency_contact_no"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword3">Date of Birth</label>
+                                        <input
+                                            placeholder="Date of Birth"
+                                            class="form-control w-75"
+                                            type="date"
+                                            required
+                                            name="date_of_birth"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row m-b">
+                                <div class="col-md-6">
+                                    <label>Email (Personal)</label>
+                                    <input
+                                            class="form-control w-75"
+                                            type="text"
+                                            autocomplete="off"
+                                            placeholder="Personal Email"
+                                            name="email_personal"
+                                    />                      
+                                    </div>
+                                <div class="col-md-6">
+                                    <label>Email (NSU)</label>
+                                    <input
+                                            class="form-control w-75"
+                                            type="text"
+                                            autocomplete="off"
+                                            placeholder="NSU Email"
+                                            name="email_nsu"
+                                    />
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row m-b">
+                                <div class="col-md-6">
+                                    <label>Facebook Link</label>
+                                    <input
+                                            class="form-control w-75"
+                                            type="url"
+                                            autocomplete="off"
+                                            placeholder="Link to Facebook Account"
+                                            name="facebook_url"
+                                    />                
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Facebook Username</label>
+                                    <input
+                                            class="form-control w-75"
+                                            type="text"
+                                            autocomplete="off"
+                                            placeholder="Facebook Account Username"
+                                            name="facebook_username"
+                                    />
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row m-b">
+                                <div class="col-md-6">
+                                    <label for="exampleInputPassword1">Major</label>
+                                    <select class="form-control w-75" name="major" id="major">
+                                        <option value="None">-------------------</option>
+                                        <option value="CSE">CSE</option>
+                                        <option value="EEE">EEE</option>
+                                        <option value="ETE">ETE</option>
+                                    </select>                  
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="exampleInputPassword1">Tentative Graduating Year</label>
+                                    <input
+                                        class="form-control w-75"
+                                        type="number"
+                                        required name="graduating_year"
+                                        placeholder="Graduating Year"
+                                    />  
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Address</label>
+                                <input
+                                    placeholder="Home Address"
+                                    class="form-control w-75"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="home_address"
+                                />                  
+                            </div>
+                            <br>
+                            <div class="form-group row">
+                                <label class="col-sm-2 form-control-label">Gender</label>
+                                <div class="col-sm-10">
+                                  <label class="radio-inline">
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        id="male"
+                                        value="Male"
+                                    > Male
+                                  </label>
+                                  <label class="radio-inline">
+                                    <input 
+                                        type="radio"
+                                        name="gender"
+                                        id="female"
+                                        value="Female"> Female
+                                  </label>
+                                  <label class="radio-inline">
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        id="other"
+                                        value="Other"> Other
+                                  </label>
+                                </div>
+                            </div>
+                            <br>
+                            
+                            <div class="box-header" style="text-align:center;">
+                            <h1>For Official Use</h1>
+                            </div>
+                            <div class="form-group">
+                                <label>Recruited By</label>
+                                <input
+                                    class="form-control w-75"
+                                    type="text"
+                                    placeholder="Recruiter Name" required name="recruited_by"
+                                />
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 form-control-label">Payment</label>
+                                <div class="col-sm-10">
+                                  <label class="radio-inline">
+                                    <input
+                                        type="checkbox"
+                                        name="cash_payment_status" id="cash_payment" value="cash_payment"
+                                    >Cash Payment
+                                  </label>
+            
+                                </div>
+                            </div>
+                            <div style="text-align: center;">
+                                <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Recruit Member</button>
+                            </div>
+
+
+                            <!-- Save modal -->
+                            <div id="m-s-a" class="modal fade animate" data-backdrop="true">
+                            <div class="modal-dialog" id="animate">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Recruiting a new Member!</h5>
+                                </div>
+                                <div class="modal-body text-left p-lg">
+                                    <p>Are you sure that you want to Recruit a Member with the Informations you provided?.</p>
+                                    <p>Data related to the Member will be saved in the Recruitment Session Database.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                                    <input
+                                    type="submit"
+                                    class="btn btn-success"
+                                    data-bs-dismiss="modal"
+                                    name="save_edit"
+                                    value="Yes, Recruit"
+                                    >                        
+                                </div>
+                                </div><!-- /.modal-content -->
+                            </div>
+                            </div>
+                            <!-- / .modal -->
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock event_details_form %}
