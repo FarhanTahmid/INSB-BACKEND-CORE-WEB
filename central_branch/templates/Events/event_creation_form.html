@@ -91,17 +91,19 @@
             <br>
             <br>
             
-            <!--TabView for event creation-->
             
-            <div style="justify-content:center;">
-                {% block event_creation_tab %}
-                {% include "Events/event_tabs.html" %}
-                {% endblock event_creation_tab %}
-            </div>
-            <!--End of TabView-->
 
         </div>
         <!--PAGE END-->
+
+        <!--TabView for event creation-->
+            
+        <div>
+            {% block event_creation_tab %}
+                {% include "Events/event_tabs.html" %}
+            {% endblock event_creation_tab %}
+        </div>
+        <!--End of TabView-->
         
         
 
