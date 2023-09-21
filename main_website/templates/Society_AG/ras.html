@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>IEEE NSU RAS SBC - IEEE NSU SB</title>
+
+    <link rel="icon" href="{% static 'logos/logo.gif'%}"/>
+    <link rel='stylesheet' href="{% static 'css/style.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/superfish.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/component.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/font-awesome.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/jquery.fancybox.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/flexslider.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/style-responsive.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'masterslider/public/assets/css/masterslider.main.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/masterslider-custom.css'%}" type='text/css' media='all' />
+    <link rel='stylesheet' href="{% static 'css/style-custom.css'%}" type='text/css' media='all' />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/Rass.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300|Lato:regular|Crete+Round:regular" rel="stylesheet"
+        property="stylesheet" type="text/css" media="all">
+
+        <style>
+            *{
+                box-sizing: border-box;
+            }
+            .wavy {
+                position: relative;
+                width: 100%;
+                /* height: 30vh; */
+                background-color: transparent;
+                background-image: linear-gradient(180deg, #02082b 0%, #519fff 96%);
+                overflow: hidden;
+            }
+    
+            .wavy .wave {
+                position: absolute;
+                top: 75%;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: url("{% static 'upload/wave.png'%}");
+                background-size: 1000px 100px;
+                background-repeat-y: no-repeat;
+            }
+    
+            .wavy .wave.wave1 {
+                animation: animate 30s linear infinite;
+                z-index: 10;
+                opacity: 1;
+                animation-delay: 0s;
+                bottom: 0;
+            }
+    
+            .wavy .wave.wave2 {
+                animation: animate2 15s linear infinite;
+                z-index: 9;
+                opacity: 0.5;
+                animation-delay: -5s;
+                bottom: 10px;
+            }
+    
+            .wavy .wave.wave3 {
+                animation: animate 30s linear infinite;
+                z-index: 8;
+                opacity: 0.2;
+                animation-delay: -2s;
+                bottom: 15;
+            }
+    
+            .wavy .wave.wave4 {
+                animation: animate2 15s linear infinite;
+                z-index: 7;
+                opacity: 0.7;
+                animation-delay: -5s;
+                bottom: 20px;
+            }
+    
+            .wavy .title {
+                display: flex;
+                flex-direction: column;
+                text-align: center;
+                padding: 70px 0 146px;
+                line-height: 0;
+            }
+    
+            .wavy .title h2 {
+                font-family: "Poppins", Sans-serif;
+                color: #fff;
+                font-size: 45px;
+                font-weight: 600;
+                text-transform: uppercase;
+            }
+    
+            .wavy .title p {
+                font-family: "Poppins", Sans-serif;
+                color: #fff;
+                font-size: 100%;
+            }
+    
+            @keyframes animate {
+                0% {
+                    background-position-x: 0;
+                }
+    
+                100% {
+                    background-position-x: 1000px;
+                }
+            }
+    
+            @keyframes animate2 {
+                0% {
+                    background-position-x: 0;
+                }
+    
+                100% {
+                    background-position-x: -1000px;
+                }
+            }
+        </style>
+        
+
+</head>
+
+<body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+    <div class="body-wrapper  float-menu">
+        
+        {% block header %}
+            {% include 'header.html' %}
+        {% endblock header %}
+        
+        <section class="wavy">
+            <div class="title">
+                <h2>IEEE NSU RAS STUDENT BRANCH CHAPTER</h2>
+                <p>Robotics and Automation Society</p>
+            </div>
+            
+            <div class="wave wave1"></div>
+            <div class="wave wave2"></div>
+            <div class="wave wave3"></div>
+            <div class="wave wave4"></div>
+
+        </section>
+        <!-- end of wAVE PART  -->
+        <div class="bg">
+            <img src="upload/slider-2.jpg" alt="">
+        </div> 
+        <!-- about Ras and logo starts  -->
+
+        <section class="rass_grid_container ras_about">
+            <div class="rass_grid_item">
+                <h2>
+                    <b>ABOUT RAS</b>
+                </h2>
+                <p style="text-align: justify;">
+                <strong>
+                IEEE NSU Robotics and Automation Society Student Chapter is a technical chapter of IEEE NSU Student Branch focusing on the research, study, and exchange of knowledge regarding Robotics & Automation.</strong> <br>
+
+                    <strong> It was established on the 5th January 2017. It is the first Robotics and Automation Society Student Chapter in Bangladesh. </strong><br>
+
+                    <strong> IEEE NSU RAS SB Chapter, since its inception, has played an important role to promote robotics & automation within its local community. It’s constantly evolving itself through training its members to be future leaders in the field of robotics & automation. In the two short years since its commencement, the society has organized a good number of quality technical, general, and professional events to facilitate learning and knowledge in the field of robotics and automation. </strong><br>
+
+                    <strong> Keeping in line with the parent body of IEEE RAS, the IEEE NSU RAS SB Chapter is always dedicated to maintaining good academic standards in research and other literary forms relating to this field.</strong>
+                                    </p>
+            </div>
+            <div style="display: flex;" class="rass_grid_item">
+                <img style="align-items: center; justify-content: center;" src="https://ieeensusb.org/wp-content/uploads/2021/04/admin-ajax-1.png" alt="">
+            </div>
+        </section>
+
+        <!-- about Ras and logo ends  -->
+
+        <!-- featured events starts  -->
+
+            <h2 style="margin: 70px 0px 20px 0px; text-align: center; font-weight: bold;">FEATURE EVENTS</h2>
+
+
+            
+            <!--Featured Events-->
+
+            {% block event_card_body %}
+                {% include 'event_card_body.html' %}
+            {% endblock  %}
+
+
+            <!-- featured events ends  -->
+
+
+            <!-- mission and vision starts -->
+
+
+
+            <section class="rass_grid_container">
+                <div class="rass_grid_item">
+                    <h1>
+                        <b>Mission and vision</b>
+                    </h1>
+                   <p style="text-align: justify;">
+                    <strong>
+                        The mission & vision of IEEE NSU RAS SB Chapter is to make this student chapter a shining beacon of quality, creativity, academic integrity, and innovation. From the very beginning IEEE NSU RAS SB Chapter has been encouraging the dissipation of robotics and automation-related knowledge within the engineering student body of North South University. Since the beginning of IEEE NSU RAS SB Chapter, its members have been actively and enthusiastically bringing into realization workshops on robotics. IEEE NSU RAS SB Chapter aims to
+                    </strong>
+                    <b>
+                        ● Promote and foster the development of robotics and automation in an academic setting<br>
+                        ● Get members interested in robotics and automation to dive deeper and gain practical knowledge<br>
+                        ● Give potentially interested IEEE members adequate exposure to the field of Robotics and Automation<br>
+                        ● Foster research among IEEE NSU student body relating to the field of robotics and automation<br>
+                        ● Produce leaders in the field of engineering through the continued support of IEEE NSU RAS.<br>
+                    </b>
+                   </p>
+                </div>
+                <div class="rass_grid_item"  style="display: flex;">
+                    <img style="align-items: center;; justify-content: center;" src="https://ieeensusb.org/wp-content/uploads/2021/04/Vision.jpg" alt="">
+                </div>
+            </section>
+
+
+            <!-- mission and vision ends  -->
+
+            <!-- EXECUTIVE BODY starts  -->
+
+
+            <h2 style="margin: 70px 0px 20px 0px; text-align: center; font-weight: bold;">MEET OUR EXECUTIVE BODY</h2>
+
+            
+            
+            <div class="ex_row">
+                <div class="column">
+                    <div class="card">
+                    <img src="https://media.istockphoto.com/id/1212782126/photo/smiling-man-outdoors-in-the-city.jpg?s=612x612&w=0&k=20&c=R4PEVKC3kLUycF198ylswBXF8ZKeXRmjED5q5B3H5sc=" alt="Jane" style="width:100%">
+                    <div class="container">
+                        <h4 style="font-weight: bold; margin: 10px 0px;">Jane Doe</h4>
+                        <p class="title" style="font-style: italic;">CEO & Founder</p>
+                        <p>Some text that describes me lorem ipsum ipsum lorem.</p>
+                        <p>example@example.com</p>
+                        <p><button class="button">Contact</button></p>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <div class="card">
+                    <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Mike" style="width:100%">
+                    <div class="container">
+                        <h4 style="font-weight: bold; margin: 10px 0px;">Mike Ross</h4>
+                        <p class="title" style="font-style: italic;">Art Director</p>
+                        <p>Some text that describes me lorem ipsum ipsum lorem.</p>
+                        <p>example@example.com</p>
+                        <p><button class="button">Contact</button></p>
+                    </div>
+                    </div>
+                </div>
+                
+                <div class="column">
+                    <div class="card">
+                    <img src="https://media.istockphoto.com/id/1171169099/photo/man-with-crossed-arms-isolated-on-gray-background.jpg?s=612x612&w=0&k=20&c=_vETAeGc6ooeOx-WZYFyZdUUL5hyDPrvakBpjytN7lM=" alt="John" style="width:100%">
+                    <div class="container">
+                        <h4 style="font-weight: bold; margin: 10px 0px;">John Doe</h4>
+                        <p class="title" style="font-style: italic;">Designer</p>
+                        <p>Some text that describes me lorem ipsum ipsum lorem.</p>
+                        <p>example@example.com</p>
+                        <p><button class="button">Contact</button></p>
+                    </div>
+                    </div>
+                </div>
+
+                <!---Add here more column class-->
+                
+            </div>
+
+    </div>
+    <!-- content wrapper -->
+
+
+            <!-- EXECUTIVE BODY ends  -->
+
+
+
+            <!-- Q&A ofRAs starts -->
+
+                <section class="ras_qa">
+                    <div  class="qa_partition"><h3 class="colorh3">What is RAS?</h3><p id="pid">The IEEE Robotics and Automation Society is known as RAS. Through striving for the advancement of the theory and practice of robotics and automation engineering, it maintains high professional standards among its members. The mission of RAS is to develop and facilitate the exchange of scientific and technological knowledge and thoughts in Robotics and Automation for the benefit of members as well as humanity. The Society also provides aid for promoting close cooperation and exchanging technical information among its Members and Affiliates.</p></div>
+
+                    <div  class="qa_partition"><h3 class="colorh3">Why join RAS?</h3><p id="pid">When you join RAS, you will be joining a professional society of the IEEE that supports the development and the exchange of scientific knowledge in robotics and automation, including applied and theoretical issues. RAS Membership provides you with the resources and opportunities you need to keep yourself updated about the recent technologies and inventions in the field of Robotics and Automation.  Also, you get to network with other professionals near you who share a similar technical interest as you.</p></div>
+
+                    <div  class="qa_partition"><h3 class="colorh3">What activities do we usually do?</h3><p id="pid">We host many events, seminars, workshops, Tech-talks and weekly meetings throughout the year on various topics in robotics and automation. It helps the members to gather more knowledge about Robotics and Automation. Also, the members get the chance to learn new skills and develop those skills by participating in events.</p></div>
+
+                    <div  class="qa_partition"><h3 class="colorh3">How to join IEEE NSU RAS SBC?</h3><p id="pid">To join IEEE NSU RAS SBC, you will have to go through a simple evaluation process. For that, you will have to write us an email answering some easy questions which will be given to you.</p></div>
+                </section>
+
+             <!-- Q&A ofRAS ends  -->
+
+                <!-- contract us starts  -->
+
+
+                     <!-- Sidebar With Content Section-->
+                <div class="with-sidebar-wrapper" style="margin-top: 100px;">
+                    <div class="with-sidebar-container container">
+                        <div class="with-sidebar-left eight columns">
+                            <div class="with-sidebar-content twelve columns">
+                                <section id="content-section-2">
+                                    <div class="section-container container">
+                                        <div class="gdlr-item gdlr-content-item" style="margin-bottom: 60px;"><span class="clear"></span><span class="gdlr-space" style="margin-top: -22px; display: block;"></span>
+                                            <h5 class="gdlr-heading-shortcode " style="font-weight: bold;">Please fulfil the form below. </h5>
+                                            <p> <span class="clear"></span><span class="gdlr-space" style="margin-top: 25px; display: block;"></span>
+                                                <div role="form" class="wpcf7" id="wpcf7-f5-o1" lang="en-US" dir="ltr">
+                                                    <div class="screen-reader-response"></div>
+                                                    <form class="quform" action="quform/process.php" method="post" enctype="multipart/form-data" onclick="">
+
+                                                        <div class="quform-elements">
+                                                            <div class="quform-element">
+                                                                <p>Your Name (required)
+                                                                    <br>
+                                                                    <span class="wpcf7-form-control-wrap your-name">
+                                                                        <input id="name" type="text" name="name" size="40" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required" aria-required="true" aria-invalid="false">
+                                                                    </span> 
+                                                                </p>
+                                                            </div>
+                                                            <div class="quform-element">
+                                                                <p>Your Email (required)
+                                                                    <br>
+                                                                    <span class="wpcf7-form-control-wrap your-email">
+                                                                        <input id="email" type="text" name="email" size="40" class="wpcf7-form-control wpcf7-text wpcf7-email wpcf7-validates-as-required wpcf7-validates-as-email" aria-required="true" aria-invalid="false">
+                                                                    </span> 
+                                                                </p>
+                                                            </div>
+                                                            <div class="quform-element">
+                                                                <p>Your Message
+                                                                    <br>
+                                                                    <span class="wpcf7-form-control-wrap your-message">
+                                                                        <textarea  id="message" name="message" cols="40" rows="10" class="wpcf7-form-control wpcf7-textarea" aria-invalid="false"></textarea>
+                                                                    </span>
+                                                                </p>
+                                                            </div>
+                                                            <p>
+                                                                <!-- Begin Submit button -->
+                                                                <div class="quform-submit">
+                                                                    <div class="quform-submit-inner">
+                                                                        <button type="submit" class="submit-button"><span>Send</span></button>
+                                                                    </div>
+                                                                    <div class="quform-loading-wrap"><span class="quform-loading"></span></div>
+                                                                </div>
+                                                            </p>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </p>
+                                        </div>
+                                        <div class="clear"></div>
+                                    </div>
+                                </section>
+                            </div>
+
+                            <div class="clear"></div>
+                        </div>
+
+                        <div class="gdlr-sidebar gdlr-right-sidebar four columns">
+                            <div class="gdlr-item-start-content sidebar-right-item">
+                                <div id="text-6" class="widget widget_text gdlr-item gdlr-widget">
+                                    <h3 class="gdlr-widget-title">Before Contacting Us</h3>
+                                    <div class="clear"></div>
+                                    <div class="textwidget">Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Non equidem invideo, miror magis posuere velit aliquet.</div>
+                                </div>
+                                <div id="text-7" class="widget widget_text gdlr-item gdlr-widget">
+                                    <h3 class="gdlr-widget-title">Contact Information</h3>
+                                    <div class="clear"></div>
+                                    <div class="textwidget">
+                                        <p>184 Main Collins Street West Victoria 8007 Australia</p>
+                                        <p><i class="gdlr-icon fa fa-phone" style="vertical-align: middle; color: #444444; font-size: 16px; "></i> 1800-222-222</p>
+                                        <p><i class="gdlr-icon fa fa-envelope" style="vertical-align: middle; color: #444444; font-size: 16px; "></i> contact@versatilewptheme.com</p>
+                                        <p><i class="gdlr-icon fa fa-clock-o" style="vertical-align: middle; color: #444444; font-size: 16px; "></i> Everyday 9:00-17:00</p>
+                                    </div>
+                                </div>
+                                <div id="text-8" class="widget widget_text gdlr-item gdlr-widget">
+                                    <h3 class="gdlr-widget-title">Social Media</h3>
+                                    <div class="clear"></div>
+                                    <div class="textwidget"><a href="#"><i class="gdlr-icon fa fa-facebook" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a> <a href="#"><i class="gdlr-icon fa fa-twitter" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a> <a href="#"><i class="gdlr-icon fa fa-dribbble" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a> <a href="#"><i class="gdlr-icon fa fa-pinterest" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a> <a href="#"><i class="gdlr-icon fa fa-google-plus" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a> <a href="#"><i class="gdlr-icon fa fa-instagram" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+
+                <!-- Below Sidebar Section-->
+                <div class="below-sidebar-wrapper">
+                    <section id="content-section-3">
+                        <div class="gdlr-parallax-wrapper gdlr-background-image gdlr-show-all no-skin" id="gdlr-parallax-wrapper-1" data-bgspeed="0.2" style="background-color: #EEE; padding-top: 100px; padding-bottom: 50px; ">
+                            <div class="container">
+                                <div class="four columns">
+                                    <div class="gdlr-box-with-icon-ux gdlr-ux">
+                                        <div class="gdlr-item gdlr-box-with-icon-item pos-top type-circle">
+                                            <div class="box-with-circle-icon" style="background-color: #36bddb;"><i class="fa fa-envelope" style="color:#ffffff;"></i>
+                                                <br>
+                                            </div>
+                                            <h4 class="box-with-icon-title" style="font-weight: bold;">Contact By Email</h4>
+                                            <div class="clear"></div>
+                                            <div class="box-with-icon-caption">
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="four columns">
+                                    <div class="gdlr-box-with-icon-ux gdlr-ux">
+                                        <div class="gdlr-item gdlr-box-with-icon-item pos-top type-circle">
+                                            <div class="box-with-circle-icon" style="background-color: #36bddb"><i class="fa fa-phone" style="color:#ffffff;"></i>
+                                                <br>
+                                            </div>
+                                            <h4 class="box-with-icon-title" style="font-weight: bold;">Contact By Phone</h4>
+                                            <div class="clear"></div>
+                                            <div class="box-with-icon-caption">
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="four columns">
+                                    <div class="gdlr-box-with-icon-ux gdlr-ux">
+                                        <div class="gdlr-item gdlr-box-with-icon-item pos-top type-circle">
+                                            <div class="box-with-circle-icon" style="background-color: #36bddb"><i class="fa fa-home" style="color:#ffffff;"></i>
+                                                <br>
+                                            </div>
+                                            <h4 class="box-with-icon-title" style="font-weight: bold;">Come To See Us</h4>
+                                            <div class="clear"></div>
+                                            <div class="box-with-icon-caption">
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </section>
+                </div>
+
+            </div>
+            <!-- gdlr-content -->
+            <div class="clear"></div>
+        </div>
+        <!-- content wrapper -->
+
+
+
+                <!-- contract us ends  -->
+
+        <!-- content wrapper -->
+        <footer class="footer-wrapper">
+            <div>
+                <div>
+                    <section>
+                        <div>
+                            <div>
+                                <div>
+                                    <section class="wrap-img">
+                                        <div>
+                                            <div>
+                                                <div>
+                                                    <div>
+                                                        <img width="200" height="84"
+                                                            src="https://ieeensusb.org/wp-content/uploads/2021/03/ieee-mb-blue.png"
+                                                            class="attachment-large size-large wp-image-3430" alt=""
+                                                            loading="lazy">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div>
+                                                <div>
+                                                    <div>
+                                                        <img width="200" height="84"
+                                                            src="https://ieeensusb.org/wp-content/uploads/2021/03/INSB.png"
+                                                            class="attachment-large size-large wp-image-5155"
+                                                            alt="INSB Logo" loading="lazy">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <section class="footer-container container">
+                                        <div class="wrap">
+                                            <div>
+                                                <div>
+                                                    <div>
+                                                        <div>
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="https://www.ieee.org/" target="_blank">
+                                                                        <span>
+                                                                            <i class="icon icon-home2"></i> </span>
+                                                                        <span>Ieee.org</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://ieeexplore.ieee.org/"
+                                                                        target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="hm hm-globe3"></i> </span>
+                                                                        <span class="elementor-icon-list-text">IEEE
+                                                                            Explore</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://standards.ieee.org/"
+                                                                        target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="hm hm-globe3"></i> </span>
+                                                                        <span class="elementor-icon-list-text">IEEE
+                                                                            Standards</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://spectrum.ieee.org/"
+                                                                        target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="hm hm-globe3"></i> </span>
+                                                                        <span class="elementor-icon-list-text">IEEE
+                                                                            Specturm</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://ieee-collabratec.ieee.org/"
+                                                                        target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="hm hm-globe3"></i> </span>
+                                                                        <span class="elementor-icon-list-text">IEEE
+                                                                            Collaboratec</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="https://www.ieee.org/sitemap.html">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="hm hm-globe3"></i> </span>
+                                                                        <span class="elementor-icon-list-text">More
+                                                                            sites </span>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div>
+                                                    <div>
+                                                        <div>
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span class="elementor-icon-list-text">Ask a
+                                                                            Question</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span class="elementor-icon-list-text">About
+                                                                            INSB</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span class="elementor-icon-list-text">About
+                                                                            INSB IAS</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span class="elementor-icon-list-text">About
+                                                                            INSB PES</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span class="elementor-icon-list-text">About
+                                                                            INSB RAS</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span class="elementor-icon-list-text">About
+                                                                            INSB WIE</span>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div>
+                                                    <div>
+                                                        <div>
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span
+                                                                            class="elementor-icon-list-text">News</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="all-events.html" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span class="elementor-icon-list-text">Upcoming
+                                                                            Events</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span
+                                                                            class="elementor-icon-list-text">ToolKit</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span
+                                                                            class="elementor-icon-list-text">Gallery</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span
+                                                                            class="elementor-icon-list-text">Magazines</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span class="elementor-icon-list-text">Research
+                                                                            Papers</span>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div>
+                                                    <div>
+                                                        <div>
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span class="elementor-icon-list-text">Join
+                                                                            INSB</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span class="elementor-icon-list-text">Write a
+                                                                            Blog</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span
+                                                                            class="elementor-icon-list-text">Blogs</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span
+                                                                            class="elementor-icon-list-text">Achivements</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span class="elementor-icon-list-text">Current
+                                                                            Executive Body</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i aria-hidden="true"
+                                                                                class="fas fa-external-link-alt"></i>
+                                                                        </span>
+                                                                        <span class="elementor-icon-list-text">Exemplary
+                                                                            Members</span>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div>
+                                                    <div>
+                                                        <div>
+                                                            <h2>
+                                                                Follow Us:
+                                                            </h2>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div>
+                                                            <div style="padding-left: 10%;padding-bottom: 10%;">
+                                                                <span>
+                                                                    <a href="https://www.facebook.com/ieeensusb/"
+                                                                        target="_blank">
+                                                                        <i class="gdlr-icon fa fa-facebook"
+                                                                            style="vertical-align: middle;  font-size: 20px; "></i>
+                                                                        <!-- <span>Facebook</span> -->
+                                                                    </a>
+                                                                </span>
+                                                                <span>
+                                                                    <a href="https://www.linkedin.com/company/ieeensusb"
+                                                                        target="_blank">
+                                                                        <i class="gdlr-icon fa fa-linkedin"
+                                                                            style="vertical-align: middle;  font-size: 20px; "></i>
+                                                                        <!-- <span
+                                                                            class="elementor-screen-only">Linkedin</span> -->
+                                                                    </a>
+                                                                </span>
+                                                                <span>
+                                                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-instagram elementor-animation-grow elementor-repeater-item-8c259b8"
+                                                                        href="https://instagram.com/ieeensusb?igshid=1g0f6asti4d02"
+                                                                        target="_blank">
+                                                                        <i class="gdlr-icon fa fa-instagram"
+                                                                            style="vertical-align: middle;  font-size: 20px; "></i>
+                                                                        <!-- <span
+                                                                            class="elementor-screen-only">Instagram</span> -->
+                                                                    </a>
+                                                                </span>
+                                                                <span>
+                                                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-twitter elementor-animation-grow elementor-repeater-item-c01fbf2"
+                                                                        href="https://www.twitter.com/ieeensusb"
+                                                                        target="_blank">
+                                                                        <i class="gdlr-icon fa fa-twitter"
+                                                                            style="vertical-align: middle;  font-size: 20px; "></i>
+                                                                        <!-- <span
+                                                                            class="elementor-screen-only">Twitter</span> -->
+                                                                    </a>
+                                                                </span>
+                                                                <span>
+                                                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-youtube elementor-animation-grow elementor-repeater-item-a3eee86"
+                                                                        href="https://youtube.com/channel/UCR--MNc_lCe9lvgdnSWm6kA"
+                                                                        target="_blank">
+                                                                        <i class="gdlr-icon fa fa-youtube"
+                                                                            style="vertical-align: middle;  font-size: 20px; "></i>
+                                                                        <!-- <span
+                                                                            class="elementor-screen-only">Youtube</span> -->
+                                                                    </a>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div>
+                                                            <ul style="list-style: none;">
+                                                                <li>
+                                                                    <a href="mailto:info@ieeensusb.org" target="_blank">
+
+                                                                        <span class="elementor-icon-list-icon">
+                                                                            <i class="gdlr-icon fa fa-envelope"
+                                                                                style="vertical-align: middle;  font-size: 15px; "></i>
+                                                                        </span>
+                                                                        <span
+                                                                            class="elementor-icon-list-text">info@ieeensusb.org</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="mailto:contact@ieeensusb.org"
+                                                                        target="_blank">
+
+                                                                        <span>
+                                                                            <i class="gdlr-icon fa fa-envelope"
+                                                                                style="vertical-align: middle;  font-size: 15px; "></i>
+                                                                        </span>
+                                                                        <span>contact@ieeensusb.org</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+
+                                                                        <span>
+                                                                            <i aria-hidden="true"
+                                                                                class="hm hm-refresh-time"></i> </span>
+                                                                        <span class="elementor-icon-list-text">Last
+                                                                            Updated: 31 march 2021</span>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="copyright-wrapper">
+                        <div>
+                            <div>
+                                <div>
+                                    <section>
+                                        <div class="wrap-footer">
+                                            <div>
+                                                <div>
+                                                    <div>
+                                                        <div>
+                                                            <ul class="wrap-footer2">
+                                                                <li>
+                                                                    <a href="index.html">
+
+                                                                        <span
+                                                                            class="elementor-icon-list-text">Home</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">
+
+                                                                        <span
+                                                                            class="elementor-icon-list-text">Contact</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">
+
+                                                                        <span
+                                                                            class="elementor-icon-list-text">FAQ</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">
+
+                                                                        <span
+                                                                            class="elementor-icon-list-text">Sitemap</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">
+
+                                                                        <span
+                                                                            class="elementor-icon-list-text">Feedback</span>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div>
+                                                    <div>
+                                                        <div>
+                                                            © Copyright 2021 INSB – All rights reserved. Developed
+                                                            by<strong> <a href="#" style="color:#FFC936;">INSB Web
+                                                                    Development
+                                                                    Team</a></strong> </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    <!-- body-wrapper -->
+    <script type='text/javascript' src="{% static 'js/jquery.js'%}"></script>
+    <script type='text/javascript' src="{% static 'js/jquery-migrate.min.js'%}"></script>
+    <script type='text/javascript' src="{% static 'js/scripts.js'%}"></script>
+    <script type='text/javascript' src="{% static 'js/superfish.js'%}"></script>
+    <script type='text/javascript' src="{% static 'js/hoverIntent.min.js'%}"></script>
+    <script type='text/javascript' src="{% static 'js/modernizr.custom.js'%}"></script>
+    <script type='text/javascript' src="{% static 'js/jquery.dlmenu.js'%}"></script>
+    <script type='text/javascript' src="{% static 'js/jquery.easing.js'%}"></script>
+    <script type='text/javascript' src="{% static 'js/jquery.fancybox.pack.js'%}"></script>
+    <script type='text/javascript' src="{% static 'js/helpers/jquery.fancybox-media.js'%}"></script>
+    <script type='text/javascript' src="{% static 'js/helpers/jquery.fancybox-thumbs.js'%}"></script>
+    <script type='text/javascript' src="{% static 'js/jquery.flexslider.js'%}"></script>
+    <script type='text/javascript' src="{% static 'js/jquery.isotope.min.js'%}"></script>
+    <script type='text/javascript' src="{% static 'js/gdlr-script.js'%}"></script>
+    <script type='text/javascript' src="{% static 'js/jquery.transit.min.js'%}"></script>
+    <script type='text/javascript' src="{% static 'js/gdlr-portfolio-script.js'%}"></script>
+    <script>var ms_grabbing_curosr = "{% static 'images/grabbing.cur'%}", ms_grab_curosr = "{% static 'images/grab.cur'%}";</script>
+    <!-- event load more button -->
+    <script>
+        const loadMore = document.querySelector('.load-more');
+        let currentItem = 3;
+
+        loadMore.addEventListener('click', (e) => {
+            const elementList = [...document.querySelectorAll('.event-container .box-container .gdlr-item.gdlr-blog-grid.gdlr-skin-box')];
+            for (let i = currentItem; i < currentItem + 3; i++) {
+                if (elementList[i]) {
+                    elementList[i].style.display = 'flex';
+                }
+            }
+            currentItem += 3;
+
+            //hide load more button after fully loaded
+            if (currentItem >= elementList.length) {
+                loadMore.style.display = 'none';
+            }
+        })
+
+
+        function searchfunction() {
+            let input, filter, table, tr, td, j;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.querySelector(".box-container");
+            tr = table.querySelector(".box");
+
+            for (j = 0; j < tr.length; j++) {
+                td = tr[j].getElementsByTagName("div");
+                message = document.getElementById("no_data");
+
+                if (td.length > 0) {
+                    if (td[2].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[j].style.display = "";
+                        message.innerHTML = "";
+                    }
+                    else {
+                        tr[j].style.display = "none";
+                    }
+
+                }
+                if (td.length == 0) {
+                    message.innerHTML = "Event not found!";
+                }
+            }
+        }
+    </script>
+    <script src="{% static '/js/event_script.js'%}"></script>
+</body>
+
+</html>

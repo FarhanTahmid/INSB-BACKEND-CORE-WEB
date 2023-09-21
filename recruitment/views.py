@@ -389,7 +389,7 @@ def generateExcelSheet(request, session_name):
     font_style.font.bold = True
 
     # Defining columns that will stay in the first row
-    columns = ['NSU ID', 'First Name', 'Middle Name', 'Last Name', 'Email (personal)', 'Email (NSU)', 'Contact No', 'IEEE ID', 'Gender', 'Date Of Birth', 'Facebook Url',
+    columns = ['NSU ID', 'First Name', 'Middle Name', 'Last Name', 'Email (personal)', 'Email (NSU)', 'Contact No', 'IEEE ID', 'Gender', 'Date Of Birth','Facebook Username', 'Facebook Url',
                'Address', 'Major', 'Graduating Year', 'Recruitment Time', 'Recruited By', 'Cash Payment Status', 'IEEE Payment Status']
 
     # Defining first column
@@ -410,6 +410,7 @@ def generateExcelSheet(request, session_name):
                                                                                                    'ieee_id',
                                                                                                    'gender',
                                                                                                    'date_of_birth',
+                                                                                                   'facebook_username',
                                                                                                    'facebook_url',
                                                                                                    'home_address',
                                                                                                    'major', 'graduating_year',

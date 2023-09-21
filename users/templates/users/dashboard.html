@@ -2,8 +2,10 @@
 {% load static %}
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
   <title>Portal Dashboard | IEEE NSU Student Branch</title>
+  <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+  <meta charset="utf-8" />
   <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,7 +20,7 @@
   <link rel="shortcut icon" sizes="196x196" href="{% static 'logos/logo.png' %}">
   
   <!-- style -->
-  <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+  
   <link rel="stylesheet" href="{% static '/assets/animate.css/animate.min.css'%}" type="text/css" />
   <link rel="stylesheet" href="{% static '/assets/glyphicons/glyphicons.css'%}" type="text/css" />
   <link rel="stylesheet" href="{% static '/assets/font-awesome/css/font-awesome.min.css'%}" type="text/css" />
@@ -218,7 +220,8 @@
 								</div>
 								<ul class="list-inline d-flex justify-content-between justify-content-center mb-0">
 									{% for i in years %}
-									<li class="list-inline-item" style="font-size:11px;><a href="#" class="text-muted"></a>{{i}}</li>
+									<li class="list-inline-item" style="font-size:11px;"><a href="#" class="text-muted"></a>{{i}}</li>
+									<li class="list-inline-item" style="font-size:11px;"><a href="#" class="text-muted"></a>{{i}}</li>
 									{% endfor %}
 								</ul>
 							</div>
@@ -1138,7 +1141,6 @@
   {% comment %} <script src="{% static 'script/jquery.pjax.js'%}"></script> {% endcomment %}
   <script src="{% static 'script/ajax.js'%}"></script>
 <!-- endbuild -->
-
 <script>
 
 	function getChartColorsArray(chartId) {

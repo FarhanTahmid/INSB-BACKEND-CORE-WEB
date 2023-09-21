@@ -12,6 +12,8 @@ from system_administration.render_access import Access_Render
 from users.models import Members
 from port.models import Roles_and_Position
 from .models import Manage_Team
+from main_website.forms import HomePageBannerWithTextForm
+
 from users import renderData
 from users.renderData import LoggedinUser
 from django.utils.datastructures import MultiValueDictKeyError
@@ -310,6 +312,14 @@ def manage_team(request):
         return render(request,"public_relation_team/manage_team.html",context=context)
     else:
         return render(request,'public_relation_team/access_denied.html')
+    
+@login_required
+def manageWebsiteHome(request):
+    context={
+        'form':HomePageBannerWithTextForm(),
+    }
+    return render(request,"public_relation_team/manage_website/manage_website_home.html",context)
+
 
 @login_required
 def send_email(request):
@@ -344,35 +354,35 @@ def send_email(request):
             email_subject=request.POST['subject']
             email_body=request.POST['body']
             
-            try:
-                # If there is a file 
-                email_attachment=request.FILES['attachment']
-                print(f"Single Email: {email_single_email}")
-                print(f"To: {email_to_list}")
-                print(f"Cc: {email_cc_list}")
-                print(f"Bcc: {email_bcc_list}")
-                print(f"Subject: {email_subject}")
-                print(f"Body: {email_body}")
-                print(f"Attachment: {email_attachment}")
-
-                PRT_Email_System.get_all_selected_emails_from_backend(
-                    email_single_email,email_to_list,email_cc_list,email_bcc_list
-                )
-                
-            # IF there is no files
-            except MultiValueDictKeyError:
-                print(f"Single Email: {email_single_email}")
-                print(f"To: {email_to_list}")
-                print(f"Cc: {email_cc_list}")
-                print(f"Bcc: {email_bcc_list}")
-                print(f"Subject: {email_subject}")
-                print(f"Body: {email_body}")
-
-                PRT_Email_System.get_all_selected_emails_from_backend(
-                    email_single_email,email_to_list,email_cc_list,email_bcc_list
-                )
-
             
+            
+            if(email_single_email=='' and email_to_list[0]=='' and email_cc_list[0]=='' and email_bcc_list[0]==''):
+                messages.error(request,"Select atleast one recipient")
+            else:
+            
+                try:
+                    # If there is a file 
+                    email_attachment=request.FILES['attachment']
+
+                    to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
+                        email_single_email,email_to_list,email_cc_list,email_bcc_list
+                    )
+                    if PRT_Email_System.send_email(to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,attachment=email_attachment):
+                        messages.success(request,"Email sent successfully!")
+                    else:
+                        messages.error(request,"Email sending failed! Try again Later")
+                    
+                # IF there is no files
+                except MultiValueDictKeyError:
+                    to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
+                        email_single_email,email_to_list,email_cc_list,email_bcc_list
+                    )
+                    if PRT_Email_System.send_email(to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body):
+                        messages.success(request,"Email sent successfully!")
+                    else:
+                        messages.error(request,"Email sending failed! Try again Later")
+
+                
     
     context={
         'user_data':user_data,

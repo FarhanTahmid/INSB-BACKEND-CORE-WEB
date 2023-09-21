@@ -31,7 +31,9 @@ def central_home(request):
     has_access=Access_Render.system_administrator_superuser_access(user.username)
     if (has_access):
         #renderData.Branch.test_google_form()'''
-        return render(request,'central_home.html')
+        return render(request,'homepage/branch_homepage.html')
+        # return render(request,'central_home.html')
+
     else:
         return render(request,"access_denied2.html")
 
@@ -45,7 +47,7 @@ def event_control(request):
         if request.POST.get('create_new_event'):
             print("Create")
     
-    return render(request,'event/event_page.html',context)
+    return render(request,'Events/event_homepage.html',context)
 
 @login_required
 def super_event_creation(request):
@@ -120,7 +122,7 @@ def event_creation_form_page1(request):
                 
         elif(request.POST.get('cancel')):
             return redirect('central_branch:event_control')
-    return render(request,'event/event_creation_form1.html',context)
+    return render(request,'Events/event_creation_form.html',context)
 
 @login_required
 def event_creation_form_page2(request,event_id):

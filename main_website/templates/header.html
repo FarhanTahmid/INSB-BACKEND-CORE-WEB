@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+{% block header %}
+<header class="gdlr-header-wrapper header-style-1-wrapper gdlr-header-no-top-bar">
+    <!-- top navigation -->
+    <div id="gdlr-header-substitute"></div>
+    <div class="gdlr-header-inner header-inner-header-style-1">
+        <div class="gdlr-header-container container">
+            <div class="gdlr-header-inner-overlay"></div>
+
+            <!-- logo -->
+            <div class="gdlr-logo">
+                <div class="gdlr-logo-inner">
+                    <a href="{% url 'main_website:homepage' %}">
+                        <img src="{% static 'logos/logo.gif' %}" alt="IEEE NSU SB logo" class="logo" /> </a>
+                </div>
+                <div class="gdlr-responsive-navigation dl-menuwrapper" id="gdlr-responsive-navigation">
+                    <button class="dl-trigger">Open Menu</button>
+                    <ul id="menu-main-menu" class="dl-menu gdlr-main-mobile-menu">
+                        <li class="menu-item menu-item-home current-menu-item "><a href="{% url 'main_website:homepage' %}">Home</a>
+                        </li>
+                        <li class="menu-item menu-item-has-children menu-item-30">Activities
+                            <ul class="dl-submenu">
+                                <li class="menu-item"><a href="{% url 'main_website:all_events' %}">Events</a></li>
+                                <li class="menu-item"><a href="#">News</a></li>
+                                <li class="menu-item"><a href="#">Achievements</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item menu-item-has-children menu-item-30"><a href="#">Societies & AGs</a>
+                            <ul class="dl-submenu">
+                                <li class="menu-item"><a href="{% url 'main_website:ras_home' %}">IEEE NSU RAS SBC</a></li>
+                                <li class="menu-item"><a href="#">IEEE NSU PES SBC</a></li>
+                                <li class="menu-item"><a href="#">IEEE NSU IAS SBC</a></li>
+                                <li class="menu-item"><a href="#">IEEE NSU WIE AG</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item menu-item-has-children menu-item-30"><a href="#">Members</a>
+                            <ul class="dl-submenu">
+                                <li class="menu-item"><a href="#">Panels</a></li>
+                                <li class="menu-item"><a href="#">Officers</a></li>
+                                <li class="menu-item"><a href="#">Core Volunteers</a></li>
+                                <li class="menu-item"><a href="#">Exemplary Members</a></li>
+                                <li class="menu-item"><a href="#">All Members</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item menu-item-has-children menu-item-30"><a href="#">About</a>
+                            <ul class="dl-submenu">
+                                <li class="menu-item"><a href="#">IEEE</a></li>
+                                <li class="menu-item"><a href="#">IEEE Region 10</a></li>
+                                <li class="menu-item"><a href="#">IEEE Bangladesh Section</a></li>
+                                <li class="menu-item"><a href="#">IEEE NSU Student Branch</a></li>
+                                <li class="menu-item"><a href="#">FAQ</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item menu-item-has-children menu-item-30"><a href="#">Publications</a>
+                            <ul class="dl-submenu">
+                                <li class="menu-item"><a href="#">Blogs</a></li>
+                                <li class="menu-item"><a href="#">Research Papers</a></li>
+                                <li class="menu-item"><a href="#">Magazines</a></li>
+                                <li class="menu-item"><a href="#">Gallery</a></li>
+                                <li class="menu-item"><a href="#">Toolkit</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item menu-item-has-children menu-item-30"><a href="#">Contact</a></li>
+                        <li class="menu-item menu-item-has-children menu-item-30"><a href="#">Get Involved</a>
+                            <ul class="dl-submenu">
+                                <li class="menu-item"><a href="#">Join INSB</a></li>
+                                <li class="menu-item"><a href="#">Write A Blog</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- navigation -->
+            <div class="gdlr-navigation-wrapper">
+                <nav class="gdlr-navigation" id="gdlr-main-navigation">
+                    <ul id="menu-main-menu-1" class="sf-menu gdlr-main-menu">
+                        <li class="menu-item menu-item-home current-menu-item  gdlr-normal-menu"><a
+                                href="{% url 'main_website:homepage' %}">Home</a></li>
+                        <li class="menu-item menu-item-has-children gdlr-normal-menu"><a href="#"
+                                class="sf-with-ul-pre">Activities</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item"><a href="all-events.html">Events</a></li>
+                                <li class="menu-item"><a href="#">News</a></li>
+                                <li class="menu-item"><a href="#">Achievements</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item menu-item-has-children gdlr-normal-menu"><a href="#"
+                                class="sf-with-ul-pre">Societies & AGs</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item"><a href="{% url 'main_website:ras_home' %}">IEEE NSU RAS SBC</a></li>
+                                <li class="menu-item"><a href="#">IEEE NSU PES SBC</a></li>
+                                <li class="menu-item"><a href="#">IEEE NSU IAS SBC</a></li>
+                                <li class="menu-item"><a href="#">IEEE NSU WIE AG</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item menu-item-has-children gdlr-normal-menu"><a href="#"
+                                class="sf-with-ul-pre">Members</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item"><a href="#">Panels</a></li>
+                                <li class="menu-item"><a href="#">Officers</a></li>
+                                <li class="menu-item"><a href="#">Core Volunteers</a></li>
+                                <li class="menu-item"><a href="#">Exemplary Members</a></li>
+                                <li class="menu-item"><a href="#">All Members</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item menu-item-has-children gdlr-normal-menu"><a href="#"
+                                class="sf-with-ul-pre">About</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item"><a href="#">IEEE</a></li>
+                                <li class="menu-item"><a href="#">IEEE Region 10</a></li>
+                                <li class="menu-item"><a href="#">IEEE Bangladesh Section</a></li>
+                                <li class="menu-item"><a href="#">IEEE NSU Student Branch</a></li>
+                                <li class="menu-item"><a href="#">FAQ</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item menu-item-has-children gdlr-normal-menu"><a href="#"
+                                class="sf-with-ul-pre">Publications</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item"><a href="#">Blogs</a></li>
+                                <li class="menu-item"><a href="#">Research Papers</a></li>
+                                <li class="menu-item"><a href="#">Magazines</a></li>
+                                <li class="menu-item"><a href="#">Gallery</a></li>
+                                <li class="menu-item"><a href="#">Toolkit</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item menu-item-has-children gdlr-normal-menu"><a href="#"
+                                class="sf-with-ul-pre">Contact</a></li>
+                        <li class="menu-item menu-item-has-children gdlr-normal-menu"><a href="#"
+                                class="sf-with-ul-pre">Get Involved</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item"><a href="#">Join INSB</a></li>
+                                <li class="menu-item"><a href="#">Write A Blog</a></li>
+                            </ul>
+                        </li>
+                        
+                </nav>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</header>
+{% endblock header %}
