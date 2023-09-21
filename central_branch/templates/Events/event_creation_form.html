@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Home | IEEE NSU PES SBC</title>
+    <title>Create Event | IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
     {% block common_css %}
@@ -81,24 +81,28 @@
         
         <!-- ############ PAGE START-->
         <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+            
+            <!--Instruction Section Start-->
+            {% block instruction %}
+            {% include "Events/instructions.html" %}
+            {% endblock instruction %}
+            <!--Instruction Section End-->
 
-
-            <br>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to the <span><b>Events</b></span> of <span style="color:#00629B;">IEEE NSU Student Branch</b></span></h2>
-              
-
-            <!--TabView for event creation-->
             <br>
             <br>
             
-
+            <!--TabView for event creation-->
+            
+            <div style="justify-content:center;">
+                {% block event_creation_tab %}
+                {% include "Events/event_tabs.html" %}
+                {% endblock event_creation_tab %}
+            </div>
             <!--End of TabView-->
-                        
+
         </div>
         <!--PAGE END-->
-        {% block event_creation_tab %}
-                {% include "Events/event_tabs.html" %}
-        {% endblock event_creation_tab %}
+        
         
 
         
