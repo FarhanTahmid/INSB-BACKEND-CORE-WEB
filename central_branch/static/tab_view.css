@@ -3,7 +3,7 @@
     margin-left: 5px;
     display: grid;
     grid-template-columns: auto 1fr; /* Two columns: fixed size for tabs and flexible size for content */
-    grid-gap: 10px; /* Gap between the tabs and content */
+    grid-gap: 5px; /* Gap between the tabs and content */
     justify-content: center; /* Center the content horizontally */
     
 }
