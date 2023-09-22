@@ -12,10 +12,10 @@
         {% include "Events/event_details_form_content.html" %}
     {% endblock event_details_form %}
 
-    <div id="tab2" class="tab-content">
-        <h2>Tab 2 Content</h2>
-        <p>This is the content of Tab 2.</p>
-    </div>
+    {% block collaboration_form %}
+        {% include "Events/event_collaboration_details_form_content.html" %}
+    {% endblock collaboration_form %}
+
 
     <div id="tab3" class="tab-content">
         <h2>Tab 3 Content</h2>
