@@ -17,10 +17,9 @@
     {% endblock collaboration_form %}
 
 
-    <div id="tab3" class="tab-content">
-        <h2>Tab 3 Content</h2>
-        <p>This is the content of Tab 3.</p>
-    </div>
+    {% block event_venue_and_permission_form %}
+        {% include "Events/event_venue_and_permission_form_content.html" %}
+    {% endblock event_venue_and_permission_form %}
 </div>
 
 {% endblock event_creation_tab %}
