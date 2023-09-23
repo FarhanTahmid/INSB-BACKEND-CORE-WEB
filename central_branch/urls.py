@@ -13,7 +13,7 @@ urlpatterns = [
     #Event control page 
     path('event_control',views.event_control, name='event_control'),
     #Event Creation Form page 1
-    path('create_event/page-1',views.event_creation_form_page1,name='event_creation_form1'),
+    path('create_event/',views.event_creation_form_page,name='event_creation_form1'),
     #Event Creation Form Page 2
     path("create_event/<int:event_id>/page-2", views.event_creation_form_page2, name="event_creation_form2"),
     #Event creation page 3

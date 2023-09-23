@@ -38,7 +38,7 @@
                                     <label>Super Event of</label>
                                         <div class="col-lg-6">
                                             <select multiple class="form-control" name="super_event">
-                                            <option selected value="">--------------------</option>
+                                            <option selected value="null">--------------------</option>
                                             {% for super_event in super_events %}
                                                 <option value={{super_event.id}}>{{super_event.super_event_name}}</option>
                                                 {% endfor %}
@@ -51,7 +51,7 @@
                                     <label>Select Event Type</label>
                                         <div class="col-lg-6">
                                             <select multiple class="form-control" name="event_type">
-                                            <option selected value="">--------------------</option>
+                                            <option selected value="null">--------------------</option>
                                                 {% for event_type in event_types %}
                                                 <option value={{event_type.id}}>{{event_type.event_type}}</option>
                                                 {% endfor %}
@@ -71,7 +71,7 @@
                                 </div>
                                 <br>  
                                 <div style="text-align: center;">
-                                    <button type="submit" onclick="showTab('tab2')" class="btn btn-outline b-success text-success">Continue to Collaborations Tab</button>
+                                    <button onclick="showTab('tab2')" class="btn btn-outline b-success text-success">Continue to Collaborations Tab</button>
                                 </div>
                                 <br> 
                         </div>

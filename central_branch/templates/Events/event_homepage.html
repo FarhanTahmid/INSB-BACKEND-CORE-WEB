@@ -122,17 +122,17 @@
                         <tr>
                             <th>Event Name</th>
                             <th>Event Organiser</th>
-                            <th>Probable Date of Event</th>
-                            <th>Final Date of Event</th>
+                            <th>Date of Event</th>
+                            
                         </tr>
                       </thead>
                       <tbody>
                         {% for event in events %}
                         <tr>
-                            <td><a href="{% url 'central_branch:event_dashboard' event.id %}">{{event.event_name }}</a></td>
+                            <td><a style="color:blue;" href="{% url 'central_branch:event_dashboard' event.id %}">{{event.event_name }}</a></td>
                             <td>{{ event.event_organiser }}</td>
-                            <td>{{ event.probable_date }}</td>
-                            <td>{{ event.final_date }}</td>
+                            <td>{{ event.event_date }}</td>
+                            
                         </tr>
                         {% endfor %}
                         

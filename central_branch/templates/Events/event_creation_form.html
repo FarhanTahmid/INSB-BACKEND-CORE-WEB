@@ -99,9 +99,17 @@
         <!--TabView for event creation-->
             
         <div>
-            {% block event_creation_tab %}
-                {% include "Events/event_tabs.html" %}
-            {% endblock event_creation_tab %}
+           
+                {% block event_creation_tab %}
+                    {% include "Events/event_tabs.html" %}
+                {% endblock event_creation_tab %}
+        
+            <div>
+                {% for message in messages %}
+                <p>{{message}}</p>
+                {% endfor %}
+                <p></p>
+            </div>
         </div>
         <!--End of TabView-->
         

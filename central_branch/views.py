@@ -77,7 +77,7 @@ def super_event_creation(request):
 
 
 @login_required
-def event_creation_form_page1(request):
+def event_creation_form_page(request):
     
     #######load data to show in the form boxes#########
     
@@ -85,21 +85,32 @@ def event_creation_form_page1(request):
     super_events=Branch.load_all_mother_events()
     event_types=Branch.load_all_event_type()
 
+    #loading all inter branch collaboration Options
+    inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+
+    #loading all venues from the venue list from event management team database
+    venues=Events_And_Management_Team.getVenues()
+    #loading all the permission criterias from event management team database
+    permission_criterias=Events_And_Management_Team.getPermissionCriterias()
+
     
     context={
         'super_events':super_events,
         'event_types':event_types,
+        'inter_branch_collaboration_options':inter_branch_collaboration_options,
+        'venues':venues,
+        'permission_criterias':permission_criterias,
+
     }
     
     
     if(request.method=="POST"):
-        if(request.POST.get('next')):
+        if(request.POST.get('create_event')):
             super_event_name=request.POST.get('super_event')
             event_name=request.POST['event_name']
             event_description=request.POST['event_description']
             event_type = request.POST['event_type']
-            probable_date=request.POST['probable_date']
-            final_date=request.POST['final_date']
+            event_date=request.POST['event_date']
     
             
             get_event=renderData.Branch.register_event_page1(
@@ -107,21 +118,13 @@ def event_creation_form_page1(request):
                 event_name=event_name,
                 event_type=event_type,
                 event_description=event_description,
-                probable_date=probable_date,
-                final_date=final_date)
+                event_date=event_date
+            )
             
-            if(get_event)==False:
-                messages.info(request,"Database Error Occured! Please try again later.")
-            else:
-                #if the method returns true, it will redirect to the new page
-                return redirect('central_branch:event_creation_form2',get_event)
+            print(get_event)
+            print("Event Created")
+            return render('central_branch:event_control')
 
-
-                
-            
-                
-        elif(request.POST.get('cancel')):
-            return redirect('central_branch:event_control')
     return render(request,'Events/event_creation_form.html',context)
 
 @login_required

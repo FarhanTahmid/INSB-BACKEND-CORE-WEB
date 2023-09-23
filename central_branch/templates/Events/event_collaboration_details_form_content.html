@@ -19,7 +19,7 @@
                                 <label>Inter Branch Collaboration With: (Press CTRL to select multiple options) </label>
                                     <div class="col-lg-6">
                                         <select multiple class="form-control" name="inter_branch_collaboration">
-                                        <option selected value="">--------------------</option>
+                                        <option selected value="null">--------------------</option>
                                         {% for inter_branch_collaboration_option in inter_branch_collaboration_options %}
                                             <option value={{inter_branch_collaboration_option.id}}>
                                             {{inter_branch_collaboration_option.group_name}}</option>
@@ -38,7 +38,7 @@
                             </div>
                                 
                             <div style="text-align: center;">
-                                <button type="submit" onclick="showTab('tab3')" class="btn btn-outline b-success text-success">Continue to Venue & Permissions Tab</button>
+                                <button onclick="showTab('tab3')" class="btn btn-outline b-success text-success">Continue to Venue & Permissions Tab</button>
                             </div>
                             <br> 
                         </div>

@@ -1,7 +1,7 @@
 {% load static %}
 {% block event_venue_and_permission_form %}
 <div id="tab3" class="tab-content">
-    <h2 style="text-align:center">Tab 3 Content</h2>
+    <h2 style="text-align:center">Venue and Permission for the Event</h2>
     <div class="container">
         <div class="padding">
             <div class="row" >
@@ -29,7 +29,7 @@
                             <div class="form-group">
                                 <label>Select Permission Criterias For the Event: (Press CTRL to select multiple options) <span style="color:red">*<span></label>
                                     <select multiple class="form-control" name="permission_criteria">
-                                        <option value="" selected>----------</option>
+                                        <option value="null" selected>----------</option>
                                         {% for permission in permission_criterias %}
                                         <option value={{permission.id}}>{{permission.permission_name}}</option>
                                         {% endfor %}
@@ -37,8 +37,34 @@
                             </div>
                                 
                             <div style="text-align: center;">
-                                <button type="submit" class="btn btn-outline b-success text-success">Create Event</button>
+                                <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Create Event</button>
                             </div>
+
+                            <!--Modal-->
+                            <div id="m-s-a" class="modal fade animate" data-backdrop="true">
+                                <div class="modal-dialog" id="animate">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Creating a new Event!</h5>
+                                    </div>
+                                    <div class="modal-body text-left p-lg">
+                                        <p>Are you sure that you want to create a new Event with the Informations you provided?.</p>
+                                        <p>Data related to this Event can be updated later. Also different Teams can contribute to this event.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                                        <input
+                                        type="submit"
+                                        class="btn btn-success"
+                                        data-bs-dismiss="modal"
+                                        name="create_event"
+                                        value="Yes, Create"
+                                        >                        
+                                    </div>
+                                    </div><!-- /.modal-content -->
+                                </div>
+                                </div>
+                                <!-- / .modal -->
                             <br> 
                         </div>
                     </div>
