@@ -7,6 +7,7 @@ from events_and_management_team.models import Venue_List, Permission_criteria
 from system_administration.render_access import Access_Render
 from users.models import Executive_commitee,Executive_commitee_members
 from membership_development_team.renderData import MDT_DATA
+from .models import InterBranchCollaborations,IntraBranchCollaborations
 
 
 
@@ -340,6 +341,11 @@ class Branch:
 
             has_access= Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username)
             return has_access
+    
+    def event_interBranch_Collaborations(event_id):
+        '''this function loads all the Inter Branch Collaborations from the database. cross match with event_id'''
+
+        interBranchCollaborations=InterBranchCollaborations.objects.filter(event_id=Events.objects.get(id=event_id))
         
-            
+        return interBranchCollaborations            
         
