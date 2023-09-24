@@ -347,5 +347,11 @@ class Branch:
 
         interBranchCollaborations=InterBranchCollaborations.objects.filter(event_id=Events.objects.get(id=event_id))
         
-        return interBranchCollaborations            
+        return interBranchCollaborations
+
+    def event_IntraBranch_Collaborations(event_id):
+        '''this function loads all the Intra Branch Collaborations from the database. cross match with event_id'''
         
+        intraBranchCollaborations=IntraBranchCollaborations.objects.filter(event_id=Events.objects.get(id=event_id))
+
+        return intraBranchCollaborations

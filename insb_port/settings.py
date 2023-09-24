@@ -180,7 +180,7 @@ MEDIA_ROOT= os.path.join(BASE_DIR, 'User Files/')
 MEDIA_URL= "/media_files/" 
 
 #to do user login required
-LOGIN_REDIRECT_URL='users:dashboard'
+# LOGIN_REDIRECT_URL='users:dashboard'
 LOGOUT_REDIRECT_URL='users:logoutUser'
 LOGIN_URL='users:login'
 

@@ -183,13 +183,20 @@ def event_description(request,event_id):
 
         '''Details page for registered events'''
 
+        # Get collaboration details
         interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
+        intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
+        # Checking if event has collaborations
+        hasCollaboration=False
+        if(len(interBranchCollaborations)>0 and len(intraBranchCollaborations)>0):
+            hasCollaboration=True
+        
+        
 
-        context={}
         get_all_team_name = renderData.Branch.load_teams()
         get_event_details = Events.objects.get(id = event_id)
+
         #print(get_event_details.super_event_name.id)
-        get_intra_branch_collaboration = IntraBranchCollaborations.objects.filter(event_id = get_event_details.id)
         get_event_venue = Event_Venue.objects.filter(event_id = get_event_details.id)  
         
         if request.method == "POST":
@@ -203,7 +210,8 @@ def event_description(request,event_id):
             'event_venue':get_event_venue,
             'team_names':get_all_team_name,
             'interBranchCollaborations':interBranchCollaborations,
-            
+            'intraBranchCollaborations':intraBranchCollaborations,
+            'hasCollaboration':hasCollaboration,
         }
     else:
         return redirect('main_website:all-events')

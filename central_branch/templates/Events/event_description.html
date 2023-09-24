@@ -85,74 +85,20 @@
 
             <br>
             <h1 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;"><b>{{event_details.event_name}}</b></span></h1>
-            <div style="justify-content:center;text-align:center;">  
-                <div class="btn-container">
-                  <a href="" class="btn btn-outline b-success text-success">Create a New Super Event</a>
-                  <a href="{% url 'central_branch:event_creation_form1' %}" class="btn btn-outline b-primary text-primary">Create a New Event</a>
-                </div>
-            </div>  
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Organised By: <span style="color:#00629B;"><b>{{event_details.event_organiser}}</b></span>.</h4>
+            {% if hasCollaboration %}
+              <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">In Collaboration With:</h4>
+              {% for i in interBranchCollaborations %}
+              <h5 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;">{{i.collaboration_with}}</span></h4>
+              {% endfor %}
+              {% for i in intraBranchCollaborations %}
+              <h5 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;">{{i.collaboration_with}}</span></h4>
+            {% endfor %}
+            {% endif %}
 
-            <!--Events Table-->
-            <div style="text-align:center; margin-top=30px;">  
-                <div class="container" style="justify-content:center;">
-                  <div class="header_wrap">
-                    <div class="num_rows">
-                
-                      <div class="form-group">
-                        <!--		Show Numbers Of Rows 		-->
-                        <select class="form-control" name="state" id="maxRows">
-                
-                          <option value="10">10</option>
-                          <option value="15">15</option>
-                          <option value="20">20</option>
-                          <option value="50">50</option>
-                          <option value="5000">Show ALL Rows</option>
-                        </select>
-                
-                      </div>
-                    </div>
-                    <div class="tb_search">
-                      <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search.." class="form-control">
-                    </div>
-                  </div>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-class" id="table-id">
-                  
-                      <thead>
-                        <tr>
-                            <th>Event Name</th>
-                            <th>Event Organiser</th>
-                            <th>Date of Event</th>
-                            
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for event in events %}
-                        <tr>
-                            <td><a style="color:blue;" href="{% url 'central_branch:event_dashboard' event.id %}">{{event.event_name }}</a></td>
-                            <td>{{ event.event_organiser }}</td>
-                            <td>{{ event.event_date }}</td>
-                            
-                        </tr>
-                        {% endfor %}
-                        
-                      <tbody>
-                    </table>
-                  </div>
-                  <!--		Start Pagination -->
-                  <div class='pagination-container'>
-                    <nav>
-                      <ul class="pagination">
-                        <!--	Here the JS Function Will Add the Rows -->
-                      </ul>
-                    </nav>
-                  </div>
-                  <div class="rows_count">Showing 11 to 20 of 91 entries</div>    
-                        
-                </div>
-              </div>
+            
 
-              <!--Events table end-->
+            
             
         </div>
         <!--PAGE END-->
