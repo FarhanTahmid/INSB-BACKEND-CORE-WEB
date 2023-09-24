@@ -31,7 +31,7 @@ def login(request):
         
         if user is not None: #Checks if user exists and if the user is superuser
             # Check for the 'next' parameter in the GET request
-            next_url = request.POST['next']
+            next_url = request.POST.get('next')
             
             auth.login(request,user)
 
