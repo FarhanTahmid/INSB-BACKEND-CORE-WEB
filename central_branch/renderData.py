@@ -109,7 +109,7 @@ class Branch:
             return DatabaseError
     
     def load_all_events():
-        return Events.objects.all()
+        return Events.objects.all().order_by('-id')
     def load_all_mother_events():
         '''This method loads all the mother/Super events'''
         return SuperEvents.objects.all()

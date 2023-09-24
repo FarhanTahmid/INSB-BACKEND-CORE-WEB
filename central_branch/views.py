@@ -39,6 +39,7 @@ def central_home(request):
 
 @login_required
 def event_control(request):
+    # This function loads all events and super events in the event homepage table
     all_insb_events=renderData.Branch.load_all_events()
     context={
         'events':all_insb_events,
@@ -85,27 +86,15 @@ def event_creation_form_page(request):
     super_events=Branch.load_all_mother_events()
     event_types=Branch.load_all_event_type()
 
-    #loading all inter branch collaboration Options
-    inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
-
-    #loading all venues from the venue list from event management team database
-    venues=Events_And_Management_Team.getVenues()
-    #loading all the permission criterias from event management team database
-    permission_criterias=Events_And_Management_Team.getPermissionCriterias()
-
     
     context={
         'super_events':super_events,
         'event_types':event_types,
-        'inter_branch_collaboration_options':inter_branch_collaboration_options,
-        'venues':venues,
-        'permission_criterias':permission_criterias,
-
     }
     
     
     if(request.method=="POST"):
-        if(request.POST.get('create_event')):
+        if(request.POST.get('next')):
             super_event_name=request.POST.get('super_event')
             event_name=request.POST['event_name']
             event_description=request.POST['event_description']
@@ -121,10 +110,14 @@ def event_creation_form_page(request):
                 event_date=event_date
             )
             
-            print(get_event)
-            print("Event Created")
-            return render('central_branch:event_control')
+            if(get_event)==False:
+                messages.info(request,"Database Error Occured! Please try again later.")
+            else:
+                #if the method returns true, it will redirect to the new page
+                return redirect('central_branch:event_creation_form2',get_event)
 
+        elif(request.POST.get('cancel')):
+            return redirect('central_branch:event_control')
     return render(request,'Events/event_creation_form.html',context)
 
 @login_required
@@ -151,7 +144,7 @@ def event_creation_form_page2(request,event_id):
             return redirect('central_branch:event_control')
 
 
-    return render(request,'event/event_creation_form2.html',context)
+    return render(request,'Events/event_creation_form2.html',context)
 
 def event_creation_form_page3(request,event_id):
     #loading all venues from the venue list from event management team database
@@ -164,7 +157,7 @@ def event_creation_form_page3(request,event_id):
         'permission_criterias':permission_criterias,
     }
     if request.method=="POST":
-        if request.POST.get('next'):
+        if request.POST.get('create_event'):
             #getting the venues for the event
             venue_list_for_event=request.POST.getlist('event_venues')
             #getting the permission criterias for the event
@@ -178,7 +171,7 @@ def event_creation_form_page3(request,event_id):
             else:
                 return redirect('central_branch:event_control')
 
-    return render(request,'event/event_creation_form3.html',context)
+    return render(request,'Events/event_creation_form3.html',context)
 
 @login_required
 def event_dashboard(request,event_id):
