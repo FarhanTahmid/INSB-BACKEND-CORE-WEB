@@ -1,0 +1,66 @@
+{% load static %}
+{% block image_slider %}
+<section id="content-section-1">
+    <div class="gdlr-full-size-wrapper gdlr-show-all no-skin"
+        style="padding-bottom: 0px;  background-color: #ffffff; ">
+        <div class="gdlr-master-slider-item gdlr-slider-item gdlr-item" style="margin-bottom: 0px;">
+            <!-- MasterSlider -->
+            <div id="P_MS5bab48b0b8b8a" class="master-slider-parent ms-parent-id-11">
+
+                <!-- MasterSlider Main -->
+                <div id="MS5bab48b0b8b8a" class="master-slider ms-skin-default">
+                    {% comment %} Pictures here {% endcomment %}
+                    {% for i in banner_item %}
+                    <div class="ms-slide" data-delay="7" data-fill-mode="fill">
+                        <img src="{% static 'masterslider/public/assets/css/blank.gif' %}" alt="" title=""
+                            data-src="{{media_url}}{{i.banner_picture}}"
+                            style="opacity: 0.5;" />
+
+
+                        <div class="ms-layer  msp-cn-11-1"
+                            style="font-family: 'Poppins', sans-serif; font-size: 30px; margin-left: 15%;"
+                            data-effect="t(true,n,n,500,n,n,n,n,n,n,n,n,n,n,n)" data-duration="387"
+                            data-ease="easeOutQuint" data-offset-x="-2" data-offset-y="-144"
+                            data-origin="ml" data-position="normal">
+                            {{i.first_layer_text}}</div>
+
+                        <div class="ms-layer  msp-cn-11-2"
+                            style="font-family: 'Poppins', sans-serif; font-size: 80px; font-weight: bolder; margin-top: -40px; margin-left: 10%;"
+                            data-effect="t(true,n,n,-500,n,n,n,n,n,n,n,n,n,n,n)" data-duration="387"
+                            data-delay="387" data-ease="easeOutQuint" data-offset-x="2"
+                            data-offset-y="-33" data-origin="ml" data-position="normal">
+                            {{i.second_layer_text}} <span style="color: #ffe02f;">{{i.second_layer_text_colored}}</span></div>
+
+                        <div class="ms-layer  msp-cn-11-7"
+                            style="font-family: 'Poppins', sans-serif; font-size: 17px; margin-top: -40px;margin-left: 10%;"
+                            data-effect="t(true,n,n,-500,n,n,n,n,n,n,n,n,n,n,n)" data-duration="400"
+                            data-delay="750" data-ease="easeOutQuint" data-offset-x="3"
+                            data-offset-y="396" data-origin="tl" data-position="normal">
+                            {{i.third_layer_text}}
+                        </div>
+
+                        <a href="" target="_self" style="margin-left: 10%; color: "
+                            class="ms-layer ms-btn ms-btn-round ms-btn-n msp-preset-btn-159"
+                            data-duration="437" data-delay="1112" data-ease="easeOutQuint"
+                            data-type="button" data-offset-x="3" data-offset-y="132"
+                            data-origin="ml" data-position="normal">{{i.button_text}}</a>
+
+                    </div>
+                    {% endfor %}
+                    
+                </div>
+                
+                <!-- END MasterSlider Main -->
+
+            </div>
+            <!-- END MasterSlider -->
+
+
+
+        </div>
+        <div class="clear"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+</section>
+{% endblock image_slider %}
