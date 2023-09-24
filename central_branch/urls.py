@@ -11,13 +11,15 @@ urlpatterns = [
     #central_homeage
     path('',views.central_home, name='central_home'),
     #Event control page 
-    path('event_control',views.event_control, name='event_control'),
+    path('event_control',views.event_control_homepage, name='event_control'),
     #Event Creation Form page 1
-    path('create_event/page-1',views.event_creation_form_page1,name='event_creation_form1'),
+    path('create_event/',views.event_creation_form_page,name='event_creation_form1'),
     #Event Creation Form Page 2
     path("create_event/<int:event_id>/page-2", views.event_creation_form_page2, name="event_creation_form2"),
     #Event creation page 3
     path("create_event/<int:event_id>/page-3", views.event_creation_form_page3, name="event_creation_form3"),
+    #event dashboard team
+    path('event_details/<int:event_id>',views.event_description,name='event_dashboard'),
     #teams page
     path('teams_and_panels',views.teams,name='teams'),
     #team details page
@@ -29,8 +31,7 @@ urlpatterns = [
     #panel details
     path('panel_details/<int:pk>',views.panel_details,name="panel_details"),
     
-    #event dashboard team
-    path('event_dashboard/<int:event_id>',views.event_dashboard,name='event_dashboard'),
+    
     #for updating value in team member select box in event assigning
     path('get_updated_options/', views.get_updated_options_for_event_dashboard, name='get_updated_options'),
     #others page

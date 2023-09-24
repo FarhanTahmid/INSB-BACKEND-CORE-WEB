@@ -53,8 +53,7 @@ class Events(models.Model):
     super_event_name=models.ForeignKey(SuperEvents,null=True,blank=True,on_delete=models.CASCADE)
     event_description=models.CharField(null=True,blank=True,max_length=1000)
     event_organiser=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE,default=5)#Default is set to 5 to keep branch as default organizer of events, If a new database is created change this number according to the id of the branch
-    probable_date=models.DateField(null=True,blank=True) #Must add probable date for an event
-    final_date=models.DateField(null=True,blank=True)
+    event_date=models.DateField(null=True,blank=True)
     registration_fee=models.BooleanField(null=False,blank=False,default=False)
     flagship_event = models.BooleanField(null=False,blank=False,default=False)
     publish_in_main_web = models.BooleanField(null=False,blank=False,default=False)

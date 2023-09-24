@@ -213,7 +213,7 @@ def getEventNumberStat():
     year = datetime.date.today().year
     print(year)
     for i in range(5):
-        count = Events.objects.filter(probable_date__year=(year-i)).count()
+        count = Events.objects.filter(event_date__year=(year-i)).count()
         event_num.append(count)
     event_num.reverse()
     return event_num

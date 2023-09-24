@@ -7,19 +7,21 @@
         <li class="tab" onclick="showTab('tab2')">Collaborations</li>
         <li class="tab" onclick="showTab('tab3')">Venue & Permissions</li>
     </ul>
+    <form method="POST">
+        {% csrf_token %}   
+        {% block event_details_form %}
+            {% include "Events/event_details_form_content.html" %}
+        {% endblock event_details_form %}
 
-    {% block event_details_form %}
-        {% include "Events/event_details_form_content.html" %}
-    {% endblock event_details_form %}
-
-    {% block collaboration_form %}
-        {% include "Events/event_collaboration_details_form_content.html" %}
-    {% endblock collaboration_form %}
+        {% block collaboration_form %}
+            {% include "Events/event_collaboration_details_form_content.html" %}
+        {% endblock collaboration_form %}
 
 
-    {% block event_venue_and_permission_form %}
-        {% include "Events/event_venue_and_permission_form_content.html" %}
-    {% endblock event_venue_and_permission_form %}
+        {% block event_venue_and_permission_form %}
+            {% include "Events/event_venue_and_permission_form_content.html" %}
+        {% endblock event_venue_and_permission_form %}
+    </form>
 </div>
 
 {% endblock event_creation_tab %}
