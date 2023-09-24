@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import Events,SuperEvents,Event_type,Event_Venue
+from . models import Events,SuperEvents,Event_type,Event_Venue,InterBranchCollaborations,IntraBranchCollaborations
 # Register your models here.
 
 #Creating customized View For DJANGO Admin
@@ -13,4 +13,11 @@ class Super_Events(admin.ModelAdmin):
 class Events(admin.ModelAdmin):
     list_display=['id','event_name','event_type','super_event_name','event_organiser','event_date','registration_fee','flagship_event','publish_in_main_web']
 
+@admin.register(InterBranchCollaborations)
+class InterBranchCollaborations(admin.ModelAdmin):
+    list_display=['event_id','collaboration_with']
+
+@admin.register(IntraBranchCollaborations)
+class IntraBranchCollaborations(admin.ModelAdmin):
+    list_display=['event_id','collaboration_with']
 

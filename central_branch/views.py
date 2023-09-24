@@ -38,7 +38,7 @@ def central_home(request):
         return render(request,"access_denied2.html")
 
 @login_required
-def event_control(request):
+def event_control_homepage(request):
     # This function loads all events and super events in the event homepage table
     all_insb_events=renderData.Branch.load_all_events()
     context={
@@ -174,7 +174,7 @@ def event_creation_form_page3(request,event_id):
     return render(request,'Events/event_creation_form3.html',context)
 
 @login_required
-def event_dashboard(request,event_id):
+def event_description(request,event_id):
 
     '''Checking to see whether the user has access to view events on portal and edit them'''
     user = request.user
@@ -206,7 +206,7 @@ def event_dashboard(request,event_id):
         }
     else:
         return redirect('main_website:all-events')
-    return render(request,"event/event_dashboard.html",context)
+    return render(request,"Events/event_description.html",context)
 
 @login_required
 def get_updated_options_for_event_dashboard(request):
@@ -227,9 +227,7 @@ def get_updated_options_for_event_dashboard(request):
         #returning the dictionary
         return JsonResponse(updated_options, safe=False)
 
-def event_control_homepage(request,event_id):
-    
-    return render(request,'event_control_homepage.html')
+
 
 #Panel and Team Management
 def teams(request):
