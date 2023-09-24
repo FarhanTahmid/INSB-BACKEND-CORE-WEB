@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+{% load static %}
+<html lang="en-US">
+<head>
+    
+
+    <title>IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+    
+    {% block common_css %}
+        {% include "common_css_includes.html" %}
+    {% endblock common_css %}
+
+
+</head>
+
+<body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+    <div class="body-wrapper  float-menu" data-home="{% url 'main_website:homepage' %}">
+        
+        {% block header %}
+            {% include 'header.html' %}
+        {% endblock %}
+
+
+        <!-- is search -->
+        <div class="content-wrapper">
+            <div class="gdlr-content">
+
+                <!-- Above Sidebar Section-->
+                <div class="above-sidebar-wrapper">
+
+                    <!--Image slider-->
+
+                    {% block image_slider %}
+                        {% include "LandingPage/image_slider.html" %}
+                    {% endblock image_slider %}
+                    
+                </div>
+
+                <!-- Sidebar With Content Section-->
+                <div class="with-sidebar-wrapper">
+                    
+                    <!--What We do-->
+                    {% block what_we_do %}
+                        {% include "LandingPage/what_we_do.html" %}
+                    {% endblock what_we_do %}
+
+                    
+                    <!--Banner with Stats-->
+
+                    {% block banner_with_numbers %}
+                        {% include "LandingPage/banner_with_numbers.html" %}
+                    {% endblock banner_with_numbers %}
+
+
+                    <!--Featured Events-->
+                    
+                    {% block featured_events %}
+                        {% include "LandingPage/featured_events.html" %}
+                    {% endblock featured_events %}
+
+                    <!--News Cards-->
+
+                    {% block news_cards %}
+                        {% include "LandingPage/news_cards.html" %}
+                    {% endblock news_cards %}
+
+                    
+                    <!--Blogs cards-->
+                    {% block blogs_cards %}
+                        {% include "LandingPage/blogs_cards.html" %}
+                    {% endblock blogs_cards %}
+                    
+            </div>
+            <!-- gdlr-content -->
+            <div class="clear"></div>
+        </div>
+
+        <!--footer block-->
+        
+        {% block footer %}
+            {% include "footer_block.html" %}
+        {% endblock %}
+        
+    </div>
+    <!-- body-wrapper -->
+    {% block common_js %}
+        {% include "common_js_includes.html" %}
+    {% endblock %}
+</body>
+
+</html>

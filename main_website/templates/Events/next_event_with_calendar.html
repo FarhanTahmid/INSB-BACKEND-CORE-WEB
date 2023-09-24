@@ -1,0 +1,42 @@
+{% load static %}
+{% block event_with_calendar %}
+<section style="padding: 50px 0px;" class="">
+    <div>
+        <div class="event_container">
+            
+            <div class="upnext">
+                <h4 style="margin-bottom: 30px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">UP N</span>EXT</h4>
+                <img style="border: 1px solid rgb(205, 193, 193); padding: 5px; border-radius: 6px;" src="https://ieeensusb.org/wp-content/uploads/2021/03/157705762_257718782652594_8108325620051204445_n.jpg" width="100%" height="100%" alt="">
+            </div>
+            <div class="event_calender">
+                <!-- Calender start -->
+                <h4 style="margin-bottom: 30px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">EVENT C</span>ALENDER</h4>
+                <div class="calendar">
+                <div class="header" style="padding: 20px;">
+                <div style="cursor: pointer;" class="prev-btn"><i class="fa-solid fa-chevron-left"></i></div>
+                <span class="month-year"></span>
+                <div style="cursor: pointer;" class="next-btn"><i class="fa-solid fa-chevron-right"></i></div>
+                </div>
+                <div class="days-of-week" style="display: flex; justify-content: space-around; padding: 10px 0px; font-weight: bold;">
+                <span class="day-of-week">Sun</span>
+                <span class="day-of-week">Mon</span>
+                <span class="day-of-week">Tue</span>
+                <span class="day-of-week">Wed</span>
+                <span class="day-of-week">Thu</span>
+                <span class="day-of-week">Fri</span>
+                <span class="day-of-week">Sat</span>
+                </div>
+                <div class="days" style="padding: 15px 0px; font-weight: bold;"></div>
+                </div>
+                <div class="event-box" style="padding: 20px;">
+                    <h5>Events for <span class="selected-date"></span></h3>
+                    <ul style="list-style-type: disc; margin-top: 15px;" class="events-list"></ul>
+                </div>
+            <!-- calender end -->
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock event_with_calendar %}
+
