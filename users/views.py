@@ -30,8 +30,16 @@ def login(request):
         user=auth.authenticate(username=username,password=password)
         
         if user is not None: #Checks if user exists and if the user is superuser
+            # Check for the 'next' parameter in the GET request
+            next_url = request.POST['next']
+            
             auth.login(request,user)
-            return redirect('users:dashboard')
+
+            if next_url:
+                # Redirect to the originally requested URL
+                return redirect(next_url)
+            else:
+                return redirect('users:dashboard')
         else:
             messages.info(request,"Credentials given are wrong")
             return redirect('users:login')     
