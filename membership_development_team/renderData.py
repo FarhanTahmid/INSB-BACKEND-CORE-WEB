@@ -11,6 +11,7 @@ class MDT_DATA:
     def get_member_data(ieee_id):
         '''Returning INSB MEMBERS DATA'''
         return Members.objects.get(ieee_id=ieee_id)
+    
     def get_member_account_status(ieee_id):
 
         try:
