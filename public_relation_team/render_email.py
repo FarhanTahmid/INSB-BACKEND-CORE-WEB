@@ -137,37 +137,63 @@ class PRT_Email_System:
     def send_email(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,attachment=None):
         email_from = settings.EMAIL_HOST_USER
         
-        
-        if attachment is None:
-            try:
-                email=EmailMultiAlternatives(subject,mail_body,
-                        email_from,
-                        to_email_list,
-                        bcc=bcc_email_list,
-                        cc=cc_email_list
-                        )
-                email.send()
-                return True
-            except Exception as e:
-                print(e)
-                return False    
-        else:
-            try:
-                # Create a ContentFile from the uploaded file
-                content_file = ContentFile(attachment.read())
-                content_file.name = attachment.name  # Set the filename
-                email=EmailMultiAlternatives(subject,mail_body,
-                        email_from,
-                        to_email_list,
-                        bcc=bcc_email_list,
-                        cc=cc_email_list
-                        )
-                email.attach(attachment.name,content_file.read(),attachment.content_type)
-                email.send()
-                return True
-            except Exception as e:
-                print(e)
-                return False
+        if len(to_email_list)>=40 and len(bcc_email_list)>=40:
+            while len(to_email_list)!=0 and len(bcc_email_list)!=0:
+                print(to_email_list)
+                print()
+                print(bcc_email_list)
+                print()
+                send_email_confirmation(to_email_list[0:41],cc_email_list,bcc_email_list[0:41],subject,mail_body,attachment=None)
+                del to_email_list[:41]
+                del bcc_email_list[:41]
+
+        elif len(to_email_list)>=40:
+            while len(to_email_list)!=0:
+                print(to_email_list)
+                print()
+                send_email_confirmation(to_email_list[0:41],cc_email_list,bcc_email_list,subject,mail_body,attachment=None)
+                del to_email_list[:41]
+    
+        elif len(bcc_email_list)>=40:
+            while len(bcc_email_list)!=0:
+                print(bcc_email_list)
+                print()
+                send_email_confirmation(to_email_list,cc_email_list,bcc_email_list[0:41],subject,mail_body,attachment=None)
+                del bcc_email_list[:41]
+            
+
+
+        def send_email_confirmation(to_email_list_final,cc_email_list_final,bcc_email_list_final,subject,mail_body,attachment=None):
+            if attachment is None:
+                try:
+                    email=EmailMultiAlternatives(subject,mail_body,
+                            email_from,
+                            to_email_list_final,
+                            bcc=bcc_email_list_final,
+                            cc=cc_email_list_final
+                            )
+                    email.send()
+                    return True
+                except Exception as e:
+                    print(e)
+                    return False    
+            else:
+                try:
+                    # Create a ContentFile from the uploaded file
+                    content_file = ContentFile(attachment.read())
+                    content_file.name = attachment.name  # Set the filename
+                    email=EmailMultiAlternatives(subject,mail_body,
+                            email_from,
+                            to_email_list_final,
+                            bcc=bcc_email_list_final,
+                            cc=cc_email_list_final
+                            )
+                    email.attach(attachment.name,content_file.read(),attachment.content_type)
+                    email.send()
+                    return True
+                except Exception as e:
+                    print(e)
+                    return False
             
             
         
