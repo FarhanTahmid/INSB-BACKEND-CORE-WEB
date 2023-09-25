@@ -147,14 +147,14 @@ class PRT_Email_System:
                 del to_email_list[:41]
                 del bcc_email_list[:41]
 
-        elif len(to_email_list)>=40:
+        if len(to_email_list)>=40:
             while len(to_email_list)!=0:
                 print(to_email_list)
                 print()
                 send_email_confirmation(to_email_list[0:41],cc_email_list,bcc_email_list,subject,mail_body,attachment=None)
                 del to_email_list[:41]
     
-        elif len(bcc_email_list)>=40:
+        if len(bcc_email_list)>=40:
             while len(bcc_email_list)!=0:
                 print(bcc_email_list)
                 print()
