@@ -136,33 +136,44 @@ class PRT_Email_System:
     
     def send_email(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,attachment):
         
-        if len(to_email_list)>=3 and len(bcc_email_list)>=3:
+        '''Checking to see if 'to' mail and 'bcc' mail length is more than 40 or not. If so
+        it will send the email to the first 40 and then the first 40 mail would be removed
+        from both thr lists until one of them becomes 0. If there is remaining items on other list 
+        then the last two 'if' condition will work to send the remaining emails'''
+
+        if len(to_email_list)>=40 and len(bcc_email_list)>=40:
             while len(to_email_list)!=0 and len(bcc_email_list)!=0:
                 print(to_email_list)
                 print()
                 print(bcc_email_list)
                 print()
-                if PRT_Email_System.send_email_confirmation(to_email_list[0:4],cc_email_list,bcc_email_list[0:4],subject,mail_body,attachment):
-                    return True
-                del to_email_list[:4]
-                del bcc_email_list[:4]
+                if PRT_Email_System.send_email_confirmation(to_email_list[0:41],cc_email_list,bcc_email_list[0:41],subject,mail_body,attachment):
+                    del to_email_list[:41]
+                    del bcc_email_list[:41]
+                else:
+                    return False
 
-        if len(to_email_list)>=3:
+        if len(to_email_list)>=40:
             while len(to_email_list)!=0:
                 print(to_email_list)
                 print()
-                if PRT_Email_System.send_email_confirmation(to_email_list[0:4],cc_email_list,bcc_email_list,subject,mail_body,attachment):
-                    return True
-                del to_email_list[:4]
+                if PRT_Email_System.send_email_confirmation(to_email_list[0:41],cc_email_list,bcc_email_list,subject,mail_body,attachment):
+                    del to_email_list[:41]
+                else:
+                    return False
     
-        if len(bcc_email_list)>=3:
+        if len(bcc_email_list)>=40:
             while len(bcc_email_list)!=0:
                 print(bcc_email_list)
                 print()
-                if PRT_Email_System.send_email_confirmation(to_email_list,cc_email_list,bcc_email_list[0:4],subject,mail_body,attachment):
-                    return True
-                del bcc_email_list[:4]
-
+                if PRT_Email_System.send_email_confirmation(to_email_list,cc_email_list,bcc_email_list[0:41],subject,mail_body,attachment):
+                    del bcc_email_list[:41]
+                else:
+                    return False
+                
+        
+        #If both list does not have more than 40 than normal just sending the emails without any
+        #changes in the lists'''
         else:
             if PRT_Email_System.send_email_confirmation(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,attachment):
                 return True
