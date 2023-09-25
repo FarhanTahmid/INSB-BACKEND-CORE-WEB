@@ -173,6 +173,133 @@
 .event_box{
   width: 350px;
 }
+/* event css */
+
+/* event card css */
+.event-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 25px 20px;
+}
+
+.event-container h1 {
+    font-size: 40px;
+    margin-bottom: 20px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #334;
+}
+
+.event-container .box-container {
+    margin: 50px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 50px;
+    justify-items: center;
+}
+
+.event-container .box-container .box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 18rem;
+    border: 2px solid gray;
+    display: none;
+}
+.event-container .box-container .gdlr-item.gdlr-blog-grid.gdlr-skin-box{
+    border: 2px solid gray;
+    display: none;
+}
+
+.event-container .box-container .gdlr-item.gdlr-blog-grid.gdlr-skin-box:nth-child(1),
+.event-container .box-container .gdlr-item.gdlr-blog-grid.gdlr-skin-box:nth-child(2),
+.event-container .box-container .gdlr-item.gdlr-blog-grid.gdlr-skin-box:nth-child(3) {
+    display: inline-block;
+}
+
+.event-container .box-container .box .event-box-image {
+    height: 160px;
+    width: 288px;
+    overflow: hidden;
+}
+
+.event-container .box-container .box .event-box-image img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.event-container .box-container .box .event-box-date {
+    background-color: #02082b;
+    width: 100%;
+    padding: 2% 0 0 0;
+}
+
+.event-container .box-container .box .event-box-content {
+    background-color: #fff;
+    width: 100%;
+    padding-top: 10px;
+}
+
+.event-container .box-container .box .event-box-content h3 {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 30px;
+    color: #000;
+}
+
+.event-container .box-container .box .event-box-footer {
+    position: sticky;
+    top: 100%;
+    background-color: rgba(143, 143, 143, 0.5);
+    width: 100%;
+}
+
+.event-container .box-container .box .event-box-footer a {
+    color: #000;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.event-container .box-container .box .event-box-footer a:hover {
+    color: #bd8a00;
+}
+
+.load-more {
+    display: inline-block;
+    padding: 10px 30px;
+    border: 1px solid #02082b;
+    color: #02082b;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.load-more:hover {
+    background-color: #02082b;
+    border-color: #bd8a00;
+    color: #bd8a00;
+}
+
+.event_search {
+    padding: 10px 0;
+}
+
+.event_search label {
+    font-size: 20px;
+    color: #02082b;
+}
+
+.event_search input {
+    font-size: 20px;
+    width: 70%;
+    max-width: 50vh;
+    color: #02082b;
+}
+.event_box{
+
+}
 
 /* end */
 

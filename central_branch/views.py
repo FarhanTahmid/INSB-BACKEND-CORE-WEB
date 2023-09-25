@@ -38,7 +38,8 @@ def central_home(request):
         return render(request,"access_denied2.html")
 
 @login_required
-def event_control(request):
+def event_control_homepage(request):
+    # This function loads all events and super events in the event homepage table
     all_insb_events=renderData.Branch.load_all_events()
     context={
         'events':all_insb_events,
@@ -77,7 +78,7 @@ def super_event_creation(request):
 
 
 @login_required
-def event_creation_form_page1(request):
+def event_creation_form_page(request):
     
     #######load data to show in the form boxes#########
     
@@ -98,8 +99,7 @@ def event_creation_form_page1(request):
             event_name=request.POST['event_name']
             event_description=request.POST['event_description']
             event_type = request.POST['event_type']
-            probable_date=request.POST['probable_date']
-            final_date=request.POST['final_date']
+            event_date=request.POST['event_date']
     
             
             get_event=renderData.Branch.register_event_page1(
@@ -107,8 +107,8 @@ def event_creation_form_page1(request):
                 event_name=event_name,
                 event_type=event_type,
                 event_description=event_description,
-                probable_date=probable_date,
-                final_date=final_date)
+                event_date=event_date
+            )
             
             if(get_event)==False:
                 messages.info(request,"Database Error Occured! Please try again later.")
@@ -116,10 +116,6 @@ def event_creation_form_page1(request):
                 #if the method returns true, it will redirect to the new page
                 return redirect('central_branch:event_creation_form2',get_event)
 
-
-                
-            
-                
         elif(request.POST.get('cancel')):
             return redirect('central_branch:event_control')
     return render(request,'Events/event_creation_form.html',context)
@@ -148,7 +144,7 @@ def event_creation_form_page2(request,event_id):
             return redirect('central_branch:event_control')
 
 
-    return render(request,'event/event_creation_form2.html',context)
+    return render(request,'Events/event_creation_form2.html',context)
 
 def event_creation_form_page3(request,event_id):
     #loading all venues from the venue list from event management team database
@@ -161,7 +157,7 @@ def event_creation_form_page3(request,event_id):
         'permission_criterias':permission_criterias,
     }
     if request.method=="POST":
-        if request.POST.get('next'):
+        if request.POST.get('create_event'):
             #getting the venues for the event
             venue_list_for_event=request.POST.getlist('event_venues')
             #getting the permission criterias for the event
@@ -175,10 +171,10 @@ def event_creation_form_page3(request,event_id):
             else:
                 return redirect('central_branch:event_control')
 
-    return render(request,'event/event_creation_form3.html',context)
+    return render(request,'Events/event_creation_form3.html',context)
 
 @login_required
-def event_dashboard(request,event_id):
+def event_description(request,event_id):
 
     '''Checking to see whether the user has access to view events on portal and edit them'''
     user = request.user
@@ -186,13 +182,21 @@ def event_dashboard(request,event_id):
     if has_access:
 
         '''Details page for registered events'''
-    
-        context={}
+
+        # Get collaboration details
+        interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
+        intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
+        # Checking if event has collaborations
+        hasCollaboration=False
+        if(len(interBranchCollaborations)>0 and len(intraBranchCollaborations)>0):
+            hasCollaboration=True
+        
+        
+
         get_all_team_name = renderData.Branch.load_teams()
         get_event_details = Events.objects.get(id = event_id)
+
         #print(get_event_details.super_event_name.id)
-        get_inter_branch_collaboration = InterBranchCollaborations.objects.filter(event_id=get_event_details.id)
-        get_intra_branch_collaboration = IntraBranchCollaborations.objects.filter(event_id = get_event_details.id)
         get_event_venue = Event_Venue.objects.filter(event_id = get_event_details.id)  
         
         if request.method == "POST":
@@ -203,14 +207,15 @@ def event_dashboard(request,event_id):
             progress = request.POST.get('progression')    
         context={
             'event_details':get_event_details,
-            'inter_branch_details':get_inter_branch_collaboration,
-            'intra_branch_details':get_intra_branch_collaboration,
             'event_venue':get_event_venue,
-            'team_names':get_all_team_name
+            'team_names':get_all_team_name,
+            'interBranchCollaborations':interBranchCollaborations,
+            'intraBranchCollaborations':intraBranchCollaborations,
+            'hasCollaboration':hasCollaboration,
         }
     else:
         return redirect('main_website:all-events')
-    return render(request,"event/event_dashboard.html",context)
+    return render(request,"Events/event_description.html",context)
 
 @login_required
 def get_updated_options_for_event_dashboard(request):
@@ -231,9 +236,7 @@ def get_updated_options_for_event_dashboard(request):
         #returning the dictionary
         return JsonResponse(updated_options, safe=False)
 
-def event_control_homepage(request,event_id):
-    
-    return render(request,'event_control_homepage.html')
+
 
 #Panel and Team Management
 def teams(request):

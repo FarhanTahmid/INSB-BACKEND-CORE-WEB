@@ -100,9 +100,9 @@
             
         <div>
            
-                {% block event_creation_form %}
-                    {% include "Events/event_details_form_content.html" %}
-                {% endblock event_creation_form %}
+                {% block event_venue_and_permission_form %}
+                    {% include "Events/event_venue_and_permission_form_content.html" %}
+                {% endblock event_venue_and_permission_form %}
         
             <div>
                 {% for message in messages %}
