@@ -19,3 +19,9 @@ from . models import HomepageBannerPictureWithText
 @admin.register(HomepageBannerPictureWithText)
 class HomepageBannerData(admin.ModelAdmin):
     list_display=['id']
+
+#Homepage Ribbon Picture
+from . models import RibbonPicture
+@admin.register(RibbonPicture)
+class RibbonPicture(admin.ModelAdmin):
+    list_display=['id']
