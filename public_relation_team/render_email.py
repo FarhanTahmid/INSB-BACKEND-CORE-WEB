@@ -134,36 +134,44 @@ class PRT_Email_System:
         
         return to_email_final_list,cc_email_final_list,bcc_email_final_list
     
-    def send_email(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,attachment=None):
-        email_from = settings.EMAIL_HOST_USER
+    def send_email(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,attachment):
         
-        if len(to_email_list)>=40 and len(bcc_email_list)>=40:
+        if len(to_email_list)>=3 and len(bcc_email_list)>=3:
             while len(to_email_list)!=0 and len(bcc_email_list)!=0:
                 print(to_email_list)
                 print()
                 print(bcc_email_list)
                 print()
-                send_email_confirmation(to_email_list[0:41],cc_email_list,bcc_email_list[0:41],subject,mail_body,attachment=None)
-                del to_email_list[:41]
-                del bcc_email_list[:41]
+                if PRT_Email_System.send_email_confirmation(to_email_list[0:4],cc_email_list,bcc_email_list[0:4],subject,mail_body,attachment):
+                    return True
+                del to_email_list[:4]
+                del bcc_email_list[:4]
 
-        if len(to_email_list)>=40:
+        if len(to_email_list)>=3:
             while len(to_email_list)!=0:
                 print(to_email_list)
                 print()
-                send_email_confirmation(to_email_list[0:41],cc_email_list,bcc_email_list,subject,mail_body,attachment=None)
-                del to_email_list[:41]
+                if PRT_Email_System.send_email_confirmation(to_email_list[0:4],cc_email_list,bcc_email_list,subject,mail_body,attachment):
+                    return True
+                del to_email_list[:4]
     
-        if len(bcc_email_list)>=40:
+        if len(bcc_email_list)>=3:
             while len(bcc_email_list)!=0:
                 print(bcc_email_list)
                 print()
-                send_email_confirmation(to_email_list,cc_email_list,bcc_email_list[0:41],subject,mail_body,attachment=None)
-                del bcc_email_list[:41]
-            
+                if PRT_Email_System.send_email_confirmation(to_email_list,cc_email_list,bcc_email_list[0:4],subject,mail_body,attachment):
+                    return True
+                del bcc_email_list[:4]
+
+        else:
+            if PRT_Email_System.send_email_confirmation(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,attachment):
+                return True
+            else:
+                return False
 
 
-        def send_email_confirmation(to_email_list_final,cc_email_list_final,bcc_email_list_final,subject,mail_body,attachment=None):
+    def send_email_confirmation(to_email_list_final,cc_email_list_final,bcc_email_list_final,subject,mail_body,attachment):
+            email_from = settings.EMAIL_HOST_USER     
             if attachment is None:
                 try:
                     email=EmailMultiAlternatives(subject,mail_body,
