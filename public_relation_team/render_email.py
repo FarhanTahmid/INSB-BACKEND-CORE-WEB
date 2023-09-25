@@ -134,7 +134,7 @@ class PRT_Email_System:
         
         return to_email_final_list,cc_email_final_list,bcc_email_final_list
     
-    def send_email(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,attachment):
+    def send_email(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,attachment=None):
         
         '''Checking to see if 'to' mail and 'bcc' mail length is more than 40 or not. If so
         it will send the email to the first 40 and then the first 40 mail would be removed
