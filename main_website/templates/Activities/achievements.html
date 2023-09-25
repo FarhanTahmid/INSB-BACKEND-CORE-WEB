@@ -3,9 +3,8 @@
 <html lang="en">
 
 <head>
-
     <title>Events - IEEE NSU SB</title>
-    <link rel="icon" href="{% static 'upload/logo.gif' %}"/>
+    <link rel="icon" href="upload/logo.gif"/>
     
     <!--Common CSS-->
     {% block common_css %}
@@ -14,44 +13,54 @@
 
     <!--Extra CSS-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/event.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/event.css' %}"/>    <link rel="stylesheet" href="css/Rass.css">
+    <link rel="stylesheet" href="{% static 'css/Rass.css' %}"/>    <link rel="stylesheet" href="css/Rass.css">
+
+    
 
 </head>
 
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+    
     <div class="body-wrapper  float-menu">
         
+        <!--Header-->
         {% block header %}
             {% include 'header.html' %}
         {% endblock header %}
-        
+        <!--Header End-->
+
+        <!--Wave-->
         {% block wave_design %}
             {% include 'wave.html' %}
         {% endblock %}
-
-        <!--Upcoming Event with Calendar-->
-
-        {% block event_with_calendar %}
-            {% include "Events/next_event_with_calendar.html" %}
-        {% endblock event_with_calendar %}
+        <!-- end of wAVE PART  -->
 
 
-        <!--Event card with search function and load more option-->
-        {% block event_container %}
-            {% include 'Events/event_card_block.html' %}
-        {% endblock  %}
+        <!-- Achievement card -->
+
+        {% block achievement_card_container %}
+            {% include "Activities/achievement_card_container.html" %}
+        {% endblock achievement_card_container %}
+        
+        <!-- Achievement Card End-->
+     
+
 
         <!--Footer-->
+
         {% block footer %}
             {% include "footer_block.html" %}
         {% endblock footer %}
 
-       
+        <!--Footer End-->
+
     </div>
+    <!-- body-wrapper -->
     {% block common_js %}
         {% include "common_js_includes.html" %}
-    {% endblock %}
-    <script src="{% static './js/event_script.js'%}"></script>
+    {% endblock %}    
+    
 </body>
 
 </html>

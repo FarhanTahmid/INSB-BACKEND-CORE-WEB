@@ -77,6 +77,11 @@ def Event_Details(request,event_id):
     })
 
 
+# ###################### ACHIEVEMENTS ##############################
+
+def achievements(request):
+    return render(request,"Activities/achievements.html")
+
     
 
 ######################### SOCIETY & AG WORKS #######################
