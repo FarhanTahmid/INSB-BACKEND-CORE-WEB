@@ -19,25 +19,26 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    path('',include('port.urls',namespace='port')),
+    
+    path('',include('main_website.urls',namespace='main_website')),
+    path('ieeensusb.portal',include('port.urls',namespace='port')),
     path('api/',include('api.urls')),
     path('admin/', admin.site.urls),
-    path('users/',include('users.urls',namespace="users")),
-    path('recruitment/',include('recruitment.urls',namespace="recruitment")),
-    path('central_branch/',include('central_branch.urls',namespace='central_branch')),
-    path('membership_development_team/',include('membership_development_team.urls',namespace='membership_development_team')),
-    path('public_relation_team/',include('public_relation_team.urls',namespace='public_relation_team')),
-    path('system_administration',include('system_administration.urls',namespace='system_administration')),
-    path('main_website/',include('main_website.urls',namespace='main_website')),
-    path('events_and_management_team/',include('events_and_management_team.urls',namespace="events_and_management_team")),
-    path('logistics_and_operations_team/',include('logistics_and_operations_team.urls',namespace="logistics_and_operations_team")),
-    path('content_writing_and_publications_team/',include('content_writing_and_publications_team.urls',namespace="content_writing_and_publications_team")),
-    path('promotions_team/',include('promotions_team.urls',namespace="promotions_team")),
-    path('website_development_team/',include('website_development_team.urls',namespace='website_development_team')),
-    path('media_team/',include('media_team.urls',namespace='media_team')),
-    path('graphics_team/',include('graphics_team.urls',namespace="graphics_team")),
-    path('finance_and_corporate_team/',include("finance_and_corporate_team.urls",namespace="finanace_and_corporate_team")),
-    path('ieee_nsusb_pes_sbc/',include("ieee_nsu_sb_pes_sbc.urls",namespace="ieee_nsu_pes")),
+    path('portal/users/',include('users.urls',namespace="users")),
+    path('portal/recruitment/',include('recruitment.urls',namespace="recruitment")),
+    path('portal/central_branch/',include('central_branch.urls',namespace='central_branch')),
+    path('portal/membership_development_team/',include('membership_development_team.urls',namespace='membership_development_team')),
+    path('portal/public_relation_team/',include('public_relation_team.urls',namespace='public_relation_team')),
+    path('portal/system_administration',include('system_administration.urls',namespace='system_administration')),
+    path('portal/events_and_management_team/',include('events_and_management_team.urls',namespace="events_and_management_team")),
+    path('portal/logistics_and_operations_team/',include('logistics_and_operations_team.urls',namespace="logistics_and_operations_team")),
+    path('portal/content_writing_and_publications_team/',include('content_writing_and_publications_team.urls',namespace="content_writing_and_publications_team")),
+    path('portal/promotions_team/',include('promotions_team.urls',namespace="promotions_team")),
+    path('portal/website_development_team/',include('website_development_team.urls',namespace='website_development_team')),
+    path('portal/media_team/',include('media_team.urls',namespace='media_team')),
+    path('portal/graphics_team/',include('graphics_team.urls',namespace="graphics_team")),
+    path('portal/finance_and_corporate_team/',include("finance_and_corporate_team.urls",namespace="finanace_and_corporate_team")),
+    path('portal/ieee_nsusb_pes_sbc/',include("ieee_nsu_sb_pes_sbc.urls",namespace="ieee_nsu_pes")),
     
     
 ]

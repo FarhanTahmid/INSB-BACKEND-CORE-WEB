@@ -350,7 +350,7 @@ def renewal_session_data(request,pk):
     load_team_members=renderData.MDT_DATA.load_team_members()
     
     #form link for particular sessions
-    form_link=f"{request.META['HTTP_HOST']}/membership_development_team/renewal_form/"+str(session_id)
+    form_link=f"{request.META['HTTP_HOST']}/portal/membership_development_team/renewal_form/"+str(session_id)
     
     #try loading form data to notify user if form credentials has been updated or not for that session with button glow in "Update Form Credentials"
     has_form_data=False
@@ -709,7 +709,7 @@ def site_registration_request_home(request):
     #counting the pending requests
     pending_count=Portal_Joining_Requests.objects.filter(application_status=False).count()
     #form link for site registration
-    form_link=f"{request.META['HTTP_HOST']}/membership_development_team/insb_site_registration_form"
+    form_link=f"{request.META['HTTP_HOST']}/portal/membership_development_team/insb_site_registration_form"
     
     context={
         'requests':get_requests,
