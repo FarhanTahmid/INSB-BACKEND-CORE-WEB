@@ -83,7 +83,7 @@
         <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
                 
             <br>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to the <span><b>Teams</b></span> of <span style="color:#00629B;">IEEE NSU Student Branch</b></span></h2>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Manage <span style="color:#00629B;"><b>{{team_name}}</b></span> Team</h2>
             
             <div style="justify-content:center;text-align:center;">  
                 <p class="btn-groups">
@@ -128,11 +128,12 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% for member in team_members %}
                         <form method="POST">
                         {% csrf_token %}
-                        {% for member in team_members %}
+                        
                         <tr>
-                            <td><a href="">{{ member.ieee_id }}</a></td>
+                            <td style="color:#00629B;"><a href="">{{ member.ieee_id }}</a></td>
                             <td>{{ member.name }}</td>
                             <td>{{ member.email_ieee }}</td>
                             <td>
@@ -154,8 +155,9 @@
                                 </div>
                             </td>    
                         </tr>
-                        {% endfor %}
+                        
                         </form>
+                        {% endfor %}
                         
                         
                     <tbody>

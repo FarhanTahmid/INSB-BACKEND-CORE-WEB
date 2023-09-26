@@ -121,7 +121,7 @@
                       <tbody>
                         {% for team in team %}
                         <tr>
-                            <td style="color:#00629B"><a href="{% url 'central_branch:team_details' team.primary team.team_name %}" >{{team.team_name}}</a></td>
+                            <td style="color:#00629B;"><a href="{% url 'central_branch:team_details' team.primary team.team_name %}" >{{team.team_name}}</a></td>
                         </tr>
                         {% endfor %}
                         
