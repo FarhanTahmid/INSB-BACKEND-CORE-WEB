@@ -2,6 +2,7 @@
 {% block common_css %}
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <link rel='stylesheet' href="{% static 'css/style.css' %}" type='text/css' media='all' />
 <link rel='stylesheet' href="{% static 'css/superfish.css' %}" type='text/css' media='all' />
 <link rel='stylesheet' href="{% static 'css/component.css' %}" type='text/css' media='all' />
@@ -11,6 +12,52 @@
 <link rel='stylesheet' href="{% static 'masterslider/public/assets/css/masterslider.main.css' %}" type='text/css' media='all' />
 <link rel='stylesheet' href="{% static 'css/masterslider-custom.css' %}" type='text/css' media='all' />
 <link rel='stylesheet' href="{% static 'css/style-custom.css' %}" type='text/css' media='all' />
-<link href="https://fonts.googleapis.com/css?family=Raleway:300|Lato:regular|Crete+Round:regular" rel="stylesheet"
-    property="stylesheet" type="text/css" media="all">
+<link href="https://fonts.googleapis.com/css?family=Raleway:300|Lato:regular|Crete+Round:regular" rel="stylesheet" property="stylesheet" type="text/css" media="all">
+
 {% endblock common_css %}
+<style>
+    .button-15 {
+        background-image: linear-gradient(#00629B, #00629D);
+        border: 1px solid #0077CC;
+        border-radius: 4px;
+        box-sizing: border-box;
+        color: #FFFFFF;
+        cursor: pointer;
+        direction: ltr;
+        display: block;
+        letter-spacing: -.022em;
+        line-height: 1.47059;
+        min-width: 30px;
+        overflow: visible;
+        padding: 4px 10px;
+        text-align: center;
+        vertical-align: baseline;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        white-space: nowrap;
+        margin-left: 20px;
+      }
+      
+      .button-15:disabled {
+        cursor: default;
+        opacity: .3;
+      }
+      
+      .button-15:hover {
+        background-image: linear-gradient(#51A9EE, #147BCD);
+        border-color: #1482D0;
+        text-decoration: none;
+      }
+      
+      .button-15:active {
+        background-image: linear-gradient(#3D94D9, #0067B9);
+        border-color: #006DBC;
+        outline: none;
+      }
+      
+      .button-15:focus {
+        box-shadow: rgba(131, 192, 253, 0.5) 0 0 0 3px;
+        outline: none;
+      }
+</style>
