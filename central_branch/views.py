@@ -328,9 +328,11 @@ def team_details(request,primary,name):
             position = request.POST.get('position')
             Members.objects.filter(ieee_id = ieee_id).update(position = position)
             return redirect('central_branch:team_details',primary,name)
+        
         if (request.POST.get('reset_team')):
+            print("got request")
             '''To remove all members in the team and assigning them as general memeber'''
-            all_memebers_in_team = Members.objects.filter(team = primary)
+            all_memebers_in_team = Members.objects.filter(team = Teams.objects.get(primary=primary))
             all_memebers_in_team.update(team=None,position = Roles_and_Position.objects.get(id=13))
             return redirect('central_branch:team_details',primary,name)
         
