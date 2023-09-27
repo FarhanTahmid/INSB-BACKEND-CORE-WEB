@@ -12,7 +12,6 @@
 
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
 
-
     <style>
         body, html {
         
@@ -178,15 +177,11 @@
 
 
 
-
-
-
-
             <!--Modals-->
             <div id="m-s-a" class="modal fade animate" data-backdrop="true">
                 <form method="POST">
                     {% csrf_token %}
-                    <div class="modal-dialog" id="animate">
+                    <div class="modal-dialog modal-lg" id="animate">
                         <div class="modal-content">
                             <div class="modal-header">
                             <h5 class="modal-title">Add Member in The Team</h5>
@@ -195,8 +190,7 @@
                             <div class="modal-body text-left p-lg">
                                 
                                 <p>Choose Position First and then Select Member From the Table</p>
-                                
-                            </div>
+                        
 
                             <div class="modal-footer">
                             <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
@@ -246,6 +240,5 @@
     {% endblock common_js %}
 
     <script src="{% static 'table_search.js'%}"></script>
-
 </body>
 </html>
