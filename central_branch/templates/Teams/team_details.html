@@ -52,6 +52,87 @@
               width: 100%; /* Make the button full width on smaller screens */
             }
           }
+          .scrollable-list {
+            max-height: 300px; /* Adjust the maximum height as needed */
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+    
+        .scrollable-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+    
+        .scrollable-list select {
+            flex: 1;
+        }
+        .image-button {
+            display: inline-block;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+        
+        /* Add additional styling for image appearance, such as size and alignment */
+        .image-button img {
+            height:50px;
+            width: 50px; /* Adjust as needed */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 5px; /* Add rounded corners if desired */
+        }
+        .btn-container {
+          text-align: center;
+        }
+        
+        .btn {
+          max-width: 100%;
+          width: auto;
+          display: inline-block;
+          white-space: normal; /* Allow text to wrap within the button */
+          word-wrap: break-word; /* Break long words if necessary */
+          font-size: 16px; /* Adjust the font size as needed */
+        }
+        .tooltip-container {
+          position: relative;
+          display: inline-block;
+        }
+        .tooltip-container.right {
+          float: right; /* Float the container to the right */
+          margin-right: 0; /* Reset the margin for the right-aligned button */
+        }
+        
+        .image-button:hover + .tooltip-text {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(10px); /* Adjust the distance from the link */
+        }
+        
+        .tooltip-text {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+        }
+      
+        
+        /* Media query for smaller screens (adjust the breakpoint as needed) */
+        @media (max-width: 768px) {
+          .btn {
+            width: 100%; /* Make the button full width on smaller screens */
+          }
+        }
         
     </style>
 </head>
@@ -80,6 +161,13 @@
         
         <!-- ############ PAGE START-->
         <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+            <br>
+            <div class="tooltip-container">
+                <a href="{% url 'central_branch:teams' %}" class="image-button">
+                    <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+                </a>
+                <span class="tooltip-text">Go back to Team Homepage</span>
+              </div>
                 
             <br>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Manage <span style="color:#00629B;"><b>{{team_name}}</b></span> Team</h2>
@@ -147,8 +235,8 @@
                             <td>
                                 <div style="justify-content:center;text-align:center;">  
                                     <p class="btn-groups">
-                                        <input class="btn btn-success" type="submit" name="update" value = "Update">
                                         <input class="btn btn-danger" name="remove_member" type="submit" value="Remove">
+                                        <input class="btn btn-success" type="submit" name="update" value = "Update">
                                         <input type="hidden" name="access_ieee_id" value={{member.ieee_id}}> 
                                     </p>
                                 </div>
@@ -190,11 +278,40 @@
                             <div class="modal-body text-left p-lg">
                                 
                                 <p>Choose Position First and then Select Member From the Table</p>
-                        
+
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <!--Add member section-->
+                                    <label><b>Select Position:</b></label>
+                                    <select class="form-control w-75" id="position" name="position">
+                                        {% for position in positions %}
+                                            <option value={{position.id}}>{{ position.role }}</option>
+                                        {% endfor %}                                    
+                                    </select>
+                                    <br>
+                                    <label>Search Members:</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" id="searchInput" class="form-control" placeholder="Search Members with name">
+                                    </div>
+                                    <label>Select Members whom you want to add in the team:</label>
+                                    <div class="scrollable-list" style="text-align:center;justify-content:center;">
+                                        <ol id="memberList">
+                                            <!-- Add list items here -->
+                                            {% for member in insb_members %}
+                                            <li>
+                                                <span style="color:#00629B"><a href="{% url 'membership_development_team:member_details' member.ieee_id %}">{{ member.name  }}</a> - </span>
+                                                <input type="checkbox" id="select" name="member_select" value={{member.ieee_id}}>
+                                            </li>
+                                            {% endfor %}
+                                            <!-- Add more list items as needed -->
+                                        </ol>
+                                    </div>
+                            </div>
 
                             <div class="modal-footer">
                             <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                            <button type="submit" class="btn btn-success p-x-md">Add Member </button>                  
+                            <input type="submit" name="add_to_team" class="btn btn-success p-x-md" value="Add Member"></input>
+                        </form>                  
                             </div>
                         </div><!-- /.modal-content -->
                     </div>
@@ -212,11 +329,10 @@
                             
                             <div class="modal-body text-left p-lg">
                                 <p>This will remove all team members from the team and switch their positions to 'General Member'</p>
-                                
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                            <button type="submit" class="btn btn-danger p-x-md">Yes</button>                  
+                            <input type="submit" name="reset_team" class="btn btn-danger p-x-md" value="Reset"></input>                  
                             </div>
                         </div><!-- /.modal-content -->
                     </div>
@@ -240,5 +356,27 @@
     {% endblock common_js %}
 
     <script src="{% static 'table_search.js'%}"></script>
+
+    <script>
+        // JavaScript to filter the list based on user input
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById("searchInput");
+            const memberList = document.getElementById("memberList").getElementsByTagName("li");
+    
+            searchInput.addEventListener("input", function () {
+                const filter = searchInput.value.toLowerCase();
+    
+                for (let i = 0; i < memberList.length; i++) {
+                    const listItem = memberList[i];
+                    const text = listItem.querySelector("span").textContent || listItem.querySelector("span").innerText;
+                    if (text.toLowerCase().includes(filter)) {
+                        listItem.style.display = "flex";
+                    } else {
+                        listItem.style.display = "none";
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
