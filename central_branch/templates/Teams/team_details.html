@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Teams | IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+
+    <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+
+    <style>
+        body, html {
+        
+        margin: 0;
+        
+        align-items: center;
+        justify-content: center;
+        }
+
+        .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+          }
+          .btn-container {
+            text-align: center;
+          }
+          
+          .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+          }
+          
+          /* Media query for smaller screens (adjust the breakpoint as needed) */
+          @media (max-width: 768px) {
+            .btn {
+              width: 100%; /* Make the button full width on smaller screens */
+            }
+          }
+        
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+                {% include 'navbar.html' %}
+            {% endblock navbar %}
+
+        </div>
+        <!--navbar content-->
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+                
+            <br>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Manage <span style="color:#00629B;"><b>{{team_name}}</b></span> Team</h2>
+            
+            <div style="justify-content:center;text-align:center;">  
+                <p class="btn-groups">
+                    <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-d" ui-toggle-class="bounce" ui-target="#animate">Reset Team</button>
+                    <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add Member in Team</button>
+                </p>
+            </div>
+
+
+            <!--Team Members Table-->
+            <div style="text-align:center; margin-top=30px;">  
+                <div class="container">
+                    <div class="header_wrap">
+                            <div class="num_rows">
+                        
+                            <div class="form-group">
+                                <!--		Show Numbers Of Rows 		-->
+                                <select class="form-control" name="state" id="maxRows">
+                        
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="5000">Show ALL Rows</option>
+                                </select>
+                        
+                            </div>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-striped table-class" id="table-id">
+                
+                    <thead>
+                        <tr>
+                            <th>IEEE ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Current Position</th>
+                            <th>Contact No</th>
+                            <th>Update Position / Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in team_members %}
+                        <form method="POST">
+                        {% csrf_token %}
+                        
+                        <tr>
+                            <td style="color:#00629B;"><a href="">{{ member.ieee_id }}</a></td>
+                            <td>{{ member.name }}</td>
+                            <td>{{ member.email_ieee }}</td>
+                            <td>
+                                <select id="position" name="position">
+                                    <option selected>{{member.position.role}}</option>
+                                    {% for position in positions %}
+                                        <option value={{position.id}}>{{ position.role }}</option>
+                                    {% endfor %} 
+                                </select>
+                            </td>
+                            <td>{{ member.contact_no }}</td>
+                            <td>
+                                <div style="justify-content:center;text-align:center;">  
+                                    <p class="btn-groups">
+                                        <input class="btn btn-success" type="submit" name="update" value = "Update">
+                                        <input class="btn btn-danger" name="remove_member" type="submit" value="Remove">
+                                        <input type="hidden" name="access_ieee_id" value={{member.ieee_id}}> 
+                                    </p>
+                                </div>
+                            </td>    
+                        </tr>
+                        
+                        </form>
+                        {% endfor %}
+                        
+                        
+                    <tbody>
+                    </table>
+                </div>
+                <!--		Start Pagination -->
+                <div class='pagination-container'>
+                    <nav>
+                    <ul class="pagination">
+                        <!--	Here the JS Function Will Add the Rows -->
+                    </ul>
+                    </nav>
+                </div>
+                <div class="rows_count">Showing 11 to 20 of 91 entries</div>    
+                        
+                </div>
+            </div>
+
+
+
+            <!--Modals-->
+            <div id="m-s-a" class="modal fade animate" data-backdrop="true">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="modal-dialog modal-lg" id="animate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Add Member in The Team</h5>
+                            </div>
+                            
+                            <div class="modal-body text-left p-lg">
+                                
+                                <p>Choose Position First and then Select Member From the Table</p>
+                        
+
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <button type="submit" class="btn btn-success p-x-md">Add Member </button>                  
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </form>
+            </div>
+
+            <div id="m-s-d" class="modal fade animate" data-backdrop="true">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="modal-dialog" id="animate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Are you sure you want to Reset this team?</h5>
+                            </div>
+                            
+                            <div class="modal-body text-left p-lg">
+                                <p>This will remove all team members from the team and switch their positions to 'General Member'</p>
+                                
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <button type="submit" class="btn btn-danger p-x-md">Yes</button>                  
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+        <!--PAGE END-->
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+    
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+
+    <script src="{% static 'table_search.js'%}"></script>
+</body>
+</html>

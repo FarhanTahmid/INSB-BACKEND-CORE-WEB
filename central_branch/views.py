@@ -279,7 +279,7 @@ def teams(request):
         context={
             'team':team_list,
         }
-        return render(request,'team/teams.html',context=context)
+        return render(request,'Teams/team_homepage.html',context=context)
     return render(request,"access_denied2.html")
 
 
@@ -333,13 +333,7 @@ def team_details(request,primary,name):
             all_memebers_in_team = Members.objects.filter(team = primary)
             all_memebers_in_team.update(team=None,position = Roles_and_Position.objects.get(id=13))
             return redirect('central_branch:team_details',primary,name)
-
-            
-            
-
-
-
-    
+        
     context={
         'team_id':primary,
         'team_name':name,
@@ -348,7 +342,8 @@ def team_details(request,primary,name):
         'insb_members':insb_members,
         
     }
-    return render(request,'team/team_details_page.html',context=context)
+    # return render(request,'team/team_details_page.html',context=context)
+    return render(request,'Teams/team_details.html',context=context)
 
 @login_required
 def manage_team(request,pk,team_name):

@@ -132,6 +132,10 @@ class PRT_Email_System:
                 continue
             j+=1 
         
+        to_email_final_list=list(set(to_email_final_list))
+        cc_email_final_list=list(set(cc_email_final_list))
+        bcc_email_final_list=list(set(bcc_email_final_list))
+        
         return to_email_final_list,cc_email_final_list,bcc_email_final_list
     
     def send_email(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,attachment=None):
@@ -140,13 +144,11 @@ class PRT_Email_System:
         it will send the email to the first 40 and then the first 40 mail would be removed
         from both thr lists until one of them becomes 0. If there is remaining items on other list 
         then the last two 'if' condition will work to send the remaining emails'''
+        
 
         if len(to_email_list)>=40 and len(bcc_email_list)>=40:
             while len(to_email_list)!=0 and len(bcc_email_list)!=0:
-                print(to_email_list)
-                print()
-                print(bcc_email_list)
-                print()
+                
                 if PRT_Email_System.send_email_confirmation(to_email_list[0:41],cc_email_list,bcc_email_list[0:41],subject,mail_body,attachment):
                     del to_email_list[:41]
                     del bcc_email_list[:41]
@@ -155,8 +157,7 @@ class PRT_Email_System:
 
         if len(to_email_list)>=40:
             while len(to_email_list)!=0:
-                print(to_email_list)
-                print()
+                
                 if PRT_Email_System.send_email_confirmation(to_email_list[0:41],cc_email_list,bcc_email_list,subject,mail_body,attachment):
                     del to_email_list[:41]
                 else:
@@ -164,8 +165,7 @@ class PRT_Email_System:
     
         if len(bcc_email_list)>=40:
             while len(bcc_email_list)!=0:
-                print(bcc_email_list)
-                print()
+                
                 if PRT_Email_System.send_email_confirmation(to_email_list,cc_email_list,bcc_email_list[0:41],subject,mail_body,attachment):
                     del bcc_email_list[:41]
                 else:
