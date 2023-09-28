@@ -47,25 +47,22 @@
                 </tr>
             </thead>
             <tbody>
-                {% for member,count in members.items %}
-                {% for count in count %}
+                {% for i in topBannerItems %}
                     <tr>
-                    <td style="color:#00629B;"><a href="{% url "recruitment:recruitee_details" pk count.nsu_id %}">{{ count.nsu_id }}</a></td>
-                    <td>{{ count.first_name }} {{ count.middle_name }} {{ count.last_name }}</td>
-                        <td>{{ count.email_personal }}</td>
-                        <td>{{ count.contact_no }}</td>
-                        <td>{{ count.major }}</td>
-                        <td>{{ count.recruitment_time }}</td>
-                        <td>{{ count.recruited_by }}</td>
-                        <td>{{ count.comment }}</td>
-                        {% if count.ieee_payment_status %}
-                        <td><img src="/static/admin/img/icon-yes.svg" alt="True"></td>
-                        {% else %}
-                        <td><img src="/static/admin/img/icon-no.svg" alt="False"></td>
-                        {% endif %}
+                    <td style="color:#00629B;"><a href="">{{ i.first_layer_text }}</a></td>
+                    <td style="width: 100px; height: 70px;">
+                        <img src="{{media_url}}{{i.banner_picture}}" alt="Your Image" style="width: 100%; height: 100%;">
+                    </td>
+                    <td>
+                        <div style="text-align:center;">  
+                            <div class="btn-container">
+                              <button class="btn btn-outline b-primary text-primary">Update</button>
+                              <button class="btn btn-outline b-danger text-danger">Delete</button>
+                            </div>
+                        </div>
+                    </td>
                     </tr>
     
-                {% endfor %}
                 {% endfor %}
                 
             <tbody>

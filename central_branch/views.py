@@ -20,6 +20,7 @@ from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,
 from events_and_management_team.models import Venue_List,Permission_criteria
 from main_website.models import Research_Papers,Blog_Category,Blog
 from users.models import Members
+from django.conf import settings
 
 
 
@@ -456,6 +457,13 @@ def add_blogs(request):
     })
 
 
+from main_website.models import HomepageBannerPictureWithText
 @login_required
 def manage_website_homepage(request):
-    return render(request,'Manage Website/Homepage/manage_web_homepage.html')
+    topBannerItems=HomepageBannerPictureWithText.objects.all()
+    
+    context={
+        'topBannerItems':topBannerItems,
+        'media_url':settings.MEDIA_URL
+    }
+    return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
