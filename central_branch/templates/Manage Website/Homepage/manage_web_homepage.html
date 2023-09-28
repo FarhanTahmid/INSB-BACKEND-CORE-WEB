@@ -9,8 +9,8 @@
     {% block common_css %}
         {% include "common_css.html" %}
     {% endblock common_css %}
+    <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
-
 
     <style>
         body, html {
@@ -43,7 +43,7 @@
             display: inline-block;
             white-space: normal; /* Allow text to wrap within the button */
             word-wrap: break-word; /* Break long words if necessary */
-            font-size: 16px; /* Adjust the font size as needed */
+            font-size: 15px; /* Adjust the font size as needed */
           }
           
           /* Media query for smaller screens (adjust the breakpoint as needed) */
@@ -85,7 +85,10 @@
             <h2>Manage the <b>Homepage</b> of the Central Website of <span style="color:#00629B;"><b>IEEE NSU Student Branch</b></span></h2>
             <br>
             
-            
+            <!--Tab view-->
+            {% block web_home_tab %}
+              {% include "Manage Website/Homepage/web_homepage_tab.html" %}
+            {% endblock web_home_tab %}
             
             
         </div>
@@ -104,7 +107,7 @@
         {% include "common_js.html" %}
     {% endblock common_js %}
 
-    <script src="{% static 'table_search.js'%}"></script>
+  <script src="{% static 'table_search.js'%}"></script>
 
 </body>
 </html>

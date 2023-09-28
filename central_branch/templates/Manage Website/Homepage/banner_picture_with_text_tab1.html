@@ -1,0 +1,89 @@
+{% block banner_picture_text_tab %}
+{% load static %}
+
+
+<div id="tab1" class="tab-content">
+    <h2 style="text-align:center;">Top Banner Picture With Texts & Buttons</h2>
+    <br>
+    <div style="text-align:center;">  
+        <div class="btn-container">
+          <button class="btn btn-outline b-primary text-primary">Add New Image and Text in Top Banner</button>
+        </div>
+    </div>
+    <br>
+
+    <!--Data Table-->
+    <div style="text-align:center; margin-top:30px;">  
+        <div class="container" style="justify-content:center;">
+        <div class="header_wrap">
+            <div class="num_rows">
+        
+            <div class="form-group">
+                <!--		Show Numbers Of Rows 		-->
+                <select class="form-control" name="state" id="maxRows">
+        
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="5000">Show ALL Rows</option>
+                </select>
+        
+            </div>
+            </div>
+            <div class="tb_search">
+            <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search.." class="form-control">
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-class" id="table-id">
+        
+            <thead>
+                <tr>
+                    <th>First Layer Text</th>
+                    <th>Image</th>
+                    <th>Update/Delete</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for member,count in members.items %}
+                {% for count in count %}
+                    <tr>
+                    <td style="color:#00629B;"><a href="{% url "recruitment:recruitee_details" pk count.nsu_id %}">{{ count.nsu_id }}</a></td>
+                    <td>{{ count.first_name }} {{ count.middle_name }} {{ count.last_name }}</td>
+                        <td>{{ count.email_personal }}</td>
+                        <td>{{ count.contact_no }}</td>
+                        <td>{{ count.major }}</td>
+                        <td>{{ count.recruitment_time }}</td>
+                        <td>{{ count.recruited_by }}</td>
+                        <td>{{ count.comment }}</td>
+                        {% if count.ieee_payment_status %}
+                        <td><img src="/static/admin/img/icon-yes.svg" alt="True"></td>
+                        {% else %}
+                        <td><img src="/static/admin/img/icon-no.svg" alt="False"></td>
+                        {% endif %}
+                    </tr>
+    
+                {% endfor %}
+                {% endfor %}
+                
+            <tbody>
+            </table>
+        </div>
+        <!--		Start Pagination -->
+        <div class='pagination-container'>
+            <nav>
+            <ul class="pagination">
+                <!--	Here the JS Function Will Add the Rows -->
+            </ul>
+            </nav>
+        </div>
+        <div class="rows_count">Showing 11 to 20 of 91 entries</div>    
+                
+        </div>
+    </div>
+
+</div>
+
+{% endblock banner_picture_text_tab %}
