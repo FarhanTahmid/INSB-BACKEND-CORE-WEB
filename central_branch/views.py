@@ -455,3 +455,7 @@ def add_blogs(request):
         "chapterSocietyAndAffinityGroups":load_Chapters_Society_And_Affinity_Groups
     })
 
+
+@login_required
+def manage_website_homepage(request):
+    return render(request,'Manage Website/Homepage/manage_web_homepage.html')
