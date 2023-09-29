@@ -1,13 +1,218 @@
 {% block banner_picture_text_tab %}
 {% load static %}
+<style>
+    /* Styles for the lightbox overlay */
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 999;
+    }
 
+    /* Styles for the centered image */
+    .overlay img {
+        display: block;
+        margin: auto;
+        max-width: 90%;
+        max-height: 90%;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    /* Style for the close button */
+    .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+    }
+</style>
 
 <div id="tab1" class="tab-content">
     <h2 style="text-align:center;">Top Banner Picture With Texts & Buttons</h2>
     <br>
     <div style="text-align:center;">  
         <div class="btn-container">
-          <button class="btn btn-outline b-primary text-primary">Add New Image and Text in Top Banner</button>
+          <button class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add New Image and Text in Top Banner</button>
+        </div>
+    </div>
+    <!--Modal form-->
+    <div id="m-s-a" class="modal fade animate" data-backdrop="true">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-dialog modal-lg" id="animate">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title">Add a New Top Banner Picture & Texts</h5>
+                    </div>
+                    
+                    <div class="modal-body text-left p-lg">
+                        
+                        <p>View the Image given below to understand about the fields and fill the Form according to it.</p>
+                        <p>For Button URL(Link), take URL from the Path.</p>
+                        <ul>
+                            <li>
+                                <p>For example: If you want to go the <b>'Events'</b> page and the URL(link) is <b>'ieeensusb.org/events/'</b></p>
+                                <p>In this case you will have to enter <b>'/events/'</b> as your Button URL to make it work properly.
+                                
+                            </li>
+                            <li>
+                                <p>Do not use dynamic page URL in the Button URL</p> 
+                            </li>
+                        </ul>
+                        
+
+
+                        <!-- Thumbnail image (clickable) -->
+                        <!--If you wish to change photo, make changes in both of the places-->
+                        <div style="text-align:center;">
+                            <img src="{% static 'images/homepage_banner_tutorial.jpg'%}" alt="Thumbnail" width="250" height="150" onclick="openLightbox('{% static 'images/homepage_banner_tutorial.jpg' %}')">
+                        </div>
+
+                        <!--Form start-->
+
+                        <div class="container">
+                            <div class="padding">
+                                <div class="row" >
+                                    <div class="col-sm-10">
+                                        <div class="box">
+                                            <div class="box-header">
+                                                <h1 style="text-align:center;">Provide Details</h1>
+                                            </div>
+                                            <!--Error Message-->
+                                            <div class="py-3 text-center">
+                                                {% for message in messages %}
+                                                    <p style="color:red" class="message">{{message}}</p>
+                                                {% endfor %}
+                                            </div>
+                                            <form method="POST">
+                                                {% csrf_token %}
+                                                <div class="box-body">
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 form-control-label">Banner Picture (1600 x 750) <span style="color:red;">*</span></label>
+                                                            <div class="col-sm-10">
+                                                            <input type="file" required id="myFile" name="banner_picture">
+                                    
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>First Layer Text <span style="color:red">*<span></label>
+                                                                <div class="col-sm-10">
+                                                                <input
+                                                                    placeholder="First Layer Text"
+                                                                    class="form-control"
+                                                                    type="text"
+                                                                    autocomplete="off"
+                                                                    required
+                                                                    name="first_layer_text"/>
+                                                                </div>
+                                                        </div>
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label>Second Layer Text <span style="color:red">*<span></label>
+                                                                        <div class="col-sm-10">
+                                                                        <input
+                                                                            placeholder="Second Layer Text"
+                                                                            class="form-control"
+                                                                            type="text"
+                                                                            autocomplete="off"
+                                                                            required
+                                                                            name="second_layer_text"/>
+                                                                        </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label>Second Layer Text (colored) <span style="color:red">*<span></label>
+                                                                        <div class="col-sm-10">
+                                                                        <input
+                                                                            placeholder="Colored Text"
+                                                                            class="form-control"
+                                                                            type="text"
+                                                                            autocomplete="off"
+                                                                            required
+                                                                            name="second_layer_text_colored"/>
+                                                                        </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        
+                                                        <div class="form-group">
+                                                            <label>Third Layer Paragraph <span style="color:red">*<span></label>
+                                                                <div class="col-sm-10">
+                                                                <input
+                                                                    placeholder="Third Layer Text"
+                                                                    class="form-control"
+                                                                    type="text"
+                                                                    autocomplete="off"
+                                                                    required
+                                                                    name="third_layer_text"/>
+                                                                </div>
+                                                        </div>
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label>Button Text <span style="color:red">*<span></label>
+                                                                        <div class="col-sm-10">
+                                                                        <input
+                                                                            placeholder="Place the Button Text"
+                                                                            class="form-control"
+                                                                            type="text"
+                                                                            autocomplete="off"
+                                                                            required
+                                                                            name="first_layer_text"/>
+                                                                        </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label>Button URL <span style="color:red">*<span></label>
+                                                                        <div class="col-sm-10">
+                                                                        <input
+                                                                            placeholder="Read above Instructions before adding the URL"
+                                                                            class="form-control"
+                                                                            type="text"
+                                                                            autocomplete="off"
+                                                                            required
+                                                                            name="first_layer_text"/>
+                                                                        </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            
+                    </div>
+
+                    <div class="modal-footer">
+                    <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                    <input type="submit" name="add_banner" class="btn btn-success p-x-md" value="Add"></input>               
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </form>
+        <!-- Lightbox overlay (hidden by default) -->
+        <div id="lightbox" class="overlay">
+            <span class="close-btn" onclick="closeLightbox()">&times;</span>
+            <img id="lightbox-img">
         </div>
     </div>
     <br>
@@ -82,5 +287,20 @@
     </div>
 
 </div>
+<!--Thumbnail Image Script-->
+<script>
+    function openLightbox(imageSrc) {
+        var lightbox = document.getElementById('lightbox');
+        var lightboxImg = document.getElementById('lightbox-img');
+
+        lightbox.style.display = 'block';
+        lightboxImg.src = imageSrc;
+    }
+
+    function closeLightbox() {
+        var lightbox = document.getElementById('lightbox');
+        lightbox.style.display = 'none';
+    }
+</script>
 
 {% endblock banner_picture_text_tab %}
