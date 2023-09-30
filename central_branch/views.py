@@ -20,6 +20,8 @@ from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,
 from events_and_management_team.models import Venue_List,Permission_criteria
 from main_website.models import Research_Papers,Blog_Category,Blog
 from users.models import Members
+from django.conf import settings
+from users.renderData import LoggedinUser
 
 
 
@@ -455,3 +457,46 @@ def add_blogs(request):
         "chapterSocietyAndAffinityGroups":load_Chapters_Society_And_Affinity_Groups
     })
 
+
+from main_website.models import HomepageBannerPictureWithText
+@login_required
+def manage_website_homepage(request):
+    topBannerItems=HomepageBannerPictureWithText.objects.all()
+    
+    # get user data
+    #Loading current user data from renderData.py
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    if(user_data==False):
+        return DatabaseError
+    
+    
+    # Getting Form response
+    if request.method=="POST":
+        if request.POST.get('add_banner'):
+            
+            try:
+                newBanner=HomepageBannerPictureWithText.objects.create(
+                    banner_picture=request.FILES['banner_picture'],
+                    first_layer_text=request.POST['first_layer_text'],
+                    second_layer_text=request.POST['second_layer_text'],
+                    second_layer_text_colored=request.POST['second_layer_text_colored'],
+                    third_layer_text=request.POST['third_layer_text'],
+                    button_text=request.POST['button_text'],
+                    button_url=request.POST['button_url']
+                )
+                newBanner.save()
+                messages.success(request,"New Banner Picture added in Homepage successfully!")
+                return redirect('central_branch:manage_website_home')
+            except:
+                print("GG")
+                
+            
+            
+    
+    context={
+        'user_data':user_data,
+        'topBannerItems':topBannerItems,
+        'media_url':settings.MEDIA_URL
+    }
+    return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)

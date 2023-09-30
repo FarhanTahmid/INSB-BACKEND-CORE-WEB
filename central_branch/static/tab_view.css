@@ -1,6 +1,6 @@
 /* Container for the grid */
 .tabs-container {
-    margin-left: 5px;
+    margin-left: 10px;
     display: grid;
     grid-template-columns: auto 1fr; /* Two columns: fixed size for tabs and flexible size for content */
     grid-gap: 5px; /* Gap between the tabs and content */
