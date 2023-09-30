@@ -259,12 +259,26 @@
                         <img src="{{media_url}}{{i.banner_picture}}" alt="Your Image" style="width: 100%; height: 100%;">
                     </td>
                     <td>
-                        <div style="text-align:center;">  
-                            <div class="btn-container">
-                              <button class="btn btn-outline b-primary text-primary">Update</button>
-                              <button class="btn btn-outline b-danger text-danger">Delete</button>
-                            </div>
+                        
+                        <div style="text-align:center;">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="btn-container">
+                                  <input type="submit" name="update" value="Update" class="btn btn-outline b-primary text-primary"></input>
+                                  <input type="submit" name="delete" class="btn btn-outline b-danger text-danger" value="Delete"></input>
+                                  <input type="hidden" name="get_item" value="{{i.id}}"></input>
+                                </div>
+                            </form>
+                                
+
+                                    <!-- Lightbox overlay (hidden by default) -->
+                                    <div id="lightbox" class="overlay">
+                                        <span class="close-btn" onclick="closeLightbox()">&times;</span>
+                                        <img id="lightbox-img">
+                                    </div>
+                                </div>
                         </div>
+                        
                     </td>
                     </tr>
     

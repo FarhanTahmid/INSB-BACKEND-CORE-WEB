@@ -462,7 +462,6 @@ from main_website.models import HomepageBannerPictureWithText
 @login_required
 def manage_website_homepage(request):
     topBannerItems=HomepageBannerPictureWithText.objects.all()
-    
     # get user data
     #Loading current user data from renderData.py
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -473,8 +472,15 @@ def manage_website_homepage(request):
     
     # Getting Form response
     if request.method=="POST":
+
+        # To update an Item
+        # To delete an item
+        if request.POST.get('delete'):
+            # Delelte the item. Getting the id of the item from the hidden input value.
+            HomepageBannerPictureWithText.objects.filter(id=request.POST.get('get_item')).delete()
+            return redirect('central_branch:manage_website_home')
+        # To add a new Banner Item
         if request.POST.get('add_banner'):
-            
             try:
                 newBanner=HomepageBannerPictureWithText.objects.create(
                     banner_picture=request.FILES['banner_picture'],
