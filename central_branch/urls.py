@@ -26,7 +26,7 @@ urlpatterns = [
     path('team_details/<int:primary>/<str:name>',views.team_details,name='team_details'),
     #manage team Page
     path('manage_team/<str:pk>/<str:team_name>',views.manage_team,name="manage_team"),
-    
+
     #PANEL
     #panel details
     path('panel_details/<int:pk>',views.panel_details,name="panel_details"),
@@ -41,6 +41,11 @@ urlpatterns = [
     #addblogs page
     path('add_blogs/',views.add_blogs,name="add_blogs"),
     #Super Event Creation Form
-    path('create_super_event/',views.super_event_creation,name="super_event_creation")
+    path('create_super_event/',views.super_event_creation,name="super_event_creation"),
+    
+    #WEBSITE Management URL Path
+    path('manage_website/homepage',views.manage_website_homepage,name="manage_website_home"),
+    
+    
     
 ]
