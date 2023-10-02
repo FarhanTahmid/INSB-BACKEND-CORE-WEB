@@ -1,41 +1,5 @@
 {% load static %}
 {% block banner_with_numbers %}
-<style>
-    /* Styles for the lightbox overlay */
-    .overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
-        z-index: 999;
-    }
-
-    /* Styles for the centered image */
-    .overlay img {
-        display: block;
-        margin: auto;
-        max-width: 90%;
-        max-height: 90%;
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-    }
-
-    /* Style for the close button */
-    .close-btn {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        color: white;
-        font-size: 24px;
-        cursor: pointer;
-    }
-</style>
 <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
 
 <div id="tab2" class="tab-content">
@@ -46,6 +10,21 @@
           <button class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#updateBanner" ui-toggle-class="bounce" ui-target="#animate">Update Banner Picture</button>
         </div>
     </div>
+    <br>
+    <div style="margin-left:auto; margin-right:auto; text-align:center;">
+        <h5>Current Picture in the Banner:</h5>
+        {% for i in bannerPictureWithNumbers %}
+            <span>
+                <div style="display:inline-block; text-align:center;">
+                    <img src="{{media_url}}{{i.image}}" alt="Your Image" style="width: 250px; height: 170px;">
+                </div>
+            </span>
+        {% endfor %}
+    </div>
+
+
+
+
     <!--Modal form-->
     <div id="updateBanner" class="modal fade animate" data-backdrop="true">
         <form method="POST" enctype="multipart/form-data">
@@ -53,9 +32,8 @@
             <div class="modal-dialog modal-lg" id="animate">
                 <div class="modal-content">
                     <div class="modal-header">
-                    <h5 class="modal-title">Update Banner Picture</h5>
+                        <h5 class="modal-title">Update Banner Picture</h5>
                     </div>
-                    
                     <div class="modal-body text-left p-lg">
                         
                         <p>View the Image given below to understand where the Image will be added.</p>
@@ -66,10 +44,10 @@
                         <!--If you wish to change photo, make changes in both of the places-->
                         <div style="text-align:center;">
                             <img src="{% static 'images/banner_with_numbers.png'%}" alt="Thumbnail" width="250" height="150" onclick="openLightbox('{% static 'images/banner_with_numbers.png' %}')">
-                        </div>
+                        </div
 
                         <!--Form start-->
-
+                        <!--modal-->
                         <div class="container">
                             <div class="padding">
                                 <div class="row" >
@@ -84,8 +62,7 @@
                                                     <p style="color:red" class="message">{{message}}</p>
                                                 {% endfor %}
                                             </div>
-                                            <form method="POST">
-                                                {% csrf_token %}
+                                            
                                                 <div class="box-body">
                                                         <div class="form-group row">
                                                             <label class="col-sm-2 form-control-label">Banner Picture (1600 x 450) <span style="color:red;">*</span></label>
@@ -95,7 +72,7 @@
                                                             </div>
                                                         </div>
                                                 </div>
-                                            </form>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -105,8 +82,8 @@
                     </div>
 
                     <div class="modal-footer">
-                    <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                    <input type="submit" name="update" class="btn btn-success p-x-md" value="Update"></input>               
+                        <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <input type="submit" name="update_banner" class="btn btn-success p-x-md" value="Update"></input>               
                     </div>
                 </div><!-- /.modal-content -->
             </div>
@@ -117,93 +94,12 @@
             <img id="lightbox-img">
         </div>
     </div>
-    <br>
-
-    <!--Data Table-->
-    <div style="text-align:center; margin-top:30px;">  
-        <div class="container" style="justify-content:center;">
-        <div class="header_wrap">
-            <div class="num_rows">
-        
-            <div class="form-group">
-                <!--		Show Numbers Of Rows 		-->
-                <select class="form-control" name="state" id="maxRows">
-        
-                <option value="10">10</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-                <option value="5000">Show ALL Rows</option>
-                </select>
-        
-            </div>
-            </div>
-            <div class="tb_search">
-            <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search.." class="form-control">
-            </div>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-striped table-class" id="table-id">
-        
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Delete</th>
-
-                </tr>
-            </thead>
-            <tbody>
-                {% for i in bannerPictureWithNumbers %}
-                    <tr>
-                    <td style="color:#00629B;"><a href="">{{ i.first_layer_text }}</a></td>
-                    <td style="width: 100px; height: 70px;">
-                        <img src="{{media_url}}{{i.image}}" alt="Banner Picture" style="width: 100%; height: 100%;">
-                    </td>
-                    <td>
-                        
-                        <div style="text-align:center;">
-                            <form method="POST">
-                                {% csrf_token %}
-                                <div class="btn-container">
-                                  <input type="submit" name="delete" class="btn btn-outline b-danger text-danger" value="Delete"></input>
-                                  <input type="hidden" name="get_banner_picture" value="{{i.id}}"></input>
-                                </div>
-                            </form>
-                                
-                            <div>
-                                <!-- Lightbox overlay (hidden by default) -->
-                                <div id="lightbox" class="overlay">
-                                    <span class="close-btn" onclick="closeLightbox()">&times;</span>
-                                    <img id="lightbox-img">
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </td>
-                    </tr>
-    
-                {% endfor %}
-                
-            <tbody>
-            </table>
-        </div>
-        <!--		Start Pagination -->
-        <div class='pagination-container'>
-            <nav>
-            <ul class="pagination">
-                <!--	Here the JS Function Will Add the Rows -->
-            </ul>
-            </nav>
-        </div>
-        <div class="rows_count">Showing 11 to 20 of 91 entries</div>    
-                
-        </div>
-    </div>
 
 </div>
-<!--Thumbnail Image Script-->
+
 <script src="{% static 'tab_view.js'%}"></script>
 
+<!--Thumbnail Image Script-->
 <script>
     function openLightbox(imageSrc) {
         var lightbox = document.getElementById('lightbox');

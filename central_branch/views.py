@@ -501,7 +501,10 @@ def manage_website_homepage(request):
     '''For banner picture with Texts'''   
     from main_website.models import RibbonPicture
 
-    existing_banner_picture_with_numbers=RibbonPicture.objects.all()  
+    existing_banner_picture_with_numbers=RibbonPicture.objects.all()
+    if request.method=="POST":
+        if request.POST.get('update_banner'):
+            print("Banner changing")
             
     
     context={
