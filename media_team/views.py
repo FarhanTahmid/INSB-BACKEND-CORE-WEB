@@ -11,7 +11,7 @@ from .renderData import MediaTeam
 # Create your views here.
 @login_required
 def team_homepage(request):
-    return render(request,"media_team/team_homepage.html")
+    return render(request,"HomePage/media_homepage.html")
 
 @login_required
 def manage_team(request):

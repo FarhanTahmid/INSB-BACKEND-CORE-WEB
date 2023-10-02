@@ -1,0 +1,87 @@
+{% load static %}
+{% block navbar %}
+<style>
+    .nav a.active {
+        color: #FFA300;
+    }
+</style>
+<!--This is scrip is to get the link of the current page and cross match it with the navlink to change colors-->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Get the current page's URL
+    const currentPageUrl = window.location.href;
+  
+    // Find the links in the navigation bar
+    const navLinks = document.querySelectorAll(".nav a");
+  
+    // Loop through the links and add a "active" class to the matching link
+    navLinks.forEach(function (link) {
+      if (link.href === currentPageUrl) {
+        link.classList.add("active");
+      }
+    });
+  });
+</script>
+<div class="app-header white box-shadow">
+    <div class="navbar navbar-toggleable-sm flex-row align-items-center">
+        <!-- Open side - Naviation on mobile -->
+        <a data-toggle="modal" data-target="#aside" class="hidden-lg-up mr-3">
+        <i class="material-icons">&#xe5d2;</i>
+        </a>
+        <!-- / -->
+    
+        <!-- Page title - Bind to $state's title -->
+        <div class="mb-0 h5 no-wrap" ng-bind="$state.current.data.title" id="pageTitle"></div>
+    
+        <!-- navbar collapse -->
+        <div class="collapse navbar-collapse" id="collapse">
+        <!-- link and dropdown -->
+        <ul class="nav navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="{% url 'media_team:team_homepage' %}">
+                <i class="fa fa-home"></i>
+                <span>Home</span>
+                </a>
+                <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="{% url 'central_branch:event_control' %}">
+                <i class="fa fa-calendar"></i>
+                <span>Events</span>
+                </a>
+                <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+            </li>
+        </ul>
+    
+        <div ui-include="'../views/blocks/navbar.form.html'"></div>
+        <!-- / -->
+        </div>
+        <!-- / navbar collapse -->
+    
+        <!-- navbar right -->
+        <ul class="nav navbar-nav ml-auto flex-row">
+        <li class="nav-item hidden-md-up">
+            <a class="nav-link pl-2" data-toggle="collapse" data-target="#collapse">
+            <i class="material-icons">more_horiz</i>
+            </a>
+        </li>
+        <li class="nav-item dropdown pos-stc-xs">
+            <a class="nav-link mr-2" href data-toggle="dropdown">
+            <i class="material-icons">&#xe7f5;</i>
+            <span class="label label-sm up warn">3</span>
+            </a>
+            <div ui-include="'../views/blocks/dropdown.notification.html'"></div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
+            <span class="avatar w-32">
+                <img src="{{ user_data.profile_picture }}" alt="user_profile">
+                <i class="on b-white bottom"></i>
+            </span>
+            </a>
+            <div ui-include="'../views/blocks/dropdown.user.html'"></div>
+        </li>
+        </ul>
+        <!-- / navbar right -->
+</div>
+{% endblock navbar %}
