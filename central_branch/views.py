@@ -504,7 +504,8 @@ def manage_website_homepage(request):
     existing_banner_picture_with_numbers=RibbonPicture.objects.all()
     if request.method=="POST":
         if request.POST.get('update_banner'):
-            print("Banner changing")
+            # first get all the objects and get the image file path. Delete the files from the system and then delete the object, then get the new image and create a new object.
+            pass
             
     
     context={
