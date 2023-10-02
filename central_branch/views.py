@@ -461,6 +461,7 @@ def add_blogs(request):
 from main_website.models import HomepageBannerPictureWithText
 @login_required
 def manage_website_homepage(request):
+    '''For top banner picture with Texts and buttons - Tab 1'''
     topBannerItems=HomepageBannerPictureWithText.objects.all()
     # get user data
     #Loading current user data from renderData.py
@@ -495,13 +496,18 @@ def manage_website_homepage(request):
                 return redirect('central_branch:manage_website_home')
             except:
                 print("GG")
-                
-            
+
+
+    '''For banner picture with Texts'''   
+    from main_website.models import RibbonPicture
+
+    existing_banner_picture_with_numbers=RibbonPicture.objects.all()  
             
     
     context={
         'user_data':user_data,
         'topBannerItems':topBannerItems,
+        'bannerPictureWithNumbers':existing_banner_picture_with_numbers,
         'media_url':settings.MEDIA_URL
     }
     return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)

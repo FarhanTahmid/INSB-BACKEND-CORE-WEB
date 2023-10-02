@@ -4,23 +4,21 @@
 <div class="tabs-container">
     <ul class="tabs">
         <li class="tab" onclick="showTab('tab1')">Top Banner with Picture & Texts</li>
-        <li class="tab" onclick="showTab('tab2')">Collaborations</li>
+        <li class="tab" onclick="showTab('tab2')">Banner With Numbers</li>
         <li class="tab" onclick="showTab('tab3')">Venue & Permissions</li>
     </ul>
     {% block banner_picture_text_tab %}
         {% include "Manage Website/Homepage/banner_picture_with_text_tab1.html" %}
     {% endblock banner_picture_text_tab %}
 
-    <div id="tab2" class="tab-content">
-        <h2>Tab 2 Content</h2>
-        <p>This is the content of Tab 2.</p>
-    </div>
+    {% block banner_with_numbers %}
+        {% include "Manage Website/Homepage/banner_with_numbers_tab2.html" %}
+    {% endblock banner_with_numbers %}
 
     <div id="tab3" class="tab-content">
         <h2>Tab 3 Content</h2>
         <p>This is the content of Tab 3.</p>
     </div>
 </div>
-<script src="{% static 'tab_view.js'%}"></script>
 
 {% endblock web_home_tab %}
