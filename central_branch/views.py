@@ -473,7 +473,6 @@ def manage_website_homepage(request):
     # Getting Form response
     if request.method=="POST":
 
-        # To update an Item
         # To delete an item
         if request.POST.get('delete'):
             # Delelte the item. Getting the id of the item from the hidden input value.

@@ -264,7 +264,6 @@
                             <form method="POST">
                                 {% csrf_token %}
                                 <div class="btn-container">
-                                  <input type="submit" name="update" value="Update" class="btn btn-outline b-primary text-primary"></input>
                                   <input type="submit" name="delete" class="btn btn-outline b-danger text-danger" value="Delete"></input>
                                   <input type="hidden" name="get_item" value="{{i.id}}"></input>
                                 </div>
