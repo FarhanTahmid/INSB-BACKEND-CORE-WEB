@@ -123,14 +123,16 @@
                           </div>
                           <form method="POST">
                             {% csrf_token %}
-                          <label style="text-align:center;">Select Position</label>
-                            <select id="position" name="position">
+                            <div class="container" style="justify-content:center;text-align:center;">
+                          <label>Select Position</label>
+                            <select> id="position" name="position">
                                 {% for position in positions %}
                                     <option value={{position.id}}>{{ position.role }}</option>
                                 {% endfor %} 
                             </select>
+                          </div>
                           <div class="table-responsive">
-                            <table class="table table-sm" id="table-id">
+                            <table class="table table table-dark" id="table-id">
                           
                               <thead>
                                 <tr>
@@ -145,12 +147,12 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                {% for member in insb_members %}
-                                <tr id="table_row2">
-                                    <td><a href="{% url 'membership_development_team:member_details' member.ieee_id %}">{{ member.name }}</a></td>                        <td class="insb_member_table_data">{{ member.ieee_id }}</td>
-                                    <td>{{ member.team }}</td>
-                                    <td>{{ member.position }}</td>
-                                    <td>{{ member.email_ieee }}</td>
+                                {% for members in insb_members %}
+                                <tr id="table_row">
+                                    <td><a href="{% url 'membership_development_team:member_details' members.ieee_id %}">{{ members.name }}</a></td>                        <td class="insb_member_table_data">{{ member.ieee_id }}</td>
+                                    <td>{{ members.team }}</td>
+                                    <td>{{ members.position }}</td>
+                                    <td>{{ members.email_ieee }}</td>
                                     <td>
                                         <input type="checkbox" id="select" name="member_select1" value={{member.ieee_id}}>
                                     </td>
@@ -184,11 +186,13 @@
 
 
             <!--End of modal of current member-->
+
+
             <div style="text-align:center; margin-top=30px;">  
                 <div class="container" style="justify-content:center;">
                   <div class="header_wrap"> 
                   <div class="table-responsive">
-                    <table class="table table table-black" id="table-id">
+                    <table class="table table table table-dark" id="table_members">
                   
                       <thead>
                         <tr>
@@ -198,9 +202,7 @@
                             <th>Current Position</th>
                             <th>Email</th>
                             <th>Contact</th>
-                            <th></th>
-                            
-                        </tr>
+                            <th>Action</th>
                       </thead>
                       <tbody>
                         {% for member in members %}
@@ -227,14 +229,14 @@
                                       <p>Are you sure that you want to remove this member?</p> 
                                     </div>
                                     <div class="modal-footer">
-                                      <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
                                       <input
                                       type="submit"
-                                      class="btn btn-success"
+                                      class="btn btn-danger"
                                       data-bs-dismiss="modal"
                                       name="remove_member"
-                                      value="delete"
-                                      >                        
+                                      value="Delete"
+                                      >
+                                      <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>                     
                                     </div>
                                   </div><!-- /.modal-content -->
                                 </div>
