@@ -1,3 +1,4 @@
+getPagination('#table-id2');
 getPagination('#table-id');
 	$('#maxRows').trigger('change');
 	function getPagination (table){
@@ -61,7 +62,6 @@ getPagination('#table-id');
 								// END OF PAGINATION 
     
 	}	
-
 
 
 // SI SETTING

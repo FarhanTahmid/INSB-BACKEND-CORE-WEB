@@ -37,6 +37,8 @@ def manage_team(request):
             members_to_add=request.POST.getlist('member_select1')
             #get position
             position=request.POST.get('position')
+            print(position)
+            print(members_to_add)
             for member in members_to_add:
                 MediaTeam.add_member_to_team(member,position)
             return redirect('media_team:manage_team')

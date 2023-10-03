@@ -25,7 +25,7 @@ class MediaTeam:
         return team_members
     
     def add_member_to_team(ieee_id,position):
-        team_id=MediaTeam.get_team_id()
+        team_id=MediaTeam.get_team_id().id
         Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
 
     def media_manage_team_access_modifications(manage_team_access,ieee_id):
