@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
 
 <div id="tab2" class="tab-content">
-    <h2 style="text-align:center;">Banner Picture with Numbers</h2>
+    <h2 style="text-align:center;">Middle Banner Picture with Numbers</h2>
     <br>
     <div style="text-align:center;">  
         <div class="btn-container">
@@ -44,9 +44,9 @@
                         <!--If you wish to change photo, make changes in both of the places-->
                         <div style="text-align:center;">
                             <img src="{% static 'images/banner_with_numbers.png'%}" alt="Thumbnail" width="250" height="150" onclick="openLightbox('{% static 'images/banner_with_numbers.png' %}')">
-                        </div
+                        </div>
 
-                        <!--Form start-->
+                        <!--Form Start>
                         <!--modal-->
                         <div class="container">
                             <div class="padding">
@@ -56,18 +56,12 @@
                                             <div class="box-header">
                                                 <h1 style="text-align:center;">Upload Picture</h1>
                                             </div>
-                                            <!--Error Message-->
-                                            <div class="py-3 text-center">
-                                                {% for message in messages %}
-                                                    <p style="color:red" class="message">{{message}}</p>
-                                                {% endfor %}
-                                            </div>
                                             
                                                 <div class="box-body">
                                                         <div class="form-group row">
                                                             <label class="col-sm-2 form-control-label">Banner Picture (1600 x 450) <span style="color:red;">*</span></label>
                                                             <div class="col-sm-10">
-                                                            <input type="file" required id="myFile" name="banner_picture">
+                                                            <input type="file" required id="myFile" name="banner_picture_with_stat">
                                     
                                                             </div>
                                                         </div>

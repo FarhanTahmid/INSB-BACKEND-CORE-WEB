@@ -21,9 +21,9 @@ class HomepageBannerPictureWithText(models.Model):
         return str(self.pk)
 
 #Table for Ribbon Picture
-class RibbonPicture(models.Model):
+class BannerPictureWithStat(models.Model):
 
-    image = models.ImageField(upload_to='main_website_files/homepage/ribbon_picture')
+    image = ResizedImageField(upload_to='main_website_files/homepage/ribbon_picture')
     
     class Meta:
         verbose_name="Banner Picture with Statistics in Homepage"

@@ -21,7 +21,7 @@ class HomepageBannerData(admin.ModelAdmin):
     list_display=['id']
 
 #Homepage Ribbon Picture
-from . models import RibbonPicture
-@admin.register(RibbonPicture)
+from . models import BannerPictureWithStat
+@admin.register(BannerPictureWithStat)
 class RibbonPicture(admin.ModelAdmin):
     list_display=['id']

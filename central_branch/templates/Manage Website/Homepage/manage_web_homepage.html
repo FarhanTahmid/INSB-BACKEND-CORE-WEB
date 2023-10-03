@@ -118,7 +118,17 @@
             <br>
             <h2>Manage the <b>Homepage</b> of the Central Website of <span style="color:#00629B;"><b>IEEE NSU Student Branch</b></span></h2>
             <br>
-            
+            <!--Message Section-->
+            {% if messages %}
+               {% for message in messages %}
+                 {% if message.tags == 'success' %}
+                   <h4 class="success" style="justify-content:center;text-align:center;margin-bottom:15px;color:green;">{{message}} </h4>
+                 {% else %}
+                   <h4 class="error" style="justify-content:center;text-align:center;margin-bottom:15px;color:red;">{{message}} </h4>
+                 {% endif %}
+               {% endfor %}
+
+            {% endif %}
             <!--Tab view-->
             {% block web_home_tab %}
               {% include "Manage Website/Homepage/web_homepage_tab.html" %}
