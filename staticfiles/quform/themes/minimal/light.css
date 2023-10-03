@@ -1,0 +1,302 @@
+/*
+ * Theme Name: Quform Minimal light
+ * Description: A minimal theme with a light design.
+ * Version: 1.0 (For Quform PHP)
+ * Author: ThemeCatcher
+ * Author URI: http://www.themecatcher.net
+ */
+
+/*****************************************************
+1: Form heading and description
+******************************************************/
+/*Set global fonts*/
+.quform-theme-minimal-light {
+	color: #000;
+}
+/*Form Heading*/
+.quform-theme-minimal-light h3.quform-title {
+	color: #000;
+}
+/*Form description*/
+.quform-theme-minimal-light p.quform-description {
+	color: #666;
+}
+
+/*****************************************************
+2: Elements and labels
+******************************************************/
+
+/*Required - this is the text that is used to indicate a required field*/
+.quform-theme-minimal-light .quform-element label span.quform-required {
+	color: #cc0101;
+}
+/*Element description*/
+.quform-theme-minimal-light .quform-element p.quform-description {
+	color: #000;
+}
+/*Default state input, selects and textareas*/
+.quform-theme-minimal-light .quform-elements .quform-element-text input,
+.quform-theme-minimal-light .quform-elements .quform-element-captcha input,
+.quform-theme-minimal-light .quform-elements .quform-element-password input,
+.quform-theme-minimal-light .quform-elements .quform-element select,
+.quform-theme-minimal-light .quform-elements .quform-element textarea {
+	color: #666;
+	border: solid 1px #b9b9b9;
+	padding: 2px;
+	background: #fff;
+}
+.quform-theme-minimal-light .quform-elements .quform-element select {padding: 1px;}
+/*Fix Chrome select (no background image sorry!)*/
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	.quform-theme-minimal-light .quform-elements .quform-element select {background: #fff;}
+}
+/*Hover element*/
+.quform-theme-minimal-light .quform-elements .quform-element-text input:hover,
+.quform-theme-minimal-light .quform-elements .quform-element-captcha input:hover,
+.quform-theme-minimal-light .quform-elements .quform-element-password input:hover,
+.quform-theme-minimal-light .quform-elements .quform-element select:hover,
+.quform-theme-minimal-light .quform-elements .quform-element textarea:hover {
+	border: solid 1px #CACACA;
+}
+/*Active element*/
+.quform-theme-minimal-light .quform-elements .quform-element-text input:active,
+.quform-theme-minimal-light .quform-elements .quform-element-captcha input:active,
+.quform-theme-minimal-light .quform-elements .quform-element-password input:active,
+.quform-theme-minimal-light .quform-elements .quform-element select:active,
+.quform-theme-minimal-light .quform-elements .quform-element textarea:active {
+}
+/*Focused element*/
+.quform-theme-minimal-light .quform-elements .quform-element-text input:focus,
+.quform-theme-minimal-light .quform-elements .quform-element-captcha input:focus,
+.quform-theme-minimal-light .quform-elements .quform-element-password input:focus,
+.quform-theme-minimal-light .quform-elements .quform-element select:focus,
+.quform-theme-minimal-light .quform-elements .quform-element textarea:focus {
+	color: #000;
+	background: #fff;
+	border: solid 1px #CACACA;
+}
+/*Fix Chrome select (no background image sorry!)*/
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	.quform-theme-minimal-light .quform-elements .quform-element select {background: #fff;}
+}
+
+/* Default Label*/
+.quform-theme-minimal-light .quform-element > .quform-spacer > label {
+	color: #000;
+}
+/*Tooltip icon*/
+.quform-theme-minimal-light .quform-tooltip-icon {
+	background: url(images/help-icon-light.png) no-repeat 0 0;
+}
+/*Select options*/
+.quform-theme-minimal-light select option {
+	padding-right: 10px;
+}
+.quform-theme-minimal-light select[multiple="multiple"] option {
+	padding: 0 5px;
+}
+/*****************************************************
+4: Captcha
+******************************************************/
+
+/*Refresh captcha icon background*/
+.quform-theme-minimal-light .quform-captcha-inner {
+	margin-top: 3px;
+	border: 1px solid #ccc;
+}
+/*****************************************************
+5: Element groups
+******************************************************/
+
+/*Group title & description wrap plain*/
+.quform-theme-minimal-light .quform-group-style-plain > .quform-group-elements .quform-group-title-description-wrap {
+	margin-bottom: 15px;
+	padding-bottom: 5px;
+	border-bottom: solid 1px #eee;
+	border-top: solid 1px #eee;
+}
+/*Group title plain*/
+.quform-theme-minimal-light .quform-group-style-plain > .quform-group-elements .quform-group-title {
+	color: #363636;
+	padding: 5px 0 0;
+	font-weight: normal;
+}
+/*Group description plain*/
+.quform-theme-minimal-light .quform-group-style-plain > .quform-group-elements p.quform-group-description {
+	color: #666;
+	padding: 0;
+	font-size: 11px;
+}
+/*IE fix for negative margins used below*/
+.quform-theme-minimal-light .quform-group-style-bordered > .quform-group-elements {min-width: 1px;}
+/*Group title & description wrap bordered*/
+.quform-theme-minimal-light .quform-group-style-bordered > .quform-group-elements .quform-group-title-description-wrap {
+	margin: -10px -10px 10px -10px;
+	border-bottom: solid 1px #eee;
+	background: #fff;
+	padding-bottom: 5px;
+}
+/*Group title bordered*/
+.quform-theme-minimal-light .quform-group-style-bordered > .quform-group-elements .quform-group-title {
+	color: #363636;
+	padding: 5px 10px 0;
+	font-weight: normal;
+	margin: 0;
+}
+/*Group description bordered*/
+.quform-theme-minimal-light .quform-group-style-bordered > .quform-group-elements p.quform-group-description {
+	color: #666;
+	font-size: 11px;
+	padding: 2px 10px 0;
+	margin: 0;
+}
+/*Bordered style group*/
+.quform-theme-minimal-light .quform-group-style-bordered > .quform-group-elements {
+	border: solid 1px #CCC;
+	background: #fefefe;
+}
+.quform-theme-minimal-light .quform-group-style-bordered > .quform-group-row {
+}
+/*One row inside a group*/
+.quform-theme-minimal-light .quform-group-style-bordered > .quform-group-elements .quform-group-row {
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 10px;
+}
+.quform-theme-minimal-light .quform-group-style-plain > .quform-group-elements .quform-group-row {
+	background: none;
+	margin-bottom: 0;
+}
+.quform-theme-minimal-light .quform-group-style-bordered .quform-group-row:last-child {
+	background: none;
+	margin-bottom: 0;
+	border-bottom: none;
+}
+
+/*****************************************************
+6: Submit button and related
+******************************************************/
+/*Note: Submit button is designed so you can use rounded cornered image backgrounds that can be fluid size*/
+.quform-theme-minimal-light .quform-submit button {border: 1px outset #ccc;} /* optional - IE7 fix */
+/*Submit button wrap*//*You might want to use float:right here. Change loading icon wrap below too*/
+.quform-theme-minimal-light .quform-submit-inner {}
+/*Submit button hide*/
+.quform-theme-minimal-light .quform-submit button {
+	border: none;
+	background: none;
+	text-align: center;
+	width: auto;
+	overflow: visible;
+	white-space: nowrap;
+	padding: 0;
+	margin: 0;
+	height: auto;
+	cursor: pointer;
+	max-width: 100%;
+}
+/*Submit button default state*/
+.quform-theme-minimal-light .quform-submit button span {
+	color: #363636;
+}
+/*Default*/
+.quform-theme-minimal-light .quform-submit button span {
+	background: #ccc; /*Left image*/
+}
+/*Hover*/
+.quform-theme-minimal-light .quform-submit button:hover span {
+	background: #ccc; /*Left image*/
+}
+/*Active*/
+.quform-theme-minimal-light .quform-submit button:active span {
+	background: #fff; /*Left image*/
+}
+/*Default*/
+.quform-theme-minimal-light .quform-submit button em {
+	background: transparent; /*right image*/
+}
+/*Hover*/
+.quform-theme-minimal-light .quform-submit button:hover em {
+	background: transparent; /*right image*/
+	color: #000;
+}
+/*Active*/
+.quform-theme-minimal-light .quform-submit button:active em {
+	background: transparent; /*right image*/
+	color: #000;
+}
+/*Loading the submit*//*You will want this float:right if the button is right*/
+.quform-theme-minimal-light .quform-loading-wrap {margin-top: 9px;}
+.quform-theme-minimal-light .quform-button-fat .quform-loading-wrap {margin-top: 18px;}
+/*Loading gif image*/
+.quform-theme-minimal-light .quform-loading-wrap .quform-loading {}
+/*****************************************************
+7: Messages for user
+******************************************************/
+
+/*Errors*/
+.quform-theme-minimal-light .quform-errors > .quform-error {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	text-shadow: 1px 1px 0 #f3d6d4;
+}
+/*File upload errors*/
+.quform-theme-minimal-light .quform-queue-errors-list > .quform-queue-error {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	text-shadow: 1px 1px 0 #f3d6d4;
+}
+
+/*Success message*/
+.quform-theme-minimal-light .quform-success-message {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	text-shadow: 1px 1px 0 #e0fdc3;
+}
+/*quform referal link*/
+.quform-theme-minimal-light .quform-referral-link a {
+	color: #0F83CA;
+}
+.quform-theme-minimal-light .quform-referral-link a:hover {
+	color: #292929;
+}
+/*****************************************************
+8: Quform PHP specific
+******************************************************/
+/*Light close button*/
+.quform-theme-minimal-light.quform-outer a.quform-cancel-button {
+	background: url(images/close-light.png) no-repeat 0 0;
+}
+
+/*****************************************************
+9: Responsive
+******************************************************/
+/* Smaller than standard 960 (devices and browsers) */
+@media only screen and (max-width: 959px) {
+
+}
+
+/* Tablet Portrait size to standard 960 (devices and browsers) */
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+
+}
+
+/* Tablet Portrait and below (devices and browser) */
+@media only screen and (max-width: 768px) {
+	/* Make radio and checkboxes a bit easier to select on touch devices */
+	.quform-theme-minimal-light .quform-options .quform-option {
+		border: solid 1px #b9b9b9;
+		background: #fff;
+	}
+}
+
+/* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+
+}
+
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
+@media only screen and (max-width: 479px) {
+
+}

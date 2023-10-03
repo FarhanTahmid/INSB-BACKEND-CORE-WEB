@@ -12,9 +12,10 @@ from users.models import User
 # Create your views here.
 def homepage(request):
     bannerItems=HomepageItems.getHomepageBannerItems()
-
+    bannerWithStat=HomepageItems.getBannerPictureWithStat()
     context={
         'banner_item':bannerItems,
+        'banner_pic_with_stat':bannerWithStat,
         'media_url':settings.MEDIA_URL,
         'all_member_count':HomepageItems.getAllIEEEMemberCount(),
         'event_count':HomepageItems.getEventCount(),
