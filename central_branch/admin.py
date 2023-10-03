@@ -15,7 +15,7 @@ class Events(admin.ModelAdmin):
 
 @admin.register(InterBranchCollaborations)
 class InterBranchCollaborations(admin.ModelAdmin):
-    list_display=['event_id','collaboration_with']
+    list_display=['id','event_id','collaboration_with']
 
 @admin.register(IntraBranchCollaborations)
 class IntraBranchCollaborations(admin.ModelAdmin):

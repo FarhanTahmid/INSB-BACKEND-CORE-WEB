@@ -45,9 +45,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div ui-include="'../views/blocks/dropdown.new.html'"></div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link" href="{% url 'central_branch:event_control' %}">
+                <a class="nav-link" href="{% url 'media_team:event_page' %}">
                 <i class="fa fa-calendar"></i>
                 <span>Events</span>
+                </a>
+                <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="{% url 'media_team:manage_team' %}">
+                <i class="fa fa-calendar"></i>
+                <span>Manage Team</span>
                 </a>
                 <div ui-include="'../views/blocks/dropdown.new.html'"></div>
             </li>

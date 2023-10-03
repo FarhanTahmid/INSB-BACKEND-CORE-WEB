@@ -7,6 +7,8 @@ from port.models import Roles_and_Position
 from django.contrib import messages
 from system_administration.models import Media_Data_Access
 from .renderData import MediaTeam
+from central_branch.models import Events,InterBranchCollaborations
+from django.db.models import Q
 
 # Create your views here.
 @login_required
@@ -98,3 +100,16 @@ def manage_team(request):
     if has_access:
         return render(request,"media_team/manage_team.html",context=context)
     return render(request,"media_team/access_denied.html")
+
+@login_required
+def event_page(request):
+
+    '''Only events organised by INSB would be shown on the event page of Media Team
+       So, only those events are being retrieved from database'''
+    insb_organised_events = Events.objects.filter(event_organiser=5).order_by('-event_date')
+    print(insb_organised_events)
+
+    context = {'events_of_insb_only':insb_organised_events,}
+
+
+    return render(request,"Events/media_event_homepage.html",context)
