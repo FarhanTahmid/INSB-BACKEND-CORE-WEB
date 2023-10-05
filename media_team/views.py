@@ -45,6 +45,9 @@ def manage_team(request):
         
         if (request.POST.get('remove_member')):
             '''To remove member from team table'''
+            print("Sakib")
+            x = request.POST.get('remove_ieee_id')
+            print(x)
             try:
                 Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
                 try:

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Events | IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+
+    <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+
+
+    <style>
+        body, html {
+        
+        margin: 0;
+        
+        align-items: center;
+        justify-content: center;
+        }
+
+        .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+          }
+          .btn-container {
+            text-align: center;
+          }
+          
+          .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+          }
+          
+          /* Media query for smaller screens (adjust the breakpoint as needed) */
+          @media (max-width: 768px) {
+            .btn {
+              width: 100%; /* Make the button full width on smaller screens */
+            }
+          }
+        
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+                {% include 'media_navbar.html' %}
+            {% endblock navbar %}
+
+        </div>
+        <!--navbar content-->
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
+
+            <br>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Media Team<br><br></b></span></h2>
+            <h3 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;"><b>Current Team Members</b></span> </h3>
+            <div style="justify-content:center;text-align:center;">  
+                <div class="btn-container">
+                    <button class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#modal" ui-toggle-class="bounce" ui-target="#animate">Add New Member To The Current Team</button>
+                </div>
+            </div>
+            <!--Modal for current member-->
+            <div id="modal" class="modal fade animate" data-backdrop="true">
+              <form method="POST">
+                {% csrf_token %}
+                <div class="modal-dialog modal-lg" id="animate">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Add Members To The Team</h5>
+                    </div>
+
+                    <div class="modal-body text-left p-lg">
+
+                      <div style="text-align:center; margin-top=30px;">  
+                        <div class="container" style="justify-content:center;">
+                          <div class="header_wrap">
+                            <div class="num_rows">
+                              <div class="form-group">
+                                <!--		Show Numbers Of Rows 		-->
+                                <select class="form-control" name="state" id="maxRows">
+                        
+                                  <option value="10">10</option>
+                                  <option value="15">15</option>
+                                  <option value="20">20</option>
+                                  <option value="50">50</option>
+                                  <option value="5000">Show ALL Rows</option>
+                                </select>
+                        
+                              </div>
+                            </div>
+                            <div class="tb_search">
+                              <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search.." class="form-control">
+                            </div>
+                          </div>
+                          <div class="container" style="justify-content:center;text-align:center;">
+                              
+                              <label>Select Position</label>
+                              <select id="position" name="position">
+                                {% for position in positions %}
+                                    <option value={{position.id}}>{{ position.role }}</option>
+                                {% endfor %} 
+                            </select>
+                            <br>
+                            <div class="table-responsive">
+                              <table class="table table table-dark" id="table-id">
+                          
+                                <thead>
+                                  <tr>
+                                    <th>Name</th>
+                                    <th>IEEE ID</th>
+                                    <th>Team</th>
+                                    <th>Current Position</th>
+                                    <th>Email</th>
+                                    <th>Select Member</th>
+                                    <th></th>
+                                    
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for members in insb_members %}
+                                  <tr id="table_row">
+                                    <td><a href="{% url 'membership_development_team:member_details' members.ieee_id %}">{{ members.name }}</a></td>                        <td class="insb_member_table_data">{{ member.ieee_id }}</td>
+                                    <td>{{ members.team }}</td>
+                                    <td>{{ members.position }}</td>
+                                    <td>{{ members.email_ieee }}</td>
+                                    <td>
+                                      <input type="checkbox" id="select" name="member_select1" value={{member.ieee_id}}>
+                                    </td>
+                                  </tr>
+                                  {% endfor %}  
+                                <tbody>
+                              </table>
+                            
+                          <!--		Start Pagination -->
+                          <div class='pagination-container'>
+                            <nav>
+                              <ul class="pagination">
+                                <!--	Here the JS Function Will Add the Rows -->
+                              </ul>
+                            </nav>
+                          </div>
+                          <div class="rows_count">Showing 11 to 20 of 91 entries</div> 
+                          <div class="modal-footer">   
+                          <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                          <input type="submit" name="add_member_to_team" class="btn btn-success p-x-md" value="Add"></input>  
+                          </div>
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </form>
+            </div>
+
+
+
+            <!--End of modal of current member-->
+
+
+            <div style="text-align:center; margin-top=30px;">  
+                <div class="container" style="justify-content:center;">
+                  <div class="header_wrap"> 
+                  <div class="table-responsive">
+                    <table class="table table table table-dark" id="table_members">
+                  
+                      <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>IEEE ID</th>
+                            <th>NSU ID</th>
+                            <th>Current Position</th>
+                            <th>Email</th>
+                            <th>Contact</th>
+                            <th>Action</th>
+                      </thead>
+                      <tbody>
+                        {% for member in members %}
+                        <tr>
+                          <td><a href="{% url 'membership_development_team:member_details' member.ieee_id %}">{{ member.name  }}</a></td>
+                          <td>{{member.ieee_id}}</td>
+                          <td>{{member.nsu_id}}</td>
+                          <td>{{member.position}}</td>
+                          <td>{{member.email_ieee}}</td>
+                          <td>{{member.contact_no}}</td>
+                          <td>
+                            <form method="POST">
+                              {% csrf_token %}
+                              <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Remove Member</button>
+                              <input type="hidden" name="remove_ieee_id" value={{member.ieee_id}}>
+                              <!--Modal for confirmation-->
+                              <div id="m-s-a" class="modal fade animate" data-backdrop="true">
+                                <div class="modal-dialog" id="animate">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title">Warning!</h5>
+                                    </div>
+                                    <div class="modal-body text-left p-lg">
+                                      <p>Are you sure that you want to remove this member?</p> 
+                                    </div>
+                                    <div class="modal-footer">
+                                      <input
+                                      type="submit"
+                                      class="btn btn-danger"
+                                      data-bs-dismiss="modal"
+                                      name="remove_member"
+                                      value="Delete"
+                                      >
+                                      <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>                     
+                                    </div>
+                                  </div><!-- /.modal-content -->
+                                </div>
+                              </div>
+                            </form>
+                          </td>
+                        </tr>
+                        {% endfor %}  
+                      <tbody>
+                    </table>
+                  </div>    
+                        
+                </div>
+            </div>
+            
+
+
+            {% block theme_switcher %}
+              {% include "theme_switcher.html" %}
+            {% endblock theme_switcher %}
+
+    </div>
+<!-- app end-->
+        {% block common_js %}
+            {% include "common_js.html" %}
+        {% endblock common_js %}
+        
+        <script src="{% static 'table_search.js'%}"></script>  
+
+</body>
+</html>
