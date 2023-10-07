@@ -108,14 +108,17 @@
         .remove-member{
           font-size:13px;
           border-width:thin;
+          text-decoration:none;
+          color:black;
         }
         .access-member{
             font-size:13px;
             border-width:thin;
             text-decoration:none;
-            color:white;
+            color:black;
         }
         table{
+            width:100%;
             overflow-y:scroll;
             height:300px;
             display:block;
@@ -291,7 +294,7 @@
                 <p>
                   <form method="POST">
                       {% csrf_token %}
-                      <button class="btn btn-outline b-primary text-primary remove-member" name="remove_member" type="submit" value="Remove Member">Remove Member</button>
+                      <button class="btn btn-outline-danger remove-member" name="remove_member" type="submit" value="Remove Member">Remove Member</button>
                       <input type="hidden" name="remove_ieee_id" value={{member.ieee_id}}>
                   </form>
                 </p>
@@ -430,8 +433,8 @@
                   </div>
                   <div class="table-cell last-cell">
                     <p>
-                        <button class="btn btn-outline b-primary text-primary access-member" name="access_update" type="submit" value="update">Update</button>
-                        <button class="btn btn-outline b-primary text-primary remove-member" name="access_remove" type="submit" value="Remove">Remove</button>
+                        <button class="btn btn-outline-primary access-member" name="access_update" type="submit" value="update">Update</button>
+                        <button class="btn btn-outline-danger  remove-member" name="access_remove" type="submit" value="Remove">Remove</button>
                         <input type="hidden" name="access_ieee_id" value={{data_access.ieee_id}}>
                       </form>
                     </p>
