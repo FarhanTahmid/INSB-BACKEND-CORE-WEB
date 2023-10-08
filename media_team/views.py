@@ -9,6 +9,7 @@ from system_administration.models import Media_Data_Access
 from .renderData import MediaTeam
 from central_branch.models import Events,InterBranchCollaborations
 from django.db.models import Q
+from .models import Media_Link,Media_Images
 
 # Create your views here.
 @login_required
@@ -113,6 +114,36 @@ def event_page(request):
        So, only those events are being retrieved from database'''
     insb_organised_events = Events.objects.filter(event_organiser=5).order_by('-event_date')
     print(insb_organised_events)
+
+    if request.POST.get('add_event_pic_and_others'):
+            event_ids = request.POST.get('EventID')
+            drive_link_of_event = request.POST.get('drive_link_of_event')
+            logo_link_of_event = request.POST.get('logo_link_of_event')
+            images= request.FILES.getlist('images')
+
+            targetted_event = Events.objects.get(id = event_ids)
+            print(targetted_event)
+            try:
+                links = Media_Link.objects.create(
+                    event_id = targetted_event,
+                    media_link = drive_link_of_event,
+                    logo_link = logo_link_of_event
+                )
+                links.save()
+                for image in images:
+                    Image_save = Media_Images.objects.create(
+                    event_id = targetted_event,
+                    selected_images = image
+                    )
+                    Image_save.save()
+                messages.success(request,"Successfully Added!")
+                return redirect('media_team:event_page')
+            except:
+                print("Error")
+
+
+
+
 
     context = {'events_of_insb_only':insb_organised_events,}
 

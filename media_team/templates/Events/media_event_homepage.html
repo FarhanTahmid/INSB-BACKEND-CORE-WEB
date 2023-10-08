@@ -28,6 +28,17 @@
         align-items: center;
         height: 100%;
         }
+        /* Styles for the lightbox overlay */
+        .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 999;
+        }
         .row {
             display: flex;
             justify-content: center;
@@ -53,6 +64,67 @@
               width: 100%; /* Make the button full width on smaller screens */
             }
           }
+
+          @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese');
+          
+         
+          .images {
+              width: 50%;
+              margin: 20px 0;
+              display: flex;
+          }
+          .images img {
+              width: 100%;
+              height: 100px;
+              object-fit: cover;
+              margin: 2px;
+              padding: 2px;
+              float: left;
+              border: .5px solid #ddd;
+              cursor: pointer;
+              transition: .8s ease-in-out;
+          }
+          .fullscreen-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+          }
+      
+          .fullscreen-image {
+            max-width: 80%;
+            max-height: 80%;
+            cursor: pointer;
+          }
+          .remove-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: red;
+            color: white;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+          }
+      
+          .images-image .remove-button {
+            opacity: 1;
+          }
+      
+          .images img:hover{opacity: .5;}
+          
+         #burger{
+            border:none;
+            background:transparent;
+         }
         
     </style>
 </head>
@@ -122,14 +194,16 @@
                         </tr>
                       </thead>
                       <tbody>
+            
                         {% for event in events_of_insb_only %}
                         <tr>
-                            <td><a style="color:blue;" data-toggle="modal" data-target="#modal"  ui-target="#animate">{{event.event_name }}</a></td>
+                            <td><button id="burger"><a style="color:blue;" data-toggle="modal" onclick="openModal('{{event.id}}')" data-target="#modal" ui-target="#animate">{{event.event_name }}</a></button></td>
                             <td>{{ event.event_organiser }}</td>
                             <td>{{ event.event_date }}</td>
                             
                         </tr>
                         {% endfor %}
+                    
                         
                       <tbody>
                     </table>
@@ -165,8 +239,8 @@
 
                       <div class="modal-body text-left p-lg">
                         
-                        <!--<p>View the Image given below to understand about the fields and fill the Form according to it.</p>
-                        <p>For Button URL(Link), take URL from the Path.</p>
+                        <p><input id="EventID" name= "EventID" type="hidden"></p>
+                        <!--<p>For Button URL(Link), take URL from the Path.</p>
                         <ul>
                             <li>
                                 <p>For example: If you want to go the <b>'Events'</b> page and the URL(link) is <b>'ieeensusb.org/events/'</b></p>
@@ -194,7 +268,7 @@
                                     <div class="col-sm-10">
                                         <div class="box">
                                             <div class="box-header">
-                                                <h1 style="text-align:center;">Provide Details</h1>
+                                                <h1 style="text-align:center;">Add Details</h1>
                                             </div>
                                             <!--Error Message-->
                                             <div class="py-3 text-center">
@@ -206,100 +280,60 @@
                                                 {% csrf_token %}
                                                 <div class="box-body">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-2 form-control-label">Banner Picture (1600 x 750) <span style="color:red;">*</span></label>
+                                                            <label class="col-sm-2 form-control-label">Drive Link</label>
                                                             <div class="col-sm-10">
-                                                            <input type="file" required id="myFile" name="banner_picture">
+                                                                <input
+                                                                placeholder="Provide Drive Link for The Event"
+                                                                class="form-control"
+                                                                type="url"
+                                                                autocomplete="off"
+                                                                required
+                                                                name="drive_link_of_event"/>
                                     
                                                             </div>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label>First Layer Text <span style="color:red">*<span></label>
-                                                                <div class="col-sm-10">
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-2 form-control-label">Logo Link</label>
+                                                            <div class="col-sm-10">
                                                                 <input
-                                                                    placeholder="First Layer Text"
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    autocomplete="off"
-                                                                    required
-                                                                    name="first_layer_text"/>
-                                                                </div>
+                                                                placeholder="Provide Link for the Logo's"
+                                                                class="form-control"
+                                                                type="url"
+                                                                autocomplete="off"
+                                                                required
+                                                                name="logo_link_of_event"/>
+                                    
+                                                            </div>
                                                         </div>
                                                         <br>
+                                                        <div class="form-group" style="justify-content:center;">
+                                                            <label class="col-sm-2 form-control-label">Upload Images (Max 6):</label>
+                                                                <input type="file" id="uploadInput" required name="images" accept="image/*" multiple onchange="handleFileSelect(event)">
+                                                        </div>
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
-                                                                    <label>Second Layer Text <span style="color:red">*<span></label>
                                                                         <div class="col-sm-10">
-                                                                        <input
-                                                                            placeholder="Second Layer Text"
-                                                                            class="form-control"
-                                                                            type="text"
-                                                                            autocomplete="off"
-                                                                            required
-                                                                            name="second_layer_text"/>
+                                                                            <div id="images" class="images"></div>
+
+                                                                            <div class="fullscreen-container" id="fullscreen-container" onclick="closeFullscreen()">
+                                                                              <img class="fullscreen-image" id="fullscreen-image">
+                                                                            </div>
                                                                         </div>
+                                                                        
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label>Second Layer Text (colored) <span style="color:red">*<span></label>
-                                                                        <div class="col-sm-10">
-                                                                        <input
-                                                                            placeholder="Colored Text"
-                                                                            class="form-control"
-                                                                            type="text"
-                                                                            autocomplete="off"
-                                                                            required
-                                                                            name="second_layer_text_colored"/>
-                                                                        </div>
-                                                                </div>
-                                                            </div>
-                                                            
                                                         </div>
                                                         
-                                                        <div class="form-group">
-                                                            <label>Third Layer Paragraph <span style="color:red">*<span></label>
-                                                                <div class="col-sm-10">
-                                                                <input
-                                                                    placeholder="Third Layer Text"
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    autocomplete="off"
-                                                                    required
-                                                                    name="third_layer_text"/>
-                                                                </div>
-                                                        </div>
+                                                        
                                                         <br>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label>Button Text <span style="color:red">*<span></label>
-                                                                        <div class="col-sm-10">
-                                                                        <input
-                                                                            placeholder="Place the Button Text"
-                                                                            class="form-control"
-                                                                            type="text"
-                                                                            autocomplete="off"
-                                                                            required
-                                                                            name="button_text"/>
-                                                                        </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label>Button URL <span style="color:red">*<span></label>
-                                                                        <div class="col-sm-10">
-                                                                        <input
-                                                                            placeholder="Read above Instructions before adding the URL"
-                                                                            class="form-control"
-                                                                            type="text"
-                                                                            autocomplete="off"
-                                                                            required
-                                                                            name="button_url"/>
-                                                                        </div>
-                                                                </div>
-                                                            </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                                                            <input type="submit" name="add_event_pic_and_others" class="btn btn-success p-x-md" value="Add"></input>               
                                                         </div>
+                                                        
+                                                            
+                                                    </div>
                                                 </div>
                                             </form>
                                         </div>
@@ -312,9 +346,10 @@
                   </div>
               </div>
           </form>
+
       </div>
       <!--Modal Ends-->
-
+      
         
 
         
@@ -335,6 +370,60 @@
     {% endblock common_js %}
 
     <script src="{% static 'table_search.js'%}"></script>
+    <!--Script for image previewing on modal-->
+    <script>
+        
+        function handleFileSelect(event) {
+            const files = event.target.files;
+            const gallery = document.getElementById('images');
+      
+            for (let i = 0; i < files.length; i++) {
+              const file = files[i];
+              const img = document.createElement('img');
+              img.classList.add('images-img');
+
+              const imgElement = document.createElement('img');
+              img.src = URL.createObjectURL(file);
+              img.onclick = function () {
+                openFullscreen(img.src);
+              };
+
+              const removeButton = document.createElement('button');
+                removeButton.classList.add('remove-button');
+                removeButton.innerHTML = '✖';
+                removeButton.onclick = function () {
+                img.remove();
+            };
+            img.appendChild(imgElement);
+            img.appendChild(removeButton);
+              gallery.appendChild(img);
+            }
+          }
+      
+          function openFullscreen(src) {
+            const fullscreenContainer = document.getElementById('fullscreen-container');
+            const fullscreenImage = document.getElementById('fullscreen-image');
+      
+            fullscreenImage.src = src;
+            fullscreenContainer.style.display = 'flex';
+          }
+      
+          function closeFullscreen() {
+            const fullscreenContainer = document.getElementById('fullscreen-container');
+            fullscreenContainer.style.display = 'none';
+          }
+
+          function openModal(name) {
+            // Set data in the modal
+            var inputElement = document.getElementById('EventID');
+            inputElement.value=name;
+    
+          }
+      
+         
+      
+         
+    </script>
 
 
 
