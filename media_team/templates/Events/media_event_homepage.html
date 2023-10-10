@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <title>Events | IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     {% block common_css %}
         {% include "common_css.html" %}
@@ -125,6 +126,7 @@
             border:none;
             background:transparent;
          }
+
         
     </style>
 </head>
@@ -156,7 +158,7 @@
 
 
             <br>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to the <span><b>Events</b></span> organised by <span style="color:#00629B;">IEEE NSU Student Branch</b></span></h2>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"><span><b>Events</b></span> organised by <span style="color:#00629B;">IEEE NSU Student Branch</b></span></h2>
               
 
             <!--Events Table-->
@@ -194,15 +196,20 @@
                         </tr>
                       </thead>
                       <tbody>
-            
+                        <form method="POST">
                         {% for event in events_of_insb_only %}
                         <tr>
-                            <td><button id="burger"><a style="color:blue;" data-toggle="modal" onclick="openModal('{{event.id}}')" data-target="#modal" ui-target="#animate">{{event.event_name }}</a></button></td>
+                            <td>
+                              <!--<button id="burger" type="button" value={{event.id}} name="result"  data-toggle="modal"  onclick="openModal('{{event.id}}')"  data-target="#modal" ui-target="#animate">{{event.event_name}}</button>
+                              -->
+                              <a href="{% url 'media_team:event_form' event.id %}"> {{event.event_name}}</a><br>
+                            </td>
                             <td>{{ event.event_organiser }}</td>
                             <td>{{ event.event_date }}</td>
                             
                         </tr>
                         {% endfor %}
+                      </form>
                     
                         
                       <tbody>
@@ -235,6 +242,7 @@
                   <div class="modal-content">
                       <div class="modal-header">
                           <h5 class="modal-title">Provide Link and Images For The Event</h5>
+       
                       </div>
 
                       <div class="modal-body text-left p-lg">
@@ -260,87 +268,6 @@
                             <img src="{% static 'images/homepage_banner_tutorial.jpg'%}" alt="Thumbnail" width="250" height="150" onclick="openLightbox('{% static 'images/homepage_banner_tutorial.jpg' %}')">
                         </div>
                         -->
-                        <!--Form start-->
-
-                        <div class="container">
-                            <div class="padding">
-                                <div class="row" >
-                                    <div class="col-sm-10">
-                                        <div class="box">
-                                            <div class="box-header">
-                                                <h1 style="text-align:center;">Add Details</h1>
-                                            </div>
-                                            <!--Error Message-->
-                                            <div class="py-3 text-center">
-                                                {% for message in messages %}
-                                                    <p style="color:red" class="message">{{message}}</p>
-                                                {% endfor %}
-                                            </div>
-                                            <form method="POST">
-                                                {% csrf_token %}
-                                                <div class="box-body">
-                                                        <div class="form-group row">
-                                                            <label class="col-sm-2 form-control-label">Drive Link</label>
-                                                            <div class="col-sm-10">
-                                                                <input
-                                                                placeholder="Provide Drive Link for The Event"
-                                                                class="form-control"
-                                                                type="url"
-                                                                autocomplete="off"
-                                                                required
-                                                                name="drive_link_of_event"/>
-                                    
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label class="col-sm-2 form-control-label">Logo Link</label>
-                                                            <div class="col-sm-10">
-                                                                <input
-                                                                placeholder="Provide Link for the Logo's"
-                                                                class="form-control"
-                                                                type="url"
-                                                                autocomplete="off"
-                                                                required
-                                                                name="logo_link_of_event"/>
-                                    
-                                                            </div>
-                                                        </div>
-                                                        <br>
-                                                        <div class="form-group" style="justify-content:center;">
-                                                            <label class="col-sm-2 form-control-label">Upload Images (Max 6):</label>
-                                                                <input type="file" id="uploadInput" required name="images" accept="image/*" multiple onchange="handleFileSelect(event)">
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                        <div class="col-sm-10">
-                                                                            <div id="images" class="images"></div>
-
-                                                                            <div class="fullscreen-container" id="fullscreen-container" onclick="closeFullscreen()">
-                                                                              <img class="fullscreen-image" id="fullscreen-image">
-                                                                            </div>
-                                                                        </div>
-                                                                        
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        
-                                                        <br>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                                                            <input type="submit" name="add_event_pic_and_others" class="btn btn-success p-x-md" value="Add"></input>               
-                                                        </div>
-                                                        
-                                                            
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                             
                     </div>
                   </div>
@@ -368,7 +295,8 @@
     {% block common_js %}
         {% include "common_js.html" %}
     {% endblock common_js %}
-
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'table_search.js'%}"></script>
     <!--Script for image previewing on modal-->
     <script>
@@ -413,17 +341,11 @@
             fullscreenContainer.style.display = 'none';
           }
 
-          function openModal(name) {
-            // Set data in the modal
-            var inputElement = document.getElementById('EventID');
-            inputElement.value=name;
-    
-          }
-      
-         
+          
       
          
     </script>
+    
 
 
 

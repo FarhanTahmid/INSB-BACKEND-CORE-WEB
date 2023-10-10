@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+
+        #gallery {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 600px;
+        }
+
+        .photo {
+            position: relative;
+            margin: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            width: 150px; /* Set the width of each photo element */
+        }
+
+        .photo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover; /* Maintain the aspect ratio of the image */
+            display: block;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #fff;
+            border: none;
+            cursor: pointer;
+            color:red;
+        }
+
+        .full-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .full-screen img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <div id="gallery"></div>
+
+    <div id="full-screen" class="full-screen">
+        <span class="close-btn" onclick="closeFullScreen()">&#10006;</span>
+        <img id="full-screen-image">
+    </div>
+
+    <input type="file" id="file-input" style="display: none" accept="image/*">
+    <button onclick="openFileInput()">Add Photo</button>
+
+    <script>
+        const gallery = document.getElementById('gallery');
+        const fullScreen = document.getElementById('full-screen');
+        const fullScreenImage = document.getElementById('full-screen-image');
+        const fileInput = document.getElementById('file-input');
+    
+        function addPhoto(url) {
+            if (gallery.children.length < 6) {
+                const photoContainer = document.createElement('div');
+                photoContainer.className = 'photo';
+    
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'close-btn';
+                closeBtn.innerHTML = '&#10006;';
+                closeBtn.onclick = () => removePhoto(photoContainer);
+    
+                const img = document.createElement('img');
+                img.src = url;
+                img.onclick = () => showFullScreen(url);
+    
+                photoContainer.appendChild(closeBtn);
+                photoContainer.appendChild(img);
+    
+                gallery.appendChild(photoContainer);
+            } else {
+                alert('You can only add up to six photos.');
+            }
+        }
+    
+        function removePhoto(photoContainer) {
+            gallery.removeChild(photoContainer);
+        }
+    
+        function showFullScreen(url) {
+            fullScreenImage.src = url;
+            fullScreen.style.display = 'flex';
+        }
+    
+        function closeFullScreen() {
+            fullScreen.style.display = 'none';
+        }
+    
+        function openFileInput() {
+            if (gallery.children.length < 6) {
+                fileInput.click();
+            } else {
+                alert('You can only add up to six photos.');
+            }
+        }
+    
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    addPhoto(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>

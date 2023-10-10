@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from system_administration.render_access import Access_Render
 from users.models import Members
@@ -10,6 +11,8 @@ from .renderData import MediaTeam
 from central_branch.models import Events,InterBranchCollaborations
 from django.db.models import Q
 from .models import Media_Link,Media_Images
+from django.conf import settings
+
 
 # Create your views here.
 @login_required
@@ -46,7 +49,6 @@ def manage_team(request):
         
         if (request.POST.get('remove_member')):
             '''To remove member from team table'''
-            print("Sakib")
             x = request.POST.get('remove_ieee_id')
             print(x)
             try:
@@ -114,14 +116,54 @@ def event_page(request):
        So, only those events are being retrieved from database'''
     insb_organised_events = Events.objects.filter(event_organiser=5).order_by('-event_date')
     print(insb_organised_events)
+    #media_link = Media_Link.objects.get(event_id=Events.objects.get(id = event_id))
+    #media_img = Media_Images.objects.get(event_id=Events.objects.get(id = event_id))
+    #drive_link = media_link.media_link
+    #logo_link = media_link.logo_link
+    #Img = media_img.selected_images
+    
 
-    if request.POST.get('add_event_pic_and_others'):
-            event_ids = request.POST.get('EventID')
+
+    
+
+
+
+
+
+    context = {'events_of_insb_only':insb_organised_events,
+                }
+
+
+    return render(request,"Events/media_event_homepage.html",context)
+
+@login_required
+def event_form(request,event_ID):
+    event_id = event_ID
+    event = Events.objects.get(id = event_id)
+    print(event)
+    media = Media_Link.objects.filter(event_id = event)
+    Img  = Media_Images.objects.filter(event_id = event)
+    
+    try:
+        media_link = media[0].media_link
+        logo_link = media[0].logo_link
+        Img_photo = Img
+        exist=True
+    except:
+        exist=False
+        media_link=None
+        logo_link=None
+        Img_photo=None
+
+
+    if request.method=="POST":
+        if request.POST.get('add_event_pic_and_others'):
             drive_link_of_event = request.POST.get('drive_link_of_event')
             logo_link_of_event = request.POST.get('logo_link_of_event')
             images= request.FILES.getlist('images')
+            print(images)
 
-            targetted_event = Events.objects.get(id = event_ids)
+            targetted_event = Events.objects.get(id = event_id)
             print(targetted_event)
             try:
                 links = Media_Link.objects.create(
@@ -141,11 +183,27 @@ def event_page(request):
             except:
                 print("Error")
 
+        if request.POST.get('submitted_changed_picture'):
+            picture_id= request.POST.get('ImageID')
+            print(picture_id)
+            picture = Media_Images.objects.get(id=picture_id)
+            new_picture = request.FILES['new_image']
+            print(new_picture)
+           
 
 
 
 
-    context = {'events_of_insb_only':insb_organised_events,}
+
+    context={
+        'media_link':media_link,
+        'logo_link':logo_link,
+        'Img':Img_photo,
+        'exist':exist,
+        'media_url':settings.MEDIA_URL,
+        'event_name':event.event_name,
+    }
+
+    return render(request,"media_team/media_event_form.html",context)
 
 
-    return render(request,"Events/media_event_homepage.html",context)

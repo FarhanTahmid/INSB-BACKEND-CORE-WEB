@@ -292,11 +292,11 @@
               </div>
               <div class="table-cell last-cell">
                 <p>
-                  <form method="POST">
-                      {% csrf_token %}
-                      <button class="btn btn-outline-danger remove-member" name="remove_member" type="submit" value="Remove Member">Remove Member</button>
+                
+                      
+                      <button class="btn btn-outline-danger remove-member" data-toggle="modal" onclick="openModal('{{member.ieee_id}}')" data-target="#modal2" ui-target="#animate">Remove</button>
                       <input type="hidden" name="remove_ieee_id" value={{member.ieee_id}}>
-                  </form>
+                  
                 </p>
               </div>   
           </div>
@@ -434,9 +434,10 @@
                   <div class="table-cell last-cell">
                     <p>
                         <button class="btn btn-outline-primary access-member" name="access_update" type="submit" value="update">Update</button>
-                        <button class="btn btn-outline-danger  remove-member" name="access_remove" type="submit" value="Remove">Remove</button>
                         <input type="hidden" name="access_ieee_id" value={{data_access.ieee_id}}>
                       </form>
+                      <button class="btn btn-outline-danger remove-member" data-toggle="modal" onclick="openModal2('{{data_access.ieee_id}}')" data-target="#modal3" ui-target="#animate">Remove</button>
+                        
                     </p>
                   </div>  
               </div>
@@ -448,7 +449,60 @@
           </div>  
           <br><br> 
     
-              <!--Current Team Members table ends who has access-->
+          <div id="modal2" class="modal fade animate" data-backdrop="true">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-dialog modal-lg" id="animate">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Warning!</h5>
+                        </div>
+  
+                        <div class="modal-body text-left p-lg">
+                          
+                          <p><input id="ieeeID" name= "remove_ieee_id" type="hidden"></p>
+                          <p>Are you sure you want to delete this memeber?</p>
+                            
+                              
+                      </div>
+                      <div class="modal-footer">
+                        
+                        <input type="submit" name="remove_member" class="btn btn-danger p-x-md" value="Delete"></input> 
+                        <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>              
+                        </div>
+                    </div>
+                </div>
+            </form>
+  
+        </div>
+
+
+        <div id="modal3" class="modal fade animate" data-backdrop="true">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-dialog modal-lg" id="animate">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Warning!</h5>
+                        </div>
+  
+                        <div class="modal-body text-left p-lg">
+                          
+                          <p><input id="remove_access_ieee_ID" name= "access_ieee_id" type="hidden"></p>
+                          <p>Are you sure you want to remove this memeber from access?</p>
+                            
+                              
+                      </div>
+                      <div class="modal-footer">
+                        
+                        <input type="submit" name="access_remove" class="btn btn-danger p-x-md" value="Delete"></input> 
+                        <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>              
+                        </div>
+                    </div>
+                </div>
+            </form>
+  
+        </div>
 
         
 
@@ -464,7 +518,22 @@
             {% include "common_js.html" %}
         {% endblock common_js %}
     
-<script src="{% static 'table_search.js'%}"></script>  
+<script src="{% static 'table_search.js'%}"></script> 
+<script>
+    function openModal(ieeeID) {
+        // Set data in the modal
+        var inputElement = document.getElementById('ieeeID');
+        inputElement.value=ieeeID;
+
+      }
+      function openModal2(ieeeID) {
+        // Set data in the modal
+        var inputElement = document.getElementById('remove_access_ieee_ID');
+        inputElement.value=ieeeID;
+
+      }
+  
+</script> 
 
 </body>
 </html>
