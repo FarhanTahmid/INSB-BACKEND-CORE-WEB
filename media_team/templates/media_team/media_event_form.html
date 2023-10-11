@@ -237,7 +237,7 @@
                                 
                                                         </div>
                                                     </div>
-                                        
+                                                    {% if not exist %}
                                                     <div class="container" style="justify-content:center;">
                                                         <label class="form-group row"><b>Upload Maximum 6 images<b></label>
                                                             
@@ -257,36 +257,8 @@
                                                                           </div>
                                                          
                                                     </div>
-                                                    {% if exist %}
-                                                  
-                                                    <div class="form-group row">
-                                                        <label class="col form-control-label">Previously Uploaded Pictures</label>
-                                                        <div class="container" style="justify-content:center">
-                                                          
-                                                        {% for i in Img %}
-                                                        <div class="container">
-                                                            <img id="image-preview" src="{{media_url}}{{ i.selected_images}}" alt="Image {{ forloop.counter }}"  width=100% height=auto style="border: 2px solid black;on-hover: opacity;"  onclick="triggerFileInput(this)">
-                                                            <input class="d-none" type="file"  id="file-input"   onchange="displayNewImage(this)" name="new_image">
-                                                            <input type="text" value={{i.id}} name="ImageID">
-                                                            
-                                                        </div>
-                                                        <br>
-                                                        <input type="submit" class="btn btn-primary p-x-md" name="submitted_changed_picture" value="Change">
-                                                        
-                                                        
-                                                        <br><br>
-                                                            
-                                                        {% endfor %}
-                                                     
-                                                    
-                                                        </div>
-                                
-                                                        </div>
-                                                    </div>
                                                     {% endif %}
-                                                    
-                                                   
-                                                    
+                                          
                                                     <br>
                                                     <div class="footer" style="position:right;">
                                                       {% if exist %}
@@ -311,13 +283,55 @@
 
          
         
-    </div>
+    
+    
+    
+    
+    
+        </div>
+
+
+        <div style="text-align:center; margin-top=30px;">
+          <div class="container">
+            <div class="box-body" style="justify-content:center;margin-right:100px;margin-left:300px;">
+            {% if exist %}
+                                                  
+                                                    <div class="form-group row">
+                                                        <label class="col form-control-label"><b>Previously Uploaded Pictures</b></label>
+                                                        <div class="container" style="justify-content:center">
+                                                        
+                                                        {% for i in Img %}
+                                                        <form method="POST" enctype="multipart/form-data">
+                                                          {% csrf_token %}
+                                                        <div class="container">
+                                                            <img id="image-preview" src="{{media_url}}{{ i.selected_images}}" alt="Image {{ forloop.counter }}"  width=100% height=auto style="border: 2px solid black;on-hover: opacity;"  onclick="triggerFileInput(this)">
+                                                            <input class="d-none" type="file"  id="file-input"   onchange="displayNewImage(this)" name="new_image">
+                                                            <input type="hidden" value={{i.id}} name="ImageID">
+                                                            
+                                                        </div>
+                                                        <br>
+                                                        <input type="submit" class="btn btn-primary p-x-md" name="submitted_changed_picture" value="Change">
+                                                        
+                                                        
+                                                        <br><br>
+                                                      </form>  
+                                                        {% endfor %}
+                                                     
+                                                    
+                                                        </div>
+                                
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
+                                                  </div>
+          </div>
+        </div>
      <!--Theme Switcher-->
 
      {% block theme_switcher %}
         {% include "theme_switcher.html" %}
     {% endblock theme_switcher %}
-</div>
+  </div>
 
 
 <!-- app end-->

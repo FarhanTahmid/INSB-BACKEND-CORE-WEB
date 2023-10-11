@@ -143,7 +143,6 @@ def event_form(request,event_ID):
     print(event)
     media = Media_Link.objects.filter(event_id = event)
     Img  = Media_Images.objects.filter(event_id = event)
-    
     try:
         media_link = media[0].media_link
         logo_link = media[0].logo_link
@@ -158,37 +157,67 @@ def event_form(request,event_ID):
 
     if request.method=="POST":
         if request.POST.get('add_event_pic_and_others'):
+            targetted_event = Events.objects.get(id = event_id)
             drive_link_of_event = request.POST.get('drive_link_of_event')
+            print(drive_link_of_event)
             logo_link_of_event = request.POST.get('logo_link_of_event')
             images= request.FILES.getlist('images')
             print(images)
-
-            targetted_event = Events.objects.get(id = event_id)
-            print(targetted_event)
-            try:
-                links = Media_Link.objects.create(
+            if len(images)==0:
+                if exist:
+                    media_id = media[0].id
+                    extracted_from_table = Media_Link.objects.get(id = media_id)
+                    extracted_from_table.media_link = drive_link_of_event
+                    extracted_from_table.logo_link = logo_link_of_event
+                    extracted_from_table.save()
+                else:
+                    try:
+                        links = Media_Link.objects.create(
+                        event_id = targetted_event,
+                        media_link = drive_link_of_event,
+                        logo_link = logo_link_of_event
+                        )
+                        links.save()
+                        messages.success(request,"Successfully Added!")
+                        return redirect('media_team:event_page')
+                    except:
+                        print("Error")
+                    
+                
+                
+            else:
+                try:
+                    links = Media_Link.objects.create(
                     event_id = targetted_event,
                     media_link = drive_link_of_event,
                     logo_link = logo_link_of_event
-                )
-                links.save()
-                for image in images:
-                    Image_save = Media_Images.objects.create(
-                    event_id = targetted_event,
-                    selected_images = image
                     )
-                    Image_save.save()
-                messages.success(request,"Successfully Added!")
-                return redirect('media_team:event_page')
-            except:
-                print("Error")
+                    links.save()
+                    for image in images:
+                        Image_save = Media_Images.objects.create(
+                        event_id = targetted_event,
+                        selected_images = image
+                        )
+                        Image_save.save()
+                    messages.success(request,"Successfully Added!")
+                    return redirect('media_team:event_page')
+                except:
+                    print("Error")
+                
+            
+            
 
         if request.POST.get('submitted_changed_picture'):
-            picture_id= request.POST.get('ImageID')
-            print(picture_id)
-            picture = Media_Images.objects.get(id=picture_id)
-            new_picture = request.FILES['new_image']
-            print(new_picture)
+            try:
+                picture_id= request.POST.get('ImageID')
+                print(picture_id)
+                picture = Media_Images.objects.get(id=picture_id)
+                new_picture = request.FILES['new_image']
+                print(new_picture)
+                picture.selected_images = new_picture
+                picture.save()
+            except:
+                print("Error")
            
 
 
