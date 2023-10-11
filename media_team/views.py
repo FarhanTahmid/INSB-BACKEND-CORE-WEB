@@ -12,11 +12,28 @@ from central_branch.models import Events,InterBranchCollaborations
 from django.db.models import Q
 from .models import Media_Link,Media_Images
 from django.conf import settings
+from . import renderData
+from users.renderData import LoggedinUser
 
 
 # Create your views here.
 @login_required
 def team_homepage(request):
+
+    #Loading data of the co-ordinators, co ordinator id is 9,
+    co_ordinators=renderData.MediaTeam.get_member_with_postion(9)
+    #Loading data of the incharges, incharge id is 10
+    in_charges=renderData.MediaTeam.get_member_with_postion(10)
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    context={
+        'co_ordinators':co_ordinators,
+        'incharges':in_charges,
+        'media_url':settings.MEDIA_URL,
+        'user_data':user_data,
+    }
+
+    
     return render(request,"HomePage/media_homepage.html")
 
 @login_required
