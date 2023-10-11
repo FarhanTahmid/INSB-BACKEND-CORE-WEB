@@ -170,6 +170,7 @@ def event_form(request,event_ID):
                     extracted_from_table.media_link = drive_link_of_event
                     extracted_from_table.logo_link = logo_link_of_event
                     extracted_from_table.save()
+                    return redirect('media_team:event_page')
                 else:
                     try:
                         links = Media_Link.objects.create(
@@ -216,6 +217,7 @@ def event_form(request,event_ID):
                 print(new_picture)
                 picture.selected_images = new_picture
                 picture.save()
+                return redirect('media_team:event_page')
             except:
                 print("Error")
            
