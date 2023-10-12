@@ -237,9 +237,9 @@
                                 
                                                         </div>
                                                     </div>
-                                                    {% if not exist %}
+                                                    {% if not all_image_exists %}
                                                     <div class="container" style="justify-content:center;">
-                                                        <label class="form-group row"><b>Upload Maximum 6 images<b></label>
+                                                        <label class="form-group row"><b>Upload Maximum {{required}} images<b></label>
                                                             
                                                             
                                                           
@@ -250,7 +250,7 @@
                                                                             <div class="upload__btn-box">
                                                                               <label class="upload__btn">
                                                                                 <p>Upload Image</p>
-                                                                                <input type="file" multiple="" required name="images" data-max_length="20" class="upload__inputfile">
+                                                                                <input type="file" multiple="" id="fileInput" name="images" data-max_length="20" class="upload__inputfile">
                                                                               </label>
                                                                             </div>
                                                                             <div class="upload__img-wrap"></div>
@@ -261,10 +261,12 @@
                                           
                                                     <br>
                                                     <div class="footer" style="position:right;">
-                                                      {% if exist %}
+                                                      {% if all_image_exists %}
                                                          <button type="submit" name="add_event_pic_and_others" class="btn btn-success p-x-md" value="Update">Update</button> 
+                                                      {% elif not all_image_exists and image_exists %}
+                                                         <button type="submit" name="add_more_pic_and_update_link" class="btn btn-success p-x-md" value="Add">Update</button>
                                                       {% else %}
-                                                         <button type="submit" name="add_event_pic_and_others" class="btn btn-success p-x-md" value="Add">Add</button>
+                                                        <button type="submit" name="add_event_pic_and_others" class="btn btn-success p-x-md" value="Add">Add</button>
                                                       {% endif %}              
                                                     </div>  
                                                 </div>
@@ -294,10 +296,10 @@
         <div style="text-align:center; margin-top=30px;">
           <div class="container">
             <div class="box-body" style="justify-content:center;margin-right:100px;margin-left:300px;">
-            {% if exist %}
+            {% if image_exists %}
                                                   
                                                     <div class="form-group row">
-                                                        <label class="col form-control-label"><b>Previously Uploaded Pictures</b></label>
+                                                        
                                                         <div class="container" style="justify-content:center">
                                                         
                                                         {% for i in Img %}
@@ -404,6 +406,12 @@
               $(this).parent().parent().remove();
             });
           }
+
+          function updateInputField(files) {
+            // Assuming your input field has an ID like "fileInput"
+            var inputField = $('#fileInput')[0];  // Adjust the ID accordingly
+            inputField.files = new FileList(files);
+        }
           function triggerFileInput(element) {
             element.nextElementSibling.click();
         }

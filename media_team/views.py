@@ -14,7 +14,7 @@ from .models import Media_Link,Media_Images
 from django.conf import settings
 from . import renderData
 from users.renderData import LoggedinUser
-
+import os
 
 # Create your views here.
 @login_required
@@ -160,13 +160,21 @@ def event_form(request,event_ID):
     print(event)
     media = Media_Link.objects.filter(event_id = event)
     Img  = Media_Images.objects.filter(event_id = event)
+    image_length=len(Img)
+    x=6
     try:
         media_link = media[0].media_link
         logo_link = media[0].logo_link
         Img_photo = Img
-        exist=True
+        image_exists=True
+        if image_length<6:
+            all_image_exists = False
+            x= 6-image_length
+        else:
+            all_image_exists=True
     except:
-        exist=False
+        image_exists=False
+        all_image_exists=False
         media_link=None
         logo_link=None
         Img_photo=None
@@ -179,9 +187,10 @@ def event_form(request,event_ID):
             print(drive_link_of_event)
             logo_link_of_event = request.POST.get('logo_link_of_event')
             images= request.FILES.getlist('images')
+            images = images[0:6]
             print(images)
             if len(images)==0:
-                if exist:
+                if image_exists:
                     media_id = media[0].id
                     extracted_from_table = Media_Link.objects.get(id = media_id)
                     extracted_from_table.media_link = drive_link_of_event
@@ -222,7 +231,31 @@ def event_form(request,event_ID):
                 except:
                     print("Error")
                 
-            
+        if request.POST.get('add_more_pic_and_update_link'):
+            targetted_event = Events.objects.get(id = event_id)
+            images= request.FILES.getlist('images')
+            result = 6-image_length
+            images = images[0:result]
+            drive_link_of_event = request.POST.get('drive_link_of_event')
+            print(drive_link_of_event)
+            logo_link_of_event = request.POST.get('logo_link_of_event')
+            try:
+                media_id = media[0].id
+                extracted_from_table = Media_Link.objects.get(id = media_id)
+                extracted_from_table.media_link = drive_link_of_event
+                extracted_from_table.logo_link = logo_link_of_event
+                extracted_from_table.save()
+                for image in images:
+                    Image_save = Media_Images.objects.create(
+                    event_id = targetted_event,
+                    selected_images = image
+                    )
+                    Image_save.save()
+                messages.success(request,"Successfully Added!")
+                return redirect('media_team:event_page')
+            except:
+                print("Error")
+
             
 
         if request.POST.get('submitted_changed_picture'):
@@ -232,6 +265,8 @@ def event_form(request,event_ID):
                 picture = Media_Images.objects.get(id=picture_id)
                 new_picture = request.FILES['new_image']
                 print(new_picture)
+                path = settings.MEDIA_ROOT+str(picture.selected_images)
+                os.remove(path)
                 picture.selected_images = new_picture
                 picture.save()
                 return redirect('media_team:event_page')
@@ -247,7 +282,10 @@ def event_form(request,event_ID):
         'media_link':media_link,
         'logo_link':logo_link,
         'Img':Img_photo,
-        'exist':exist,
+        'image_exists':image_exists,
+        'all_image_exists':all_image_exists,
+        'required':x,
+        'images_length':image_length,
         'media_url':settings.MEDIA_URL,
         'event_name':event.event_name,
     }
