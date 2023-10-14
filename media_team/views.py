@@ -157,7 +157,6 @@ def event_page(request):
 def event_form(request,event_ID):
     event_id = event_ID
     event = Events.objects.get(id = event_id)
-    print(event)
     media = Media_Link.objects.filter(event_id = event)
     Img  = Media_Images.objects.filter(event_id = event)
     image_length=len(Img)
