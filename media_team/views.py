@@ -155,6 +155,10 @@ def event_page(request):
 
 @login_required
 def event_form(request,event_ID):
+
+    #Initially loading the events whose  links and images were previously uploaded
+    #and can be editible
+
     event_id = event_ID
     event = Events.objects.get(id = event_id)
     media = Media_Link.objects.filter(event_id = event)
@@ -180,6 +184,9 @@ def event_form(request,event_ID):
 
 
     if request.method=="POST":
+
+        #When user hits ADD on the page to insert the links and images for the events
+
         if request.POST.get('add_event_pic_and_others'):
             targetted_event = Events.objects.get(id = event_id)
             drive_link_of_event = request.POST.get('drive_link_of_event')
@@ -188,7 +195,14 @@ def event_form(request,event_ID):
             images= request.FILES.getlist('images')
             images = images[0:6]
             print(images)
+
+            #If no images are added i.e only links then
+
             if len(images)==0:
+
+                #If only links are updated as images already existed, and the user made no
+                #changes to them
+                
                 if image_exists:
                     media_id = media[0].id
                     extracted_from_table = Media_Link.objects.get(id = media_id)
@@ -197,6 +211,8 @@ def event_form(request,event_ID):
                     extracted_from_table.save()
                     return redirect('media_team:event_page')
                 else:
+
+                    #Image didn't exist. So the user is adding new links only
                     try:
                         links = Media_Link.objects.create(
                         event_id = targetted_event,
@@ -210,7 +226,7 @@ def event_form(request,event_ID):
                         print("Error")
                     
                 
-                
+            #If new images are being added as well along with the links
             else:
                 try:
                     links = Media_Link.objects.create(
@@ -229,7 +245,11 @@ def event_form(request,event_ID):
                     return redirect('media_team:event_page')
                 except:
                     print("Error")
-                
+
+        #If less than 6 images were uploaded and the user wants to add upto 6 or less
+        #then this loop is executed where whether the link field is also updated or not
+        #is also checked
+             
         if request.POST.get('add_more_pic_and_update_link'):
             targetted_event = Events.objects.get(id = event_id)
             images= request.FILES.getlist('images')
@@ -256,7 +276,9 @@ def event_form(request,event_ID):
                 print("Error")
 
             
-
+        #when user updates the saved picture from the page, it deletes the existing one
+        #and replaces it with the new in the User Files folder
+        
         if request.POST.get('submitted_changed_picture'):
             try:
                 picture_id= request.POST.get('ImageID')
