@@ -245,7 +245,6 @@
         
             <thead>
                 <tr>
-                    <th>First Layer Text</th>
                     <th>Image</th>
                     <th>Update/Delete</th>
 
@@ -254,17 +253,29 @@
             <tbody>
                 {% for i in topBannerItems %}
                     <tr>
-                    <td style="color:#00629B;"><a href="">{{ i.first_layer_text }}</a></td>
                     <td style="width: 100px; height: 70px;">
                         <img src="{{media_url}}{{i.banner_picture}}" alt="Your Image" style="width: 100%; height: 100%;">
                     </td>
                     <td>
-                        <div style="text-align:center;">  
-                            <div class="btn-container">
-                              <button class="btn btn-outline b-primary text-primary">Update</button>
-                              <button class="btn btn-outline b-danger text-danger">Delete</button>
-                            </div>
+                        
+                        <div style="text-align:center;">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="btn-container">
+                                  <input type="submit" name="delete" class="btn btn-outline b-danger text-danger" value="Delete"></input>
+                                  <input type="hidden" name="get_item" value="{{i.id}}"></input>
+                                </div>
+                            </form>
+                                
+
+                                    <!-- Lightbox overlay (hidden by default) -->
+                                    <div id="lightbox" class="overlay">
+                                        <span class="close-btn" onclick="closeLightbox()">&times;</span>
+                                        <img id="lightbox-img">
+                                    </div>
+                                </div>
                         </div>
+                        
                     </td>
                     </tr>
     
@@ -287,6 +298,7 @@
     </div>
 
 </div>
+
 <!--Thumbnail Image Script-->
 <script>
     function openLightbox(imageSrc) {

@@ -24,50 +24,9 @@ class HomepageBannerPictureWithText(models.Model):
 class RibbonPicture(models.Model):
 
     image = models.ImageField(upload_to='main_website_files/homepage/ribbon_picture')
-
-    def save(self, *args, **kwargs):
-        # Open the uploaded image using Pillow
-        img = Image.open(self.image.path)
-
-        # Define your desired dimensions (width and height)
-        desired_width = 1600  # Replace with your desired width
-        desired_height = 450  # Replace with your desired height
-
-        # Calculate the aspect ratio of the original image
-        original_ratio = img.width / img.height
-
-        # Calculate the desired aspect ratio
-        desired_ratio = desired_width / desired_height
-
-        # Check if the original image needs cropping
-        if original_ratio != desired_ratio:
-            if original_ratio > desired_ratio:
-                # Crop the image horizontally to match the desired aspect ratio
-                new_width = int(img.height * desired_ratio)
-                left = (img.width - new_width) // 2
-                top = 0
-                right = left + new_width
-                bottom = img.height
-                img = img.crop((left, top, right, bottom))
-            else:
-                # Crop the image vertically to match the desired aspect ratio
-                new_height = int(img.width / desired_ratio)
-                left = 0
-                top = (img.height - new_height) // 2
-                right = img.width
-                bottom = top + new_height
-                img = img.crop((left, top, right, bottom))
-
-        # Resize the image to the desired dimensions
-        img = img.resize((desired_width, desired_height), Image.ANTIALIAS)
-
-        # Save the modified image back to the same path
-        img.save(self.image.path)
-
-        super().save(*args, **kwargs)
     
     class Meta:
-        verbose_name="Ribbon Picture in Homepage"
+        verbose_name="Banner Picture with Statistics in Homepage"
     
     def __str__(self) -> str:
         return str(self.pk)

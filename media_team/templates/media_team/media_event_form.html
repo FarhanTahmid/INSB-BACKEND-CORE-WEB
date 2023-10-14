@@ -187,15 +187,16 @@
 
 
         <br>
-        <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">  <span><b>Events</b></span> organised by <span style="color:#00629B;">IEEE NSU Student Branch</b></span></h2>
-        <ul style="justify-content:center;text-align:center;margin-bottom:15px;"><b>
-          <p>Provide the Links and the Images</p>
-          <p>If images are already added you can change the particular image by clicking on the image.
-            Select the desired picture and hit 'change' to confirm.</p>
-          <p>Maximum 6 pictures can be uploaded.</p>
-          <p>If there are less than 6 images uploaded, you can upload more and hit 'Update' to make changes</p>
-          <p>To change links and media use the 'Update' button. Use the 'Change' button for updating pictures</p>
-        </ul></b>
+        <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
+        
+        <ol style="justify-content:center;margin-bottom:15px;"><b>
+          <li>Provide the Links of the folder for both Event Pictures and Pictures with Logo</li>
+          <li>If Pictures are already added you can change the particular picture by clicking on it.
+            Select the desired picture and hit <span style="color:blue;">'Change'</span> to confirm.</li>
+          <li>Maximum 6 pictures can be uploaded.</li>
+          <li>If there are less than 6 images uploaded, you can upload more and hit 'Update' to make changes</li>
+          <li>To change links and media use the 'Update' button. Use the 'Change' button for updating pictures</li>
+        </ol></b>
         
 
         <div style="text-align:center; margin-top=30px;">  
@@ -204,13 +205,7 @@
               </ul>
               
                 <br><br>
-                    <h3><b>{{event_name}}</b></h3>
-                    <br>
                    
-                        
-                            
-                                
-                                   
                                         <div class="box-header">
                                             <h1 style="text-align:center;font-size:30px;">Add Details</h1>
                                         </div>
@@ -220,7 +215,7 @@
                                             <div class="box-body">
                                               
                                                     <div class="form-group row">
-                                                        <label class="col-sm-2 form-control-label">Drive Link</label>
+                                                        <label class="col-sm-2 form-control-label">Folder Drive Link for Event Pictures</label>
                                                         <div class="col-sm-10">
                                                             <input
                                                             placeholder="Provide Drive Link for The Event"
@@ -235,7 +230,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
-                                                        <label class="col-sm-2 form-control-label">Logo Link</label>
+                                                        <label class="col-sm-2 form-control-label">Folder Drive Link for Pictures with Logos</label>
                                                         <div class="col-sm-10">
                                                             <input
                                                             placeholder="Provide Link for the Logo's"
@@ -251,11 +246,6 @@
                                                     {% if not all_image_exists %}
                                                     <div class="container" style="justify-content:center;">
                                                         <label class="form-group row"><b>Upload Maximum {{required}} images<b></label>
-                                                            
-                                                            
-                                                          
-                              
-                                                          
                                                                        
                                                                         <div class="upload__box">
                                                                             <div class="upload__btn-box">
