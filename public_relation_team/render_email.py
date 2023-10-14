@@ -144,6 +144,9 @@ class PRT_Email_System:
         it will send the email to the first 40 and then the first 40 mail would be removed
         from both thr lists until one of them becomes 0. If there is remaining items on other list 
         then the last two 'if' condition will work to send the remaining emails'''
+
+        '''If length of both the list is not 40 then the next two if condition will check for 
+        individual list length'''
         
 
         if len(to_email_list)>=40 and len(bcc_email_list)>=40:
