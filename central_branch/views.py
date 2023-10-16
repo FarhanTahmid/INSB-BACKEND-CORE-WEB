@@ -461,8 +461,8 @@ def add_blogs(request):
 from main_website.models import HomepageBannerPictureWithText
 @login_required
 def manage_website_homepage(request):
+    '''For top banner picture with Texts and buttons - Tab 1'''
     topBannerItems=HomepageBannerPictureWithText.objects.all()
-    
     # get user data
     #Loading current user data from renderData.py
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -473,8 +473,14 @@ def manage_website_homepage(request):
     
     # Getting Form response
     if request.method=="POST":
+
+        # To delete an item
+        if request.POST.get('delete'):
+            # Delelte the item. Getting the id of the item from the hidden input value.
+            HomepageBannerPictureWithText.objects.filter(id=request.POST.get('get_item')).delete()
+            return redirect('central_branch:manage_website_home')
+        # To add a new Banner Item
         if request.POST.get('add_banner'):
-            
             try:
                 newBanner=HomepageBannerPictureWithText.objects.create(
                     banner_picture=request.FILES['banner_picture'],
@@ -490,13 +496,18 @@ def manage_website_homepage(request):
                 return redirect('central_branch:manage_website_home')
             except:
                 print("GG")
-                
-            
+
+
+    '''For banner picture with Texts'''   
+    from main_website.models import RibbonPicture
+
+    existing_banner_picture_with_numbers=RibbonPicture.objects.all()  
             
     
     context={
         'user_data':user_data,
         'topBannerItems':topBannerItems,
+        'bannerPictureWithNumbers':existing_banner_picture_with_numbers,
         'media_url':settings.MEDIA_URL
     }
     return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
