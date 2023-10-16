@@ -7,11 +7,29 @@ from port.models import Roles_and_Position
 from django.contrib import messages
 from system_administration.models import Graphics_Data_Access
 from .renderData import GraphicsTeam
+from users.renderData import LoggedinUser
+from . import renderData
+from django.conf import settings
 
 # Create your views here.
 @login_required
 def team_homepage(request):
-    return render(request,"graphics_team/team_homepage.html")
+
+    #Loading data of the co-ordinators, co ordinator id is 9,
+    co_ordinators=renderData.GraphicsTeam.get_member_with_postion(9)
+    #Loading data of the incharges, incharge id is 10
+    in_charges=renderData.GraphicsTeam.get_member_with_postion(10)
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    context={
+        'co_ordinators':co_ordinators,
+        'incharges':in_charges,
+        'media_url':settings.MEDIA_URL,
+        'user_data':user_data,
+    }
+
+
+    return render(request,"Homepage/graphics_homepage.html",context)
 
 @login_required
 def manage_team(request):

@@ -34,7 +34,7 @@ def team_homepage(request):
     }
 
     
-    return render(request,"HomePage/media_homepage.html")
+    return render(request,"HomePage/media_homepage.html",context)
 
 @login_required
 def manage_team(request):
@@ -133,20 +133,7 @@ def event_page(request):
        So, only those events are being retrieved from database'''
     insb_organised_events = Events.objects.filter(event_organiser=5).order_by('-event_date')
     print(insb_organised_events)
-    #media_link = Media_Link.objects.get(event_id=Events.objects.get(id = event_id))
-    #media_img = Media_Images.objects.get(event_id=Events.objects.get(id = event_id))
-    #drive_link = media_link.media_link
-    #logo_link = media_link.logo_link
-    #Img = media_img.selected_images
-    
-
-
-    
-
-
-
-
-
+   
     context = {'events_of_insb_only':insb_organised_events,
                 }
 

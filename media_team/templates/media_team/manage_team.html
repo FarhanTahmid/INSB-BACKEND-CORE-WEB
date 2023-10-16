@@ -519,21 +519,8 @@
         {% endblock common_js %}
     
 <script src="{% static 'table_search.js'%}"></script> 
-<script>
-    function openModal(ieeeID) {
-        // Set data in the modal
-        var inputElement = document.getElementById('ieeeID');
-        inputElement.value=ieeeID;
+<script src="{% static 'modal_views.js'%}"></script> 
 
-      }
-      function openModal2(ieeeID) {
-        // Set data in the modal
-        var inputElement = document.getElementById('remove_access_ieee_ID');
-        inputElement.value=ieeeID;
-
-      }
-  
-</script> 
 
 </body>
 </html>

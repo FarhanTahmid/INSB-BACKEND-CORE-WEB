@@ -233,54 +233,8 @@
         </div>
         <!--PAGE END-->
 
-        <!--Modal for current member-->
-
-        <div id="modal" class="modal fade animate" data-backdrop="true">
-          <form method="POST" enctype="multipart/form-data">
-              {% csrf_token %}
-              <div class="modal-dialog modal-lg" id="animate">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <h5 class="modal-title">Provide Link and Images For The Event</h5>
-       
-                      </div>
-
-                      <div class="modal-body text-left p-lg">
-                        
-                        <p><input id="EventID" name= "EventID" type="hidden"></p>
-                        <!--<p>For Button URL(Link), take URL from the Path.</p>
-                        <ul>
-                            <li>
-                                <p>For example: If you want to go the <b>'Events'</b> page and the URL(link) is <b>'ieeensusb.org/events/'</b></p>
-                                <p>In this case you will have to enter <b>'/events/'</b> as your Button URL to make it work properly.
-                                
-                            </li>
-                            <li>
-                                <p>Do not use dynamic page URL in the Button URL</p> 
-                            </li>
-                        </ul>-->
-                        
-
-
-                        <!-- Thumbnail image (clickable) -->
-                        <!--If you wish to change photo, make changes in both of the places
-                        <div style="text-align:center;">
-                            <img src="{% static 'images/homepage_banner_tutorial.jpg'%}" alt="Thumbnail" width="250" height="150" onclick="openLightbox('{% static 'images/homepage_banner_tutorial.jpg' %}')">
-                        </div>
-                        -->
-                            
-                    </div>
-                  </div>
-              </div>
-          </form>
-
-      </div>
-      <!--Modal Ends-->
-      
         
-
-        
-
+     
     
 
         <!--Theme Switcher-->
@@ -301,46 +255,7 @@
     <!--Script for image previewing on modal-->
     <script>
         
-        function handleFileSelect(event) {
-            const files = event.target.files;
-            const gallery = document.getElementById('images');
-      
-            for (let i = 0; i < files.length; i++) {
-              const file = files[i];
-              const img = document.createElement('img');
-              img.classList.add('images-img');
-
-              const imgElement = document.createElement('img');
-              img.src = URL.createObjectURL(file);
-              img.onclick = function () {
-                openFullscreen(img.src);
-              };
-
-              const removeButton = document.createElement('button');
-                removeButton.classList.add('remove-button');
-                removeButton.innerHTML = '✖';
-                removeButton.onclick = function () {
-                img.remove();
-            };
-            img.appendChild(imgElement);
-            img.appendChild(removeButton);
-              gallery.appendChild(img);
-            }
-          }
-      
-          function openFullscreen(src) {
-            const fullscreenContainer = document.getElementById('fullscreen-container');
-            const fullscreenImage = document.getElementById('fullscreen-image');
-      
-            fullscreenImage.src = src;
-            fullscreenContainer.style.display = 'flex';
-          }
-      
-          function closeFullscreen() {
-            const fullscreenContainer = document.getElementById('fullscreen-container');
-            fullscreenContainer.style.display = 'none';
-          }
-
+        
           
       
          
