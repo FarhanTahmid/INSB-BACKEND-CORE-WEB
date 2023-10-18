@@ -11,7 +11,7 @@ urlpatterns = [
     path('events/',views.event_homepage,name="event_homepage"),
     
     #SOCIETY AG URLS
-    path('ieeensu_ras_sbc/',views.rasPage,name="ras_home"),
+    path('ras_sbc/',views.rasPage,name="ras_home"),
 
     #Achievements
     path('achievements/',views.achievements,name="achievements")
