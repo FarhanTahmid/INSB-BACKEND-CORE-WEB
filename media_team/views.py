@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from system_administration.render_access import Access_Render
 from users.models import Members
@@ -7,11 +8,33 @@ from port.models import Roles_and_Position
 from django.contrib import messages
 from system_administration.models import Media_Data_Access
 from .renderData import MediaTeam
+from central_branch.models import Events,InterBranchCollaborations
+from django.db.models import Q
+from .models import Media_Link,Media_Images
+from django.conf import settings
+from . import renderData
+from users.renderData import LoggedinUser
+import os
 
 # Create your views here.
 @login_required
 def team_homepage(request):
-    return render(request,"media_team/team_homepage.html")
+
+    #Loading data of the co-ordinators, co ordinator id is 9,
+    co_ordinators=renderData.MediaTeam.get_member_with_postion(9)
+    #Loading data of the incharges, incharge id is 10
+    in_charges=renderData.MediaTeam.get_member_with_postion(10)
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    context={
+        'co_ordinators':co_ordinators,
+        'incharges':in_charges,
+        'media_url':settings.MEDIA_URL,
+        'user_data':user_data,
+    }
+
+    
+    return render(request,"HomePage/media_homepage.html")
 
 @login_required
 def manage_team(request):
@@ -35,12 +58,16 @@ def manage_team(request):
             members_to_add=request.POST.getlist('member_select1')
             #get position
             position=request.POST.get('position')
+            print(position)
+            print(members_to_add)
             for member in members_to_add:
                 MediaTeam.add_member_to_team(member,position)
             return redirect('media_team:manage_team')
         
         if (request.POST.get('remove_member')):
             '''To remove member from team table'''
+            x = request.POST.get('remove_ieee_id')
+            print(x)
             try:
                 Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
                 try:
@@ -98,3 +125,192 @@ def manage_team(request):
     if has_access:
         return render(request,"media_team/manage_team.html",context=context)
     return render(request,"media_team/access_denied.html")
+
+@login_required
+def event_page(request):
+
+    '''Only events organised by INSB would be shown on the event page of Media Team
+       So, only those events are being retrieved from database'''
+    insb_organised_events = Events.objects.filter(event_organiser=5).order_by('-event_date')
+    print(insb_organised_events)
+    #media_link = Media_Link.objects.get(event_id=Events.objects.get(id = event_id))
+    #media_img = Media_Images.objects.get(event_id=Events.objects.get(id = event_id))
+    #drive_link = media_link.media_link
+    #logo_link = media_link.logo_link
+    #Img = media_img.selected_images
+    
+
+
+    
+
+
+
+
+
+    context = {'events_of_insb_only':insb_organised_events,
+                }
+
+
+    return render(request,"Events/media_event_homepage.html",context)
+
+@login_required
+def event_form(request,event_ID):
+
+    #Initially loading the events whose  links and images were previously uploaded
+    #and can be editible
+
+    event_id = event_ID
+    event = Events.objects.get(id = event_id)
+    media = Media_Link.objects.filter(event_id = event)
+    Img  = Media_Images.objects.filter(event_id = event)
+    image_length=len(Img)
+    x=6
+    try:
+        media_link = media[0].media_link
+        logo_link = media[0].logo_link
+        Img_photo = Img
+        image_exists=True
+        if image_length<6:
+            all_image_exists = False
+            x= 6-image_length
+        else:
+            all_image_exists=True
+    except:
+        image_exists=False
+        all_image_exists=False
+        media_link=None
+        logo_link=None
+        Img_photo=None
+
+
+    if request.method=="POST":
+
+        #When user hits ADD on the page to insert the links and images for the events
+
+        if request.POST.get('add_event_pic_and_others'):
+            targetted_event = Events.objects.get(id = event_id)
+            drive_link_of_event = request.POST.get('drive_link_of_event')
+            print(drive_link_of_event)
+            logo_link_of_event = request.POST.get('logo_link_of_event')
+            images= request.FILES.getlist('images')
+            images = images[0:6]
+            print(images)
+
+            #If no images are added i.e only links then
+
+            if len(images)==0:
+
+                #If only links are updated as images already existed, and the user made no
+                #changes to them
+                
+                if image_exists:
+                    media_id = media[0].id
+                    extracted_from_table = Media_Link.objects.get(id = media_id)
+                    extracted_from_table.media_link = drive_link_of_event
+                    extracted_from_table.logo_link = logo_link_of_event
+                    extracted_from_table.save()
+                    return redirect('media_team:event_page')
+                else:
+
+                    #Image didn't exist. So the user is adding new links only
+                    try:
+                        links = Media_Link.objects.create(
+                        event_id = targetted_event,
+                        media_link = drive_link_of_event,
+                        logo_link = logo_link_of_event
+                        )
+                        links.save()
+                        messages.success(request,"Successfully Added!")
+                        return redirect('media_team:event_page')
+                    except:
+                        print("Error")
+                    
+                
+            #If new images are being added as well along with the links
+            else:
+                try:
+                    links = Media_Link.objects.create(
+                    event_id = targetted_event,
+                    media_link = drive_link_of_event,
+                    logo_link = logo_link_of_event
+                    )
+                    links.save()
+                    for image in images:
+                        Image_save = Media_Images.objects.create(
+                        event_id = targetted_event,
+                        selected_images = image
+                        )
+                        Image_save.save()
+                    messages.success(request,"Successfully Added!")
+                    return redirect('media_team:event_page')
+                except:
+                    print("Error")
+
+        #If less than 6 images were uploaded and the user wants to add upto 6 or less
+        #then this loop is executed where whether the link field is also updated or not
+        #is also checked
+             
+        if request.POST.get('add_more_pic_and_update_link'):
+            targetted_event = Events.objects.get(id = event_id)
+            images= request.FILES.getlist('images')
+            result = 6-image_length
+            images = images[0:result]
+            drive_link_of_event = request.POST.get('drive_link_of_event')
+            print(drive_link_of_event)
+            logo_link_of_event = request.POST.get('logo_link_of_event')
+            try:
+                media_id = media[0].id
+                extracted_from_table = Media_Link.objects.get(id = media_id)
+                extracted_from_table.media_link = drive_link_of_event
+                extracted_from_table.logo_link = logo_link_of_event
+                extracted_from_table.save()
+                for image in images:
+                    Image_save = Media_Images.objects.create(
+                    event_id = targetted_event,
+                    selected_images = image
+                    )
+                    Image_save.save()
+                messages.success(request,"Successfully Added!")
+                return redirect('media_team:event_page')
+            except:
+                print("Error")
+
+            
+        #when user updates the saved picture from the page, it deletes the existing one
+        #and replaces it with the new in the User Files folder
+        
+        if request.POST.get('submitted_changed_picture'):
+            try:
+                picture_id= request.POST.get('ImageID')
+                print(picture_id)
+                picture = Media_Images.objects.get(id=picture_id)
+                new_picture = request.FILES['new_image']
+                print(new_picture)
+                path = settings.MEDIA_ROOT+str(picture.selected_images)
+                os.remove(path)
+                picture.selected_images = new_picture
+                picture.save()
+                return redirect('media_team:event_page')
+            except:
+                print("Error")
+           
+
+
+
+
+
+    context={
+        'media_link':media_link,
+        'logo_link':logo_link,
+        'Img':Img_photo,
+        'image_exists':image_exists,
+        'all_image_exists':all_image_exists,
+        'required':x,
+        'images_length':image_length,
+        'media_url':settings.MEDIA_URL,
+        'event_name':event.event_name,
+    }
+
+    return render(request,"media_team/media_event_form.html",context)
+
+

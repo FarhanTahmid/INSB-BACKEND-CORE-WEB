@@ -4,6 +4,11 @@ from system_administration.models import Media_Data_Access
 
 class MediaTeam:
 
+    def get_member_with_postion(position):
+        '''Returns Media Team Members with positions'''
+        team_members=Members.objects.filter(team=MediaTeam.get_team_id(),position=position)
+        return team_members
+
     def get_team_id():
         
         '''Gets the team id from the database only for Media Team. Not the right approach'''
@@ -25,7 +30,7 @@ class MediaTeam:
         return team_members
     
     def add_member_to_team(ieee_id,position):
-        team_id=MediaTeam.get_team_id()
+        team_id=MediaTeam.get_team_id().id
         Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
 
     def media_manage_team_access_modifications(manage_team_access,ieee_id):
