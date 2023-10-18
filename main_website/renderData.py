@@ -1,4 +1,4 @@
-from .models import HomepageBannerPictureWithText
+from .models import HomepageBannerPictureWithText,BannerPictureWithStat
 from django.http import HttpResponseServerError
 from users.models import Members
 from membership_development_team.renderData import MDT_DATA
@@ -8,6 +8,14 @@ class HomepageItems:
     def getHomepageBannerItems():
         try:
             return HomepageBannerPictureWithText.objects.all()
+        except Exception as e:
+            print(e)
+            response = HttpResponseServerError("Oops! Something went wrong.")
+            return response
+    def getBannerPictureWithStat():
+        try:
+            getItem=BannerPictureWithStat.objects.first()
+            return getItem.image
         except Exception as e:
             print(e)
             response = HttpResponseServerError("Oops! Something went wrong.")
