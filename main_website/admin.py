@@ -1,6 +1,12 @@
 from django.contrib import admin
 from .models import Research_Papers,Blog_Category,Blog
 # Register your models here.
+###Society AGS###
+# RAS
+from .models import Ras_Sbc
+@admin.register(Ras_Sbc)
+class Ras_Sbc(admin.ModelAdmin):
+    list_display=['id']
 
 #Research Blogs Category
 @admin.register(Research_Papers)
