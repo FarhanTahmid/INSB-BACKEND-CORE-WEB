@@ -1,41 +1,6 @@
 {% block banner_picture_text_tab %}
 {% load static %}
-<style>
-    /* Styles for the lightbox overlay */
-    .overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
-        z-index: 999;
-    }
 
-    /* Styles for the centered image */
-    .overlay img {
-        display: block;
-        margin: auto;
-        max-width: 90%;
-        max-height: 90%;
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-    }
-
-    /* Style for the close button */
-    .close-btn {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        color: white;
-        font-size: 24px;
-        cursor: pointer;
-    }
-</style>
 
 <div id="tab1" class="tab-content">
     <h2 style="text-align:center;">Top Banner Picture With Texts & Buttons</h2>

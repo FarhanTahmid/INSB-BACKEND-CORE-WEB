@@ -22,6 +22,7 @@ from main_website.models import Research_Papers,Blog_Category,Blog
 from users.models import Members
 from django.conf import settings
 from users.renderData import LoggedinUser
+import os
 
 
 
@@ -499,10 +500,32 @@ def manage_website_homepage(request):
 
 
     '''For banner picture with Texts'''   
-    from main_website.models import RibbonPicture
+    from main_website.models import BannerPictureWithStat
 
-    existing_banner_picture_with_numbers=RibbonPicture.objects.all()  
-            
+    existing_banner_picture_with_numbers=BannerPictureWithStat.objects.all()
+    if request.method=="POST":
+        if request.POST.get('update_banner'):
+            # first get all the objects and get the image file path. Delete the files from the system and then delete the object, then get the new image and create a new object.
+            try:
+                banner_image=request.FILES['banner_picture_with_stat']
+                
+                # Now get previous instances of Banner Picture with stat
+                for i in BannerPictureWithStat.objects.all():
+                    image_instance=settings.MEDIA_ROOT+str(i.image)
+                    if(os.path.isfile(image_instance)):
+                        # Delete the image now:
+                        os.remove(image_instance)
+                        # Now delete the object:
+                        i.delete()
+                
+                newBannerPictureWithStat=BannerPictureWithStat.objects.create(image=banner_image)
+                newBannerPictureWithStat.save()
+                messages.success(request,"Banner Picture With Statistics was successfully updated")
+                return redirect('central_branch:manage_website_home')    
+            except Exception as e:
+                messages.error(request,"Something went wrong! Please try again.")
+                return redirect('central_branch:manage_website_home')    
+
     
     context={
         'user_data':user_data,

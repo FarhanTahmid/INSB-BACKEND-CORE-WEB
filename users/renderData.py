@@ -72,8 +72,6 @@ class LoggedinUser:
             
             #get the previous profile picture of the user to delete it later
             previous_profile_picture=settings.MEDIA_ROOT+str(get_user.user_profile_picture)
-            print(previous_profile_picture)
-            print(settings.MEDIA_ROOT+'user_profile_pictures/default_profile_picture.png')
             #check if the previous profile picture is the default one, if yes, just replace with new one. if no, delete the previous profile picture. replace with new one
             if(previous_profile_picture!=(settings.MEDIA_ROOT+'user_profile_pictures/default_profile_picture.png')):
                 
