@@ -10,6 +10,7 @@ from .renderData import GraphicsTeam
 from users.renderData import LoggedinUser
 from . import renderData
 from django.conf import settings
+from central_branch.models import Events
 
 # Create your views here.
 @login_required
@@ -115,3 +116,17 @@ def manage_team(request):
     if has_access:
         return render(request,"graphics_team/manage_team.html",context=context)
     return render(request,"graphics_team/access_denied.html")
+
+@login_required
+def event_page(request):
+
+    '''Only events organised by INSB would be shown on the event page of Graphics Team
+       So, only those events are being retrieved from database'''
+    insb_organised_events = Events.objects.filter(event_organiser=5).order_by('-event_date')
+   
+   
+    context = {'events_of_insb_only':insb_organised_events,
+                }
+
+
+    return render(request,"Events/graphics_team_events.html",context)
