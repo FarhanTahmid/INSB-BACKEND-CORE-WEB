@@ -130,3 +130,18 @@ def event_page(request):
 
 
     return render(request,"Events/graphics_team_events.html",context)
+
+@login_required
+def event_form(request,event_ID):
+
+    #Initially loading the events whose  links and images were previously uploaded
+    #and can be editible
+
+    event_id = event_ID
+    event = Events.objects.get(id = event_id)
+
+    context={
+        'event_name':event.event_name,
+    }
+
+    return render(request,"graphics_team/graphics_event_form.html",context)

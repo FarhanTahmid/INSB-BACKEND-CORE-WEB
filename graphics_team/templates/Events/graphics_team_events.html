@@ -200,7 +200,7 @@
               <td style="color:blue;">
                 <!--<button id="burger" type="button" value={{event.id}} name="result"  data-toggle="modal"  onclick="openModal('{{event.id}}')"  data-target="#modal" ui-target="#animate">{{event.event_name}}</button>
                 -->
-                <a href=""> {{event.event_name}}</a><br>
+                <a href="{% url 'graphics_team:event_form' event.id %}"> {{event.event_name}}</a><br>
               </td>
               <td>{{ event.event_organiser }}</td>
               <td>{{ event.event_date }}</td>

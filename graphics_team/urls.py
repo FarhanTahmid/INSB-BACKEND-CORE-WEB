@@ -9,5 +9,7 @@ urlpatterns = [
     path('manage_team/',views.manage_team,name="manage_team"),
     #Event page
     path('event_page/',views.event_page,name="event_page"),
+    #Event form
+    path('event_page/<int:event_ID>',views.event_form,name="event_form"),
 
 ]
