@@ -115,7 +115,7 @@ def manage_team(request):
 
     if has_access:
         return render(request,"graphics_team/manage_team.html",context=context)
-    return render(request,"graphics_team/access_denied.html")
+    return render(request,"access_denied2.html")
 
 @login_required
 def event_page(request):
