@@ -13,8 +13,24 @@ class Ras_Sbc(models.Model):
     what_activities=models.TextField(null=True,blank=True,max_length=300)
     how_to_join=models.TextField(null=True,blank=True,max_length=300)
     
+    #RAS Contact Info
+    address=models.CharField(null=True,blank=True,max_length=200)
+    contact_no=models.CharField(null=True,blank=True,max_length=50)
+    email=models.CharField(null=True,blank=True,max_length=100)
+    
     class Meta:
         verbose_name="RAS SBC Informations"
     
+    def __str__(self) -> str:
+        return str(self.pk)
+
+class Ras_Query_Form(models.Model):
+    name=models.CharField(null=False,blank=False,max_length=100)
+    email=models.EmailField(null=False,blank=False)
+    message=models.CharField(null=False,blank=False,max_length=1000)
+    
+    class Meta:
+        verbose_name="RAS SBC Contact Form Queries"
+        
     def __str__(self) -> str:
         return str(self.pk)
