@@ -39,6 +39,7 @@ urlpatterns = [
     path('portal/graphics_team/',include('graphics_team.urls',namespace="graphics_team")),
     path('portal/finance_and_corporate_team/',include("finance_and_corporate_team.urls",namespace="finanace_and_corporate_team")),
     path('portal/ieee_nsusb_pes_sbc/',include("ieee_nsu_sb_pes_sbc.urls",namespace="ieee_nsu_pes")),
+    path('portal/ieee_nsusb_ras_sbc/',include("ieee_nsu_sb_ras_sbc.urls",namespace="ras")),
     
     
 ]
