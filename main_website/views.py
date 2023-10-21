@@ -89,18 +89,22 @@ def achievements(request):
     
 
 ######################### SOCIETY & AG WORKS #######################
-
+from . import society_ag
 def rasPage(request):
     # Title of the page
     page_title="IEEE NSU RAS Student Branch Chapter"
     # Second para after the title
     secondary_para="Focusing on the research, study, and exchange of knowledge regarding Robotics & Automation."
     
+    getRasAbout=society_ag.Ras.get_ras_about()
+    
+    if getRasAbout is False:
+        return HttpResponse("GG")
     
     context={
         'page_title':page_title,
         'secondary_para':secondary_para,
-        
+        'about_ras':getRasAbout,
     }
     return render(request,'Society_AG/ras.html',context=context)
 

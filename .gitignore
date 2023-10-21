@@ -107,6 +107,7 @@ env.bak/
 venv.bak/
 farhan_insb_port/
 farhan_insb_port2/
+insb_portal_env/
 windows_env/
 linux_env/
 linux_env2/

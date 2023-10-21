@@ -63,6 +63,9 @@ INSTALLED_APPS = [
     'graphics_team',
     'finance_and_corporate_team',
     'ieee_nsu_sb_pes_sbc',
+    'ieee_nsu_sb_ras_sbc',
+    'ckeditor',
+    
 ]
 
 MIDDLEWARE = [
