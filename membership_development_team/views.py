@@ -398,7 +398,7 @@ def renewal_session_data(request,pk):
         'has_form_data':has_form_data,
     }
     
-    return render(request,'renewal_sessions.html',context)
+    return render(request,'Renewal/renewal_session_details.html',context)
 
 @login_required
 def renewal_request_details(request,pk,request_id):
