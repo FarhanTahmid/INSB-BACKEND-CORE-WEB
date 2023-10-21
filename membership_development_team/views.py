@@ -243,17 +243,19 @@ def membership_renewal(request):
             session_name=request.POST['renewal_session']
             try:
                 if(Renewal_Sessions.objects.get(session_name=session_name)):
-                    messages.info(request,"A same session with this name already exists!")
+                    messages.error(request,"A same session with this name already exists!")
+                    return redirect('membership_development_team:membership_renewal')
             except Renewal_Sessions.DoesNotExist:
                 session_time=datetime.datetime.now()
                 add_session=Renewal_Sessions(session_name=session_name,session_time=session_time)
                 add_session.save()
-                return render(request,'renewal.html',context)
+                messages.success(request,"A new session has been created!")
+                return redirect('membership_development_team:membership_renewal')
         except DatabaseError:
             messages.info(request,"Error Creating a new Session!")
-            return DatabaseError
+            return redirect('membership_development_team:membership_renewal')
         
-    return render(request,'renewal.html',context)
+    return render(request,'Renewal/renewal_homepage.html',context)
 
 # no login required as this will open up for other people
 def membership_renewal_form(request,pk):
