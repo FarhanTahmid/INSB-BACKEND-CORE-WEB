@@ -20,10 +20,11 @@ class Renewal_Sessions(models.Model):
 #Table for renewal requests for every session, primary key is id. This table is View Protected. Donot register this in admin
 class Renewal_requests(models.Model):
     session_id=models.ForeignKey(Renewal_Sessions,null=False,blank=False,on_delete=models.CASCADE)
-    #ieee_id=models.ForeignKey(Members,null=True,blank=True,on_delete=models.CASCADE)
+    ieee_id=models.IntegerField(null=True,blank=True)
     name=models.CharField(null=False,blank=False,max_length=100,default="null")
     contact_no=models.CharField(null=False,blank=False,max_length=30,default="null")
-    email_personal=models.EmailField(null=False,blank=False)
+    email_associated=models.EmailField(null=False,blank=False)
+    email_ieee=models.EmailField(null=True,blank=True)
     ieee_account_password=models.CharField(null=False,blank=False,max_length=500)
     
     #this *_check fields refers to the subscriptions the user is selecting on the forms.
