@@ -381,14 +381,16 @@ def renewal_session_data(request,pk):
     
     #try loading form data to notify user if form credentials has been updated or not for that session with button glow in "Update Form Credentials"
     has_form_data=False
+    form_data=None
     if(renderData.MDT_DATA.load_form_data_for_particular_renewal_session(renewal_session_id=pk)==False):
         has_form_data=False
     else:
+        form_data=renderData.MDT_DATA.load_form_data_for_particular_renewal_session(renewal_session_id=pk)
         has_form_data=True
-    
     
     if request.method=="POST":
         if request.POST.get('update_form_credentials'):
+            
             form_description=request.POST['form_description']
             ieee_membership_amount=request.POST['ieee_membership_amount']
             ieee_ras_membership_amount=request.POST['ieee_ras_membership_amount']
@@ -396,6 +398,7 @@ def renewal_session_data(request,pk):
             ieee_ias_membership_amount=request.POST['ieee_ias_membership_amount']
             ieee_wie_membership_amount=request.POST['ieee_wie_membership_amount']
             bkash_payment_number=request.POST['bkash_payment_number']
+            nagad_payment_number=request.POST['nagad_payment_number']
             further_contact_member_id=request.POST['further_contact_member_id']
             
             #update form credentials
@@ -408,11 +411,13 @@ def renewal_session_data(request,pk):
                 ieee_ras_membership_amount=ieee_ras_membership_amount,
                 ieee_wie_membership_amount=ieee_wie_membership_amount,
                 bkash_payment_number=bkash_payment_number,
+                nagad_payment_number=nagad_payment_number,
                 further_contact_member_id=further_contact_member_id
             )
             return redirect('membership_development_team:renewal_session_data',pk) 
     context={
         'session_name':session_name,
+        'form_data':form_data,
         'session_id':session_id,
         'requests':get_renewal_requests,
         'form_link':form_link,

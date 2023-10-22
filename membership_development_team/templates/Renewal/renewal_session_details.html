@@ -84,6 +84,50 @@
         copyButton:hover {
             background-color: #0056b3;
         }
+        .tooltip-container {
+          position: relative;
+          display: inline-block;
+        }
+        .tooltip-container.right {
+          float: right; /* Float the container to the right */
+          margin-right: 0; /* Reset the margin for the right-aligned button */
+        }
+        
+        .image-button:hover + .tooltip-text {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(10px); /* Adjust the distance from the link */
+        }
+        
+        .tooltip-text {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+        }
+        .image-button {
+          display: inline-block;
+          background: none;
+          border: none;
+          padding: 0;
+          cursor: pointer;
+      }
+      
+      /* Add additional styling for image appearance, such as size and alignment */
+      .image-button img {
+          height:50px;
+          width: 50px; /* Adjust as needed */
+          height: auto; /* Maintain aspect ratio */
+          border-radius: 5px; /* Add rounded corners if desired */
+      }
         
     </style>
 </head>
@@ -115,13 +159,27 @@
 
             <!--Start from here-->
             <br>
+            <!--Back button-->
+            <div class="tooltip-container">
+              <a href="{% url 'membership_development_team:membership_renewal' %}" class="image-button">
+                  <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+              </a>
+              <span class="tooltip-text">Go back to Renewal Sessions</span>
+            </div>
+            <!--Back button end-->
+
+            <br>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Renewal Session - <span style="color:#00629B;"> <b>{{session_name}}</b></span></h2>
             <br>
 
             <div style="justify-content:center;text-align:center;">  
                 <div class="btn-container">
                   <a href="{% url 'membership_development_team:renewal_form' session_id %}" class="btn btn-outline b-primary text-primary">View Renewal Form</a>
-                  <a href="" class="btn btn-outline b-danger text-danger">Edit Renewal Amount Credentials</a>
+                  {% if has_form_data %}
+                    <button type="submit" class="btn btn-outline b-info text-info" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Edit Renewal Form</button>
+                  {% else %}
+                    <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Edit Renewal Form</button>
+                  {% endif %}
                   <a href="{% url "membership_development_team:export_excel_renewal_request" session_id %}" class="btn btn-outline b-success text-success">Generate Excel Sheet For this Session</a>
                 </div>
             </div>
@@ -206,13 +264,174 @@
                       </ul>
                     </nav>
                   </div>
-                  <div class="rows_count">Showing 11 to 20 of 91 entries</div>    
-                        
+                  <div class="rows_count">Showing 11 to 20 of 91 entries</div>        
                 </div>
               </div>
             
             </div>
             <!--Session Table end-->
+
+
+            <!--Modal for Edit Form Credentials-->
+            <div id="m-s-a" class="modal fade animate" data-backdrop="true">
+              <form method="POST">
+                  {% csrf_token %}
+                  <div class="modal-dialog modal-lg" id="animate">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                          <h5 class="modal-title">Edit Renewal Form for {{session_name}} session</h5>
+                          </div>
+                          
+                          <div class="modal-body text-left p-lg">
+
+                              <form method="POST">
+                                  {% csrf_token %}
+                                  <div class="col-md">
+                                    <div class="box">
+                                      <div class="box-header">
+                                        <small>Form details can be updated from here and renewal form will change according to provided Informations.</small>
+                                      </div>
+                                      <div class="box-divider m-0"></div>
+                                      <div class="box-body">
+                                          <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-2 form-control-label">Form Description</label>
+                                            <div class="col-sm-10">
+                                              {% if has_form_data %}
+                                                <textarea name="form_description" required placeholder="Give form description/caption within 600 words" class="form-control" rows="6">{{form_data.form_description}}</textarea>
+                                              {% else %}
+                                                <textarea name="form_description" required placeholder="Give form description/caption within 400 words" class="form-control" rows="6"></textarea>
+                                              {% endif %}
+                                            </div>
+                                          </div>
+                                          
+                                            <div class="form-group row">
+                                              <label for="inputieeeid3" class="col-sm-2 form-control-label">IEEE Membership Fee</label>
+                                                <div class="col-sm-10">
+                                                  {% if has_form_data %}
+                                                    <input type="text" value="{{form_data.ieee_membership_amount}}" name="ieee_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE Membership Fee">
+                                                  {% else %}
+                                                  <input type="text" name="ieee_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE Membership Fee">
+                                                  {% endif %}
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                              <div class="col-md-6">
+
+                                                <div class="form-group row">
+                                                  <label for="inputieeeid3" class="col-sm-10 form-control-label">IEEE RAS Membership Fee</label>
+                                                  <div class="col-sm-10">
+                                                    {% if has_form_data %}
+                                                    <input type="text" value="{{form_data.ieee_ras_membership_amount}}" name="ieee_ras_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE RAS Membership Fee">
+                                                    {% else %}
+                                                    <input type="text" name="ieee_ras_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE RAS Membership Fee">
+                                                    {% endif %}
+                                                  </div>
+                                                </div>
+                                              </div>
+
+                                              <div class="col-md-6">
+                                                <div class="form-group row">
+                                                  <label for="inputieeeid3" class="col-sm-10 form-control-label">IEEE PES Membership Fee</label>
+                                                  <div class="col-sm-10">
+                                                    {% if has_form_data %}
+                                                    <input type="text" value="{{form_data.ieee_pes_membership_amount}}" name="ieee_pes_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE PES Membership Fee">
+                                                    {% else %}
+                                                    <input type="text" name="ieee_pes_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE PES Membership Fee">
+                                                    {% endif %}
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+
+                                            <div class="row">
+                                              <div class="col-md-6">
+                                                <div class="form-group row">
+                                                  <label for="inputieeeid3" class="col-sm-10 form-control-label">IEEE IAS Membership Fee</label>
+                                                  <div class="col-sm-10">
+                                                    {% if has_form_data %}
+                                                    <input type="text" value="{{form_data.ieee_ias_membership_amount}}" name="ieee_ias_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE IAS Membership Fee">
+                                                    {% else %}
+                                                    <input type="text" name="ieee_ias_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE IAS Membership Fee">
+                                                    {% endif %}
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div class="col-md-6">
+                                                <div class="form-group row">
+                                                  <label for="inputieeeid3" class="col-sm-10 form-control-label">IEEE WIE Membership Fee</label>
+                                                  <div class="col-sm-10">
+                                                    {% if has_form_data %}
+                                                    <input type="text" value="{{form_data.ieee_wie_membership_amount}}" name="ieee_wie_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE WIE Membership Fee">
+                                                    {% else %}
+                                                    <input type="text" name="ieee_wie_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE WIE Membership Fee">
+                                                    {% endif %}
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          
+                                            <div class="row">
+                                              
+                                              <div class="col-md-6">
+                                                <div class="form-group row">
+                                                  <label for="inputieeeid3" class="col-sm-10 form-control-label">Bkash No.</label>
+                                                  <div class="col-sm-10">
+                                                    {% if has_form_data %}
+                                                    <input type="text" value="{{form_data.bkash_payment_number}}" name="bkash_payment_number" class="form-control" id="inputieeeid3" placeholder="Bkash no.">
+                                                    {% else %}
+                                                    <input type="text" name="bkash_payment_number" class="form-control" id="inputieeeid3" placeholder="Bkash No.">
+                                                    {% endif %}
+                                                  </div>
+                                                </div>
+                                              </div>
+
+                                              <div class="col-md-6">
+                                                <div class="form-group row">
+                                                  <label for="inputieeeid3" class="col-sm-10 form-control-label">Nagad no.</label>
+                                                  <div class="col-sm-10">
+                                                    {% if has_form_data %}
+                                                    <input type="text" value="{{form_data.nagad_payment_number}}" name="nagad_payment_number" class="form-control" id="inputieeeid3" placeholder="Nagad No.">
+                                                    {% else %}
+                                                    <input type="text" name="nagad_payment_number" class="form-control" id="inputieeeid3" placeholder="Nagad No.">
+                                                    {% endif %}
+                                                  </div>
+                                                </div>
+                                              </div>
+
+                                            </div>
+
+                                          
+                                          
+                                          
+
+                                          <div class="form-group row">
+                                            <label for="inputieeeid3" class="col-sm-2  form-control-label">For Further Details Contact With.</label>
+                                            <div class="col-sm-10">
+                                              <select id="further_details" name="further_contact_member_id">
+                                                {% for member in mdt_team_member %}
+                                                  <option value={{member.ieee_id}}>{{member.name}}</option>
+                                                {% endfor %}
+                                              </select>
+                                            </div>
+                                          </div>
+        
+                                        
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
+                          </div>
+
+                          <div class="modal-footer">
+                          <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                          <input type="submit" name="update_form_credentials" class="btn btn-success p-x-md" value="Update Form Credentials"></input>
+                      </form>                  
+                          </div>
+                      </div><!-- /.modal-content -->
+                  </div>
+              </form>
+          </div>
             
         </div>
         <!--PAGE END-->
