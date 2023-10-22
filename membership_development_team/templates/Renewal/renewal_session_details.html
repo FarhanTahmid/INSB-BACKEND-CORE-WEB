@@ -59,6 +59,31 @@
         .error {
             color: red;
         }
+        .form_link {
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        copyButton {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        copyButton:hover {
+            background-color: #0056b3;
+        }
         
     </style>
 </head>
@@ -96,10 +121,23 @@
             <div style="justify-content:center;text-align:center;">  
                 <div class="btn-container">
                   <a href="{% url 'membership_development_team:renewal_form' session_id %}" class="btn btn-outline b-primary text-primary">View Renewal Form</a>
-                  <a href="" class="btn btn-outline b-primary text-primary">Edit Renewal Amount Credentials</a>
+                  <a href="" class="btn btn-outline b-danger text-danger">Edit Renewal Amount Credentials</a>
                   <a href="{% url "membership_development_team:export_excel_renewal_request" session_id %}" class="btn btn-outline b-success text-success">Generate Excel Sheet For this Session</a>
                 </div>
             </div>
+            <br>
+
+            <!--Form link copy section-->
+            <div class="form_link" style="justify-content:center;">
+                <label><h6>Renewal Form Link:</h6></label>
+                <input type="text" id="urlInput" value={{form_link}}>
+                <button class="copyButton" id="copyButton"><i class="fa fa-copy"></i></button>
+            </div>
+
+            <!--Bar chart options for application status-->
+            
+
+            <!--Session Table-->
             
         </div>
         <!--PAGE END-->
@@ -118,6 +156,18 @@
     {% endblock common_js %}
     <script src="{% static 'table_search.js'%}"></script>
 
-
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlInput = document.getElementById("urlInput");
+            const copyButton = document.getElementById("copyButton");
+        
+            copyButton.addEventListener("click", function () {
+                urlInput.select();
+                document.execCommand("copy");
+                window.getSelection().removeAllRanges();
+                alert("URL copied to clipboard!");
+            });
+        });
+    </script>
 </body>
 </html>
