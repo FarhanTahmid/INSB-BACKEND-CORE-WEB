@@ -29,7 +29,7 @@ class Access_Render:
         try:
             get_co_ordinator=Members.objects.get(ieee_id=int(username))
             
-            if(get_co_ordinator.position.is_officer):
+            if(get_co_ordinator.position.is_officer) and (get_co_ordinator.position.is_co_ordinator):
                 return True
             else:
                 return False
@@ -41,7 +41,7 @@ class Access_Render:
         try:
             get_co_ordinator=Members.objects.get(ieee_id=int(username))
             
-            if(get_co_ordinator.position.is_officer and (get_co_ordinator.team.id==team_id)):
+            if(get_co_ordinator.position.is_officer and (get_co_ordinator.position.is_co_ordinator) and (get_co_ordinator.team.id==team_id)):
                 return True
             else:
                 return False

@@ -27,6 +27,7 @@ class Roles_and_Position(models.Model):
     is_eb_member = models.BooleanField(default=False)
     is_sc_ag_eb_member=models.BooleanField(default=False)
     is_officer=models.BooleanField(default=False)
+    is_co_ordinator=models.BooleanField(default=False)
     is_faculty=models.BooleanField(default=False)
     
     class Meta:

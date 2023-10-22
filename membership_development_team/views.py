@@ -327,13 +327,13 @@ def membership_renewal_form(request,pk):
             return HttpResponseBadRequest
     
     
-    return render(request,'renewal_form.html',context)
+    return render(request,'Renewal/renewal_form.html',context)
 
 def membership_renewal_form_success(request,pk):
     context={
         'pk':pk
     }
-    return render(request,"renewal_form_confirmation.html",context)
+    return render(request,"Renewal/renewal_form_confirmation.html",context)
 
 @login_required
 def renewal_session_data(request,pk):
