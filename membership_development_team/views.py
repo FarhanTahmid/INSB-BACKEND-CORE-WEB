@@ -353,7 +353,7 @@ def renewal_session_data(request,pk):
     '''This view function loads all data for the renewal session including the members registered'''
     session_name=renewal_data.get_renewal_session_name(pk)
     session_id=renewal_data.get_renewal_session_id(session_name=session_name)
-    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_associated','contact_no',).order_by('-id')
+    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_associated','contact_no','ieee_id').order_by('-id')
     #loading all the unviewed request count
     notification_count=Renewal_requests.objects.filter(session_id=session_id,view_status=False).count()
     #counting the renewed requests
@@ -421,12 +421,12 @@ def renewal_request_details(request,pk,request_id):
     user=request.user
     has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
     
-    renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('name','email_personal','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
+    renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('name','email_associated','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
     name=renewal_request_details[0]['name']
     renewal_email=""
     has_comment=False
     for i in range(len(renewal_request_details)):
-        renewal_email=renewal_request_details[i]['email_personal']
+        renewal_email=renewal_request_details[i]['email_associated']
         if(renewal_request_details[i]['official_comment'] is not None):
             has_comment=True
     #changing the viewing status
