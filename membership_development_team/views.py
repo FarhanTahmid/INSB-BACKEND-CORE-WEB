@@ -10,7 +10,7 @@ from . models import Renewal_Sessions,Renewal_requests
 from recruitment.models import recruitment_session
 from . import renewal_data
 from . import renderData
-from django.http import HttpResponse,HttpResponseBadRequest,HttpResponseServerError
+from django.http import JsonResponse, HttpResponse,HttpResponseBadRequest,HttpResponseServerError
 import datetime
 import xlwt
 from django.contrib import messages
@@ -261,8 +261,6 @@ def membership_renewal(request):
 from system_administration.render_access import Access_Render
 def membership_renewal_form(request,pk):
     
-    
-    
     #rendering access to view the message section
     has_access_to_view=False
     if (request.user.is_authenticated):
@@ -348,19 +346,33 @@ def membership_renewal_form_success(request,pk):
     }
     return render(request,"Renewal/renewal_form_confirmation.html",context)
 
+
+@login_required
+def getRenewalStats(request):
+    if request.method=="GET":
+        session_id=request.GET.get('session_id')
+        #loading all the unviewed request count
+        notification_count=Renewal_requests.objects.filter(session_id=session_id,view_status=False).count()
+        #counting the renewed requests
+        renewed_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=True).count()
+        #counting the pending requests
+        pending_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=False).count()
+        context={
+            "labels":["Applications Not Yet Viewed","Total Pending Applications","Total Renewed Applications"],
+            "values":[notification_count,pending_count,renewed_count]
+        }
+    return JsonResponse(context)    
+
+    
+
+
 @login_required
 def renewal_session_data(request,pk):
     '''This view function loads all data for the renewal session including the members registered'''
     session_name=renewal_data.get_renewal_session_name(pk)
     session_id=renewal_data.get_renewal_session_id(session_name=session_name)
-    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_associated','contact_no','ieee_id').order_by('-id')
-    #loading all the unviewed request count
-    notification_count=Renewal_requests.objects.filter(session_id=session_id,view_status=False).count()
-    #counting the renewed requests
-    renewed_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=True).count()
-    #counting the pending requests
-    pending_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=False).count()
-    
+    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_associated','email_ieee','contact_no','ieee_id').order_by('-id')
+        
     #loading team member data for form credential edit
     load_team_members=renderData.MDT_DATA.load_team_members()
     
@@ -404,9 +416,6 @@ def renewal_session_data(request,pk):
         'session_id':session_id,
         'requests':get_renewal_requests,
         'form_link':form_link,
-        'notification_count':notification_count,
-        'renewed_count':renewed_count,
-        'pending_count':pending_count,
         'mdt_team_member':load_team_members,
         'has_form_data':has_form_data,
     }
@@ -524,7 +533,7 @@ def generateExcelSheet_renewal_requestList(request,session_id):
     font_style.font.bold = True
 
     # Defining columns that will stay in the first row
-    columns = ['Name', 'Associated Email','Contact No', 'IEEE Account Password', 'IEEE-Renewal', 'PES-Renewal', 'RAS-Renewal','IAS-Renewal','WIE-Renewal','Transaction ID','Any Comments?',
+    columns = ['Name','IEEE ID', 'Associated Email','IEEE Email','Contact No', 'IEEE Account Password', 'IEEE-Renewal', 'PES-Renewal', 'RAS-Renewal','IAS-Renewal','WIE-Renewal','Transaction ID','Any Comments?',
                'Renewal Status','MDT Comment']
 
     # Defining first column
@@ -536,7 +545,9 @@ def generateExcelSheet_renewal_requestList(request,session_id):
 
     # getting all the values of members as rows with same session
     rows = Renewal_requests.objects.all().values_list('name',
-                                             'email_personal',
+                                            'ieee_id',
+                                             'email_associated',
+                                             'email_ieee',
                                              'contact_no',
                                              'ieee_account_password',
                                              'ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check',
