@@ -112,16 +112,42 @@
                                         </div>
                                     </div>
                                     <div class="row my-3">
-                                        <div class="col-md-2 mt-1">Email:</div>
+                                        <div class="col-md-2 mt-1">Email (Associated with your IEEE account):</div>
                                         <div class="col-md-8">
                                             <input
                                                
                                                 class="form-control w-75"
                                                 type="email"
                                                 autocomplete="on"
-                                                id="email_personal" name="email_personal" required placeholder="Enter Email Associated with Your IEEE ID" 
+                                                id="email_associated" name="email_associated" required placeholder="Enter Email Associated with Your IEEE ID" 
                                             />
                                         </div>
+                                    </div>
+                                    <div class="row my-3">
+                                        <div class="col-md-2 mt-1">Email (IEEE):</div>
+                                        <div class="col-md-8">
+                                            <input
+                                               
+                                                class="form-control w-75"
+                                                type="email"
+                                                autocomplete="on"
+                                                id="email_ieee" name="email_ieee" required placeholder="Enter Your IEEE Email" 
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row my-3">
+                                    <div class="col-md-2 mt-1">IEEE Membership ID:</div>
+                                    <div class="col-md-8">
+                                        <input
+                                            placeholder="IEEE ID"
+                                            class="form-control w-75"
+                                            type="number"
+                                            autocomplete="off"
+                                            required
+                                            name="ieee_id" 
+                                        />
                                     </div>
                                 </div>
 
@@ -162,11 +188,11 @@
                             <h3
                                 class="bg-light border rounded text-center p-2 text-uppercase mb-4"
                             >
-                                Subscription options
+                                Payment Section
                             </h3>
                             <div class="px-0 px-md-5">
 
-                                <h5 class="" style="font-weight:bold;">Renewal Fee Details:</h5>
+                                <h5 class="" style="font-weight:bold;">Renewal Fee Amount & Details:</h5>
                                 <ul>
                                     <li><span style="font-weight:bold; font-size:15px;">IEEE Membership:</span> <span style="font-style:italic;font-weight:bold;font-size:15px;">{{form_credentials.ieee_membership_amount}}</span> </li>
                                     <li><span style="font-weight:bold;font-size:15px;">IEEE RAS Membership:</span> <span style="font-style:italic;font-weight:bold;font-size:15px;">{{form_credentials.ieee_ras_membership_amount}}</span> </li>
@@ -175,13 +201,12 @@
                                     <li><span style="font-weight:bold;font-size:15px;">IEEE WIE Membership:</span> <span style="font-style:italic;font-weight:bold;font-size:15px;">{{form_credentials.ieee_wie_membership_amount}}</span> </li>
 
                                 </ul>
-                                <h5 class="" style="font-weight:bold;">Payment Options and Method (via Bkash):</h5>
+                                <h5 class="" style="font-weight:bold;">Payment Details for Bkash and Nagad:</h5>
                                 <ol>
                                     <li><span style="font-weight:bold;font-size:15px;">Bkash Number:</span><span style="font-weight:bold;font-style:italic;font-size:15px;"> {{form_credentials.bkash_payment_number}}</span></li>
-                                    <li><span style="font-size:15px;">During payment, add </span> <span style="font-weight:bold; font-size:15px;">referrence</span> <span style="font-size:15px;">note: </span><span style="font-weight:bold; font-size:15px;">"Renewal IEEE NSU"</span></li>
-                                    <li><span style="font-size:15px;">After payment, please assure by </span> <span style="font-weight:bold; font-size:15px;">calling</span> <span style="font-size:15px;">the number you have made the payment.</span>></li>
-                                    
-                                    <li><span style="font-size:15px;">Provide your</span><span style="font-weight:bold; font-size:15px;"> "Bkash Transaction ID"</span></li>
+                                    <li><span style="font-weight:bold;font-size:15px;">Nagad Number:</span><span style="font-weight:bold;font-style:italic;font-size:15px;"> {{form_credentials.bkash_payment_number}}</span></li>
+                                    <li><span style="font-size:15px;">During payment, add </span> <span style="font-weight:bold; font-size:15px;">referrence</span> <span style="font-size:15px;">note: </span><span style="font-weight:bold; font-size:15px;">"Renewal_IEEE_NSU_your_name"</span></li>
+                                    <li><span style="font-size:15px;">Provide your</span><span style="font-weight:bold; font-size:15px;"> "Bkash/Nagad Transaction ID"</span></li>
 
                                 </ol>
 

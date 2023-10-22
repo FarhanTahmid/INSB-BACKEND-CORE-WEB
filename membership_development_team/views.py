@@ -295,9 +295,11 @@ def membership_renewal_form(request,pk):
         
         if(request.POST.get('apply')):
            
+            ieee_id=request.POST['ieee_id']
             name=request.POST['name']
             contact_no=request.POST['contact_no']
-            email_personal=request.POST['email_personal']
+            email_associated=request.POST['email_associated']
+            email_ieee=request.POST['email_ieee']
             password=request.POST['password']
             confirm_password=request.POST['confirm_password']
             
@@ -327,7 +329,7 @@ def membership_renewal_form(request,pk):
                 
                 try:
                     #encrypted_pass=renewal_data.encrypt_password(password=password)
-                    renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),name=name,contact_no=contact_no,email_personal=email_personal,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
+                    renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),ieee_id=ieee_id,name=name,contact_no=contact_no,email_associated=email_associated,email_ieee=email_ieee,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
                     renewal_instance.save()
                     return redirect('membership_development_team:renewal_form_success',pk)
                 except:
@@ -351,7 +353,7 @@ def renewal_session_data(request,pk):
     '''This view function loads all data for the renewal session including the members registered'''
     session_name=renewal_data.get_renewal_session_name(pk)
     session_id=renewal_data.get_renewal_session_id(session_name=session_name)
-    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_personal','contact_no',).order_by('-id')
+    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_associated','contact_no',).order_by('-id')
     #loading all the unviewed request count
     notification_count=Renewal_requests.objects.filter(session_id=session_id,view_status=False).count()
     #counting the renewed requests
