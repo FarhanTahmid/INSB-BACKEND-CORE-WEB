@@ -399,7 +399,7 @@ try {
     // Conversion failed
     console.log("Failed to parse as an integer.");
   }
-  const response = await fetch('/recruitment/getPaymentStats/?session_id=' + encodeURIComponent(sessionValue));
+  const response = await fetch('/portal/recruitment/getPaymentStats/?session_id=' + encodeURIComponent(sessionValue));
   const data = await response.json();
   console.log(data)
   return data;

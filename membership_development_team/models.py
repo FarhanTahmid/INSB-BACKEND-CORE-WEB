@@ -65,6 +65,7 @@ class Renewal_Form_Info(models.Model):
     ieee_wie_membership_amount=models.CharField(null=True,blank=True,max_length=50)
     #payment method details
     bkash_payment_number=models.CharField(null=True,blank=True,max_length=20)
+    nagad_payment_number=models.CharField(null=True,blank=True,max_length=20)
     #further contact member id
     further_contact_member_id=models.CharField(null=True,blank=True,max_length=50)
     
