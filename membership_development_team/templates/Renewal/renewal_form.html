@@ -5,7 +5,9 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Renewal Form - {{session_name}}</title>
+        <title>Renewal Form - {{session_name}} | Membership Development Team</title>
+        <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
         <script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
@@ -67,11 +69,14 @@
                             </ul>
                             <br>
                             <div class="py-3 text-center">
+
+                                {% if has_access_to_view %}
+                                    {% for message in messages %}
+                                        <p style="font-size:25px;color:red;" class="message">{{message}}</p>
+                                    {% endfor %}
+                                {% endif %}
                             
-                                {% for message in messages %}
-                                    <p style="font-size:25px;color:red;" class="message">{{message}}</p>
-                                {% endfor %}
-                                
+                
                             </div>
                             
                             <div class="px-0 px-md-5">

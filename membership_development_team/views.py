@@ -258,8 +258,18 @@ def membership_renewal(request):
     return render(request,'Renewal/renewal_homepage.html',context)
 
 # no login required as this will open up for other people
+from system_administration.render_access import Access_Render
 def membership_renewal_form(request,pk):
     
+    
+    
+    #rendering access to view the message section
+    has_access_to_view=False
+    if (request.user.is_authenticated):
+        if((Access_Render.faculty_advisor_access(request.user.username)) or (Access_Render.eb_access(request.user.username)) or (Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=request.user.username)) or (Access_Render.system_administrator_superuser_access(request.user.username)) or (Access_Render.system_administrator_staffuser_access(request.user.username))):
+            has_access_to_view=True
+            
+        
     session_name=renewal_data.get_renewal_session_name(pk)
     
     #load renewal form credentials
@@ -277,7 +287,8 @@ def membership_renewal_form(request,pk):
     context={
         'session_name':session_name,
         'form_credentials':form_credentials,
-        'further_contact':form_credentials_further_contact_info,  
+        'further_contact':form_credentials_further_contact_info,
+        'has_access_to_view':has_access_to_view,
     }
     
     if request.method=="POST":
