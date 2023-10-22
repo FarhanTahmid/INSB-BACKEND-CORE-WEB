@@ -56,7 +56,7 @@ class Renewal_Form_Info(models.Model):
     #to identify the form with session name we are using this session
     session=models.ForeignKey(Renewal_Sessions,on_delete=models.CASCADE,null=True,blank=True)
     #details of the form
-    form_description=models.CharField(null=True,blank=True,max_length=700)
+    form_description=models.TextField(null=True,blank=True,max_length=1000)
     #membership payment amount details
     ieee_membership_amount=models.CharField(null=True,blank=True,max_length=50)
     ieee_ras_membership_amount=models.CharField(null=True,blank=True,max_length=50)
@@ -72,7 +72,7 @@ class Renewal_Form_Info(models.Model):
     class Meta:
         verbose_name="Renewal Form Detail"
     def __str__(self) -> str:
-        return self.form_description
+        return str(self.pk)
         
 
 
