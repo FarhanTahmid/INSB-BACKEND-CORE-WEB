@@ -192,13 +192,11 @@ def event_form(request,event_ID):
                         print("Error")
             
             else:
-                try:
-                    links = Graphics_Link.objects.create(
-                    event_id = targetted_event,
-                    graphics_link = drive_link_of_banner_picture
-                    )
-                    links.save()
-                    
+                if media_link!=None:
+                    media_id = media[0].id
+                    extracted_from_table = Graphics_Link.objects.get(id = media_id)
+                    extracted_from_table.graphics_link = drive_link_of_banner_picture
+                    extracted_from_table.save()
                     Image_save = Graphics_Banner_Image.objects.create(
                     event_id = targetted_event,
                     selected_image = image[0],
@@ -206,8 +204,23 @@ def event_form(request,event_ID):
                     Image_save.save()
                     messages.success(request,"Successfully Added!")
                     return redirect('graphics_team:event_page')
-                except:
-                    print("Error")
+                else:
+                    try:
+                        links = Graphics_Link.objects.create(
+                        event_id = targetted_event,
+                        graphics_link = drive_link_of_banner_picture
+                        )
+                        links.save()
+                    
+                        Image_save = Graphics_Banner_Image.objects.create(
+                        event_id = targetted_event,
+                        selected_image = image[0],
+                        )
+                        Image_save.save()
+                        messages.success(request,"Successfully Added!")
+                        return redirect('graphics_team:event_page')
+                    except:
+                        print("Error")
 
         if request.POST.get('update_link'):
             targetted_event = Events.objects.get(id = event_id)
