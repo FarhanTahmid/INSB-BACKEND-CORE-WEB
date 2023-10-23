@@ -11,6 +11,8 @@ from users.renderData import LoggedinUser
 from . import renderData
 from django.conf import settings
 from central_branch.models import Events
+from .models import Graphics_Banner_Image,Graphics_Link
+import os
 
 # Create your views here.
 @login_required
@@ -140,8 +142,115 @@ def event_form(request,event_ID):
     event_id = event_ID
     event = Events.objects.get(id = event_id)
 
+    media = Graphics_Link.objects.filter(event_id = event)
+    Img  = Graphics_Banner_Image.objects.filter(event_id = event)
+
+    try:
+        media_link = media[0].graphics_link
+        print(media_link)
+        Img_photo = Img
+        if len(Img)>0:
+            image_exists=True
+        else:
+            image_exists=False
+    except:
+        image_exists=False
+        media_link=None
+        Img_photo=None
+
+    if Img_photo != None:
+        media_exists = True
+    else:
+        media_exists=False
+
+    if request.method == "POST":
+
+        if request.POST.get('add_banner_pic_and_link'):
+            targetted_event = Events.objects.get(id = event_id)
+            drive_link_of_banner_picture = request.POST.get('drive_link_of_graphics')
+            print(drive_link_of_banner_picture)
+            image= request.FILES.getlist('image')
+            print(image)
+
+            if len(image)==0:
+                if media_link!=None:
+                    media_id = media[0].id
+                    extracted_from_table = Graphics_Link.objects.get(id = media_id)
+                    extracted_from_table.graphics_link = drive_link_of_banner_picture
+                    extracted_from_table.save()
+                    return redirect('graphics_team:event_page')
+                else:
+                    try:
+                        links = Graphics_Link.objects.create(
+                        event_id = targetted_event,
+                        graphics_link = drive_link_of_banner_picture,
+                        )
+                        links.save()
+                        messages.success(request,"Successfully Added!")
+                        return redirect('graphics_team:event_page')
+                    except:
+                        print("Error")
+            
+            else:
+                try:
+                    links = Graphics_Link.objects.create(
+                    event_id = targetted_event,
+                    graphics_link = drive_link_of_banner_picture
+                    )
+                    links.save()
+                    
+                    Image_save = Graphics_Banner_Image.objects.create(
+                    event_id = targetted_event,
+                    selected_image = image[0],
+                    )
+                    Image_save.save()
+                    messages.success(request,"Successfully Added!")
+                    return redirect('graphics_team:event_page')
+                except:
+                    print("Error")
+
+        if request.POST.get('update_link'):
+            targetted_event = Events.objects.get(id = event_id)
+            drive_link_of_banner_picture = request.POST.get('drive_link_of_graphics')
+            print(drive_link_of_banner_picture)
+            try:
+                media_id = media[0].id
+                extracted_from_table = Graphics_Link.objects.get(id = media_id)
+                extracted_from_table.graphics_link = drive_link_of_banner_picture
+                extracted_from_table.save()
+                messages.success(request,"Successfully Added!")
+                return redirect('graphics_team:event_page')
+            except:
+                print("Error")
+        
+        if request.POST.get('submitted_changed_picture'):
+            try:
+                picture_id= request.POST.get('ImageID')
+                print(picture_id)
+                picture = Graphics_Banner_Image.objects.get(id=picture_id)
+                new_picture = request.FILES['new_image']
+                print(new_picture)
+                path = settings.MEDIA_ROOT+str(picture.selected_image)
+                os.remove(path)
+                picture.selected_image = new_picture
+                picture.save()
+                return redirect('graphics_team:event_page')
+            except:
+                print("Error")
+            
+
+
+
+
+
+
     context={
         'event_name':event.event_name,
+        'image_exists':image_exists,
+        'Img':Img_photo,
+        'media_link':media_link,
+        'media_url':settings.MEDIA_URL,
+        'media_exists':media_exists,
     }
 
     return render(request,"graphics_team/graphics_event_form.html",context)
