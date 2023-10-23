@@ -7,11 +7,32 @@ from port.models import Roles_and_Position
 from django.contrib import messages
 from system_administration.models import Graphics_Data_Access
 from .renderData import GraphicsTeam
+from users.renderData import LoggedinUser
+from . import renderData
+from django.conf import settings
+from central_branch.models import Events
+from .models import Graphics_Banner_Image,Graphics_Link
+import os
 
 # Create your views here.
 @login_required
 def team_homepage(request):
-    return render(request,"graphics_team/team_homepage.html")
+
+    #Loading data of the co-ordinators, co ordinator id is 9,
+    co_ordinators=renderData.GraphicsTeam.get_member_with_postion(9)
+    #Loading data of the incharges, incharge id is 10
+    in_charges=renderData.GraphicsTeam.get_member_with_postion(10)
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    context={
+        'co_ordinators':co_ordinators,
+        'incharges':in_charges,
+        'media_url':settings.MEDIA_URL,
+        'user_data':user_data,
+    }
+
+
+    return render(request,"Homepage/graphics_homepage.html",context)
 
 @login_required
 def manage_team(request):
@@ -96,4 +117,153 @@ def manage_team(request):
 
     if has_access:
         return render(request,"graphics_team/manage_team.html",context=context)
-    return render(request,"graphics_team/access_denied.html")
+    return render(request,"access_denied2.html")
+
+@login_required
+def event_page(request):
+
+    '''Only events organised by INSB would be shown on the event page of Graphics Team
+       So, only those events are being retrieved from database'''
+    insb_organised_events = Events.objects.filter(event_organiser=5).order_by('-event_date')
+   
+   
+    context = {'events_of_insb_only':insb_organised_events,
+                }
+
+
+    return render(request,"Events/graphics_team_events.html",context)
+
+@login_required
+def event_form(request,event_ID):
+
+    #Initially loading the events whose  links and images were previously uploaded
+    #and can be editible
+
+    event_id = event_ID
+    event = Events.objects.get(id = event_id)
+
+    media = Graphics_Link.objects.filter(event_id = event)
+    Img  = Graphics_Banner_Image.objects.filter(event_id = event)
+
+    try:
+        media_link = media[0].graphics_link
+        print(media_link)
+        Img_photo = Img
+        if len(Img)>0:
+            image_exists=True
+        else:
+            image_exists=False
+    except:
+        image_exists=False
+        media_link=None
+        Img_photo=None
+
+    if Img_photo != None:
+        media_exists = True
+    else:
+        media_exists=False
+
+    if request.method == "POST":
+
+        if request.POST.get('add_banner_pic_and_link'):
+            targetted_event = Events.objects.get(id = event_id)
+            drive_link_of_banner_picture = request.POST.get('drive_link_of_graphics')
+            print(drive_link_of_banner_picture)
+            image= request.FILES.getlist('image')
+            print(image)
+
+            if len(image)==0:
+                if media_link!=None:
+                    media_id = media[0].id
+                    extracted_from_table = Graphics_Link.objects.get(id = media_id)
+                    extracted_from_table.graphics_link = drive_link_of_banner_picture
+                    extracted_from_table.save()
+                    return redirect('graphics_team:event_page')
+                else:
+                    try:
+                        links = Graphics_Link.objects.create(
+                        event_id = targetted_event,
+                        graphics_link = drive_link_of_banner_picture,
+                        )
+                        links.save()
+                        messages.success(request,"Successfully Added!")
+                        return redirect('graphics_team:event_page')
+                    except:
+                        print("Error")
+            
+            else:
+                if media_link!=None:
+                    media_id = media[0].id
+                    extracted_from_table = Graphics_Link.objects.get(id = media_id)
+                    extracted_from_table.graphics_link = drive_link_of_banner_picture
+                    extracted_from_table.save()
+                    Image_save = Graphics_Banner_Image.objects.create(
+                    event_id = targetted_event,
+                    selected_image = image[0],
+                    )
+                    Image_save.save()
+                    messages.success(request,"Successfully Added!")
+                    return redirect('graphics_team:event_page')
+                else:
+                    try:
+                        links = Graphics_Link.objects.create(
+                        event_id = targetted_event,
+                        graphics_link = drive_link_of_banner_picture
+                        )
+                        links.save()
+                    
+                        Image_save = Graphics_Banner_Image.objects.create(
+                        event_id = targetted_event,
+                        selected_image = image[0],
+                        )
+                        Image_save.save()
+                        messages.success(request,"Successfully Added!")
+                        return redirect('graphics_team:event_page')
+                    except:
+                        print("Error")
+
+        if request.POST.get('update_link'):
+            targetted_event = Events.objects.get(id = event_id)
+            drive_link_of_banner_picture = request.POST.get('drive_link_of_graphics')
+            print(drive_link_of_banner_picture)
+            try:
+                media_id = media[0].id
+                extracted_from_table = Graphics_Link.objects.get(id = media_id)
+                extracted_from_table.graphics_link = drive_link_of_banner_picture
+                extracted_from_table.save()
+                messages.success(request,"Successfully Added!")
+                return redirect('graphics_team:event_page')
+            except:
+                print("Error")
+        
+        if request.POST.get('submitted_changed_picture'):
+            try:
+                picture_id= request.POST.get('ImageID')
+                print(picture_id)
+                picture = Graphics_Banner_Image.objects.get(id=picture_id)
+                new_picture = request.FILES['new_image']
+                print(new_picture)
+                path = settings.MEDIA_ROOT+str(picture.selected_image)
+                os.remove(path)
+                picture.selected_image = new_picture
+                picture.save()
+                return redirect('graphics_team:event_page')
+            except:
+                print("Error")
+            
+
+
+
+
+
+
+    context={
+        'event_name':event.event_name,
+        'image_exists':image_exists,
+        'Img':Img_photo,
+        'media_link':media_link,
+        'media_url':settings.MEDIA_URL,
+        'media_exists':media_exists,
+    }
+
+    return render(request,"graphics_team/graphics_event_form.html",context)

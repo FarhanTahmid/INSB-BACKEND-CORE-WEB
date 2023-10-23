@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Events | Media Team</title>
+    <title>Events | Graphics Team</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
@@ -107,6 +107,7 @@
           }
           .upload__img-box {
             width: 200px;
+            height:200px;
             padding: 0 10px;
             margin-bottom: 12px;
           }
@@ -193,7 +194,7 @@
     <!-- navbar content -->
     <div id="content" class="app-content box-shadow-z0" role="main">
         {% block navbar %}
-            {% include 'media_navbar.html' %}
+            {% include 'graphics_navbar.html' %}
         {% endblock navbar %}
 
     </div>
@@ -205,14 +206,14 @@
         <br>
         <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
         
-        <ol style="justify-content:center;margin-bottom:15px;"><b>
+        <!--<ol style="justify-content:center;margin-bottom:15px;"><b>
           <li>Provide the Links of the folder for both Event Pictures and Pictures with Logo</li>
           <li>If Pictures are already added you can change the particular picture by clicking on it.
             Select the desired picture and hit <span style="color:blue;">'Change'</span> to confirm.</li>
           <li>Maximum 6 pictures can be uploaded.</li>
           <li>If there are less than 6 images uploaded, you can upload more and hit 'Update' to make changes</li>
           <li>To change links and media use the 'Update' button. Use the 'Change' button for updating pictures</li>
-        </ol></b>
+        </ol></b>-->
         
 
         <div style="text-align:center; margin-top=30px;">  
@@ -231,43 +232,30 @@
                                             <div class="box-body">
                                               
                                                     <div class="form-group row">
-                                                        <label class="col-sm-2 form-control-label">Folder Drive Link for Event Pictures</label>
+                                                        <label class="col-sm-2 form-control-label">Folder Drive Link for Banner Pictures</label>
                                                         <div class="col-sm-10">
                                                             <input
-                                                            placeholder="Provide Drive Link for The Event"
+                                                            placeholder="Provide Drive Link for The Banner Pictures"
                                                             class="form-control"
                                                             type="url"
                                                             autocomplete="off"
                                                             required
                                                             id="#field1"
                                                             value="{{media_link}}"
-                                                            name="drive_link_of_event"/>
+                                                            name="drive_link_of_graphics"/>
                                 
                                                         </div>
                                                     </div>
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 form-control-label">Folder Drive Link for Pictures with Logos</label>
-                                                        <div class="col-sm-10">
-                                                            <input
-                                                            placeholder="Provide Link for the Logo's"
-                                                            class="form-control"
-                                                            type="url"
-                                                            autocomplete="off"
-                                                            required
-                                                            value="{{logo_link}}"
-                                                            name="logo_link_of_event"/>
-                                
-                                                        </div>
-                                                    </div>
-                                                    {% if not all_image_exists %}
+                                                    
+                                                   {% if not image_exists %}
                                                     <div class="container" style="justify-content:center;">
-                                                        <label class="form-group row"><b>Upload Maximum {{required}} images<b></label>
+                                                        <label class="form-group row"><b>Add Banner Image<b></label>
                                                                        
                                                                         <div class="upload__box">
                                                                             <div class="upload__btn-box">
                                                                               <label class="upload__btn">
                                                                                 <p>Upload Image</p>
-                                                                                <input type="file" multiple="" id="fileInput" name="images" data-max_length="20" class="upload__inputfile">
+                                                                                <input type="file" id="fileInput" name="image" data-max_length="20" class="upload__inputfile">
                                                                               </label>
                                                                             </div>
                                                                             <div class="upload__img-wrap"></div>
@@ -275,16 +263,16 @@
                                                          
                                                     </div>
                                                     {% endif %}
+                                                    
                                           
                                                     <br>
                                                     <div class="footer" style="position:right;">
-                                                      {% if all_image_exists %}
-                                                         <button type="submit" name="add_event_pic_and_others" class="btn btn-success p-x-md" value="Update">Update</button> 
-                                                      {% elif not all_image_exists and image_exists %}
-                                                         <button type="submit" name="add_more_pic_and_update_link" class="btn btn-success p-x-md" value="Add">Update</button>
-                                                      {% else %}
-                                                        <button type="submit" name="add_event_pic_and_others" class="btn btn-success p-x-md" value="Add">Add</button>
-                                                      {% endif %}              
+                                                        {% if not image_exists  %}
+                                                        <button type="submit" name="add_banner_pic_and_link" class="btn btn-success p-x-md" value="Add">Add</button>
+                                                        {% else %} 
+                                                        <button type="submit" name="update_link" class="btn btn-success p-x-md" value="Add">Update</button>
+                                                        {% endif %}
+
                                                     </div>  
                                                 </div>
                                                 
@@ -319,13 +307,13 @@
                                                         
                                                         <div class="container" style="justify-content:center;">
                                                         
-                                                        {% for i in Img %}
+                                                        
                                                         <form method="POST" enctype="multipart/form-data">
                                                           {% csrf_token %}
                                                         <div class="container">
-                                                            <img id="image-preview" src="{{media_url}}{{ i.selected_images}}" alt="Image {{ forloop.counter }}"  width=100% height=auto style="border: 2px solid black;on-hover: opacity;"  onclick="triggerFileInput(this)">
+                                                            <img id="image-preview" src="{{media_url}}{{ Img.0.selected_image}}" alt="Image"  width=100% height=auto style="border: 2px solid black;on-hover: opacity;"  onclick="triggerFileInput(this)">
                                                             <input class="d-none" type="file"  id="file-input"   onchange="displayNewImage(this)" name="new_image">
-                                                            <input type="hidden" value={{i.id}} name="ImageID">
+                                                            <input type="hidden" value={{Img.0.id}} name="ImageID">
                                                             
                                                         </div>
                                                         <br>
@@ -335,7 +323,7 @@
                                                         
                                                         <br><br><br><br><br>
                                                       </form>  
-                                                        {% endfor %}
+                                                      
                                                      
                                                     
                                                         </div>
@@ -365,104 +353,57 @@
     <script src="{% static 'table_search.js'%}"></script>
     <!--Script for image previewing on modal-->
     <script>
-        jQuery(document).ready(function () {
-            ImgUpload();
-          });
-          
-          function ImgUpload() {
-            var imgWrap = "";
-            var imgArray = [];
-          
-            $('.upload__inputfile').each(function () {
-              $(this).on('change', function (e) {
-                imgWrap = $(this).closest('.upload__box').find('.upload__img-wrap');
-                var maxLength = $(this).attr('data-max_length');
-          
-                var files = e.target.files;
-                var filesArr = Array.prototype.slice.call(files);
-                var iterator = 0;
-                filesArr.forEach(function (f, index) {
-          
-                  if (!f.type.match('image.*')) {
-                    return;
-                  }
-          
-                  if (imgArray.length > maxLength) {
-                    return false
-                  } else {
-                    var len = 0;
-                    for (var i = 0; i < imgArray.length; i++) {
-                      if (imgArray[i] !== undefined) {
-                        len++;
-                      }
-                    }
-                    if (len > maxLength) {
-                      return false;
-                    } else {
-                      imgArray.push(f);
-          
-                      var reader = new FileReader();
-                      reader.onload = function (e) {
-                        var html = "<div class='upload__img-box'><div style='background-image: url(" + e.target.result + ")' data-number='" + $(".upload__img-close").length + "' data-file='" + f.name + "' class='img-bg'><div class='upload__img-close'></div></div></div>";
-                        imgWrap.append(html);
-                        iterator++;
-                      }
-                      reader.readAsDataURL(f);
-                    }
-                  }
-                });
-              });
-            });
-          
-            $('body').on('click', ".upload__img-close", function (e) {
-              var file = $(this).parent().data("file");
-              for (var i = 0; i < imgArray.length; i++) {
-                if (imgArray[i].name === file) {
-                  imgArray.splice(i, 1);
-                  break;
-                }
+      function removeImage(element) {
+          var imgBox = $(element).closest('.upload__img-box');
+          imgBox.remove();
+          // Optionally, you may want to update the input field and perform other tasks here
+      }
+  
+      jQuery(document).ready(function () {
+          ImgUpload();
+      });
+  
+      function ImgUpload() {
+          $('.upload__inputfile').on('change', function (e) {
+              var imgWrap = $(this).closest('.upload__box').find('.upload__img-wrap');
+              var file = e.target.files[0];
+  
+              if (!file || !file.type.match('image.*')) {
+                  return;
               }
-              $(this).parent().parent().remove();
-
-              updateInputField(imgArray);
-            });
-          }
-
-          function updateInputField(files) {
-    // Assuming your input field has an ID like "fileInput"
-    var inputField = $('#fileInput')[0];  // Adjust the ID accordingly
-
-    // Create a new FileList object
-    var newFileList = new DataTransfer();
-
-    // Add files to the FileList
-    for (var i = 0; i < files.length; i++) {
-        newFileList.items.add(files[i]);
+  
+              var reader = new FileReader();
+              reader.onload = function (e) {
+                  imgWrap.html(
+                      "<div class='upload__img-box'>" +
+                      "<div style='background-image: url(" + e.target.result + ")' class='img-bg'>" +
+                      "<div class='upload__img-close' onclick='removeImage(this)'></div>" +
+                      "</div></div>"
+                  );
+              };
+              reader.readAsDataURL(file);
+          });
+      }
+      function triggerFileInput(element) {
+        element.nextElementSibling.click();
     }
 
-    // Set the input field's files to the new FileList
-    inputField.files = newFileList.files;
-}
-          function triggerFileInput(element) {
-            element.nextElementSibling.click();
+
+      function displayNewImage(input) {
+        var preview = input.previousElementSibling;
+        var file = input.files[0];
+
+        if (file) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+            };
+
+            reader.readAsDataURL(file);
         }
-    
-        function displayNewImage(input) {
-            var preview = input.previousElementSibling;
-            var file = input.files[0];
-    
-            if (file) {
-                var reader = new FileReader();
-    
-                reader.onload = function (e) {
-                    preview.src = e.target.result;
-                };
-    
-                reader.readAsDataURL(file);
-            }
-        }
-        
-    </script>
+    }
+  </script>
     
 </body>
 </html>

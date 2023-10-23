@@ -311,8 +311,18 @@
                   </a>
                   <ul class="nav-sub nav-mega nav-mega-3">
                     <li>
-                      <a href="arrow.html" >
-                        <span class="nav-text">Arrow</span>
+                      <a href="{% url 'graphics_team:team_homepage' %}" >
+                        <span class="nav-text">Home</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'graphics_team:event_page' %}" >
+                        <span class="nav-text">Events</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'graphics_team:manage_team' %}" >
+                        <span class="nav-text">Manage Team</span>
                       </a>
                     </li>
                     

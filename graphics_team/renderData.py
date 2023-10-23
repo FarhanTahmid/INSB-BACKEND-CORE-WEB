@@ -4,6 +4,12 @@ from system_administration.models import Graphics_Data_Access
 
 class GraphicsTeam:
 
+
+    def get_member_with_postion(position):
+        '''Returns Graphics Team Members with positions'''
+        team_members=Members.objects.filter(team=GraphicsTeam.get_team_id(),position=position)
+        return team_members
+
     def get_team_id():
         
         '''Gets the team id from the database only for Graphics Team. Not the right approach'''
