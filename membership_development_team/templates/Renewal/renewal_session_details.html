@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>{{session_name}} | Renewal - Membership Development Team</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+    <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+
+
+    <style>
+        body, html {
+        
+        margin: 0;
+        
+        align-items: center;
+        justify-content: center;
+        }
+
+        .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+          }
+          .btn-container {
+            text-align: center;
+          }
+          
+          .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+          }
+          
+          /* Media query for smaller screens (adjust the breakpoint as needed) */
+          @media (max-width: 768px) {
+            .btn {
+              width: 100%; /* Make the button full width on smaller screens */
+            }
+          }
+          .success {
+            color: green;
+        }
+        
+        .error {
+            color: red;
+        }
+        .form_link {
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        copyButton {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        copyButton:hover {
+            background-color: #0056b3;
+        }
+        .tooltip-container {
+          position: relative;
+          display: inline-block;
+        }
+        .tooltip-container.right {
+          float: right; /* Float the container to the right */
+          margin-right: 0; /* Reset the margin for the right-aligned button */
+        }
+        
+        .image-button:hover + .tooltip-text {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(10px); /* Adjust the distance from the link */
+        }
+        
+        .tooltip-text {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+        }
+        .image-button {
+          display: inline-block;
+          background: none;
+          border: none;
+          padding: 0;
+          cursor: pointer;
+      }
+      
+      /* Add additional styling for image appearance, such as size and alignment */
+      .image-button img {
+          height:50px;
+          width: 50px; /* Adjust as needed */
+          height: auto; /* Maintain aspect ratio */
+          border-radius: 5px; /* Add rounded corners if desired */
+      }
+        
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+                {% include 'mdt_navbar.html' %}
+            {% endblock navbar %}
+
+        </div>
+        <!--navbar content-->
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
+            <!--Start from here-->
+            <br>
+            <!--Back button-->
+            <div class="tooltip-container">
+              <a href="{% url 'membership_development_team:membership_renewal' %}" class="image-button">
+                  <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+              </a>
+              <span class="tooltip-text">Go back to Renewal Sessions</span>
+            </div>
+            <!--Back button end-->
+
+            <br>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Renewal Session - <span style="color:#00629B;"> <b>{{session_name}}</b></span></h2>
+            <br>
+
+            <div style="justify-content:center;text-align:center;">  
+                <div class="btn-container">
+                  <a href="{% url 'membership_development_team:renewal_form' session_id %}" class="btn btn-outline b-primary text-primary">View Renewal Form</a>
+                  {% if has_form_data %}
+                    <button type="submit" class="btn btn-outline b-info text-info" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Edit Renewal Form</button>
+                  {% else %}
+                    <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Edit Renewal Form</button>
+                  {% endif %}
+                  <a href="{% url "membership_development_team:export_excel_renewal_request" session_id %}" class="btn btn-outline b-success text-success">Generate Excel Sheet For this Session</a>
+                </div>
+            </div>
+            <br>
+
+            <!--Form link copy section-->
+            <div class="form_link" style="justify-content:center;">
+                <label><h6>Renewal Form Link:</h6></label>
+                <input type="text" id="urlInput" value={{form_link}}>
+                <button class="copyButton" id="copyButton"><i class="fa fa-copy"></i></button>
+            </div>
+
+            <br>
+            <!--Bar chart options for application status-->
+            <div style="justify-content:center;text-align:center;">
+                <h4>Renewal Statistics</h4> 
+              <div class="card-body">
+                <canvas id="doughnut" data-colors='["#BA0C2F", "#FFC72C","#007377"]'></canvas>
+              </div>
+            </div>
+
+            <!--Session Table-->
+            <br>
+            <br>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Renewal Applications</h2>
+
+            <div style="justify-content:center;text-align:center; margin-top:10px;">  
+                <div class="container" style="justify-content:center;">
+                  <div class="header_wrap">
+                    <div class="num_rows">
+                
+                      <div class="form-group">
+                        <!--		Show Numbers Of Rows 		-->
+                        <select class="form-control" name="state" id="maxRows">
+                
+                          <option value="10">10</option>
+                          <option value="15">15</option>
+                          <option value="20">20</option>
+                          <option value="50">50</option>
+                          <option value="5000">Show ALL Rows</option>
+                        </select>
+                
+                      </div>
+                    </div>
+                    <div class="tb_search">
+                      <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search.." class="form-control">
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-class" id="table-id">
+                  
+                      <thead>
+                        <tr>
+                          <th data-priority="1">IEEE ID</th>
+                          <th data-priority="1">Name</th>
+                          <th data-priority="1">IEEE Email</th>
+                          <th data-priority="1">Contact No</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for request in requests %}
+                                          
+                          <tr>
+                          
+                              <td style="color:#00629B"><a href="{% url 'membership_development_team:request_details' session_id request.id %}">{{ request.ieee_id  }}</a></td>
+                              <td>{{ request.name  }}</td>
+                              <td>{{ request.email_ieee }}</td>
+                              <td>{{ request.contact_no }}</td>
+                                            
+                          </tr>
+                  
+                        {% endfor %}
+                  
+                      <tbody>
+                    </table>
+                  </div>
+                  <!--		Start Pagination -->
+                  <div class='pagination-container'>
+                    <nav>
+                      <ul class="pagination">
+                        <!--	Here the JS Function Will Add the Rows -->
+                      </ul>
+                    </nav>
+                  </div>
+                  <div class="rows_count">Showing 11 to 20 of 91 entries</div>        
+                </div>
+              </div>
+            
+            </div>
+            <!--Session Table end-->
+
+
+            <!--Modal for Edit Form Credentials-->
+            <div id="m-s-a" class="modal fade animate" data-backdrop="true">
+              <form method="POST">
+                  {% csrf_token %}
+                  <div class="modal-dialog modal-lg" id="animate">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                          <h5 class="modal-title">Edit Renewal Form for {{session_name}} session</h5>
+                          </div>
+                          
+                          <div class="modal-body text-left p-lg">
+
+                              <form method="POST">
+                                  {% csrf_token %}
+                                  <div class="col-md">
+                                    <div class="box">
+                                      <div class="box-header">
+                                        <small>Form details can be updated from here and renewal form will change according to provided Informations.</small>
+                                      </div>
+                                      <div class="box-divider m-0"></div>
+                                      <div class="box-body">
+                                          <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-2 form-control-label">Form Description</label>
+                                            <div class="col-sm-10">
+                                              {% if has_form_data %}
+                                                <textarea name="form_description" required placeholder="Give form description/caption within 600 words" class="form-control" rows="6">{{form_data.form_description}}</textarea>
+                                              {% else %}
+                                                <textarea name="form_description" required placeholder="Give form description/caption within 400 words" class="form-control" rows="6"></textarea>
+                                              {% endif %}
+                                            </div>
+                                          </div>
+                                          
+                                            <div class="form-group row">
+                                              <label for="inputieeeid3" class="col-sm-2 form-control-label">IEEE Membership Fee</label>
+                                                <div class="col-sm-10">
+                                                  {% if has_form_data %}
+                                                    <input type="text" value="{{form_data.ieee_membership_amount}}" name="ieee_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE Membership Fee">
+                                                  {% else %}
+                                                  <input type="text" name="ieee_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE Membership Fee">
+                                                  {% endif %}
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                              <div class="col-md-6">
+
+                                                <div class="form-group row">
+                                                  <label for="inputieeeid3" class="col-sm-10 form-control-label">IEEE RAS Membership Fee</label>
+                                                  <div class="col-sm-10">
+                                                    {% if has_form_data %}
+                                                    <input type="text" value="{{form_data.ieee_ras_membership_amount}}" name="ieee_ras_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE RAS Membership Fee">
+                                                    {% else %}
+                                                    <input type="text" name="ieee_ras_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE RAS Membership Fee">
+                                                    {% endif %}
+                                                  </div>
+                                                </div>
+                                              </div>
+
+                                              <div class="col-md-6">
+                                                <div class="form-group row">
+                                                  <label for="inputieeeid3" class="col-sm-10 form-control-label">IEEE PES Membership Fee</label>
+                                                  <div class="col-sm-10">
+                                                    {% if has_form_data %}
+                                                    <input type="text" value="{{form_data.ieee_pes_membership_amount}}" name="ieee_pes_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE PES Membership Fee">
+                                                    {% else %}
+                                                    <input type="text" name="ieee_pes_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE PES Membership Fee">
+                                                    {% endif %}
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+
+                                            <div class="row">
+                                              <div class="col-md-6">
+                                                <div class="form-group row">
+                                                  <label for="inputieeeid3" class="col-sm-10 form-control-label">IEEE IAS Membership Fee</label>
+                                                  <div class="col-sm-10">
+                                                    {% if has_form_data %}
+                                                    <input type="text" value="{{form_data.ieee_ias_membership_amount}}" name="ieee_ias_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE IAS Membership Fee">
+                                                    {% else %}
+                                                    <input type="text" name="ieee_ias_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE IAS Membership Fee">
+                                                    {% endif %}
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div class="col-md-6">
+                                                <div class="form-group row">
+                                                  <label for="inputieeeid3" class="col-sm-10 form-control-label">IEEE WIE Membership Fee</label>
+                                                  <div class="col-sm-10">
+                                                    {% if has_form_data %}
+                                                    <input type="text" value="{{form_data.ieee_wie_membership_amount}}" name="ieee_wie_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE WIE Membership Fee">
+                                                    {% else %}
+                                                    <input type="text" name="ieee_wie_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE WIE Membership Fee">
+                                                    {% endif %}
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          
+                                            <div class="row">
+                                              
+                                              <div class="col-md-6">
+                                                <div class="form-group row">
+                                                  <label for="inputieeeid3" class="col-sm-10 form-control-label">Bkash No.</label>
+                                                  <div class="col-sm-10">
+                                                    {% if has_form_data %}
+                                                    <input type="text" value="{{form_data.bkash_payment_number}}" name="bkash_payment_number" class="form-control" id="inputieeeid3" placeholder="Bkash no.">
+                                                    {% else %}
+                                                    <input type="text" name="bkash_payment_number" class="form-control" id="inputieeeid3" placeholder="Bkash No.">
+                                                    {% endif %}
+                                                  </div>
+                                                </div>
+                                              </div>
+
+                                              <div class="col-md-6">
+                                                <div class="form-group row">
+                                                  <label for="inputieeeid3" class="col-sm-10 form-control-label">Nagad no.</label>
+                                                  <div class="col-sm-10">
+                                                    {% if has_form_data %}
+                                                    <input type="text" value="{{form_data.nagad_payment_number}}" name="nagad_payment_number" class="form-control" id="inputieeeid3" placeholder="Nagad No.">
+                                                    {% else %}
+                                                    <input type="text" name="nagad_payment_number" class="form-control" id="inputieeeid3" placeholder="Nagad No.">
+                                                    {% endif %}
+                                                  </div>
+                                                </div>
+                                              </div>
+
+                                            </div>
+
+                                          
+                                          
+                                          
+
+                                          <div class="form-group row">
+                                            <label for="inputieeeid3" class="col-sm-2  form-control-label">For Further Details Contact With.</label>
+                                            <div class="col-sm-10">
+                                              <select id="further_details" name="further_contact_member_id">
+                                                {% for member in mdt_team_member %}
+                                                  <option value={{member.ieee_id}}>{{member.name}}</option>
+                                                {% endfor %}
+                                              </select>
+                                            </div>
+                                          </div>
+        
+                                        
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
+                          </div>
+
+                          <div class="modal-footer">
+                          <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                          <input type="submit" name="update_form_credentials" class="btn btn-success p-x-md" value="Update Form Credentials"></input>
+                      </form>                  
+                          </div>
+                      </div><!-- /.modal-content -->
+                  </div>
+              </form>
+          </div>
+            
+        </div>
+        <!--PAGE END-->
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+    
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+    <script src="{% static 'scripts/chartjs.js' %}"></script>
+
+    <!--Renewal Stat Script-->
+    <script>
+        // get colors array from the string
+        function getChartColorsArray(chartId) {
+            if (document.getElementById(chartId) !== null) {
+            var colors = document.getElementById(chartId).getAttribute("data-colors");
+            var colors = JSON.parse(colors);
+            return colors.map(function (value) {
+                var newValue = value.replace(" ", "");
+                if (newValue.indexOf("--") != -1) {
+                var color = getComputedStyle(document.documentElement).getPropertyValue(
+                    newValue
+                );
+                if (color) return color;
+                } else {
+                return newValue;
+                }
+            });
+            }
+        }
+        
+        // Function to fetch data from Django API
+        async function fetchData() {
+        try {
+            var x = "{{ session_id }}"; // Assuming '{{ session_id }}' is a string representing an integer
+            
+            var sessionValue = parseInt(x, 10); // The second argument (10) specifies the base (decimal in this case)
+
+            if (!isNaN(sessionValue)) {
+            
+            } else {
+            // Conversion failed
+            console.log("Failed to parse as an integer.");
+            }
+            const response = await fetch('/portal/membership_development_team/getRenewalStats/?session_id=' + encodeURIComponent(sessionValue));
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            throw error; // Rethrow the error for further handling
+        }
+        }
+        
+        // ... (getChartColorsArray and fetchData functions remain unchanged)
+        
+        async function initializeDougnutChart() {
+        try {
+            var isdoughnutchart = document.getElementById('doughnut');
+            var data = await fetchData(); // Fetch data from the Django API
+            var doughnutChartColors = getChartColorsArray('doughnut');
+            
+            var doughnutChart = new Chart(isdoughnutchart, {
+            type: 'doughnut',
+            data: {
+                labels: data.labels, // Use the fetched labels
+                datasets: [
+                {
+                    data: data.values, // Use the fetched data values
+                    backgroundColor: doughnutChartColors,
+                    hoverBackgroundColor: doughnutChartColors,
+                    hoverBorderColor: "#fff"
+                }
+                ]
+            }
+            });
+        } catch (error) {
+            console.error('Error initializing chart:', error);
+        }
+        }
+        
+        initializeDougnutChart();
+    </script>
+    <!--Renewal Stat Script End-->
+
+    <script>
+        getPagination('#table-id');
+        $('#maxRows').trigger('change');
+        function getPagination (table){
+
+            $('#maxRows').on('change',function(){
+                $('.pagination').html('');						// reset pagination div
+                var trnum = 0 ;									// reset tr counter 
+                var maxRows = parseInt($(this).val());			// get Max Rows from select option
+            
+                var totalRows = $(table+' tbody tr').length;		// numbers of rows 
+                $(table+' tr:gt(0)').each(function(){			// each TR in  table and not the header
+                    trnum++;									// Start Counter 
+                    if (trnum > maxRows ){						// if tr number gt maxRows
+                        
+                        $(this).hide();							// fade it out 
+                    }if (trnum <= maxRows ){$(this).show();}// else fade in Important in case if it ..
+                });											//  was fade out to fade it in 
+                if (totalRows > maxRows){						// if tr total rows gt max rows option
+                    var pagenum = Math.ceil(totalRows/maxRows);	// ceil total(rows/maxrows) to get ..  
+                                                                //	numbers of pages 
+                    for (var i = 1; i <= pagenum ;){			// for each page append pagination li 
+                    $('.pagination').append('<li data-page="'+i+'">\
+                                        <span>'+ i++ +'<span class="sr-only">(current)</span></span>\
+                                        </li>').show();
+                    }											// end for i 
+        
+            
+                } 												// end if row count > max rows
+                $('.pagination li:first-child').addClass('active'); // add active class to the first li 
+            
+            
+            //SHOWING ROWS NUMBER OUT OF TOTAL DEFAULT
+        showig_rows_count(maxRows, 1, totalRows);
+            //SHOWING ROWS NUMBER OUT OF TOTAL DEFAULT
+
+            $('.pagination li').on('click',function(e){		// on click each page
+            e.preventDefault();
+                    var pageNum = $(this).attr('data-page');	// get it's number
+                    var trIndex = 0 ;							// reset tr counter
+                    $('.pagination li').removeClass('active');	// remove active class from all li 
+                    $(this).addClass('active');					// add active class to the clicked 
+            
+            
+            //SHOWING ROWS NUMBER OUT OF TOTAL
+        showig_rows_count(maxRows, pageNum, totalRows);
+            //SHOWING ROWS NUMBER OUT OF TOTAL
+            
+            
+            
+                    $(table+' tr:gt(0)').each(function(){		// each tr in table not the header
+                        trIndex++;								// tr index counter 
+                        // if tr index gt maxRows*pageNum or lt maxRows*pageNum-maxRows fade if out
+                        if (trIndex > (maxRows*pageNum) || trIndex <= ((maxRows*pageNum)-maxRows)){
+                            $(this).hide();		
+                        }else {$(this).show();} 				//else fade in 
+                    }); 										// end of for each tr in table
+                        });										// end of on click pagination list
+            });
+                                                // end of on select change 
+            
+                                    // END OF PAGINATION 
+        
+        }	
+
+
+                
+
+    // SI SETTING
+    $(function(){
+        // Just to append id number for each row  
+    default_index();
+                        
+    });
+
+    //ROWS SHOWING FUNCTION
+    function showig_rows_count(maxRows, pageNum, totalRows) {
+    //Default rows showing
+            var end_index = maxRows*pageNum;
+            var start_index = ((maxRows*pageNum)- maxRows) + parseFloat(1);
+            var string = 'Showing '+ start_index + ' to ' + end_index +' of ' + totalRows + ' entries';               
+            $('.rows_count').html(string);
+    }
+
+    // CREATING INDEX
+    function default_index() {
+    $('table tr:eq(0)').prepend('<th> SL No. </th>')
+
+                        var id = 0;
+
+                        $('table tr:gt(0)').each(function(){	
+                            id++
+                            $(this).prepend('<td>'+id+'</td>');
+                        });
+    }
+
+    // All Table search script
+    function FilterkeyWord_all_table() {
+    
+    // Count td if you want to search on all table instead of specific column
+
+    var count = $('.table').children('tbody').children('tr:first-child').children('td').length; 
+
+            // Declare variables
+    var input, filter, table, tr, td, i;
+    input = document.getElementById("search_input_all");
+    var input_value =     document.getElementById("search_input_all").value;
+            filter = input.value.toLowerCase();
+    if(input_value !=''){
+            table = document.getElementById("table-id");
+            tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 1; i < tr.length; i++) {
+            
+            var flag = 0;
+            
+            for(j = 0; j < count; j++){
+                td = tr[i].getElementsByTagName("td")[j];
+                if (td) {
+                
+                    var td_text = td.innerHTML;  
+                    if (td.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                    //var td_text = td.innerHTML;  
+                    //td.innerHTML = 'shaban';
+                    flag = 1;
+                    } else {
+                    //DO NOTHING
+                    }
+                }
+                }
+            if(flag==1){
+                        tr[i].style.display = "";
+            }else {
+                tr[i].style.display = "none";
+            }
+            }
+        }else {
+        //RESET TABLE
+        $('#maxRows').trigger('change');
+        }
+    }
+  </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlInput = document.getElementById("urlInput");
+            const copyButton = document.getElementById("copyButton");
+        
+            copyButton.addEventListener("click", function () {
+                urlInput.select();
+                document.execCommand("copy");
+                window.getSelection().removeAllRanges();
+                alert("URL copied to clipboard!");
+            });
+        });
+    </script>
+</body>
+</html>

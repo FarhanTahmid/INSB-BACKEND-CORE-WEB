@@ -10,7 +10,7 @@ from . models import Renewal_Sessions,Renewal_requests
 from recruitment.models import recruitment_session
 from . import renewal_data
 from . import renderData
-from django.http import HttpResponse,HttpResponseBadRequest,HttpResponseServerError
+from django.http import JsonResponse, HttpResponse,HttpResponseBadRequest,HttpResponseServerError
 import datetime
 import xlwt
 from django.contrib import messages
@@ -243,21 +243,31 @@ def membership_renewal(request):
             session_name=request.POST['renewal_session']
             try:
                 if(Renewal_Sessions.objects.get(session_name=session_name)):
-                    messages.info(request,"A same session with this name already exists!")
+                    messages.error(request,"A same session with this name already exists!")
+                    return redirect('membership_development_team:membership_renewal')
             except Renewal_Sessions.DoesNotExist:
                 session_time=datetime.datetime.now()
                 add_session=Renewal_Sessions(session_name=session_name,session_time=session_time)
                 add_session.save()
-                return render(request,'renewal.html',context)
+                messages.success(request,"A new session has been created!")
+                return redirect('membership_development_team:membership_renewal')
         except DatabaseError:
             messages.info(request,"Error Creating a new Session!")
-            return DatabaseError
+            return redirect('membership_development_team:membership_renewal')
         
-    return render(request,'renewal.html',context)
+    return render(request,'Renewal/renewal_homepage.html',context)
 
 # no login required as this will open up for other people
+from system_administration.render_access import Access_Render
 def membership_renewal_form(request,pk):
     
+    #rendering access to view the message section
+    has_access_to_view=False
+    if (request.user.is_authenticated):
+        if((Access_Render.faculty_advisor_access(request.user.username)) or (Access_Render.eb_access(request.user.username)) or (Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=request.user.username)) or (Access_Render.system_administrator_superuser_access(request.user.username)) or (Access_Render.system_administrator_staffuser_access(request.user.username))):
+            has_access_to_view=True
+            
+        
     session_name=renewal_data.get_renewal_session_name(pk)
     
     #load renewal form credentials
@@ -275,16 +285,19 @@ def membership_renewal_form(request,pk):
     context={
         'session_name':session_name,
         'form_credentials':form_credentials,
-        'further_contact':form_credentials_further_contact_info,  
+        'further_contact':form_credentials_further_contact_info,
+        'has_access_to_view':has_access_to_view,
     }
     
     if request.method=="POST":
         
         if(request.POST.get('apply')):
            
+            ieee_id=request.POST['ieee_id']
             name=request.POST['name']
             contact_no=request.POST['contact_no']
-            email_personal=request.POST['email_personal']
+            email_associated=request.POST['email_associated']
+            email_ieee=request.POST['email_ieee']
             password=request.POST['password']
             confirm_password=request.POST['confirm_password']
             
@@ -314,7 +327,7 @@ def membership_renewal_form(request,pk):
                 
                 try:
                     #encrypted_pass=renewal_data.encrypt_password(password=password)
-                    renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),name=name,contact_no=contact_no,email_personal=email_personal,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
+                    renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),ieee_id=ieee_id,name=name,contact_no=contact_no,email_associated=email_associated,email_ieee=email_ieee,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
                     renewal_instance.save()
                     return redirect('membership_development_team:renewal_form_success',pk)
                 except:
@@ -325,27 +338,41 @@ def membership_renewal_form(request,pk):
             return HttpResponseBadRequest
     
     
-    return render(request,'renewal_form.html',context)
+    return render(request,'Renewal/renewal_form.html',context)
 
 def membership_renewal_form_success(request,pk):
     context={
         'pk':pk
     }
-    return render(request,"renewal_form_confirmation.html",context)
+    return render(request,"Renewal/renewal_form_confirmation.html",context)
+
+
+@login_required
+def getRenewalStats(request):
+    if request.method=="GET":
+        session_id=request.GET.get('session_id')
+        #loading all the unviewed request count
+        notification_count=Renewal_requests.objects.filter(session_id=session_id,view_status=False).count()
+        #counting the renewed requests
+        renewed_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=True).count()
+        #counting the pending requests
+        pending_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=False).count()
+        context={
+            "labels":["Applications Not Yet Viewed","Total Pending Applications","Total Renewed Applications"],
+            "values":[notification_count,pending_count,renewed_count]
+        }
+    return JsonResponse(context)    
+
+    
+
 
 @login_required
 def renewal_session_data(request,pk):
     '''This view function loads all data for the renewal session including the members registered'''
     session_name=renewal_data.get_renewal_session_name(pk)
     session_id=renewal_data.get_renewal_session_id(session_name=session_name)
-    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_personal','contact_no',).order_by('-id')
-    #loading all the unviewed request count
-    notification_count=Renewal_requests.objects.filter(session_id=session_id,view_status=False).count()
-    #counting the renewed requests
-    renewed_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=True).count()
-    #counting the pending requests
-    pending_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=False).count()
-    
+    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_associated','email_ieee','contact_no','ieee_id').order_by('-id')
+        
     #loading team member data for form credential edit
     load_team_members=renderData.MDT_DATA.load_team_members()
     
@@ -354,14 +381,16 @@ def renewal_session_data(request,pk):
     
     #try loading form data to notify user if form credentials has been updated or not for that session with button glow in "Update Form Credentials"
     has_form_data=False
+    form_data=None
     if(renderData.MDT_DATA.load_form_data_for_particular_renewal_session(renewal_session_id=pk)==False):
         has_form_data=False
     else:
+        form_data=renderData.MDT_DATA.load_form_data_for_particular_renewal_session(renewal_session_id=pk)
         has_form_data=True
-    
     
     if request.method=="POST":
         if request.POST.get('update_form_credentials'):
+            
             form_description=request.POST['form_description']
             ieee_membership_amount=request.POST['ieee_membership_amount']
             ieee_ras_membership_amount=request.POST['ieee_ras_membership_amount']
@@ -369,6 +398,7 @@ def renewal_session_data(request,pk):
             ieee_ias_membership_amount=request.POST['ieee_ias_membership_amount']
             ieee_wie_membership_amount=request.POST['ieee_wie_membership_amount']
             bkash_payment_number=request.POST['bkash_payment_number']
+            nagad_payment_number=request.POST['nagad_payment_number']
             further_contact_member_id=request.POST['further_contact_member_id']
             
             #update form credentials
@@ -381,22 +411,21 @@ def renewal_session_data(request,pk):
                 ieee_ras_membership_amount=ieee_ras_membership_amount,
                 ieee_wie_membership_amount=ieee_wie_membership_amount,
                 bkash_payment_number=bkash_payment_number,
+                nagad_payment_number=nagad_payment_number,
                 further_contact_member_id=further_contact_member_id
             )
             return redirect('membership_development_team:renewal_session_data',pk) 
     context={
         'session_name':session_name,
+        'form_data':form_data,
         'session_id':session_id,
         'requests':get_renewal_requests,
         'form_link':form_link,
-        'notification_count':notification_count,
-        'renewed_count':renewed_count,
-        'pending_count':pending_count,
         'mdt_team_member':load_team_members,
         'has_form_data':has_form_data,
     }
     
-    return render(request,'renewal_sessions.html',context)
+    return render(request,'Renewal/renewal_session_details.html',context)
 
 @login_required
 def renewal_request_details(request,pk,request_id):
@@ -406,12 +435,12 @@ def renewal_request_details(request,pk,request_id):
     user=request.user
     has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
     
-    renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('name','email_personal','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
+    renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('name','email_associated','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
     name=renewal_request_details[0]['name']
     renewal_email=""
     has_comment=False
     for i in range(len(renewal_request_details)):
-        renewal_email=renewal_request_details[i]['email_personal']
+        renewal_email=renewal_request_details[i]['email_associated']
         if(renewal_request_details[i]['official_comment'] is not None):
             has_comment=True
     #changing the viewing status
@@ -509,7 +538,7 @@ def generateExcelSheet_renewal_requestList(request,session_id):
     font_style.font.bold = True
 
     # Defining columns that will stay in the first row
-    columns = ['Name', 'Associated Email','Contact No', 'IEEE Account Password', 'IEEE-Renewal', 'PES-Renewal', 'RAS-Renewal','IAS-Renewal','WIE-Renewal','Transaction ID','Any Comments?',
+    columns = ['Name','IEEE ID', 'Associated Email','IEEE Email','Contact No', 'IEEE Account Password', 'IEEE-Renewal', 'PES-Renewal', 'RAS-Renewal','IAS-Renewal','WIE-Renewal','Transaction ID','Any Comments?',
                'Renewal Status','MDT Comment']
 
     # Defining first column
@@ -521,7 +550,9 @@ def generateExcelSheet_renewal_requestList(request,session_id):
 
     # getting all the values of members as rows with same session
     rows = Renewal_requests.objects.all().values_list('name',
-                                             'email_personal',
+                                            'ieee_id',
+                                             'email_associated',
+                                             'email_ieee',
                                              'contact_no',
                                              'ieee_account_password',
                                              'ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check',

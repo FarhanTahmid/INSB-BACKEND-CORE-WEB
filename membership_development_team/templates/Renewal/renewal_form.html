@@ -5,7 +5,9 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Renewal Form - {{session_name}}</title>
+        <title>Renewal Form - {{session_name}} | Membership Development Team</title>
+        <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
         <script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
@@ -60,18 +62,21 @@
                             <ul>
                                 <li style="font-size:15px">Enter the correct password only for your IEEE account and Enter the e-mail which is associated with your IEEE account!</li>
                                 <li style="font-size:15px">Your password will stay confidential and would not be shared anywhere.</li>
-                                <li style="font-size:15px">If you are a SBC or SBAG member, you must renew both your IEEE and Society Memberships and Subscriptions. If you have already renewed your IEEE Membership then you don't need to pay for that, you just have to pay for the Society Membership renewal</li>
-                                <li style="font-size:15px">If you have Paid by yourself or via any Societies / Affinity Group, write "Self" / "Society / Affinity Group name" in the Transaction ID field</li>
+                                <li style="font-size:15px">If you want to Renew your Chapter or Affinity Group Membership, Select them in the form. You must Renew your IEEE membership to renew you SC/AG membership.</li>
+                                <li style="font-size:15px">If you have Paid by yourself or via any Society / Affinity Group, write "Self" / "Society / Affinity Group name" in the Transaction ID field. Write "Payment Reciever Name" if you have paid by cash.</li>
                                 <li style="font-size:15px">If you have a free subscription of any kind, tick mark the option for which you have free subscription and Mention it under the comment section</li>
                                 <li style="font-size:15px">If you have any further queries, Please refer to: <b>{{further_contact.name}}, {{further_contact.position}}, {{further_contact.team}} Team, IEEE NSU SB</b>.<br>Contact Informations:<br> <a href={{further_contact.facebook_url}}>Facebook</a>, <a href={{further_contact.linkedin_url}}>Linkedin</a>, Cell: {{further_contact.contact_no}}</li>
                             </ul>
                             <br>
                             <div class="py-3 text-center">
+
+                                {% if has_access_to_view %}
+                                    {% for message in messages %}
+                                        <p style="font-size:25px;color:red;" class="message">{{message}}</p>
+                                    {% endfor %}
+                                {% endif %}
                             
-                                {% for message in messages %}
-                                    <p style="font-size:25px;color:red;" class="message">{{message}}</p>
-                                {% endfor %}
-                                
+                
                             </div>
                             
                             <div class="px-0 px-md-5">
@@ -107,16 +112,42 @@
                                         </div>
                                     </div>
                                     <div class="row my-3">
-                                        <div class="col-md-2 mt-1">Email:</div>
+                                        <div class="col-md-2 mt-1">Email (Associated with your IEEE account):</div>
                                         <div class="col-md-8">
                                             <input
                                                
                                                 class="form-control w-75"
                                                 type="email"
                                                 autocomplete="on"
-                                                id="email_personal" name="email_personal" required placeholder="Enter Email Associated with Your IEEE ID" 
+                                                id="email_associated" name="email_associated" required placeholder="Enter Email Associated with Your IEEE ID" 
                                             />
                                         </div>
+                                    </div>
+                                    <div class="row my-3">
+                                        <div class="col-md-2 mt-1">Email (IEEE):</div>
+                                        <div class="col-md-8">
+                                            <input
+                                               
+                                                class="form-control w-75"
+                                                type="email"
+                                                autocomplete="on"
+                                                id="email_ieee" name="email_ieee" required placeholder="Enter Your IEEE Email" 
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row my-3">
+                                    <div class="col-md-2 mt-1">IEEE Membership ID:</div>
+                                    <div class="col-md-8">
+                                        <input
+                                            placeholder="IEEE ID"
+                                            class="form-control w-75"
+                                            type="number"
+                                            autocomplete="off"
+                                            required
+                                            name="ieee_id" 
+                                        />
                                     </div>
                                 </div>
 
@@ -157,11 +188,11 @@
                             <h3
                                 class="bg-light border rounded text-center p-2 text-uppercase mb-4"
                             >
-                                Subscription options
+                                Payment Section
                             </h3>
                             <div class="px-0 px-md-5">
 
-                                <h5 class="" style="font-weight:bold;">Renewal Fee Details:</h5>
+                                <h5 class="" style="font-weight:bold;">Renewal Fee Amount & Details:</h5>
                                 <ul>
                                     <li><span style="font-weight:bold; font-size:15px;">IEEE Membership:</span> <span style="font-style:italic;font-weight:bold;font-size:15px;">{{form_credentials.ieee_membership_amount}}</span> </li>
                                     <li><span style="font-weight:bold;font-size:15px;">IEEE RAS Membership:</span> <span style="font-style:italic;font-weight:bold;font-size:15px;">{{form_credentials.ieee_ras_membership_amount}}</span> </li>
@@ -170,13 +201,12 @@
                                     <li><span style="font-weight:bold;font-size:15px;">IEEE WIE Membership:</span> <span style="font-style:italic;font-weight:bold;font-size:15px;">{{form_credentials.ieee_wie_membership_amount}}</span> </li>
 
                                 </ul>
-                                <h5 class="" style="font-weight:bold;">Payment Options and Method (via Bkash):</h5>
+                                <h5 class="" style="font-weight:bold;">Payment Details for Bkash and Nagad:</h5>
                                 <ol>
                                     <li><span style="font-weight:bold;font-size:15px;">Bkash Number:</span><span style="font-weight:bold;font-style:italic;font-size:15px;"> {{form_credentials.bkash_payment_number}}</span></li>
-                                    <li><span style="font-size:15px;">During payment, add </span> <span style="font-weight:bold; font-size:15px;">referrence</span> <span style="font-size:15px;">note: </span><span style="font-weight:bold; font-size:15px;">"Renewal IEEE NSU"</span></li>
-                                    <li><span style="font-size:15px;">After payment, please assure by </span> <span style="font-weight:bold; font-size:15px;">calling</span> <span style="font-size:15px;">the number you have made the payment.</span>></li>
-                                    
-                                    <li><span style="font-size:15px;">Provide your</span><span style="font-weight:bold; font-size:15px;"> "Bkash Transaction ID"</span></li>
+                                    <li><span style="font-weight:bold;font-size:15px;">Nagad Number:</span><span style="font-weight:bold;font-style:italic;font-size:15px;"> {{form_credentials.nagad_payment_number}}</span></li>
+                                    <li><span style="font-size:15px;">During payment, add </span> <span style="font-weight:bold; font-size:15px;">referrence</span> <span style="font-size:15px;">note: </span><span style="font-weight:bold; font-size:15px;">"Renewal_IEEE_NSU_your_name"</span></li>
+                                    <li><span style="font-size:15px;">Provide your</span><span style="font-weight:bold; font-size:15px;"> "Bkash/Nagad Transaction ID"</span></li>
 
                                 </ol>
 

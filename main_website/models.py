@@ -30,7 +30,7 @@ class BannerPictureWithStat(models.Model):
     
     def __str__(self) -> str:
         return str(self.pk)
-    
+
 #Table for Research Papers
 class Research_Papers(models.Model):
     title = models.CharField(null=False,blank=False,max_length=500)

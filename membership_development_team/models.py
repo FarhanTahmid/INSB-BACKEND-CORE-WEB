@@ -20,10 +20,11 @@ class Renewal_Sessions(models.Model):
 #Table for renewal requests for every session, primary key is id. This table is View Protected. Donot register this in admin
 class Renewal_requests(models.Model):
     session_id=models.ForeignKey(Renewal_Sessions,null=False,blank=False,on_delete=models.CASCADE)
-    #ieee_id=models.ForeignKey(Members,null=True,blank=True,on_delete=models.CASCADE)
+    ieee_id=models.IntegerField(null=True,blank=True)
     name=models.CharField(null=False,blank=False,max_length=100,default="null")
     contact_no=models.CharField(null=False,blank=False,max_length=30,default="null")
-    email_personal=models.EmailField(null=False,blank=False)
+    email_associated=models.EmailField(null=False,blank=False)
+    email_ieee=models.EmailField(null=True,blank=True)
     ieee_account_password=models.CharField(null=False,blank=False,max_length=500)
     
     #this *_check fields refers to the subscriptions the user is selecting on the forms.
@@ -55,7 +56,7 @@ class Renewal_Form_Info(models.Model):
     #to identify the form with session name we are using this session
     session=models.ForeignKey(Renewal_Sessions,on_delete=models.CASCADE,null=True,blank=True)
     #details of the form
-    form_description=models.CharField(null=True,blank=True,max_length=700)
+    form_description=models.TextField(null=True,blank=True,max_length=1000)
     #membership payment amount details
     ieee_membership_amount=models.CharField(null=True,blank=True,max_length=50)
     ieee_ras_membership_amount=models.CharField(null=True,blank=True,max_length=50)
@@ -64,13 +65,14 @@ class Renewal_Form_Info(models.Model):
     ieee_wie_membership_amount=models.CharField(null=True,blank=True,max_length=50)
     #payment method details
     bkash_payment_number=models.CharField(null=True,blank=True,max_length=20)
+    nagad_payment_number=models.CharField(null=True,blank=True,max_length=20)
     #further contact member id
     further_contact_member_id=models.CharField(null=True,blank=True,max_length=50)
     
     class Meta:
         verbose_name="Renewal Form Detail"
     def __str__(self) -> str:
-        return self.form_description
+        return str(self.pk)
         
 
 

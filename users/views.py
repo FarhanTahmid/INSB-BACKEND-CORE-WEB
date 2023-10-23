@@ -209,7 +209,7 @@ def profile_page(request):
 @login_required
 def logoutUser(request):
     auth.logout(request)
-    return redirect('/users/login')
+    return redirect('users:login')
 
 
 def forgotPassword_getUsername(request):
