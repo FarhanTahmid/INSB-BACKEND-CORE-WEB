@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Renewal - {{name}} | Membership Development Team</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+
+    <style>
+        body, html {
+        
+        margin: 0;
+        
+        align-items: center;
+        justify-content: center;
+        }
+
+        .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+          }
+          .btn-container {
+            text-align: center;
+          }
+          
+          .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+          }
+          
+          /* Media query for smaller screens (adjust the breakpoint as needed) */
+          @media (max-width: 768px) {
+            .btn {
+              width: 100%; /* Make the button full width on smaller screens */
+            }
+          }
+          .items{
+            font-size:18px;
+          }
+          .image_icon{
+            padding:10px;
+            
+          }
+        
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+                {% include 'mdt_navbar.html' %}
+            {% endblock navbar %}
+
+        </div>
+        <!--navbar content-->
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
+            <!--Start from here-->
+            <br>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Renewal Application Details of - <span style="color:#00629B;"> <b>{{name}}</b></span></h2>
+            <br>
+            
+            <!--Data Table Start-->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="box">
+                    <div class="box-header">
+                        <small>Renewal Details collected from the Application Form are given here.</small>
+                    </div>
+                    <div class="box-divider m-0">
+
+                    </div>
+                        <div class="box-body">
+                        
+                            {% for details in details %}
+
+                                <p class="items"><span><b>IEEE ID: </b></span>{{details.ieee_id}} </p>
+                                <p class="items"><span><b>Name: </b></span>{{details.name}} </p>
+                                <p class="items"><span><b>Email (Associated with IEEE Account): </b></span>{{details.email_associated}} </p>
+                                <p class="items"><span><b>IEEE Email: </b></span>{{details.email_ieee}} </p>
+                                <p class="items"><span><b>Contact No: </b></span>{{details.contact_no}} </p>
+                                <p class="items"><span><b>Account Password: </b></span>{{details.ieee_account_password}} </p>
+                                <p class="items"><span><b>Applicant Comment: </b></span>{{details.comment}} </p>
+                            
+                            {% endfor %}    
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="box">
+                    <div class="box-header">
+                        <small>Renewal Payment and Criteria Details collected from the Application Form are given here.</small>
+                    </div>
+                    <div class="box-divider m-0">
+
+                    </div>
+                        <div class="box-body">
+                        
+                            {% for details in details %}
+
+                                <p class="items"><span><b>IEEE Membership: </b></span>
+                                    {% if details.ieee_renewal_check %}
+                                        <img class="image_icon" src="/static/admin/img/icon-yes.svg" alt="True">
+                                    {% else %}
+                                        <img class="image_icon" src="/static/admin/img/icon-no.svg" alt="False">
+                                    {% endif %}
+                                </p>
+                                <p class="items"><span><b>IEEE PES Membership: </b></span> 
+                                    {% if details.pes_renewal_check %}
+                                        <img class="image_icon" src="/static/admin/img/icon-yes.svg" alt="True">
+                                    {% else %}
+                                        <img class="image_icon" src="/static/admin/img/icon-no.svg" alt="False">
+                                    {% endif %}
+                                </p>
+                                <p class="items"><span><b>IEEE RAS Membership: </b></span> 
+                                    {% if details.ras_renewal_check %}
+                                        <img class="image_icon" src="/static/admin/img/icon-yes.svg" alt="True">
+                                    {% else %}
+                                        <img class="image_icon" src="/static/admin/img/icon-no.svg" alt="False">
+                                    {% endif %}
+                                </p>                                
+                                <p class="items"><span><b>IEEE IAS Membership: </b></span> 
+                                    {% if details.ias_renewal_check %}
+                                        <img class="image_icon" src="/static/admin/img/icon-yes.svg" alt="True">
+                                    {% else %}
+                                        <img class="image_icon" src="/static/admin/img/icon-no.svg" alt="False">
+                                    {% endif %}
+                                </p>
+                                <p class="items"><span><b>IEEE WIE Membership: </b></span> 
+                                    {% if details.wie_renewal_check %}
+                                        <img class="image_icon" src="/static/admin/img/icon-yes.svg" alt="True">
+                                    {% else %}
+                                        <img class="image_icon" src="/static/admin/img/icon-no.svg" alt="False">
+                                    {% endif %}
+                                </p>
+                                {% comment %} <p class="items"><span><b>Transaction ID: </b></span>{{details.transaction_id}} </p> {% endcomment %}
+                        
+                            {% endfor %}    
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Data Table End-->
+
+
+            <!--Invoice Start-->
+            <div class="padding">
+                <a href class="btn btn-sm btn-info pull-right hidden-print" onClick="window.print();">Print</a>                
+                {% for details in details %}
+                    <p>Order date: <strong>{{details.timestamp}}</strong><br>
+                        {% if details.renewal_status %}
+                            Order status: <span class="label success">Membership Renewed</span><br>
+                        {% else %}
+                            Order status: <span class="label danger">Membership Not yet Renewed</span><br>
+
+                        {% endif %}
+                        Transaction ID: <strong>{{details.transaction_id}}</strong>
+                    </p>
+                {% endfor %}
+                
+                <div class="table-responsive">
+                  <table class="table table-striped white b-a">
+                    <thead>
+                      <tr>
+                        
+                        <th>Membership Type</th>
+                        <th style="width: 140px">UNIT PRICE</th>
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for key,value in renewal_amount.items %}
+                        <tr>
+
+                            
+                            <td>{{ key }}</td>
+                            <td>BDT {{ value }}</td>
+                            
+                            </tr>
+                        {% endfor %}
+                        
+                        
+                      
+                      
+                      <tr>
+                        <td colspan="3" class="text-right no-border"><strong>Total</strong></td>
+                        <td><strong>BDT {{total_amount}}</strong></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>          
+              </div>
+            <!--Invoice End-->
+
+        </div>
+        <!--PAGE END-->
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+    
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+
+</body>
+</html>

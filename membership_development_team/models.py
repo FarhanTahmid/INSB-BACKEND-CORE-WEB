@@ -19,6 +19,7 @@ class Renewal_Sessions(models.Model):
     
 #Table for renewal requests for every session, primary key is id. This table is View Protected. Donot register this in admin
 class Renewal_requests(models.Model):
+    timestamp=models.DateTimeField(null=True,blank=True)
     session_id=models.ForeignKey(Renewal_Sessions,null=False,blank=False,on_delete=models.CASCADE)
     ieee_id=models.IntegerField(null=True,blank=True)
     name=models.CharField(null=False,blank=False,max_length=100,default="null")
@@ -35,6 +36,7 @@ class Renewal_requests(models.Model):
     wie_renewal_check=models.BooleanField(null=False,blank=False,default=False)
     
     transaction_id=models.CharField(null=True,blank=True,max_length=80)
+    # The comment will be from applicant
     comment=models.CharField(null=True,blank=True,max_length=100) #the comment left by the applicant while applying
     
     renewal_status=models.BooleanField(null=False,blank=False,default=False)

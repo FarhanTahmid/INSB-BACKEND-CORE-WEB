@@ -427,9 +427,9 @@ def renewal_session_data(request,pk):
     
     return render(request,'Renewal/renewal_session_details.html',context)
 
+from .models import Renewal_Form_Info
 @login_required
 def renewal_request_details(request,pk,request_id):
-    
     '''This function loads the datas for particular renewal requests'''
     #check if the user has access to view
     user=request.user
@@ -446,13 +446,38 @@ def renewal_request_details(request,pk,request_id):
     #changing the viewing status
     Renewal_requests.objects.filter(id=request_id).update(view_status=True)
     
+    # INVOICE
+    # get form amount of money
+    renewal_amount_dict={
+        'IEEE Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='ieee',form_id=pk),
+        'IEEE PES Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='pes',form_id=pk),
+        'IEEE RAS Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='ras',form_id=pk),
+        'IEEE IAS Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='ias',form_id=pk),
+        'IEEE WIE Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='wie',form_id=pk),
+    }
+    
+    try:
+        total_amount=(
+            renewal_amount_dict['IEEE Membership']+
+            renewal_amount_dict['IEEE PES Membership']+
+            renewal_amount_dict['IEEE RAS Membership']+
+            renewal_amount_dict['IEEE IAS Membership']+
+            renewal_amount_dict['IEEE WIE Membership']
+        )
+        
+    except:
+        total_amount=0
     context={
         'id':request_id,
         'details':renewal_request_details,
         'has_comment':has_comment,
         'pk':pk,
         'name':name,
+        'renewal_amount':renewal_amount_dict,
+        'total_amount':total_amount,
     }
+    
+    
     if request.method=="POST":
         if (request.POST.get('go_back')):
             return redirect('membership_development_team:renewal_session_data',pk)
@@ -511,7 +536,7 @@ def renewal_request_details(request,pk,request_id):
                 messages.info(request,"Something Went Wrong! Please refresh the page and try again")
                 return redirect('membership_development_team:request_details',pk,request_id)
     if(has_access):        
-        return render(request,"renewal_request_details.html",context=context)
+        return render(request,"Renewal/renewal_application_details.html",context=context)
     else:
         return render(request,'access_denied.html')
     

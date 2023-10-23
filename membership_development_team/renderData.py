@@ -1,4 +1,5 @@
 from . models import Renewal_Form_Info,Renewal_Sessions
+from membership_development_team.models import Renewal_requests
 from users.models import Members
 from port.models import Teams,Roles_and_Position
 from system_administration.models import MDT_Data_Access
@@ -65,6 +66,68 @@ class MDT_DATA:
         '''Returns MDT Team Members with positions'''
         team_members=Members.objects.filter(team=MDT_DATA.get_team_id(),position=position)
         return team_members
+    
+    
+    def getRenewalInvoiceQuantity(request_id,info):
+        getData=Renewal_requests.objects.get(id=request_id)
+        if(info=='ieee'):
+            if getData.ieee_renewal_check:
+                return 1
+            else:
+                return 0
+        if(info=='pes'):
+            if getData.pes_renewal_check:
+                return 1
+            else:
+                return 0
+        if(info=='ras'):
+            if getData.ras_renewal_check:
+                return 1
+            else:
+                return 0
+        if(info=='ias'):
+            if getData.ias_renewal_check:
+                return 1
+            else:
+                return 0
+            
+        if(info=='wie'):
+            if getData.wie_renewal_check    :
+                return 1
+            else:
+                return 0
+    
+    def getPaymentAmount(request_id,info,form_id):
+        getData=Renewal_requests.objects.get(id=request_id)
+        form_credentials=Renewal_Form_Info.objects.get(form_id=form_id)
+
+        if(info=='ieee'):
+            if getData.ieee_renewal_check:
+                return int(form_credentials.ieee_membership_amount)
+            else:
+                return 0
+        if(info=='pes'):
+            if getData.pes_renewal_check:
+                return int(form_credentials.ieee_pes_membership_amount)
+            else:
+                return 0
+        if(info=='ras'):
+            if getData.ras_renewal_check:
+                return int(form_credentials.ieee_ras_membership_amount)
+            else:
+                return 0
+        if(info=='ias'):
+            if getData.ias_renewal_check:
+                return int(form_credentials.ieee_ias_membership_amount)
+            else:
+                return 0
+            
+        if(info=='wie'):
+            if getData.wie_renewal_check:
+                print(type(form_credentials.ieee_wie_membership_amount))
+                return int(form_credentials.ieee_wie_membership_amount)
+            else:
+                return 0
     
     def load_team_members():
         
