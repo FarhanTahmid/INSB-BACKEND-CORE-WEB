@@ -90,7 +90,15 @@
             <br>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Renewal Application Details of - <span style="color:#00629B;"> <b>{{name}}</b></span></h2>
             <br>
-            
+            <!--Messages-->
+            <div style="justify-content:center; text-align:center;">
+                {% if messages %}
+                    {% for message in messages %}
+                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <!--Messages-->
             <!--Data Table Start-->
             <div class="row">
                 <div class="col-md-6">
@@ -245,7 +253,75 @@
                 </div>          
               </div>
             <!--Invoice End-->
+            <!--Buttons-->
+            <div style="justify-content:center;text-align:center;">  
+                <div class="btn-container">
+                  <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-b" ui-toggle-class="bounce" ui-target="#animate">Delete</button>
+                    {% for i in details %}
+                        {% if i.renewal_status %}
+                            <button type="submit" disabled class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Renew Membership</button>
+                        {% else %}
+                        <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Renew Membership</button>
 
+                        {% endif %}
+                    {% endfor %}
+
+                </div>
+            </div>
+            <br>
+            <br>
+            <br>
+            <!--Button End-->
+
+            <!--Renew Membership Modal-->
+            <div id="m-s-a" class="modal" data-backdrop="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Renew Membership of {{name}}</h5>
+                    </div>
+                    <div class="modal-body p-lg">
+                      <p>Are you sure to renew the Membership based on the IEEE ID?</p>
+                      {% for i in details %}
+                      <p>This will update their membership status for 1 year with - {{i.ieee_id}}</p>
+                      {% endfor %}
+                      <p>If the IEEE ID is not registered in the INSB Registered Member Database, it would not make any effect. Renewal Data will be kept stored in the system</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                      <form method="POST">
+                        {% csrf_token %}
+                        <input type="submit" class="btn success p-x-md" name="renew_button" value="Renew"></input>  
+                      </form>
+                    </div>
+                  </div><!-- /.modal-content -->
+                </div>
+            </div>
+            <!--Renew Membership Modal End-->
+
+            <!--Delete Modal-->
+            <div id="m-s-b" class="modal" data-backdrop="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete Renewal Application</h5>
+                    </div>
+                    <div class="modal-body p-lg">
+                      <p>Are you sure to execute this action?</p>
+                      <p>This will delete the Renewal Application of {{name}}.</p>
+                      <p>This will not effect if the Member is registered in the INSB Registered Members Database</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                      <form method="POST">
+                        {% csrf_token %}
+                        <input type="submit" class="btn danger p-x-md" name="delete_button" value="Delete"></input>
+                      </form>
+                    </div>
+                  </div><!-- /.modal-content -->
+                </div>
+            </div>
+            <!--Delete Modal End-->
 
         </div>
         <!--PAGE END-->

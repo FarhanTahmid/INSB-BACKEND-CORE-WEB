@@ -184,7 +184,7 @@
                 </div>
             </div>
             <br>
-
+            
             <!--Form link copy section-->
             <div class="form_link" style="justify-content:center;">
                 <label><h6>Renewal Form Link:</h6></label>
@@ -192,6 +192,17 @@
                 <button class="copyButton" id="copyButton"><i class="fa fa-copy"></i></button>
             </div>
 
+            <br>
+            
+            <!--Messages-->
+            <div style="justify-content:center; text-align:center;">
+              {% if messages %}
+                  {% for message in messages %}
+                      <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                  {% endfor %}
+              {% endif %}
+            </div>
+            <!--Messages End-->
             <br>
             <!--Bar chart options for application status-->
             <div style="justify-content:center;text-align:center;">
@@ -308,9 +319,9 @@
                                               <label for="inputieeeid3" class="col-sm-2 form-control-label">IEEE Membership Fee</label>
                                                 <div class="col-sm-10">
                                                   {% if has_form_data %}
-                                                    <input type="text" value="{{form_data.ieee_membership_amount}}" name="ieee_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE Membership Fee">
+                                                    <input type="number" value="{{form_data.ieee_membership_amount}}" name="ieee_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE Membership Fee">
                                                   {% else %}
-                                                  <input type="text" name="ieee_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE Membership Fee">
+                                                  <input type="number" name="ieee_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE Membership Fee">
                                                   {% endif %}
                                                 </div>
                                             </div>
@@ -322,9 +333,9 @@
                                                   <label for="inputieeeid3" class="col-sm-10 form-control-label">IEEE RAS Membership Fee</label>
                                                   <div class="col-sm-10">
                                                     {% if has_form_data %}
-                                                    <input type="text" value="{{form_data.ieee_ras_membership_amount}}" name="ieee_ras_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE RAS Membership Fee">
+                                                    <input type="number" value="{{form_data.ieee_ras_membership_amount}}" name="ieee_ras_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE RAS Membership Fee">
                                                     {% else %}
-                                                    <input type="text" name="ieee_ras_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE RAS Membership Fee">
+                                                    <input type="number" name="ieee_ras_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE RAS Membership Fee">
                                                     {% endif %}
                                                   </div>
                                                 </div>
@@ -335,9 +346,9 @@
                                                   <label for="inputieeeid3" class="col-sm-10 form-control-label">IEEE PES Membership Fee</label>
                                                   <div class="col-sm-10">
                                                     {% if has_form_data %}
-                                                    <input type="text" value="{{form_data.ieee_pes_membership_amount}}" name="ieee_pes_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE PES Membership Fee">
+                                                    <input type="number" value="{{form_data.ieee_pes_membership_amount}}" name="ieee_pes_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE PES Membership Fee">
                                                     {% else %}
-                                                    <input type="text" name="ieee_pes_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE PES Membership Fee">
+                                                    <input type="number" name="ieee_pes_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE PES Membership Fee">
                                                     {% endif %}
                                                   </div>
                                                 </div>
@@ -350,9 +361,9 @@
                                                   <label for="inputieeeid3" class="col-sm-10 form-control-label">IEEE IAS Membership Fee</label>
                                                   <div class="col-sm-10">
                                                     {% if has_form_data %}
-                                                    <input type="text" value="{{form_data.ieee_ias_membership_amount}}" name="ieee_ias_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE IAS Membership Fee">
+                                                    <input type="number" value="{{form_data.ieee_ias_membership_amount}}" name="ieee_ias_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE IAS Membership Fee">
                                                     {% else %}
-                                                    <input type="text" name="ieee_ias_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE IAS Membership Fee">
+                                                    <input type="number" name="ieee_ias_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE IAS Membership Fee">
                                                     {% endif %}
                                                   </div>
                                                 </div>
@@ -362,9 +373,9 @@
                                                   <label for="inputieeeid3" class="col-sm-10 form-control-label">IEEE WIE Membership Fee</label>
                                                   <div class="col-sm-10">
                                                     {% if has_form_data %}
-                                                    <input type="text" value="{{form_data.ieee_wie_membership_amount}}" name="ieee_wie_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE WIE Membership Fee">
+                                                    <input type="number" value="{{form_data.ieee_wie_membership_amount}}" name="ieee_wie_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE WIE Membership Fee">
                                                     {% else %}
-                                                    <input type="text" name="ieee_wie_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE WIE Membership Fee">
+                                                    <input type="number" name="ieee_wie_membership_amount" class="form-control" id="inputieeeid3" placeholder="IEEE WIE Membership Fee">
                                                     {% endif %}
                                                   </div>
                                                 </div>

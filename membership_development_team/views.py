@@ -435,12 +435,12 @@ def renewal_request_details(request,pk,request_id):
     user=request.user
     has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
     
-    renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('name','email_associated','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
+    renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('name','ieee_id','email_associated','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
     name=renewal_request_details[0]['name']
-    renewal_email=""
+    
     has_comment=False
     for i in range(len(renewal_request_details)):
-        renewal_email=renewal_request_details[i]['email_associated']
+        ieee_id=renewal_request_details[i]['ieee_id']
         if(renewal_request_details[i]['official_comment'] is not None):
             has_comment=True
     #changing the viewing status
@@ -482,21 +482,21 @@ def renewal_request_details(request,pk,request_id):
         if (request.POST.get('go_back')):
             return redirect('membership_development_team:renewal_session_data',pk)
         if(request.POST.get('renew_button')):
+            
             try:
-                #First check if the member is registered in the database or not, search with ASSOCIATED EMAIL (email_personal) and get ieee id with it
-                member=Members.objects.get(email_personal=renewal_email)
-                ieee_id=member.ieee_id #getting the ieee id
                     
                 #update data in main registered Members database
                 get_renewal_session=Renewal_Sessions.objects.get(id=pk)
-                
-                Members.objects.filter(ieee_id=ieee_id).update(last_renewal_session=Renewal_Sessions.objects.get(id=get_renewal_session.id))
-                
+                # Update and Check if the member is registered in the database or not.
+                member=Members.objects.get(ieee_id=ieee_id)
+                member.last_renewal_session=Renewal_Sessions.objects.get(id=get_renewal_session.id)
+                member.save()
+                                
                 # #Update in renewal requests database.
                 Renewal_requests.objects.filter(id=request_id).update(renewal_status=True)
                 
                 # #show success message
-                messages.info(request,f"Membership with IEEE ID {ieee_id} has been renewed!")
+                messages.success(request,f"Membership with IEEE ID {ieee_id} has been renewed!")
                 return redirect('membership_development_team:request_details',pk,request_id)
             
             #Now if the member is not registered in the database
@@ -506,8 +506,7 @@ def renewal_request_details(request,pk,request_id):
                 Renewal_requests.objects.filter(id=request_id,session_id=pk).update(renewal_status=True)
                 
                 #show message
-                messages.info(request,f"Membership has been renewed!\nThis member with the associated E-mail: {renewal_email} was not found in the INSB Registered Member Database!\nHowever, the system kept the Data of renewal!")
-                
+                messages.success(request,f"Membership has been renewed!\nThis member with the associated IEEE ID: {ieee_id} was not found in the INSB Registered Member Database!\nHowever, the system kept the Data of renewal!")
         
         #TO DELETE AN APPLICATION
         if(request.POST.get('delete_button')): 
@@ -516,11 +515,16 @@ def renewal_request_details(request,pk,request_id):
             try:
                 #getting member and deleting
                 Renewal_requests.objects.get(id=request_id,session_id=pk).delete()
+                messages.error(request,"Renewal Application was Deleted")
                 return redirect('membership_development_team:renewal_session_data',pk)
             except Renewal_requests.DoesNotExist:
-                messages.info(request,"Member could not be found!")
+                messages.error(request,"Renewal Application could not be found!")
+                return redirect('membership_development_team:renewal_session_data',pk)
+
             except:
-                messages.info(request,"Something went Wrong!")
+                messages.error(request,"Something went Wrong!")
+                return redirect('membership_development_team:renewal_session_data',pk)
+
             
         #TO UPDATE AN APPLICATIONS COMMENT BY MD TEAM
         if(request.POST.get('update_comment')):

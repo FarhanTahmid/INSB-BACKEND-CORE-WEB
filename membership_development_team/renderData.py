@@ -124,7 +124,6 @@ class MDT_DATA:
             
         if(info=='wie'):
             if getData.wie_renewal_check:
-                print(type(form_credentials.ieee_wie_membership_amount))
                 return int(form_credentials.ieee_wie_membership_amount)
             else:
                 return 0
