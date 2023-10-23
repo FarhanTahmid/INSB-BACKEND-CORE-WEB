@@ -167,7 +167,27 @@
                                     {% endif %}
                                 </p>
                                 {% comment %} <p class="items"><span><b>Transaction ID: </b></span>{{details.transaction_id}} </p> {% endcomment %}
-                        
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    {% if has_comment %}
+                                        <div class="form-group row">
+                                            <label style="font-size:18px;" for="inputPassword3" class="col-sm-2 form-control-label">MDT Comment:</label>
+                                            <div class="col-sm-10">
+                                            <textarea placeholder="For MDT Use Only" name="official_comment" class="form-control" rows="2">{{details.official_comment}}</textarea>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="form-group row">
+                                            <label style="font-size:18px;" for="inputPassword3" class="col-sm-2 form-control-label">Comment:</label>
+                                            <div class="col-sm-10">
+                                            <textarea placeholder="For MDT Use Only" name="official_comment" class="form-control" rows="2"></textarea>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    <div style="justify-content:center; text-align:center;"> 
+                                        <input type="submit" class="btn btn-outline b-primary text-primary" name="update_comment" value="Update Comment"></input>
+                                    </div>
+                                </form>
                             {% endfor %}    
 
                         </div>
@@ -225,6 +245,7 @@
                 </div>          
               </div>
             <!--Invoice End-->
+
 
         </div>
         <!--PAGE END-->
