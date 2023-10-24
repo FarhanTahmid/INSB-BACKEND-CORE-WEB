@@ -259,6 +259,7 @@ def membership_renewal(request):
 
 # no login required as this will open up for other people
 from system_administration.render_access import Access_Render
+from datetime import datetime
 def membership_renewal_form(request,pk):
     
     #rendering access to view the message section
@@ -327,7 +328,7 @@ def membership_renewal_form(request,pk):
                 
                 try:
                     #encrypted_pass=renewal_data.encrypt_password(password=password)
-                    renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),ieee_id=ieee_id,name=name,contact_no=contact_no,email_associated=email_associated,email_ieee=email_ieee,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
+                    renewal_instance=Renewal_requests(timestamp=datetime.now(),session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),ieee_id=ieee_id,name=name,contact_no=contact_no,email_associated=email_associated,email_ieee=email_ieee,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
                     renewal_instance.save()
                     return redirect('membership_development_team:renewal_form_success',pk)
                 except:
@@ -435,7 +436,7 @@ def renewal_request_details(request,pk,request_id):
     user=request.user
     has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
     
-    renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('name','ieee_id','email_associated','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
+    renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('timestamp','name','ieee_id','email_associated','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
     name=renewal_request_details[0]['name']
     
     has_comment=False
@@ -704,10 +705,12 @@ def data_access(request):
             
             ieeeId=request.POST['access_ieee_id']
             if(renderData.MDT_DATA.remove_member_from_data_access(ieee_id=ieeeId)):
-                messages.info(request,"Removed member from Data Access Table")
+                messages.info(request,"Removed member from View Permission Controls")
                 return redirect('membership_development_team:data_access')
             else:
                 messages.info(request,"Something went wrong!")
+                return redirect('membership_development_team:data_access')
+
                 
         if request.POST.get('remove_member'):
             '''To remove member from team table'''
@@ -715,8 +718,10 @@ def data_access(request):
                 Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
                 try:
                     MDT_Data_Access.objects.filter(ieee_id=request.POST['remove_ieee_id']).delete()
+                    messages.error(request,f"A Member with IEEE ID {request.POST['remove_ieee_id']} was Removed Successfully From Team")
                 except MDT_Data_Access.DoesNotExist:
-                     return redirect('membership_development_team:data_access')
+                    messages.error(request,"Something went wrong! Please, try again!")
+                    return redirect('membership_development_team:data_access')
                 return redirect('membership_development_team:data_access')
             except:
                 pass
@@ -728,11 +733,13 @@ def data_access(request):
             if(len(new_data_access_member_list)>0):
                 for ieeeID in new_data_access_member_list:
                     if(renderData.MDT_DATA.add_member_to_data_access(ieeeID)=="exists"):
-                        messages.info(request,f"The member with IEEE Id: {ieeeID} already exists in the Data Access Table")
+                        messages.info(request,f"The member with IEEE Id: {ieeeID} already exists in the View Permission Controls Table")
+                        return redirect('membership_development_team:data_access')
                     elif(renderData.MDT_DATA.add_member_to_data_access(ieeeID)==False):
                         messages.info(request,"Something Went wrong! Please try again")
+                        return redirect('membership_development_team:data_access')
                     elif(renderData.MDT_DATA.add_member_to_data_access(ieeeID)==True):
-                        messages.info(request,f"Member with {ieeeID} was added to the Data Access table!")
+                        messages.info(request,f"Member with {ieeeID} was added to the View Permission Controls table!")
                         return redirect('membership_development_team:data_access')
 
         if request.POST.get('add_member_to_team'):
@@ -740,8 +747,16 @@ def data_access(request):
             members_to_add=request.POST.getlist('member_select1')
             #get position
             position=request.POST.get('position')
-            for member in members_to_add:
-                renderData.MDT_DATA.add_member_to_team(member,position)
+            for ieee_id in members_to_add:
+                addMemberStatus=renderData.MDT_DATA.add_member_to_team(ieee_id,position)
+                if(addMemberStatus):
+                    add_to_data_access=renderData.MDT_DATA.add_member_to_data_access(ieee_id=ieee_id)
+                    if(add_to_data_access):
+                        messages.info(request,f"{ieee_id} has been successfully added as a member and also added to Data Access Table")
+                    elif(add_to_data_access=="exists"):
+                        messages.success(request,"A new Member was successfully added to the Team!")
+                else:
+                    messages.error(request,"Something went wrong! Please, Try again!")
             return redirect('membership_development_team:data_access')
 
     context={
@@ -752,7 +767,7 @@ def data_access(request):
         
     }
     if(has_access):
-        return render(request,'data_access_table.html',context=context)
+        return render(request,'Manage Team/manage_team.html',context=context)
     else:
         return render(request,'access_denied.html')
     
@@ -784,9 +799,6 @@ def site_registration_request_home(request):
 
 
 
-import socket
-from smtplib import SMTPException
-
 @login_required
 def site_registration_request_details(request,ieee_id):
     #gaining access data at first
@@ -799,7 +811,7 @@ def site_registration_request_details(request,ieee_id):
     #changing view Status
     Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).update(view_status=True)
     
-    dob = datetime.datetime.strptime(str(
+    dob = datetime.strptime(str(
         get_request.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
     context={
         'request':get_request,

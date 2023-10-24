@@ -21,7 +21,7 @@ class Renewal_Sessions(models.Model):
 class Renewal_requests(models.Model):
     timestamp=models.DateTimeField(null=True,blank=True)
     session_id=models.ForeignKey(Renewal_Sessions,null=False,blank=False,on_delete=models.CASCADE)
-    ieee_id=models.IntegerField(null=True,blank=True)
+    ieee_id=models.IntegerField(null=False,blank=False,default=0)
     name=models.CharField(null=False,blank=False,max_length=100,default="null")
     contact_no=models.CharField(null=False,blank=False,max_length=30,default="null")
     email_associated=models.EmailField(null=False,blank=False)
