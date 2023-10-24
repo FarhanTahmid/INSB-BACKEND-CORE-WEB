@@ -753,7 +753,7 @@ def data_access(request):
         
     }
     if(has_access):
-        return render(request,'data_access_table.html',context=context)
+        return render(request,'Manage Team/manage_team.html',context=context)
     else:
         return render(request,'access_denied.html')
     
@@ -785,9 +785,6 @@ def site_registration_request_home(request):
 
 
 
-import socket
-from smtplib import SMTPException
-
 @login_required
 def site_registration_request_details(request,ieee_id):
     #gaining access data at first
@@ -800,7 +797,7 @@ def site_registration_request_details(request,ieee_id):
     #changing view Status
     Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).update(view_status=True)
     
-    dob = datetime.datetime.strptime(str(
+    dob = datetime.strptime(str(
         get_request.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
     context={
         'request':get_request,
