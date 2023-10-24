@@ -10,7 +10,6 @@ import json
 class TestUrls(SimpleTestCase):
     def test_homepage_url(self):
         url=reverse('port:homepage')
-        print(resolve(url))
         self.assertEquals(resolve(url).func,homepage)
 
 
