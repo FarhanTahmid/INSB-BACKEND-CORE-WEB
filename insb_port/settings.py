@@ -31,7 +31,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-LOGIN_URL='/users/login'
+LOGIN_URL='/portal/users/login'
 
 # Application definition
 
