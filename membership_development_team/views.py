@@ -79,7 +79,7 @@ def member_details(request,ieee_id):
     has_access=(renderData.MDT_DATA.insb_member_details_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
     
     member_data=renderData.MDT_DATA.get_member_data(ieee_id=ieee_id)
-    dob = datetime.datetime.strptime(str(
+    dob = datetime.strptime(str(
         member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
     sessions=recruitment_session.objects.all().order_by('-id')
     #getting the ieee account active status of the member
@@ -372,7 +372,7 @@ def renewal_session_data(request,pk):
     '''This view function loads all data for the renewal session including the members registered'''
     session_name=renewal_data.get_renewal_session_name(pk)
     session_id=renewal_data.get_renewal_session_id(session_name=session_name)
-    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_associated','email_ieee','contact_no','ieee_id').order_by('-id')
+    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_associated','email_ieee','contact_no','ieee_id').order_by('id')
         
     #loading team member data for form credential edit
     load_team_members=renderData.MDT_DATA.load_team_members()
@@ -449,13 +449,18 @@ def renewal_request_details(request,pk,request_id):
     
     # INVOICE
     # get form amount of money
-    renewal_amount_dict={
-        'IEEE Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='ieee',form_id=pk),
-        'IEEE PES Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='pes',form_id=pk),
-        'IEEE RAS Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='ras',form_id=pk),
-        'IEEE IAS Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='ias',form_id=pk),
-        'IEEE WIE Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='wie',form_id=pk),
-    }
+    try:
+        renewal_amount_dict={
+            'IEEE Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='ieee',form_id=pk),
+            'IEEE PES Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='pes',form_id=pk),
+            'IEEE RAS Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='ras',form_id=pk),
+            'IEEE IAS Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='ias',form_id=pk),
+            'IEEE WIE Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='wie',form_id=pk),
+        }
+    except:
+        messages.error(request,"Please Edit Form Credentials to view.")
+        return redirect('membership_development_team:renewal_session_data',pk)
+
     
     try:
         total_amount=(
@@ -468,10 +473,27 @@ def renewal_request_details(request,pk,request_id):
         
     except:
         total_amount=0
+        
+    current_request=Renewal_requests.objects.get(id=request_id)
+    next_request=Renewal_requests.objects.filter(pk__gt=current_request.pk,session_id=pk).first()
+    
+    if next_request:
+        next_request_id=next_request.pk
+        has_next_request=True
+    else:
+        next_request_id=None
+        has_next_request=False
+    
+    print(next_request_id)
+    print(has_next_request)
+    
+        
     context={
         'id':request_id,
         'details':renewal_request_details,
         'has_comment':has_comment,
+        'has_next_request':has_next_request,
+        'next_request_id':next_request_id,
         'pk':pk,
         'name':name,
         'renewal_amount':renewal_amount_dict,
@@ -775,29 +797,36 @@ def data_access(request):
 def site_registration_request_home(request):
     
     '''This loads data for site joining request'''
-    
+    # Getting all the requests for portal site
     get_requests=Portal_Joining_Requests.objects.all().order_by('application_status')
-    #loading all the unviewed request count
-    notification_count=Portal_Joining_Requests.objects.filter(view_status=False).count()
-    #counting the renewed requests
-    accepted_count=Portal_Joining_Requests.objects.filter(application_status=True).count()
-    #counting the pending requests
-    pending_count=Portal_Joining_Requests.objects.filter(application_status=False).count()
     #form link for site registration
     form_link=f"{request.META['HTTP_HOST']}/portal/membership_development_team/insb_site_registration_form"
     
     context={
         'requests':get_requests,
-        'notification_count': notification_count,
-        'accepted':accepted_count,
-        'pending_count':pending_count,
         'form_link':form_link
     }
     
-    
-    return render(request,'site_registration_home.html',context)
+    return render(request,'Site Registration/site_registration_home.html',context)
 
-
+@login_required
+def getSiteRegistrationRequestStats(request):
+    '''This function returns stats of portal registration application and the stats'''
+    if request.method=="GET":
+        #loading all the unviewed request count
+        notification_count=Portal_Joining_Requests.objects.filter(view_status=False).count()
+        #counting the renewed requests
+        accepted_count=Portal_Joining_Requests.objects.filter(application_status=True).count()
+        #counting the pending requests
+        pending_count=Portal_Joining_Requests.objects.filter(application_status=False).count()
+        context={
+            "labels":["Applications Not Yet Viewed","Total Pending Applications","Total Verified Applications"],
+            "values":[notification_count,pending_count,accepted_count]
+        }
+        
+        return JsonResponse(context)
+        
+        
 
 @login_required
 def site_registration_request_details(request,ieee_id):
@@ -813,9 +842,22 @@ def site_registration_request_details(request,ieee_id):
     
     dob = datetime.strptime(str(
         get_request.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
+    
+    current_application=Portal_Joining_Requests.objects.get(ieee_id=ieee_id)
+    next_application=Portal_Joining_Requests.objects.filter(pk__gt=current_application.ieee_id).first()
+    
+    if next_application:
+        next_application_id=next_application.ieee_id
+        has_next_request=True
+    else:
+        next_application_id=None
+        has_next_request=False
+    
     context={
         'request':get_request,
         'dob':dob,
+        'next_application_id':next_application_id,
+        'has_next_request':has_next_request
     }
     if request.method=="POST":
         if request.POST.get('register_to_database'):
@@ -844,9 +886,11 @@ def site_registration_request_details(request,ieee_id):
                     #sending mails to MDT team officials to verify the request, primarily sent to their ieee mail
                     if(email_sending.send_email_on_site_registration_verification_to_user(request,new_member.name,new_member.email_personal)==False):
                         messages.info(request,"Couldn't Send Verification Email")
+                        return redirect('membership_development_team:site_registration')
+
                     else:
                         messages.info(request,"User Notified via Email")
-                
+                        
                     #Updating application status
                     Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).update(application_status=True)
                     messages.info(request,"Member Successfully Updated to the Main Database")
@@ -889,13 +933,13 @@ def site_registration_request_details(request,ieee_id):
             #Deleting Member
             try:
                 Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).delete()
-                messages.info(request,"Request Deleted")
+                messages.info(request,f"A Site Registration Application with IEEE ID: {ieee_id} was Deleted")
                 return redirect('membership_development_team:site_registration')
             except:
                 messages.info(request,"Sorry! Member Couldn't be Deleted")
     if(has_access):
         
-        return render(request,'site_registration_request_details.html',context)
+        return render(request,'Site Registration/site_registration_application_details.html',context)
     else:
         return render(request,"access_denied.html")
 
@@ -980,6 +1024,6 @@ def site_registration_form(request):
                     messages.info(request,"Some Error Occured! Please contact the System Administrator")
                     return redirect('membership_development_team:site_registration_form')
     
-    return render(request,'site_registration_form.html',context)
+    return render(request,'Site Registration/site_registration_form.html',context)
 def confirmation_of_form_submission(request):
     return render(request,'confirmation.html')

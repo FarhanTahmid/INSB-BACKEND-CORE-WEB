@@ -67,7 +67,7 @@
                             
                             <div class="px-0 px-md-5">
                                 <div class="row my-3">
-                                    <div class="col-md-2 mt-1">Name:</div>
+                                    <div class="col-md-2 mt-1">Name: <span style="color:red">*</span></div>
                                     <div class="col-md-8">
                                         <input
                                             placeholder="Enter Your Name"
@@ -80,7 +80,7 @@
                                     </div>
                                 </div>
                                 <div class="row my-3">
-                                    <div class="col-md-2 mt-1">IEEE ID:</div>
+                                    <div class="col-md-2 mt-1">IEEE ID: <span style="color:red">*</span></div>
                                     <div class="col-md-8">
                                         <input
                                             placeholder="Enter Your IEEE ID"
@@ -93,10 +93,10 @@
                                     </div>
                                 </div>
                                 <div class="row my-3">
-                                    <div class="col-md-2 mt-1">NSU ID:</div>
+                                    <div class="col-md-2 mt-1">NSU ID: <span style="color:red">*</span></div>
                                     <div class="col-md-8">
                                         <input
-                                            placeholder="Enter Your NSU ID"
+                                            placeholder="Enter Your NSU ID/ Enter Random Digits if you are a Faculty"
                                             class="form-control w-50"
                                             type="number"
                                             autocomplete="off"
@@ -108,7 +108,7 @@
 
                                 <div class="row my-3">
                                     <div class="row my-3">
-                                        <div class="col-md-2 mt-1">Email (Personal):</div>
+                                        <div class="col-md-2 mt-1">Email (Personal): <span style="color:red">*</span></div>
                                         <div class="col-md-8">
                                             <input
                                                
@@ -121,7 +121,7 @@
                                     </div>
 
                                     <div class="row my-3">
-                                        <div class="col-md-2 mt-1">Email (NSU):</div>
+                                        <div class="col-md-2 mt-1">Email (NSU): <span style="color:red">*</span></div>
                                         <div class="col-md-8">
                                             <input
                                                 class="form-control w-75"
@@ -133,7 +133,7 @@
                                     </div>
 
                                     <div class="row my-3">
-                                        <div class="col-md-2 mt-1">Email (IEEE):</div>
+                                        <div class="col-md-2 mt-1">Email (IEEE): <span style="color:red">*</span></div>
                                         <div class="col-md-8">
                                             <input
                                                 class="form-control w-75"
@@ -145,7 +145,7 @@
                                     </div>
 
                                     <div class="row my-3">
-                                        <div class="col-md-2 mt-1">Home Address:</div>
+                                        <div class="col-md-2 mt-1">Home Address: <span style="color:red">*</span></div>
                                         <div class="col-md-8">
                                             <input
                                                 class="form-control w-75"
@@ -156,13 +156,13 @@
                                         </div>
                                     </div>
                                     <div class="row my-3">
-                                        <div class="col-md-2 mt-1">Major:</div>
+                                        <div class="col-md-2 mt-1">Major / Department: <span style="color:red">*</span></div>
                                         <div class="col-md-8">
                                             <input
                                                 class="form-control w-50"
                                                 type="text"
                                                 autocomplete="on"
-                                                id="major" name="major" placeholder="Enter Your Major" 
+                                                id="major" name="major" placeholder="Enter Your Major / Department" 
                                             />
                                         </div>
                                     </div>
@@ -204,10 +204,11 @@
                                         <div class="col-md-6">
                                             <div class="row">
                                                 <div class="col-md-4 mt-1">
-                                                    Facebook Account Link:
+                                                    Facebook Account Link: <span style="color:red">*</span>
                                                 </div>
                                                 <div class="col-md-8">
                                                     <input
+                                                        required
                                                         class="form-control w-80"
                                                         type="url"
                                                         name="facebook_url" autocomplete="off" placeholder="Enter URL to Your Facebook Account"
@@ -218,10 +219,11 @@
                                         <div class="col-md-6">
                                             <div class="row">
                                                 <div class="col-md-4 mt-1">
-                                                    Linkedin Account Link:
+                                                    Linkedin Account Link: <span style="color:red">*</span>
                                                 </div>
                                                 <div class="col-md-8">
                                                     <input
+                                                        required
                                                         class="form-control w-80"
                                                         type="url"
                                                         name="linkedin_url" autocomplete="off" placeholder="Enter URL to Your Linkedin Account"
@@ -230,9 +232,10 @@
                                             </div>
                                         </div>
                                     <div class="row my-3">
-                                        <div class="col-md-2 mt-1">Gender:</div>
+                                        <div class="col-md-2 mt-1">Gender: <span style="color:red">*</span></div>
                                         <div class="col-md-8 mt-2 mt-md-0">
                                             <input
+                                                required
                                                 class="form-check-input"
                                                 type="radio"
                                                 name="gender"

@@ -14,7 +14,7 @@ class EmailHandler:
         
         site_domain = request.META['HTTP_HOST'] #gets the domain name
         
-        message=f"Dear user,\nYour password reset link is:\n{site_domain}/users/reset_password/{username}/{token}/\nPlease do not share this link with any other individuals.\nThank you.\n\nThis message was automatically generated fromt the portal site of IEEE NSU SB."
+        message=f"Dear user,\nYour password reset link is:\n{site_domain}/portal/users/reset_password/{username}/{token}/\nPlease do not share this link with any other individuals.\nThank you.\n\nThis message was automatically generated fromt the portal site of IEEE NSU SB."
         
         email_from = settings.EMAIL_HOST_USER
         
