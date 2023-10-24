@@ -334,8 +334,11 @@ class MDT_DATA:
             return False
     def add_member_to_team(ieee_id,position):
         team_id=MDT_DATA.get_team_id()
-        Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
-    
+        try:
+            Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
+            return True
+        except:
+            return False
     def get_officials_access(ieee_id):
         ''''''
         try:

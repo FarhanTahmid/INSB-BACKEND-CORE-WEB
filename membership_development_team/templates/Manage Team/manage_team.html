@@ -50,6 +50,29 @@
               width: 100%; /* Make the button full width on smaller screens */
             }
           }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+        }
+
+        .table-container {
+            max-height: 300px;
+            overflow: auto;
+        }
         
     </style>
 </head>
@@ -84,6 +107,16 @@
             <br>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Membership Development Team - <span style="color:#00629B;"><b>Manage Team</b></span></h2>
             <br>
+            <!--Messages-->
+            <div style="justify-content:center; text-align:center;">
+                {% if messages %}
+                    {% for message in messages %}
+                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                    {% endfor %}
+                <br>
+                {% endif %}
+            </div>
+            <!--Messages-->
             
             <!--Add member to team-->
             <h4 style="justify-content:center;text-align:center;margin-bottom:30px;"> Current <span style="color:#00629B;"><b> Team Members </b></span> </h4>
@@ -138,6 +171,74 @@
 
             <br>
 
+            <!--Modal for adding member to team-->
+            <div id="m-s-a" class="modal" data-backdrop="true">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add member to Team!</h5>
+                    </div>
+                    <div class="modal-body p-lg">
+                      <p>Do select the Position of the Member Carefully!</p>
+                      <p>Team Members will be added in the View Permission Table also. However, they will not have any access.</p>
+                      <br>
+                    </div>
+                    <!--Position Input-->
+
+                    <!--Position Input Ends-->
+
+                    <!--Search table-->
+                    <form method="POST">
+                        {% csrf_token %}
+                        <label style="margin-left:5px;">Select Position</label>
+                        <select id="position" name="position">
+                            {% for position in positions %}
+                                <option value={{position.id}}>{{ position.role }}</option>
+                            {% endfor %} 
+                        </select>
+                        <div class="table-container">
+                            <label style="margin-left:5px;">Search</label>
+                            <input class="w-75" type="text" id="searchInput" placeholder="Search Member">
+                            <table id="data">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>IEEE ID</th>
+                                        <th>Current Position</th>
+                                        <th>Email</th>
+                                        <th>Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for member in insb_members %}
+                                        <tr>
+                                            <td>{{ member.name }}</td>
+                                            <td>{{ member.ieee_id }}</td>
+                                            <td>{{ member.position }}</td>
+                                            <td>{{ member.email_ieee }}</td>
+                                            <td>
+                                                <input type="checkbox" id="select" name="member_select1" value={{member.ieee_id}}>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--Search Table Ends-->
+                    
+                        <div class="modal-footer">
+                        <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                    
+                            <input type="submit" class="btn primary p-x-md" name="add_member_to_team" value="Add Member"></input>  
+                        </div>
+                    </form>
+
+                  </div><!-- /.modal-content -->
+                </div>
+            </div>
+            <!--End of Modal-->
+
 
             <!--View Access-->
             <h4 style="justify-content:center;text-align:center;margin-bottom:30px;"><span style="color:#00629B;"><b> View Permission</b> </span>Controls for <span style="color:#00629B;"><b>Membership Development Team</b></span></h4>
@@ -147,7 +248,7 @@
                 <div class="box-header">
                     
                     <div style="text-align:right;">
-                        <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add a new Member To View Permission Controls</button>
+                        <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-b" ui-toggle-class="bounce" ui-target="#animate">Add a new Member To View Permission Controls</button>
                     </div>
                 <small>This table holds the data of View Permission assigned to different members. You can add members her from other teams too.<br>Update one row at a time.</small>
                 </div>
@@ -171,57 +272,54 @@
                                 <td>{{data_access.ieee_id.name}}</td>
                                 <td>{{data_access.ieee_id.team}}</td>
                                 <td>{{data_access.ieee_id.position}}</td>
-                                
-                                <td>
                                 <form method="POST">
                                     {% csrf_token %}
+                                    <td>
+                                        
+                                        {% if data_access.insb_member_details %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="insb_member_details" name="insb_member_details">
+                                        <label for="insb_member_details">INSB Registered Member Details Permission
+                                        </label><br>
+                                        {% else %}
+                                        <input type="checkbox" class="checkbox" value="insb_member_details" name="insb_member_details">
+                                        <label for="insb_member_details">INSB Registered Member Details Permission</label><br>
+                                        {% endif %}
+
+
+                                        {% if data_access.recruitment_session %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="recruitment_session" name="recruitment_session">
+                                        <label for="recruitment_session">Recruitment Data View Permission</label><br>
+                                        {% else %}
+                                        <input type="checkbox" class="checkbox" value="recruitment_session" name="recruitment_session">
+                                        <label for="recruitment_session">Recruitment Data View Permission</label><br>
+                                        {% endif %}
+
+
+                                        {% if data_access.recruited_member_details %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="recruited_member_details" name="recruited_member_details">
+                                        <label for="recruited_member_details">Rectuited Member Details Permission</label><br>
+                                        {% else %}
+                                        <input type="checkbox" class="checkbox" value="recruited_member_details" name="recruited_member_details">
+                                        <label for="recruited_member_details">Rectuited Member Details Permission</label><br>
+                                        {% endif %}
+
+
+                                        {% if data_access.renewal_data_access %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="renewal_data_access" name="renewal_data_access">
+                                        <label for="renewal_data_access">Membership Renewal Data Access Permission</label><br>
+                                        {% else %}
+                                        <input type="checkbox" class="checkbox" value="renewal_data_access" name="renewal_data_access">
+                                        <label for="renewal_data_access">Membership Renewal Data Access Permission</label><br>
+                                        {% endif %}
+                                            
+                                    </td>
                                 
-                                    
-
-                                    {% if data_access.insb_member_details %}
-                                    <input type="checkbox" checked="True" class="checkbox" value="insb_member_details" name="insb_member_details">
-                                    <label for="insb_member_details">INSB Registered Member Details Permission
-                                    </label><br>
-                                    {% else %}
-                                    <input type="checkbox" class="checkbox" value="insb_member_details" name="insb_member_details">
-                                    <label for="insb_member_details">INSB Registered Member Details Permission</label><br>
-                                    {% endif %}
-
-
-                                    {% if data_access.recruitment_session %}
-                                    <input type="checkbox" checked="True" class="checkbox" value="recruitment_session" name="recruitment_session">
-                                    <label for="recruitment_session">Recruitment Data View Permission</label><br>
-                                    {% else %}
-                                    <input type="checkbox" class="checkbox" value="recruitment_session" name="recruitment_session">
-                                    <label for="recruitment_session">Recruitment Data View Permission</label><br>
-                                    {% endif %}
-
-
-                                    {% if data_access.recruited_member_details %}
-                                    <input type="checkbox" checked="True" class="checkbox" value="recruited_member_details" name="recruited_member_details">
-                                    <label for="recruited_member_details">Rectuited Member Details Permission</label><br>
-                                    {% else %}
-                                    <input type="checkbox" class="checkbox" value="recruited_member_details" name="recruited_member_details">
-                                    <label for="recruited_member_details">Rectuited Member Details Permission</label><br>
-                                    {% endif %}
-
-
-                                    {% if data_access.renewal_data_access %}
-                                    <input type="checkbox" checked="True" class="checkbox" value="renewal_data_access" name="renewal_data_access">
-                                    <label for="renewal_data_access">Membership Renewal Data Access Permission</label><br>
-                                    {% else %}
-                                    <input type="checkbox" class="checkbox" value="renewal_data_access" name="renewal_data_access">
-                                    <label for="renewal_data_access">Membership Renewal Data Access Permission</label><br>
-                                    {% endif %}
-                                    
-                                </td>
-                                
-                                <td>
-                                        <input class="btn btn-warning" name="access_update" type="submit" value="Update">
-                                        <input class="btn btn-danger" name="access_remove" type="submit" value="Remove">
+                                    <td>
+                                        <input class="btn btn-outline b-success text-success" name="access_update" type="submit" value="Update">
+                                        <input class="btn btn-outline b-danger text-danger" type="submit" value="Remove">
                                         <input type="hidden" name="access_ieee_id" value={{data_access.ieee_id}}>
-                                    </form>
-                                </td>
+                                    </td>
+                                </form>
                             </tr>
                         {% endfor %}
 
@@ -232,6 +330,71 @@
             <!--View Permission Table End-->
             <br>
             <br>
+
+            <!--Modal for adding member to View Permission-->
+            <div id="m-s-b" class="modal" data-backdrop="true">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add member to View Permission Controls!</h5>
+                    </div>
+                    <div class="modal-body p-lg">
+                      <p>Do select the Member Carefully!</p>
+                      <p>Members will be added in the View Permission Table. However, they will not have any access at first.</p>
+                      <br>
+                    </div>
+                    <!--Position Input-->
+
+                    <!--Position Input Ends-->
+
+                    <!--Search table-->
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="table-container">
+                            <label style="margin-left:5px;">Search</label>
+                            <input class="w-75" type="text" id="searchInput2" placeholder="Search Member">
+                            <table id="data2">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>IEEE ID</th>
+                                        <th>Current Team</th>
+                                        <th>Current Position</th>
+                                        <th>Email</th>
+                                        <th>Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for member in insb_members %}
+                                        <tr>
+                                            <td>{{ member.name }}</td>
+                                            <td>{{ member.ieee_id }}</td>
+                                            <td>{{ member.team }}</td>
+                                            <td>{{ member.position }}</td>
+                                            <td>{{ member.email_ieee }}</td>
+                                            <td>
+                                                <input type="checkbox" id="select" name="member_select" value={{member.ieee_id}}>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--Search Table Ends-->
+                    
+                        <div class="modal-footer">
+                        <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                    
+                            <input type="submit" class="btn primary p-x-md" name="update_data_access_member" value="Add Member to View Permission"></input>  
+                        </div>
+                    </form>
+
+                  </div><!-- /.modal-content -->
+                </div>
+            </div>
+            <!--End of Modal-->
 
         </div>
         <!--PAGE END-->
@@ -249,5 +412,60 @@
         {% include "common_js.html" %}
     {% endblock common_js %}
 
+    <!--Script for table search-->
+    <script>
+        // Get the input element and table
+        var input = document.getElementById("searchInput");
+        var table = document.getElementById("data");
+
+        input.addEventListener("keyup", function () {
+            var filter, row, cell, i, j;
+            filter = input.value.toUpperCase();
+
+            // Loop through all table rows and hide those that don't match the search query
+            for (i = 0; i < table.rows.length; i++) {
+                row = table.rows[i];
+                for (j = 0; j < row.cells.length; j++) {
+                    cell = row.cells[j];
+                    if (cell) {
+                        if (cell.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                            row.style.display = "";
+                            break;
+                        } else {
+                            row.style.display = "none";
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!--Script for table search 2-->
+    <script>
+        // Get the input element and table
+        var input = document.getElementById("searchInput2");
+        var table = document.getElementById("data2");
+
+        input.addEventListener("keyup", function () {
+            var filter, row, cell, i, j;
+            filter = input.value.toUpperCase();
+
+            // Loop through all table rows and hide those that don't match the search query
+            for (i = 0; i < table.rows.length; i++) {
+                row = table.rows[i];
+                for (j = 0; j < row.cells.length; j++) {
+                    cell = row.cells[j];
+                    if (cell) {
+                        if (cell.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                            row.style.display = "";
+                            break;
+                        } else {
+                            row.style.display = "none";
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>

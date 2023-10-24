@@ -705,10 +705,12 @@ def data_access(request):
             
             ieeeId=request.POST['access_ieee_id']
             if(renderData.MDT_DATA.remove_member_from_data_access(ieee_id=ieeeId)):
-                messages.info(request,"Removed member from Data Access Table")
+                messages.info(request,"Removed member from View Permission Controls")
                 return redirect('membership_development_team:data_access')
             else:
                 messages.info(request,"Something went wrong!")
+                return redirect('membership_development_team:data_access')
+
                 
         if request.POST.get('remove_member'):
             '''To remove member from team table'''
@@ -716,8 +718,10 @@ def data_access(request):
                 Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
                 try:
                     MDT_Data_Access.objects.filter(ieee_id=request.POST['remove_ieee_id']).delete()
+                    messages.error(request,f"A Member with IEEE ID {request.POST['remove_ieee_id']} was Removed Successfully From Team")
                 except MDT_Data_Access.DoesNotExist:
-                     return redirect('membership_development_team:data_access')
+                    messages.error(request,"Something went wrong! Please, try again!")
+                    return redirect('membership_development_team:data_access')
                 return redirect('membership_development_team:data_access')
             except:
                 pass
@@ -729,11 +733,13 @@ def data_access(request):
             if(len(new_data_access_member_list)>0):
                 for ieeeID in new_data_access_member_list:
                     if(renderData.MDT_DATA.add_member_to_data_access(ieeeID)=="exists"):
-                        messages.info(request,f"The member with IEEE Id: {ieeeID} already exists in the Data Access Table")
+                        messages.info(request,f"The member with IEEE Id: {ieeeID} already exists in the View Permission Controls Table")
+                        return redirect('membership_development_team:data_access')
                     elif(renderData.MDT_DATA.add_member_to_data_access(ieeeID)==False):
                         messages.info(request,"Something Went wrong! Please try again")
+                        return redirect('membership_development_team:data_access')
                     elif(renderData.MDT_DATA.add_member_to_data_access(ieeeID)==True):
-                        messages.info(request,f"Member with {ieeeID} was added to the Data Access table!")
+                        messages.info(request,f"Member with {ieeeID} was added to the View Permission Controls table!")
                         return redirect('membership_development_team:data_access')
 
         if request.POST.get('add_member_to_team'):
@@ -741,8 +747,16 @@ def data_access(request):
             members_to_add=request.POST.getlist('member_select1')
             #get position
             position=request.POST.get('position')
-            for member in members_to_add:
-                renderData.MDT_DATA.add_member_to_team(member,position)
+            for ieee_id in members_to_add:
+                addMemberStatus=renderData.MDT_DATA.add_member_to_team(ieee_id,position)
+                if(addMemberStatus):
+                    add_to_data_access=renderData.MDT_DATA.add_member_to_data_access(ieee_id=ieee_id)
+                    if(add_to_data_access):
+                        messages.info(request,f"{ieee_id} has been successfully added as a member and also added to Data Access Table")
+                    elif(add_to_data_access=="exists"):
+                        messages.success(request,"A new Member was successfully added to the Team!")
+                else:
+                    messages.error(request,"Something went wrong! Please, Try again!")
             return redirect('membership_development_team:data_access')
 
     context={
