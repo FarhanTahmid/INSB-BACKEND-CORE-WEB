@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Application - {{request.ieee_id}} | Site Registration Request Details | Membership Development Team</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+
+    <style>
+        body, html {
+        
+        margin: 0;
+        
+        align-items: center;
+        justify-content: center;
+        }
+
+        .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+          }
+          .btn-container {
+            text-align: center;
+          }
+          
+          .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+          }
+          
+          /* Media query for smaller screens (adjust the breakpoint as needed) */
+          @media (max-width: 768px) {
+            .btn {
+              width: 100%; /* Make the button full width on smaller screens */
+            }
+          }
+          .tooltip-container {
+            position: relative;
+            display: inline-block;
+          }
+          .tooltip-container.right {
+            float: right; /* Float the container to the right */
+            margin-right: 0; /* Reset the margin for the right-aligned button */
+          }
+          
+          .image-button:hover + .tooltip-text {
+              opacity: 1;
+              visibility: visible;
+              transform: translateX(10px); /* Adjust the distance from the link */
+          }
+          
+          .tooltip-text {
+              position: absolute;
+              top: 50%;
+              left: 100%;
+              transform: translateY(-50%);
+              white-space: nowrap;
+              background-color: #333;
+              color: #fff;
+              padding: 5px;
+              border-radius: 5px;
+              opacity: 0;
+              visibility: hidden;
+              transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+          }
+          .image-button {
+            display: inline-block;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+        
+        /* Add additional styling for image appearance, such as size and alignment */
+        .image-button img {
+            height:50px;
+            width: 50px; /* Adjust as needed */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 5px; /* Add rounded corners if desired */
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+                {% include 'mdt_navbar.html' %}
+            {% endblock navbar %}
+
+        </div>
+        <!--navbar content-->
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
+            <!--Start from here-->
+            <br>
+            <!--Back button-->
+            <div class="tooltip-container">
+                <a href="{% url 'membership_development_team:site_registration' %}" class="image-button">
+                    <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+                </a>
+                <span class="tooltip-text">Go back to Renewal Sessions</span>
+            </div>
+            <!--Back button end-->
+
+            <!--Next Application Button-->
+            {% if has_next_request %}
+            <div class="tooltip-container right">
+            <a href="{% url "membership_development_team:site_registration_request_details" next_application_id %}" class="image-button">
+                <img src="{% static 'back-arrow.png' %}" alt="Next Recruited Member" style="transform: rotate(180deg);">
+            </a>
+            <span class="tooltip-text">Go to Next Application</span>
+            </div>
+            {% endif %}
+            <!--Next Application Button-->
+
+            <br>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Detailed Application Information of <span style="color:#00629B;"> <b>{{request.name}}</b></span></h2>
+            <br>
+            
+
+            
+
+            <!--Application Details-->
+            <div class="padding">
+                <div class="row">
+                  <div class="col-md">
+                    <div class="box">
+                      <div class="box-header">
+                        <small>This Data is Not Editable. Only Register the Member in INSB Database if the data are correct and Verified!</small>
+                      </div>
+                      <div class="box-divider m-0"></div>
+                      <div class="box-body">
+                        
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">IEEE ID</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter IEEE ID" name="ieee_id" value={{ request.ieee_id }}>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">NSU ID</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" required name="nsu_id" value={{request.nsu_id}}>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Name</label>
+                                <input type="text" class="form-control" id="exampleInputEmail1" required name="name" value="{{ request.name }}">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Email (Personal)</label>
+                                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter E-Mail" required name="email_personal" value="{{ request.email_personal }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">Email (NSU)</label>
+                                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter NSU E-Mail" name="email_nsu" value="{{ request.email_nsu }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">Email (IEEE)</label>
+                                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter IEEE E-Mail" name="email_ieee" value="{{ request.email_ieee }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Contact No.</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Contact no." required name="contact_no" value="{{ request.contact_no }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">Date of Birth</label>
+                                        <input type="date" class="form-control" id="exampleInputEmail1" placeholder="Date of Birth" required name="date_of_birth" value="{{ dob }}">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Facebook URL.</label>
+                                        <input type="url" class="form-control" id="exampleInputEmail1" placeholder="Enter Facebook URL" name="facebook_url" value="{{ request.facebook_url }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">Linkedin URL</label>
+                                        <input type="url" class="form-control" id="exampleInputEmail1" placeholder="Enter Linkedin URL" name="linkedin_url" value="{{ request.linkedin_url }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Address</label>
+                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Address" required name="home_address" value="{{ request.home_address }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Major</label>
+                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Major" required name="major" value="{{ request.major }}">
+                            </div>
+                            <div class="form-group" style="font-size:16px;">
+                                <label for="exampleInputPassword1">Team: <span><b>{{request.team.team_name}}</b></span></label>
+                            </div>
+                            <div class="form-group" style="font-size:16px;">
+                                <label for="exampleInputPassword1">Position: <span><b>{{request.position.role}}</b></span></label>
+                            </div>
+                      </div>
+                        <div style="justify-content:center;text-align:center;">  
+                            <div class="btn-container">
+                                <button class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-b" ui-toggle-class="bounce" ui-target="#animate">Delete Application</button>
+                                {% if request.application_status %}
+                                <button class="btn btn-outline b-primary text-primary" disabled data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Register Member to INSB Database</button>  
+                                {% else %}
+                                <button class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Register Member to INSB Database</button>  
+                                {% endif %}  
+                            </div>
+                        </div>
+                        <br>
+                        <br>  
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+                <!--Application Details Ends-->
+              
+                <!--Register Member Modal-->
+                <div id="m-s-a" class="modal" data-backdrop="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Register Member to INSB Database?</h5>
+                        </div>
+                        <div class="modal-body p-lg">
+                          <p>Are you sure to execute this action?</p>
+                          <p>This will register the member in INSB Database with IEEE ID {{request.ieee_id}}.</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                          <form method="POST">
+                            {% csrf_token %}
+                            <input type="submit" class="btn primary p-x-md" name="register_to_database" value="Register Member"></input>
+                          </form>
+                        </div>
+                      </div><!-- /.modal-content -->
+                    </div>
+                </div>
+                <!--Register Member Modal Ends-->
+
+
+                <!--Delete Modal Starts-->
+                <div id="m-s-b" class="modal" data-backdrop="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Delete Portal Site Registration Application!</h5>
+                        </div>
+                        <div class="modal-body p-lg">
+                          <p>Are you sure to execute this action?</p>
+                          <p>This will delete the Registration Application of {{request.name}}.</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                          <form method="POST">
+                            {% csrf_token %}
+                            <input type="submit" class="btn danger p-x-md" name="delete_request" value="Delete"></input>
+                          </form>
+                        </div>
+                      </div><!-- /.modal-content -->
+                    </div>
+                </div>
+                <!--Delete Modal End-->
+        </div>
+        <!--PAGE END-->
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+    
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+
+</body>
+</html>
