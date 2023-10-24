@@ -259,6 +259,7 @@ def membership_renewal(request):
 
 # no login required as this will open up for other people
 from system_administration.render_access import Access_Render
+from datetime import datetime
 def membership_renewal_form(request,pk):
     
     #rendering access to view the message section
@@ -327,7 +328,7 @@ def membership_renewal_form(request,pk):
                 
                 try:
                     #encrypted_pass=renewal_data.encrypt_password(password=password)
-                    renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),ieee_id=ieee_id,name=name,contact_no=contact_no,email_associated=email_associated,email_ieee=email_ieee,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
+                    renewal_instance=Renewal_requests(timestamp=datetime.now(),session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),ieee_id=ieee_id,name=name,contact_no=contact_no,email_associated=email_associated,email_ieee=email_ieee,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
                     renewal_instance.save()
                     return redirect('membership_development_team:renewal_form_success',pk)
                 except:
@@ -435,7 +436,7 @@ def renewal_request_details(request,pk,request_id):
     user=request.user
     has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
     
-    renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('name','ieee_id','email_associated','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
+    renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('timestamp','name','ieee_id','email_associated','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
     name=renewal_request_details[0]['name']
     
     has_comment=False
