@@ -351,5 +351,22 @@ class MDT_DATA:
                 return False
         except:
             return False
-
-            
+    
+    def load_MDT_coordinator():
+        '''This function loads only the coordinator of MDT Team'''
+        # get Roles for which is_coordinator is True
+        try:
+            getPosition=Roles_and_Position.objects.get(is_co_ordinator=True)
+            return (Members.objects.filter(team=MDT_DATA.get_team_id(),position=Roles_and_Position.objects.get(id=getPosition.id)))
+        except:
+            return False
+    
+    def process_renewal_item_dict(renewal_check_dict):
+        renewal_list=[]
+        for key in renewal_check_dict:
+            if(renewal_check_dict[key]==True):
+                renewal_list.append(key)
+        
+        
+        
+        return renewal_list

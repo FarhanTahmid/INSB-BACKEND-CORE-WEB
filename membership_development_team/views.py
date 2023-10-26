@@ -46,8 +46,7 @@ def md_team_homepage(request):
         'volunteers':volunteers,
         'media_url':settings.MEDIA_URL,
         'user_data':user_data,
-    }    
-    
+    }
     return render(request,'md_team_homepage.html',context=context)
 
 @login_required
@@ -330,6 +329,16 @@ def membership_renewal_form(request,pk):
                     #encrypted_pass=renewal_data.encrypt_password(password=password)
                     renewal_instance=Renewal_requests(timestamp=datetime.now(),session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),ieee_id=ieee_id,name=name,contact_no=contact_no,email_associated=email_associated,email_ieee=email_ieee,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
                     renewal_instance.save()
+                    
+                    # Send mail upon form submission to users IEEE Account Associated mail
+                    renewal_check_dict={
+                        'IEEE Membership':ieee_renewal,
+                        'IEEE PES Membership':pes_renewal,
+                        'IEEE RAS Membership': ras_renewal,
+                        'IEEE IAS Membership':ias_renewal,
+                        'IEEE WIE Membership':wie_renewal,
+                    }
+                    email_sending.send_emails_upon_filling_up_renewal_form(reciever_name=name,reciever_email=email_associated,renewal_session=session_name,renewal_check_dict=renewal_check_dict)
                     return redirect('membership_development_team:renewal_form_success',pk)
                 except:
                     return HttpResponseServerError
