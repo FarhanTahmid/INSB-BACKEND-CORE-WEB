@@ -338,7 +338,11 @@ def membership_renewal_form(request,pk):
                         'IEEE IAS Membership':ias_renewal,
                         'IEEE WIE Membership':wie_renewal,
                     }
-                    email_sending.send_emails_upon_filling_up_renewal_form(ieee_id=ieee_id,reciever_name=name,reciever_email=email_associated,renewal_session=session_name,renewal_check_dict=renewal_check_dict,request_id=renewal_instance.pk,form_id=pk)
+                    email_stat=email_sending.send_emails_upon_filling_up_renewal_form(ieee_id=ieee_id,reciever_name=name,reciever_email=email_associated,renewal_session=session_name,renewal_check_dict=renewal_check_dict,request_id=renewal_instance.pk,form_id=pk)
+                    if(email_stat):
+                        messages.success(request,"A confirmation mail has been sent to your email.")
+                    else:
+                        messages.error(request,"An internal error occured! Can not send you a confirmation mail!")
                     return redirect('membership_development_team:renewal_form_success',pk)
                 except:
                     return HttpResponseServerError
@@ -372,9 +376,6 @@ def getRenewalStats(request):
             "values":[notification_count,pending_count,renewed_count]
         }
     return JsonResponse(context)    
-
-    
-
 
 @login_required
 def renewal_session_data(request,pk):
@@ -492,11 +493,7 @@ def renewal_request_details(request,pk,request_id):
     else:
         next_request_id=None
         has_next_request=False
-    
-    print(next_request_id)
-    print(has_next_request)
-    
-        
+
     context={
         'id':request_id,
         'details':renewal_request_details,
@@ -529,6 +526,13 @@ def renewal_request_details(request,pk,request_id):
                 
                 # #show success message
                 messages.success(request,f"Membership with IEEE ID {ieee_id} has been renewed!")
+                # Send an Email to the Applicants Associated Email
+                email_stat=email_sending.send_email_upon_renewal_confirmed(reciever_email=renewal_request_details[0]['email_associated'],reciever_name=renewal_request_details[0]['name'])
+                if email_stat:
+                    messages.success(request,"Renewal Confirmation email was sent to the member's Associated email address.")
+                else:
+                    messages.error(request,"An internal error occured! Can not send the renewal confirmation email.")
+
                 return redirect('membership_development_team:request_details',pk,request_id)
             
             #Now if the member is not registered in the database
@@ -539,7 +543,15 @@ def renewal_request_details(request,pk,request_id):
                 
                 #show message
                 messages.success(request,f"Membership has been renewed!\nThis member with the associated IEEE ID: {ieee_id} was not found in the INSB Registered Member Database!\nHowever, the system kept the Data of renewal!")
-        
+                # Send an Email to the Applicants Associated Email
+                email_stat=email_sending.send_email_upon_renewal_confirmed(reciever_email=renewal_request_details[0]['email_associated'],reciever_name=renewal_request_details[0]['name'])
+                if email_stat:
+                    messages.success(request,"Renewal Confirmation email was sent to the member's Associated email address.")
+                else:
+                    messages.error(request,"An internal error occured! Can not send the renewal confirmation email.")
+
+                return redirect('membership_development_team:request_details',pk,request_id)
+
         #TO DELETE AN APPLICATION
         if(request.POST.get('delete_button')): 
             
