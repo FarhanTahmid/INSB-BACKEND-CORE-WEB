@@ -361,12 +361,25 @@ class MDT_DATA:
         except:
             return False
     
-    def process_renewal_item_dict(renewal_check_dict):
+    def process_renewal_item_dict(renewal_check_dict,request_id,form_id):
         renewal_list=[]
         for key in renewal_check_dict:
             if(renewal_check_dict[key]==True):
                 renewal_list.append(key)
         
         
-        
-        return renewal_list
+        renewal_amount_dict={
+            'IEEE Membership':MDT_DATA.getPaymentAmount(request_id=request_id,info='ieee',form_id=form_id),
+            'IEEE PES Membership':MDT_DATA.getPaymentAmount(request_id=request_id,info='pes',form_id=form_id),
+            'IEEE RAS Membership':MDT_DATA.getPaymentAmount(request_id=request_id,info='ras',form_id=form_id),
+            'IEEE IAS Membership':MDT_DATA.getPaymentAmount(request_id=request_id,info='ias',form_id=form_id),
+            'IEEE WIE Membership':MDT_DATA.getPaymentAmount(request_id=request_id,info='wie',form_id=form_id),
+        }
+        total_amount=(
+            renewal_amount_dict['IEEE Membership']+
+            renewal_amount_dict['IEEE PES Membership']+
+            renewal_amount_dict['IEEE RAS Membership']+
+            renewal_amount_dict['IEEE IAS Membership']+
+            renewal_amount_dict['IEEE WIE Membership']
+        )
+        return renewal_list,total_amount

@@ -338,7 +338,7 @@ def membership_renewal_form(request,pk):
                         'IEEE IAS Membership':ias_renewal,
                         'IEEE WIE Membership':wie_renewal,
                     }
-                    email_sending.send_emails_upon_filling_up_renewal_form(reciever_name=name,reciever_email=email_associated,renewal_session=session_name,renewal_check_dict=renewal_check_dict)
+                    email_sending.send_emails_upon_filling_up_renewal_form(ieee_id=ieee_id,reciever_name=name,reciever_email=email_associated,renewal_session=session_name,renewal_check_dict=renewal_check_dict,request_id=renewal_instance.pk,form_id=pk)
                     return redirect('membership_development_team:renewal_form_success',pk)
                 except:
                     return HttpResponseServerError

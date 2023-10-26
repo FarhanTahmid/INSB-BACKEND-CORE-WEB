@@ -174,7 +174,7 @@
 
             <div style="justify-content:center;text-align:center;">  
                 <div class="btn-container">
-                  <a href="{% url 'membership_development_team:renewal_form' session_id %}" class="btn btn-outline b-primary text-primary">View Renewal Form</a>
+                  <a href="{% url 'membership_development_team:renewal_form' session_id %}" target="blank" class="btn btn-outline b-primary text-primary">View Renewal Form</a>
                   {% if has_form_data %}
                     <button type="submit" class="btn btn-outline b-info text-info" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Edit Renewal Form</button>
                   {% else %}
