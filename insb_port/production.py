@@ -1,3 +1,3 @@
 from .settings import *
 
-ALLOWED_HOSTS=['insbapp.pythonanywhere.com']
+ALLOWED_HOSTS=['ieeensusb.pythonanywhere.com']
