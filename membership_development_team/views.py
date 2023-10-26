@@ -78,8 +78,11 @@ def member_details(request,ieee_id):
     has_access=(renderData.MDT_DATA.insb_member_details_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
     
     member_data=renderData.MDT_DATA.get_member_data(ieee_id=ieee_id)
-    dob = datetime.strptime(str(
-        member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
+    try:
+        dob = datetime.strptime(str(
+            member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
+    except:
+        dob=None
     sessions=recruitment_session.objects.all().order_by('-id')
     #getting the ieee account active status of the member
     active_status=renderData.MDT_DATA.get_member_account_status(ieee_id=ieee_id)
@@ -294,6 +297,7 @@ def membership_renewal_form(request,pk):
         if(request.POST.get('apply')):
            
             ieee_id=request.POST['ieee_id']
+            nsu_id=request.POST['nsu_id']
             name=request.POST['name']
             contact_no=request.POST['contact_no']
             email_associated=request.POST['email_associated']
@@ -327,7 +331,7 @@ def membership_renewal_form(request,pk):
                 
                 try:
                     #encrypted_pass=renewal_data.encrypt_password(password=password)
-                    renewal_instance=Renewal_requests(timestamp=datetime.now(),session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),ieee_id=ieee_id,name=name,contact_no=contact_no,email_associated=email_associated,email_ieee=email_ieee,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
+                    renewal_instance=Renewal_requests(timestamp=datetime.now(),session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),ieee_id=ieee_id,nsu_id=nsu_id,name=name,contact_no=contact_no,email_associated=email_associated,email_ieee=email_ieee,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
                     renewal_instance.save()
                     
                     # Send mail upon form submission to users IEEE Account Associated mail
@@ -446,7 +450,7 @@ def renewal_request_details(request,pk,request_id):
     user=request.user
     has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
     
-    renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('timestamp','name','ieee_id','email_associated','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
+    renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('timestamp','name','ieee_id','nsu_id','email_associated','email_ieee','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
     name=renewal_request_details[0]['name']
     
     has_comment=False
@@ -540,9 +544,20 @@ def renewal_request_details(request,pk,request_id):
                 
                 # just Update the renewal request table and notify team that member is not registered in the main database
                 Renewal_requests.objects.filter(id=request_id,session_id=pk).update(renewal_status=True)
-                
+                #update the member in INSB Registered Members Database
+                try:
+                    new_member_from_renewal=Members.objects.create(
+                        ieee_id=ieee_id,nsu_id=renewal_request_details[0]['nsu_id'],name=name,contact_no=renewal_request_details[0]['contact_no'],
+                        email_personal=renewal_request_details[0]['email_associated'],
+                        email_ieee=renewal_request_details[0]['email_ieee'],last_renewal_session=Renewal_Sessions.objects.get(id=get_renewal_session.id)
+                    )
+                    new_member_from_renewal.save()
+                except:
+                    messages.error(request,f"Can not update this application to INSB Registered Members Database!")
+
                 #show message
                 messages.success(request,f"Membership has been renewed!\nThis member with the associated IEEE ID: {ieee_id} was not found in the INSB Registered Member Database!\nHowever, the system kept the Data of renewal!")
+                
                 # Send an Email to the Applicants Associated Email
                 email_stat=email_sending.send_email_upon_renewal_confirmed(reciever_email=renewal_request_details[0]['email_associated'],reciever_name=renewal_request_details[0]['name'])
                 if email_stat:
