@@ -205,12 +205,26 @@
             <!--Messages End-->
             <br>
             <!--Bar chart options for application status-->
-            <div style="justify-content:center;text-align:center;">
-                <h4>Renewal Statistics</h4> 
-              <div class="card-body">
-                <canvas id="doughnut" data-colors='["#BA0C2F", "#FFC72C","#007377"]'></canvas>
+            <div class="row">
+              <div class="col-md-6">
+                <div style="justify-content:center;text-align:center;">
+                  <h4>Renewal Statistics</h4> 
+                  <div class="card-body">
+                    <canvas id="doughnut" data-colors='["#BA0C2F", "#FFC72C","#007377"]'></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div style="justify-content:center;text-align:center;">
+                  <h4>Chapters, Affinity Group Renewal Stats</h4> 
+                  <div class="card-body">
+                    <!--Logo colors of the SC & AGs-->
+                    <canvas id="doughnut2" data-colors='["#679B41","#951A32","#FEC937","#6b2974"]'></canvas>
+                  </div>
+                </div>
               </div>
             </div>
+            
 
             <!--Session Table-->
             <br>
@@ -483,7 +497,7 @@
         }
         
         // Function to fetch data from Django API
-        async function fetchData() {
+        async function fetchData(type) {
         try {
             var x = "{{ session_id }}"; // Assuming '{{ session_id }}' is a string representing an integer
             
@@ -495,9 +509,16 @@
             // Conversion failed
             console.log("Failed to parse as an integer.");
             }
-            const response = await fetch('/portal/membership_development_team/getRenewalStats/?session_id=' + encodeURIComponent(sessionValue));
-            const data = await response.json();
-            return data;
+            if(type==1){
+              const response = await fetch('/portal/membership_development_team/getRenewalStats/?session_id=' + encodeURIComponent(sessionValue));
+              const data = await response.json();
+              return data;
+            }else if(type==2){
+              var data_type='sc_ag:'+sessionValue;
+              const response = await fetch('/portal/membership_development_team/getRenewalStats/?data_type=' + encodeURIComponent(data_type));
+              const data=await response.json();
+              return data
+            };
         } catch (error) {
             console.error('Error fetching data:', error);
             throw error; // Rethrow the error for further handling
@@ -509,7 +530,8 @@
         async function initializeDougnutChart() {
         try {
             var isdoughnutchart = document.getElementById('doughnut');
-            var data = await fetchData(); // Fetch data from the Django API
+            var type=1; //Meaning that we need the renewal data only
+            var data = await fetchData(type); // Fetch data from the Django API
             var doughnutChartColors = getChartColorsArray('doughnut');
             
             var doughnutChart = new Chart(isdoughnutchart, {
@@ -530,8 +552,34 @@
             console.error('Error initializing chart:', error);
         }
         }
+        async function initializeDougnutChart2() {
+          try {
+              var isdoughnutchart = document.getElementById('doughnut2');
+              var type=2; //Meaning that we need the SC AG renewal stats
+              var data = await fetchData(2); // Fetch data from the Django API
+              var doughnutChartColors = getChartColorsArray('doughnut2');
+              
+              var doughnutChart = new Chart(isdoughnutchart, {
+              type: 'doughnut',
+              data: {
+                  labels: data.labels, // Use the fetched labels
+                  datasets: [
+                  {
+                      data: data.values, // Use the fetched data values
+                      backgroundColor: doughnutChartColors,
+                      hoverBackgroundColor: doughnutChartColors,
+                      hoverBorderColor: "#fff"
+                  }
+                  ]
+              }
+              });
+          } catch (error) {
+              console.error('Error initializing chart:', error);
+          }
+          }
         
         initializeDougnutChart();
+        initializeDougnutChart2();
     </script>
     <!--Renewal Stat Script End-->
 

@@ -367,19 +367,52 @@ def membership_renewal_form_success(request,pk):
 
 @login_required
 def getRenewalStats(request):
+    
+    # Returning different context for different seeked data
+    
     if request.method=="GET":
         session_id=request.GET.get('session_id')
-        #loading all the unviewed request count
-        notification_count=Renewal_requests.objects.filter(session_id=session_id,view_status=False).count()
-        #counting the renewed requests
-        renewed_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=True).count()
-        #counting the pending requests
-        pending_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=False).count()
-        context={
-            "labels":["Applications Not Yet Viewed","Total Pending Applications","Total Renewed Applications"],
-            "values":[notification_count,pending_count,renewed_count]
-        }
-    return JsonResponse(context)    
+        
+        # the data type gets what kind of data the url is trying to fetch
+        data_type=request.GET.get('data_type')
+
+        if(session_id is not None):
+            # if the URL has a session_id, this means it is seeking the renewal session data
+            
+            #loading all the unviewed request count
+            notification_count=Renewal_requests.objects.filter(session_id=session_id,view_status=False).count()
+            #counting the renewed requests
+            renewed_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=True).count()
+            #counting the pending requests
+            pending_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=False).count()
+            context={
+                "labels":["Applications Not Yet Viewed","Total Pending Applications","Total Renewed Applications"],
+                "values":[notification_count,pending_count,renewed_count]
+            }
+            return JsonResponse(context)
+        if('sc_ag' in data_type):
+            # checking if data type has 'sc_ag' in it. so we know that it is seeking for the stat of SC & AG Renewal.
+            
+            # The URL is designed such a way that the last number in the 'data_type' value will be the session_id. So we can extract session data from it.
+            session_id=data_type[-1] 
+            try:
+                pes_renewal_count=Renewal_requests.objects.filter(session_id=session_id,pes_renewal_check=True).count()
+                ras_renewal_count=Renewal_requests.objects.filter(session_id=session_id,ras_renewal_check=True).count()
+                ias_renewal_count=Renewal_requests.objects.filter(session_id=session_id,ias_renewal_check=True).count()
+                wie_renewal_count=Renewal_requests.objects.filter(session_id=session_id,wie_renewal_check=True).count()
+            except:
+                # IF we can not find the data we need it will return 0s.
+                pes_renewal_count=0
+                ras_renewal_count=0
+                ias_renewal_count=0
+                wie_renewal_count=0
+                messages.error(request,"Could not fetch the Chapter & Affinity Group Renewal Statistics")
+            
+            context={
+                "labels":["PES Renewal Count","RAS Renewal Count","IAS Renewal Count","WIE Renewal Count"],
+                "values":[pes_renewal_count,ras_renewal_count,ias_renewal_count,wie_renewal_count]
+            }
+            return JsonResponse(context)
 
 @login_required
 def renewal_session_data(request,pk):
