@@ -349,11 +349,11 @@ def membership_renewal_form(request,pk):
                         messages.error(request,"An internal error occured! Can not send you a confirmation mail!")
                     return redirect('membership_development_team:renewal_form_success',pk)
                 except:
-                    return HttpResponseServerError
+                    return HttpResponseServerError("Bad request")
             else:
                 messages.info(request,"Two Passwords did not match!")   
         else:
-            return HttpResponseBadRequest
+            return HttpResponseBadRequest("Bad Request!")
     
     
     return render(request,'Renewal/renewal_form.html',context)
