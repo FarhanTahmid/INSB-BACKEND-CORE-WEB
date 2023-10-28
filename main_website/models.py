@@ -5,9 +5,9 @@ from django_resized import ResizedImageField
 from PIL import Image
 
 # Create your models here.
-
+    
 # Tables for Homepage
-class HomepageBannerPictureWithText(models.Model):
+class HomePageTopBanner(models.Model):
     banner_picture=ResizedImageField(null=False,blank=False,upload_to='main_website_files/homepage/banner_pictures')
     first_layer_text=models.CharField(null=False,blank=False,default="FOCUSING LIMELIGHT ON",max_length=50)
     second_layer_text=models.CharField(null=False,blank=False,default="THE",max_length=20)

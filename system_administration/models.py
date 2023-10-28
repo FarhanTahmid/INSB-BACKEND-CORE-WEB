@@ -5,8 +5,20 @@ from users.models import Members
 from django_resized import ResizedImageField
 # Create your models here.
 
-#if you want to create an admin, go to django admin, insert data in this model, then register in users as superuser
+# System Model
+class system(models.Model):
+    system_under_maintenance=models.BooleanField(null=False,blank=False,default=False)
+    main_website_under_maintenance=models.BooleanField(null=False,blank=False,default=False)
+    portal_under_maintenance=models.BooleanField(null=False,blank=False,default=False)
+    
+    class Meta:
+        verbose_name="System Handling"
+    
+    def __str__(self) -> str:
+        return self.pk
 
+
+#if you want to create an admin, go to django admin, insert data in this model, then register in users as superuser
 class adminUsers(models.Model):
     username=models.CharField(primary_key=True,null=False,blank=False,max_length=30,default='Undetermined')
     name=models.CharField(null=False,blank=False,max_length=60,default="Undetermined")

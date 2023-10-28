@@ -21,8 +21,8 @@ class Blog(admin.ModelAdmin):
     
 
 #Homepage Models
-from . models import HomepageBannerPictureWithText
-@admin.register(HomepageBannerPictureWithText)
+from . models import HomePageTopBanner
+@admin.register(HomePageTopBanner)
 class HomepageBannerData(admin.ModelAdmin):
     list_display=['id']
 
