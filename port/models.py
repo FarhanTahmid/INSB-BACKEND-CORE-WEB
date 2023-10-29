@@ -1,5 +1,4 @@
 from django.db import models
-
 # Create your models here.
 class Chapters_Society_and_Affinity_Groups(models.Model):
     '''This model Includes Branch and all the Society'''
@@ -39,11 +38,12 @@ class Roles_and_Position(models.Model):
 
 class Panels(models.Model):
     year=models.CharField(max_length=40,null=False,blank=False)
+    creation_time=models.DateTimeField(null=True,blank=True)
     current=models.BooleanField(null=False,blank=False,default=False)
     
     class Meta:
         verbose_name='IEEE NSU SB Panels'
     def __str__(self) -> str:
-        return str(self.pk)
+        return str(self.year)
     
     

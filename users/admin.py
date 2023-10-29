@@ -13,12 +13,12 @@ class Ex_Panel_Members(admin.ModelAdmin):
     ]
 
 
-
-# @admin.register(Executive_commitee_members)
-# class Executive_Commitee_members(admin.ModelAdmin):
-#     list_display=[
-#         'member','year','position'
-#     ]
+from . models import Panel_Members
+@admin.register(Panel_Members)
+class PanelMembers(admin.ModelAdmin):
+    list_display=[
+        'member','tenure','position','team'
+    ]
 
 @admin.register(ResetPasswordTokenTable)
 class ResetPasswordTokenTable(admin.ModelAdmin):

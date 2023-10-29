@@ -1,5 +1,5 @@
-from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups
-from users.models import Members
+from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
+from users.models import Members,Panel_Members
 from django.db import DatabaseError
 from system_administration.models import MDT_Data_Access
 from . models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_type
@@ -8,8 +8,9 @@ from system_administration.render_access import Access_Render
 # from users.models import Executive_commitee,Executive_commitee_members
 from membership_development_team.renderData import MDT_DATA
 from .models import InterBranchCollaborations,IntraBranchCollaborations
-
-
+from datetime import datetime
+import sqlite3
+from django.contrib import messages
 
 class Branch:
 
@@ -75,6 +76,46 @@ class Branch:
                     general_members.append(member)
         return general_members
     
+    def create_panel(request,tenure_year,current_check):
+        '''This function creates a panel object. Collects parameter value from views '''
+        try:
+            # Check if the panel being created is the current panel
+            if(current_check is None):
+                # Create with current_check=False
+                new_panel=Panels.objects.create(year=tenure_year,creation_time=datetime.now(),current=False)
+                new_panel.save()
+                messages.success(request,"Panel was created successfully")
+                return True
+            else:
+                # If the panel being created is current
+                # Changing previous panel current status to False
+                Panels.objects.filter(current=True).update(current=False)
+                # Create with current_check=True
+                new_panel=Panels.objects.create(year=tenure_year,creation_time=datetime.now(),current=True)
+                new_panel.save()
+                messages.success(request,"Panel was created successfully")
+                messages.info(request,"Current Panel has been changed!")
+                return True
+        except sqlite3.OperationalError: #if no such table exists
+            messages.error(request,"No Data Table found!")
+            return False
+        except: 
+            messages.error(request,"Some error occured! Try again.")
+            return False
+            
+    def load_all_panels():
+        '''This function loads all the panels from the database'''
+        try:
+            panels=Panels.objects.filter().all().order_by('-id')
+            return panels
+        except:
+            return DatabaseError
+
+    def load_current_panel():
+        '''This method loads the current panel'''
+        currentPanel=Panels.objects.filter(current=True)
+        return currentPanel.first()
+        
     def load_roles_and_positions():
         '''This methods all the Position for Branch Only'''
         getBranchId=Branch.getBranchID()
@@ -86,12 +127,20 @@ class Branch:
     def add_member_to_team(ieee_id,team_primary,position):
         '''This function adds member to the team'''
         getTeam=Teams.objects.get(primary=team_primary)
+        # Assign positions according to Panels
+        getCurrentPanel=Branch.load_current_panel()
         team=getTeam.id
         try:
-            if(team_primary==7): #Checking if the team is MDT as its id is 12
+            if(team_primary==7): #Checking if the team is MDT as its id is 7. this is basically done for the data access which is not necessary to do for every team.
                 
                 Members.objects.filter(ieee_id=ieee_id).update(team=team,position=position)
-                
+                try:
+                    new_member_in_panel=Panel_Members.objects.create(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=Members.objects.get(ieee_id=ieee_id),
+                                                                     position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(id=team))
+                    new_member_in_panel.save()
+                    print("Panel Member Done")
+                except:
+                    return DatabaseError
                 data_access_instance=MDT_Data_Access(ieee_id=Members.objects.get(ieee_id=ieee_id),
                                                      renewal_data_access=False,
                                                      insb_member_details=False,
@@ -103,6 +152,13 @@ class Branch:
             else:
                 
                 Members.objects.filter(ieee_id=ieee_id).update(team=team,position=position)
+                try:
+                    new_member_in_panel=Panel_Members.objects.create(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=Members.objects.get(ieee_id=ieee_id),
+                                                                     position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(id=team))
+                    new_member_in_panel.save()
+                    print("Panel Member Done")
+                except:
+                    return DatabaseError
                 return True
         except Members.DoesNotExist:
             return False

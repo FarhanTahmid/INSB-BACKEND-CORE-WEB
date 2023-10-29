@@ -39,9 +39,7 @@ class Members(models.Model):
     team=models.ForeignKey(Teams,null=True,blank=True,on_delete=models.CASCADE)
     position=models.ForeignKey(Roles_and_Position,default=13,on_delete=models.CASCADE) #Default=13 means the position of a general member, check roles and positions table
     session=models.ForeignKey(recruitment_session,null=True,blank=True,on_delete=models.CASCADE) #recruitment session
-    last_renewal_session=models.ForeignKey(Renewal_Sessions,null=True,blank=True,on_delete=models.CASCADE) #last renewal session
-    panel_session=models.ForeignKey(Panels,null=True,blank=True,on_delete=models.CASCADE) #panel session of the member to identify in which panel he had his positin
-    
+    last_renewal_session=models.ForeignKey(Renewal_Sessions,null=True,blank=True,on_delete=models.CASCADE) #last renewal session    
     class Meta:
         verbose_name='INSB Registered Members'
     
@@ -70,17 +68,21 @@ class Ex_panel_members(models.Model):
 
 
 
-# '''This will create a table for Executive Commitee Members. Members will be assigned by years, and their positions. people who are registered already in INSB Database 
-# will be extracted from "Members" table and those who are not in insb database will be extracted from "Ex Panel Members" Table.
-# '''
-# class Executive_commitee_members(models.Model):
-#     year=models.ForeignKey(Executive_commitee,on_delete=models.CASCADE)
-#     member=models.ForeignKey(Members,on_delete=models.CASCADE,null=True,blank=True)
-#     ex_member=models.ForeignKey(Ex_panel_members,on_delete=models.CASCADE,null=True,blank=True)
-#     position=models.ForeignKey(Roles_and_Position,on_delete=models.CASCADE)
+'''This will create a table for Executive Commitee Members. Members will be assigned by years, and their positions. people who are registered already in INSB Database 
+will be extracted from "Members" table and those who are not in insb database will be extracted from "Ex Panel Members" Table.
+'''
+class Panel_Members(models.Model):
+    tenure=models.ForeignKey(Panels,on_delete=models.CASCADE)
+    member=models.ForeignKey(Members,on_delete=models.CASCADE,null=True,blank=True)
+    ex_member=models.ForeignKey(Ex_panel_members,on_delete=models.CASCADE,null=True,blank=True)
+    position=models.ForeignKey(Roles_and_Position,on_delete=models.CASCADE)
+    team=models.ForeignKey(Teams,null=True,blank=True,on_delete=models.CASCADE)
     
-#     class Meta:
-#         verbose_name="Executive Commitee Members" 
+    class Meta:
+        verbose_name="Panel Members (Whole Tenure)"
+    
+    def __str__(self) -> str:
+        return str(self.member) 
 
 class ResetPasswordTokenTable(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)

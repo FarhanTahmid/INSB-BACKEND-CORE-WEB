@@ -15,6 +15,6 @@ from .models import Panels
 @admin.register(Panels)
 class Panels(admin.ModelAdmin):
     list_display=[
-        'year','current'
+        'year','creation_time','current'
     ]
 
