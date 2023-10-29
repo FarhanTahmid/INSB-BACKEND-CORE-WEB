@@ -15,7 +15,7 @@ class system(models.Model):
         verbose_name="System Handling"
     
     def __str__(self) -> str:
-        return self.pk
+        return str(self.pk)
 
 
 #if you want to create an admin, go to django admin, insert data in this model, then register in users as superuser

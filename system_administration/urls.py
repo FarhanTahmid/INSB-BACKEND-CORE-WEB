@@ -6,5 +6,5 @@ from django.conf import settings
 app_name='system_administration'
 
 urlpatterns = [
-    #path('',)
+    path('',views.main_website_update_view,name="main_web_update")
 ]
