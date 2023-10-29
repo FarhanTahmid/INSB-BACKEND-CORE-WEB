@@ -249,7 +249,7 @@ def teams(request):
     Gives option to add or delete a team
     '''
     #load panel lists
-    panels=renderData.Branch.load_ex_com_panel_list()
+    # panels=renderData.Branch.load_ex_com_panel_list()
     user = request.user
 
     '''Checking if user is EB/faculty or not, and the calling the function event_page_access
@@ -300,7 +300,6 @@ def team_details(request,primary,name):
             positions=positions.exclude(pk=i.pk)
     #loading all members of insb
     insb_members=renderData.Branch.load_all_insb_members()
-    
     members_to_add=[]
     position=12 #assigning default to volunteer
     if request.method=='POST':
@@ -358,10 +357,25 @@ def manage_team(request,pk,team_name):
     }
     return render(request,'team/team_management.html',context=context)
 
-#PANEL WORS
+#PANEL WORkS
 @login_required
-def panel_details(request,pk):
-    return render(request,"ex_com_panels/panel_details.html")
+def panel_home(request):
+    
+    # get all panels from database
+    panels = Branch.load_all_panels()
+    
+    if request.method=="POST":
+        tenure_year=request.POST['tenure_year']
+        current_check=request.POST.get('current_check')
+        # create panel
+        if(Branch.create_panel(request,tenure_year=tenure_year,current_check=current_check)):
+            return redirect('central_branch:panels')
+        
+    context={
+        'panels':panels,
+    }
+    
+    return render(request,"Panel/panel_homepage.html",context)
 
 @login_required
 def others(request):
