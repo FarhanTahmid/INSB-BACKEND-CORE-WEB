@@ -34,5 +34,16 @@ class Roles_and_Position(models.Model):
         verbose_name='Registered positions'
     def __str__(self) -> str:
         return self.role
+
+'''This will create a table with panel years and a boolean value named "current" to check if it is the current panel or not '''
+
+class Panels(models.Model):
+    year=models.CharField(max_length=40,null=False,blank=False)
+    current=models.BooleanField(null=False,blank=False,default=False)
+    
+    class Meta:
+        verbose_name='IEEE NSU SB Panels'
+    def __str__(self) -> str:
+        return str(self.pk)
     
     

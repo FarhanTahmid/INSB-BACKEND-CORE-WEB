@@ -13,6 +13,7 @@ from django.contrib.auth.models import User
 from django_resized import ResizedImageField
 import datetime
 from django.contrib.postgres.fields import ArrayField
+from port.models import Panels
 
 # from membership_development_team.models import Renewal_Sessions
 # Create your models here.
@@ -38,7 +39,8 @@ class Members(models.Model):
     team=models.ForeignKey(Teams,null=True,blank=True,on_delete=models.CASCADE)
     position=models.ForeignKey(Roles_and_Position,default=13,on_delete=models.CASCADE) #Default=13 means the position of a general member, check roles and positions table
     session=models.ForeignKey(recruitment_session,null=True,blank=True,on_delete=models.CASCADE) #recruitment session
-    last_renewal_session=models.ForeignKey(Renewal_Sessions,null=True,blank=True,on_delete=models.CASCADE)
+    last_renewal_session=models.ForeignKey(Renewal_Sessions,null=True,blank=True,on_delete=models.CASCADE) #last renewal session
+    panel_session=models.ForeignKey(Panels,null=True,blank=True,on_delete=models.CASCADE) #panel session of the member to identify in which panel he had his positin
     
     class Meta:
         verbose_name='INSB Registered Members'
@@ -65,29 +67,20 @@ class Ex_panel_members(models.Model):
     def __str__(self) -> str:
         return self.name
 
-'''This will create a table with panel years and a boolean value named "current" to check if it is the current panel or not '''
 
-class Executive_commitee(models.Model):
-    year=models.CharField(max_length=40,null=False,blank=False)
-    current=models.BooleanField(null=False,blank=False,default=False)
+
+
+# '''This will create a table for Executive Commitee Members. Members will be assigned by years, and their positions. people who are registered already in INSB Database 
+# will be extracted from "Members" table and those who are not in insb database will be extracted from "Ex Panel Members" Table.
+# '''
+# class Executive_commitee_members(models.Model):
+#     year=models.ForeignKey(Executive_commitee,on_delete=models.CASCADE)
+#     member=models.ForeignKey(Members,on_delete=models.CASCADE,null=True,blank=True)
+#     ex_member=models.ForeignKey(Ex_panel_members,on_delete=models.CASCADE,null=True,blank=True)
+#     position=models.ForeignKey(Roles_and_Position,on_delete=models.CASCADE)
     
-    class Meta:
-        verbose_name='Executive Commitees'
-    def __str__(self) -> str:
-        return self.year
-
-
-'''This will create a table for Executive Commitee Members. Members will be assigned by years, and their positions. people who are registered already in INSB Database 
-will be extracted from "Members" table and those who are not in insb database will be extracted from "Ex Panel Members" Table.
-'''
-class Executive_commitee_members(models.Model):
-    year=models.ForeignKey(Executive_commitee,on_delete=models.CASCADE)
-    member=models.ForeignKey(Members,on_delete=models.CASCADE,null=True,blank=True)
-    ex_member=models.ForeignKey(Ex_panel_members,on_delete=models.CASCADE,null=True,blank=True)
-    position=models.ForeignKey(Roles_and_Position,on_delete=models.CASCADE)
-    
-    class Meta:
-        verbose_name="Executive Commitee Members" 
+#     class Meta:
+#         verbose_name="Executive Commitee Members" 
 
 class ResetPasswordTokenTable(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)

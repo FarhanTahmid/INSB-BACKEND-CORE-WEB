@@ -5,7 +5,7 @@ from system_administration.models import MDT_Data_Access
 from . models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_type
 from events_and_management_team.models import Venue_List, Permission_criteria
 from system_administration.render_access import Access_Render
-from users.models import Executive_commitee,Executive_commitee_members
+# from users.models import Executive_commitee,Executive_commitee_members
 from membership_development_team.renderData import MDT_DATA
 from .models import InterBranchCollaborations,IntraBranchCollaborations
 
@@ -24,13 +24,13 @@ class Branch:
         teams=Teams.objects.all().values('primary','team_name') #returns a list of dictionaryies with the id and team name
         return teams
     
-    def load_ex_com_panel_list():
-        panels=Executive_commitee.objects.all().order_by('-pk')
-        ex_com_panel_list=[]
-        for committee in panels:
-            ex_com_panel_list.append(committee)
+    # def load_ex_com_panel_list():
+    #     panels=Executive_commitee.objects.all().order_by('-pk')
+    #     ex_com_panel_list=[]
+    #     for committee in panels:
+    #         ex_com_panel_list.append(committee)
         
-        return ex_com_panel_list
+    #     return ex_com_panel_list
         
     def load_team_members(team_primary):
         
