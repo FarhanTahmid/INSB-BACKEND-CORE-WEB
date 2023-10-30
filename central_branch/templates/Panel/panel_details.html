@@ -9,7 +9,7 @@
     {% block common_css %}
         {% include "common_css.html" %}
     {% endblock common_css %}
-    <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+    <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
 
 
     <style>
@@ -67,6 +67,30 @@
         .ui-switch {
             display: inline-block;
         }
+        .table-container {
+            overflow: hidden; /* Hide table overflow */
+        }
+        
+        .table-wrapper {
+            max-height: 300px; /* Set the maximum height for scrolling */
+            overflow: auto; /* Enable vertical scrolling */
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        
+        /* Add responsive styling for smaller screens */
+        @media (max-width: 768px) {
+            .table-wrapper {
+                max-height: none; /* Allow table to expand vertically on smaller screens */
+            }
+        }
         
     </style>
 </head>
@@ -102,25 +126,33 @@
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">IEEE NSU Student Branch Panel of <b><span style="color:#00629B;"> {{panel_info.year}} </span></b></h2>
             <br>
             
-            <!--Executive Commitee For the Panel-->
+            <!--Tab view for Panels-->
+            <!--Tab view Start-->
+            <div class="tabs-container">
+                <ul class="tabs">
+                    <li class="tab" onclick="showTab('tab1')">Executive Members Panel</li>
+                    <li class="tab" onclick="showTab('tab2')">Officers Member Panel</li>
+                    <li class="tab" onclick="showTab('tab3')">Volunteer & General Members Panel</li>
+                </ul>
 
+                <div id="tab1" class="tab-content">
+                    {% block executive_members_panel %}
+                        {% include "Panel/executive_members_tab.html" %}
+                    {% endblock executive_members_panel %}
+                </div>
 
+                <div id="tab2" class="tab-content">
+                    <h2>Tab 2 Content</h2>
+                    <p>This is the content of Tab 2.</p>
+                </div>
 
-            <div style="justify-content:center;text-align:center;">  
-                <div class="btn-container">
-                    <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Create a New Session</button>
+                <div id="tab3" class="tab-content">
+                    <h2>Tab 3 Content</h2>
+                    <p>This is the content of Tab 3.</p>
                 </div>
             </div>
-            <br>
-            <!--Messages-->
-            <div style="justify-content:center; text-align:center;">
-                {% if messages %}
-                    {% for message in messages %}
-                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
-                    {% endfor %}
-                {% endif %}
-            </div>
-            <!--Messages End-->
+            <!--Tab view end-->
+            
 
         </div>
         <!--PAGE END-->
@@ -137,7 +169,9 @@
     {% block common_js %}
         {% include "common_js.html" %}
     {% endblock common_js %}
-    <script src="{% static 'table_search.js'%}"></script>
+    <!--Search for executive members-->
+    
+    <script src="{% static 'tab_view.js'%}"></script>
 
 </body>
 </html>

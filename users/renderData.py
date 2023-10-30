@@ -13,6 +13,8 @@ from django.db.models import Q
 from users.models import User
 from recruitment.models import recruited_members
 import math
+import sqlite3
+from django.contrib import messages
 
 class LoggedinUser:
     
@@ -161,6 +163,17 @@ def is_eb_or_admin(user):
         return True
     else:
         return False
+    
+def get_all_registered_members(request):
+    '''This function returns all the INSB members registered in the main database'''
+    try:
+        get_members=Members.objects.filter().all().order_by('-ieee_id')
+        return get_members
+    except sqlite3.DatabaseError:
+        messages.error(request,"An internal Database Error has occured!")
+    except:
+        messages.error(request,"Soemthing went wrong. Please try again!")
+        
 
 def getRecruitmentStats():
     
