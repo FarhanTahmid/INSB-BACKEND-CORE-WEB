@@ -29,9 +29,8 @@ urlpatterns = [
 
     #PANEL
     path('panels',views.panel_home,name="panels"),
-
     #panel details
-    # path('panel_details/<int:pk>',views.panel_details,name="panel_details"),
+    path('panels/<int:panel_id>',views.panel_details,name="panel_details"),
     
     
     #for updating value in team member select box in event assigning

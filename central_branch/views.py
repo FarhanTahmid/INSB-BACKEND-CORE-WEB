@@ -378,6 +378,42 @@ def panel_home(request):
     return render(request,"Panel/panel_homepage.html",context)
 
 @login_required
+def panel_details(request,panel_id):
+    # Load the panel information
+    panel_info = Branch.load_panel_by_id(panel_id)
+    # Load the Members data associated with the panel
+    panel_members=Branch.load_panel_members_by_panel_id(panel_id=panel_id)
+    # Creating list to get different types of members
+    eb_member=[]
+    officer_member=[]
+    faculty_member=[]
+    volunteer_members=[]
+    
+    for i in panel_members:
+        # if the member position is eb_member
+        if(i.position.is_eb_member):
+            eb_member.append(i)
+        # if the member position is officer member
+        elif(i.position.is_officer):
+            officer_member.append(i)
+        # if the member position is faculty member
+        elif(i.position.is_faculty):
+            faculty_member.append(i)
+        else:
+        # generally add rest of the members as volunteers as one can only be added to Panel Member list if he is in any position or team. 
+            volunteer_members.append(i)
+    
+    context={
+        'panel_info':panel_info,
+        'eb_member':eb_member,
+        'officer_member':officer_member,
+        'faculty_member':faculty_member,
+        'volunteer_members':volunteer_members,
+    }
+    return render(request,'Panel/panel_details.html',context)
+
+
+@login_required
 def others(request):
     return render(request,"others.html")
 

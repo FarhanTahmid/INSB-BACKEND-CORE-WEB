@@ -155,7 +155,7 @@
                       <tbody>
                         {% for panel in panels %}
                         <tr>
-                            <td><a style="color:blue;" href="">{{panel.year }}</a></td>
+                            <td><a style="color:blue;" href="{% url "central_branch:panel_details" panel.id %}">{{panel.year }}</a></td>
                             {% if panel.current %}
                             <td><img src="/static/admin/img/icon-yes.svg" alt="True"></td>
                             {% else %}
