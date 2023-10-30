@@ -1,7 +1,7 @@
 from django import forms
-from .models import HomepageBannerPictureWithText
+from .models import HomePageTopBanner
 
-class HomePageBannerWithTextForm(forms.ModelForm):
+class HomePageTopBanner(forms.ModelForm):
     class Meta:
-        model=HomepageBannerPictureWithText
+        model=HomePageTopBanner
         fields=['banner_picture','first_layer_text','second_layer_text','second_layer_text_colored','third_layer_text']

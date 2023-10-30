@@ -46,8 +46,7 @@ def md_team_homepage(request):
         'volunteers':volunteers,
         'media_url':settings.MEDIA_URL,
         'user_data':user_data,
-    }    
-    
+    }
     return render(request,'md_team_homepage.html',context=context)
 
 @login_required
@@ -79,8 +78,11 @@ def member_details(request,ieee_id):
     has_access=(renderData.MDT_DATA.insb_member_details_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
     
     member_data=renderData.MDT_DATA.get_member_data(ieee_id=ieee_id)
-    dob = datetime.strptime(str(
-        member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
+    try:
+        dob = datetime.strptime(str(
+            member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
+    except:
+        dob=None
     sessions=recruitment_session.objects.all().order_by('-id')
     #getting the ieee account active status of the member
     active_status=renderData.MDT_DATA.get_member_account_status(ieee_id=ieee_id)
@@ -295,6 +297,7 @@ def membership_renewal_form(request,pk):
         if(request.POST.get('apply')):
            
             ieee_id=request.POST['ieee_id']
+            nsu_id=request.POST['nsu_id']
             name=request.POST['name']
             contact_no=request.POST['contact_no']
             email_associated=request.POST['email_associated']
@@ -328,15 +331,29 @@ def membership_renewal_form(request,pk):
                 
                 try:
                     #encrypted_pass=renewal_data.encrypt_password(password=password)
-                    renewal_instance=Renewal_requests(timestamp=datetime.now(),session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),ieee_id=ieee_id,name=name,contact_no=contact_no,email_associated=email_associated,email_ieee=email_ieee,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
+                    renewal_instance=Renewal_requests(timestamp=datetime.now(),session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),ieee_id=ieee_id,nsu_id=nsu_id,name=name,contact_no=contact_no,email_associated=email_associated,email_ieee=email_ieee,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
                     renewal_instance.save()
+                    
+                    # Send mail upon form submission to users IEEE Account Associated mail
+                    renewal_check_dict={
+                        'IEEE Membership':ieee_renewal,
+                        'IEEE PES Membership':pes_renewal,
+                        'IEEE RAS Membership': ras_renewal,
+                        'IEEE IAS Membership':ias_renewal,
+                        'IEEE WIE Membership':wie_renewal,
+                    }
+                    email_stat=email_sending.send_emails_upon_filling_up_renewal_form(ieee_id=ieee_id,reciever_name=name,reciever_email=email_associated,renewal_session=session_name,renewal_check_dict=renewal_check_dict,request_id=renewal_instance.pk,form_id=pk)
+                    if(email_stat):
+                        messages.success(request,"A confirmation mail has been sent to your email.")
+                    else:
+                        messages.error(request,"An internal error occured! Can not send you a confirmation mail!")
                     return redirect('membership_development_team:renewal_form_success',pk)
                 except:
-                    return HttpResponseServerError
+                    return HttpResponseServerError("Bad request")
             else:
                 messages.info(request,"Two Passwords did not match!")   
         else:
-            return HttpResponseBadRequest
+            return HttpResponseBadRequest("Bad Request!")
     
     
     return render(request,'Renewal/renewal_form.html',context)
@@ -350,22 +367,52 @@ def membership_renewal_form_success(request,pk):
 
 @login_required
 def getRenewalStats(request):
+    
+    # Returning different context for different seeked data
+    
     if request.method=="GET":
         session_id=request.GET.get('session_id')
-        #loading all the unviewed request count
-        notification_count=Renewal_requests.objects.filter(session_id=session_id,view_status=False).count()
-        #counting the renewed requests
-        renewed_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=True).count()
-        #counting the pending requests
-        pending_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=False).count()
-        context={
-            "labels":["Applications Not Yet Viewed","Total Pending Applications","Total Renewed Applications"],
-            "values":[notification_count,pending_count,renewed_count]
-        }
-    return JsonResponse(context)    
+        
+        # the data type gets what kind of data the url is trying to fetch
+        data_type=request.GET.get('data_type')
 
-    
-
+        if(session_id is not None):
+            # if the URL has a session_id, this means it is seeking the renewal session data
+            
+            #loading all the unviewed request count
+            notification_count=Renewal_requests.objects.filter(session_id=session_id,view_status=False).count()
+            #counting the renewed requests
+            renewed_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=True).count()
+            #counting the pending requests
+            pending_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=False).count()
+            context={
+                "labels":["Applications Not Yet Viewed","Total Pending Applications","Total Renewed Applications"],
+                "values":[notification_count,pending_count,renewed_count]
+            }
+            return JsonResponse(context)
+        if('sc_ag' in data_type):
+            # checking if data type has 'sc_ag' in it. so we know that it is seeking for the stat of SC & AG Renewal.
+            
+            # The URL is designed such a way that the last number in the 'data_type' value will be the session_id. So we can extract session data from it.
+            session_id=data_type[-1] 
+            try:
+                pes_renewal_count=Renewal_requests.objects.filter(session_id=session_id,pes_renewal_check=True).count()
+                ras_renewal_count=Renewal_requests.objects.filter(session_id=session_id,ras_renewal_check=True).count()
+                ias_renewal_count=Renewal_requests.objects.filter(session_id=session_id,ias_renewal_check=True).count()
+                wie_renewal_count=Renewal_requests.objects.filter(session_id=session_id,wie_renewal_check=True).count()
+            except:
+                # IF we can not find the data we need it will return 0s.
+                pes_renewal_count=0
+                ras_renewal_count=0
+                ias_renewal_count=0
+                wie_renewal_count=0
+                messages.error(request,"Could not fetch the Chapter & Affinity Group Renewal Statistics")
+            
+            context={
+                "labels":["PES Renewal Count","RAS Renewal Count","IAS Renewal Count","WIE Renewal Count"],
+                "values":[pes_renewal_count,ras_renewal_count,ias_renewal_count,wie_renewal_count]
+            }
+            return JsonResponse(context)
 
 @login_required
 def renewal_session_data(request,pk):
@@ -436,7 +483,7 @@ def renewal_request_details(request,pk,request_id):
     user=request.user
     has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
     
-    renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('timestamp','name','ieee_id','email_associated','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
+    renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('timestamp','name','ieee_id','nsu_id','email_associated','email_ieee','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
     name=renewal_request_details[0]['name']
     
     has_comment=False
@@ -483,11 +530,7 @@ def renewal_request_details(request,pk,request_id):
     else:
         next_request_id=None
         has_next_request=False
-    
-    print(next_request_id)
-    print(has_next_request)
-    
-        
+
     context={
         'id':request_id,
         'details':renewal_request_details,
@@ -520,6 +563,13 @@ def renewal_request_details(request,pk,request_id):
                 
                 # #show success message
                 messages.success(request,f"Membership with IEEE ID {ieee_id} has been renewed!")
+                # Send an Email to the Applicants Associated Email
+                email_stat=email_sending.send_email_upon_renewal_confirmed(reciever_email=renewal_request_details[0]['email_associated'],reciever_name=renewal_request_details[0]['name'])
+                if email_stat:
+                    messages.success(request,"Renewal Confirmation email was sent to the member's Associated email address.")
+                else:
+                    messages.error(request,"An internal error occured! Can not send the renewal confirmation email.")
+
                 return redirect('membership_development_team:request_details',pk,request_id)
             
             #Now if the member is not registered in the database
@@ -527,10 +577,29 @@ def renewal_request_details(request,pk,request_id):
                 
                 # just Update the renewal request table and notify team that member is not registered in the main database
                 Renewal_requests.objects.filter(id=request_id,session_id=pk).update(renewal_status=True)
-                
+                #update the member in INSB Registered Members Database
+                try:
+                    new_member_from_renewal=Members.objects.create(
+                        ieee_id=ieee_id,nsu_id=renewal_request_details[0]['nsu_id'],name=name,contact_no=renewal_request_details[0]['contact_no'],
+                        email_personal=renewal_request_details[0]['email_associated'],
+                        email_ieee=renewal_request_details[0]['email_ieee'],last_renewal_session=Renewal_Sessions.objects.get(id=get_renewal_session.id)
+                    )
+                    new_member_from_renewal.save()
+                except:
+                    messages.error(request,f"Can not update this application to INSB Registered Members Database!")
+
                 #show message
                 messages.success(request,f"Membership has been renewed!\nThis member with the associated IEEE ID: {ieee_id} was not found in the INSB Registered Member Database!\nHowever, the system kept the Data of renewal!")
-        
+                
+                # Send an Email to the Applicants Associated Email
+                email_stat=email_sending.send_email_upon_renewal_confirmed(reciever_email=renewal_request_details[0]['email_associated'],reciever_name=renewal_request_details[0]['name'])
+                if email_stat:
+                    messages.success(request,"Renewal Confirmation email was sent to the member's Associated email address.")
+                else:
+                    messages.error(request,"An internal error occured! Can not send the renewal confirmation email.")
+
+                return redirect('membership_development_team:request_details',pk,request_id)
+
         #TO DELETE AN APPLICATION
         if(request.POST.get('delete_button')): 
             

@@ -249,7 +249,7 @@ def teams(request):
     Gives option to add or delete a team
     '''
     #load panel lists
-    panels=renderData.Branch.load_ex_com_panel_list()
+    # panels=renderData.Branch.load_ex_com_panel_list()
     user = request.user
 
     '''Checking if user is EB/faculty or not, and the calling the function event_page_access
@@ -300,7 +300,6 @@ def team_details(request,primary,name):
             positions=positions.exclude(pk=i.pk)
     #loading all members of insb
     insb_members=renderData.Branch.load_all_insb_members()
-    
     members_to_add=[]
     position=12 #assigning default to volunteer
     if request.method=='POST':
@@ -358,10 +357,25 @@ def manage_team(request,pk,team_name):
     }
     return render(request,'team/team_management.html',context=context)
 
-#PANEL WORS
+#PANEL WORkS
 @login_required
-def panel_details(request,pk):
-    return render(request,"ex_com_panels/panel_details.html")
+def panel_home(request):
+    
+    # get all panels from database
+    panels = Branch.load_all_panels()
+    
+    if request.method=="POST":
+        tenure_year=request.POST['tenure_year']
+        current_check=request.POST.get('current_check')
+        # create panel
+        if(Branch.create_panel(request,tenure_year=tenure_year,current_check=current_check)):
+            return redirect('central_branch:panels')
+        
+    context={
+        'panels':panels,
+    }
+    
+    return render(request,"Panel/panel_homepage.html",context)
 
 @login_required
 def others(request):
@@ -459,11 +473,11 @@ def add_blogs(request):
     })
 
 
-from main_website.models import HomepageBannerPictureWithText
+from main_website.models import HomePageTopBanner
 @login_required
 def manage_website_homepage(request):
     '''For top banner picture with Texts and buttons - Tab 1'''
-    topBannerItems=HomepageBannerPictureWithText.objects.all()
+    topBannerItems=HomePageTopBanner.objects.all()
     # get user data
     #Loading current user data from renderData.py
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -478,12 +492,12 @@ def manage_website_homepage(request):
         # To delete an item
         if request.POST.get('delete'):
             # Delelte the item. Getting the id of the item from the hidden input value.
-            HomepageBannerPictureWithText.objects.filter(id=request.POST.get('get_item')).delete()
+            HomePageTopBanner.objects.filter(id=request.POST.get('get_item')).delete()
             return redirect('central_branch:manage_website_home')
         # To add a new Banner Item
         if request.POST.get('add_banner'):
             try:
-                newBanner=HomepageBannerPictureWithText.objects.create(
+                newBanner=HomePageTopBanner.objects.create(
                     banner_picture=request.FILES['banner_picture'],
                     first_layer_text=request.POST['first_layer_text'],
                     second_layer_text=request.POST['second_layer_text'],

@@ -10,3 +10,11 @@ class Roles(admin.ModelAdmin):
 @admin.register(Chapters_Society_and_Affinity_Groups)
 class Chapter_Society(admin.ModelAdmin):
     list_display=['id','group_name','primary']
+    
+from .models import Panels  
+@admin.register(Panels)
+class Panels(admin.ModelAdmin):
+    list_display=[
+        'year','creation_time','current'
+    ]
+
