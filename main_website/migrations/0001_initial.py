@@ -21,22 +21,7 @@ class Migration(migrations.Migration):
                 ('blog_category', models.CharField(max_length=40)),
             ],
         ),
-        migrations.CreateModel(
-            name='HomePageTopBanner',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('banner_picture', django_resized.forms.ResizedImageField(crop=None, force_format='JPEG', keep_meta=True, quality=80, scale=1.0, size=[1920, 1080], upload_to='main_website_files/homepage/banner_pictures')),
-                ('first_layer_text', models.CharField(default='FOCUSING LIMELIGHT ON', max_length=50)),
-                ('second_layer_text', models.CharField(default='THE', max_length=20)),
-                ('second_layer_text_colored', models.CharField(default='MASTERMINDS', max_length=20)),
-                ('third_layer_text', models.TextField(max_length=500)),
-                ('button_text', models.CharField(default='About INSB', max_length=50)),
-                ('button_url', models.CharField(default='#', max_length=200)),
-            ],
-            options={
-                'verbose_name': 'Homepage Banner Picture With Texts',
-            },
-        ),
+        
         migrations.CreateModel(
             name='Research_Papers',
             fields=[

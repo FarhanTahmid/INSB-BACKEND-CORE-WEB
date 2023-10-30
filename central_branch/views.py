@@ -23,8 +23,8 @@ from users.models import Members
 from django.conf import settings
 from users.renderData import LoggedinUser
 import os
-
-
+from users import renderData as port_render
+from port.renderData import PortData
 
 
 # Create your views here.
@@ -403,12 +403,17 @@ def panel_details(request,panel_id):
         # generally add rest of the members as volunteers as one can only be added to Panel Member list if he is in any position or team. 
             volunteer_members.append(i)
     
+    all_insb_members=port_render.get_all_registered_members(request)
+    
+    all_insb_positions=PortData.get_positions_with_sc_ag_id(request,sc_ag_primary=1) #setting sc_ag_primary as 1, because Branch's Primary is 1 by default
     context={
         'panel_info':panel_info,
         'eb_member':eb_member,
         'officer_member':officer_member,
         'faculty_member':faculty_member,
         'volunteer_members':volunteer_members,
+        'insb_members':all_insb_members,
+        'positions':all_insb_positions,
     }
     return render(request,'Panel/panel_details.html',context)
 
