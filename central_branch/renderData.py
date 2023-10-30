@@ -1,3 +1,4 @@
+from django.http import Http404
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
 from users.models import Members,Panel_Members
 from django.db import DatabaseError
@@ -102,7 +103,24 @@ class Branch:
         except: 
             messages.error(request,"Some error occured! Try again.")
             return False
-            
+    
+    def load_panel_by_id(panel_id):
+        '''This loads all the panel information from Panels table'''
+        try:
+            panel = Panels.objects.get(id=panel_id)
+            return panel
+        except:
+            raise Http404("The requested page does not exist.")
+    
+    def load_panel_members_by_panel_id(panel_id):
+        '''This load all the info associated with a panel from Panel members Table'''
+        try:
+            get_panel_members=Panel_Members.objects.filter(tenure=panel_id).all()
+            return get_panel_members
+        except:
+            raise Http404("The requested page does not exist.")
+        
+                    
     def load_all_panels():
         '''This function loads all the panels from the database'''
         try:
