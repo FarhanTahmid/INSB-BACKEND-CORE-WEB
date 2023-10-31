@@ -15,6 +15,8 @@ from recruitment.models import recruited_members
 import math
 import sqlite3
 from django.contrib import messages
+from . models import Panel_Members
+from port.models import Panels
 
 class LoggedinUser:
     
@@ -330,8 +332,39 @@ def getMonthName(numb: int)->str:
 
     
 
+class PanelMembersData:
 
+    def add_executive_members_to_branch_panel(request,members,position,panel_info):
 
+        try:
+            for i in members:
+                # first add members to the Panel members table
+                new_panel_member=Panel_Members.objects.create(tenure=Panels.objects.get(id=panel_info.pk),member=Members.objects.get(ieee_id=i),position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=1))
+                new_panel_member.save()
+
+                # then update the members team and position in Members table
+                Members.objects.filter(ieee_id=i).update(team=Teams.objects.get(primary=1),position=Roles_and_Position.objects.get(id=position))
+            messages.success(request,"Members were added in the Panel")
+            return True
+        except sqlite3.OperationalError:
+            messages.error(request,"An internal Database error has occured!")
+        except:
+            messages.error(request,"Something went wrong! Please try again!")
+
+    def remove_member_from_panel(request,ieee_id,panel_id):
+        
+        try:
+            # Delete from panel members database
+            Panel_Members.objects.filter(tenure=Panels.objects.get(id=panel_id),member=Members.objects.get(ieee_id=ieee_id)).delete()
+
+            # Remove Positions from Members Table database,turing their position in general members
+            Members.objects.filter(ieee_id=ieee_id).update(position=Roles_and_Position.objects.get(id=13),team=None)
+            messages.info(request,f"{ieee_id} was removed from the Panel")
+            return True
+        except sqlite3.OperationalError:
+            messages.error(request,"An internal Database error has occured!")
+        except:
+            messages.error(request,"Something went wrong! Please try again!")
 
 
 

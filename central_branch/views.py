@@ -25,6 +25,7 @@ from users.renderData import LoggedinUser
 import os
 from users import renderData as port_render
 from port.renderData import PortData
+from users.renderData import PanelMembersData
 
 
 # Create your views here.
@@ -404,7 +405,27 @@ def panel_details(request,panel_id):
             volunteer_members.append(i)
     
     all_insb_members=port_render.get_all_registered_members(request)
-    
+
+    if request.method=="POST":
+        # Check whether the add executive button was pressed
+        if (request.POST.get('add_executive_to_panel')):
+            # get position
+            position=request.POST.get('position')
+            # get members as list
+            members=request.POST.getlist('member_select')
+
+            if(PanelMembersData.add_executive_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position)):
+                return redirect('central_branch:panel_details',panel_id)
+            
+        
+        # check whether the remove member button was pressed
+        if (request.POST.get('remove_member')):
+            ieee_id=request.POST['remove_panel_member']
+            
+            if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
+                return redirect('central_branch:panel_details',panel_id)
+
+
     all_insb_positions=PortData.get_positions_with_sc_ag_id(request,sc_ag_primary=1) #setting sc_ag_primary as 1, because Branch's Primary is 1 by default
     context={
         'panel_info':panel_info,

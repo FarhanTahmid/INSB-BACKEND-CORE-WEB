@@ -48,7 +48,7 @@
                     <form method="POST">
                         {% csrf_token %}
                             <input class="btn btn-outline b-danger text-danger" name="remove_member" type="submit" value="Remove Member">
-                            <input type="hidden" name="remove_panel_member" value={{member.ieee_id}}>
+                            <input type="hidden" name="remove_panel_member" value={{member.member.ieee_id}}>
                         </form>
                     </td>
                 </tr>
@@ -106,7 +106,7 @@
                                     <td>{{ member.position }}</td>
                                     <td>{{ member.email_ieee }}</td>
                                     <td>
-                                        <input type="checkbox" id="select" name="member_select1" value={{member.ieee_id}}>
+                                        <input type="checkbox" id="select" name="member_select" value={{member.ieee_id}}>
                                     </td>
                                 </tr>
                                 {% endfor %}
