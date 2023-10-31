@@ -1,5 +1,6 @@
-from .models import Chapters_Society_and_Affinity_Groups,Roles_and_Position,Teams
+from .models import Chapters_Society_and_Affinity_Groups,Roles_and_Position,Teams,Panels
 from django.contrib import messages
+import sqlite3
 
 class PortData:
     def get_positions_with_sc_ag_id(request,sc_ag_primary):
@@ -40,4 +41,14 @@ class PortData:
             return teams
         except:
             messages.error(request,"An internal Database error occured loading the Positions for Executive Members!")
+            return False
+    
+    def get_current_panel():
+        '''Returns the id of the current panel'''
+        try:            
+            current_panel=Panels.objects.get(current=True)
+            return current_panel.pk
+        except sqlite3.OperationalError:
+            return False
+        except:
             return False
