@@ -334,16 +334,16 @@ def getMonthName(numb: int)->str:
 
 class PanelMembersData:
 
-    def add_executive_members_to_branch_panel(request,members,position,panel_info):
+    def add_members_to_branch_panel(request,members,position,panel_info,team_primary):
 
         try:
             for i in members:
                 # first add members to the Panel members table
-                new_panel_member=Panel_Members.objects.create(tenure=Panels.objects.get(id=panel_info.pk),member=Members.objects.get(ieee_id=i),position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=1))
+                new_panel_member=Panel_Members.objects.create(tenure=Panels.objects.get(id=panel_info.pk),member=Members.objects.get(ieee_id=i),position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
                 new_panel_member.save()
 
                 # then update the members team and position in Members table
-                Members.objects.filter(ieee_id=i).update(team=Teams.objects.get(primary=1),position=Roles_and_Position.objects.get(id=position))
+                Members.objects.filter(ieee_id=i).update(team=Teams.objects.get(primary=team_primary),position=Roles_and_Position.objects.get(id=position))
             messages.success(request,"Members were added in the Panel")
             return True
         except sqlite3.OperationalError:

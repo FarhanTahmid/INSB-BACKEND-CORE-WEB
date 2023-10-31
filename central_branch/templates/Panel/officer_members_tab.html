@@ -1,7 +1,7 @@
 {% load static %}
-{% block executive_members_panel %}
+{% block officer_members_panel %}
 
-<h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>Executive Panel Members</b></h2>
+<h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>Officer Panel Members</b></h2>
     
     <!--Messages-->
     <div style="justify-content:center; text-align:center;">
@@ -18,37 +18,40 @@
         <div class="box-header">
             
             <div style="text-align:right;">
-            <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add Executive Member</button>
+            <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-b" ui-toggle-class="bounce" ui-target="#animate">Add Officer Member</button>
             </div>
-            <small>This table holds the data of Executive Members in the panel</small>
+            <small>This table holds the data of Officer Members in the panel</small>
             <br>
             <label style="margin-left:5px;">Search:</label>
-            <input class="form-control w-75" type="text" id="searchInput" placeholder="Search Member by name" onkeyup="searchTable()">
+            <input class="form-control w-75" type="text" id="searchInput3" placeholder="Search Member by name" onkeyup="searchTable3()">
         </div>
         <div class="table-responsive" style="max-height:300px; overflow-y:auto;">
-        <table class="table table-bordered m-0" style="text-align:center;">
+        <table class="table table-bordered m-0 table3" style="text-align:center;">
             <thead>
             <tr>
                 <th style="text-align:center;">IEEE ID</th>
                 <th style="text-align:center;">Name</th>
                 <th style="text-align:center;">IEEE Email</th>
                 <th style="text-align:center;">Current Position</th>
+                <th style="text-align:center;">Team</th>
                 <th style="text-align:center;">Remove Member?</th>
             </tr>
             </thead>
             <tbody>
             
-                {% for member in eb_member %}
+                {% for member in officer_member %}
                 <tr>
                     <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.member.ieee_id %}">{{member.member.ieee_id}}</a></td>
                     <td>{{ member.member.name  }}</td>
                     <td>{{member.member.email_ieee}}</td>
                     <td>{{member.position}}</td>
+                    <td>{{member.team}}</td>
+
                     <td>
                     <form method="POST">
                         {% csrf_token %}
-                            <input class="btn btn-outline b-danger text-danger" name="remove_member" type="submit" value="Remove Member">
-                            <input type="hidden" name="remove_panel_member" value={{member.member.ieee_id}}>
+                            <input class="btn btn-outline b-danger text-danger" name="remove_member_officer" type="submit" value="Remove Member">
+                            <input type="hidden" name="remove_officer_member" value={{member.member.ieee_id}}>
                         </form>
                     </td>
                 </tr>
@@ -61,15 +64,15 @@
     <br>
     <br>
     <!--Add modal-->
-    <div id="m-s-a" class="modal" data-backdrop="true">
+    <div id="m-s-b" class="modal" data-backdrop="true">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add member to Executive Panel!</h5>
+                <h5 class="modal-title">Add member to Officer Panel!</h5>
             </div>
             <div class="modal-body p-lg">
-              <p>Do select the Position of the Member Carefully!</p>
-              <p>This will update the Members Position in the Database and also keep a record of the Member in the Panel.</p>
+              <p>Do select the Position and Team of the Member Carefully!</p>
+              <p>This will update the Members Position and Team in the Database and also keep a record of the Member in the Panel.</p>
               <br>
             </div>
             <!--Position Input-->
@@ -80,16 +83,24 @@
             <form method="POST">
                 {% csrf_token %}
                 <label style="margin-left:5px;">Select Position</label>
-                <select id="position" name="position">
-                    {% for position in positions %}
+                <select id="position" name="position1">
+                    {% for position in officer_positions %}
                         <option value={{position.id}}>{{ position.role }}</option>
                     {% endfor %} 
                 </select>
+
+                <label style="margin-left:5px;">Select Team</label>
+                <select id="team" name="team">
+                    {% for team in teams %}
+                        <option value={{team.primary}}>{{ team.team_name }}</option>
+                    {% endfor %} 
+                </select>
+
                 <div class="table-container">
                     <label style="margin-left: 5px;">Search</label>
-                    <input class="w-75" type="text" id="searchInput2" placeholder="Search Member" onkeyup="searchTable2()">
+                    <input class="w-75" type="text" id="searchInput4" placeholder="Search Member" onkeyup="searchTable4()">
                     <div class="table-wrapper">
-                        <table class="table2" id="data2">
+                        <table class="table4" id="data2">
                             <thead>
                                 <tr id="row">
                                     <th>Name</th>
@@ -107,7 +118,7 @@
                                     <td>{{ member.position }}</td>
                                     <td>{{ member.email_ieee }}</td>
                                     <td>
-                                        <input type="checkbox" id="select" name="member_select" value={{member.ieee_id}}>
+                                        <input type="checkbox" id="select" name="member_select1" value={{member.ieee_id}}>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -119,7 +130,7 @@
                 <div class="modal-footer">
                 <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
             
-                    <input type="submit" class="btn primary p-x-md" name="add_executive_to_panel" value="Add Executive Member"></input>  
+                    <input type="submit" class="btn primary p-x-md" name="add_officer_to_panel" value="Add Officer Member"></input>  
                 </div>
             </form>
 
@@ -130,12 +141,12 @@
 
 
     <script>
-        function searchTable() {
+        function searchTable3() {
             // Declare variables
             var input, filter, table, tr, td, i, j, txtValue;
-            input = document.getElementById("searchInput");
+            input = document.getElementById("searchInput3");
             filter = input.value.toUpperCase();
-            table = document.querySelector("table");
+            table = document.querySelector(".table3");
             tr = table.getElementsByTagName("tr");
         
             // Loop through all table rows
@@ -163,12 +174,12 @@
         }
     </script>
     <script>
-        function searchTable2() {
+        function searchTable4() {
             // Declare variables
             var input, filter, table, tr, td, i, j, txtValue;
-            input = document.getElementById("searchInput2");
+            input = document.getElementById("searchInput4");
             filter = input.value.toUpperCase();
-            table = document.querySelector(".table2");
+            table = document.querySelector(".table4");
             tr = table.getElementsByTagName("tr");
         
             // Loop through all table rows
@@ -196,4 +207,4 @@
         }
     </script>
 
-{% endblock executive_members_panel %}
+{% endblock officer_members_panel %}
