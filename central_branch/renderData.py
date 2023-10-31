@@ -115,7 +115,7 @@ class Branch:
     def load_panel_members_by_panel_id(panel_id):
         '''This load all the info associated with a panel from Panel members Table'''
         try:
-            get_panel_members=Panel_Members.objects.filter(tenure=panel_id).all()
+            get_panel_members=Panel_Members.objects.filter(tenure=panel_id).all().order_by('position')
             return get_panel_members
         except:
             raise Http404("The requested page does not exist.")

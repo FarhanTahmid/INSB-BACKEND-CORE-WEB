@@ -131,7 +131,7 @@
             <div class="tabs-container">
                 <ul class="tabs">
                     <li class="tab" onclick="showTab('tab1')">Executive Members Panel</li>
-                    <li class="tab" onclick="showTab('tab2')">Officers Member Panel</li>
+                    <li class="tab" onclick="showTab('tab2')">Officer Member Panel</li>
                     <li class="tab" onclick="showTab('tab3')">Volunteer & General Members Panel</li>
                 </ul>
 
@@ -142,8 +142,9 @@
                 </div>
 
                 <div id="tab2" class="tab-content">
-                    <h2>Tab 2 Content</h2>
-                    <p>This is the content of Tab 2.</p>
+                    {% block officer_members_panel %}
+                        {% include "Panel/officer_members_tab.html" %}
+                    {% endblock officer_members_panel %}
                 </div>
 
                 <div id="tab3" class="tab-content">

@@ -25,6 +25,7 @@ from users.renderData import LoggedinUser
 import os
 from users import renderData as port_render
 from port.renderData import PortData
+from users.renderData import PanelMembersData
 
 
 # Create your views here.
@@ -404,8 +405,57 @@ def panel_details(request,panel_id):
             volunteer_members.append(i)
     
     all_insb_members=port_render.get_all_registered_members(request)
-    
-    all_insb_positions=PortData.get_positions_with_sc_ag_id(request,sc_ag_primary=1) #setting sc_ag_primary as 1, because Branch's Primary is 1 by default
+
+    if request.method=="POST":
+        '''Block of code for Executive Members'''
+        # Check whether the add executive button was pressed
+        if (request.POST.get('add_executive_to_panel')):
+            # get position
+            position=request.POST.get('position')
+            # get members as list
+            members=request.POST.getlist('member_select')
+
+            if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=1)): #team_primary=1 as branchs primary is always 1
+                return redirect('central_branch:panel_details',panel_id)
+            
+        # check whether the remove member button was pressed
+        if (request.POST.get('remove_member')):
+            # get ieee_id of the member
+            ieee_id=request.POST['remove_panel_member']
+            # remove member
+            if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
+                return redirect('central_branch:panel_details',panel_id)
+        
+        '''Block of code for Officer Members'''
+
+        # Check whether the add officer button was pressed
+        if(request.POST.get('add_officer_to_panel')):
+            # get position
+            position=request.POST.get('position1')
+            # get team
+            team=request.POST.get('team')
+            # get members as a list
+            members=request.POST.getlist('member_select1')
+
+            if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=team)):
+                return redirect('central_branch:panel_details',panel_id)
+        
+        if(request.POST.get('remove_member_officer')):
+            # get ieee_id of the member
+            ieee_id=request.POST['remove_officer_member']
+            # remove member
+            if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
+                return redirect('central_branch:panel_details',panel_id)
+
+        
+
+
+
+
+
+    all_insb_executive_positions=PortData.get_all_executive_positions_with_sc_ag_id(request,sc_ag_primary=1) #setting sc_ag_primary as 1, because Branch's Primary is 1 by default
+    all_insb_officer_positions=PortData.get_all_officer_positions_with_sc_ag_id(request,sc_ag_primary=1)
+    all_insb_teams=PortData.get_teams_of_sc_ag_with_id(request,sc_ag_primary=1)
     context={
         'panel_info':panel_info,
         'eb_member':eb_member,
@@ -413,7 +463,9 @@ def panel_details(request,panel_id):
         'faculty_member':faculty_member,
         'volunteer_members':volunteer_members,
         'insb_members':all_insb_members,
-        'positions':all_insb_positions,
+        'positions':all_insb_executive_positions,
+        'officer_positions':all_insb_officer_positions,
+        'teams':all_insb_teams,
     }
     return render(request,'Panel/panel_details.html',context)
 
