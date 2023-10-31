@@ -148,8 +148,9 @@
                 </div>
 
                 <div id="tab3" class="tab-content">
-                    <h2>Tab 3 Content</h2>
-                    <p>This is the content of Tab 3.</p>
+                    {% block volunteer_members_panel %}
+                        {% include "Panel/volunteer_members_tab.html" %}
+                    {% endblock volunteer_members_panel %}
                 </div>
             </div>
             <!--Tab view end-->

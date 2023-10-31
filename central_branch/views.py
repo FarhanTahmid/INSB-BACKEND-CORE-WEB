@@ -440,6 +440,7 @@ def panel_details(request,panel_id):
             if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=team)):
                 return redirect('central_branch:panel_details',panel_id)
         
+        # Check whether the update button was pressed
         if(request.POST.get('remove_member_officer')):
             # get ieee_id of the member
             ieee_id=request.POST['remove_officer_member']
@@ -449,13 +450,34 @@ def panel_details(request,panel_id):
 
         
 
+        '''Block of code for Volunteer Members'''
+        # check whether the add buton was pressed
+        if(request.POST.get('add_volunteer_to_panel')):
+            # get_position
+            position=request.POST.get('position2')
+            # get team
+            team=request.POST.get('team1')
+            # get members as a list
+            members=request.POST.getlist('member_select2')
+
+            if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=team)):
+                return redirect('central_branch:panel_details',panel_id)
+        # check whether the remove button was pressed
+        if(request.POST.get('remove_member_volunteer')):
+            # get ieee id of the member
+            ieee_id=request.POST['remove_officer_member']
+            # remove member
+            if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
+                return redirect('central_branch:panel_details',panel_id)
 
 
 
 
     all_insb_executive_positions=PortData.get_all_executive_positions_with_sc_ag_id(request,sc_ag_primary=1) #setting sc_ag_primary as 1, because Branch's Primary is 1 by default
     all_insb_officer_positions=PortData.get_all_officer_positions_with_sc_ag_id(request,sc_ag_primary=1)
+    all_insb_volunteer_positions=PortData.get_all_volunteer_position_with_sc_ag_id(request,sc_ag_primary=1)
     all_insb_teams=PortData.get_teams_of_sc_ag_with_id(request,sc_ag_primary=1)
+    
     context={
         'panel_info':panel_info,
         'eb_member':eb_member,
@@ -465,6 +487,7 @@ def panel_details(request,panel_id):
         'insb_members':all_insb_members,
         'positions':all_insb_executive_positions,
         'officer_positions':all_insb_officer_positions,
+        'volunteer_positions':all_insb_volunteer_positions,
         'teams':all_insb_teams,
     }
     return render(request,'Panel/panel_details.html',context)
