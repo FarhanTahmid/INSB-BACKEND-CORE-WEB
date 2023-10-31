@@ -664,3 +664,7 @@ def manage_website_homepage(request):
         'media_url':settings.MEDIA_URL
     }
     return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
+
+
+def manage_view_access(request):
+    return render(request,'Manage Access/manage_access.html')
