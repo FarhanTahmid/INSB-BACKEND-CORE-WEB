@@ -12,7 +12,7 @@ from .models import InterBranchCollaborations,IntraBranchCollaborations
 from datetime import datetime
 import sqlite3
 from django.contrib import messages
-
+from system_administration.models import Branch_Data_Access
 class Branch:
 
     def getBranchID():
@@ -33,6 +33,31 @@ class Branch:
     #         ex_com_panel_list.append(committee)
         
     #     return ex_com_panel_list
+    def add_member_to_branch_view_access(request,selected_members):
+        try:
+            for i in selected_members:
+                new_member=Branch_Data_Access.objects.create(ieee_id=Members.objects.get(ieee_id=i))
+                new_member.save()
+            messages.success(request,"Members were added to the View Access Page")
+            return True
+        except:
+            messages.error(request,"Can not add members.")
+    
+    def remover_member_from_branch_access(request,ieee_id):
+        try:
+            Branch_Data_Access.objects.get(ieee_id=ieee_id).delete()
+            messages.info(request,f"{ieee_id} was removed from Branch Data access Table")
+            return True
+        except:
+            messages.error(request,"Can not remove member from Branch Data access!")
+            return False
+    
+    def get_branch_data_access(request):
+        try:
+            return Branch_Data_Access.objects.all()
+        except:
+            messages.error("Something went wrong while loading Data Access for Branch")
+            return False
         
     def load_team_members(team_primary):
         

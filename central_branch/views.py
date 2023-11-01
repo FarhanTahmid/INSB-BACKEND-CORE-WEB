@@ -26,6 +26,7 @@ import os
 from users import renderData as port_render
 from port.renderData import PortData
 from users.renderData import PanelMembersData
+from central_branch.renderData import Branch
 
 
 # Create your views here.
@@ -665,6 +666,34 @@ def manage_website_homepage(request):
     }
     return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
 
-
+@login_required
 def manage_view_access(request):
-    return render(request,'Manage Access/manage_access.html')
+
+    # get access of the page first
+
+    all_insb_members=port_render.get_all_registered_members(request)
+    branch_data_access=Branch.get_branch_data_access(request)
+
+    if request.method=="POST":
+        if(request.POST.get('add_member_to_access')):
+            selected_members=request.POST.getlist('member_select')
+            if(Branch.add_member_to_branch_view_access(request=request,selected_members=selected_members)):
+                return redirect('central_branch:manage_access')
+        
+        if(request.POST.get('remove_member')):
+            ieee_id=request.POST['remove_member_data_access']
+            if(Branch.remover_member_from_branch_access(request=request,ieee_id=ieee_id)):
+                return redirect('central_branch:manage_access')
+
+        
+
+
+
+
+
+    context={
+        'insb_members':all_insb_members,
+        'branch_data_access':branch_data_access,
+    }
+
+    return render(request,'Manage Access/manage_access.html',context)
