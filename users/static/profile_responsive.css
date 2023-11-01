@@ -1,0 +1,49 @@
+
+@media screen and (max-width: 768px) {
+  html {
+    font-size: 10px;
+  }
+
+  /* ===== =====>>  profile_container Css Start  <<===== ===== */
+  .profile_container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "userProfile"
+      "userDetails"
+      "work_skills"
+      "timeline_about";
+    overflow-x: hidden;
+    overflow-y: inherit;
+    padding: 0;
+    width: 95%;
+    height: 100%;
+    box-shadow: none;
+  }
+
+  /* ===== =====>>  profile_container Card Css Start  <<===== ===== */
+  .profile_container .card {
+    backdrop-filter: none;
+  }
+
+  .userDetails {
+    margin-bottom: 3rem;
+  }
+
+  .profile_container::before,
+  .profile_container::after {
+    display: none;
+  }
+
+  /* ===== =====>>  Header/Navbar Css Start  <<===== ===== */
+  .profile_container header {
+    padding: 2.5rem;
+  } 
+}
+
+@media screen and (max-width: 500px) {
+  .profile_container {
+    width: 100%;
+    overflow: initial;
+  }
+}
