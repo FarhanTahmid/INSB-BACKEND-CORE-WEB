@@ -169,7 +169,7 @@ def is_eb_or_admin(user):
 def get_all_registered_members(request):
     '''This function returns all the INSB members registered in the main database'''
     try:
-        get_members=Members.objects.filter().all().order_by('-ieee_id')
+        get_members=Members.objects.filter().all().order_by('position')
         return get_members
     except sqlite3.DatabaseError:
         messages.error(request,"An internal Database Error has occured!")

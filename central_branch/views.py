@@ -26,6 +26,7 @@ import os
 from users import renderData as port_render
 from port.renderData import PortData
 from users.renderData import PanelMembersData
+from central_branch.renderData import Branch
 
 
 # Create your views here.
@@ -664,3 +665,64 @@ def manage_website_homepage(request):
         'media_url':settings.MEDIA_URL
     }
     return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
+
+@login_required
+def manage_view_access(request):
+
+    # get access of the page first
+
+    all_insb_members=port_render.get_all_registered_members(request)
+    branch_data_access=Branch.get_branch_data_access(request)
+
+    if request.method=="POST":
+        if(request.POST.get('update_access')):
+            ieee_id=request.POST['remove_member_data_access']
+            
+            # Setting Data Access Fields to false initially
+            create_event_access=False
+            event_details_page_access=False
+            create_panels_access=False
+            panel_memeber_add_remove_access=False
+            team_details_page=False
+            manage_web_access=False
+
+            # Getting values from check box
+            
+            if(request.POST.get('create_event_access')):
+                create_event_access=True
+            if(request.POST.get('event_details_page_access')):
+                event_details_page_access=True
+            if(request.POST.get('create_panels_access')):
+                create_panels_access=True
+            if(request.POST.get('panel_memeber_add_remove_access')):
+                panel_memeber_add_remove_access=True
+            if(request.POST.get('team_details_page')):
+                team_details_page=True
+            if(request.POST.get('manage_web_access')):
+                manage_web_access=True
+            
+            # ****The passed keys must match the field name in the models. otherwise it wont update access
+            if(Branch.update_member_to_branch_view_access(request=request,ieee_id=ieee_id,kwargs={'create_event_access':create_event_access,
+                                                       'event_details_page_access':event_details_page_access,
+                                                       'create_panels_access':create_panels_access,'panel_memeber_add_remove_access':panel_memeber_add_remove_access,
+                                                       'team_details_page':team_details_page,'manage_web_access':manage_web_access})):
+                return redirect('central_branch:manage_access')
+            
+        if(request.POST.get('add_member_to_access')):
+            selected_members=request.POST.getlist('member_select')
+            if(Branch.add_member_to_branch_view_access(request=request,selected_members=selected_members)):
+                return redirect('central_branch:manage_access')
+        
+        if(request.POST.get('remove_member')):
+            ieee_id=request.POST['remove_member_data_access']
+            if(Branch.remover_member_from_branch_access(request=request,ieee_id=ieee_id)):
+                return redirect('central_branch:manage_access')
+
+        
+
+    context={
+        'insb_members':all_insb_members,
+        'branch_data_access':branch_data_access,
+    }
+
+    return render(request,'Manage Access/manage_access.html',context)

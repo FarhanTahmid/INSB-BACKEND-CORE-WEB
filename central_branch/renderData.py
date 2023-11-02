@@ -12,6 +12,10 @@ from .models import InterBranchCollaborations,IntraBranchCollaborations
 from datetime import datetime
 import sqlite3
 from django.contrib import messages
+from system_administration.models import Branch_Data_Access
+from django.db.utils import IntegrityError
+import traceback
+import logging
 
 class Branch:
 
@@ -33,6 +37,58 @@ class Branch:
     #         ex_com_panel_list.append(committee)
         
     #     return ex_com_panel_list
+    def add_member_to_branch_view_access(request,selected_members):
+        logger = logging.getLogger(__name__)
+
+        try:
+            for i in selected_members:
+                new_member=Branch_Data_Access.objects.create(ieee_id=Members.objects.get(ieee_id=i))
+                new_member.save()
+            messages.success(request,"Members were added to the View Access Page")
+            return True
+        except IntegrityError:
+            messages.info(request,"The member already exists in the Table. Search to view them.")
+        except Exception as ex:
+            messages.error(request,"Can not add members.")
+            logger.info(ex, exc_info=True)
+    
+    def update_member_to_branch_view_access(request,ieee_id,**kwargs):
+        '''This function updates the view permission of Branch Data Access.
+        ****Remember that the passed keys in the keyword arguments must match with the models attributes.
+        '''
+        try:
+            # first get member
+            get_member=Branch_Data_Access.objects.get(ieee_id=ieee_id)
+            
+            # iterate through the fields of the member
+            for field in get_member._meta.fields:
+                # if field name matches with passed kwargs
+                if field.name in kwargs['kwargs']:
+                    # set attribute of the member with the value from keyword argument
+                    setattr(get_member,field.attname,kwargs['kwargs'][field.name])
+                    # save the member
+                    get_member.save()
+            messages.success(request,f"View Permission was updated for {ieee_id}")
+            return True
+        except:
+            messages.error(request,"View Permission can not be updated!")
+        
+
+    def remover_member_from_branch_access(request,ieee_id):
+        try:
+            Branch_Data_Access.objects.get(ieee_id=ieee_id).delete()
+            messages.info(request,f"{ieee_id} was removed from Branch Data access Table")
+            return True
+        except:
+            messages.error(request,"Can not remove member from Branch Data access!")
+            return False
+    
+    def get_branch_data_access(request):
+        try:
+            return Branch_Data_Access.objects.all()
+        except:
+            messages.error("Something went wrong while loading Data Access for Branch")
+            return False
         
     def load_team_members(team_primary):
         
