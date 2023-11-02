@@ -152,18 +152,20 @@
                             <td style="border:1px solid #ccc;text-align:center;">{{member.ieee_id.team}}</td>
                             <td style="border:1px solid #ccc;text-align:center;">{{member.ieee_id.position}}</td>
                             <td style="border:1px solid #ccc;">
+                                <form method="POST">
+                                {% csrf_token %}
                                     {% if member.create_event_access %}
                                         <input type="checkbox" checked="True" class="checkbox" value="create_event_access" name="create_event_access">
                                         <label for="create_event_access">Event Create Access
                                         </label><br>
                                     {% else %}
-                                        <input type="checkbox" class="checkbox" value="create_event_access" name="create_event_access">
+                                        <input type="checkbox" value="create_event_access" name="create_event_access">
                                         <label for="create_event_access">Event Create Access
                                         </label><br>                                    
                                     {% endif %}
 
 
-                                    {% if data_access.event_details_page_access %}
+                                    {% if member.event_details_page_access %}
                                         <input type="checkbox" checked="True" class="checkbox" value="event_details_page_access" name="event_details_page_access">
                                         <label for="event_details_page_access">Event Details Edit Permission</label><br>
                                     {% else %}
@@ -172,7 +174,7 @@
                                     {% endif %}
 
 
-                                    {% if data_access.create_panels_access %}
+                                    {% if member.create_panels_access %}
                                         <input type="checkbox" checked="True" class="checkbox" value="create_panels_access" name="create_panels_access">
                                         <label for="create_panels_access">Create Panel Access</label><br>
                                     {% else %}
@@ -181,7 +183,7 @@
                                     {% endif %}
 
 
-                                    {% if data_access.panel_memeber_add_remove_access %}
+                                    {% if member.panel_memeber_add_remove_access %}
                                         <input type="checkbox" checked="True" class="checkbox" value="panel_memeber_add_remove_access" name="panel_memeber_add_remove_access">
                                         <label for="panel_memeber_add_remove_access">Panel Member Add/Remove Access</label><br>
                                     {% else %}
@@ -189,7 +191,7 @@
                                         <label for="panel_memeber_add_remove_access">Panel Member Add/Remove Access</label><br>
                                     {% endif %}
 
-                                    {% if data_access.team_details_page %}
+                                    {% if member.team_details_page %}
                                         <input type="checkbox" checked="True" class="checkbox" value="team_details_page" name="team_details_page">
                                         <label for="team_details_page">Team Details Page Access</label><br>
                                     {% else %}
@@ -197,7 +199,7 @@
                                         <label for="team_details_page">Team Details Page Access</label><br>
                                     {% endif %}
 
-                                    {% if data_access.manage_web_access %}
+                                    {% if member.manage_web_access %}
                                         <input type="checkbox" checked="True" class="checkbox" value="manage_web_access" name="manage_web_access">
                                         <label for="manage_web_access">Manage Web Access</label><br>
                                     {% else %}
@@ -207,8 +209,9 @@
 
                             </td>
                             <td style="border:1px solid #ccc;text-align:center;">
-                            <form method="POST">
-                                {% csrf_token %}
+                                    <br>
+                                    <br>
+                                    <br>
                                     <input class="btn btn-outline b-warn text-warn" style="margin-bottom:10px;" name="update_access" type="submit" value="Update Access">
                                     <input class="btn btn-outline b-danger text-danger" name="remove_member" type="submit" value="Remove Member">
                                     <input type="hidden" name="remove_member_data_access" value={{member.ieee_id}}>
@@ -243,14 +246,14 @@
                         
                             <div class="table-wrapper">
                                 <br>
-                                <table style="margin-left:10px;text-align:center;" class="table2" id="data2">
-                                    <thead>
+                                <table style="margin-left:5px;text-align:center;" class="table2" id="data2">
+                                    <thead >
                                         <tr id="row">
-                                            <th>Name</th>
-                                            <th>IEEE ID</th>
-                                            <th>Current Position</th>
-                                            <th>Email</th>
-                                            <th>Select</th>
+                                            <th style="text-align:center;">Name</th>
+                                            <th style="text-align:center;">IEEE ID</th>
+                                            <th style="text-align:center;">Current Position</th>
+                                            <th style="text-align:center;">Email</th>
+                                            <th style="text-align:center;">Select</th>
                                         </tr>
                                     </thead>
                                     <tbody>

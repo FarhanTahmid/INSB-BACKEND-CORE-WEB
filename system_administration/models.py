@@ -32,7 +32,7 @@ class adminUsers(models.Model):
         return reverse("admin_users", kwargs={"userid": self.userid})
         
 class Branch_Data_Access(models.Model):
-    ieee_id=models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE)
+    ieee_id=models.OneToOneField(Members,null=False,blank=False,on_delete=models.CASCADE)
     create_event_access=models.BooleanField(null=False,blank=False,default=False)
     event_details_page_access=models.BooleanField(null=False,blank=False,default=False)
     create_panels_access=models.BooleanField(null=False,blank=False,default=False)
