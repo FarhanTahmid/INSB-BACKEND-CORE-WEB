@@ -27,14 +27,16 @@ from users import renderData as port_render
 from port.renderData import PortData
 from users.renderData import PanelMembersData
 from central_branch.renderData import Branch
+from . view_access import Branch_View_Access
+
 
 
 # Create your views here.
 
 def central_home(request):
     user=request.user
-    has_access=Access_Render.system_administrator_superuser_access(user.username)
-    if (has_access):
+    # has_access=Access_Render.system_administrator_superuser_access(user.username)
+    if (True):
         #renderData.Branch.test_google_form()'''
         return render(request,'homepage/branch_homepage.html')
         # return render(request,'central_home.html')
@@ -45,9 +47,12 @@ def central_home(request):
 @login_required
 def event_control_homepage(request):
     # This function loads all events and super events in the event homepage table
+    
+    has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
     all_insb_events=renderData.Branch.load_all_events()
     context={
         'events':all_insb_events,
+        'has_access_to_create_event':has_access_to_create_event,
     }
     if(request.method=="POST"):
         if request.POST.get('create_new_event'):
@@ -666,9 +671,9 @@ def manage_website_homepage(request):
     }
     return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
 
+
 @login_required
 def manage_view_access(request):
-
     # get access of the page first
 
     all_insb_members=port_render.get_all_registered_members(request)
