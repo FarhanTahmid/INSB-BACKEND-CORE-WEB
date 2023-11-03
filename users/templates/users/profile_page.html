@@ -80,7 +80,7 @@
         <!-- navbar content -->
         <div id="content" class="app-content box-shadow-z0" role="main">
             {% block navbar %}
-            {% include 'navbar.html' %}
+                {% include 'users/navbar.html' %}
             {% endblock navbar %}
 
         </div>
@@ -95,16 +95,6 @@
             <div class="body">
                 <div class="profile_container">
 
-                    <header style="display: flex;" class="header">
-                        <div class="brandLogo">
-                            <span><a class="dropdown-item" href="{% url 'users:settings' %}">Settings</a></span>
-                            &nbsp;&nbsp;&nbsp;
-                            <span><a class="dropdown-item" href="{% url 'users:update_information' %}">Update Information</a></span>
-                            &nbsp;&nbsp;&nbsp;
-                            <span><a class="dropdown-item" href="{% url 'users:logoutUser' %}">Logout</a></span>
-                        </div>
-
-                    </header>
 
                     <section class="userProfile card">
                         <div class="profile">

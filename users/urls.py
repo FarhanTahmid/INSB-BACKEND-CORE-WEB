@@ -22,7 +22,7 @@ urlpatterns = [
     #user Profile
     path('profile',views.profile_page,name='profile'),
     #user Profile settings
-    path('settings',views.settings,name='settings'),
+    path('change_password',views.change_password,name='change_password'),
     #user Profile update information
     path('update_information',views.update_information,name='update_information'),
     #forgot password
