@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Profiles | IEEE NSU Student Branch</title>
+    <title>Profile | IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
     <link rel="stylesheet" href="{% static 'profile_style.css' %}">
     <link rel="stylesheet" href="{% static 'profile_responsive.css' %}">
@@ -97,9 +97,9 @@
 
                     <header style="display: flex;" class="header">
                         <div class="brandLogo">
-                            <span><a class="dropdown-item" href="#">Settings</a></span>
+                            <span><a class="dropdown-item" href="{% url 'users:settings' %}">Settings</a></span>
                             &nbsp;&nbsp;&nbsp;
-                            <span><a class="dropdown-item" href="#">Update Information</a></span>
+                            <span><a class="dropdown-item" href="{% url 'users:update_information' %}">Update Information</a></span>
                             &nbsp;&nbsp;&nbsp;
                             <span><a class="dropdown-item" href="{% url 'users:logoutUser' %}">Logout</a></span>
                         </div>
