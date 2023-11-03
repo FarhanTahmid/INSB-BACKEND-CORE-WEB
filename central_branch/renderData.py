@@ -29,7 +29,14 @@ class Branch:
         
         teams=Teams.objects.all().values('primary','team_name') #returns a list of dictionaryies with the id and team name
         return teams
-    
+    def load_team_members(team_primary):
+        
+        '''This function loads all the team members from the database'''
+        team=Teams.objects.get(primary=team_primary)
+        team_id=team.id
+        team_members=Members.objects.order_by('position').filter(team=team_id)
+        return team_members
+
     # def load_ex_com_panel_list():
     #     panels=Executive_commitee.objects.all().order_by('-pk')
     #     ex_com_panel_list=[]
@@ -90,13 +97,7 @@ class Branch:
             messages.error("Something went wrong while loading Data Access for Branch")
             return False
         
-    def load_team_members(team_primary):
-        
-        '''This function loads all the team members from the database'''
-        team=Teams.objects.get(primary=team_primary)
-        team_id=team.id
-        team_members=Members.objects.order_by('position').filter(team=team_id)
-        return team_members
+    
     
     def load_branch_eb_panel():
         '''This function loads all the EB panel members from the branch.
