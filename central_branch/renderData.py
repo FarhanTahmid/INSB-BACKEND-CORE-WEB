@@ -139,7 +139,7 @@ class Branch:
             # Check if the panel being created is the current panel
             if(current_check is None):
                 # Create with current_check=False
-                new_panel=Panels.objects.create(year=tenure_year,creation_time=datetime.now(),current=False)
+                new_panel=Panels.objects.create(year=tenure_year,creation_time=datetime.now(),current=False,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1)) #primary=1 as this is branch's panel
                 new_panel.save()
                 messages.success(request,"Panel was created successfully")
                 return True
@@ -148,7 +148,7 @@ class Branch:
                 # Changing previous panel current status to False
                 Panels.objects.filter(current=True).update(current=False)
                 # Create with current_check=True
-                new_panel=Panels.objects.create(year=tenure_year,creation_time=datetime.now(),current=True)
+                new_panel=Panels.objects.create(year=tenure_year,creation_time=datetime.now(),current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1)) #primary=1 as this is branch's panel)
                 new_panel.save()
                 messages.success(request,"Panel was created successfully")
                 messages.info(request,"Current Panel has been changed!")
