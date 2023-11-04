@@ -34,11 +34,10 @@ class Branch_View_Access:
         try:
             # get username
             username=request.user.username
-            data_access=False
             if(Branch_View_Access.common_access(username=username)):
                 return True
             elif(Branch_Data_Access.objects.filter(ieee_id=username,create_event_access=True).exists()):
-                data_access=True
+                return True
             else:
                 return False
         except Exception as ex:
@@ -46,6 +45,37 @@ class Branch_View_Access:
             logger.info(ex, exc_info=True)
             return False
 
+    def get_create_panel_access(request):
+        logger = logging.getLogger(__name__)
+        try:
+            # get username
+            username=request.user.username
+            if(Branch_View_Access.common_access(username=username)):
+                return True
+            elif(Branch_Data_Access.objects.filter(ieee_id=username,create_panels_access=True).exists()):
+                return True
+            else:
+                return False
+        except Exception as ex:
+            messages.error(request,"Error loading Data Access")
+            logger.info(ex, exc_info=True)
+            return False
+
+    def get_team_details_view_access(request):
+        logger = logging.getLogger(__name__)
+        try:
+            # get username
+            username=request.user.username
+            if(Branch_View_Access.common_access(username=username)):
+                return True
+            elif(Branch_Data_Access.objects.filter(ieee_id=username,team_details_page=True).exists()):
+                return True
+            else:
+                return False
+        except Exception as ex:
+            messages.error(request,"Error loading Data Access")
+            logger.info(ex, exc_info=True)
+            return False
 
 
     
