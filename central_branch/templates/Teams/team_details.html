@@ -11,6 +11,7 @@
     {% endblock common_css %}
 
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
         body, html {
@@ -203,31 +204,20 @@
                 </ul>
 
             </div>
-
-
+            <br>
             <!--Team Members Table-->
-            <div style="text-align:center; margin-top=20px;">  
+            <div style="text-align:center; margin-top:10px;">  
                 <div class="container">
-                    <div class="header_wrap">
-                            <div class="num_rows">
-                        
-                            <div class="form-group">
-                                <!--		Show Numbers Of Rows 		-->
-                                <select class="form-control" name="state" id="maxRows">
-                        
-                                <option value="10">10</option>
-                                <option value="15">15</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="5000">Show ALL Rows</option>
-                                </select>
-                        
-                            </div>
+                    <div class="form-group" style="justify-content:left; text-align:left;">
+                        <div class="search-container">
+                            <label class="form-label" for="table-search">Search: </label>
+                            <input class="form-control w-75" type="text" id="searchInput3" placeholder="Search..." onkeyup="searchTable3()">
+                        </div>
                     </div>
                 </div>
                 
                 <div class="table-responsive">
-                    <table class="table table-striped table-class" id="table-id">
+                    <table class="table table-striped table-class table3" id="table-id">
                 
                     <thead>
                         <tr>
@@ -399,6 +389,41 @@
     {% block common_js %}
         {% include "common_js.html" %}
     {% endblock common_js %}
+
+    <script>
+        function searchTable3() {
+            // Declare variables
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput3");
+            filter = input.value.toUpperCase();
+            table = document.querySelector(".table3");
+            tr = table.getElementsByTagName("tr");
+        
+            // Loop through all table rows
+            for (i = 0; i < tr.length; i++) {
+                var rowVisible = false; // Flag to track if any column matches the search query in the current row
+        
+                // Loop through all columns in the current row
+                for (j = 0; j < tr[i].getElementsByTagName("td").length; j++) {
+                    td = tr[i].getElementsByTagName("td")[j];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            rowVisible = true; // If a match is found in any column, set the flag to true
+                        }
+                    }
+                }
+        
+                // Set the display style for the row based on the flag
+                if (rowVisible) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+        
 
     <script>
         function searchTable() {
