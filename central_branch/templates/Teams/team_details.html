@@ -171,17 +171,42 @@
                 
             <br>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Manage <span style="color:#00629B;"><b>{{team_name}}</b></span> Team</h2>
-            
+            <br>
+            <!--Messages-->
+            <div style="justify-content:center; text-align:center;">
+                {% if messages %}
+                    {% for message in messages %}
+                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <!--Messages End-->
+            <br>
             <div style="justify-content:center;text-align:center;">  
                 <p class="btn-groups">
                     <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-d" ui-toggle-class="bounce" ui-target="#animate">Reset Team</button>
                     <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add Member in Team</button>
                 </p>
             </div>
+            <br>
+            <div class="nb" style="justify-content:center;">
+                <ul>
+                    <li>
+                        <p style="color:green;">Adding Member to the Team will also make them a part of the Current Panel: {{current_panel.year}}</p>
+                    </li>
+                    <li>
+                        <p style="color:red;">Removing Members from the Team will result Members to be excluded from the Current Panel {{current_panel.year}} as well. </p>
+                    </li>
+                    <li>
+                        <p style="color:purple;">If there is a new Current Panel created and previous Team's tenure is over, Reset the Teams. This will preserve the Previous Members of the team in their Respective Panels. Their Position and Teams will only be cleared from INSB Members Database.</p>
+                    </li>
+                </ul>
+
+            </div>
 
 
             <!--Team Members Table-->
-            <div style="text-align:center; margin-top=30px;">  
+            <div style="text-align:center; margin-top=20px;">  
                 <div class="container">
                     <div class="header_wrap">
                             <div class="num_rows">
@@ -289,22 +314,40 @@
                                         {% endfor %}                                    
                                     </select>
                                     <br>
-                                    <label>Search Members:</label>
-                                    <div class="input-group mb-3">
-                                        <input type="text" id="searchInput" class="form-control" placeholder="Search Members with name">
-                                    </div>
-                                    <label>Select Members whom you want to add in the team:</label>
-                                    <div class="scrollable-list" style="text-align:center;justify-content:center;">
-                                        <ol id="memberList">
-                                            <!-- Add list items here -->
-                                            {% for member in insb_members %}
-                                            <li>
-                                                <span style="color:#00629B"><a href="{% url 'membership_development_team:member_details' member.ieee_id %}">{{ member.name  }}</a> - </span>
-                                                <input type="checkbox" id="select" name="member_select" value={{member.ieee_id}}>
-                                            </li>
-                                            {% endfor %}
-                                            <!-- Add more list items as needed -->
-                                        </ol>
+                                    <div class="box">
+                                        <div class="box-header">
+                                            <label style="margin-left:5px;">Search:</label>
+                                            <input class="form-control w-75" type="text" id="searchInput" placeholder="Search Member by name" onkeyup="searchTable()">
+                                        </div>
+                                        <div class="table-responsive" style="max-height:300px; overflow-y:auto;">
+                                        <table class="table table-bordered m-0 table2" style="text-align:center;">
+                                            <thead>
+                                            <tr>
+                                                <th style="text-align:center;">IEEE ID</th>
+                                                <th style="text-align:center;">Name</th>
+                                                <th style="text-align:center;">IEEE Email</th>
+                                                <th style="text-align:center;">Current Position</th>
+                                                <th style="text-align:center;">Select Member</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            
+                                                {% for member in insb_members %}
+                                                <tr>
+                                                    <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.ieee_id %}">{{member.ieee_id}}</a></td>
+                                                    <td>{{ member.name  }}</td>
+                                                    <td>{{ member.email_ieee }}</td>
+                                                    <td>{{ member.position }}</td>
+                                                    <td>
+                                                    
+                                                        <input name="member_select" type="checkbox" value="{{member.ieee_id}}">
+                                                
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        </div>
                                     </div>
                             </div>
 
@@ -328,7 +371,9 @@
                             </div>
                             
                             <div class="modal-body text-left p-lg">
-                                <p>This will remove all team members from the team and switch their positions to 'General Member'</p>
+                                <p>You should only Reset Teams when there is a new Panel.</p>
+                                <p>This will remove all team members from the team and switch their positions to 'General Member' in the Registered Member Database.</p>
+                                <p>However, The Position and Teams of the Members will remain preserved in their respective panels.</p>
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
@@ -355,28 +400,38 @@
         {% include "common_js.html" %}
     {% endblock common_js %}
 
-    <script src="{% static 'table_search.js'%}"></script>
-
     <script>
-        // JavaScript to filter the list based on user input
-        document.addEventListener("DOMContentLoaded", function () {
-            const searchInput = document.getElementById("searchInput");
-            const memberList = document.getElementById("memberList").getElementsByTagName("li");
-    
-            searchInput.addEventListener("input", function () {
-                const filter = searchInput.value.toLowerCase();
-    
-                for (let i = 0; i < memberList.length; i++) {
-                    const listItem = memberList[i];
-                    const text = listItem.querySelector("span").textContent || listItem.querySelector("span").innerText;
-                    if (text.toLowerCase().includes(filter)) {
-                        listItem.style.display = "flex";
-                    } else {
-                        listItem.style.display = "none";
+        function searchTable() {
+            // Declare variables
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.querySelector(".table2");
+            tr = table.getElementsByTagName("tr");
+        
+            // Loop through all table rows
+            for (i = 0; i < tr.length; i++) {
+                var rowVisible = false; // Flag to track if any column matches the search query in the current row
+        
+                // Loop through all columns in the current row
+                for (j = 0; j < tr[i].getElementsByTagName("td").length; j++) {
+                    td = tr[i].getElementsByTagName("td")[j];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            rowVisible = true; // If a match is found in any column, set the flag to true
+                        }
                     }
                 }
-            });
-        });
+        
+                // Set the display style for the row based on the flag
+                if (rowVisible) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
     </script>
 </body>
 </html>

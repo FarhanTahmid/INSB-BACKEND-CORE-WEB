@@ -55,10 +55,12 @@ class Panels(models.Model):
         -there must be only one instance that can have the currrent=False value. The system wont work if there are multiple instances that have the current=False attributes.
         -year indicates the tenure of the panel
         -creation_time is initialized whenever the panel is created from the Panel Page.
+        -panel_of means for which society or AG the panel is for
     '''
     year=models.CharField(max_length=40,null=False,blank=False)
     creation_time=models.DateTimeField(null=True,blank=True)
     current=models.BooleanField(null=False,blank=False,default=False)
+    panel_of=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
     
     class Meta:
         verbose_name='IEEE NSU SB Panels'

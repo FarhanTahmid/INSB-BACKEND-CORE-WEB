@@ -203,7 +203,13 @@ def profile_page(request):
     
     return render(request,"users/profile_page.html",context)
 
+# profile settings
+def change_password(request):
+    return render(request,"users/change_password.html")
 
+# update profile information
+def update_information(request):
+    return render(request,"users/update_information.html")
 
 
 @login_required

@@ -29,7 +29,14 @@ class Branch:
         
         teams=Teams.objects.all().values('primary','team_name') #returns a list of dictionaryies with the id and team name
         return teams
-    
+    def load_team_members(team_primary):
+        
+        '''This function loads all the team members from the database'''
+        team=Teams.objects.get(primary=team_primary)
+        team_id=team.id
+        team_members=Members.objects.order_by('position').filter(team=team_id)
+        return team_members
+
     # def load_ex_com_panel_list():
     #     panels=Executive_commitee.objects.all().order_by('-pk')
     #     ex_com_panel_list=[]
@@ -90,13 +97,7 @@ class Branch:
             messages.error("Something went wrong while loading Data Access for Branch")
             return False
         
-    def load_team_members(team_primary):
-        
-        '''This function loads all the team members from the database'''
-        team=Teams.objects.get(primary=team_primary)
-        team_id=team.id
-        team_members=Members.objects.order_by('position').filter(team=team_id)
-        return team_members
+    
     
     def load_branch_eb_panel():
         '''This function loads all the EB panel members from the branch.
@@ -139,7 +140,7 @@ class Branch:
             # Check if the panel being created is the current panel
             if(current_check is None):
                 # Create with current_check=False
-                new_panel=Panels.objects.create(year=tenure_year,creation_time=datetime.now(),current=False)
+                new_panel=Panels.objects.create(year=tenure_year,creation_time=datetime.now(),current=False,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1)) #primary=1 as this is branch's panel
                 new_panel.save()
                 messages.success(request,"Panel was created successfully")
                 return True
@@ -148,7 +149,7 @@ class Branch:
                 # Changing previous panel current status to False
                 Panels.objects.filter(current=True).update(current=False)
                 # Create with current_check=True
-                new_panel=Panels.objects.create(year=tenure_year,creation_time=datetime.now(),current=True)
+                new_panel=Panels.objects.create(year=tenure_year,creation_time=datetime.now(),current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1)) #primary=1 as this is branch's panel)
                 new_panel.save()
                 messages.success(request,"Panel was created successfully")
                 messages.info(request,"Current Panel has been changed!")
@@ -198,6 +199,7 @@ class Branch:
     def load_all_insb_members():
         insb_members=Members.objects.all().order_by('nsu_id')
         return insb_members
+    
     def add_member_to_team(ieee_id,team_primary,position):
         '''This function adds member to the team'''
         getTeam=Teams.objects.get(primary=team_primary)
@@ -212,7 +214,6 @@ class Branch:
                     new_member_in_panel=Panel_Members.objects.create(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=Members.objects.get(ieee_id=ieee_id),
                                                                      position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(id=team))
                     new_member_in_panel.save()
-                    print("Panel Member Done")
                 except:
                     return DatabaseError
                 data_access_instance=MDT_Data_Access(ieee_id=Members.objects.get(ieee_id=ieee_id),
@@ -230,7 +231,6 @@ class Branch:
                     new_member_in_panel=Panel_Members.objects.create(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=Members.objects.get(ieee_id=ieee_id),
                                                                      position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(id=team))
                     new_member_in_panel.save()
-                    print("Panel Member Done")
                 except:
                     return DatabaseError
                 return True
