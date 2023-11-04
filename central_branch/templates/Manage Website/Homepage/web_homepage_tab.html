@@ -1,11 +1,19 @@
 {% load static %}
 {% block web_home_tab %}
-
-<div class="tabs-container">
-    <ul class="tabs">
-        <li class="tab" onclick="showTab('tab1')">Top Banner with Picture & Texts</li>
+<style>
+    .tabs li.active_tab {
+        background-color: #FFC72C;
+    }
+    .tabs li:hover{
+        transition: all 0.3s ease-in-out;
+    }
+</style>
+<div class="tabs-container" style="    display: flex;
+flex-direction: column;">
+    <ul class="tabs" style="display: flex; margin-right: 0px; justify-content: center;">
+        <li class="tab active_tab" onclick="showTab('tab1')">Top Banner with Picture & Texts</li>
         <li class="tab" onclick="showTab('tab2')">Middle Banner Picture With Statistics</li>
-        <li class="tab" onclick="showTab('tab3')">Venue & Permissions</li>
+        <li class="tab" onclick="showTab('tab3')" style="border-right: 1px solid #00629B;">Venue & Permissions</li>
     </ul>
     {% block banner_picture_text_tab %}
         {% include "Manage Website/Homepage/banner_picture_with_text_tab1.html" %}
@@ -15,10 +23,18 @@
         {% include "Manage Website/Homepage/banner_with_numbers_tab2.html" %}
     {% endblock banner_with_numbers %}
 
-    <div id="tab3" class="tab-content">
+    <div id="tab3" class="tab-content" style="    margin-right: 0px;">
         <h2>Tab 3 Content</h2>
         <p>This is the content of Tab 3.</p>
     </div>
 </div>
-
+<script>
+    const linkels = document.querySelectorAll('.tab');
+    linkels.forEach(linkels =>{
+        linkels.addEventListener('click', ()=> {
+            document.querySelector('.active_tab')?.classList.remove('active_tab');
+            linkels.classList.add('active_tab');
+        });
+    });
+</script>
 {% endblock web_home_tab %}
