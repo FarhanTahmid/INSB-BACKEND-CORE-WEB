@@ -296,7 +296,7 @@ def teams(request):
 def team_details(request,primary,name):
     
     '''Detailed panel for the team'''
-    
+    current_panel=Branch.load_current_panel()
     #load data of current team Members
     team_members=renderData.Branch.load_team_members(primary)
     #load all the roles and positions from database
@@ -318,16 +318,17 @@ def team_details(request,primary,name):
                 #ADDING MEMBER TO TEAM
                 for member in members_to_add:
                     if(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)):
-                        messages.info(request,"Member Added to the team!")
+                        messages.success(request,"Member Added to the team!")
                     elif(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)==False):
-                        messages.info(request,"Member couldn't be added!")
+                        messages.error(request,"Member couldn't be added!")
                     elif(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)==DatabaseError):
-                        messages.info(request,"An internal Database Error Occured! Please try again!")
+                        messages.error(request,"An internal Database Error Occured! Please try again!")
                 return redirect('central_branch:team_details',primary,name)
         if(request.POST.get('remove_member')):
             '''To remove member from team table'''
             try:
                 Members.objects.filter(ieee_id=request.POST['access_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13)) #ID 13 means general member
+                messages.error(request,f"{request.POST['access_ieee_id']} was removed from the Team")
                 return redirect('central_branch:team_details',primary,name)
             except:
                 pass
@@ -336,6 +337,7 @@ def team_details(request,primary,name):
             ieee_id=request.POST.get('access_ieee_id')
             position = request.POST.get('position')
             Members.objects.filter(ieee_id = ieee_id).update(position = position)
+            messages.info(request,"Member Position was updated in the Team.")
             return redirect('central_branch:team_details',primary,name)
         
         if (request.POST.get('reset_team')):
@@ -351,6 +353,7 @@ def team_details(request,primary,name):
         'team_members':team_members,
         'positions':positions,
         'insb_members':insb_members,
+        'current_panel':current_panel,
         
     }
     # return render(request,'team/team_details_page.html',context=context)

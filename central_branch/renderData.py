@@ -199,6 +199,7 @@ class Branch:
     def load_all_insb_members():
         insb_members=Members.objects.all().order_by('nsu_id')
         return insb_members
+    
     def add_member_to_team(ieee_id,team_primary,position):
         '''This function adds member to the team'''
         getTeam=Teams.objects.get(primary=team_primary)
@@ -213,7 +214,6 @@ class Branch:
                     new_member_in_panel=Panel_Members.objects.create(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=Members.objects.get(ieee_id=ieee_id),
                                                                      position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(id=team))
                     new_member_in_panel.save()
-                    print("Panel Member Done")
                 except:
                     return DatabaseError
                 data_access_instance=MDT_Data_Access(ieee_id=Members.objects.get(ieee_id=ieee_id),
@@ -231,7 +231,6 @@ class Branch:
                     new_member_in_panel=Panel_Members.objects.create(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=Members.objects.get(ieee_id=ieee_id),
                                                                      position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(id=team))
                     new_member_in_panel.save()
-                    print("Panel Member Done")
                 except:
                     return DatabaseError
                 return True
