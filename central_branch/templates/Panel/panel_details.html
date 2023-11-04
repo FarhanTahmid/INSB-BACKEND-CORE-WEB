@@ -180,37 +180,15 @@
 
             <!--Start from here-->
             <br>
-            <br>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">IEEE NSU Student Branch Panel of <b><span style="color:#00629B;"> {{panel_info.year}} </span></b></h2>
             <br>
             
             <!--Tab view for Panels-->
             <!--Tab view Start-->
-            <div class="tabs-container">
-                <ul class="tabs">
-                    <li class="tab" onclick="showTab('tab1')">Executive Members Panel</li>
-                    <li class="tab" onclick="showTab('tab2')">Officer Member Panel</li>
-                    <li class="tab" onclick="showTab('tab3')">Volunteer & General Members Panel</li>
-                </ul>
+            {% block panel_tab %}
+                {% include "Panel/panel_tabs.html" %}
+            {% endblock panel_tab %}
 
-                <div id="tab1" class="tab-content">
-                    {% block executive_members_panel %}
-                        {% include "Panel/executive_members_tab.html" %}
-                    {% endblock executive_members_panel %}
-                </div>
-
-                <div id="tab2" class="tab-content">
-                    {% block officer_members_panel %}
-                        {% include "Panel/officer_members_tab.html" %}
-                    {% endblock officer_members_panel %}
-                </div>
-
-                <div id="tab3" class="tab-content">
-                    {% block volunteer_members_panel %}
-                        {% include "Panel/volunteer_members_tab.html" %}
-                    {% endblock volunteer_members_panel %}
-                </div>
-            </div>
             <!--Tab view end-->
             
 

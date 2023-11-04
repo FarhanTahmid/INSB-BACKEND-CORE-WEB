@@ -211,12 +211,14 @@ class Branch:
                 
                 Members.objects.filter(ieee_id=ieee_id).update(team=team,position=position)
                 try:
+                    # check if Member existed in the current panel
                     check_member=Panel_Members.objects.filter(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=ieee_id).exists()
                     if(check_member):
                         # updating position and team for the member
                         Panel_Members.objects.filter(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=ieee_id).update(position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
                     
                     else:
+                        # add member in the Current panel
                         new_member_in_panel=Panel_Members.objects.create(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=Members.objects.get(ieee_id=ieee_id),
                                                                         position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(id=team))
                         new_member_in_panel.save()
@@ -234,11 +236,13 @@ class Branch:
                 
                 Members.objects.filter(ieee_id=ieee_id).update(team=team,position=position)
                 try:
+                    # check if member existed in the current panel
                     check_member=Panel_Members.objects.filter(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=ieee_id).exists()
                     if(check_member):
                         # updating position and team for the member
                         Panel_Members.objects.filter(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=ieee_id).update(position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
                     else:
+                        # add member to current panel
                         new_member_in_panel=Panel_Members.objects.create(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=Members.objects.get(ieee_id=ieee_id),
                                                                         position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(id=team))
                         new_member_in_panel.save()
