@@ -1,23 +1,13 @@
 from django.shortcuts import render,redirect
-from django.contrib.auth.models import User
-from django.http import JsonResponse, response
+from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from . import renderData
 from port.models import Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position
-from django.db import connection
-from django.db.utils import IntegrityError
-from django.core.exceptions import ObjectDoesNotExist
-from recruitment.models import recruited_members
-import csv,datetime
-from users.ActiveUser import ActiveUser
 from django.db import DatabaseError
-from system_administration.render_access import Access_Render
 from central_branch.renderData import Branch
 from events_and_management_team.renderData import Events_And_Management_Team
-from logistics_and_operations_team.renderData import LogisticsTeam
-from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,Event_type,Event_Venue,SuperEvents
-from events_and_management_team.models import Venue_List,Permission_criteria
+from . models import Events,Event_Venue,SuperEvents
 from main_website.models import Research_Papers,Blog_Category,Blog
 from users.models import Members,Panel_Members
 from django.conf import settings
@@ -261,40 +251,40 @@ def teams(request):
 
     '''Checking if user is EB/faculty or not, and the calling the function event_page_access
     which was previously called for providing access to Eb's/faculty only to event page'''
-
-    has_access = renderData.Branch.event_page_access(user)
-    if has_access:
-        '''
-        Loads all the existing teams in the branch
+    
+    '''Loads all the existing teams in the branch
         Gives option to add or delete a team
-        '''
-        if request.method == "POST":
-            if request.POST.get('recruitment_session'):
-                team_name = request.POST.get('recruitment_session')
-                new_team = Teams(team_name = team_name)
-                new_team.save()
-            if (request.POST.get('reset_all_teams')):
-                '''To remove all members in all teams and assigning them as general memeber'''
-                all_memebers_in_team = Members.objects.all()
-                all_memebers_in_team.update(team=None,position = Roles_and_Position.objects.get(id=13))
-                return redirect('central_branch:teams')
+    '''
     
-        #load teams from database
+        
+    if request.method == "POST":
+        if request.POST.get('recruitment_session'):
+            team_name = request.POST.get('recruitment_session')
+            new_team = Teams(team_name = team_name)
+            new_team.save()
+        if (request.POST.get('reset_all_teams')):
+            '''To remove all members in all teams and assigning them as general memeber'''
+            all_memebers_in_team = Members.objects.all()
+            all_memebers_in_team.update(team=None,position = Roles_and_Position.objects.get(id=13))
+            return redirect('central_branch:teams')
     
-        teams=renderData.Branch.load_teams()
-        team_list=[]
-        for team in teams:
-            team_list.append(team)
+    #load teams from database
+    
+    teams=renderData.Branch.load_teams()
+    team_list=[]
+    for team in teams:
+        team_list.append(team)
             
-        context={
-            'team':team_list,
-        }
-        return render(request,'Teams/team_homepage.html',context=context)
-    return render(request,"access_denied2.html")
+    context={
+        'team':team_list,
+    }
+    return render(request,'Teams/team_homepage.html',context=context)
+    
 
 
 def team_details(request,primary,name):
     
+    has_access=Branch_View_Access.get_team_details_view_access(request=request)
     '''Detailed panel for the team'''
     current_panel=Branch.load_current_panel()
     #load data of current team Members
@@ -364,8 +354,10 @@ def team_details(request,primary,name):
         'current_panel':current_panel,
         
     }
-    # return render(request,'team/team_details_page.html',context=context)
-    return render(request,'Teams/team_details.html',context=context)
+    if(has_access):
+        return render(request,'Teams/team_details.html',context=context)
+    else:
+        return render(request,"access_denied2.html")
 
 @login_required
 def manage_team(request,pk,team_name):
@@ -381,7 +373,7 @@ def panel_home(request):
     
     # get all panels from database
     panels = Branch.load_all_panels()
-    
+    create_panel_access=Branch_View_Access.get_create_panel_access(request=request)
     if request.method=="POST":
         tenure_year=request.POST['tenure_year']
         current_check=request.POST.get('current_check')
@@ -391,6 +383,7 @@ def panel_home(request):
         
     context={
         'panels':panels,
+        'create_panel_access':create_panel_access,
     }
     
     return render(request,"Panel/panel_homepage.html",context)
