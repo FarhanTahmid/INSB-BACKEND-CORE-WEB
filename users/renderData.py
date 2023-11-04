@@ -338,9 +338,17 @@ class PanelMembersData:
 
         try:
             for i in members:
-                # first add members to the Panel members table
-                new_panel_member=Panel_Members.objects.create(tenure=Panels.objects.get(id=panel_info.pk),member=Members.objects.get(ieee_id=i),position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
-                new_panel_member.save()
+                # check if Member already exists in the Panel
+                check_member=Panel_Members.objects.filter(tenure=panel_info.pk,member=i).exists()
+                if(check_member):
+                    # update Members Position and Teams
+                    Panel_Members.objects.filter(tenure=panel_info.pk,member=i).update(position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
+                    messages.info(request,f"{i} already existed in the Panel. Positions and Team were updated.")
+                    return True
+                # if not then add members to the Panel members table
+                else:
+                    new_panel_member=Panel_Members.objects.create(tenure=Panels.objects.get(id=panel_info.pk),member=Members.objects.get(ieee_id=i),position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
+                    new_panel_member.save()
 
                 # then update the members team and position in Members table
                 Members.objects.filter(ieee_id=i).update(team=Teams.objects.get(primary=team_primary),position=Roles_and_Position.objects.get(id=position))

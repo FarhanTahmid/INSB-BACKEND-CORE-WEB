@@ -187,7 +187,7 @@ class Branch:
             return DatabaseError
 
     def load_current_panel():
-        '''This method loads the current panel'''
+        '''This method loads the current panel. returns the year of the panel'''
         currentPanel=Panels.objects.filter(current=True)
         return currentPanel.first()
         
@@ -211,9 +211,15 @@ class Branch:
                 
                 Members.objects.filter(ieee_id=ieee_id).update(team=team,position=position)
                 try:
-                    new_member_in_panel=Panel_Members.objects.create(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=Members.objects.get(ieee_id=ieee_id),
-                                                                     position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(id=team))
-                    new_member_in_panel.save()
+                    check_member=Panel_Members.objects.filter(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=ieee_id).exists()
+                    if(check_member):
+                        # updating position and team for the member
+                        Panel_Members.objects.filter(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=ieee_id).update(position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
+                    
+                    else:
+                        new_member_in_panel=Panel_Members.objects.create(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=Members.objects.get(ieee_id=ieee_id),
+                                                                        position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(id=team))
+                        new_member_in_panel.save()
                 except:
                     return DatabaseError
                 data_access_instance=MDT_Data_Access(ieee_id=Members.objects.get(ieee_id=ieee_id),
@@ -228,9 +234,14 @@ class Branch:
                 
                 Members.objects.filter(ieee_id=ieee_id).update(team=team,position=position)
                 try:
-                    new_member_in_panel=Panel_Members.objects.create(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=Members.objects.get(ieee_id=ieee_id),
-                                                                     position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(id=team))
-                    new_member_in_panel.save()
+                    check_member=Panel_Members.objects.filter(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=ieee_id).exists()
+                    if(check_member):
+                        # updating position and team for the member
+                        Panel_Members.objects.filter(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=ieee_id).update(position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
+                    else:
+                        new_member_in_panel=Panel_Members.objects.create(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=Members.objects.get(ieee_id=ieee_id),
+                                                                        position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(id=team))
+                        new_member_in_panel.save()
                 except:
                     return DatabaseError
                 return True

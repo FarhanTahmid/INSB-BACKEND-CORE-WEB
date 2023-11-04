@@ -19,7 +19,7 @@ from logistics_and_operations_team.renderData import LogisticsTeam
 from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,Event_type,Event_Venue,SuperEvents
 from events_and_management_team.models import Venue_List,Permission_criteria
 from main_website.models import Research_Papers,Blog_Category,Blog
-from users.models import Members
+from users.models import Members,Panel_Members
 from django.conf import settings
 from users.renderData import LoggedinUser
 import os
@@ -328,23 +328,26 @@ def team_details(request,primary,name):
             '''To remove member from team table'''
             try:
                 Members.objects.filter(ieee_id=request.POST['access_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13)) #ID 13 means general member
-                messages.error(request,f"{request.POST['access_ieee_id']} was removed from the Team")
+                Panel_Members.objects.filter(tenure=current_panel.pk,member=request.POST['access_ieee_id']).delete()
+                messages.error(request,f"{request.POST['access_ieee_id']} was removed from the Team. The Member was also removed from the current Panel.")
                 return redirect('central_branch:team_details',primary,name)
-            except:
-                pass
+            except Exception as ex:
+                messages.error(request,"Something went Wrong!")
+
         if (request.POST.get('update')):
             '''To update member's position in a team'''
             ieee_id=request.POST.get('access_ieee_id')
             position = request.POST.get('position')
             Members.objects.filter(ieee_id = ieee_id).update(position = position)
-            messages.info(request,"Member Position was updated in the Team.")
+            Panel_Members.objects.filter(tenure=current_panel.pk,member=ieee_id).update(position=position)
+            messages.info(request,"Member Position was updated in the Team and the Current Panel.")
             return redirect('central_branch:team_details',primary,name)
         
         if (request.POST.get('reset_team')):
-            print("got request")
             '''To remove all members in the team and assigning them as general memeber'''
             all_memebers_in_team = Members.objects.filter(team = Teams.objects.get(primary=primary))
             all_memebers_in_team.update(team=None,position = Roles_and_Position.objects.get(id=13))
+            messages.info(request,"The whole team was reset. Previous Members are preserved in their respective Panel.")
             return redirect('central_branch:team_details',primary,name)
         
     context={
