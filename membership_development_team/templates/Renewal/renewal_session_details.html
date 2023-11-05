@@ -262,18 +262,22 @@
                           <th data-priority="1">Name</th>
                           <th data-priority="1">IEEE Email</th>
                           <th data-priority="1">Contact No</th>
+                          <th data-priority="1">Renewal Status</th>
                         </tr>
                       </thead>
                       <tbody>
                         {% for request in requests %}
                                           
                           <tr>
-                          
                               <td style="color:#00629B"><a href="{% url 'membership_development_team:request_details' session_id request.id %}">{{ request.ieee_id  }}</a></td>
                               <td>{{ request.name  }}</td>
                               <td>{{ request.email_ieee }}</td>
                               <td>{{ request.contact_no }}</td>
-                                            
+                              {% if request.renewal_status %}
+                              <td><img src="/static/admin/img/icon-yes.svg" alt="True"></td>
+                              {% else %}
+                              <td><img src="/static/admin/img/icon-no.svg" alt="True"></td>
+                              {% endif %}       
                           </tr>
                   
                         {% endfor %}
