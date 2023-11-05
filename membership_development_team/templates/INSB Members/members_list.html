@@ -172,12 +172,22 @@
     <br>
     <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> IEEE NSU SB Registered Members List </h2>
     <h4 style="justify-content:center;text-align:center;margin-bottom:30px;"> Total Registered Member in System: <span style="color:#00629B;"><b>{{totalNumber}}</b></span> </h4>
-    
+    <!--Messages-->
+    <div style="justify-content:center; text-align:center;">
+      {% if messages %}
+          {% for message in messages %}
+              <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+          {% endfor %}
+        <br>
+      {% endif %}
+  </div>
+  <!--Messages-->
     <div style="justify-content:center;text-align:center;">  
         <div class="btn-container">
           <a href="{% url 'membership_development_team:export_excel' %}" class="btn btn-outline b-success text-success">Generate an Excel Sheet of All Registered INSB Members</a>
         </div>
     </div>
+
 
 <div style="justify-content:center;text-align:center; margin-top:30px;">  
     <div class="container" style="justify-content:center;">

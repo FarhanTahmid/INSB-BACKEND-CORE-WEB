@@ -203,13 +203,13 @@
                         <label>Contact No.</label>
                         <input
                         class="form-control w-75"
-                        type="text" placeholder="Contact no." required name="contact_no" value="{{ member_data.contact_no }}"/>                      
+                        type="text" placeholder="Contact no." name="contact_no" value="{{ member_data.contact_no }}"/>                      
                       </div>
                       <div class="col-sm-6">
                         <label>Date Of Birth</label>
                         <input
                         class="form-control w-75"
-                          type="date" placeholder="Date of Birth" required name="date_of_birth" value="{{ dob }}"
+                          type="date" placeholder="Date of Birth" name="date_of_birth" value="{{ dob }}"
                         />
                     </div>
                     <br>
@@ -228,7 +228,7 @@
                         <label>Email (NSU)</label>
                         <input
                         class="form-control"
-                        type="text" placeholder="NSU E-Mail" required name="email_nsu" value="{{ member_data.email_nsu }}"
+                        type="text" placeholder="NSU E-Mail" name="email_nsu" value="{{ member_data.email_nsu }}"
                         />
                       </div>
                     </div>
@@ -237,7 +237,7 @@
                         <label>Email (Personal)</label>
                         <input
                         class="form-control"
-                        type="email" placeholder="Personal E-Mail" required name="email_personal" value="{{ member_data.email_personal }}"
+                        type="text" placeholder="Personal E-Mail" name="email_personal" value="{{ member_data.email_personal }}"
                         />
                       </div>
                     </div>
@@ -246,14 +246,14 @@
                     <label for="exampleInputPassword1">Facebook URL</label>
                     <input
                     class="form-control"
-                    type="url" placeholder="Enter Facebook URL" name="facebook_url" value="{{ member_data.facebook_url }}"
+                    type="text" placeholder="Enter Facebook URL" name="facebook_url" value="{{ member_data.facebook_url }}"
                     />                  
                   </div>
                   <div class="form-group">
                     <label for="exampleInputPassword1">Address</label>
                     <input
                     class="form-control"
-                    type="text" placeholder="Enter Address" required name="home_address" value="{{ member_data.home_address }}"
+                    type="text" placeholder="Enter Address" name="home_address" value="{{ member_data.home_address }}"
                     />
                   </div>
                   <div class="box-header" style="text-align:center;">
@@ -261,7 +261,7 @@
                   </div>
                   <div class="form-group">
                     <label>Major</label>
-                    <input class="form-control" type="text" placeholder="Major" required name="major_label" value="{{ member_data.major }}"
+                    <input class="form-control" type="text" placeholder="Major" name="major_label" value="{{ member_data.major }}"
                     />
                   </div>
 
