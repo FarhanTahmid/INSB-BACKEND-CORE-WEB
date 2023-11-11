@@ -128,6 +128,17 @@
           height: auto; /* Maintain aspect ratio */
           border-radius: 5px; /* Add rounded corners if desired */
       }
+      .ui-switch{
+        /* Add shadow to the icon */
+        box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.2);
+        display: inline-block;
+
+        /* You can customize the shadow properties */
+    }
+    
+    .ui-switch {
+        display: inline-block;
+    }
         
     </style>
 </head>
@@ -262,18 +273,22 @@
                           <th data-priority="1">Name</th>
                           <th data-priority="1">IEEE Email</th>
                           <th data-priority="1">Contact No</th>
+                          <th data-priority="1">Renewal Status</th>
                         </tr>
                       </thead>
                       <tbody>
                         {% for request in requests %}
                                           
                           <tr>
-                          
                               <td style="color:#00629B"><a href="{% url 'membership_development_team:request_details' session_id request.id %}">{{ request.ieee_id  }}</a></td>
                               <td>{{ request.name  }}</td>
                               <td>{{ request.email_ieee }}</td>
                               <td>{{ request.contact_no }}</td>
-                                            
+                              {% if request.renewal_status %}
+                              <td><img src="/static/admin/img/icon-yes.svg" alt="True"></td>
+                              {% else %}
+                              <td><img src="/static/admin/img/icon-no.svg" alt="True"></td>
+                              {% endif %}       
                           </tr>
                   
                         {% endfor %}
@@ -426,10 +441,6 @@
 
                                             </div>
 
-                                          
-                                          
-                                          
-
                                           <div class="form-group row">
                                             <label for="inputieeeid3" class="col-sm-2  form-control-label">For Further Details Contact With.</label>
                                             <div class="col-sm-10">
@@ -440,8 +451,24 @@
                                               </select>
                                             </div>
                                           </div>
-        
-                                        
+
+                                          <div class="form-group row">
+                                            <label for="inputieeeid3" class="col-sm  form-control-label">Accepting Response?</label>
+                                            <div class="col-sm-10">
+                                              {% if form_data.accepting_response %}
+                                                <label class="ui-switch">
+                                                  <input name="accept_response" checked="True" type="checkbox">
+                                                      <i></i>
+                                                </label>
+                                              {% else %}
+                                                <label class="ui-switch">
+                                                  <input name="accept_response" type="checkbox">
+                                                      <i></i>
+                                                </label>
+                                              {% endif %}
+                                            </div>
+                                          </div>
+
                                       </div>
                                     </div>
                                   </div>

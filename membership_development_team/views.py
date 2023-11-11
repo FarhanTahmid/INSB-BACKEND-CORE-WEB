@@ -214,6 +214,7 @@ def member_details(request,ieee_id):
         if request.POST.get('delete_member'):
             #Deleting a member from database
             member_to_delete=Members.objects.get(ieee_id=ieee_id)
+            messages.error(request,f"{member_to_delete.ieee_id} was deleted from the INSB Registered Members Database.")
             member_to_delete.delete()
             return redirect('membership_development_team:members_list')
               
@@ -417,9 +418,15 @@ def getRenewalStats(request):
 @login_required
 def renewal_session_data(request,pk):
     '''This view function loads all data for the renewal session including the members registered'''
+
+    user=request.user
+    has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
+
+
+
     session_name=renewal_data.get_renewal_session_name(pk)
     session_id=renewal_data.get_renewal_session_id(session_name=session_name)
-    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_associated','email_ieee','contact_no','ieee_id').order_by('id')
+    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
         
     #loading team member data for form credential edit
     load_team_members=renderData.MDT_DATA.load_team_members()
@@ -448,6 +455,12 @@ def renewal_session_data(request,pk):
             bkash_payment_number=request.POST['bkash_payment_number']
             nagad_payment_number=request.POST['nagad_payment_number']
             further_contact_member_id=request.POST['further_contact_member_id']
+            accepting_response=request.POST.get('accept_response')
+
+            if accepting_response is None:
+                accepting_response=False
+            else:
+                accepting_response=True
             
             #update form credentials
             renderData.MDT_DATA.create_form_data_for_particular_renewal_session(
@@ -460,7 +473,8 @@ def renewal_session_data(request,pk):
                 ieee_wie_membership_amount=ieee_wie_membership_amount,
                 bkash_payment_number=bkash_payment_number,
                 nagad_payment_number=nagad_payment_number,
-                further_contact_member_id=further_contact_member_id
+                further_contact_member_id=further_contact_member_id,
+                accepting_response=accepting_response
             )
             return redirect('membership_development_team:renewal_session_data',pk) 
     context={
@@ -472,8 +486,10 @@ def renewal_session_data(request,pk):
         'mdt_team_member':load_team_members,
         'has_form_data':has_form_data,
     }
-    
-    return render(request,'Renewal/renewal_session_details.html',context)
+    if has_access:
+        return render(request,'Renewal/renewal_session_details.html',context)
+    else:
+        return render(request,'access_denied.html')
 
 from .models import Renewal_Form_Info
 @login_required
