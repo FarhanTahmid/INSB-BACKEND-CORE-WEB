@@ -71,6 +71,8 @@ class Renewal_Form_Info(models.Model):
     nagad_payment_number=models.CharField(null=True,blank=True,max_length=20)
     #further contact member id
     further_contact_member_id=models.CharField(null=True,blank=True,max_length=50)
+    # form accepting response
+    accepting_response=models.BooleanField(null=False,blank=False,default=False)
     
     class Meta:
         verbose_name="Renewal Form Detail"

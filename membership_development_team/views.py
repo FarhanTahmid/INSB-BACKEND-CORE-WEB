@@ -455,6 +455,12 @@ def renewal_session_data(request,pk):
             bkash_payment_number=request.POST['bkash_payment_number']
             nagad_payment_number=request.POST['nagad_payment_number']
             further_contact_member_id=request.POST['further_contact_member_id']
+            accepting_response=request.POST.get('accept_response')
+
+            if accepting_response is None:
+                accepting_response=False
+            else:
+                accepting_response=True
             
             #update form credentials
             renderData.MDT_DATA.create_form_data_for_particular_renewal_session(
@@ -467,7 +473,8 @@ def renewal_session_data(request,pk):
                 ieee_wie_membership_amount=ieee_wie_membership_amount,
                 bkash_payment_number=bkash_payment_number,
                 nagad_payment_number=nagad_payment_number,
-                further_contact_member_id=further_contact_member_id
+                further_contact_member_id=further_contact_member_id,
+                accepting_response=accepting_response
             )
             return redirect('membership_development_team:renewal_session_data',pk) 
     context={
