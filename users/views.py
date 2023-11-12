@@ -65,8 +65,8 @@ def signup(request):
                     getMember=Members.objects.get(ieee_id=ieee_id)
                     
                     #checking if the member is already signed up
-                    if User.objects.filter(email=getMember.email_personal).exists():
-                        messages.info(request,"You are already signed up!")
+                    if User.objects.filter(username=ieee_id).exists():
+                        messages.info(request,"You are already signed up! Try Logging in instead.")
                     else:
                         
                         #creating account for the user
@@ -76,7 +76,7 @@ def signup(request):
                             auth.login(request,user) #logging in user after signing up automatically
                             return redirect('users:dashboard')
                         except:
-                            messages.info("Something went wrong! Try again")
+                            messages.info(request,"Something went wrong! Try again")
                         
                 except Members.DoesNotExist:
                     #If the ieee id is not found:
@@ -203,7 +203,13 @@ def profile_page(request):
     
     return render(request,"users/profile_page.html",context)
 
+# profile settings
+def change_password(request):
+    return render(request,"users/change_password.html")
 
+# update profile information
+def update_information(request):
+    return render(request,"users/update_information.html")
 
 
 @login_required

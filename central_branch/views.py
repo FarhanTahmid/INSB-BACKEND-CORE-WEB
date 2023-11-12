@@ -1,29 +1,23 @@
 from django.shortcuts import render,redirect
-from django.contrib.auth.models import User
-from django.http import JsonResponse, response
+from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from . import renderData
 from port.models import Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position
-from django.db import connection
-from django.db.utils import IntegrityError
-from django.core.exceptions import ObjectDoesNotExist
-from recruitment.models import recruited_members
-import csv,datetime
-from users.ActiveUser import ActiveUser
 from django.db import DatabaseError
-from system_administration.render_access import Access_Render
 from central_branch.renderData import Branch
 from events_and_management_team.renderData import Events_And_Management_Team
-from logistics_and_operations_team.renderData import LogisticsTeam
-from . models import Events,InterBranchCollaborations,IntraBranchCollaborations,Event_type,Event_Venue,SuperEvents
-from events_and_management_team.models import Venue_List,Permission_criteria
+from . models import Events,Event_Venue,SuperEvents
 from main_website.models import Research_Papers,Blog_Category,Blog
-from users.models import Members
+from users.models import Members,Panel_Members
 from django.conf import settings
 from users.renderData import LoggedinUser
 import os
-
+from users import renderData as port_render
+from port.renderData import PortData
+from users.renderData import PanelMembersData
+from central_branch.renderData import Branch
+from . view_access import Branch_View_Access
 
 
 
@@ -31,8 +25,8 @@ import os
 
 def central_home(request):
     user=request.user
-    has_access=Access_Render.system_administrator_superuser_access(user.username)
-    if (has_access):
+    # has_access=Access_Render.system_administrator_superuser_access(user.username)
+    if (True):
         #renderData.Branch.test_google_form()'''
         return render(request,'homepage/branch_homepage.html')
         # return render(request,'central_home.html')
@@ -43,9 +37,12 @@ def central_home(request):
 @login_required
 def event_control_homepage(request):
     # This function loads all events and super events in the event homepage table
+    
+    has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
     all_insb_events=renderData.Branch.load_all_events()
     context={
         'events':all_insb_events,
+        'has_access_to_create_event':has_access_to_create_event,
     }
     if(request.method=="POST"):
         if request.POST.get('create_new_event'):
@@ -249,47 +246,47 @@ def teams(request):
     Gives option to add or delete a team
     '''
     #load panel lists
-    panels=renderData.Branch.load_ex_com_panel_list()
+    # panels=renderData.Branch.load_ex_com_panel_list()
     user = request.user
 
     '''Checking if user is EB/faculty or not, and the calling the function event_page_access
     which was previously called for providing access to Eb's/faculty only to event page'''
-
-    has_access = renderData.Branch.event_page_access(user)
-    if has_access:
-        '''
-        Loads all the existing teams in the branch
+    
+    '''Loads all the existing teams in the branch
         Gives option to add or delete a team
-        '''
-        if request.method == "POST":
-            if request.POST.get('recruitment_session'):
-                team_name = request.POST.get('recruitment_session')
-                new_team = Teams(team_name = team_name)
-                new_team.save()
-            if (request.POST.get('reset_all_teams')):
-                '''To remove all members in all teams and assigning them as general memeber'''
-                all_memebers_in_team = Members.objects.all()
-                all_memebers_in_team.update(team=None,position = Roles_and_Position.objects.get(id=13))
-                return redirect('central_branch:teams')
+    '''
     
-        #load teams from database
+        
+    if request.method == "POST":
+        if request.POST.get('recruitment_session'):
+            team_name = request.POST.get('recruitment_session')
+            new_team = Teams(team_name = team_name)
+            new_team.save()
+        if (request.POST.get('reset_all_teams')):
+            '''To remove all members in all teams and assigning them as general memeber'''
+            all_memebers_in_team = Members.objects.all()
+            all_memebers_in_team.update(team=None,position = Roles_and_Position.objects.get(id=13))
+            return redirect('central_branch:teams')
     
-        teams=renderData.Branch.load_teams()
-        team_list=[]
-        for team in teams:
-            team_list.append(team)
+    #load teams from database
+    
+    teams=renderData.Branch.load_teams()
+    team_list=[]
+    for team in teams:
+        team_list.append(team)
             
-        context={
-            'team':team_list,
-        }
-        return render(request,'Teams/team_homepage.html',context=context)
-    return render(request,"access_denied2.html")
+    context={
+        'team':team_list,
+    }
+    return render(request,'Teams/team_homepage.html',context=context)
+    
 
 
 def team_details(request,primary,name):
     
+    has_access=Branch_View_Access.get_team_details_view_access(request=request)
     '''Detailed panel for the team'''
-    
+    current_panel=Branch.load_current_panel()
     #load data of current team Members
     team_members=renderData.Branch.load_team_members(primary)
     #load all the roles and positions from database
@@ -300,7 +297,6 @@ def team_details(request,primary,name):
             positions=positions.exclude(pk=i.pk)
     #loading all members of insb
     insb_members=renderData.Branch.load_all_insb_members()
-    
     members_to_add=[]
     position=12 #assigning default to volunteer
     if request.method=='POST':
@@ -312,31 +308,41 @@ def team_details(request,primary,name):
                 #ADDING MEMBER TO TEAM
                 for member in members_to_add:
                     if(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)):
-                        messages.info(request,"Member Added to the team!")
+                        messages.success(request,"Member Added to the team!")
                     elif(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)==False):
-                        messages.info(request,"Member couldn't be added!")
+                        messages.error(request,"Member couldn't be added!")
                     elif(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)==DatabaseError):
-                        messages.info(request,"An internal Database Error Occured! Please try again!")
+                        messages.error(request,"An internal Database Error Occured! Please try again!")
                 return redirect('central_branch:team_details',primary,name)
+            
         if(request.POST.get('remove_member')):
             '''To remove member from team table'''
             try:
+                # update members team to None and postion to general member
                 Members.objects.filter(ieee_id=request.POST['access_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13)) #ID 13 means general member
+                # remove member from the current panel ass well
+                Panel_Members.objects.filter(tenure=current_panel.pk,member=request.POST['access_ieee_id']).delete()
+                messages.error(request,f"{request.POST['access_ieee_id']} was removed from the Team. The Member was also removed from the current Panel.")
                 return redirect('central_branch:team_details',primary,name)
-            except:
-                pass
+            except Exception as ex:
+                messages.error(request,"Something went Wrong!")
+
         if (request.POST.get('update')):
             '''To update member's position in a team'''
             ieee_id=request.POST.get('access_ieee_id')
             position = request.POST.get('position')
+            # update position for member
             Members.objects.filter(ieee_id = ieee_id).update(position = position)
+            # update member position in the current panel as well
+            Panel_Members.objects.filter(tenure=current_panel.pk,member=ieee_id).update(position=position)
+            messages.info(request,"Member Position was updated in the Team and the Current Panel.")
             return redirect('central_branch:team_details',primary,name)
         
         if (request.POST.get('reset_team')):
-            print("got request")
-            '''To remove all members in the team and assigning them as general memeber'''
+            '''To remove all members in the team and assigning them as general memeber. Resetting team won't effect the panel'''
             all_memebers_in_team = Members.objects.filter(team = Teams.objects.get(primary=primary))
             all_memebers_in_team.update(team=None,position = Roles_and_Position.objects.get(id=13))
+            messages.info(request,"The whole team was reset. Previous Members are preserved in their respective Panel.")
             return redirect('central_branch:team_details',primary,name)
         
     context={
@@ -345,10 +351,13 @@ def team_details(request,primary,name):
         'team_members':team_members,
         'positions':positions,
         'insb_members':insb_members,
+        'current_panel':current_panel,
         
     }
-    # return render(request,'team/team_details_page.html',context=context)
-    return render(request,'Teams/team_details.html',context=context)
+    if(has_access):
+        return render(request,'Teams/team_details.html',context=context)
+    else:
+        return render(request,"access_denied2.html")
 
 @login_required
 def manage_team(request,pk,team_name):
@@ -358,10 +367,141 @@ def manage_team(request,pk,team_name):
     }
     return render(request,'team/team_management.html',context=context)
 
-#PANEL WORS
+#PANEL WORkS
 @login_required
-def panel_details(request,pk):
-    return render(request,"ex_com_panels/panel_details.html")
+def panel_home(request):
+    
+    # get all panels from database
+    panels = Branch.load_all_panels()
+    create_panel_access=Branch_View_Access.get_create_panel_access(request=request)
+    if request.method=="POST":
+        tenure_year=request.POST['tenure_year']
+        current_check=request.POST.get('current_check')
+        # create panel
+        if(Branch.create_panel(request,tenure_year=tenure_year,current_check=current_check)):
+            return redirect('central_branch:panels')
+        
+    context={
+        'panels':panels,
+        'create_panel_access':create_panel_access,
+    }
+    
+    return render(request,"Panel/panel_homepage.html",context)
+
+@login_required
+def panel_details(request,panel_id):
+    # Load the panel information
+    panel_info = Branch.load_panel_by_id(panel_id)
+    # Load the Members data associated with the panel
+    panel_members=Branch.load_panel_members_by_panel_id(panel_id=panel_id)
+    # Creating list to get different types of members
+    eb_member=[]
+    officer_member=[]
+    faculty_member=[]
+    volunteer_members=[]
+    
+    for i in panel_members:
+        # if the member position is eb_member
+        if(i.position.is_eb_member):
+            eb_member.append(i)
+        # if the member position is officer member
+        elif(i.position.is_officer):
+            officer_member.append(i)
+        # if the member position is faculty member
+        elif(i.position.is_faculty):
+            faculty_member.append(i)
+        else:
+        # generally add rest of the members as volunteers as one can only be added to Panel Member list if he is in any position or team. 
+            volunteer_members.append(i)
+    
+    all_insb_members=port_render.get_all_registered_members(request)
+
+    if request.method=="POST":
+        '''Block of code for Executive Members'''
+        # Check whether the add executive button was pressed
+        if (request.POST.get('add_executive_to_panel')):
+            # get position
+            position=request.POST.get('position')
+            # get members as list
+            members=request.POST.getlist('member_select')
+
+            if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=1)): #team_primary=1 as branchs primary is always 1
+                return redirect('central_branch:panel_details',panel_id)
+            
+        # check whether the remove member button was pressed
+        if (request.POST.get('remove_member')):
+            # get ieee_id of the member
+            ieee_id=request.POST['remove_panel_member']
+            # remove member
+            if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
+                return redirect('central_branch:panel_details',panel_id)
+        
+        '''Block of code for Officer Members'''
+
+        # Check whether the add officer button was pressed
+        if(request.POST.get('add_officer_to_panel')):
+            # get position
+            position=request.POST.get('position1')
+            # get team
+            team=request.POST.get('team')
+            # get members as a list
+            members=request.POST.getlist('member_select1')
+
+            if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=team)):
+                return redirect('central_branch:panel_details',panel_id)
+        
+        # Check whether the update button was pressed
+        if(request.POST.get('remove_member_officer')):
+            # get ieee_id of the member
+            ieee_id=request.POST['remove_officer_member']
+            # remove member
+            if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
+                return redirect('central_branch:panel_details',panel_id)
+
+        
+
+        '''Block of code for Volunteer Members'''
+        # check whether the add buton was pressed
+        if(request.POST.get('add_volunteer_to_panel')):
+            # get_position
+            position=request.POST.get('position2')
+            # get team
+            team=request.POST.get('team1')
+            # get members as a list
+            members=request.POST.getlist('member_select2')
+
+            if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=team)):
+                return redirect('central_branch:panel_details',panel_id)
+        # check whether the remove button was pressed
+        if(request.POST.get('remove_member_volunteer')):
+            # get ieee id of the member
+            ieee_id=request.POST['remove_officer_member']
+            # remove member
+            if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
+                return redirect('central_branch:panel_details',panel_id)
+
+
+
+
+    all_insb_executive_positions=PortData.get_all_executive_positions_with_sc_ag_id(request,sc_ag_primary=1) #setting sc_ag_primary as 1, because Branch's Primary is 1 by default
+    all_insb_officer_positions=PortData.get_all_officer_positions_with_sc_ag_id(request,sc_ag_primary=1)
+    all_insb_volunteer_positions=PortData.get_all_volunteer_position_with_sc_ag_id(request,sc_ag_primary=1)
+    all_insb_teams=PortData.get_teams_of_sc_ag_with_id(request,sc_ag_primary=1)
+    
+    context={
+        'panel_info':panel_info,
+        'eb_member':eb_member,
+        'officer_member':officer_member,
+        'faculty_member':faculty_member,
+        'volunteer_members':volunteer_members,
+        'insb_members':all_insb_members,
+        'positions':all_insb_executive_positions,
+        'officer_positions':all_insb_officer_positions,
+        'volunteer_positions':all_insb_volunteer_positions,
+        'teams':all_insb_teams,
+    }
+    return render(request,'Panel/panel_details.html',context)
+
 
 @login_required
 def others(request):
@@ -459,11 +599,11 @@ def add_blogs(request):
     })
 
 
-from main_website.models import HomepageBannerPictureWithText
+from main_website.models import HomePageTopBanner
 @login_required
 def manage_website_homepage(request):
     '''For top banner picture with Texts and buttons - Tab 1'''
-    topBannerItems=HomepageBannerPictureWithText.objects.all()
+    topBannerItems=HomePageTopBanner.objects.all()
     # get user data
     #Loading current user data from renderData.py
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -478,12 +618,12 @@ def manage_website_homepage(request):
         # To delete an item
         if request.POST.get('delete'):
             # Delelte the item. Getting the id of the item from the hidden input value.
-            HomepageBannerPictureWithText.objects.filter(id=request.POST.get('get_item')).delete()
+            HomePageTopBanner.objects.filter(id=request.POST.get('get_item')).delete()
             return redirect('central_branch:manage_website_home')
         # To add a new Banner Item
         if request.POST.get('add_banner'):
             try:
-                newBanner=HomepageBannerPictureWithText.objects.create(
+                newBanner=HomePageTopBanner.objects.create(
                     banner_picture=request.FILES['banner_picture'],
                     first_layer_text=request.POST['first_layer_text'],
                     second_layer_text=request.POST['second_layer_text'],
@@ -534,3 +674,64 @@ def manage_website_homepage(request):
         'media_url':settings.MEDIA_URL
     }
     return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
+
+
+@login_required
+def manage_view_access(request):
+    # get access of the page first
+
+    all_insb_members=port_render.get_all_registered_members(request)
+    branch_data_access=Branch.get_branch_data_access(request)
+
+    if request.method=="POST":
+        if(request.POST.get('update_access')):
+            ieee_id=request.POST['remove_member_data_access']
+            
+            # Setting Data Access Fields to false initially
+            create_event_access=False
+            event_details_page_access=False
+            create_panels_access=False
+            panel_memeber_add_remove_access=False
+            team_details_page=False
+            manage_web_access=False
+
+            # Getting values from check box
+            
+            if(request.POST.get('create_event_access')):
+                create_event_access=True
+            if(request.POST.get('event_details_page_access')):
+                event_details_page_access=True
+            if(request.POST.get('create_panels_access')):
+                create_panels_access=True
+            if(request.POST.get('panel_memeber_add_remove_access')):
+                panel_memeber_add_remove_access=True
+            if(request.POST.get('team_details_page')):
+                team_details_page=True
+            if(request.POST.get('manage_web_access')):
+                manage_web_access=True
+            
+            # ****The passed keys must match the field name in the models. otherwise it wont update access
+            if(Branch.update_member_to_branch_view_access(request=request,ieee_id=ieee_id,kwargs={'create_event_access':create_event_access,
+                                                       'event_details_page_access':event_details_page_access,
+                                                       'create_panels_access':create_panels_access,'panel_memeber_add_remove_access':panel_memeber_add_remove_access,
+                                                       'team_details_page':team_details_page,'manage_web_access':manage_web_access})):
+                return redirect('central_branch:manage_access')
+            
+        if(request.POST.get('add_member_to_access')):
+            selected_members=request.POST.getlist('member_select')
+            if(Branch.add_member_to_branch_view_access(request=request,selected_members=selected_members)):
+                return redirect('central_branch:manage_access')
+        
+        if(request.POST.get('remove_member')):
+            ieee_id=request.POST['remove_member_data_access']
+            if(Branch.remover_member_from_branch_access(request=request,ieee_id=ieee_id)):
+                return redirect('central_branch:manage_access')
+
+        
+
+    context={
+        'insb_members':all_insb_members,
+        'branch_data_access':branch_data_access,
+    }
+
+    return render(request,'Manage Access/manage_access.html',context)

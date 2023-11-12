@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Panels | IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+    <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
+
+
+    <style>
+        body, html {
+        
+        margin: 0;
+        
+        align-items: center;
+        justify-content: center;
+        }
+
+        .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+          }
+          .btn-container {
+            text-align: center;
+          }
+          
+          .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+          }
+          
+          /* Media query for smaller screens (adjust the breakpoint as needed) */
+          @media (max-width: 768px) {
+            .btn {
+              width: 100%; /* Make the button full width on smaller screens */
+            }
+          }
+          .ui-switch{
+            /* Add shadow to the icon */
+            box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+
+            /* You can customize the shadow properties */
+        }
+        .form-control-label {
+            display: inline-block;
+            margin-right: 10px; /* Add margin for spacing between elements */
+        }
+    
+        .ui-switch {
+            display: inline-block;
+        }
+        .table-container {
+            overflow: hidden; /* Hide table overflow */
+        }
+        
+        .table-wrapper {
+            max-height: 300px; /* Set the maximum height for scrolling */
+            overflow: auto; /* Enable vertical scrolling */
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        
+        /* Add responsive styling for smaller screens */
+        @media (max-width: 768px) {
+            .table-wrapper {
+                max-height: none; /* Allow table to expand vertically on smaller screens */
+            }
+        }
+        .image_icon{
+            padding:10px;
+            
+          }
+          .tooltip-container {
+            position: relative;
+            display: inline-block;
+          }
+          .tooltip-container.right {
+            float: right; /* Float the container to the right */
+            margin-right: 0; /* Reset the margin for the right-aligned button */
+          }
+          
+          .image-button:hover + .tooltip-text {
+              opacity: 1;
+              visibility: visible;
+              transform: translateX(10px); /* Adjust the distance from the link */
+          }
+          
+          .tooltip-text {
+              position: absolute;
+              top: 50%;
+              left: 100%;
+              transform: translateY(-50%);
+              white-space: nowrap;
+              background-color: #333;
+              color: #fff;
+              padding: 5px;
+              border-radius: 5px;
+              opacity: 0;
+              visibility: hidden;
+              transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+          }
+          .image-button {
+            display: inline-block;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+        
+        /* Add additional styling for image appearance, such as size and alignment */
+        .image-button img {
+            height:50px;
+            width: 50px; /* Adjust as needed */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 5px; /* Add rounded corners if desired */
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+                {% include 'navbar.html' %}
+            {% endblock navbar %}
+
+        </div>
+        <!--navbar content-->
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
+            <br>
+            <!--Back button-->
+            <div class="tooltip-container">
+                <a href="{% url 'central_branch:panels' %}" class="image-button">
+                    <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+                </a>
+                <span class="tooltip-text">Go back to Recruited Members Page</span>
+            </div>
+            <!--Back button-->
+
+            <!--Start from here-->
+            <br>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">IEEE NSU Student Branch Panel of <b><span style="color:#00629B;"> {{panel_info.year}} </span></b></h2>
+            <br>
+            
+            <!--Tab view for Panels-->
+            <!--Tab view Start-->
+            {% block panel_tab %}
+                {% include "Panel/panel_tabs.html" %}
+            {% endblock panel_tab %}
+
+            <!--Tab view end-->
+            
+
+        </div>
+        <!--PAGE END-->
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+    
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+    <!--Search for executive members-->
+    
+    <script src="{% static 'tab_view.js'%}"></script>
+
+</body>
+</html>

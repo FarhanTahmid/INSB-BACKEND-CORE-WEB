@@ -85,12 +85,15 @@
 
             <br>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to the <span><b>Events</b></span> of <span style="color:#00629B;">IEEE NSU Student Branch</b></span></h2>
-            <div style="justify-content:center;text-align:center;">  
+            {% if has_access_to_create_event %}
+              <div style="justify-content:center;text-align:center;">  
                 <div class="btn-container">
                   <a href="" class="btn btn-outline b-success text-success">Create a New Super Event</a>
                   <a href="{% url 'central_branch:event_creation_form1' %}" class="btn btn-outline b-primary text-primary">Create a New Event</a>
                 </div>
-            </div>  
+              </div> 
+            {% endif %}
+             
 
             <!--Events Table-->
             <div style="text-align:center; margin-top=30px;">  
@@ -156,12 +159,6 @@
             
         </div>
         <!--PAGE END-->
-
-        
-
-        
-
-    
 
         <!--Theme Switcher-->
 

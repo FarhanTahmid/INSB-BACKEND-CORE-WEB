@@ -13,6 +13,10 @@ from django.db.models import Q
 from users.models import User
 from recruitment.models import recruited_members
 import math
+import sqlite3
+from django.contrib import messages
+from . models import Panel_Members
+from port.models import Panels
 
 class LoggedinUser:
     
@@ -161,6 +165,17 @@ def is_eb_or_admin(user):
         return True
     else:
         return False
+    
+def get_all_registered_members(request):
+    '''This function returns all the INSB members registered in the main database'''
+    try:
+        get_members=Members.objects.filter().all().order_by('position')
+        return get_members
+    except sqlite3.DatabaseError:
+        messages.error(request,"An internal Database Error has occured!")
+    except:
+        messages.error(request,"Soemthing went wrong. Please try again!")
+        
 
 def getRecruitmentStats():
     
@@ -317,8 +332,47 @@ def getMonthName(numb: int)->str:
 
     
 
+class PanelMembersData:
 
+    def add_members_to_branch_panel(request,members,position,panel_info,team_primary):
 
+        try:
+            for i in members:
+                # check if Member already exists in the Panel
+                check_member=Panel_Members.objects.filter(tenure=panel_info.pk,member=i).exists()
+                if(check_member):
+                    # update Members Position and Teams
+                    Panel_Members.objects.filter(tenure=panel_info.pk,member=i).update(position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
+                    messages.info(request,f"{i} already existed in the Panel. Positions and Team were updated.")
+                    return True
+                # if not then add members to the Panel members table
+                else:
+                    new_panel_member=Panel_Members.objects.create(tenure=Panels.objects.get(id=panel_info.pk),member=Members.objects.get(ieee_id=i),position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
+                    new_panel_member.save()
+
+                # then update the members team and position in Members table
+                Members.objects.filter(ieee_id=i).update(team=Teams.objects.get(primary=team_primary),position=Roles_and_Position.objects.get(id=position))
+            messages.success(request,"Members were added in the Panel")
+            return True
+        except sqlite3.OperationalError:
+            messages.error(request,"An internal Database error has occured!")
+        except:
+            messages.error(request,"Something went wrong! Please try again!")
+
+    def remove_member_from_panel(request,ieee_id,panel_id):
+        
+        try:
+            # Delete from panel members database
+            Panel_Members.objects.filter(tenure=Panels.objects.get(id=panel_id),member=Members.objects.get(ieee_id=ieee_id)).delete()
+
+            # Remove Positions from Members Table database,turing their position in general members
+            Members.objects.filter(ieee_id=ieee_id).update(position=Roles_and_Position.objects.get(id=13),team=None)
+            messages.info(request,f"{ieee_id} was removed from the Panel")
+            return True
+        except sqlite3.OperationalError:
+            messages.error(request,"An internal Database error has occured!")
+        except:
+            messages.error(request,"Something went wrong! Please try again!")
 
 
 

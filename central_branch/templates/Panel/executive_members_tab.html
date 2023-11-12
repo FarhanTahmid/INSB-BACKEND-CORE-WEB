@@ -1,0 +1,199 @@
+{% load static %}
+{% block executive_members_panel %}
+
+<h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>Executive Panel Members</b></h2>
+    
+    <!--Messages-->
+    <div style="justify-content:center; text-align:center;">
+        {% if messages %}
+            {% for message in messages %}
+                <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <!--Messages End-->
+    
+    <!--Executive Commitee Table For the Panel-->
+    <div class="box">
+        <div class="box-header">
+            
+            <div style="text-align:right;">
+            <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add Executive Member</button>
+            </div>
+            <small>This table holds the data of Executive Members in the panel</small>
+            <br>
+            <label style="margin-left:5px;">Search:</label>
+            <input class="form-control w-75" type="text" id="searchInput" placeholder="Search Member by name" onkeyup="searchTable()">
+        </div>
+        <div class="table-responsive" style="max-height:300px; overflow-y:auto;">
+        <table class="table table-bordered m-0" style="text-align:center;">
+            <thead>
+            <tr>
+                <th style="text-align:center;">IEEE ID</th>
+                <th style="text-align:center;">Name</th>
+                <th style="text-align:center;">IEEE Email</th>
+                <th style="text-align:center;">Current Position</th>
+                <th style="text-align:center;">Remove Member?</th>
+            </tr>
+            </thead>
+            <tbody>
+            
+                {% for member in eb_member %}
+                <tr>
+                    <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.member.ieee_id %}">{{member.member.ieee_id}}</a></td>
+                    <td>{{ member.member.name  }}</td>
+                    <td>{{member.member.email_ieee}}</td>
+                    <td>{{member.position}}</td>
+                    <td>
+                    <form method="POST">
+                        {% csrf_token %}
+                            <input class="btn btn-outline b-danger text-danger" name="remove_member" type="submit" value="Remove Member">
+                            <input type="hidden" name="remove_panel_member" value={{member.member.ieee_id}}>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+    <!--Table Ends-->
+    <br>
+    <br>
+    <!--Add modal-->
+    <div id="m-s-a" class="modal" data-backdrop="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add member to Executive Panel!</h5>
+            </div>
+            <div class="modal-body p-lg">
+              <p>Do select the Position of the Member Carefully!</p>
+              <p>This will update the Members Position in the Database and also keep a record of the Member in the Panel.</p>
+              <br>
+            </div>
+            <!--Position Input-->
+
+            <!--Position Input Ends-->
+
+            <!--Search table-->
+            <form method="POST">
+                {% csrf_token %}
+                <label style="margin-left:5px;">Select Position</label>
+                <select id="position" name="position">
+                    {% for position in positions %}
+                        <option value={{position.id}}>{{ position.role }}</option>
+                    {% endfor %} 
+                </select>
+                <div class="table-container">
+                    <label style="margin-left: 5px;">Search</label>
+                    <input class="w-75" type="text" id="searchInput2" placeholder="Search Member" onkeyup="searchTable2()">
+                    <div class="table-wrapper">
+                        <table class="table2" id="data2">
+                            <thead>
+                                <tr id="row">
+                                    <th>Name</th>
+                                    <th>IEEE ID</th>
+                                    <th>Current Position</th>
+                                    <th>Email</th>
+                                    <th>Select</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for member in insb_members %}
+                                <tr>
+                                    <td>{{ member.name }}</td>
+                                    <td>{{ member.ieee_id }}</td>
+                                    <td>{{ member.position }}</td>
+                                    <td>{{ member.email_ieee }}</td>
+                                    <td>
+                                        <input type="checkbox" id="select" name="member_select" value={{member.ieee_id}}>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            
+                <div class="modal-footer">
+                <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+            
+                    <input type="submit" class="btn primary p-x-md" name="add_executive_to_panel" value="Add Executive Member"></input>  
+                </div>
+            </form>
+
+          </div><!-- /.modal-content -->
+        </div>
+    </div>
+    <!--Add modal ends-->
+
+
+    <script>
+        function searchTable() {
+            // Declare variables
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.querySelector("table");
+            tr = table.getElementsByTagName("tr");
+        
+            // Loop through all table rows
+            for (i = 0; i < tr.length; i++) {
+                var rowVisible = false; // Flag to track if any column matches the search query in the current row
+        
+                // Loop through all columns in the current row
+                for (j = 0; j < tr[i].getElementsByTagName("td").length; j++) {
+                    td = tr[i].getElementsByTagName("td")[j];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            rowVisible = true; // If a match is found in any column, set the flag to true
+                        }
+                    }
+                }
+        
+                // Set the display style for the row based on the flag
+                if (rowVisible) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+    <script>
+        function searchTable2() {
+            // Declare variables
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput2");
+            filter = input.value.toUpperCase();
+            table = document.querySelector(".table2");
+            tr = table.getElementsByTagName("tr");
+        
+            // Loop through all table rows
+            for (i = 0; i < tr.length; i++) {
+                var rowVisible = false; // Flag to track if any column matches the search query in the current row
+        
+                // Loop through all columns in the current row
+                for (j = 0; j < tr[i].getElementsByTagName("td").length; j++) {
+                    td = tr[i].getElementsByTagName("td")[j];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            rowVisible = true; // If a match is found in any column, set the flag to true
+                        }
+                    }
+                }
+        
+                // Set the display style for the row based on the flag
+                if (rowVisible) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+
+{% endblock executive_members_panel %}

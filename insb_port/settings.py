@@ -31,7 +31,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-LOGIN_URL='/users/login'
+LOGIN_URL='/portal/users/login'
 
 # Application definition
 
@@ -77,6 +77,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'main_website.middleware.BlockMainWebMiddleWare',
 ]
 
 ROOT_URLCONF = 'insb_port.urls'

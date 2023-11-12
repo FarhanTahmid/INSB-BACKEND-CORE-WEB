@@ -21,7 +21,8 @@ class Renewal_Sessions(models.Model):
 class Renewal_requests(models.Model):
     timestamp=models.DateTimeField(null=True,blank=True)
     session_id=models.ForeignKey(Renewal_Sessions,null=False,blank=False,on_delete=models.CASCADE)
-    ieee_id=models.IntegerField(null=True,blank=True)
+    ieee_id=models.IntegerField(null=False,blank=False,default=0)
+    nsu_id=models.IntegerField(null=False,blank=False,default=0)
     name=models.CharField(null=False,blank=False,max_length=100,default="null")
     contact_no=models.CharField(null=False,blank=False,max_length=30,default="null")
     email_associated=models.EmailField(null=False,blank=False)
@@ -70,6 +71,8 @@ class Renewal_Form_Info(models.Model):
     nagad_payment_number=models.CharField(null=True,blank=True,max_length=20)
     #further contact member id
     further_contact_member_id=models.CharField(null=True,blank=True,max_length=50)
+    # form accepting response
+    accepting_response=models.BooleanField(null=False,blank=False,default=False)
     
     class Meta:
         verbose_name="Renewal Form Detail"

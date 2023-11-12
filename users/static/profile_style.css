@@ -1,0 +1,415 @@
+
+/* ===== =====>> Css Variables  <<===== =====  */
+:root {
+  --f1-color: #fff;
+  --f2-color: #000;
+  --f3-color: rgba(0, 0, 0, 0.8);
+  --f4-color: rgba(0, 0, 0, 0.6);
+  --f5-color: #0099cc;
+  --f6-color: #88cee6;
+  --bg1-color: #fff;
+  --bg2-color: #000;
+  --bg3-color: #33ccff;
+  --bg4-color: #33cc33;
+  --bg5-color: #0099cc;
+  --bg6-color: rgba(0, 0, 0, 0.4);
+  --bg7-color: rgba(0, 0, 0, 0.2);
+  --glass-bg: linear-gradient( to right bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3) );
+  --C-lg-bg: linear-gradient(45deg, #ff3399, #ff9933);
+  --xxxl-fs: 25px;
+  --xxl-fs: 20px;
+  --xl-fs: 20px;
+  --l-fs: 15px;
+  --m-fs: 13px;
+  --s-fs: 10px;
+  --xs-fs: 10px;
+  --m-2-5: 1rem;
+  --m-1-8: 1.3rem;
+  --m-1-5: 1rem;
+  --m-0-6: 0.1rem;
+  --m-0-5: 0.1rem;
+  --m-0-3: 0.1rem;
+  --p-2-5: 1rem;
+  --p-1-5: 1rem;
+  --p-1-0: 1rem;
+  --p-0-8: 0.3rem;
+  --p-0-5: 0.2rem;
+  --p-0-4: 0.2rem;
+  --p-0-3: 0.3rem;
+}
+/* ===== =====>>  Body Css  <<===== =====  */
+.body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 10px;
+}
+
+
+/* ===== =====>>  Main-profile_container Css  <<===== =====  */
+.profile_container {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-areas:
+    "header header"
+    "userProfile userDetails"
+    "work_skills timeline_about"
+    "work_skills timeline_about";
+  width: 95%;
+  height: 90vh;
+  background: linear-gradient( to right bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3) );
+  padding: 1rem;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5), 0 0 25px rgba(0, 0, 0, 0.08);
+  background-color: #cbcaca;
+}
+
+/* ===== =====>>  profile_container Cards Grid-Area Css Start  <<===== =====  */
+.header {
+  grid-area: header;
+}
+
+.userProfile {
+  grid-area: userProfile;
+}
+
+.work_skills {
+  grid-area: work_skills;
+}
+
+.userDetails {
+  grid-area: userDetails;
+}
+
+.timeline_about {
+  grid-area: timeline_about;
+}
+
+/* ===== =====>>  profile_container Cards Css  <<===== =====  */
+.profile_container .card {
+  background: linear-gradient( to right bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3) );
+  backdrop-filter: blur(3rem);
+  border-radius: 0.5rem;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+}
+
+/* ===== =====>>  profile_container Header/Navbar Css  <<===== =====  */
+.profile_container header {
+  padding: 0 1rem;
+}
+
+.profile_container header .brandLogo {
+  display: flex;
+  align-items: center;
+}
+
+.profile_container header .brandLogo figure img {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.profile_container header .brandLogo span {
+  font-size: 20px;
+  font-weight: 700;
+  margin-left: 0.1rem;
+}
+
+/* ===== =====>>  User Main-Profile Css Start  <<===== ===== */
+.profile_container .userProfile {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  background: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+.profile_container .userProfile .profile figure img {
+  width: 18rem;
+  height: 18rem;
+  border-radius: 50%;
+}
+
+/* ===== =====>>  Work & Skills Css Start  <<===== ===== */
+.profile_container .work_skills {
+  padding: 1rem;
+}
+
+.work_skills .work .heading,
+.work_skills .skills .heading {
+  position: relative;
+  font-size: 10px;
+  color: rgba(0, 0, 0, 0.6);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.work_skills .work .heading::before,
+.work_skills .skills .heading::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 0.1rem;
+  width: 88%;
+  background: var(--bg6-color);
+}
+
+.work_skills .work .ieee_basic_info{
+  position: relative;
+}
+
+.work_skills .work .ieee_basic_info h1{
+  font-size: 15px;
+  color: var(--f3-color);
+  margin-bottom: 0.1rem;
+}
+
+.work_skills .work .ieee_basic_info span{
+  position: absolute;
+  top: 0;
+  right: 3rem;
+  font-weight: 700;
+  font-size: 10px;
+  color: var(--f5-color);
+  background: #e6f2ff;
+  padding: 0.2rem 1rem;
+  border-radius: 0.4rem;
+}
+
+.work_skills .work .ieee_basic_info p{
+  margin-bottom: 1.3rem;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.6);
+  line-height: 1.6rem;
+}
+
+/* =====>>  Skills Bars Css  <<===== */
+.work_skills .skills ul li {
+  position: relative;
+  font-size: 13px;
+  line-height: 1.8rem;
+  margin: 0.1rem;
+  color: var(--f2-color);
+  font-weight: 500;
+}
+
+.work_skills .skills ul li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  height: 0.2rem;
+  background: var(--bg3-color);
+  animation: skills 8s linear infinite;
+  animation-delay: calc(-2s * var(--i));
+}
+
+@keyframes skills {
+  0% {
+    width: 50%;
+    filter: hue-rotate(180deg);
+  }
+
+  50% {
+    width: 0;
+  }
+
+  100% {
+    width: 50%;
+    filter: hue-rotate(0);
+  }
+}
+
+/* ===== =====>>  User Details Css Start  <<===== ===== */
+.userDetails {
+  position: relative;
+  padding: 1rem 1rem;
+}
+
+.userDetails .userName h1 {
+  font-size: 25px;
+}
+
+.userDetails .userName .map {
+  position: absolute;
+  top: 2.5rem;
+  left: 18.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.userDetails .userName .map .ri {
+  margin-right: 0.1rem;
+  font-size: 13px;
+}
+
+.userDetails .userName .map span {
+  font-size: 10px;
+  color: var(--f3-color);
+  font-weight: 700;
+}
+
+.userDetails .userName p {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--f5-color);
+  margin-bottom: 1.3rem;
+}
+
+.userDetails .rank {
+  position: relative;
+  margin-bottom: 1.3rem;
+}
+
+.userDetails .rank .heading {
+  font-size: 10px;
+  color: var(--f4-color);
+  text-transform: uppercase;
+  margin-bottom: 0.1rem;
+}
+
+.userDetails .rank span {
+  font-size: var(--xxl-fs);
+  font-weight: 700;
+}
+
+.userDetails .rank .rating {
+  position: absolute;
+  top: 2.7rem;
+  left: 3.5rem;
+}
+
+.userDetails .rank .rating .rate {
+  color: var(--f5-color);
+  font-size: 15px;
+}
+
+.userDetails .rank .rating .underrate {
+  color: var(--f6-color);
+}
+
+.userDetails .btns ul,
+.userDetails .btns ul li {
+  display: flex;
+  align-items: center;
+}
+
+.userDetails .btns ul li {
+  margin-right: var(--m-2-5);
+  border-radius: 0.5rem;
+}
+
+.userDetails .btns ul li .ri {
+  margin-right: 0.1rem;
+  font-size: 20px;
+}
+
+.userDetails .btns ul li a {
+  font-size: 15px;
+  color: var(--f2-color);
+  font-weight: 500;
+}
+
+.userDetails .btns ul .active {
+  background: #e6f2ff;
+  padding: var(--p-0-5) 1rem;
+}
+
+.userDetails .btns ul .active a,
+.userDetails .btns ul .active .ri {
+  color: var(--f5-color);
+}
+
+/* ===== =====>>  Timeline & About Css Start  <<===== ===== */
+.timeline_about {
+  padding: 1rem;
+}
+
+.timeline_about .tabs ul {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--m-2-5);
+}
+
+.timeline_about .tabs ul::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--bg7-color);
+}
+
+.timeline_about .tabs ul li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-right: var(--m-2-5);
+  padding-bottom: var(--p-0-8);
+  cursor: pointer;
+}
+
+.timeline_about .tabs ul li span {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.timeline_about .tabs ul li .ri {
+  margin-right: 0.1rem;
+}
+
+.timeline_about .tabs ul .active::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--bg5-color);
+}
+
+.timeline_about .contact_info .heading,
+.timeline_about .basic_info .heading {
+  font-size: 10px;
+  color: var(--f4-color);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.timeline_about .contact_info ul,
+.timeline_about .basic_info ul {
+  margin-bottom: 1rem;
+}
+
+.timeline_about .contact_info ul li,
+.timeline_about .basic_info ul .list {
+  display: flex;
+  margin: 0.1rem 0;
+}
+
+.timeline_about .contact_info ul li h1,
+.timeline_about .basic_info ul .list .basic_info_label {
+  font-weight: 500;
+  font-size: 13px;
+  min-width: 12rem;
+}
+
+.timeline_about .contact_info ul li span,
+.timeline_about .basic_info ul .list .basic_info_info {
+  font-size: 13px;
+}
+
+.timeline_about .contact_info ul .phone span,
+.timeline_about .contact_info ul .email span,
+.timeline_about .contact_info ul .site span {
+  color: var(--f5-color);
+}

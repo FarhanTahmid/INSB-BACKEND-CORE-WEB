@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Update Profile Information | IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+
+
+    {% block common_css %}
+    {% include "common_css.html" %}
+    {% endblock common_css %}
+
+    <style>
+        body,
+        html {
+
+            margin: 0;
+
+            align-items: center;
+            justify-content: center;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .btn-container {
+            text-align: center;
+        }
+
+        .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal;
+            /* Allow text to wrap within the button */
+            word-wrap: break-word;
+            /* Break long words if necessary */
+            font-size: 16px;
+            /* Adjust the font size as needed */
+        }
+
+        /* Media query for smaller screens (adjust the breakpoint as needed) */
+        @media (max-width: 768px) {
+            .btn {
+                width: 100%;
+                /* Make the button full width on smaller screens */
+            }
+        }
+
+        /* settings */
+
+        .body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-size: 10px;
+        }
+
+        .container {
+            position: relative;
+            max-width: 780px;
+            width: 100%;
+            background: #fff;
+            border-radius: 4px;
+            padding: 30px;
+            margin: 0 20px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .container label {
+            position: relative;
+            font-size: 0.9rem;
+        }
+        
+        .input-img{
+            margin-bottom: 15px;
+            height: 40px;
+            width: 100%;
+            font-size: 16px;
+            color: #000;
+        }
+
+        .input {
+            margin-bottom: 15px;
+            height: 40px;
+            width: 100%;
+            border: 2px solid #d3d3d3;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #000;
+            outline: none;
+            padding: 0 16px 0 16px;
+        }
+        .profile{
+            text-align: center;
+        }
+        .profile_info{
+            display: flex;
+            column-gap: 10px;
+            justify-content: space-between;
+        }
+        @media screen and (max-width:520px) {
+            .profile_info{
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+
+            {% block sidebar %}
+            {% include 'users/sidebar.html' %}
+            {% endblock %}
+
+        </div>
+        <!-- aside end -->
+
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+            {% include 'navbar.html' %}
+            {% endblock navbar %}
+
+        </div>
+        <!--navbar content-->
+
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" id="view">
+
+            <!--Start from here-->
+            <div class="body">
+                <div class="container">
+                    <form action="" method="get" style="padding: 0 5%;">
+                        <h2 style="font-weight: 600;
+                        text-align: center;
+                        margin-bottom: 20px;
+                        text-transform: uppercase;">Update Information</h2>
+                        <div class="profile">
+                            <figure><img src="{{ user_data.profile_picture }}" alt="profile" width="250px" height="250px">
+                            </figure>
+                        </div>
+                        <label for="image-upload">Update your profile picture</label> 
+                        <input class="input-img" type="file" id="image-upload" accept="image/*"><br>
+                        <div class="profile_info">
+                            <div>
+                                <label for="name">Full Name</label>
+                                <input class="input" type="text" name="name" value="{{ user_data.name }}" required><br>
+                                <label for="address">Address</label>
+                                <input class="input" type="text" name="address" value="{{ user_data.home_address }}" required><br>
+                                <label for="email">Email</label>
+                                <input class="input" type="email" name="email" value="{{ user_data.email_personal }}" required><br>
+                                <label for="phone">Contact</label>
+                                <input class="input" type="phone" name="phone" value="{{ user_data.contact_no }}" required><br>
+                            </div>
+                            <div>
+                                <label for="dob">Date of Birth</label>
+                                <input class="input" type="text" name="dob" value="{{ user_data.dob }}" placeholder="Format: January 01, 2023" required><br>
+                                <label for="gender">Gender</label>
+                                <input class="input" type="text" name="gender" value="{{ user_data.gender }}" required><br>
+                                <label for="major">Major in NSU</label>
+                                <input class="input" type="text" name="major" value="{{ user_data.major }}" required><br>
+                            </div>
+                        </div>
+                        
+
+                        <div style="
+                        column-gap: 10px;
+                        display: flex;
+                        justify-content: center;
+                        ">
+                            <button class="btn" type="submit" style="background-color: #050D3A;
+                            color: #fff;">Update</button>
+                            <a class="btn" href="{% url 'users:profile' %}" style="    background-color: #FFA300;
+                            color: #000000;">Cancel</a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <!--PAGE END-->
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+        {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+    {% include "common_js.html" %}
+    {% endblock common_js %}
+
+</body>
+
+</html>

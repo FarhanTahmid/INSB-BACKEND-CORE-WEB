@@ -27,3 +27,4 @@ class Media_Links(admin.ModelAdmin):
 class Media_Links(admin.ModelAdmin):
     list_display=['event_id','selected_image']
 
+

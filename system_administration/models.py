@@ -5,8 +5,20 @@ from users.models import Members
 from django_resized import ResizedImageField
 # Create your models here.
 
-#if you want to create an admin, go to django admin, insert data in this model, then register in users as superuser
+# System Model
+class system(models.Model):
+    system_under_maintenance=models.BooleanField(null=False,blank=False,default=False)
+    main_website_under_maintenance=models.BooleanField(null=False,blank=False,default=False)
+    portal_under_maintenance=models.BooleanField(null=False,blank=False,default=False)
+    
+    class Meta:
+        verbose_name="System Handling"
+    
+    def __str__(self) -> str:
+        return str(self.pk)
 
+
+#if you want to create an admin, go to django admin, insert data in this model, then register in users as superuser
 class adminUsers(models.Model):
     username=models.CharField(primary_key=True,null=False,blank=False,max_length=30,default='Undetermined')
     name=models.CharField(null=False,blank=False,max_length=60,default="Undetermined")
@@ -19,7 +31,20 @@ class adminUsers(models.Model):
     def get_absolute_url(self):
         return reverse("admin_users", kwargs={"userid": self.userid})
         
+class Branch_Data_Access(models.Model):
+    ieee_id=models.OneToOneField(Members,null=False,blank=False,on_delete=models.CASCADE)
+    create_event_access=models.BooleanField(null=False,blank=False,default=False)
+    event_details_page_access=models.BooleanField(null=False,blank=False,default=False)
+    create_panels_access=models.BooleanField(null=False,blank=False,default=False)
+    panel_memeber_add_remove_access=models.BooleanField(null=False,blank=False,default=False)
+    team_details_page=models.BooleanField(null=False,blank=False,default=False)
+    manage_web_access=models.BooleanField(null=False,blank=False,default=False)
+    manage_web_home_access=models.BooleanField(null=False,blank=False,default=False)
 
+    class Meta:
+        verbose_name="Branch Data Access"
+    def __str__(self) -> str:
+        return str(self.pk)
     
 class MDT_Data_Access(models.Model):
     

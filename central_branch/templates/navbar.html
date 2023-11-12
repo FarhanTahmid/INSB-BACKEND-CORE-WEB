@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div ui-include="'../views/blocks/dropdown.new.html'"></div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link" href="{% url 'ieee_nsu_sb_pes_sbc:pes_members' %}">
+                <a class="nav-link" href="{% url 'central_branch:panels' %}">
                 <i class="fa  fa-graduation-cap"></i>
                 <span>Panels</span>
                 </a>
@@ -76,6 +76,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 <a class="nav-link" href="{% url 'central_branch:manage_website_home' %}">
                 <i class="material-icons">&#xe894;</i>
                 <span>Manage Branch Website</span>
+                </a>
+                <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="{% url 'central_branch:manage_access' %}">
+                <i class="fa fa-lock"></i>
+                <span>Manage View Access</span>
                 </a>
                 <div ui-include="'../views/blocks/dropdown.new.html'"></div>
             </li>

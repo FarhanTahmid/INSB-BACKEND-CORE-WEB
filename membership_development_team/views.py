@@ -46,8 +46,7 @@ def md_team_homepage(request):
         'volunteers':volunteers,
         'media_url':settings.MEDIA_URL,
         'user_data':user_data,
-    }    
-    
+    }
     return render(request,'md_team_homepage.html',context=context)
 
 @login_required
@@ -79,8 +78,11 @@ def member_details(request,ieee_id):
     has_access=(renderData.MDT_DATA.insb_member_details_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
     
     member_data=renderData.MDT_DATA.get_member_data(ieee_id=ieee_id)
-    dob = datetime.datetime.strptime(str(
-        member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
+    try:
+        dob = datetime.strptime(str(
+            member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
+    except:
+        dob=None
     sessions=recruitment_session.objects.all().order_by('-id')
     #getting the ieee account active status of the member
     active_status=renderData.MDT_DATA.get_member_account_status(ieee_id=ieee_id)
@@ -212,6 +214,7 @@ def member_details(request,ieee_id):
         if request.POST.get('delete_member'):
             #Deleting a member from database
             member_to_delete=Members.objects.get(ieee_id=ieee_id)
+            messages.error(request,f"{member_to_delete.ieee_id} was deleted from the INSB Registered Members Database.")
             member_to_delete.delete()
             return redirect('membership_development_team:members_list')
               
@@ -259,6 +262,7 @@ def membership_renewal(request):
 
 # no login required as this will open up for other people
 from system_administration.render_access import Access_Render
+from datetime import datetime
 def membership_renewal_form(request,pk):
     
     #rendering access to view the message section
@@ -294,6 +298,7 @@ def membership_renewal_form(request,pk):
         if(request.POST.get('apply')):
            
             ieee_id=request.POST['ieee_id']
+            nsu_id=request.POST['nsu_id']
             name=request.POST['name']
             contact_no=request.POST['contact_no']
             email_associated=request.POST['email_associated']
@@ -327,15 +332,29 @@ def membership_renewal_form(request,pk):
                 
                 try:
                     #encrypted_pass=renewal_data.encrypt_password(password=password)
-                    renewal_instance=Renewal_requests(session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),ieee_id=ieee_id,name=name,contact_no=contact_no,email_associated=email_associated,email_ieee=email_ieee,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
+                    renewal_instance=Renewal_requests(timestamp=datetime.now(),session_id=Renewal_Sessions.objects.get(id=pk,session_name=session_name),ieee_id=ieee_id,nsu_id=nsu_id,name=name,contact_no=contact_no,email_associated=email_associated,email_ieee=email_ieee,ieee_account_password=password,ieee_renewal_check=ieee_renewal,pes_renewal_check=pes_renewal,ras_renewal_check=ras_renewal,ias_renewal_check=ias_renewal,wie_renewal_check=wie_renewal,transaction_id=transaction_id,comment=comment,renewal_status=False,view_status=False)
                     renewal_instance.save()
+                    
+                    # Send mail upon form submission to users IEEE Account Associated mail
+                    renewal_check_dict={
+                        'IEEE Membership':ieee_renewal,
+                        'IEEE PES Membership':pes_renewal,
+                        'IEEE RAS Membership': ras_renewal,
+                        'IEEE IAS Membership':ias_renewal,
+                        'IEEE WIE Membership':wie_renewal,
+                    }
+                    email_stat=email_sending.send_emails_upon_filling_up_renewal_form(ieee_id=ieee_id,reciever_name=name,reciever_email=email_associated,renewal_session=session_name,renewal_check_dict=renewal_check_dict,request_id=renewal_instance.pk,form_id=pk)
+                    if(email_stat):
+                        messages.success(request,"A confirmation mail has been sent to your email.")
+                    else:
+                        messages.error(request,"An internal error occured! Can not send you a confirmation mail!")
                     return redirect('membership_development_team:renewal_form_success',pk)
                 except:
-                    return HttpResponseServerError
+                    return HttpResponseServerError("Bad request")
             else:
                 messages.info(request,"Two Passwords did not match!")   
         else:
-            return HttpResponseBadRequest
+            return HttpResponseBadRequest("Bad Request!")
     
     
     return render(request,'Renewal/renewal_form.html',context)
@@ -349,29 +368,65 @@ def membership_renewal_form_success(request,pk):
 
 @login_required
 def getRenewalStats(request):
+    
+    # Returning different context for different seeked data
+    
     if request.method=="GET":
         session_id=request.GET.get('session_id')
-        #loading all the unviewed request count
-        notification_count=Renewal_requests.objects.filter(session_id=session_id,view_status=False).count()
-        #counting the renewed requests
-        renewed_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=True).count()
-        #counting the pending requests
-        pending_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=False).count()
-        context={
-            "labels":["Applications Not Yet Viewed","Total Pending Applications","Total Renewed Applications"],
-            "values":[notification_count,pending_count,renewed_count]
-        }
-    return JsonResponse(context)    
+        
+        # the data type gets what kind of data the url is trying to fetch
+        data_type=request.GET.get('data_type')
 
-    
-
+        if(session_id is not None):
+            # if the URL has a session_id, this means it is seeking the renewal session data
+            
+            #loading all the unviewed request count
+            notification_count=Renewal_requests.objects.filter(session_id=session_id,view_status=False).count()
+            #counting the renewed requests
+            renewed_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=True).count()
+            #counting the pending requests
+            pending_count=Renewal_requests.objects.filter(session_id=session_id,renewal_status=False).count()
+            context={
+                "labels":["Applications Not Yet Viewed","Total Pending Applications","Total Renewed Applications"],
+                "values":[notification_count,pending_count,renewed_count]
+            }
+            return JsonResponse(context)
+        if('sc_ag' in data_type):
+            # checking if data type has 'sc_ag' in it. so we know that it is seeking for the stat of SC & AG Renewal.
+            
+            # The URL is designed such a way that the last number in the 'data_type' value will be the session_id. So we can extract session data from it.
+            session_id=data_type[-1] 
+            try:
+                pes_renewal_count=Renewal_requests.objects.filter(session_id=session_id,pes_renewal_check=True).count()
+                ras_renewal_count=Renewal_requests.objects.filter(session_id=session_id,ras_renewal_check=True).count()
+                ias_renewal_count=Renewal_requests.objects.filter(session_id=session_id,ias_renewal_check=True).count()
+                wie_renewal_count=Renewal_requests.objects.filter(session_id=session_id,wie_renewal_check=True).count()
+            except:
+                # IF we can not find the data we need it will return 0s.
+                pes_renewal_count=0
+                ras_renewal_count=0
+                ias_renewal_count=0
+                wie_renewal_count=0
+                messages.error(request,"Could not fetch the Chapter & Affinity Group Renewal Statistics")
+            
+            context={
+                "labels":["PES Renewal Count","RAS Renewal Count","IAS Renewal Count","WIE Renewal Count"],
+                "values":[pes_renewal_count,ras_renewal_count,ias_renewal_count,wie_renewal_count]
+            }
+            return JsonResponse(context)
 
 @login_required
 def renewal_session_data(request,pk):
     '''This view function loads all data for the renewal session including the members registered'''
+
+    user=request.user
+    has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
+
+
+
     session_name=renewal_data.get_renewal_session_name(pk)
     session_id=renewal_data.get_renewal_session_id(session_name=session_name)
-    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_associated','email_ieee','contact_no','ieee_id').order_by('-id')
+    get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
         
     #loading team member data for form credential edit
     load_team_members=renderData.MDT_DATA.load_team_members()
@@ -400,6 +455,12 @@ def renewal_session_data(request,pk):
             bkash_payment_number=request.POST['bkash_payment_number']
             nagad_payment_number=request.POST['nagad_payment_number']
             further_contact_member_id=request.POST['further_contact_member_id']
+            accepting_response=request.POST.get('accept_response')
+
+            if accepting_response is None:
+                accepting_response=False
+            else:
+                accepting_response=True
             
             #update form credentials
             renderData.MDT_DATA.create_form_data_for_particular_renewal_session(
@@ -412,7 +473,8 @@ def renewal_session_data(request,pk):
                 ieee_wie_membership_amount=ieee_wie_membership_amount,
                 bkash_payment_number=bkash_payment_number,
                 nagad_payment_number=nagad_payment_number,
-                further_contact_member_id=further_contact_member_id
+                further_contact_member_id=further_contact_member_id,
+                accepting_response=accepting_response
             )
             return redirect('membership_development_team:renewal_session_data',pk) 
     context={
@@ -424,8 +486,10 @@ def renewal_session_data(request,pk):
         'mdt_team_member':load_team_members,
         'has_form_data':has_form_data,
     }
-    
-    return render(request,'Renewal/renewal_session_details.html',context)
+    if has_access:
+        return render(request,'Renewal/renewal_session_details.html',context)
+    else:
+        return render(request,'access_denied.html')
 
 from .models import Renewal_Form_Info
 @login_required
@@ -435,7 +499,7 @@ def renewal_request_details(request,pk,request_id):
     user=request.user
     has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
     
-    renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('name','ieee_id','email_associated','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
+    renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('timestamp','name','ieee_id','nsu_id','email_associated','email_ieee','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
     name=renewal_request_details[0]['name']
     
     has_comment=False
@@ -448,13 +512,18 @@ def renewal_request_details(request,pk,request_id):
     
     # INVOICE
     # get form amount of money
-    renewal_amount_dict={
-        'IEEE Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='ieee',form_id=pk),
-        'IEEE PES Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='pes',form_id=pk),
-        'IEEE RAS Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='ras',form_id=pk),
-        'IEEE IAS Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='ias',form_id=pk),
-        'IEEE WIE Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='wie',form_id=pk),
-    }
+    try:
+        renewal_amount_dict={
+            'IEEE Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='ieee',form_id=pk),
+            'IEEE PES Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='pes',form_id=pk),
+            'IEEE RAS Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='ras',form_id=pk),
+            'IEEE IAS Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='ias',form_id=pk),
+            'IEEE WIE Membership':renderData.MDT_DATA.getPaymentAmount(request_id=request_id,info='wie',form_id=pk),
+        }
+    except:
+        messages.error(request,"Please Edit Form Credentials to view.")
+        return redirect('membership_development_team:renewal_session_data',pk)
+
     
     try:
         total_amount=(
@@ -467,10 +536,23 @@ def renewal_request_details(request,pk,request_id):
         
     except:
         total_amount=0
+        
+    current_request=Renewal_requests.objects.get(id=request_id)
+    next_request=Renewal_requests.objects.filter(pk__gt=current_request.pk,session_id=pk).first()
+    
+    if next_request:
+        next_request_id=next_request.pk
+        has_next_request=True
+    else:
+        next_request_id=None
+        has_next_request=False
+
     context={
         'id':request_id,
         'details':renewal_request_details,
         'has_comment':has_comment,
+        'has_next_request':has_next_request,
+        'next_request_id':next_request_id,
         'pk':pk,
         'name':name,
         'renewal_amount':renewal_amount_dict,
@@ -497,6 +579,13 @@ def renewal_request_details(request,pk,request_id):
                 
                 # #show success message
                 messages.success(request,f"Membership with IEEE ID {ieee_id} has been renewed!")
+                # Send an Email to the Applicants Associated Email
+                email_stat=email_sending.send_email_upon_renewal_confirmed(reciever_email=renewal_request_details[0]['email_associated'],reciever_name=renewal_request_details[0]['name'])
+                if email_stat:
+                    messages.success(request,"Renewal Confirmation email was sent to the member's Associated email address.")
+                else:
+                    messages.error(request,"An internal error occured! Can not send the renewal confirmation email.")
+
                 return redirect('membership_development_team:request_details',pk,request_id)
             
             #Now if the member is not registered in the database
@@ -504,10 +593,29 @@ def renewal_request_details(request,pk,request_id):
                 
                 # just Update the renewal request table and notify team that member is not registered in the main database
                 Renewal_requests.objects.filter(id=request_id,session_id=pk).update(renewal_status=True)
-                
+                #update the member in INSB Registered Members Database
+                try:
+                    new_member_from_renewal=Members.objects.create(
+                        ieee_id=ieee_id,nsu_id=renewal_request_details[0]['nsu_id'],name=name,contact_no=renewal_request_details[0]['contact_no'],
+                        email_personal=renewal_request_details[0]['email_associated'],
+                        email_ieee=renewal_request_details[0]['email_ieee'],last_renewal_session=Renewal_Sessions.objects.get(id=get_renewal_session.id)
+                    )
+                    new_member_from_renewal.save()
+                except:
+                    messages.error(request,f"Can not update this application to INSB Registered Members Database!")
+
                 #show message
                 messages.success(request,f"Membership has been renewed!\nThis member with the associated IEEE ID: {ieee_id} was not found in the INSB Registered Member Database!\nHowever, the system kept the Data of renewal!")
-        
+                
+                # Send an Email to the Applicants Associated Email
+                email_stat=email_sending.send_email_upon_renewal_confirmed(reciever_email=renewal_request_details[0]['email_associated'],reciever_name=renewal_request_details[0]['name'])
+                if email_stat:
+                    messages.success(request,"Renewal Confirmation email was sent to the member's Associated email address.")
+                else:
+                    messages.error(request,"An internal error occured! Can not send the renewal confirmation email.")
+
+                return redirect('membership_development_team:request_details',pk,request_id)
+
         #TO DELETE AN APPLICATION
         if(request.POST.get('delete_button')): 
             
@@ -704,10 +812,12 @@ def data_access(request):
             
             ieeeId=request.POST['access_ieee_id']
             if(renderData.MDT_DATA.remove_member_from_data_access(ieee_id=ieeeId)):
-                messages.info(request,"Removed member from Data Access Table")
+                messages.info(request,"Removed member from View Permission Controls")
                 return redirect('membership_development_team:data_access')
             else:
                 messages.info(request,"Something went wrong!")
+                return redirect('membership_development_team:data_access')
+
                 
         if request.POST.get('remove_member'):
             '''To remove member from team table'''
@@ -715,8 +825,10 @@ def data_access(request):
                 Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
                 try:
                     MDT_Data_Access.objects.filter(ieee_id=request.POST['remove_ieee_id']).delete()
+                    messages.error(request,f"A Member with IEEE ID {request.POST['remove_ieee_id']} was Removed Successfully From Team")
                 except MDT_Data_Access.DoesNotExist:
-                     return redirect('membership_development_team:data_access')
+                    messages.error(request,"Something went wrong! Please, try again!")
+                    return redirect('membership_development_team:data_access')
                 return redirect('membership_development_team:data_access')
             except:
                 pass
@@ -728,11 +840,13 @@ def data_access(request):
             if(len(new_data_access_member_list)>0):
                 for ieeeID in new_data_access_member_list:
                     if(renderData.MDT_DATA.add_member_to_data_access(ieeeID)=="exists"):
-                        messages.info(request,f"The member with IEEE Id: {ieeeID} already exists in the Data Access Table")
+                        messages.info(request,f"The member with IEEE Id: {ieeeID} already exists in the View Permission Controls Table")
+                        return redirect('membership_development_team:data_access')
                     elif(renderData.MDT_DATA.add_member_to_data_access(ieeeID)==False):
                         messages.info(request,"Something Went wrong! Please try again")
+                        return redirect('membership_development_team:data_access')
                     elif(renderData.MDT_DATA.add_member_to_data_access(ieeeID)==True):
-                        messages.info(request,f"Member with {ieeeID} was added to the Data Access table!")
+                        messages.info(request,f"Member with {ieeeID} was added to the View Permission Controls table!")
                         return redirect('membership_development_team:data_access')
 
         if request.POST.get('add_member_to_team'):
@@ -740,8 +854,16 @@ def data_access(request):
             members_to_add=request.POST.getlist('member_select1')
             #get position
             position=request.POST.get('position')
-            for member in members_to_add:
-                renderData.MDT_DATA.add_member_to_team(member,position)
+            for ieee_id in members_to_add:
+                addMemberStatus=renderData.MDT_DATA.add_member_to_team(ieee_id,position)
+                if(addMemberStatus):
+                    add_to_data_access=renderData.MDT_DATA.add_member_to_data_access(ieee_id=ieee_id)
+                    if(add_to_data_access):
+                        messages.info(request,f"{ieee_id} has been successfully added as a member and also added to Data Access Table")
+                    elif(add_to_data_access=="exists"):
+                        messages.success(request,"A new Member was successfully added to the Team!")
+                else:
+                    messages.error(request,"Something went wrong! Please, Try again!")
             return redirect('membership_development_team:data_access')
 
     context={
@@ -752,7 +874,7 @@ def data_access(request):
         
     }
     if(has_access):
-        return render(request,'data_access_table.html',context=context)
+        return render(request,'Manage Team/manage_team.html',context=context)
     else:
         return render(request,'access_denied.html')
     
@@ -760,32 +882,36 @@ def data_access(request):
 def site_registration_request_home(request):
     
     '''This loads data for site joining request'''
-    
+    # Getting all the requests for portal site
     get_requests=Portal_Joining_Requests.objects.all().order_by('application_status')
-    #loading all the unviewed request count
-    notification_count=Portal_Joining_Requests.objects.filter(view_status=False).count()
-    #counting the renewed requests
-    accepted_count=Portal_Joining_Requests.objects.filter(application_status=True).count()
-    #counting the pending requests
-    pending_count=Portal_Joining_Requests.objects.filter(application_status=False).count()
     #form link for site registration
     form_link=f"{request.META['HTTP_HOST']}/portal/membership_development_team/insb_site_registration_form"
     
     context={
         'requests':get_requests,
-        'notification_count': notification_count,
-        'accepted':accepted_count,
-        'pending_count':pending_count,
         'form_link':form_link
     }
     
-    
-    return render(request,'site_registration_home.html',context)
+    return render(request,'Site Registration/site_registration_home.html',context)
 
-
-
-import socket
-from smtplib import SMTPException
+@login_required
+def getSiteRegistrationRequestStats(request):
+    '''This function returns stats of portal registration application and the stats'''
+    if request.method=="GET":
+        #loading all the unviewed request count
+        notification_count=Portal_Joining_Requests.objects.filter(view_status=False).count()
+        #counting the renewed requests
+        accepted_count=Portal_Joining_Requests.objects.filter(application_status=True).count()
+        #counting the pending requests
+        pending_count=Portal_Joining_Requests.objects.filter(application_status=False).count()
+        context={
+            "labels":["Applications Not Yet Viewed","Total Pending Applications","Total Verified Applications"],
+            "values":[notification_count,pending_count,accepted_count]
+        }
+        
+        return JsonResponse(context)
+        
+        
 
 @login_required
 def site_registration_request_details(request,ieee_id):
@@ -799,11 +925,24 @@ def site_registration_request_details(request,ieee_id):
     #changing view Status
     Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).update(view_status=True)
     
-    dob = datetime.datetime.strptime(str(
+    dob = datetime.strptime(str(
         get_request.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
+    
+    current_application=Portal_Joining_Requests.objects.get(ieee_id=ieee_id)
+    next_application=Portal_Joining_Requests.objects.filter(pk__gt=current_application.ieee_id).first()
+    
+    if next_application:
+        next_application_id=next_application.ieee_id
+        has_next_request=True
+    else:
+        next_application_id=None
+        has_next_request=False
+    
     context={
         'request':get_request,
         'dob':dob,
+        'next_application_id':next_application_id,
+        'has_next_request':has_next_request
     }
     if request.method=="POST":
         if request.POST.get('register_to_database'):
@@ -832,9 +971,11 @@ def site_registration_request_details(request,ieee_id):
                     #sending mails to MDT team officials to verify the request, primarily sent to their ieee mail
                     if(email_sending.send_email_on_site_registration_verification_to_user(request,new_member.name,new_member.email_personal)==False):
                         messages.info(request,"Couldn't Send Verification Email")
+                        return redirect('membership_development_team:site_registration')
+
                     else:
                         messages.info(request,"User Notified via Email")
-                
+                        
                     #Updating application status
                     Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).update(application_status=True)
                     messages.info(request,"Member Successfully Updated to the Main Database")
@@ -877,13 +1018,13 @@ def site_registration_request_details(request,ieee_id):
             #Deleting Member
             try:
                 Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).delete()
-                messages.info(request,"Request Deleted")
+                messages.info(request,f"A Site Registration Application with IEEE ID: {ieee_id} was Deleted")
                 return redirect('membership_development_team:site_registration')
             except:
                 messages.info(request,"Sorry! Member Couldn't be Deleted")
     if(has_access):
         
-        return render(request,'site_registration_request_details.html',context)
+        return render(request,'Site Registration/site_registration_application_details.html',context)
     else:
         return render(request,"access_denied.html")
 
@@ -968,6 +1109,6 @@ def site_registration_form(request):
                     messages.info(request,"Some Error Occured! Please contact the System Administrator")
                     return redirect('membership_development_team:site_registration_form')
     
-    return render(request,'site_registration_form.html',context)
+    return render(request,'Site Registration/site_registration_form.html',context)
 def confirmation_of_form_submission(request):
     return render(request,'confirmation.html')

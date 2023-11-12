@@ -271,7 +271,7 @@ class MDT_DATA:
         else:
             return False
     
-    def create_form_data_for_particular_renewal_session(renewal_session_id,form_description,ieee_membership_amount,ieee_ras_membership_amount,ieee_pes_membership_amount,ieee_ias_membership_amount,ieee_wie_membership_amount,bkash_payment_number,nagad_payment_number,further_contact_member_id):
+    def create_form_data_for_particular_renewal_session(renewal_session_id,form_description,ieee_membership_amount,ieee_ras_membership_amount,ieee_pes_membership_amount,ieee_ias_membership_amount,ieee_wie_membership_amount,bkash_payment_number,nagad_payment_number,further_contact_member_id,accepting_response):
         '''Creates and Updates Form data For Renewal Forms (Session Wise)'''
         create_form=Renewal_Form_Info(form_id=renewal_session_id, #in models the form id is primary key. Sending the renewal session id as primary key also to identify every form unique to a renewal session
                                       session=Renewal_Sessions.objects.get(id=renewal_session_id),
@@ -283,9 +283,8 @@ class MDT_DATA:
                                       ieee_wie_membership_amount=ieee_wie_membership_amount,
                                       bkash_payment_number=bkash_payment_number,
                                       nagad_payment_number=nagad_payment_number,
-                                      further_contact_member_id=further_contact_member_id 
-                                      
-                                      )
+                                      further_contact_member_id=further_contact_member_id,
+                                      accepting_response=accepting_response)
         create_form.save()
         
     def load_form_data_for_particular_renewal_session(renewal_session_id):
@@ -334,8 +333,11 @@ class MDT_DATA:
             return False
     def add_member_to_team(ieee_id,position):
         team_id=MDT_DATA.get_team_id()
-        Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
-    
+        try:
+            Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
+            return True
+        except:
+            return False
     def get_officials_access(ieee_id):
         ''''''
         try:
@@ -348,5 +350,35 @@ class MDT_DATA:
                 return False
         except:
             return False
-
-            
+    
+    def load_MDT_coordinator():
+        '''This function loads only the coordinator of MDT Team'''
+        # get Roles for which is_coordinator is True
+        try:
+            getPosition=Roles_and_Position.objects.get(is_co_ordinator=True)
+            return (Members.objects.filter(team=MDT_DATA.get_team_id(),position=Roles_and_Position.objects.get(id=getPosition.id)))
+        except:
+            return False
+    
+    def process_renewal_item_dict(renewal_check_dict,request_id,form_id):
+        renewal_list=[]
+        for key in renewal_check_dict:
+            if(renewal_check_dict[key]==True):
+                renewal_list.append(key)
+        
+        
+        renewal_amount_dict={
+            'IEEE Membership':MDT_DATA.getPaymentAmount(request_id=request_id,info='ieee',form_id=form_id),
+            'IEEE PES Membership':MDT_DATA.getPaymentAmount(request_id=request_id,info='pes',form_id=form_id),
+            'IEEE RAS Membership':MDT_DATA.getPaymentAmount(request_id=request_id,info='ras',form_id=form_id),
+            'IEEE IAS Membership':MDT_DATA.getPaymentAmount(request_id=request_id,info='ias',form_id=form_id),
+            'IEEE WIE Membership':MDT_DATA.getPaymentAmount(request_id=request_id,info='wie',form_id=form_id),
+        }
+        total_amount=(
+            renewal_amount_dict['IEEE Membership']+
+            renewal_amount_dict['IEEE PES Membership']+
+            renewal_amount_dict['IEEE RAS Membership']+
+            renewal_amount_dict['IEEE IAS Membership']+
+            renewal_amount_dict['IEEE WIE Membership']
+        )
+        return renewal_list,total_amount

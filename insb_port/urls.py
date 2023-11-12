@@ -21,9 +21,10 @@ from django.conf import settings
 urlpatterns = [
     
     path('',include('main_website.urls',namespace='main_website')),
-    path('ieeensusb.portal',include('port.urls',namespace='port')),
+    path('.portal',include('port.urls',namespace='port')),
     path('api/',include('api.urls')),
     path('admin/', admin.site.urls),
+    path('system/',include('system_administration.urls',namespace="system")),
     path('portal/users/',include('users.urls',namespace="users")),
     path('portal/recruitment/',include('recruitment.urls',namespace="recruitment")),
     path('portal/central_branch/',include('central_branch.urls',namespace='central_branch')),

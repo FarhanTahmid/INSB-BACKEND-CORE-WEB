@@ -28,8 +28,9 @@ urlpatterns = [
     path('manage_team/<str:pk>/<str:team_name>',views.manage_team,name="manage_team"),
 
     #PANEL
+    path('panels',views.panel_home,name="panels"),
     #panel details
-    path('panel_details/<int:pk>',views.panel_details,name="panel_details"),
+    path('panels/<int:panel_id>',views.panel_details,name="panel_details"),
     
     
     #for updating value in team member select box in event assigning
@@ -45,6 +46,8 @@ urlpatterns = [
     
     #WEBSITE Management URL Path
     path('manage_website/homepage',views.manage_website_homepage,name="manage_website_home"),
+
+    path('manage_access',views.manage_view_access,name="manage_access")
     
     
     
