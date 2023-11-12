@@ -350,8 +350,10 @@ class PanelMembersData:
                     new_panel_member=Panel_Members.objects.create(tenure=Panels.objects.get(id=panel_info.pk),member=Members.objects.get(ieee_id=i),position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
                     new_panel_member.save()
 
-                # then update the members team and position in Members table
-                Members.objects.filter(ieee_id=i).update(team=Teams.objects.get(primary=team_primary),position=Roles_and_Position.objects.get(id=position))
+                # then update the members team and position in Members table if the panel is current only
+                if(panel_info.current):
+                    Members.objects.filter(ieee_id=i).update(team=Teams.objects.get(primary=team_primary),position=Roles_and_Position.objects.get(id=position))
+                    messages.info(request,"Member was updated in the Team Page")
             messages.success(request,"Members were added in the Panel")
             return True
         except sqlite3.OperationalError:
