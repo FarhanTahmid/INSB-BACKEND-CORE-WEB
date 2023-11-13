@@ -1,0 +1,37 @@
+{% load static %}
+
+{% block panel_tabs %}
+<style>
+    .link-container {
+        width: 100%; /* Set the width of the container to 100% */
+      }
+      
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .links a {
+        margin: 5px; /* Add some spacing between the links */
+      }
+      
+      .links a:last-child {
+        margin-right: 0; /* Remove the margin from the last link */
+      }
+</style>
+<div class="link-container">
+    <div class="links">
+        <a href="panel-members.html" class="btn btn-outline-warning text-dark m-1">Current Ex-Com</a>
+        <a href="panel-members.html" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
+        <a href="https://example.com/your-target-page" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
+        <a href="https://example.com/your-target-page" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
+        <a href="https://example.com/your-target-page" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
+        <a href="https://example.com/your-target-page" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
+        <a href="https://example.com/your-target-page" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
+        <a href="https://example.com/your-target-page" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
+        <a href="https://example.com/your-target-page" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
+        <a href="https://example.com/your-target-page" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
+    </div>
+</div>
+{% endblock panel_tabs %}

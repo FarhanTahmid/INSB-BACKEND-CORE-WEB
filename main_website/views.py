@@ -141,3 +141,9 @@ def Research_Paper(request):
     return render(request,"All_Research_Papers.html",{
         "research_paper":get_all_research_papers
     })
+    
+
+# Memeber works
+
+def panel_members_page(request):
+    return render(request,'Members/panel_members.html')
