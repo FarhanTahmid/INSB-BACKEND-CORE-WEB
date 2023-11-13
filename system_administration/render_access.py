@@ -14,7 +14,7 @@ class Access_Render:
     
     def is_panel_member(username):
         '''This fucntion checks if a member belongs to the current panel of INSB'''
-        # get panel id
+        # get panel id, this is only for branch panels
         get_current_panel_id=PortData.get_current_panel()
         # check if member exists
         if(Panel_Members.objects.filter(tenure=get_current_panel_id,member=username).exists()):
