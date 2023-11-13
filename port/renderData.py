@@ -44,7 +44,7 @@ class PortData:
             return False
     
     def get_current_panel():
-        '''Returns the id of the current panel'''
+        '''Returns the id of the current panel of IEEE NSU SB'''
         try:            
             current_panel=Panels.objects.get(current=True)
             return current_panel.pk
