@@ -17,7 +17,8 @@ urlpatterns = [
     path('achievements/',views.achievements,name="achievements"),
     
     # Members
-    path('panels/',views.panel_members_page,name="panel_members"),
+    path('panels/',views.current_panel_members,name="panel_members"),
+    path('panels/<str:year>',views.panel_members_page,name="panel_members_previous"),
     
     
 ]

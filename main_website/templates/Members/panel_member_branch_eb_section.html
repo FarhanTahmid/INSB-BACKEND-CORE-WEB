@@ -12,31 +12,40 @@
         <!-- Grid row -->
         <div class="row d-flex justify-content-center align-items-center m-2">
             <!--Grid column-->
+            {% for i in chair %}
             <div class="col-lg-4 col-md-12 mb-4">
-                <!--Chair Card-->
+                <!--Card-->
+                
                 <div class="card testimonial-card">
                     <!--Background color-->
                     <div class="card-up info-color"></div>
-                        <!--Avatar-->
+                    <!--Avatar-->
                     <div class="avatar mx-auto white" style="height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
                         <img src="images/panel members/saifahmed.jpg" class="rounded-bottom-pill" style="object-fit: cover; width: 100%; height: 100%;">
                     </div>
                     <div class="card-body">
                         <!--Name-->
-                        <h4 class="font-weight-bold mb-4">Mohammad Iftekhar Bin</h4>
+                        <h4 class="font-weight-bold mb-4">{{i.member.name}}</h4>
                         <hr>
                         <!--Quotation-->
-                        <p class="dark-grey-text mt-4"><i class="fas fa-quote-left pr-2"></i>Chair</p>
+                        <p style="text-align:center;margin-left:3vh;" class="dark-grey-text mt-4"><b>{{i.member.position}}</b></p>
                         <ul class="list-unstyled d-flex justify-content-center mt-3 mb-0">
-                        <li><a href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin-in mx-2 icon-gray"></i></a></li>
-                        <li><a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook-f mx-2 icon-gray"></i></a></li>
-                        <li><a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram mx-2 icon-gray"></i></a></li>
-                        <li><a href="https://github.com/" target="_blank"><i class="fab fa-github mx-2 icon-gray"></i></a></li>
+                            <li><a href="{{i.member.linkedin_url}}" target="_blank"><i class="fab fa-linkedin-in mx-2 icon-gray"></i></a></li>
+                            <li><a href="{{i.member.facebook_url}}" target="_blank"><i class="fab fa-facebook-f mx-2 icon-gray"></i></a></li>
+                            <li><a href="mailto:{{i.member.email_ieee}}" target="_blank"><i class="fas fa-envelope mx-2 icon-gray"></i></a></li>
                         </ul>
+                        <ul class="list-unstyled d-flex justify-content-center mt-3 mb-0">
+                            <li><i class="fas fa-phone mx-2 icon-gray"></i>{{i.member.contact_no}}</li>
+                        </ul>
+                        
                     </div>
                 </div>
-                <!--Chair Card Ends-->
+                
+                
+                <!--Card-->
             </div>
+            {% endfor %}
+            
             <!--Grid column-->
     
             <style>
@@ -50,8 +59,10 @@
         <!-- Grid row -->
         <div class="row d-flex justify-content-center align-items-center m-2">
             <!--Grid column-->
+            {% for i in eb %}
             <div class="col-lg-4 col-md-12 mb-4">
                 <!--Card-->
+                
                 <div class="card testimonial-card">
                     <!--Background color-->
                     <div class="card-up info-color"></div>
@@ -61,20 +72,26 @@
                     </div>
                     <div class="card-body">
                         <!--Name-->
-                        <h4 class="font-weight-bold mb-4">Mohammad Iftekhar Bin</h4>
+                        <h4 class="font-weight-bold mb-4">{{i.member.name}}</h4>
                         <hr>
                         <!--Quotation-->
-                        <p class="dark-grey-text mt-4"><i class="fas fa-quote-left pr-2"></i>Chair</p>
+                        <p style="text-align:center;margin-left:3vh;" class="dark-grey-text mt-4"><b>{{i.member.position}}</b></p>
                         <ul class="list-unstyled d-flex justify-content-center mt-3 mb-0">
-                        <li><a href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin-in mx-2 icon-gray"></i></a></li>
-                        <li><a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook-f mx-2 icon-gray"></i></a></li>
-                        <li><a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram mx-2 icon-gray"></i></a></li>
-                        <li><a href="https://github.com/" target="_blank"><i class="fab fa-github mx-2 icon-gray"></i></a></li>
+                            <li><a href="{{i.member.linkedin_url}}" target="_blank"><i class="fab fa-linkedin-in mx-2 icon-gray"></i></a></li>
+                            <li><a href="{{i.member.facebook_url}}" target="_blank"><i class="fab fa-facebook-f mx-2 icon-gray"></i></a></li>
+                            <li><a href="mailto:{{i.member.email_ieee}}" target="_blank"><i class="fas fa-envelope mx-2 icon-gray"></i></a></li>
                         </ul>
+                        <ul class="list-unstyled d-flex justify-content-center mt-3 mb-0">
+                            <li><i class="fas fa-phone mx-2 icon-gray"></i>{{i.member.contact_no}}</li>
+                        </ul>
+                        
                     </div>
                 </div>
+                
+                
                 <!--Card-->
             </div>
+            {% endfor %}
             <!--Grid column-->
         </div>
         <!-- Grid row -->

@@ -19,19 +19,36 @@
       .links a:last-child {
         margin-right: 0; /* Remove the margin from the last link */
       }
+      .links a.active {
+            color: #FFA300;
+      }
 </style>
+<!--This is scrip is to get the link of the current page and cross match it with the navlink to change colors-->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      // Get the current page's URL
+      const currentPageUrl = window.location.href;
+    
+      // Find the links in the navigation bar
+      const navLinks = document.querySelectorAll(".links a");
+    
+      // Loop through the links and add a "active" class to the matching link
+      navLinks.forEach(function (link) {
+        if (link.href === currentPageUrl) {
+          link.classList.add("active");
+        }
+      });
+    });
+  </script>
 <div class="link-container">
-    <div class="links">
-        <a href="panel-members.html" class="btn btn-outline-warning text-dark m-1">Current Ex-Com</a>
-        <a href="panel-members.html" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
-        <a href="https://example.com/your-target-page" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
-        <a href="https://example.com/your-target-page" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
-        <a href="https://example.com/your-target-page" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
-        <a href="https://example.com/your-target-page" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
-        <a href="https://example.com/your-target-page" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
-        <a href="https://example.com/your-target-page" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
-        <a href="https://example.com/your-target-page" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
-        <a href="https://example.com/your-target-page" class="btn btn-outline-warning text-dark m-1">Ex-Com-22-23</a>
-    </div>
+      <div class="links">
+          {% for panel in panels %}
+            {% if panel.current %}
+              <a href="{% url 'main_website:panel_members' %}" class="btn btn-outline-warning text-dark m-1">Current Executive Committee</a>
+            {% else %}
+              <a href="#" class="btn btn-outline-warning text-dark m-1">Executive Committee {{panel.year}}</a>
+            {% endif %}
+          {% endfor %}
+      </div>
 </div>
 {% endblock panel_tabs %}

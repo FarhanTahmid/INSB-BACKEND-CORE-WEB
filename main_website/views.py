@@ -145,5 +145,34 @@ def Research_Paper(request):
 
 # Memeber works
 
-def panel_members_page(request):
-    return render(request,'Members/panel_members.html')
+def current_panel_members(request):
+    # load all panels at first
+    get_all_panels=Branch.load_all_panels()
+    get_current_panel=Branch.load_current_panel()
+    get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
+    branch_counselor=[]
+    sc_ag_faculty_advisors=[]
+    mentors=[]
+    branch_chair=[]
+    branch_eb=[]
+    sc_ag_chair=[]
+    
+    for i in get_current_panel_members:
+        if (i.position.role_of.primary==1):
+            if(i.position.is_faculty):
+                branch_counselor.append(i)
+            elif(i.position.is_eb_member):
+                if(i.position.role=='Chair'):
+                    branch_chair.append(i)
+                else:
+                    branch_eb.append(i)
+    context={
+        'panels':get_all_panels,
+        'chair':branch_chair,
+        'eb':branch_eb,
+    }
+    
+    return render(request,'Members/panel_members.html',context)
+
+def panel_members_page(request,year):
+    pass
