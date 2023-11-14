@@ -169,6 +169,15 @@ class Branch:
         except:
             raise Http404("The requested page does not exist.")
     
+    def get_panel_by_year(panel_year):
+        '''This returns the panel by year'''
+        try:
+            panel=Panels.objects.filter(year=panel_year).first()
+            return panel
+        except:
+            raise Http404("The requested page does not exist.")
+
+    
     def load_panel_members_by_panel_id(panel_id):
         '''This load all the info associated with a panel from Panel members Table'''
         try:
@@ -181,7 +190,7 @@ class Branch:
     def load_all_panels():
         '''This function loads all the panels from the database'''
         try:
-            panels=Panels.objects.filter().all().order_by('-id')
+            panels=Panels.objects.filter().all().order_by('-year')
             return panels
         except:
             return DatabaseError
@@ -224,13 +233,7 @@ class Branch:
                         new_member_in_panel.save()
                 except:
                     return DatabaseError
-                data_access_instance=MDT_Data_Access(ieee_id=Members.objects.get(ieee_id=ieee_id),
-                                                     renewal_data_access=False,
-                                                     insb_member_details=False,
-                                                     recruitment_session=False,
-                                                     recruited_member_details=False) #create data access for the member with default value set to false
-                
-                data_access_instance.save()
+
                 return True
             else:
                 

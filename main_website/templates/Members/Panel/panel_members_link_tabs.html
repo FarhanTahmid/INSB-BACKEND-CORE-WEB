@@ -46,7 +46,7 @@
             {% if panel.current %}
               <a href="{% url 'main_website:panel_members' %}" class="btn btn-outline-warning text-dark m-1">Current Executive Committee</a>
             {% else %}
-              <a href="#" class="btn btn-outline-warning text-dark m-1">Executive Committee {{panel.year}}</a>
+              <a href="{% url 'main_website:panel_members_previous' panel.year %}" class="btn btn-outline-warning text-dark m-1">Executive Committee {{panel.year}}</a>
             {% endif %}
           {% endfor %}
       </div>
