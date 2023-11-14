@@ -316,7 +316,7 @@ def manage_team(request):
 @login_required
 def manageWebsiteHome(request):
     context={
-        'form':HomePageBannerWithTextForm(),
+        # 'form':HomePageBannerWithTextForm(),
     }
     return render(request,"public_relation_team/manage_website/manage_website_home.html",context)
 
