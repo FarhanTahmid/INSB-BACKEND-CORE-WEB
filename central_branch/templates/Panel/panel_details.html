@@ -180,9 +180,24 @@
 
             <!--Start from here-->
             <br>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">IEEE NSU Student Branch Panel of <b><span style="color:#00629B;"> {{panel_info.year}} </span></b></h2>
+            {% if panel_info.current %}
+                <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">IEEE NSU Student Branch Panel of <b><span style="color:#00629B;"> {{panel_info.year}} </span><span style="color:green">(Current)</span></b></h2>
+            {% else %}
+                <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">IEEE NSU Student Branch Panel of <b><span style="color:#00629B;"> {{panel_info.year}} </span></b></h2>
+            {% endif %}
             <br>
-            
+            <div style="justify-content:center;text-align:center;">  
+                <div class="btn-container">
+                    {% if panel_info.current %}
+                    {% else %}
+                    <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-g" ui-toggle-class="bounce" ui-target="#animate">Make this panel the Current Panel</button>
+                    {% endif %}
+                    <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-f" ui-toggle-class="bounce" ui-target="#animate">Delete Panel</button>
+                </div>
+            </div>
+            <br>
+            <br>
+
             <!--Tab view for Panels-->
             <!--Tab view Start-->
             {% block panel_tab %}
@@ -191,7 +206,50 @@
 
             <!--Tab view end-->
             
-
+            <!-- Delete Panel modal -->
+            <div id="m-s-f" class="modal fade animate" data-backdrop="true">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="modal-dialog" id="animate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Delete Panel</h5>
+                            </div>
+                            
+                            <div class="modal-body text-left p-lg">
+                                <p>Remember, If you choose to Delete the Panel, all the Members Position of the panel will be changed to General Members.<br>They won't be assigned to any teams. All the Panel data would be Deleted.</p>        
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <input type="submit" class="btn btn-danger p-x-md" name="create_panel" value="Delete Panel"></input>                  
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </form>
+            </div>
+            <!-- / .modal -->
+            <!--Current Panel Modal-->
+            <div id="m-s-g" class="modal fade animate" data-backdrop="true">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="modal-dialog" id="animate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Make this Panel the Current Panel</h5>
+                            </div>
+                            
+                            <div class="modal-body text-left p-lg">
+                                <p>Remember, If you choose to make this Panel the current Panel, all the Teams and Access will change according to it.</p>        
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <input type="submit" class="btn btn-success p-x-md" name="create_panel" value="Make Current Panel"></input>                  
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </form>
+            </div>
+            <!-- / .modal -->
         </div>
         <!--PAGE END-->
 
@@ -207,7 +265,8 @@
     {% block common_js %}
         {% include "common_js.html" %}
     {% endblock common_js %}
-    <!--Search for executive members-->
+
+
     
     <script src="{% static 'tab_view.js'%}"></script>
 

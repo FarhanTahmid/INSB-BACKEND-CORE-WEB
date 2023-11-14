@@ -30,7 +30,6 @@ class Branch:
         teams=Teams.objects.all().values('primary','team_name') #returns a list of dictionaryies with the id and team name
         return teams
     def load_team_members(team_primary):
-        
         '''This function loads all the team members from the database'''
         team=Teams.objects.get(primary=team_primary)
         team_id=team.id
