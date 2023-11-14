@@ -101,22 +101,26 @@ class Branch:
     
     def load_branch_eb_panel():
         '''This function loads all the EB panel members from the branch.
-        Checks if the position of the member is True for is_eb_member'''
-        eb_panel_member=Members.objects.all()
+        Checks if the position of the member is True for is_eb_member and if member exists in current EB Panel'''
+        get_current_panel=Branch.load_current_panel()
+        members=Members.objects.all()
         eb_panel=[]
-        for member in eb_panel_member:
+        for member in members:
             if member.position.is_eb_member:
-                eb_panel.append(member)
+                if (Panel_Members.objects.filter(tenure=get_current_panel.pk,member=member.ieee_id).exists()):
+                    eb_panel.append(member)
         return eb_panel
                 
     def load_all_officers_of_branch():
         '''This function loads all the officer members from the branch.
-        Checks if the position of the member is True for is_officer'''
+        Checks if the position of the member is True for is_officer and if he belongs from the current active panel'''
+        get_current_panel=Branch.load_current_panel()
         members=Members.objects.all()
         branch_officers=[]
         for member in members:
             if member.position.is_officer:
-                branch_officers.append(member)
+                if (Panel_Members.objects.filter(tenure=get_current_panel.pk,member=member.ieee_id).exists()):
+                    branch_officers.append(member)
         return branch_officers
     
     def load_all_active_general_members_of_branch():
