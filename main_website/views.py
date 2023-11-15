@@ -141,3 +141,76 @@ def Research_Paper(request):
     return render(request,"All_Research_Papers.html",{
         "research_paper":get_all_research_papers
     })
+    
+
+# Memeber works
+
+def current_panel_members(request):
+    # load all panels at first
+    get_all_panels=Branch.load_all_panels()
+    get_current_panel=Branch.load_current_panel()
+    get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
+    
+        # TODO:add algo to add SC AG Faculty and EB
+
+    branch_counselor=[]
+    sc_ag_faculty_advisors=[]
+    mentors=[]
+    branch_chair=[]
+    branch_eb=[]
+    sc_ag_chair=[]
+    
+    for i in get_current_panel_members:
+        if (i.position.role_of.primary==1):
+            if(i.position.is_faculty):
+                branch_counselor.append(i)
+            elif(i.position.is_eb_member):
+                if(i.position.role=='Chair'):
+                    branch_chair.append(i)
+                else:
+                    branch_eb.append(i)
+    context={
+        'panels':get_all_panels,
+        'branch_counselor':branch_counselor,
+        'sc_ag_faculty_advisors':sc_ag_faculty_advisors,
+        'mentors':mentors,
+        'chair':branch_chair,
+        'eb':branch_eb,
+        'sc_ag_chair':sc_ag_chair
+    }
+    
+    return render(request,'Members/Panel/panel_members.html',context)
+
+def panel_members_page(request,year):
+    get_all_panels=Branch.load_all_panels()
+    get_panel=Branch.get_panel_by_year(year)
+    
+    get_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_panel.pk)
+    # TODO:add algo to add SC AG Faculty and EB
+    branch_counselor=[]
+    sc_ag_faculty_advisors=[]
+    mentors=[]
+    branch_chair=[]
+    branch_eb=[]
+    sc_ag_chair=[]
+    
+    for i in get_panel_members:
+        if (i.position.role_of.primary==1):
+            if(i.position.is_faculty):
+                branch_counselor.append(i)
+            elif(i.position.is_eb_member):
+                if(i.position.role=='Chair'):
+                    branch_chair.append(i)
+                else:
+                    branch_eb.append(i)
+    
+    context={
+        'panels':get_all_panels,
+        'branch_counselor':branch_counselor,
+        'sc_ag_faculty_advisors':sc_ag_faculty_advisors,
+        'mentors':mentors,
+        'chair':branch_chair,
+        'eb':branch_eb,
+        'sc_ag_chair':sc_ag_chair
+    }
+    return render(request,'Members/Panel/panel_members.html',context)

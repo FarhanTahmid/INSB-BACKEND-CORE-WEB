@@ -30,7 +30,6 @@ class Branch:
         teams=Teams.objects.all().values('primary','team_name') #returns a list of dictionaryies with the id and team name
         return teams
     def load_team_members(team_primary):
-        
         '''This function loads all the team members from the database'''
         team=Teams.objects.get(primary=team_primary)
         team_id=team.id
@@ -101,22 +100,26 @@ class Branch:
     
     def load_branch_eb_panel():
         '''This function loads all the EB panel members from the branch.
-        Checks if the position of the member is True for is_eb_member'''
-        eb_panel_member=Members.objects.all()
+        Checks if the position of the member is True for is_eb_member and if member exists in current EB Panel'''
+        get_current_panel=Branch.load_current_panel()
+        members=Members.objects.all()
         eb_panel=[]
-        for member in eb_panel_member:
+        for member in members:
             if member.position.is_eb_member:
-                eb_panel.append(member)
+                if (Panel_Members.objects.filter(tenure=get_current_panel.pk,member=member.ieee_id).exists()):
+                    eb_panel.append(member)
         return eb_panel
                 
     def load_all_officers_of_branch():
         '''This function loads all the officer members from the branch.
-        Checks if the position of the member is True for is_officer'''
+        Checks if the position of the member is True for is_officer and if he belongs from the current active panel'''
+        get_current_panel=Branch.load_current_panel()
         members=Members.objects.all()
         branch_officers=[]
         for member in members:
             if member.position.is_officer:
-                branch_officers.append(member)
+                if (Panel_Members.objects.filter(tenure=get_current_panel.pk,member=member.ieee_id).exists()):
+                    branch_officers.append(member)
         return branch_officers
     
     def load_all_active_general_members_of_branch():
@@ -169,6 +172,15 @@ class Branch:
         except:
             raise Http404("The requested page does not exist.")
     
+    def get_panel_by_year(panel_year):
+        '''This returns the panel by year'''
+        try:
+            panel=Panels.objects.filter(year=panel_year).first()
+            return panel
+        except:
+            raise Http404("The requested page does not exist.")
+
+    
     def load_panel_members_by_panel_id(panel_id):
         '''This load all the info associated with a panel from Panel members Table'''
         try:
@@ -181,7 +193,7 @@ class Branch:
     def load_all_panels():
         '''This function loads all the panels from the database'''
         try:
-            panels=Panels.objects.filter().all().order_by('-id')
+            panels=Panels.objects.filter().all().order_by('-year')
             return panels
         except:
             return DatabaseError
@@ -224,13 +236,7 @@ class Branch:
                         new_member_in_panel.save()
                 except:
                     return DatabaseError
-                data_access_instance=MDT_Data_Access(ieee_id=Members.objects.get(ieee_id=ieee_id),
-                                                     renewal_data_access=False,
-                                                     insb_member_details=False,
-                                                     recruitment_session=False,
-                                                     recruited_member_details=False) #create data access for the member with default value set to false
-                
-                data_access_instance.save()
+
                 return True
             else:
                 
