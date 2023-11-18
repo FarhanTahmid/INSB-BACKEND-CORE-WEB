@@ -142,13 +142,13 @@ class Branch:
                     general_members.append(member)
         return general_members
     
-    def create_panel(request,tenure_year,current_check):
+    def create_panel(request,tenure_year,current_check,panel_start_date,panel_end_date):
         '''This function creates a panel object. Collects parameter value from views '''
         try:
             # Check if the panel being created is the current panel
             if(current_check is None):
                 # Create with current_check=False
-                new_panel=Panels.objects.create(year=tenure_year,creation_time=datetime.now(),current=False,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1)) #primary=1 as this is branch's panel
+                new_panel=Panels.objects.create(year=tenure_year,creation_time=panel_start_date,current=False,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1),panel_end_time=panel_end_date) #primary=1 as this is branch's panel
                 new_panel.save()
                 messages.success(request,"Panel was created successfully")
                 return True
@@ -157,7 +157,7 @@ class Branch:
                 # Changing previous panel current status to False
                 Panels.objects.filter(current=True).update(current=False)
                 # Create with current_check=True
-                new_panel=Panels.objects.create(year=tenure_year,creation_time=datetime.now(),current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1)) #primary=1 as this is branch's panel)
+                new_panel=Panels.objects.create(year=tenure_year,creation_time=panel_start_date,current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1),panel_end_time=panel_end_date) #primary=1 as this is branch's panel)
                 new_panel.save()
                 messages.success(request,"Panel was created successfully")
                 messages.info(request,"Current Panel has been changed!")
@@ -222,7 +222,7 @@ class Branch:
     def load_all_panels():
         '''This function loads all the panels from the database'''
         try:
-            panels=Panels.objects.filter().all().order_by('-year')
+            panels=Panels.objects.filter().all().order_by('-current','-year')
             return panels
         except:
             return DatabaseError
