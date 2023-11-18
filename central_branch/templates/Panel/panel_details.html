@@ -185,6 +185,12 @@
             {% else %}
                 <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">IEEE NSU Student Branch Panel of <b><span style="color:#00629B;"> {{panel_info.year}} </span></b></h2>
             {% endif %}
+            <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">Panel Start Date:<span style="color:#00629B;"> {{panel_info.creation_time|date:'Y-m-d'}} </span></b></h5>
+            {% if panel_info.panel_end_time %}
+            {% else %}
+            <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">Panel End Date:<span style="color:#00629B;"> {{panel_info.panel_end_time|date:'Y-m-d'}} </span></b></h5>
+            {% endif %}
+            <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">Panel Duration:<span style="color:#00629B;"> {{tenure_time}} </span></b></h5>
             <br>
             <div style="justify-content:center;text-align:center;">  
                 <div class="btn-container">

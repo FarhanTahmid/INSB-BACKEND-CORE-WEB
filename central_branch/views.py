@@ -18,7 +18,7 @@ from port.renderData import PortData
 from users.renderData import PanelMembersData
 from central_branch.renderData import Branch
 from . view_access import Branch_View_Access
-
+from datetime import datetime
 
 
 # Create your views here.
@@ -377,8 +377,10 @@ def panel_home(request):
     if request.method=="POST":
         tenure_year=request.POST['tenure_year']
         current_check=request.POST.get('current_check')
+        panel_start_date=request.POST['panel_start_date']
+        panel_end_date=request.POST['panel_end_date']
         # create panel
-        if(Branch.create_panel(request,tenure_year=tenure_year,current_check=current_check)):
+        if(Branch.create_panel(request,tenure_year=tenure_year,current_check=current_check,panel_end_date=panel_end_date,panel_start_date=panel_start_date)):
             return redirect('central_branch:panels')
         
     context={
@@ -461,9 +463,6 @@ def panel_details(request,panel_id):
                 panel_obj.save()
                 messages.success(request,"Successfully Updated Panel Informations")
                 return redirect('central_branch:panel_details',panel_id)
-
-                
-            
             
         # Check whether the add executive button was pressed
         if (request.POST.get('add_executive_to_panel')):
@@ -535,6 +534,12 @@ def panel_details(request,panel_id):
     all_insb_volunteer_positions=PortData.get_all_volunteer_position_with_sc_ag_id(request,sc_ag_primary=1)
     all_insb_teams=PortData.get_teams_of_sc_ag_with_id(request,sc_ag_primary=1)
     
+    if(panel_info.panel_end_time is None):
+        present_date=datetime.now()
+        tenure_time=present_date.date()-panel_info.creation_time.date()
+    else:
+        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+            
     context={
         'panel_info':panel_info,
         'eb_member':eb_member,
@@ -546,6 +551,7 @@ def panel_details(request,panel_id):
         'officer_positions':all_insb_officer_positions,
         'volunteer_positions':all_insb_volunteer_positions,
         'teams':all_insb_teams,
+        'tenure_time':tenure_time,
     }
     return render(request,'Panel/panel_details.html',context)
 
