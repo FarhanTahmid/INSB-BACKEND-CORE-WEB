@@ -30,10 +30,15 @@ class Branch:
         teams=Teams.objects.all().values('primary','team_name') #returns a list of dictionaryies with the id and team name
         return teams
     def load_team_members(team_primary):
-        '''This function loads all the team members from the database'''
+        '''This function loads all the team members from the database and also checks if the member is included in the current panel'''
         team=Teams.objects.get(primary=team_primary)
         team_id=team.id
-        team_members=Members.objects.order_by('position').filter(team=team_id)
+        get_users=Members.objects.order_by('position').filter(team=team_id)
+        get_current_panel=Branch.load_current_panel()
+        team_members=[]
+        for i in get_users:
+            if(Panel_Members.objects.filter(member=i.ieee_id,tenure=get_current_panel.pk).exists()):
+                team_members.append(i)
         return team_members
 
     # def load_ex_com_panel_list():
@@ -164,6 +169,30 @@ class Branch:
             messages.error(request,"Some error occured! Try again.")
             return False
     
+    def delete_panel(request,panel_id):
+        ''' This function deletes a panel and makes all its members a general member and team = None'''
+
+        get_panel=Panels.objects.get(pk=panel_id)
+        
+        get_panel_members=Panel_Members.objects.filter(tenure=panel_id)
+        
+        for i in get_panel_members:
+            # make all the members general members first and then team=None
+            try:
+                Members.objects.filter(ieee_id=i.member.ieee_id).update(position=Roles_and_Position.objects.get(id=13),team=None)
+                i.delete()
+            except:
+                messages.error(request,"Something went wrong while deleting members from the panel")
+
+        # deleting the panel
+        try:
+            get_panel.delete()
+            messages.info(request,"Panel deleted successfully.")
+            return True
+        except:
+            messages.error(request,'Can not delete this panel. Something went wrong!')
+            return False
+
     def load_panel_by_id(panel_id):
         '''This loads all the panel information from Panels table'''
         try:

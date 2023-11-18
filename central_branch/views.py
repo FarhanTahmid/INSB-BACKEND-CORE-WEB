@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from . import renderData
-from port.models import Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position
+from port.models import Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
 from django.db import DatabaseError
 from central_branch.renderData import Branch
 from events_and_management_team.renderData import Events_And_Management_Team
@@ -418,6 +418,53 @@ def panel_details(request,panel_id):
 
     if request.method=="POST":
         '''Block of code for Executive Members'''
+        
+        # Delete panel
+        if(request.POST.get('delete_panel')):
+            if(Branch.delete_panel(request,panel_id)):
+                return redirect('central_branch:panels')
+        
+        # Save changes to the Panel
+        if(request.POST.get('save_changes')):
+            panel_tenure=request.POST.get('panel_tenure')
+            current_panel_check=request.POST.get('current_panel_check')
+            if(current_panel_check is None):
+                current_panel_check=False
+            else:
+                current_panel_check=True
+            panel_start_date=request.POST['panel_start_date']
+            panel_end_date=request.POST['panel_end_date']
+            if(panel_end_date==""):
+                panel_end_date=None
+            
+            panel_obj=Panels.objects.get(pk=panel_id)
+
+            if(current_panel_check):
+                # if current panel check is true that means we need to mark other panels current as False
+                try:
+                    Panels.objects.filter(current=True).update(current=False)
+                    # updating the panel to be the current one
+                    panel_obj.year=panel_tenure
+                    panel_obj.current=True
+                    panel_obj.creation_time=panel_start_date
+                    panel_obj.panel_end_time=panel_end_date
+                    panel_obj.save()
+                    messages.success(request,"Successfully Updated Panel Informations")
+                    return redirect('central_branch:panel_details',panel_id)
+                except:
+                    messages.error(request,"Something went wrong while making the panel current panel")
+            else:
+                panel_obj.year=panel_tenure
+                panel_obj.current=False
+                panel_obj.creation_time=panel_start_date
+                panel_obj.panel_end_time=panel_end_date
+                panel_obj.save()
+                messages.success(request,"Successfully Updated Panel Informations")
+                return redirect('central_branch:panel_details',panel_id)
+
+                
+            
+            
         # Check whether the add executive button was pressed
         if (request.POST.get('add_executive_to_panel')):
             # get position
