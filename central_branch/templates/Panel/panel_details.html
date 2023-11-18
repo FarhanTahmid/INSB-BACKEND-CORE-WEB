@@ -188,11 +188,8 @@
             <br>
             <div style="justify-content:center;text-align:center;">  
                 <div class="btn-container">
-                    {% if panel_info.current %}
-                    {% else %}
-                    <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-g" ui-toggle-class="bounce" ui-target="#animate">Make this panel the Current Panel</button>
-                    {% endif %}
                     <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-f" ui-toggle-class="bounce" ui-target="#animate">Delete Panel</button>
+                    <button type="submit" class="btn btn-outline b-info text-info" data-toggle="modal" data-target="#m-s-g" ui-toggle-class="bounce" ui-target="#animate">Panel Settings</button>
                 </div>
             </div>
             <br>
@@ -221,7 +218,7 @@
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                            <input type="submit" class="btn btn-danger p-x-md" name="create_panel" value="Delete Panel"></input>                  
+                            <input type="submit" class="btn btn-danger p-x-md" name="delete_panel" value="Delete Panel"></input>                  
                             </div>
                         </div><!-- /.modal-content -->
                     </div>
@@ -235,15 +232,60 @@
                     <div class="modal-dialog" id="animate">
                         <div class="modal-content">
                             <div class="modal-header">
-                            <h5 class="modal-title">Make this Panel the Current Panel</h5>
+                            <h5 class="modal-title">Make Changes to the Panel</h5>
                             </div>
                             
                             <div class="modal-body text-left p-lg">
-                                <p>Remember, If you choose to make this Panel the current Panel, all the Teams and Access will change according to it.</p>        
+                                <p>Remember, If you choose to make this Panel the current Panel, all the Teams and Access will change according to it.</p>
+                                <div class="form-group row">
+                                    <label for="inputieeeid3" class="col-sm  form-control-label">Make this panel Current?</label>
+                                        <span style="margin-right:30vh;">
+
+                                            <div class="col-sm-10">
+                                            {% if panel_info.current %}
+                                                <label class="ui-switch">
+                                                <input name="current_panel_check" checked="True" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            {% else %}
+                                                <label class="ui-switch">
+                                                <input name="current_panel_check" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            {% endif %}
+                                            </div>
+                                        </span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword3">Panel Start Date</label>
+                                            <input
+                                                placeholder="Panel Start Date"
+                                                class="form-control w-75"
+                                                type="date"
+                                                name="panel_start_date"
+                                                value="{{ panel_info.creation_time|date:'Y-m-d' }}"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword3">Panel End Date</label>
+                                            <input
+                                                placeholder="Date of Birth"
+                                                class="form-control w-75"
+                                                type="date"
+                                                name="panel_end_date"
+                                                value="{{ panel_info.panel_end_time|date:'Y-m-d' }}"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>        
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                            <input type="submit" class="btn btn-success p-x-md" name="create_panel" value="Make Current Panel"></input>                  
+                            <input type="submit" class="btn btn-success p-x-md" name="save_changes" value="Save Changes"></input>                  
                             </div>
                         </div><!-- /.modal-content -->
                     </div>

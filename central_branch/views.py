@@ -418,6 +418,29 @@ def panel_details(request,panel_id):
 
     if request.method=="POST":
         '''Block of code for Executive Members'''
+        
+        # Delete panel
+        if(request.POST.get('delete_panel')):
+            print("Delete")
+        
+        # Save changes to the Panel
+        if(request.POST.get('save_changes')):
+            current_panel_check=request.POST.get('current_panel_check')
+            if(current_panel_check is None):
+                current_panel_check=False
+            else:
+                current_panel_check=True
+            
+            if(current_panel_check):
+                # if current panel check is true that means we need to mark Other panels current as False
+                pass
+            
+            panel_start_date=request.POST['panel_start_date']
+            print(panel_start_date)
+            panel_end_date=request.POST['panel_end_date']
+            print(panel_end_date)
+            
+            
         # Check whether the add executive button was pressed
         if (request.POST.get('add_executive_to_panel')):
             # get position
