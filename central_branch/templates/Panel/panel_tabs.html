@@ -14,6 +14,8 @@ flex-direction: column;">
         <li class="tab active_tab" onclick="showTab('tab1')">Executive Members Panel</li>
         <li class="tab" onclick="showTab('tab2')">Officer Members Panel</li>
         <li class="tab" onclick="showTab('tab3')" style="border-right: 1px solid #00629B;">Volunteer Members Panel</li>
+        <li class="tab" onclick="showTab('tab4')" style="border-right: 1px solid #00629B;">Alumni Members Panel</li>
+
     </ul>
     <br>
     <div id="tab1" class="tab-content" style="margin-right: 0px;">
@@ -32,6 +34,12 @@ flex-direction: column;">
         {% block volunteer_members_panel %}
             {% include "Panel/volunteer_members_tab.html" %}
         {% endblock volunteer_members_panel %}
+    </div>
+
+    <div id="tab4" class="tab-content" style="margin-right: 0px;">
+        {% block alumni_members_panel %}
+            {% include "Panel/alumni_members_tab.html" %}
+        {% endblock alumni_members_panel %}
     </div>
 </div>
 <script>

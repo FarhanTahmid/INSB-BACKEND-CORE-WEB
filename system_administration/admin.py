@@ -56,3 +56,10 @@ class Branch_Data_Access(admin.ModelAdmin):
         'panel_memeber_add_remove_access','team_details_page','manage_web_access',
         'manage_web_home_access'
     ]
+
+from .models import SystemErrors
+@admin.register(SystemErrors)
+class SystemErrors(admin.ModelAdmin):
+    list_display=[
+        'pk','date_time','error_name','error_fix_status'
+    ]

@@ -3,6 +3,7 @@ from django.urls import reverse
 from port.models import Teams
 from users.models import Members
 from django_resized import ResizedImageField
+from ckeditor.fields import RichTextField
 # Create your models here.
 
 # System Model
@@ -202,3 +203,13 @@ class Project_Developers(models.Model):
         return str(self.name)
 
 
+class SystemErrors(models.Model):
+    date_time=models.DateTimeField(null=False,blank=False)
+    error_name=models.CharField(null=False,blank=False,max_length=100)
+    error_traceback=RichTextField(null=False,blank=False,max_length=1000)
+    error_fix_status=models.BooleanField(null=False,blank=False,default=False)
+    
+    class Meta:
+        verbose_name="System Error"
+    def __str__(self) -> str:
+        return str(self.pk)

@@ -8,15 +8,18 @@ from PIL import Image
 from recruitment.models import recruitment_session,recruited_members
 from central_branch.models import Event_type,Events
 from system_administration.render_access import Access_Render
-import datetime
+from datetime import datetime
 from django.db.models import Q
 from users.models import User
 from recruitment.models import recruited_members
 import math
 import sqlite3
 from django.contrib import messages
-from . models import Panel_Members
+from . models import Panel_Members,Alumni_Members
 from port.models import Panels
+import traceback
+import logging
+from system_administration.system_error_handling import ErrorHandling
 
 class LoggedinUser:
     
@@ -377,6 +380,40 @@ class PanelMembersData:
             messages.error(request,"Something went wrong! Please try again!")
 
 
+
+class Alumnis:
+    logger=logging.getLogger(__name__)
+    def create_alumni_members(request,name,picture,linkedin_link,facebook_link,email,contact_no):
+        try:
+            if picture is not None:
+                new_alumni=Alumni_Members.objects.create(
+                    name=name,
+                    picture=picture,
+                    linkedin_link=linkedin_link,
+                    facebook_link=facebook_link,
+                    email=email,
+                    contact_no=contact_no
+                )
+                new_alumni.save()
+                messages.success(request,"Alumni Member created successfully")
+                return True
+            else:
+                new_alumni=Alumni_Members.objects.create(
+                    name=name,
+                    linkedin_link=linkedin_link,
+                    facebook_link=facebook_link,
+                    email=email,
+                    contact_no=contact_no
+                )
+                new_alumni.save()
+                messages.success(request,"Alumni Member created successfully")
+                return True
+            
+        except Exception as e:
+            Alumnis.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Something went wrong! Please Try again!")
+            return False
 
 
       

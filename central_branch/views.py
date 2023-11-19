@@ -15,10 +15,12 @@ from users.renderData import LoggedinUser
 import os
 from users import renderData as port_render
 from port.renderData import PortData
-from users.renderData import PanelMembersData
+from users.renderData import PanelMembersData,Alumnis
 from central_branch.renderData import Branch
 from . view_access import Branch_View_Access
 from datetime import datetime
+from django.utils.datastructures import MultiValueDictKeyError
+
 
 
 # Create your views here.
@@ -518,7 +520,7 @@ def panel_details(request,panel_id):
 
             if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=team)):
                 return redirect('central_branch:panel_details',panel_id)
-        # check whether the remove button was pressed
+        # check =8whether the remove button was pressed
         if(request.POST.get('remove_member_volunteer')):
             # get ieee id of the member
             ieee_id=request.POST['remove_officer_member']
@@ -526,8 +528,35 @@ def panel_details(request,panel_id):
             if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
                 return redirect('central_branch:panel_details',panel_id)
 
+        '''Block of code for Alumni Members'''
+        # Create New Alumni Member
+        if(request.POST.get('create_new_alumni')):
+            try:
+                alumni_name=request.POST['alumni_name']
+                alumni_email=request.POST['alumni_email']
+                alumni_contact_no=request.POST['alumni_contact_no']
+                alumni_facebook_link=request.POST['alumni_facebook_link']
+                alumni_linkedin_link=request.POST['alumni_linkedin_link']
+                alumni_picture=request.FILES.get('alumni_picture') 
 
-
+            except MultiValueDictKeyError:
+                messages.error(request,"Image can not be uploaded!")
+            finally:
+                # create alumni
+                if(Alumnis.create_alumni_members(
+                    request=request,contact_no=alumni_contact_no,
+                    email=alumni_email,
+                    facebook_link=alumni_facebook_link,
+                    linkedin_link=alumni_linkedin_link,
+                    name=alumni_name,
+                    picture=alumni_picture)):
+                    
+                    return redirect('central_branch:panel_details',panel_id)
+                else:
+                    messages.error(request,'Failed to Add new alumni!')
+                
+            
+            
 
     all_insb_executive_positions=PortData.get_all_executive_positions_with_sc_ag_id(request,sc_ag_primary=1) #setting sc_ag_primary as 1, because Branch's Primary is 1 by default
     all_insb_officer_positions=PortData.get_all_officer_positions_with_sc_ag_id(request,sc_ag_primary=1)
