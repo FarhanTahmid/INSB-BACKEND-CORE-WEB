@@ -51,19 +51,20 @@ class Members(models.Model):
 
 '''This table will be used to get the data of the EX Panel Members of IEEE NSU SB '''
 
-class Ex_panel_members(models.Model):
+class Alumni_Members(models.Model):
     name=models.CharField(null=False,blank=False,max_length=100)
-    picture=models.ImageField(null=True,blank=True,default='user_profile_pictures/default_profile_picture.png',upload_to='panel_profile_pictures/')
+    picture=ResizedImageField(null=True,blank=True,default='user_profile_pictures/default_profile_picture.png',upload_to='panel_profile_pictures/')
     linkedin_link=models.URLField(null=True,blank=True,max_length=100)
     facebook_link=models.URLField(null=True,blank=True,max_length=100)
-    mail=models.URLField(null=True,blank=True,max_length=50)
+    email=models.URLField(null=True,blank=True,max_length=50)
+    contact_no=models.CharField(null=True,blank=True,max_length=50)
     ieee_collaboratec=models.URLField(null=True,blank=True,max_length=100)
     
     class Meta:
         verbose_name='Ex Panel Members'
     
     def __str__(self) -> str:
-        return self.name
+        return str(self.pk)
 
 
 
@@ -74,7 +75,7 @@ will be extracted from "Members" table and those who are not in insb database wi
 class Panel_Members(models.Model):
     tenure=models.ForeignKey(Panels,on_delete=models.CASCADE)
     member=models.ForeignKey(Members,on_delete=models.CASCADE,null=True,blank=True)
-    ex_member=models.ForeignKey(Ex_panel_members,on_delete=models.CASCADE,null=True,blank=True)
+    ex_member=models.ForeignKey(Alumni_Members,on_delete=models.CASCADE,null=True,blank=True)
     position=models.ForeignKey(Roles_and_Position,on_delete=models.CASCADE)
     team=models.ForeignKey(Teams,null=True,blank=True,on_delete=models.CASCADE)
     
