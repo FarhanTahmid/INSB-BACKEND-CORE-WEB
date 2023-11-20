@@ -194,9 +194,9 @@
                   <a href="{% url "membership_development_team:export_excel_renewal_request" session_id %}" class="btn btn-outline b-success text-success">Generate Excel Sheet For this Session</a>
                   <div class="btn-group dropdown">
                     <button class="btn  btn-outline b-accent text-accent  dropdown-toggle" data-toggle="dropdown">Chapters & Affinity Group Renewals</button>
-                    <div class="dropdown-menu dropdown-menu-scale info pull-right">
+                    <div class="dropdown-menu dropdown-menu-scale info pull-down">
                       {% for i in all_sc_ag %}
-                        <a class="dropdown-item" href="{% url "membership_development_team:sc_ag_renewal_session_data" pk=session_id sc_ag_id=i.primary %}">{{i.group_name}}</a>
+                        <a class="dropdown-item" href="{% url "membership_development_team:sc_ag_renewal_session_data" pk=session_id sc_ag_primary=i.primary %}">{{i.group_name}}</a>
                       {% endfor %}
                     </div>
                   </div>

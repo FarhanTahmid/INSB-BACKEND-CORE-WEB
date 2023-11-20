@@ -497,8 +497,11 @@ def renewal_session_data(request,pk):
 @login_required
 def sc_ag_renewal_session_data(request,pk,sc_ag_primary):
     get_sc_ag=PortData.get_sc_ag(request=request,primary=sc_ag_primary)
+    
     context={
-        'sc_ag':get_sc_ag
+        'sc_ag':get_sc_ag,
+        'session_id':pk,
+        
     }
     return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context)
 
