@@ -22,6 +22,7 @@ from django.core.mail import send_mail
 from . import email_sending
 from central_branch.renderData import Branch
 from users.renderData import LoggedinUser
+from port.renderData import PortData
 
 
 # Create your views here.
@@ -423,7 +424,7 @@ def renewal_session_data(request,pk):
     has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
 
 
-
+    get_all_sc_ag=PortData.get_all_sc_ag(request=request)
     session_name=renewal_data.get_renewal_session_name(pk)
     session_id=renewal_data.get_renewal_session_id(session_name=session_name)
     get_renewal_requests=Renewal_requests.objects.filter(session_id=session_id).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
@@ -485,11 +486,24 @@ def renewal_session_data(request,pk):
         'form_link':form_link,
         'mdt_team_member':load_team_members,
         'has_form_data':has_form_data,
+        'all_sc_ag':get_all_sc_ag,
+
     }
     if has_access:
         return render(request,'Renewal/renewal_session_details.html',context)
     else:
         return render(request,'access_denied.html')
+
+@login_required
+def sc_ag_renewal_session_data(request,pk,sc_ag_primary):
+    get_sc_ag=PortData.get_sc_ag(request=request,primary=sc_ag_primary)
+    
+    context={
+        'sc_ag':get_sc_ag,
+        'session_id':pk,
+        
+    }
+    return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context)
 
 from .models import Renewal_Form_Info
 @login_required
@@ -657,7 +671,7 @@ def generateExcelSheet_renewal_requestList(request,session_id):
     
     '''This method generates excel sheets only for renewal recruitment details for particular sessions'''
     session_name=renewal_data.get_renewal_session_name(pk=session_id)
-    date=datetime.datetime.now()
+    date=datetime.now()
     response = HttpResponse(
         content_type='application/ms-excel')  # eclaring content type for the excel files
     response['Content-Disposition'] = f'attachment; filename=Renewal Application - ' +\

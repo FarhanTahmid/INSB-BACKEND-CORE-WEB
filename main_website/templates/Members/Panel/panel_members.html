@@ -74,34 +74,47 @@
 
 
             <!-- Branch councelor Starts -->
-            {% block panel_member_branch_counselor %}
-                {% include "Members/Panel/panel_members_branch_counselor_section.html" %}
-            {% endblock panel_member_branch_counselor %}
+            {% if has_branch_counselor %}
+                {% block panel_member_branch_counselor %}
+                    {% include "Members/Panel/panel_members_branch_counselor_section.html" %}
+                {% endblock panel_member_branch_counselor %}
+            {% endif %}
             <!-- Branch councelor Ends -->
 
 
             <!--Chapter Advisors starts-->
-            {% block sc_ag_faculty_advisors %}
-                {% include "Members/Panel/panel_members_sc_ag_advisors_section.html" %}
-            {% endblock sc_ag_faculty_advisors %}
+            {% if has_sc_ag_faculty_advisor %}
+                {% block sc_ag_faculty_advisors %}
+                    {% include "Members/Panel/panel_members_sc_ag_advisors_section.html" %}
+                {% endblock sc_ag_faculty_advisors %}
+            {% endif %}
+            
             <!--Chapter Advisors ends-->
           
             <!--Mentor starts-->
-            {% block panel_members_mentors %}
-                {% include "Members/Panel/panel_member_mentors_section.html" %}
-            {% endblock panel_members_mentors %}
+            {% if has_mentors %}
+                {% block panel_members_mentors %}
+                    {% include "Members/Panel/panel_member_mentors_section.html" %}
+                {% endblock panel_members_mentors %}
+            {% endif %}
+
             <!--Mentor ends-->
 
             <!--Branch EB starts-->
-            {% block panel_member_branch_eb %}
-                {% include "Members/Panel/panel_member_branch_eb_section.html" %}
-            {% endblock panel_member_branch_eb %}
+            {% if has_branch_chair %}
+                {% block panel_member_branch_eb %}
+                    {% include "Members/Panel/panel_member_branch_eb_section.html" %}
+                {% endblock panel_member_branch_eb %}
+            {% endif %}
+            
             <!--Branch EB Ends-->
 
             <!--Chapter Chairs starts-->
-            {% block panel_member_sc_ag_chair %}
-                {% include "Members/Panel/panel_members_sc_ag_chair_section.html" %}
-            {% endblock panel_member_sc_ag_chair %}
+            {% if has_sc_ag_chair %}
+                {% block panel_member_sc_ag_chair %}
+                    {% include "Members/Panel/panel_members_sc_ag_chair_section.html" %}
+                {% endblock panel_member_sc_ag_chair %}
+            {% endif %}
             <!--Chapter Chairs ends-->
 
           </div>

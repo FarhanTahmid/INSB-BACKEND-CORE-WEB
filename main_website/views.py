@@ -167,9 +167,34 @@ def current_panel_members(request):
             elif(i.position.is_eb_member):
                 if(i.position.role=='Chair'):
                     branch_chair.append(i)
+                elif(i.position.is_mentor):
+                    mentors.append(i)
                 else:
                     branch_eb.append(i)
+    
+    # check of having different members
+    has_branch_counselor=False
+    has_sc_ag_faculty_advisor=False
+    has_mentors=False
+    has_branch_chair=False
+    has_branch_eb=False
+    has_sc_ag_chair=False
+    if(len(branch_counselor)>0):
+        has_branch_counselor=True
+    if(len(sc_ag_faculty_advisors)>0):
+        has_sc_ag_faculty_advisor=True
+    if(len(mentors)>0):
+        has_mentors=True
+    if(len(branch_chair)>0):
+        has_branch_chair=True
+    if(len(branch_eb)>0):
+        has_branch_eb=True
+    if(len(sc_ag_chair)>0):
+        has_sc_ag_chair=True
+    
+    
     context={
+        'has_branch_counselor':has_branch_counselor,'has_sc_ag_faculty_advisor':has_sc_ag_faculty_advisor,'has_mentors':has_mentors,'has_branch_chair':has_branch_chair,'has_branch_eb':has_branch_eb,'has_sc_ag_chair':has_sc_ag_chair,
         'panels':get_all_panels,
         'branch_counselor':branch_counselor,
         'sc_ag_faculty_advisors':sc_ag_faculty_advisors,
@@ -193,6 +218,7 @@ def panel_members_page(request,year):
     branch_chair=[]
     branch_eb=[]
     sc_ag_chair=[]
+    # alumni_member=[]
     
     for i in get_panel_members:
         if (i.position.role_of.primary==1):
@@ -201,10 +227,37 @@ def panel_members_page(request,year):
             elif(i.position.is_eb_member):
                 if(i.position.role=='Chair'):
                     branch_chair.append(i)
+                elif(i.position.is_mentor):
+                    mentors.append(i)
                 else:
                     branch_eb.append(i)
     
+    #TODO: fix the issue of branch chair showing twice in the algo
+    
+    
+    # check of having different members
+    has_branch_counselor=False
+    has_sc_ag_faculty_advisor=False
+    has_mentors=False
+    has_branch_chair=False
+    has_branch_eb=False
+    has_sc_ag_chair=False
+    
+    if(len(branch_counselor)>0):
+        has_branch_counselor=True
+    if(len(sc_ag_faculty_advisors)>0):
+        has_sc_ag_faculty_advisor=True
+    if(len(mentors)>0):
+        has_mentors=True
+    if(len(branch_chair)>0):
+        has_branch_chair=True
+    if(len(branch_eb)>0):
+        has_branch_eb=True
+    if(len(sc_ag_chair)>0):
+        has_sc_ag_chair=True
+    
     context={
+        'has_branch_counselor':has_branch_counselor,'has_sc_ag_faculty_advisor':has_sc_ag_faculty_advisor,'has_mentors':has_mentors,'has_branch_chair':has_branch_chair,'has_branch_eb':has_branch_eb,'has_sc_ag_chair':has_sc_ag_chair,
         'panels':get_all_panels,
         'branch_counselor':branch_counselor,
         'sc_ag_faculty_advisors':sc_ag_faculty_advisors,
