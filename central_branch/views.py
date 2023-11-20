@@ -20,7 +20,7 @@ from central_branch.renderData import Branch
 from . view_access import Branch_View_Access
 from datetime import datetime
 from django.utils.datastructures import MultiValueDictKeyError
-
+from users.renderData import Alumnis
 
 
 # Create your views here.
@@ -403,10 +403,11 @@ def panel_details(request,panel_id):
     officer_member=[]
     faculty_member=[]
     volunteer_members=[]
+    alumni_members=[]
     
     for i in panel_members:
-        # if the member position is eb_member
-        if(i.position.is_eb_member):
+        # if the member position is eb_member, avoiding alumni member with none clause
+        if((i.member is not None) and i.position.is_eb_member):
             eb_member.append(i)
         # if the member position is officer member
         elif(i.position.is_officer):
@@ -414,11 +415,14 @@ def panel_details(request,panel_id):
         # if the member position is faculty member
         elif(i.position.is_faculty):
             faculty_member.append(i)
+        elif(i.member is None):
+            alumni_members.append(i)
         else:
         # generally add rest of the members as volunteers as one can only be added to Panel Member list if he is in any position or team. 
             volunteer_members.append(i)
     
     all_insb_members=port_render.get_all_registered_members(request)
+    all_alumni_members=Alumnis.getAllAlumns()
 
     if request.method=="POST":
         '''Block of code for Executive Members'''
@@ -520,7 +524,7 @@ def panel_details(request,panel_id):
 
             if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=team)):
                 return redirect('central_branch:panel_details',panel_id)
-        # check =8whether the remove button was pressed
+        # check whether the remove button was pressed
         if(request.POST.get('remove_member_volunteer')):
             # get ieee id of the member
             ieee_id=request.POST['remove_officer_member']
@@ -550,11 +554,25 @@ def panel_details(request,panel_id):
                     linkedin_link=alumni_linkedin_link,
                     name=alumni_name,
                     picture=alumni_picture)):
-                    
                     return redirect('central_branch:panel_details',panel_id)
                 else:
                     messages.error(request,'Failed to Add new alumni!')
-                
+        
+        # Add alumni to panel
+        if(request.POST.get('add_alumni_to_panel')):
+            alumni_to_add=request.POST['alumni_select']
+            position=request.POST['alumni_position']
+            
+            for i in alumni_to_add:            
+                if(PanelMembersData.add_alumns_to_branch_panel(request=request,alumni_id=alumni_to_add,panel_id=panel_id,position=position)):
+                    pass
+            return redirect('central_branch:panel_details',panel_id)
+        
+        if(request.POST.get('remove_member_alumni')):
+            alumni_to_remove=request.POST['remove_alumni_member']
+            if(PanelMembersData.remove_alumns_from_branch_panel(request=request,member_to_remove=alumni_to_remove,panel_id=panel_id)):
+                return redirect('central_branch:panel_details',panel_id)
+
             
             
 
@@ -575,12 +593,14 @@ def panel_details(request,panel_id):
         'officer_member':officer_member,
         'faculty_member':faculty_member,
         'volunteer_members':volunteer_members,
+        'alumni_members_in_panel':alumni_members,
         'insb_members':all_insb_members,
         'positions':all_insb_executive_positions,
         'officer_positions':all_insb_officer_positions,
         'volunteer_positions':all_insb_volunteer_positions,
         'teams':all_insb_teams,
         'tenure_time':tenure_time,
+        'alumni_members':all_alumni_members,
     }
     return render(request,'Panel/panel_details.html',context)
 

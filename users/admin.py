@@ -17,7 +17,7 @@ from . models import Panel_Members
 @admin.register(Panel_Members)
 class PanelMembers(admin.ModelAdmin):
     list_display=[
-        'member','tenure','position','team'
+        'member','ex_member','tenure','position','team'
     ]
 
 @admin.register(ResetPasswordTokenTable)

@@ -19,7 +19,7 @@
             <div style="text-align:right;">
             <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-d" ui-toggle-class="bounce" ui-target="#animate">Add Alumni Member</button>
             </div>
-            <small>This table holds the data of the Alumni Members that are not registered in the INSB Database</small>
+            <small>This table holds the data of the Alumni Members that are not registered in the INSB Database but are in the Panel</small>
             <br>
             <label style="margin-left:5px;">Search:</label>
             <input class="form-control w-75" type="text" id="searchInput7" placeholder="Search Member by name" onkeyup="searchTable7()">
@@ -28,29 +28,26 @@
         <table class="table table-bordered m-0 table7" style="text-align:center;">
             <thead>
             <tr>
-                <th style="text-align:center;">IEEE ID</th>
                 <th style="text-align:center;">Name</th>
-                <th style="text-align:center;">IEEE Email</th>
-                <th style="text-align:center;">Current Position</th>
-                <th style="text-align:center;">Team</th>
+                <th style="text-align:center;">Email</th>
+                <th style="text-align:center;">Contact No</th>
+                <th style="text-align:center;">Position</th>
                 <th style="text-align:center;">Remove Member?</th>
             </tr>
             </thead>
             <tbody>
             
-                {% for member in volunteer_members %}
+                {% for member in alumni_members_in_panel %}
                 <tr>
-                    <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.member.ieee_id %}">{{member.member.ieee_id}}</a></td>
-                    <td>{{ member.member.name  }}</td>
-                    <td>{{member.member.email_ieee}}</td>
+                    <td>{{member.ex_member.name}}</a></td>
+                    <td>{{ member.ex_member.email  }}</td>
+                    <td>{{member.ex_member.contact_no}}</td>
                     <td>{{member.position}}</td>
-                    <td>{{member.team}}</td>
-
                     <td>
                     <form method="POST">
                         {% csrf_token %}
-                            <input class="btn btn-outline b-danger text-danger" name="remove_member_volunteer" type="submit" value="Remove Member">
-                            <input type="hidden" name="remove_officer_member" value={{member.member.ieee_id}}>
+                            <input class="btn btn-outline b-danger text-danger" name="remove_member_alumni" type="submit" value="Remove Member">
+                            <input type="hidden" name="remove_alumni_member" value={{member.pk}}>
                         </form>
                     </td>
                 </tr>
@@ -72,7 +69,7 @@
             <div class="modal-body p-lg">
               <p>Do select the Position and Team of the Member Carefully!</p>
               <br>
-              <p>If Alumni Member does not exist in the database, <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-e" ui-toggle-class="bounce" ui-target="#animate" data-dismiss="modal">Create New Alumni Member</button>
+              <p>If Alumni Member does not exist in the database, <a class="text-primary" data-toggle="modal" data-target="#m-s-e" ui-toggle-class="bounce" ui-target="#animate" data-dismiss="modal">Create New Alumni Member</a>
               </p>
             </div>
             <!--Position Input-->
@@ -82,23 +79,24 @@
             <!--Search table-->
             <form method="POST">
                 {% csrf_token %}
-                <label style="margin-left:5px;">Select Position</label>
-                <select id="position" name="position2">
+                <label style="margin-left:10px;">Select Position</label>
+                <select id="position" name="alumni_position">
                     {% for position in positions %}
                         <option value={{position.id}}>{{ position.role }}</option>
                     {% endfor %} 
                 </select>
-
-                <div class="table-container">
-                    <label style="margin-left: 5px;">Search</label>
-                    <input class="w-75" type="text" id="searchInput8" placeholder="Search Member" onkeyup="searchTable8()">
-                    <div class="table-wrapper">
+                <br>
+                <label style="margin-left:10px;">Search</label>
+                <input class="w-75 form-group" type="text" id="searchInput8" placeholder="Search Member" onkeyup="searchTable8()">
+                <div class="table-container" style="margin-left:10px;text-align:center;">
+                                        <div class="table-wrapper">
                         <table class="table8" id="data2">
                             <thead>
                                 <tr id="row">
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Contact No</th>
+                                    <th>Select</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -107,6 +105,9 @@
                                     <td>{{ member.name }}</td>
                                     <td>{{ member.email }}</td>
                                     <td>{{ member.contact_no }}</td>
+                                    <td>
+                                        <input type="checkbox" id="select" name="alumni_select" value={{member.pk}}>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

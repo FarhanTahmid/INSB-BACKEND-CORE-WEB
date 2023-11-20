@@ -64,7 +64,7 @@ class Alumni_Members(models.Model):
         verbose_name='Ex Panel Members'
     
     def __str__(self) -> str:
-        return self.pk
+        return str(self.pk)
 
 
 

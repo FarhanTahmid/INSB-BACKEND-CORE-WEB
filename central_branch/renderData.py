@@ -1,6 +1,6 @@
 from django.http import Http404
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
-from users.models import Members,Panel_Members
+from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
 from system_administration.models import MDT_Data_Access
 from . models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_type
@@ -217,8 +217,7 @@ class Branch:
             return get_panel_members
         except:
             raise Http404("The requested page does not exist.")
-        
-                    
+                                
     def load_all_panels():
         '''This function loads all the panels from the database'''
         try:
