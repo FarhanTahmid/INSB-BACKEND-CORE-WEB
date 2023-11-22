@@ -496,16 +496,27 @@ def renewal_session_data(request,pk):
 
 @login_required
 def sc_ag_renewal_session_data(request,pk,sc_ag_primary):
+    
     get_sc_ag=PortData.get_sc_ag(request=request,primary=sc_ag_primary)
     
+    get_renewal_requests=[]
+    
+    if(int(sc_ag_primary)==2):
+        get_renewal_requests=Renewal_requests.objects.filter(session_id=pk,pes_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+    elif(int(sc_ag_primary)==3):
+        get_renewal_requests=Renewal_requests.objects.filter(session_id=pk,ras_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+    elif(int(sc_ag_primary)==4):
+        get_renewal_requests=Renewal_requests.objects.filter(session_id=pk,ias_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+    elif(int(sc_ag_primary)==5):
+        get_renewal_requests=Renewal_requests.objects.filter(session_id=pk,wie_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+
     context={
         'sc_ag':get_sc_ag,
         'session_id':pk,
-        
+        'requests':get_renewal_requests,
     }
     return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context)
 
-from .models import Renewal_Form_Info
 @login_required
 def renewal_request_details(request,pk,request_id):
     '''This function loads the datas for particular renewal requests'''

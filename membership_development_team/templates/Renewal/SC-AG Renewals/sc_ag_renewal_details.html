@@ -137,7 +137,18 @@
             <br>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Renewal Details for <span style="color:#00629B;"> <b>{{sc_ag.group_name}}</b></span></h2>
             <br>
-            
+            <!--Statistics Part-->
+            {% block pie_stat_for_sc_ag_renewal %}
+              {% include "Renewal/SC-AG Renewals/pie_chart_stat.html" %}
+            {% endblock pie_stat_for_sc_ag_renewal %}
+            <!--Statistics Part End-->
+
+            <!--Table Starts-->
+            {% block sc_ag_renewal_data_table %}
+              {% include "Renewal/SC-AG Renewals/sc_ag_renewal_data_table.html" %}
+            {% endblock sc_ag_renewal_data_table %}
+            <!--Table Ends-->
+
         </div>
         <!--PAGE END-->
 
