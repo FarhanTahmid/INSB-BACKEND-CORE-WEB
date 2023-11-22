@@ -1,8 +1,8 @@
 {% load static %}
 {% block banner_with_numbers %}
-<section id="content-section-8">        
-    <div class="gdlr-parallax-wrapper gdlr-background-image gdlr-show-all no-skin"
-        id="gdlr-parallax-wrapper-2" data-bgspeed="0.1"
+<section id="content-section-8">
+    <div class="gdlr-parallax-wrapper gdlr-background-image gdlr-show-all no-skin" id="gdlr-parallax-wrapper-2"
+        data-bgspeed="0.1"
         style="background-image: url('{{ media_url }}{{ banner_pic_with_stat }}'); padding-top: 100px; padding-bottom: 70px; ">
         <div id="gdlr-parallax-overlay"></div>
         <div class="container container-card" style="position: relative;
@@ -10,37 +10,53 @@
             <div class="twelve columns">
                 <div class="gdlr-skill-item-wrapper gdlr-skin-content gdlr-item gdlr-style-1" style="background-color: #002855;
                 padding: 30px;
-                border-radius: 5px;">
-                    <div class="gdlr-skill-item-title" style="color: #FFC72C;"><b>{{all_member_count}}</b></div>
-                    <div class="gdlr-skill-item-divider" style="border-color: #ffffff;"></div>
-                    <div class="gdlr-skill-item-caption" style="color: #FFC72C;"><b>Members</b></div>
+                border-radius: 5px;
+                background: #4791ff87;    ">
+                    <div class="gdlr-skill-item-title" style="color: #FFC72C; 	font-size: 60px;
+                    margin-bottom: 18px;
+                    font-weight: 600;" data-goal="{{all_member_count}}"><b>0</b></div>
+                    <div class="gdlr-skill-item-divider" style="border-color: #000000;"></div>
+                    <div class="gdlr-skill-item-caption" style="color: #FFC72C; font-size: 20px;
+                    font-weight: 500;"><b>Members</b></div>
                 </div>
             </div>
             <div class="twelve columns">
                 <div class="gdlr-skill-item-wrapper gdlr-skin-content gdlr-item gdlr-style-1" style="background-color: #002855;
                 padding: 30px;
-                border-radius: 5px;">
-                    <div class="gdlr-skill-item-title" style="color: #FFC72C;"><b>4</b></div>
-                    <div class="gdlr-skill-item-divider" style="border-color: #ffffff;"></div>
-                    <div class="gdlr-skill-item-caption" style="color: #FFC72C;"><b>Chapters & AG</b></div>
+                border-radius: 5px;
+                background: #4791ff87;    ">
+                    <div class="gdlr-skill-item-title" style="color: #FFC72C; 	font-size: 60px;
+                    margin-bottom: 18px;
+                    font-weight: 600;" data-goal="4"><b>0</b></div>
+                    <div class="gdlr-skill-item-divider" style="border-color: #000000;"></div>
+                    <div class="gdlr-skill-item-caption" style="color: #FFC72C; font-size: 20px;
+                    font-weight: 500;"><b>Chapters & AG</b></div>
                 </div>
             </div>
             <div class="twelve columns">
                 <div class="gdlr-skill-item-wrapper gdlr-skin-content gdlr-item gdlr-style-1" style="background-color: #002855;
                 padding: 30px;
-                border-radius: 5px;">
-                    <div class="gdlr-skill-item-title" style="color: #FFC72C;"><b>{{event_count}}</b></div>
-                    <div class="gdlr-skill-item-divider" style="border-color: #ffffff;"></div>
-                    <div class="gdlr-skill-item-caption" style="color: #FFC72C;"><b>Events</b></div>
+                border-radius: 5px;
+                background: #4791ff87;    ">
+                    <div class="gdlr-skill-item-title" style="color: #FFC72C; 	font-size: 60px;
+                    margin-bottom: 18px;
+                    font-weight: 600;" data-goal="{{event_count}}"><b>-1</b></div>
+                    <div class="gdlr-skill-item-divider" style="border-color: #000000;"></div>
+                    <div class="gdlr-skill-item-caption" style="color: #FFC72C; font-size: 20px;
+                    font-weight: 500;"><b>Events</b></div>
                 </div>
             </div>
             <div class="twelve columns">
                 <div class="gdlr-skill-item-wrapper gdlr-skin-content gdlr-item gdlr-style-1" style="background-color: #002855;
                 padding: 30px;
-                border-radius: 5px;">
-                    <div class="gdlr-skill-item-title" style="color: #FFC72C;"><b>50</b></div>
-                    <div class="gdlr-skill-item-divider" style="border-color: #ffffff;"></div>
-                    <div class="gdlr-skill-item-caption" style="color: #FFC72C;"><b>Achievements</b></div>
+                border-radius: 5px;
+                background: #4791ff87;    ">
+                    <div class="gdlr-skill-item-title" style="color: #FFC72C; 	font-size: 60px;
+                    margin-bottom: 18px;
+                    font-weight: 600;" data-goal="50"><b>0</b></div>
+                    <div class="gdlr-skill-item-divider" style="border-color: #000000;"></div>
+                    <div class="gdlr-skill-item-caption" style="color: #FFC72C; font-size: 20px;
+                    font-weight: 500;"><b>Achievements</b></div>
                 </div>
             </div>
             <!-- <div class="clear"></div> -->
@@ -48,4 +64,28 @@
     </div>
     <div class="clear"></div>
 </section>
+<script>
+let nums = document.querySelectorAll(".gdlr-skill-item-title");
+let section = document.querySelector(".container-card");
+let started = false; // Function Started ? No
+
+window.onscroll = function () {
+  if (window.scrollY >= section.offsetTop) {
+    if (!started) {
+      nums.forEach((num) => startCount(num));
+    }
+    started = true;
+  }
+};
+
+function startCount(el) {
+  let goal = el.dataset.goal;
+  let count = setInterval(() => {
+    el.textContent++;
+    if (el.textContent == goal) {
+      clearInterval(count);
+    }
+  }, 2000 / goal);
+}
+</script>
 {% endblock banner_with_numbers %}
