@@ -1,6 +1,6 @@
 from django.http import Http404
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
-from users.models import Members,Panel_Members
+from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
 from system_administration.models import MDT_Data_Access
 from . models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_type
@@ -30,10 +30,15 @@ class Branch:
         teams=Teams.objects.all().values('primary','team_name') #returns a list of dictionaryies with the id and team name
         return teams
     def load_team_members(team_primary):
-        '''This function loads all the team members from the database'''
+        '''This function loads all the team members from the database and also checks if the member is included in the current panel'''
         team=Teams.objects.get(primary=team_primary)
         team_id=team.id
-        team_members=Members.objects.order_by('position').filter(team=team_id)
+        get_users=Members.objects.order_by('position').filter(team=team_id)
+        get_current_panel=Branch.load_current_panel()
+        team_members=[]
+        for i in get_users:
+            if(Panel_Members.objects.filter(member=i.ieee_id,tenure=get_current_panel.pk).exists()):
+                team_members.append(i)
         return team_members
 
     # def load_ex_com_panel_list():
@@ -137,13 +142,13 @@ class Branch:
                     general_members.append(member)
         return general_members
     
-    def create_panel(request,tenure_year,current_check):
+    def create_panel(request,tenure_year,current_check,panel_start_date,panel_end_date):
         '''This function creates a panel object. Collects parameter value from views '''
         try:
             # Check if the panel being created is the current panel
             if(current_check is None):
                 # Create with current_check=False
-                new_panel=Panels.objects.create(year=tenure_year,creation_time=datetime.now(),current=False,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1)) #primary=1 as this is branch's panel
+                new_panel=Panels.objects.create(year=tenure_year,creation_time=panel_start_date,current=False,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1),panel_end_time=panel_end_date) #primary=1 as this is branch's panel
                 new_panel.save()
                 messages.success(request,"Panel was created successfully")
                 return True
@@ -152,7 +157,7 @@ class Branch:
                 # Changing previous panel current status to False
                 Panels.objects.filter(current=True).update(current=False)
                 # Create with current_check=True
-                new_panel=Panels.objects.create(year=tenure_year,creation_time=datetime.now(),current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1)) #primary=1 as this is branch's panel)
+                new_panel=Panels.objects.create(year=tenure_year,creation_time=panel_start_date,current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1),panel_end_time=panel_end_date) #primary=1 as this is branch's panel)
                 new_panel.save()
                 messages.success(request,"Panel was created successfully")
                 messages.info(request,"Current Panel has been changed!")
@@ -164,6 +169,30 @@ class Branch:
             messages.error(request,"Some error occured! Try again.")
             return False
     
+    def delete_panel(request,panel_id):
+        ''' This function deletes a panel and makes all its members a general member and team = None'''
+
+        get_panel=Panels.objects.get(pk=panel_id)
+        
+        get_panel_members=Panel_Members.objects.filter(tenure=panel_id)
+        
+        for i in get_panel_members:
+            # make all the members general members first and then team=None
+            try:
+                Members.objects.filter(ieee_id=i.member.ieee_id).update(position=Roles_and_Position.objects.get(id=13),team=None)
+                i.delete()
+            except:
+                messages.error(request,"Something went wrong while deleting members from the panel")
+
+        # deleting the panel
+        try:
+            get_panel.delete()
+            messages.info(request,"Panel deleted successfully.")
+            return True
+        except:
+            messages.error(request,'Can not delete this panel. Something went wrong!')
+            return False
+
     def load_panel_by_id(panel_id):
         '''This loads all the panel information from Panels table'''
         try:
@@ -188,12 +217,11 @@ class Branch:
             return get_panel_members
         except:
             raise Http404("The requested page does not exist.")
-        
-                    
+                                
     def load_all_panels():
         '''This function loads all the panels from the database'''
         try:
-            panels=Panels.objects.filter().all().order_by('-year')
+            panels=Panels.objects.filter().all().order_by('-current','-year')
             return panels
         except:
             return DatabaseError

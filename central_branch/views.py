@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from . import renderData
-from port.models import Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position
+from port.models import Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
 from django.db import DatabaseError
 from central_branch.renderData import Branch
 from events_and_management_team.renderData import Events_And_Management_Team
@@ -15,10 +15,12 @@ from users.renderData import LoggedinUser
 import os
 from users import renderData as port_render
 from port.renderData import PortData
-from users.renderData import PanelMembersData
+from users.renderData import PanelMembersData,Alumnis
 from central_branch.renderData import Branch
 from . view_access import Branch_View_Access
-
+from datetime import datetime
+from django.utils.datastructures import MultiValueDictKeyError
+from users.renderData import Alumnis
 
 
 # Create your views here.
@@ -377,8 +379,10 @@ def panel_home(request):
     if request.method=="POST":
         tenure_year=request.POST['tenure_year']
         current_check=request.POST.get('current_check')
+        panel_start_date=request.POST['panel_start_date']
+        panel_end_date=request.POST['panel_end_date']
         # create panel
-        if(Branch.create_panel(request,tenure_year=tenure_year,current_check=current_check)):
+        if(Branch.create_panel(request,tenure_year=tenure_year,current_check=current_check,panel_end_date=panel_end_date,panel_start_date=panel_start_date)):
             return redirect('central_branch:panels')
         
     context={
@@ -399,10 +403,11 @@ def panel_details(request,panel_id):
     officer_member=[]
     faculty_member=[]
     volunteer_members=[]
+    alumni_members=[]
     
     for i in panel_members:
-        # if the member position is eb_member
-        if(i.position.is_eb_member):
+        # if the member position is eb_member, avoiding alumni member with none clause
+        if((i.member is not None) and i.position.is_eb_member):
             eb_member.append(i)
         # if the member position is officer member
         elif(i.position.is_officer):
@@ -410,14 +415,61 @@ def panel_details(request,panel_id):
         # if the member position is faculty member
         elif(i.position.is_faculty):
             faculty_member.append(i)
+        elif(i.member is None):
+            alumni_members.append(i)
         else:
         # generally add rest of the members as volunteers as one can only be added to Panel Member list if he is in any position or team. 
             volunteer_members.append(i)
     
     all_insb_members=port_render.get_all_registered_members(request)
+    all_alumni_members=Alumnis.getAllAlumns()
 
     if request.method=="POST":
         '''Block of code for Executive Members'''
+        
+        # Delete panel
+        if(request.POST.get('delete_panel')):
+            if(Branch.delete_panel(request,panel_id)):
+                return redirect('central_branch:panels')
+        
+        # Save changes to the Panel
+        if(request.POST.get('save_changes')):
+            panel_tenure=request.POST.get('panel_tenure')
+            current_panel_check=request.POST.get('current_panel_check')
+            if(current_panel_check is None):
+                current_panel_check=False
+            else:
+                current_panel_check=True
+            panel_start_date=request.POST['panel_start_date']
+            panel_end_date=request.POST['panel_end_date']
+            if(panel_end_date==""):
+                panel_end_date=None
+            
+            panel_obj=Panels.objects.get(pk=panel_id)
+
+            if(current_panel_check):
+                # if current panel check is true that means we need to mark other panels current as False
+                try:
+                    Panels.objects.filter(current=True).update(current=False)
+                    # updating the panel to be the current one
+                    panel_obj.year=panel_tenure
+                    panel_obj.current=True
+                    panel_obj.creation_time=panel_start_date
+                    panel_obj.panel_end_time=panel_end_date
+                    panel_obj.save()
+                    messages.success(request,"Successfully Updated Panel Informations")
+                    return redirect('central_branch:panel_details',panel_id)
+                except:
+                    messages.error(request,"Something went wrong while making the panel current panel")
+            else:
+                panel_obj.year=panel_tenure
+                panel_obj.current=False
+                panel_obj.creation_time=panel_start_date
+                panel_obj.panel_end_time=panel_end_date
+                panel_obj.save()
+                messages.success(request,"Successfully Updated Panel Informations")
+                return redirect('central_branch:panel_details',panel_id)
+            
         # Check whether the add executive button was pressed
         if (request.POST.get('add_executive_to_panel')):
             # get position
@@ -480,25 +532,75 @@ def panel_details(request,panel_id):
             if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
                 return redirect('central_branch:panel_details',panel_id)
 
+        '''Block of code for Alumni Members'''
+        # Create New Alumni Member
+        if(request.POST.get('create_new_alumni')):
+            try:
+                alumni_name=request.POST['alumni_name']
+                alumni_email=request.POST['alumni_email']
+                alumni_contact_no=request.POST['alumni_contact_no']
+                alumni_facebook_link=request.POST['alumni_facebook_link']
+                alumni_linkedin_link=request.POST['alumni_linkedin_link']
+                alumni_picture=request.FILES.get('alumni_picture') 
 
+            except MultiValueDictKeyError:
+                messages.error(request,"Image can not be uploaded!")
+            finally:
+                # create alumni
+                if(Alumnis.create_alumni_members(
+                    request=request,contact_no=alumni_contact_no,
+                    email=alumni_email,
+                    facebook_link=alumni_facebook_link,
+                    linkedin_link=alumni_linkedin_link,
+                    name=alumni_name,
+                    picture=alumni_picture)):
+                    return redirect('central_branch:panel_details',panel_id)
+                else:
+                    messages.error(request,'Failed to Add new alumni!')
+        
+        # Add alumni to panel
+        if(request.POST.get('add_alumni_to_panel')):
+            alumni_to_add=request.POST['alumni_select']
+            position=request.POST['alumni_position']
+            
+            for i in alumni_to_add:            
+                if(PanelMembersData.add_alumns_to_branch_panel(request=request,alumni_id=alumni_to_add,panel_id=panel_id,position=position)):
+                    pass
+            return redirect('central_branch:panel_details',panel_id)
+        
+        if(request.POST.get('remove_member_alumni')):
+            alumni_to_remove=request.POST['remove_alumni_member']
+            if(PanelMembersData.remove_alumns_from_branch_panel(request=request,member_to_remove=alumni_to_remove,panel_id=panel_id)):
+                return redirect('central_branch:panel_details',panel_id)
 
+            
+            
 
     all_insb_executive_positions=PortData.get_all_executive_positions_with_sc_ag_id(request,sc_ag_primary=1) #setting sc_ag_primary as 1, because Branch's Primary is 1 by default
     all_insb_officer_positions=PortData.get_all_officer_positions_with_sc_ag_id(request,sc_ag_primary=1)
     all_insb_volunteer_positions=PortData.get_all_volunteer_position_with_sc_ag_id(request,sc_ag_primary=1)
     all_insb_teams=PortData.get_teams_of_sc_ag_with_id(request,sc_ag_primary=1)
     
+    if(panel_info.panel_end_time is None):
+        present_date=datetime.now()
+        tenure_time=present_date.date()-panel_info.creation_time.date()
+    else:
+        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+            
     context={
         'panel_info':panel_info,
         'eb_member':eb_member,
         'officer_member':officer_member,
         'faculty_member':faculty_member,
         'volunteer_members':volunteer_members,
+        'alumni_members_in_panel':alumni_members,
         'insb_members':all_insb_members,
         'positions':all_insb_executive_positions,
         'officer_positions':all_insb_officer_positions,
         'volunteer_positions':all_insb_volunteer_positions,
         'teams':all_insb_teams,
+        'tenure_time':tenure_time,
+        'alumni_members':all_alumni_members,
     }
     return render(request,'Panel/panel_details.html',context)
 

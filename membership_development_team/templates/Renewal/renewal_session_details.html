@@ -192,6 +192,14 @@
                     <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Edit Renewal Form</button>
                   {% endif %}
                   <a href="{% url "membership_development_team:export_excel_renewal_request" session_id %}" class="btn btn-outline b-success text-success">Generate Excel Sheet For this Session</a>
+                  <div class="btn-group dropdown">
+                    <button class="btn  btn-outline b-accent text-accent  dropdown-toggle" data-toggle="dropdown">Chapters & Affinity Group Renewals</button>
+                    <div class="dropdown-menu dropdown-menu-scale info pull-down">
+                      {% for i in all_sc_ag %}
+                        <a class="dropdown-item" href="{% url "membership_development_team:sc_ag_renewal_session_data" pk=session_id sc_ag_primary=i.primary %}">{{i.group_name}}</a>
+                      {% endfor %}
+                    </div>
+                  </div>
                 </div>
             </div>
             <br>
@@ -240,7 +248,7 @@
             <!--Session Table-->
             <br>
             <br>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Renewal Applications</h2>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">IEE NSU SB Renewal Applications</h2>
 
             <div style="justify-content:center;text-align:center; margin-top:10px;">  
                 <div class="container" style="justify-content:center;">

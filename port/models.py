@@ -8,7 +8,7 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
     class Meta:
         verbose_name="Chapters-Societies-Affinity Group"
     def __str__(self) -> str:
-        return self.group_name 
+        return str(self.primary) 
 
 class Teams(models.Model):
     '''
@@ -41,6 +41,7 @@ class Roles_and_Position(models.Model):
     is_officer=models.BooleanField(default=False)
     is_co_ordinator=models.BooleanField(default=False)
     is_faculty=models.BooleanField(default=False)
+    is_mentor=models.BooleanField(default=False)
     
     class Meta:
         verbose_name='Registered positions'
@@ -61,6 +62,7 @@ class Panels(models.Model):
     creation_time=models.DateTimeField(null=True,blank=True)
     current=models.BooleanField(null=False,blank=False,default=False)
     panel_of=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
+    panel_end_time=models.DateTimeField(null=True,blank=True)
     
     class Meta:
         verbose_name='IEEE NSU SB Panels'

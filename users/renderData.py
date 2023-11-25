@@ -8,15 +8,18 @@ from PIL import Image
 from recruitment.models import recruitment_session,recruited_members
 from central_branch.models import Event_type,Events
 from system_administration.render_access import Access_Render
-import datetime
+from datetime import datetime
 from django.db.models import Q
 from users.models import User
 from recruitment.models import recruited_members
 import math
 import sqlite3
 from django.contrib import messages
-from . models import Panel_Members
+from . models import Panel_Members,Alumni_Members
 from port.models import Panels
+import traceback
+import logging
+from system_administration.system_error_handling import ErrorHandling
 
 class LoggedinUser:
     
@@ -231,6 +234,7 @@ def getEventNumberStat():
     event_num.reverse()
     return event_num
 
+import datetime
 def getEventNumberStatYear():
 
     '''Return the last 5 years including today as a list, so that it could be
@@ -333,6 +337,7 @@ def getMonthName(numb: int)->str:
     
 
 class PanelMembersData:
+    logger=logging.getLogger(__name__)
 
     def add_members_to_branch_panel(request,members,position,panel_info,team_primary):
 
@@ -358,9 +363,12 @@ class PanelMembersData:
             return True
         except sqlite3.OperationalError:
             messages.error(request,"An internal Database error has occured!")
-        except:
+        except Exception as e:
+            PanelMembersData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"Something went wrong! Please try again!")
-
+            
+    
     def remove_member_from_panel(request,ieee_id,panel_id):
         
         try:
@@ -373,11 +381,99 @@ class PanelMembersData:
             return True
         except sqlite3.OperationalError:
             messages.error(request,"An internal Database error has occured!")
-        except:
+        except Exception as e:
+            PanelMembersData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"Something went wrong! Please try again!")
 
+    
+    def add_alumns_to_branch_panel(request,alumni_id,panel_id,position):
+        '''Adds alumni members to the panels. As INSB Stores data of Alumnis that were Executives we will only store Executive Alumns'''
+        try:
+            get_alumni=Alumni_Members.objects.get(pk=alumni_id)
+            get_panel=Panels.objects.get(pk=panel_id)
+            
+            # check if alumni exists in the panel
+            check_alum=Panel_Members.objects.filter(tenure=get_panel.pk,ex_member=get_alumni.pk).exists()
+            if(not check_alum):
+                new_panel_member=Panel_Members.objects.create(
+                    tenure=Panels.objects.get(pk=get_panel.pk),
+                    ex_member=Alumni_Members.objects.get(pk=get_alumni.pk),
+                    position=Roles_and_Position.objects.get(id=position),
+                    team=Teams.objects.get(primary=1) #As branch panel
+                )
+                new_panel_member.save()
+                return True
+            else:
+                Panel_Members.objects.filter(tenure=get_panel.pk,ex_member=get_alumni.pk).update(position=Roles_and_Position.objects.get(id=position))
+                messages.info(request,f"Alumni member {get_alumni.name} already existed in the panel. However, Member's position was updated.")
+                return True
+        except Exception as e:
+            PanelMembersData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not add alumni to Branch Panel. Something went wrong!")
+            return False
+            
+            
+    def remove_alumns_from_branch_panel(request,member_to_remove,panel_id):
+        '''Removes Alumni Member from Branch panel. Gets the tenure id, and the Member id from Panel Members table'''
+        try:
+            member_to_remove = Panel_Members.objects.get(pk=member_to_remove,tenure=panel_id)
+            messages.error(request,f"{member_to_remove.ex_member.name} was removed from the panel.")
+            member_to_remove.delete()
+            return True
+        except Exception as e:
+            PanelMembersData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not remove alumni from Branch Panel. Something went wrong!")
+            return False
 
+class Alumnis:
+    logger=logging.getLogger(__name__)
+    
+    def create_alumni_members(request,name,picture,linkedin_link,facebook_link,email,contact_no):
+        try:
+            # if picture was uploaded
+            if picture is not None:
+                new_alumni=Alumni_Members.objects.create(
+                    name=name,
+                    picture=picture,
+                    linkedin_link=linkedin_link,
+                    facebook_link=facebook_link,
+                    email=email,
+                    contact_no=contact_no
+                )
+                new_alumni.save()
+                messages.success(request,"Alumni Member created successfully")
+                return True
+            else:
+                new_alumni=Alumni_Members.objects.create(
+                    name=name,
+                    linkedin_link=linkedin_link,
+                    facebook_link=facebook_link,
+                    email=email,
+                    contact_no=contact_no
+                )
+                new_alumni.save()
+                messages.success(request,"Alumni Member created successfully")
+                return True
+            
+        except Exception as e:
+            Alumnis.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Something went wrong! Please Try again!")
+            return False
 
+    
+    def getAllAlumns():
+        '''gets all the alumnis and returns the list of all alumnis, mainly returns pk'''
+        try:
+            alumni_list = Alumni_Members.objects.all().order_by('-pk')
+            return alumni_list
+        except Exception as e:
+            Alumnis.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
 
       
     

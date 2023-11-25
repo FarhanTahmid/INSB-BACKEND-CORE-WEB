@@ -197,9 +197,35 @@
                                 <div class="modal-body text-left p-lg">
                                     <p>Remember, If you choose the panel to be current it will remove the previous panel which is the current Panel now. Various things like site acess will change according to this.</p>
                                     <div class="form-group">
-                                            <label>Tenure Year</label>
+                                            <label>Tenure Year <span style="color:red;"> *</span></label>
                                             <input class="form-control" type="text" placeholder="E.g: 2023-2024" required name='tenure_year'>
                                     </div>
+                                    <div class="row">
+                                      <div class="col-md-6">
+                                          <div class="form-group">
+                                              <label for="exampleInputPassword3">Panel Start Date <span style="color:red;"> *</span></label>
+                                              <input
+                                                  placeholder="Panel Start Date"
+                                                  class="form-control w-75"
+                                                  type="date"
+                                                  required
+                                                  name="panel_start_date"
+                                              />
+                                          </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <div class="form-group">
+                                              <label for="exampleInputPassword3">Panel End Date <span style="color:red;"> *</span></label>
+                                              <input
+                                                  placeholder="Date of Birth"
+                                                  class="form-control w-75"
+                                                  type="date"
+                                                  required
+                                                  name="panel_end_date"
+                                              />
+                                          </div>
+                                      </div>
+                                    </div> 
                                     <label class="form-control-label">Current Panel?</label>
                                     <span>                                            
                                         <label class="ui-switch m-t-xs m-r">

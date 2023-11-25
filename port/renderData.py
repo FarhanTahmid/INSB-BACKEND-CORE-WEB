@@ -1,8 +1,34 @@
 from .models import Chapters_Society_and_Affinity_Groups,Roles_and_Position,Teams,Panels
 from django.contrib import messages
+from datetime import datetime
 import sqlite3
+import logging
+import traceback
+from system_administration.system_error_handling import ErrorHandling
 
 class PortData:
+    logger=logging.getLogger(__name__)
+    
+    def get_sc_ag(request,primary):
+        '''Returns the details of the SC AG'''
+        try:
+            return Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
+        except:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.info(request,'Something went wrong fetching the Chapter and Affinity Group')
+            return False
+    
+    def get_all_sc_ag(request):
+        '''Returns all the Chapters, Affinity Groups with their Primary'''
+        try:
+            return Chapters_Society_and_Affinity_Groups.objects.all().exclude(primary=1) #excluding branch's Primary
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.info(request,'Something went wrong fetching the Chapters and Affinity Groups')
+            return False
+        
     def get_positions_with_sc_ag_id(request,sc_ag_primary):
         try:
             positions=Roles_and_Position.objects.filter(role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).all().order_by('id')
@@ -52,3 +78,4 @@ class PortData:
             return False
         except:
             return False
+    
