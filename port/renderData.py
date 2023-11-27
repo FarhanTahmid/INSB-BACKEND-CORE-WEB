@@ -13,7 +13,7 @@ class PortData:
         '''Returns the details of the SC AG'''
         try:
             return Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
-        except:
+        except Exception as e:
             PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.info(request,'Something went wrong fetching the Chapter and Affinity Group')
