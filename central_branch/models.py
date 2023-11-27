@@ -19,7 +19,6 @@ event_proposal_files=FileSystemStorage(location='Event Proposals')
 
 
 #Event type table
-
 class Type_of_Event(models.Model):
     type_of_event=models.CharField(null=False,blank=False,max_length=60)
 
