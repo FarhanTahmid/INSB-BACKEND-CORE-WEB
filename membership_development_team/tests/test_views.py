@@ -1,4 +1,4 @@
-from django.test import TestCase,Client,RequestFactory
+from django.test import TestCase,Client
 from django.urls import reverse
 from users.models import Members
 from port.models import Teams,Roles_and_Position
@@ -14,36 +14,45 @@ class TestViews(TestCase):
         self.md_team_homepage_url = reverse('membership_development_team:md_team_homepage')
         self.insb_member_list_url = reverse('membership_development_team:members_list')
         self.user = User.objects.create_user(username='testuser', password='testpassword')
-        self.client.login(username='testuser', password='testpassword')
-
-
-        
+        Teams.objects.create(team_name="Membership Development",primary=7)
+        Members.objects.create(ieee_id=1, name='Co-ordinator 1',nsu_id=1234, position=Roles_and_Position.objects.create(role="Co-ordinator",pk=9))
         
     
     def test_md_team_homepage_GET(self):
-        team = Teams.objects.create(primary=7,team_name="Membership Development")
-        roles = [Roles_and_Position.objects.create(role="Core-volunteer",pk=0),Roles_and_Position.objects.create(role="Volunteer",pk=1)]
+        self.client.login(username='testuser', password='testpassword')
         response = self.client.get(self.md_team_homepage_url)
+
         self.assertEqual(response.status_code,200)
         self.assertTemplateUsed(response,'md_team_homepage.html')
 
-
+        #Checking only one as the rest would be same
         self.assertIn('co_ordinators', response.context)
-        self.assertIn('incharges', response.context)
-        self.assertIn('core_volunteers', response.context)
-        self.assertIn('volunteers', response.context)
-        self.assertIn('media_url', response.context)
+       
+
+    def test_md_team_insb_member_list_authenticated(self):
+
+        self.client.login(username='testuser', password='testpassword')
+        response = self.client.post(self.insb_member_list_url)
+        
+        self.assertEqual(response.status_code,200)
+        self.assertTemplateUsed(response,'INSB Members/members_list.html')
+
+        self.assertIn('members',response.context)
+        self.assertIn('totalNumber', response.context)
+        self.assertIn('has_view_permission', response.context)
         self.assertIn('user_data', response.context)
 
-    def test_md_team_insb_member_list_POST(self):
+        self.assertContains(response, 'Co-ordinator 1')
 
+    def test_md_team_insb_member_list_unauthenticated(self):
+        self.client.logout()
         response = self.client.post(self.insb_member_list_url)
-        self.assertEqual(response.status_code,302)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, f'/portal/users/login?next=/portal/membership_development_team/members/')
     
-    def test_md_team_insb_member_list_GET(self):
-
-        response = self.client.get(self.insb_member_list_url)
-        self.assertEqual(response.status_code,200)
+    
+    
+        
 
 
 

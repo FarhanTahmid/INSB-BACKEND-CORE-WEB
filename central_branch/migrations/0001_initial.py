@@ -17,13 +17,13 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Event_type',
+            name='Type_of_Event',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('event_type', models.CharField(max_length=60)),
+                ('type_of_event', models.CharField(max_length=60)),
             ],
             options={
-                'verbose_name': 'Event Type',
+                'verbose_name': 'Type of Event',
             },
         ),
         migrations.CreateModel(
@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('flagship_event', models.BooleanField(default=False)),
                 ('publish_in_main_web', models.BooleanField(default=False)),
                 ('event_organiser', models.ForeignKey(default=5, on_delete=django.db.models.deletion.CASCADE, to='port.chapters_society_and_affinity_groups')),
-                ('event_type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='central_branch.event_type')),
+                ('type_of_event', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='central_branch.type_of_event')),
             ],
             options={
                 'verbose_name': 'Registered Event',

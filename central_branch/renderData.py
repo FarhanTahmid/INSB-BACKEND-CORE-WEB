@@ -3,7 +3,7 @@ from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_G
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
 from system_administration.models import MDT_Data_Access
-from . models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_type
+from . models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Type_of_Event
 from events_and_management_team.models import Venue_List, Permission_criteria
 from system_administration.render_access import Access_Render
 # from users.models import Executive_commitee,Executive_commitee_members
@@ -298,7 +298,7 @@ class Branch:
         return Chapters_Society_and_Affinity_Groups.objects.all()
     
     def load_all_event_type():
-        return Event_type.objects.all()
+        return Type_of_Event.objects.all()
     
     def register_event_page1(super_event_name,event_name,event_type,event_description,event_date):
         '''This method creates an event and registers data which are provided in event page1. Returns the id of the event if the method can create a new event successfully
@@ -314,7 +314,7 @@ class Branch:
                         new_event=Events(
                         event_name=event_name,
                         event_description=event_description,
-                        event_type = Event_type.objects.get(id = int(event_type)),
+                        event_type = Type_of_Event.objects.get(id = int(event_type)),
                         event_date=event_date
                         )
                         new_event.save()
@@ -328,7 +328,7 @@ class Branch:
                         new_event=Events(
                         event_name=event_name,
                         event_description=event_description,
-                        event_type = Event_type.objects.get(id = int(event_type)),
+                        event_type = Type_of_Event.objects.get(id = int(event_type)),
                         event_date=event_date
                         )
                         new_event.save()
@@ -346,7 +346,7 @@ class Branch:
                         super_event_name=get_super_event_id,
                         event_name=event_name,
                         event_description=event_description,
-                        event_type = Event_type.objects.get(id = int(event_type)),
+                        event_type = Type_of_Event.objects.get(id = int(event_type)),
                         )
                         new_event.save()
                         return new_event.id
@@ -360,7 +360,7 @@ class Branch:
                         super_event_name=get_super_event_id,
                         event_name=event_name,
                         event_description=event_description,
-                        event_type = Event_type.objects.get(id = int(event_type)),
+                        event_type = Type_of_Event.objects.get(id = int(event_type)),
                         event_date=event_date
                         )
                         new_event.save()
