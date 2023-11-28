@@ -355,28 +355,29 @@
                   <li class="nav-header hidden-folded">
                     <small class="text-muted">Chapters and Affinity Group</small>
                   </li>
-                  {% for i in all_sc_ag %}
+                  
                   <li>
                     <a>
                       <span class="nav-caret">
                         <i class="fa fa-caret-down"></i>
                       </span>
-                      
-                      <span class="nav-icon">
-                        <img src={% static 'logos/PES.png' %} width="20px" height="20px">
-                        <i class="fa-fa-user"></i>
-                      </span><br>
-                      <span class="nav-text">{{i.group_name}}</span>
+                      <span class="nav-text">Soceity, Chapters & Affinity Groups</span>
                     </a>
                     <ul class="nav-sub nav-mega nav-mega-3">
+                      {% for i in all_sc_ag %}
                       <li>
+                        <span class="nav-icon">
+                          <img src={% static 'logos/PES.png' %} width="20px" height="20px">
+                          <i class="fa-fa-user"></i>
+                        </span>
                         <a href={% url 'chapters_and_affinity_group:sc_ag_homepage' i.primary %}>
-                          <span class="nav-text">Home</span>
+                          <span class="nav-text">{{i.group_name}}</span>
                         </a>
                       </li>
+                      {% endfor %} 
                     </ul>
                   </li>
-                  {% endfor %}  
+                   
                 </ul>
             </ul>
         </nav>
