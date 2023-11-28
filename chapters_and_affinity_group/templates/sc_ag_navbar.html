@@ -38,16 +38,16 @@
             <!-- link and dropdown -->
             <ul class="nav navbar-nav mr-auto">
                 <li class="nav-item dropdown">
-                    <a class="nav-link" href="{% url 'ieee_nsu_sb_pes_sbc:pes_homepage' %}">
+                    <a class="nav-link" href="{% url 'chapters_and_affinity_group:sc_ag_homepage' sc_ag_info.primary %}">
                     <i class="fa fa-home"></i>
                     <span>Home</span>
                     </a>
                     <div ui-include="'../views/blocks/dropdown.new.html'"></div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link" href="{% url 'ieee_nsu_sb_pes_sbc:pes_members' %}">
+                    <a class="nav-link" href="{% url 'chapters_and_affinity_group:sc_ag_members' sc_ag_info.primary %}">
                     <i class="fa fa-user text-muted"></i>
-                    <span>PES Members</span>
+                    <span>Members</span>
                     </a>
                     <div ui-include="'../views/blocks/dropdown.new.html'"></div>
                 </li>

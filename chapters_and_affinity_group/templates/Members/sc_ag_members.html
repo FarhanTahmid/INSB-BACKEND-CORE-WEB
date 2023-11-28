@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Home | {{sc_ag_info.group_name}}</title>
+    <title>Teams | IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
     {% block common_css %}
@@ -70,7 +70,7 @@
         <!-- navbar content -->
         <div id="content" class="app-content box-shadow-z0" role="main">
             {% block navbar %}
-                {% include 'navbar.html' %}
+                {% include 'sc_ag_navbar.html' %}
             {% endblock navbar %}
 
         </div>
@@ -82,29 +82,22 @@
             <!--Start from here-->
             <br>
             <br>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to <span style="color:#00629B;"> <b>IEEE NSU </b></span><b><span style="">{{sc_ag_info.group_name}}</b></span> </h2>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="">{{sc_ag_info.group_name}}</b></span><br> <span><b> Registered Members List<b></span> </h2>
+            <br>
 
-            <!--Executive section starts-->
-            {% block executive_cards %}
-              {% include "Homepage/executive_card.html" %}
-            {% endblock executive_cards %}
-            <!--Executive section ends-->
-
-            <!--Co-ordinator section starts-->
-            {% block co_ordinator_card %}
-              {% include "Homepage/co_ordinator_card.html" %}
-            {% endblock co_ordinator_card %}
-            <!--Co-ordinator section ends-->
-
-            <!--Incharge section starts-->
-            {% block volunteer_card %}
-              {% include "Homepage/volunteer_card.html" %}
-            {% endblock volunteer_card %}
-            <!--Incharge section ends-->
+            {% block sc_ag_members_table %}
+                {% include "Members/members_table.html" %}
+            {% endblock sc_ag_members_table %}
 
 
         </div>
         <!--PAGE END-->
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
     
     </div>
     <!-- app end-->

@@ -6,7 +6,6 @@ from .get_sc_ag_info import SC_AG_Info
 
 def sc_ag_homepage(request,primary):
     sc_ag=PortData.get_all_sc_ag(request=request)
-
     get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
     
     
@@ -14,4 +13,15 @@ def sc_ag_homepage(request,primary):
         'all_sc_ag':sc_ag,
         'sc_ag_info':get_sc_ag_info
     }
-    return render(request,'Homepage/homepage.html',context)
+    return render(request,'Homepage/sc_ag_homepage.html',context)
+
+def sc_ag_members(request,primary):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+    
+    context={
+        'all_sc_ag':sc_ag,
+        'sc_ag_info':get_sc_ag_info
+
+    }
+    return render(request,'Members/sc_ag_members.html',context=context)
