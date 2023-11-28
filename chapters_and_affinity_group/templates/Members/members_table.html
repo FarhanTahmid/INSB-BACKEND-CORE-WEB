@@ -9,6 +9,15 @@
         <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add New Members</button>
         </div>
         <small>This table holds the data of the Members of {{sc_ag_info.group_name}}</small>
+        <!--Messages-->
+        <div style="justify-content:center; text-align:center;">
+            {% if messages %}
+                {% for message in messages %}
+                    <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <!--Messages End-->
         <br>
         <label style="margin-left:5px;">Search:</label>
         <input class="form-control w-75" type="text" id="searchInput" placeholder="Search Member by name" onkeyup="searchTable()">
@@ -26,19 +35,13 @@
         </thead>
         <tbody>
         
-            {% for member in eb_member %}
+            {% for member in sc_ag_members %}
             <tr>
                 <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.member.ieee_id %}">{{member.member.ieee_id}}</a></td>
                 <td>{{ member.member.name  }}</td>
                 <td>{{member.member.email_ieee}}</td>
                 <td>{{member.position}}</td>
-                <td>
-                <form method="POST">
-                    {% csrf_token %}
-                        <input class="btn btn-outline b-danger text-danger" name="remove_member" type="submit" value="Remove Member">
-                        <input type="hidden" name="remove_panel_member" value={{member.member.ieee_id}}>
-                    </form>
-                </td>
+                <td>{{member.team}}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -79,7 +82,7 @@
                 </div>
                 <div class="col-md-6">
                     <label style="margin-left:5px;">Select Team</label>
-                    <select id="position" name="position">
+                    <select id="team" name="team">
                         <option value=0>-------------</option>
                         {% for team in teams %}
                             <option value={{team.pk}}>{{ team.team_name }}</option>
