@@ -3,7 +3,7 @@ from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_G
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
 from system_administration.models import MDT_Data_Access
-from . models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_type
+from . models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission
 from events_and_management_team.models import Venue_List, Permission_criteria
 from system_administration.render_access import Access_Render
 # from users.models import Executive_commitee,Executive_commitee_members
