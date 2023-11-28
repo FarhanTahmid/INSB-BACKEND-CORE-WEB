@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import DatabaseError
 from PIL import Image
 from recruitment.models import recruitment_session,recruited_members
-from central_branch.models import Event_type,Events
+from central_branch.models import Events
 from system_administration.render_access import Access_Render
 from datetime import datetime
 from django.db.models import Q
@@ -204,19 +204,19 @@ def getTypeOfEventStats():
 
     event_stats_keys =[]
     event_stats_values=[]
-    all_event_type=Event_type.objects.all()
+    # all_event_type=Event_type.objects.all()
     all_events_number = Events.objects.all().count()
     event_percentage ={}
-    for i in all_event_type:
-        event_count = Events.objects.filter(event_type = i.pk).count()
-        try:
-            percentage = (event_count/all_events_number*1.0)*100
-            percentage = round(percentage,1)
-            event_stats_keys.append(i.event_type)
-            event_stats_values.append(event_count)
-            event_percentage.update({i.event_type:percentage})
-        except:
-            pass
+    # for i in all_event_type:
+    #     event_count = Events.objects.filter(event_type = i.pk).count()
+    #     try:
+    #         percentage = (event_count/all_events_number*1.0)*100
+    #         percentage = round(percentage,1)
+    #         event_stats_keys.append(i.event_type)
+    #         event_stats_values.append(event_count)
+    #         event_percentage.update({i.event_type:percentage})
+    #     except:
+    #         pass
     return event_stats_keys,event_stats_values,event_percentage
 
 

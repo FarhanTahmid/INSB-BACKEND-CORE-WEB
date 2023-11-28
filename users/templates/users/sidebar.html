@@ -357,101 +357,28 @@
                   </li>
                   
                   <li>
-                      <a>
-                        <span class="nav-caret">
-                          <i class="fa fa-caret-down"></i>
-                        </span>
-                        
+                    <a>
+                      <span class="nav-caret">
+                        <i class="fa fa-caret-down"></i>
+                      </span>
+                      <span class="nav-text">Soceity, Chapters & Affinity Groups</span>
+                    </a>
+                    <ul class="nav-sub nav-mega nav-mega-3">
+                      {% for i in all_sc_ag %}
+                      <li>
                         <span class="nav-icon">
                           <img src={% static 'logos/PES.png' %} width="20px" height="20px">
-                          <i class="fa-fa-user">
-                          </i>
-                      </span>
-                        <span class="nav-text">IEEE NSU PES SBC</span>
-                      </a>
-                      <ul class="nav-sub nav-mega nav-mega-3">
-                        <li>
-                          <a href={% url 'ieee_nsu_sb_pes_sbc:pes_homepage' %}>
-                            <span class="nav-text">Home</span>
-                          </a>
-                        </li>
-                        <li>
-                          <a href={% url 'ieee_nsu_sb_pes_sbc:pes_members' %}>
-                            <span class="nav-text">PES Members</span>
-                          </a>
-                        </li>
-                        
-                      </ul>
-                  </li>
-
-                  <li>
-                      <a>
-                        <span class="nav-caret">
-                          <i class="fa fa-caret-down"></i>
+                          <i class="fa-fa-user"></i>
                         </span>
-                        
-                        <span class="nav-icon">
-                          <img src={% static 'logos/RAS.png' %} width="20px" height="20px">
-                          <i class="fa-fa-user">
-                          </i>
-                      </span>
-                        <span class="nav-text">IEEE NSU RAS SBC</span>
-                      </a>
-                      <ul class="nav-sub nav-mega nav-mega-3">
-                        <li>
-                          <a href={%url 'ras:homepage' %} >
-                            <span class="nav-text">Home</span>
-                          </a>
-                        </li>
-                        
-                      </ul>
+                        <a href={% url 'chapters_and_affinity_group:sc_ag_homepage' i.primary %}>
+                          <span class="nav-text">{{i.group_name}}</span>
+                        </a>
+                      </li>
+                      {% endfor %} 
+                    </ul>
                   </li>
-
-                  <li>
-                      <a>
-                        <span class="nav-caret">
-                          <i class="fa fa-caret-down"></i>
-                        </span>
-                        
-                        <span class="nav-icon">
-                          <img src={% static 'logos/IAS.png' %} width="20px" height="20px">
-                          <i class="fa-fa-user">
-                          </i>
-                      </span>
-                        <span class="nav-text">IEEE NSU IAS SBC</span>
-                      </a>
-                      <ul class="nav-sub nav-mega nav-mega-3">
-                        <li>
-                          <a href="arrow.html" >
-                            <span class="nav-text">Arrow</span>
-                          </a>
-                        </li>
-                        
-                      </ul>
-                  </li>
-
-                  <li>
-                      <a>
-                        <span class="nav-caret">
-                          <i class="fa fa-caret-down"></i>
-                        </span>
-                        
-                        <span class="nav-icon">
-                          <img src={% static 'logos/WIE.png' %} width="20px" height="20px">
-                          <i class="fa-fa-user">
-                          </i>
-                      </span>
-                        <span class="nav-text">IEEE WIE AG</span>
-                      </a>
-                      <ul class="nav-sub nav-mega nav-mega-3">
-                        <li>
-                          <a href="arrow.html" >
-                            <span class="nav-text">Arrow</span>
-                          </a>
-                        </li>
-                        
-                      </ul>
-                  </li>
+                   
+                </ul>
             </ul>
         </nav>
     </div>

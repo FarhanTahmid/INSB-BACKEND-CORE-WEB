@@ -17,11 +17,10 @@ import os
 # Create your views here.
 @login_required
 def team_homepage(request):
-
-    #Loading data of the co-ordinators, co ordinator id is 9,
-    co_ordinators=renderData.GraphicsTeam.get_member_with_postion(9)
-    #Loading data of the incharges, incharge id is 10
-    in_charges=renderData.GraphicsTeam.get_member_with_postion(10)
+    
+    co_ordinators=renderData.GraphicsTeam.get_co_ordinator()
+    in_charges=renderData.GraphicsTeam.get_officer()
+    print(in_charges)
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     context={

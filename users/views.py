@@ -14,7 +14,7 @@ from . import renderData
 from django.utils.datastructures import MultiValueDictKeyError
 from membership_development_team.renderData import MDT_DATA
 from . import email_handler
-from port.models import Teams
+from port.renderData import PortData
 from central_branch.models import Events
 from django.db.models import Q
 
@@ -122,7 +122,8 @@ def dashboard(request):
     hit_count_over_5_years = renderData.getHitCountOver5Years()
 
     
-
+    # Get the SC & AGS
+    sc_ag=PortData.get_all_sc_ag(request=request)
 
 
     #Loading current user data from renderData.py
@@ -149,7 +150,8 @@ def dashboard(request):
         'current_year':hit_count_monthly[0],
         'current_year_month_name':hit_count_monthly[1],
         'hit_count_monthly_data':hit_count_monthly[2],
-        'hit_count_over_5_years':hit_count_over_5_years
+        'hit_count_over_5_years':hit_count_over_5_years,
+        'all_sc_ag':sc_ag,
     }
 
     

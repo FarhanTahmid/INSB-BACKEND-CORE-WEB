@@ -53,12 +53,7 @@
                                             <div class="box-header">
                                                 <h1 style="text-align:center;">Provide Details</h1>
                                             </div>
-                                            <!--Error Message-->
-                                            <div class="py-3 text-center">
-                                                {% for message in messages %}
-                                                    <p style="color:red" class="message">{{message}}</p>
-                                                {% endfor %}
-                                            </div>
+                                            
                                             <form method="POST">
                                                 {% csrf_token %}
                                                 <div class="box-body">

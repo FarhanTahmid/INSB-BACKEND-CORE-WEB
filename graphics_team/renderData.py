@@ -4,6 +4,19 @@ from system_administration.models import Graphics_Data_Access
 
 class GraphicsTeam:
 
+    def get_co_ordinator():
+        roles = Roles_and_Position.objects.get(is_co_ordinator=True)
+        members = Members.objects.filter(position=roles,team=GraphicsTeam.get_team_id())
+        print(members)
+        return members
+
+    def get_officer():
+        roles = Roles_and_Position.objects.get(is_officer = True,is_co_ordinator=False)
+        members = Members.objects.filter(position = roles,team=GraphicsTeam.get_team_id())
+        
+        print(roles,members)
+        return members
+
 
     def get_member_with_postion(position):
         '''Returns Graphics Team Members with positions'''

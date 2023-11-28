@@ -1,11 +1,11 @@
 /* Container for the grid */
 .tabs-container {
     margin-left: 10px;
-    display: grid;
+    display: flex;
     grid-template-columns: auto 1fr; /* Two columns: fixed size for tabs and flexible size for content */
     grid-gap: 5px; /* Gap between the tabs and content */
-    justify-content: center; /* Center the content horizontally */
-    
+    /* justify-content: center; Center the content horizontally */
+    flex-direction: column;
 }
 
 /* Basic styling for tabs */
@@ -14,7 +14,8 @@
     padding: 0;
     margin: 0;
     position: sticky;
-    
+    display: flex;
+    margin-right: 10px;
 }
 
 .tabs li {
@@ -22,11 +23,9 @@
     padding: 10px;
     cursor: pointer;
     background-color: #f0f0f0;
-    border:1px solid #00629B	;
-    border-right: none;
-    width: 95%; /* Fixed width for the tabs */
-    
-    
+    border: 1px solid #00629B;
+    /* border-right: none; */
+    width: 150px;
 }
 
 .tabs li:hover {
@@ -34,9 +33,7 @@
 }
 
 .tabs li.active {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-right: none;
+    background-color: #FFC72C;
 }
 
 .tab-content {
@@ -79,5 +76,14 @@
 @media (max-width: 1500px) {
     .tabs-container {
         grid-template-columns: 1fr; /* Single column for small screens */
+    }
+}
+@media screen and (max-width: 1600px) {
+    .tabs-container{
+        display: flex;
+        flex-direction: column;
+    }
+    .tabs{
+        display: flex;
     }
 }

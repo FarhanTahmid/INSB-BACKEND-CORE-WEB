@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'ieee_nsu_sb_pes_sbc',
     'ieee_nsu_sb_ras_sbc',
     'ckeditor',
+    'chapters_and_affinity_group',
     
 ]
 

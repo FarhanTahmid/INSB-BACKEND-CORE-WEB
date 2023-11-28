@@ -8,5 +8,4 @@ def pes_homepage(request):
 
 @login_required
 def pes_members(request):
-    
     return render (request, 'pes_members/members.html')
