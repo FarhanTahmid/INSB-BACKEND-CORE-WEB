@@ -67,12 +67,29 @@
         <!--Search table-->
         <form method="POST">
             {% csrf_token %}
-            <label style="margin-left:5px;">Select Position</label>
-            <select id="position" name="position">
-                {% for position in positions %}
-                    <option value={{position.id}}>{{ position.role }}</option>
-                {% endfor %} 
-            </select>
+            <div class="row">
+                <div class="col-md-6">
+                    <label style="margin-left:5px;">Select Position</label>
+                    <select id="position" name="position">
+                        <option value=0>-------------</option>
+                        {% for position in positions %}
+                            <option value={{position.id}}>{{ position.role }}</option>
+                        {% endfor %} 
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label style="margin-left:5px;">Select Team</label>
+                    <select id="position" name="position">
+                        <option value=0>-------------</option>
+                        {% for team in teams %}
+                            <option value={{team.pk}}>{{ team.team_name }}</option>
+                        {% endfor %} 
+                    </select>
+                </div>
+            </div>
+            
+            <br>
+            
             <div class="table-container">
                 <label style="margin-left: 5px;">Search</label>
                 <input class="w-75" type="text" id="searchInput2" placeholder="Search Member" onkeyup="searchTable2()">
@@ -107,7 +124,7 @@
             <div class="modal-footer">
             <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
         
-                <input type="submit" class="btn primary p-x-md" name="add_executive_to_panel" value="Add Executive Member"></input>  
+                <input type="submit" class="btn primary p-x-md" name="add_sc_ag_member" value="Add Member"></input>  
             </div>
         </form>
 

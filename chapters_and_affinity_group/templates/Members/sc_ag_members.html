@@ -43,6 +43,23 @@
             word-wrap: break-word; /* Break long words if necessary */
             font-size: 16px; /* Adjust the font size as needed */
           }
+          .table-container {
+            overflow: hidden; /* Hide table overflow */
+        }
+        
+        .table-wrapper {
+            max-height: 300px; /* Set the maximum height for scrolling */
+            overflow: auto; /* Enable vertical scrolling */
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table, th, td {
+            border: 1px solid #ccc;
+        }
           
           /* Media query for smaller screens (adjust the breakpoint as needed) */
           @media (max-width: 768px) {
@@ -82,7 +99,7 @@
             <!--Start from here-->
             <br>
             <br>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="">{{sc_ag_info.group_name}}</b></span><br> <span><b> Registered Members List<b></span> </h2>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="">{{sc_ag_info.group_name}}</b></span><br> <span><b> Registered Members List</b></span> </h2>
             <br>
 
             {% block sc_ag_members_table %}

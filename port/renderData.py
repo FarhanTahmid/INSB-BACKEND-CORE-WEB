@@ -20,7 +20,7 @@ class PortData:
             return False
     
     def get_all_sc_ag(request):
-        '''Returns all the Chapters, Affinity Groups with their Primary'''
+        '''Returns all the Chapters, Affinity Groups with their Primary. Branch is excluded.'''
         try:
             return Chapters_Society_and_Affinity_Groups.objects.all().exclude(primary=1) #excluding branch's Primary
         except Exception as e:
@@ -31,9 +31,11 @@ class PortData:
         
     def get_positions_with_sc_ag_id(request,sc_ag_primary):
         try:
-            positions=Roles_and_Position.objects.filter(role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).all().order_by('id')
+            positions=Roles_and_Position.objects.filter(role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).all().order_by('id','is_faculty','is_eb_member','is_sc_ag_eb_member','is_co_ordinator','is_officer')
             return positions
-        except:
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"An internal Database error occured loading the Positions!")
             return False
     
@@ -41,7 +43,9 @@ class PortData:
         try:
             executive_positions=Roles_and_Position.objects.filter(is_eb_member=True,role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).all().order_by('id')
             return executive_positions
-        except:
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"An internal Database error occured loading the Positions for Executive Members!")
             return False
     
@@ -49,7 +53,9 @@ class PortData:
         try:
             officer_positions=Roles_and_Position.objects.filter(is_officer=True,role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).all().order_by('id')
             return officer_positions
-        except:
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"An internal Database error occured loading the Positions for Officer Members!")
             return False
     
@@ -57,15 +63,21 @@ class PortData:
         try:
             volunteer_positions=Roles_and_Position.objects.filter(is_officer=False,is_eb_member=False,is_sc_ag_eb_member=False,is_co_ordinator=False,is_faculty=False,role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).all().order_by('id')
             return volunteer_positions
-        except:
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"An internal Database error occured loading the Positions for Volunteer Members!")
             return False
         
     def get_teams_of_sc_ag_with_id(request,sc_ag_primary):
+        '''Returns the team of all Branch+Sc AG'''
         try:
+
             teams=Teams.objects.filter(team_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).all().order_by('id')
             return teams
-        except:
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"An internal Database error occured loading the Positions for Executive Members!")
             return False
     
@@ -76,6 +88,8 @@ class PortData:
             return current_panel.pk
         except sqlite3.OperationalError:
             return False
-        except:
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
     
