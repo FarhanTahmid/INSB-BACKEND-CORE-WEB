@@ -8,7 +8,8 @@
         <div style="text-align:right;">
         <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add New Members</button>
         </div>
-        <small>This table holds the data of the Members of {{sc_ag_info.group_name}}</small>
+        <small>This table holds the data of the Registered Members of {{sc_ag_info.group_name}}</small>
+        <strong>Total Number of Registered Members in Database:<span style="color:blue;"> {{member_count}}</span></strong>
         <!--Messages-->
         <div style="justify-content:center; text-align:center;">
             {% if messages %}

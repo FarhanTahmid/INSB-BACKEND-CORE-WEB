@@ -55,6 +55,17 @@ def sc_ag_members(request,primary):
         'positions':sc_ag_positions,
         'teams':sc_ag_teams,
         'sc_ag_members':sc_ag_members,
+        'member_count':len(sc_ag_members)
         
     }
     return render(request,'Members/sc_ag_members.html',context=context)
+
+def sc_ag_panels(request,primary):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+    
+    context={
+        'all_sc_ag':sc_ag,
+        'sc_ag_info':get_sc_ag_info,
+    }
+    return render(request,'Panels/panel_homepage.html',context=context)
