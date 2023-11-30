@@ -1,7 +1,7 @@
 from django.contrib import messages
 from .models import SC_AG_Members
 from users.models import Members
-from port.models import Chapters_Society_and_Affinity_Groups,Teams,Roles_and_Position
+from port.models import Panels,Chapters_Society_and_Affinity_Groups,Teams,Roles_and_Position
 import logging
 from system_administration.system_error_handling import ErrorHandling
 import traceback
@@ -30,4 +30,11 @@ class Sc_Ag:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
-        
+    
+    
+    def create_new_panel_of_sc_ag(request,sc_ag_primary,tenure_year,current_check,panel_start_time,panel_end_time):
+
+        new_sc_ag_panel=Panels.objects.create(year=tenure_year,creation_time=panel_start_time,current=current_check,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),panel_end_time=panel_end_time)
+        new_sc_ag_panel.save()
+    
+                

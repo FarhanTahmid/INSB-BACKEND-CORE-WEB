@@ -64,8 +64,30 @@ def sc_ag_panels(request,primary):
     sc_ag=PortData.get_all_sc_ag(request=request)
     get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
     
+    # get panels of SC-AG
+    all_panels=SC_AG_Info.get_panels_of_sc_ag(request=request,sc_ag_primary=primary)
+    if request.method=="POST":
+        if request.POST.get('create_panel'):
+            tenure_year=request.POST['tenure_year']
+            panel_start_date=request.POST['panel_start_date']
+            panel_end_date=request.POST['panel_end_date']
+            current_check=request.POST.get('current_check')
+            if current_check is None:
+                current_check=False
+            else:
+                current_check=True
+            
+            Sc_Ag.create_new_panel_of_sc_ag(request=request,
+                                            current_check=current_check,
+                                            panel_end_time=panel_end_date,
+                                            panel_start_time=panel_start_date,
+                                            sc_ag_primary=primary,tenure_year=tenure_year)
+                
+    
     context={
         'all_sc_ag':sc_ag,
         'sc_ag_info':get_sc_ag_info,
+        'panels':all_panels,
+        
     }
     return render(request,'Panels/panel_homepage.html',context=context)
