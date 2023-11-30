@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
             model_name='events',
             name='type_of_event',
         ),
-        migrations.DeleteModel(
-            name='Type_of_Event',
-        ),
+        # migrations.DeleteModel(
+        #     name='Type_of_Event',
+        # ),
     ]
