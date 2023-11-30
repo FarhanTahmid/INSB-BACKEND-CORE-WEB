@@ -194,7 +194,7 @@ class Branch:
             return False
 
     def load_panel_by_id(panel_id):
-        '''This loads all the panel information from Panels table'''
+        '''This loads all the select panel's information from Panels table'''
         try:
             panel = Panels.objects.get(id=panel_id)
             return panel

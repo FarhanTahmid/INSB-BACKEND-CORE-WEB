@@ -4,7 +4,8 @@ from users import renderData
 from .get_sc_ag_info import SC_AG_Info
 from .renderData import Sc_Ag
 from port.renderData import PortData
-
+from central_branch.renderData import Branch
+from datetime import datetime
 # Create your views here.
 
 def sc_ag_homepage(request,primary):
@@ -55,6 +56,62 @@ def sc_ag_members(request,primary):
         'positions':sc_ag_positions,
         'teams':sc_ag_teams,
         'sc_ag_members':sc_ag_members,
+        'member_count':len(sc_ag_members)
         
     }
     return render(request,'Members/sc_ag_members.html',context=context)
+
+def sc_ag_panels(request,primary):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+    
+    # get panels of SC-AG
+    all_panels=SC_AG_Info.get_panels_of_sc_ag(request=request,sc_ag_primary=primary)
+    
+    if request.method=="POST":
+        if request.POST.get('create_panel'):
+            tenure_year=request.POST['tenure_year']
+            panel_start_date=request.POST['panel_start_date']
+            panel_end_date=request.POST['panel_end_date']
+            current_check=request.POST.get('current_check')
+            if current_check is None:
+                current_check=False
+            else:
+                current_check=True
+            
+            Sc_Ag.create_new_panel_of_sc_ag(request=request,
+                                            current_check=current_check,
+                                            panel_end_time=panel_end_date,
+                                            panel_start_time=panel_start_date,
+                                            sc_ag_primary=primary,tenure_year=tenure_year)
+                
+    
+    context={
+        'all_sc_ag':sc_ag,
+        'sc_ag_info':get_sc_ag_info,
+        'panels':all_panels,
+        
+    }
+    return render(request,'Panels/panel_homepage.html',context=context)
+
+def sc_ag_panel_details(request,primary,panel_pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+
+    # get panel information
+    panel_info=Branch.load_panel_by_id(panel_pk)
+    # getting tenure time
+    if(panel_info.panel_end_time is None):
+        present_date=datetime.now()
+        tenure_time=present_date.date()-panel_info.creation_time.date()
+    else:
+        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+
+    context={
+        'all_sc_ag':sc_ag,
+        'sc_ag_info':get_sc_ag_info,
+        'panel_info':panel_info,
+        'tenure_time':tenure_time,
+
+    }
+    return render(request,'Panels/sc_ag_panel_details.html',context=context)

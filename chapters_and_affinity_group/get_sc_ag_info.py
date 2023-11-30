@@ -1,5 +1,5 @@
 import logging
-from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position
+from port.models import Panels,Chapters_Society_and_Affinity_Groups,Roles_and_Position
 from .models import SC_AG_Members
 from datetime import datetime
 from system_administration.system_error_handling import ErrorHandling
@@ -28,3 +28,7 @@ class SC_AG_Info:
             SC_AG_Info.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return Http404
+    
+    def get_panels_of_sc_ag(request,sc_ag_primary):
+        return Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).order_by('-current','-year')
+    
