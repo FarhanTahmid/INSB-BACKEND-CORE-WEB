@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Panels | IEEE NSU Student Branch</title>
+    <title>Panels | {{sc_ag_info.group_name}}</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
     {% block common_css %}
@@ -156,7 +156,7 @@
                       <tbody>
                         {% for panel in panels %}
                         <tr>
-                            <td><a style="color:blue;" href="{% url "central_branch:panel_details" panel.id %}">{{panel.year }}</a></td>
+                            <td><a style="color:blue;" href="{% url "chapters_and_affinity_group:sc_ag_panel_details" sc_ag_info.primary panel.id %}">{{panel.year }}</a></td>
                             {% if panel.current %}
                             <td><img src="/static/admin/img/icon-yes.svg" alt="True"></td>
                             {% else %}
