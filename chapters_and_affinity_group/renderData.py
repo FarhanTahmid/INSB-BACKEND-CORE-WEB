@@ -33,8 +33,16 @@ class Sc_Ag:
     
     
     def create_new_panel_of_sc_ag(request,sc_ag_primary,tenure_year,current_check,panel_start_time,panel_end_time):
-
-        new_sc_ag_panel=Panels.objects.create(year=tenure_year,creation_time=panel_start_time,current=current_check,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),panel_end_time=panel_end_time)
-        new_sc_ag_panel.save()
-    
+        try:
+            new_sc_ag_panel=Panels.objects.create(year=tenure_year,creation_time=panel_start_time,current=current_check,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),panel_end_time=panel_end_time)
+            new_sc_ag_panel.save()
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def delete_ac_ag_panel(request,panel_id):
+        '''This function deletes the panels and turn the Member of SC AG into a General Member and Team to None'''
+        get_panel=Panels.objects.get(pk=panel_id)
+        pass        
                 

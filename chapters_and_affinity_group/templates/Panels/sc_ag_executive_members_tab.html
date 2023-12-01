@@ -308,12 +308,12 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for member in insb_members %}
+                                                {% for member in sc_ag_members %}
                                                 <tr>
-                                                    <td>{{ member.name }}</td>
-                                                    <td>{{ member.ieee_id }}</td>
+                                                    <td>{{ member.member.name }}</td>
+                                                    <td>{{ member.member.ieee_id }}</td>
                                                     <td>{{ member.position }}</td>
-                                                    <td>{{ member.email_ieee }}</td>
+                                                    <td>{{ member.member.email_ieee }}</td>
                                                     <td>
                                                         <input type="checkbox" id="select" name="member_select" value={{member.ieee_id}}>
                                                     </td>
@@ -327,7 +327,7 @@
                                 <div class="modal-footer">
                                 <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
                             
-                                    <input type="submit" class="btn primary p-x-md" name="add_executive_to_panel" value="Add Executive Member"></input>  
+                                    <input type="submit" class="btn primary p-x-md" name="add_executive_to_sc_ag_panel" value="Add Executive Member"></input>  
                                 </div>
                             </form>
                 

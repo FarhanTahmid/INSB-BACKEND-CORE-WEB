@@ -221,7 +221,7 @@ class Branch:
     def load_all_panels():
         '''This function loads all the panels from the database'''
         try:
-            panels=Panels.objects.filter().all().order_by('-current','-year')
+            panels=Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1)).order_by('-current','-year')
             return panels
         except:
             return DatabaseError
