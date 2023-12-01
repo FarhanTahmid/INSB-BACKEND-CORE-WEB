@@ -1,54 +1,39 @@
 {% load static %}
 {% block panel_tab %}
 <style>
-    .tabs li.active_tab {
-        background-color: #FFC72C;
+    .tab a.active{
+        color:green;
+        background-color:yellow;
     }
     .tabs li:hover{
         transition: all 0.3s ease-in-out;
     }
 </style>
-<div class="tabs-container" style="    display: flex;
-flex-direction: column;">
-    <ul class="tabs" style="display: flex; margin-right: 0px; justify-content: center;">
-        <li class="tab active_tab" onclick="showTab('tab1')">Executive Members Panel</li>
-        <li class="tab" onclick="showTab('tab2')">Officer Members Panel</li>
-        <li class="tab" onclick="showTab('tab3')" style="border-right: 1px solid #00629B;">Volunteer Members Panel</li>
-        <li class="tab" onclick="showTab('tab4')" style="border-right: 1px solid #00629B;">Alumni Members Panel</li>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get the current page's URL
+        const currentPageUrl = window.location.href;
+      
+        // Find the links in the navigation bar
+        const navLinks = document.querySelectorAll(".tab a");
+      
+        // Loop through the links and add a "active" class to the matching link
+        navLinks.forEach(function (link) {
+          if (link.href === currentPageUrl) {
+            link.classList.add("active");
+          }
+        });
+      });
+</script>
 
+<div class="tabs-container" style="display: flex; flex-direction: column;">
+    <ul class="tabs" style="display: flex; margin-right: 0px; justify-content: center;">
+        <li class="tab"><a href="{% url 'chapters_and_affinity_group:sc_ag_panel_details' sc_ag_info.primary panel_info.pk %}"> Executive Members Panel</a></li>
+        <li class="tab"><a href="{% url 'chapters_and_affinity_group:sc_ag_panel_details_officers' sc_ag_info.primary panel_info.pk %}">Officer Members Panel</a></li>
+        <li class="tab" style="border-right: 1px solid #00629B;"><a href="{% url 'chapters_and_affinity_group:sc_ag_panel_details_volunteers' sc_ag_info.primary panel_info.pk %}">Volunteer Members Panel</a></li>
+        <li class="tab" style="border-right: 1px solid #00629B;"><a href="{% url 'chapters_and_affinity_group:sc_ag_panel_details_alumni' sc_ag_info.primary panel_info.pk %}">Alumni Members Panel</a></li>
     </ul>
     <br>
-    <div id="tab1" class="tab-content" style="margin-right: 0px;">
-        {% block executive_members_panel %}
-            {% include "Panel/executive_members_tab.html" %}
-        {% endblock executive_members_panel %}
-    </div>
-
-    <div id="tab2" class="tab-content" style="margin-right: 0px;">
-        {% block officer_members_panel %}
-            {% include "Panel/officer_members_tab.html" %}
-        {% endblock officer_members_panel %}
-    </div>
-
-    <div id="tab3" class="tab-content" style="margin-right: 0px;">
-        {% block volunteer_members_panel %}
-            {% include "Panel/volunteer_members_tab.html" %}
-        {% endblock volunteer_members_panel %}
-    </div>
-
-    <div id="tab4" class="tab-content" style="margin-right: 0px;">
-        {% block alumni_members_panel %}
-            {% include "Panel/alumni_members_tab.html" %}
-        {% endblock alumni_members_panel %}
-    </div>
 </div>
-<script>
-    const linkels = document.querySelectorAll('.tab');
-    linkels.forEach(linkels =>{
-        linkels.addEventListener('click', ()=> {
-            document.querySelector('.active_tab')?.classList.remove('active_tab');
-            linkels.classList.add('active_tab');
-        });
-    });
-</script>
+
 {% endblock panel_tab %}

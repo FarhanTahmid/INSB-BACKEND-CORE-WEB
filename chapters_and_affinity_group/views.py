@@ -97,6 +97,36 @@ def sc_ag_panels(request,primary):
 def sc_ag_panel_details(request,primary,panel_pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
     get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+    
+    # get sc_ag members
+    sc_ag_members=SC_AG_Info.get_sc_ag_members(request,primary)
+    
+    # get panel information
+    panel_info=Branch.load_panel_by_id(panel_pk)
+    # getting tenure time
+    if(panel_info.panel_end_time is None):
+        present_date=datetime.now()
+        tenure_time=present_date.date()-panel_info.creation_time.date()
+    else:
+        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+
+    if request.method=="POST":
+        if request.POST.get('add_executive_to_sc_ag_panel'):
+            print("Adding executive")
+    
+    context={
+        'all_sc_ag':sc_ag,
+        'sc_ag_info':get_sc_ag_info,
+        'panel_info':panel_info,
+        'tenure_time':tenure_time,
+        'sc_ag_members':sc_ag_members
+
+    }
+    return render(request,'Panels/sc_ag_executive_members_tab.html',context=context)
+
+def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
 
     # get panel information
     panel_info=Branch.load_panel_by_id(panel_pk)
@@ -114,4 +144,48 @@ def sc_ag_panel_details(request,primary,panel_pk):
         'tenure_time':tenure_time,
 
     }
-    return render(request,'Panels/sc_ag_panel_details.html',context=context)
+    return render(request,'Panels/sc_ag_officer_members_tab.html',context=context)
+
+def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+
+    # get panel information
+    panel_info=Branch.load_panel_by_id(panel_pk)
+    # getting tenure time
+    if(panel_info.panel_end_time is None):
+        present_date=datetime.now()
+        tenure_time=present_date.date()-panel_info.creation_time.date()
+    else:
+        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+
+    context={
+        'all_sc_ag':sc_ag,
+        'sc_ag_info':get_sc_ag_info,
+        'panel_info':panel_info,
+        'tenure_time':tenure_time,
+
+    }
+    return render(request,'Panels/sc_ag_volunteer_members_tab.html',context=context)
+
+def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+
+    # get panel information
+    panel_info=Branch.load_panel_by_id(panel_pk)
+    # getting tenure time
+    if(panel_info.panel_end_time is None):
+        present_date=datetime.now()
+        tenure_time=present_date.date()-panel_info.creation_time.date()
+    else:
+        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+
+    context={
+        'all_sc_ag':sc_ag,
+        'sc_ag_info':get_sc_ag_info,
+        'panel_info':panel_info,
+        'tenure_time':tenure_time,
+
+    }
+    return render(request,'Panels/sc_ag_alumni_members_tab.html',context=context)

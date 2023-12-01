@@ -1,134 +1,467 @@
+<!DOCTYPE html>
 {% load static %}
-{% block executive_members_panel %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Panels | {{sc_ag_info.group_name}}</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
-<h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>Executive Panel Members</b></h2>
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+    <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
+
+
+    <style>
+        body, html {
+        
+        margin: 0;
+        
+        align-items: center;
+        justify-content: center;
+        }
+
+        .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+          }
+          .btn-container {
+            text-align: center;
+          }
+          
+          .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+          }
+          
+          /* Media query for smaller screens (adjust the breakpoint as needed) */
+          @media (max-width: 768px) {
+            .btn {
+              width: 100%; /* Make the button full width on smaller screens */
+            }
+          }
+          .ui-switch{
+            /* Add shadow to the icon */
+            box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+
+            /* You can customize the shadow properties */
+        }
+        .form-control-label {
+            display: inline-block;
+            margin-right: 10px; /* Add margin for spacing between elements */
+        }
     
-    <!--Messages-->
-    <div style="justify-content:center; text-align:center;">
-        {% if messages %}
-            {% for message in messages %}
-                <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
-            {% endfor %}
-        {% endif %}
-    </div>
-    <!--Messages End-->
-    
-    <!--Executive Commitee Table For the Panel-->
-    <div class="box">
-        <div class="box-header">
+        .ui-switch {
+            display: inline-block;
+        }
+        .table-container {
+            overflow: hidden; /* Hide table overflow */
+        }
+        
+        .table-wrapper {
+            max-height: 300px; /* Set the maximum height for scrolling */
+            overflow: auto; /* Enable vertical scrolling */
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        
+        /* Add responsive styling for smaller screens */
+        @media (max-width: 768px) {
+            .table-wrapper {
+                max-height: none; /* Allow table to expand vertically on smaller screens */
+            }
+        }
+        .image_icon{
+            padding:10px;
             
-            <div style="text-align:right;">
-            <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add Executive Member</button>
-            </div>
-            <small>This table holds the data of Executive Members in the panel</small>
-            <small style="color:green;"><span style="color:red;">* </span>Make this panel the current Panel from Panel Settings if we wish to add members in the current team as well.</small>
+          }
+          .tooltip-container {
+            position: relative;
+            display: inline-block;
+          }
+          .tooltip-container.right {
+            float: right; /* Float the container to the right */
+            margin-right: 0; /* Reset the margin for the right-aligned button */
+          }
+          
+          .image-button:hover + .tooltip-text {
+              opacity: 1;
+              visibility: visible;
+              transform: translateX(10px); /* Adjust the distance from the link */
+          }
+          
+          .tooltip-text {
+              position: absolute;
+              top: 50%;
+              left: 100%;
+              transform: translateY(-50%);
+              white-space: nowrap;
+              background-color: #333;
+              color: #fff;
+              padding: 5px;
+              border-radius: 5px;
+              opacity: 0;
+              visibility: hidden;
+              transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+          }
+          .image-button {
+            display: inline-block;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+        
+        /* Add additional styling for image appearance, such as size and alignment */
+        .image-button img {
+            height:50px;
+            width: 50px; /* Adjust as needed */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 5px; /* Add rounded corners if desired */
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+                {% include 'sc_ag_navbar.html' %}
+            {% endblock navbar %}
+
+        </div>
+        <!--navbar content-->
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
             <br>
-            <label style="margin-left:5px;">Search:</label>
-            <input class="form-control w-75" type="text" id="searchInput" placeholder="Search Member by name" onkeyup="searchTable()">
-        </div>
-        <div class="table-responsive" style="max-height:300px; overflow-y:auto;">
-        <table class="table table-bordered m-0" style="text-align:center;">
-            <thead>
-            <tr>
-                <th style="text-align:center;">IEEE ID</th>
-                <th style="text-align:center;">Name</th>
-                <th style="text-align:center;">IEEE Email</th>
-                <th style="text-align:center;">Current Position</th>
-                <th style="text-align:center;">Remove Member?</th>
-            </tr>
-            </thead>
-            <tbody>
-            
-                {% for member in eb_member %}
-                <tr>
-                    <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.member.ieee_id %}">{{member.member.ieee_id}}</a></td>
-                    <td>{{ member.member.name  }}</td>
-                    <td>{{member.member.email_ieee}}</td>
-                    <td>{{member.position}}</td>
-                    <td>
-                    <form method="POST">
-                        {% csrf_token %}
-                            <input class="btn btn-outline b-danger text-danger" name="remove_member" type="submit" value="Remove Member">
-                            <input type="hidden" name="remove_panel_member" value={{member.member.ieee_id}}>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        </div>
-    </div>
-    <!--Table Ends-->
-    <br>
-    <br>
-    <!--Add modal-->
-    <div id="m-s-a" class="modal" data-backdrop="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add member to Executive Panel!</h5>
+            <!--Back button-->
+            <div class="tooltip-container">
+                <a href="{% url 'chapters_and_affinity_group:sc_ag_panels' sc_ag_info.primary %}" class="image-button">
+                    <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+                </a>
+                <span class="tooltip-text">Go back</span>
             </div>
-            <div class="modal-body p-lg">
-              <p>Do select the Position of the Member Carefully!</p>
-              <p>This will update the Members Position in the Database and also keep a record of the Member in the Panel.</p>
-              <br>
+            <!--Back button-->
+
+            <!--Start from here-->
+            <br>
+            {% if panel_info.current %}
+                <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">{{sc_ag_info.group_name}} Panel of <b><span style="color:#00629B;"> {{panel_info.year}} </span><span style="color:green">(Current)</span></b></h2>
+            {% else %}
+                <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">{{sc_ag_info.group_name}} Panel of <b><span style="color:#00629B;"> {{panel_info.year}} </span></b></h2>
+            {% endif %}
+            <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">Panel Start Date:<span style="color:#00629B;"> {{panel_info.creation_time|date:'Y-m-d'}} </span></b></h5>
+            {% if panel_info.panel_end_time %}
+            {% else %}
+            <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">Panel End Date:<span style="color:#00629B;"> {{panel_info.panel_end_time|date:'Y-m-d'}} </span></b></h5>
+            {% endif %}
+            <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">Panel Duration:<span style="color:#00629B;"> {{tenure_time}} </span></b></h5>
+            <br>
+            <div style="justify-content:center;text-align:center;">  
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-f" ui-toggle-class="bounce" ui-target="#animate">Delete Panel</button>
+                    <button type="submit" class="btn btn-outline b-info text-info" data-toggle="modal" data-target="#m-s-g" ui-toggle-class="bounce" ui-target="#animate">Panel Settings</button>
+                </div>
             </div>
-            <!--Position Input-->
+            <br>
+            <br>
 
-            <!--Position Input Ends-->
+            <!--Tab view for Panels-->
+            <!--Tab view Start-->
+            {% block panel_tab %}
+                {% include "Panels/sc_ag_panel_tabs.html" %}
+            {% endblock panel_tab %}
 
-            <!--Search table-->
-            <form method="POST">
-                {% csrf_token %}
-                <label style="margin-left:5px;">Select Position</label>
-                <select id="position" name="position">
-                    {% for position in positions %}
-                        <option value={{position.id}}>{{ position.role }}</option>
-                    {% endfor %} 
-                </select>
-                <div class="table-container">
-                    <label style="margin-left: 5px;">Search</label>
-                    <input class="w-75" type="text" id="searchInput2" placeholder="Search Member" onkeyup="searchTable2()">
-                    <div class="table-wrapper">
-                        <table class="table2" id="data2">
+            <div>
+                <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>Executive Panel Members</b></h2>
+    
+                    <!--Messages-->
+                    <div style="justify-content:center; text-align:center;">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <!--Messages End-->
+                    
+                    <!--Executive Commitee Table For the Panel-->
+                    <div class="box">
+                        <div class="box-header">
+                            
+                            <div style="text-align:right;">
+                            <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add Executive Member</button>
+                            </div>
+                            <small>This table holds the data of Executive Members in the panel</small>
+                            <small style="color:green;"><span style="color:red;">* </span>Make this panel the current Panel from Panel Settings if we wish to add members in the current team as well.</small>
+                            <br>
+                            <label style="margin-left:5px;">Search:</label>
+                            <input class="form-control w-75" type="text" id="searchInput" placeholder="Search Member by name" onkeyup="searchTable()">
+                        </div>
+                        <div class="table-responsive" style="max-height:300px; overflow-y:auto;">
+                        <table class="table table-bordered m-0" style="text-align:center;">
                             <thead>
-                                <tr id="row">
-                                    <th>Name</th>
-                                    <th>IEEE ID</th>
-                                    <th>Current Position</th>
-                                    <th>Email</th>
-                                    <th>Select</th>
-                                </tr>
+                            <tr>
+                                <th style="text-align:center;">IEEE ID</th>
+                                <th style="text-align:center;">Name</th>
+                                <th style="text-align:center;">IEEE Email</th>
+                                <th style="text-align:center;">Current Position</th>
+                                <th style="text-align:center;">Remove Member?</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                {% for member in insb_members %}
+                            
+                                {% for member in eb_member %}
                                 <tr>
-                                    <td>{{ member.name }}</td>
-                                    <td>{{ member.ieee_id }}</td>
-                                    <td>{{ member.position }}</td>
-                                    <td>{{ member.email_ieee }}</td>
+                                    <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.member.ieee_id %}">{{member.member.ieee_id}}</a></td>
+                                    <td>{{ member.member.name  }}</td>
+                                    <td>{{member.member.email_ieee}}</td>
+                                    <td>{{member.position}}</td>
                                     <td>
-                                        <input type="checkbox" id="select" name="member_select" value={{member.ieee_id}}>
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                            <input class="btn btn-outline b-danger text-danger" name="remove_member" type="submit" value="Remove Member">
+                                            <input type="hidden" name="remove_panel_member" value={{member.member.ieee_id}}>
+                                        </form>
                                     </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
+                        </div>
                     </div>
-                </div>
-            
-                <div class="modal-footer">
-                <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-            
-                    <input type="submit" class="btn primary p-x-md" name="add_executive_to_panel" value="Add Executive Member"></input>  
-                </div>
-            </form>
+                    <!--Table Ends-->
+                    <br>
+                    <br>
+                    <!--Add modal-->
+                    <div id="m-s-a" class="modal" data-backdrop="true">
+                        <div class="modal-dialog modal-lg">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Add member to Executive Panel!</h5>
+                            </div>
+                            <div class="modal-body p-lg">
+                              <p>Do select the Position of the Member Carefully!</p>
+                              <p>This will update the Members Position in the Database and also keep a record of the Member in the Panel.</p>
+                              <br>
+                            </div>
+                            <!--Position Input-->
+                
+                            <!--Position Input Ends-->
+                
+                            <!--Search table-->
+                            <form method="POST">
+                                {% csrf_token %}
+                                <label style="margin-left:5px;">Select Position</label>
+                                <select id="position" name="position">
+                                    {% for position in positions %}
+                                        <option value={{position.id}}>{{ position.role }}</option>
+                                    {% endfor %} 
+                                </select>
+                                <div class="table-container">
+                                    <label style="margin-left: 5px;">Search</label>
+                                    <input class="w-75" type="text" id="searchInput2" placeholder="Search Member" onkeyup="searchTable2()">
+                                    <div class="table-wrapper">
+                                        <table class="table2" id="data2">
+                                            <thead>
+                                                <tr id="row">
+                                                    <th>Name</th>
+                                                    <th>IEEE ID</th>
+                                                    <th>Current Position</th>
+                                                    <th>Email</th>
+                                                    <th>Select</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for member in sc_ag_members %}
+                                                <tr>
+                                                    <td>{{ member.member.name }}</td>
+                                                    <td>{{ member.member.ieee_id }}</td>
+                                                    <td>{{ member.position }}</td>
+                                                    <td>{{ member.member.email_ieee }}</td>
+                                                    <td>
+                                                        <input type="checkbox" id="select" name="member_select" value={{member.ieee_id}}>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            
+                                <div class="modal-footer">
+                                <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            
+                                    <input type="submit" class="btn primary p-x-md" name="add_executive_to_sc_ag_panel" value="Add Executive Member"></input>  
+                                </div>
+                            </form>
+                
+                          </div><!-- /.modal-content -->
+                        </div>
+                    </div>
+                    <!--Add modal ends-->
+            </div>
 
-          </div><!-- /.modal-content -->
+            <!--Tab view end-->
+            
+            <!-- Delete Panel modal -->
+            <div id="m-s-f" class="modal fade animate" data-backdrop="true">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="modal-dialog" id="animate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Delete Panel</h5>
+                            </div>
+                            
+                            <div class="modal-body text-left p-lg">
+                                <p>Remember, If you choose to Delete the Panel, all the Members Position of the panel will be changed to General Members.<br>They won't be assigned to any teams. All the Panel data would be Deleted.</p>        
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <input type="submit" class="btn btn-danger p-x-md" name="delete_panel" value="Delete Panel"></input>                  
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </form>
+            </div>
+            <!-- / .modal -->
+            <!--Current Panel Modal-->
+            <div id="m-s-g" class="modal fade animate" data-backdrop="true">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="modal-dialog" id="animate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Make Changes to the Panel</h5>
+                            </div>
+                            
+                            <div class="modal-body text-left p-lg">
+                                <div class="row">
+                                    <div class="col-md">
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword3">Tenure</label>
+                                            <input
+                                                placeholder="Panel Tenure"
+                                                class="form-control w-75"
+                                                type="text"
+                                                name="panel_tenure"
+                                                value="{{ panel_info.year }}"
+                                            />
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <p>Remember, If you choose to make this Panel the current Panel, all the Teams and Access will change according to it.</p>
+                                <div class="form-group row">
+                                    <label for="inputieeeid3" class="col-sm  form-control-label">Make this panel Current?</label>
+                                        <span style="margin-right:30vh;">
+
+                                            <div class="col-sm-10">
+                                            {% if panel_info.current %}
+                                                <label class="ui-switch">
+                                                <input name="current_panel_check" checked="True" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            {% else %}
+                                                <label class="ui-switch">
+                                                <input name="current_panel_check" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            {% endif %}
+                                            </div>
+                                        </span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword3">Panel Start Date</label>
+                                            <input
+                                                placeholder="Panel Start Date"
+                                                class="form-control w-75"
+                                                type="date"
+                                                name="panel_start_date"
+                                                value="{{ panel_info.creation_time|date:'Y-m-d' }}"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword3">Panel End Date</label>
+                                            <input
+                                                placeholder="Date of Birth"
+                                                class="form-control w-75"
+                                                type="date"
+                                                name="panel_end_date"
+                                                value="{{ panel_info.panel_end_time|date:'Y-m-d' }}"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>        
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <input type="submit" class="btn btn-success p-x-md" name="save_changes" value="Save Changes"></input>                  
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </form>
+            </div>
+            <!-- / .modal -->
         </div>
-    </div>
-    <!--Add modal ends-->
+        <!--PAGE END-->
 
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+    
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+
+
+    
+    <script src="{% static 'tab_view.js'%}"></script>
 
     <script>
         function searchTable() {
@@ -197,4 +530,5 @@
         }
     </script>
 
-{% endblock executive_members_panel %}
+</body>
+</html>
