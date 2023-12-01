@@ -450,7 +450,7 @@ def panel_details(request,panel_id):
             if(current_panel_check):
                 # if current panel check is true that means we need to mark other panels current as False
                 try:
-                    Panels.objects.filter(current=True).update(current=False)
+                    Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1),current=True).update(current=False)
                     # updating the panel to be the current one
                     panel_obj.year=panel_tenure
                     panel_obj.current=True
