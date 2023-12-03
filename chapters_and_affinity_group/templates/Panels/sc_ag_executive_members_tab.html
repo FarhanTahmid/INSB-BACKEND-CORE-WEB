@@ -246,7 +246,7 @@
                             </thead>
                             <tbody>
                             
-                                {% for member in eb_member %}
+                                {% for member in sc_ag_eb_members %}
                                 <tr>
                                     <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.member.ieee_id %}">{{member.member.ieee_id}}</a></td>
                                     <td>{{ member.member.name  }}</td>
@@ -288,8 +288,8 @@
                             <form method="POST">
                                 {% csrf_token %}
                                 <label style="margin-left:5px;">Select Position</label>
-                                <select id="position" name="position">
-                                    {% for position in positions %}
+                                <select id="position" name="sc_ag_eb_position">
+                                    {% for position in sc_ag_eb_positions %}
                                         <option value={{position.id}}>{{ position.role }}</option>
                                     {% endfor %} 
                                 </select>
@@ -315,7 +315,7 @@
                                                     <td>{{ member.position }}</td>
                                                     <td>{{ member.member.email_ieee }}</td>
                                                     <td>
-                                                        <input type="checkbox" id="select" name="member_select" value={{member.ieee_id}}>
+                                                        <input type="checkbox" id="select" name="member_select" value={{member.member.ieee_id}}>
                                                     </td>
                                                 </tr>
                                                 {% endfor %}

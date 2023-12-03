@@ -39,10 +39,10 @@ def sc_ag_members(request,primary):
             team=request.POST['team']
             if team=='0':
                 team=None
-            member_ieee_id=request.POST['member_select']
+            member_ieee_id_list=request.POST.getlist('member_select')
             
             # Create Member for SC AG
-            Sc_Ag.add_insb_members_to_sc_ag(ieee_id=member_ieee_id,
+            Sc_Ag.add_insb_members_to_sc_ag(ieee_id_list=member_ieee_id_list,
                                             position_id=position,
                                             sc_ag_primary=primary,
                                             team_pk=team,
@@ -110,17 +110,25 @@ def sc_ag_panel_details(request,primary,panel_pk):
     else:
         tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
 
+    # get sc_ag_executives
+    sc_ag_eb_members=SC_AG_Info.get_sc_ag_executives_from_panels(request=request,panel_id=panel_pk,sc_ag_primary=primary)
+    
     if request.method=="POST":
         if request.POST.get('add_executive_to_sc_ag_panel'):
-            print("Adding executive")
-    
+            member_select_list=request.POST.getlist('member_select')
+            position=request.POST.get('sc_ag_eb_position')
+            # Add Executive members to panel, keeping team=None
+            if(Sc_Ag.add_sc_ag_members_to_panel(memberList=member_select_list,panel_id=panel_pk,position_id=position,request=request,team=None)):
+                return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+
     context={
         'all_sc_ag':sc_ag,
         'sc_ag_info':get_sc_ag_info,
         'panel_info':panel_info,
         'tenure_time':tenure_time,
-        'sc_ag_members':sc_ag_members
-
+        'sc_ag_members':sc_ag_members,
+        'sc_ag_eb_members':sc_ag_eb_members,
+        'sc_ag_eb_positions':SC_AG_Info.get_sc_ag_executive_positions(request=request,sc_ag_primary=primary)
     }
     return render(request,'Panels/sc_ag_executive_members_tab.html',context=context)
 

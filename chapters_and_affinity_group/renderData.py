@@ -1,6 +1,6 @@
 from django.contrib import messages
 from .models import SC_AG_Members
-from users.models import Members
+from users.models import Members,Panel_Members
 from port.models import Panels,Chapters_Society_and_Affinity_Groups,Teams,Roles_and_Position
 import logging
 from system_administration.system_error_handling import ErrorHandling
@@ -10,22 +10,25 @@ from datetime import datetime
 class Sc_Ag:
     logger=logging.getLogger(__name__)
         
-    def add_insb_members_to_sc_ag(request,sc_ag_primary,ieee_id,team_pk,position_id):
+    def add_insb_members_to_sc_ag(request,sc_ag_primary,ieee_id_list,team_pk,position_id):
         '''This method adds an existing Member Registered in INSB to a SC or AG'''
+        get_sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)
+        count=0
         try:
-            if(SC_AG_Members.objects.filter(sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),member=Members.objects.get(ieee_id=ieee_id)).exists()):
-                messages.info(request,"The Member already exists in Database")
-            else:
-                new_sc_ag_member=SC_AG_Members.objects.create(sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)
-                                                            ,member=Members.objects.get(ieee_id=ieee_id))
-                if team_pk is not None:
-                    new_sc_ag_member.team=Teams.objects.get(pk=team_pk)
-                if position_id is not None:
-                    new_sc_ag_member.position=Roles_and_Position.objects.get(id=position_id)
-                new_sc_ag_member.save()
-                messages.success(request,f"{new_sc_ag_member.member.name} added to Members of ")
-                return True
-            
+            for ieee_id in ieee_id_list:
+                if(SC_AG_Members.objects.filter(sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),member=Members.objects.get(ieee_id=ieee_id)).exists()):
+                    messages.info(request,f"Member with IEEE ID: {ieee_id} already exists in Database")
+                else:
+                    new_sc_ag_member=SC_AG_Members.objects.create(sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)
+                                                                ,member=Members.objects.get(ieee_id=ieee_id))
+                    if team_pk is not None:
+                        new_sc_ag_member.team=Teams.objects.get(pk=team_pk)
+                    if position_id is not None:
+                        new_sc_ag_member.position=Roles_and_Position.objects.get(id=position_id)
+                    new_sc_ag_member.save()
+                    count+=1
+            messages.success(request,f"{count} new members were added to the Member List of {get_sc_ag.group_name} ")
+            return True
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -44,5 +47,54 @@ class Sc_Ag:
     def delete_ac_ag_panel(request,panel_id):
         '''This function deletes the panels and turn the Member of SC AG into a General Member and Team to None'''
         get_panel=Panels.objects.get(pk=panel_id)
-        pass        
-                
+        pass
+    
+    def add_sc_ag_members_to_panel(request,panel_id,memberList,position_id,team):
+        '''This method adds Members from SC_AG to their panels'''
+        try:
+            count=0
+            for i in memberList:
+                # check if the member already exists in the panel
+                check_existing_member=Panel_Members.objects.filter(tenure=Panels.objects.get(id=panel_id),member=Members.objects.get(ieee_id=i))
+                if(check_existing_member.exists()):
+                    # if exists, then update the members position with new Team and Positions
+                    check_existing_member.update(position=Roles_and_Position.objects.get(id=position_id))
+                    if team is None:
+                        check_existing_member.update(team=None)
+                    else:
+                        check_existing_member.update(team=Teams.objects.get(primary=team))
+                    messages.info(request,f"Member {i} already existed in the panel. Their Position and Team were updated!")
+                else:
+                    # Now create a new panel Member for the Panel and SC-AG
+                    if(team is None):
+                        # if team is not passed, it stays none
+                        new_paneL_member=Panel_Members.objects.create(
+                            tenure=Panels.objects.get(id=panel_id),
+                            member=Members.objects.get(ieee_id=i),
+                            position=Roles_and_Position.objects.get(id=position_id),
+                            team=None
+                        )
+                        new_paneL_member.save()
+                        count+=1
+                    else:
+                        # create new panel Member with Team info if team info is given
+                        new_paneL_member=Panel_Members.objects.create(
+                            tenure=Panels.objects.get(id=panel_id),
+                            member=Members.objects.get(ieee_id=i),
+                            position=Roles_and_Position.objects.get(id=position_id),
+                            team=Teams.objects.get(primary=team)
+                        )
+                        new_paneL_member.save()
+                        count+=1
+            if(count>1):
+                # if multiple members were added then show this message
+                messages.success(request,f"{count} new members were added to the panel")              
+            elif(count==1):
+                # else show a singular message
+                messages.success(request,f"{count} new member was added to the panel")              
+            return True
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
