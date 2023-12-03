@@ -49,20 +49,27 @@ class Sc_Ag:
         get_panel=Panels.objects.get(pk=panel_id)
         pass
     
-    def add_sc_ag_members_to_panel(request,panel_id,memberList,position_id,team):
+    def add_sc_ag_members_to_panel(request,panel_id,memberList,position_id,team,sc_ag_primary):
         '''This method adds Members from SC_AG to their panels'''
         try:
             count=0
             for i in memberList:
                 # check if the member already exists in the panel
                 check_existing_member=Panel_Members.objects.filter(tenure=Panels.objects.get(id=panel_id),member=Members.objects.get(ieee_id=i))
+                # get the Member from SC AG Database as well
+                member_in_sc_ag=SC_AG_Members.objects.filter(sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),member=Members.objects.get(ieee_id=i))
+                
                 if(check_existing_member.exists()):
                     # if exists, then update the members position with new Team and Positions
                     check_existing_member.update(position=Roles_and_Position.objects.get(id=position_id))
+                    # Update members position and team in SC AG members database as well
+                    member_in_sc_ag.update(position=Roles_and_Position.objects.get(id=position_id))
                     if team is None:
                         check_existing_member.update(team=None)
+                        member_in_sc_ag.update(team=None)
                     else:
                         check_existing_member.update(team=Teams.objects.get(primary=team))
+                        member_in_sc_ag.update(team=Teams.objects.get(primary=team))
                     messages.info(request,f"Member {i} already existed in the panel. Their Position and Team were updated!")
                 else:
                     # Now create a new panel Member for the Panel and SC-AG
@@ -75,6 +82,7 @@ class Sc_Ag:
                             team=None
                         )
                         new_paneL_member.save()
+                        member_in_sc_ag.update(position=Roles_and_Position.objects.get(id=position_id),team=None)
                         count+=1
                     else:
                         # create new panel Member with Team info if team info is given
@@ -85,6 +93,7 @@ class Sc_Ag:
                             team=Teams.objects.get(primary=team)
                         )
                         new_paneL_member.save()
+                        member_in_sc_ag.update(position=Roles_and_Position.objects.get(id=position_id),team=Teams.objects.get(primary=team))
                         count+=1
             if(count>1):
                 # if multiple members were added then show this message
@@ -97,4 +106,14 @@ class Sc_Ag:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
+    
+    def remove_sc_ag_member_from_panel(request,panel_id,member_ieee_id,sc_ag_primary):
+        """ This Method removes Members from SC_AG  Panels and also makes their Position and Team in SC Ag member table None"""
+        member_in_panel=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=panel_id),member=Members.objects.get(ieee_id=member_ieee_id))
+        for i in member_in_panel:
+            i.delete()
+            member_in_sc_ag=SC_AG_Members.objects.filter(sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),member=Members.objects.get(ieee_id=member_ieee_id))
+            member_in_sc_ag.update(team=None,position=None)
+            messages.error(request,f"{i.member.name} was removed from the panel!")
+        return True
         

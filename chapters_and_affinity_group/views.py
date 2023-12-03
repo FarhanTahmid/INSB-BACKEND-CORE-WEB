@@ -114,11 +114,17 @@ def sc_ag_panel_details(request,primary,panel_pk):
     sc_ag_eb_members=SC_AG_Info.get_sc_ag_executives_from_panels(request=request,panel_id=panel_pk,sc_ag_primary=primary)
     
     if request.method=="POST":
+        # adding member to panel
         if request.POST.get('add_executive_to_sc_ag_panel'):
             member_select_list=request.POST.getlist('member_select')
             position=request.POST.get('sc_ag_eb_position')
             # Add Executive members to panel, keeping team=None
-            if(Sc_Ag.add_sc_ag_members_to_panel(memberList=member_select_list,panel_id=panel_pk,position_id=position,request=request,team=None)):
+            if(Sc_Ag.add_sc_ag_members_to_panel(memberList=member_select_list,panel_id=panel_pk,position_id=position,request=request,team=None,sc_ag_primary=primary)):
+                return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+        # removing member from panel
+        if request.POST.get('remove_member'):
+            member_to_remove=request.POST['remove_panel_member']
+            if(Sc_Ag.remove_sc_ag_member_from_panel(request=request,member_ieee_id=member_to_remove,panel_id=panel_pk,sc_ag_primary=primary)):
                 return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
 
     context={
