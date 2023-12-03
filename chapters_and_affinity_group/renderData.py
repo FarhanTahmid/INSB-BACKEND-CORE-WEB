@@ -58,18 +58,22 @@ class Sc_Ag:
                 check_existing_member=Panel_Members.objects.filter(tenure=Panels.objects.get(id=panel_id),member=Members.objects.get(ieee_id=i))
                 # get the Member from SC AG Database as well
                 member_in_sc_ag=SC_AG_Members.objects.filter(sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),member=Members.objects.get(ieee_id=i))
-                
+                # get the panel details
+                get_panel=Panels.objects.get(id=panel_id)
                 if(check_existing_member.exists()):
                     # if exists, then update the members position with new Team and Positions
                     check_existing_member.update(position=Roles_and_Position.objects.get(id=position_id))
-                    # Update members position and team in SC AG members database as well
-                    member_in_sc_ag.update(position=Roles_and_Position.objects.get(id=position_id))
+                    # Update members position and team in SC AG members database as well if the panel is current
+                    if(get_panel.current):
+                        member_in_sc_ag.update(position=Roles_and_Position.objects.get(id=position_id))
                     if team is None:
                         check_existing_member.update(team=None)
-                        member_in_sc_ag.update(team=None)
+                        if(get_panel.current):
+                            member_in_sc_ag.update(team=None)
                     else:
                         check_existing_member.update(team=Teams.objects.get(primary=team))
-                        member_in_sc_ag.update(team=Teams.objects.get(primary=team))
+                        if(get_panel.current):
+                            member_in_sc_ag.update(team=Teams.objects.get(primary=team))
                     messages.info(request,f"Member {i} already existed in the panel. Their Position and Team were updated!")
                 else:
                     # Now create a new panel Member for the Panel and SC-AG
@@ -82,7 +86,8 @@ class Sc_Ag:
                             team=None
                         )
                         new_paneL_member.save()
-                        member_in_sc_ag.update(position=Roles_and_Position.objects.get(id=position_id),team=None)
+                        if(get_panel.current):
+                            member_in_sc_ag.update(position=Roles_and_Position.objects.get(id=position_id),team=None)
                         count+=1
                     else:
                         # create new panel Member with Team info if team info is given
@@ -93,7 +98,8 @@ class Sc_Ag:
                             team=Teams.objects.get(primary=team)
                         )
                         new_paneL_member.save()
-                        member_in_sc_ag.update(position=Roles_and_Position.objects.get(id=position_id),team=Teams.objects.get(primary=team))
+                        if(get_panel.current):
+                            member_in_sc_ag.update(position=Roles_and_Position.objects.get(id=position_id),team=Teams.objects.get(primary=team))
                         count+=1
             if(count>1):
                 # if multiple members were added then show this message
