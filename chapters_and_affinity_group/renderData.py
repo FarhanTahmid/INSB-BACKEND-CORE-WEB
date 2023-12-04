@@ -34,9 +34,35 @@ class Sc_Ag:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
     
+    def make_panel_members_position_and_team_none_in_sc_ag_database(request,panel_id):
+        '''This function finds the members in a panel and makes their Position and team None
+        in the SC_AG_Members Table when required.'''
+        try:
+            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=panel_id))
+            for member in get_panel_members:
+                SC_AG_Members.objects.filter(member=Members.objects.get(ieee_id=member.member.ieee_id)).update(position=None,team=None)
+            return True
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
     
     def create_new_panel_of_sc_ag(request,sc_ag_primary,tenure_year,current_check,panel_start_time,panel_end_time):
         try:
+            #Applying a logic where if the new panel is current, 
+            # it will remove other current panels and place the SC AG Members position and team as None
+            if(current_check):
+                # Find the previous panel of SC AG which is current and make it False, and also make the position=None, Team=None in for the SC AG members that are in that panel
+                previous_current_panel=Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),current=True)
+                if(previous_current_panel.exists()):
+                    # Update the Position,Team of SC AG members in that panel as None
+                    for panel in previous_current_panel:
+                        if(Sc_Ag.make_panel_members_position_and_team_none_in_sc_ag_database(request=request,panel_id=panel.pk)):
+                            # set the current value of Panel to False
+                            panel.current=False
+                            panel.save()
+                        else:
+                            return False
             new_sc_ag_panel=Panels.objects.create(year=tenure_year,creation_time=panel_start_time,current=current_check,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),panel_end_time=panel_end_time)
             new_sc_ag_panel.save()
             return True
@@ -140,5 +166,3 @@ class Sc_Ag:
             return False
     
     
-    
-        
