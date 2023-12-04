@@ -39,15 +39,26 @@ class Sc_Ag:
         try:
             new_sc_ag_panel=Panels.objects.create(year=tenure_year,creation_time=panel_start_time,current=current_check,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),panel_end_time=panel_end_time)
             new_sc_ag_panel.save()
+            return True
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
-    def delete_ac_ag_panel(request,panel_id):
-        '''This function deletes the panels and turn the Member of SC AG into a General Member and Team to None'''
-        get_panel=Panels.objects.get(pk=panel_id)
-        pass
+    def delete_sc_ag_panel(request,sc_ag_primary,panel_pk):
+        # get the panel to delete
+        get_panel=Panels.objects.get(id=panel_pk,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary))
+        # get the members of the panel to delete
+        get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(id=panel_pk))
+        for i in get_panel_members:
+            if(get_panel.current):
+                #if panel is current, change position,Team in SC AG Members as well. Position=None, Team=None
+                SC_AG_Members.objects.filter(member=Members.objects.get(ieee_id=i),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).update(team=None,position=None)
+            # delete members from panel
+            i.delete()
+        # delete panel
+        get_panel.delete()
+        return True
     
     def add_sc_ag_members_to_panel(request,panel_id,memberList,position_id,team,sc_ag_primary):
         '''This method adds Members from SC_AG to their panels'''
@@ -115,11 +126,19 @@ class Sc_Ag:
     
     def remove_sc_ag_member_from_panel(request,panel_id,member_ieee_id,sc_ag_primary):
         """ This Method removes Members from SC_AG  Panels and also makes their Position and Team in SC Ag member table None"""
-        member_in_panel=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=panel_id),member=Members.objects.get(ieee_id=member_ieee_id))
-        for i in member_in_panel:
-            i.delete()
-            member_in_sc_ag=SC_AG_Members.objects.filter(sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),member=Members.objects.get(ieee_id=member_ieee_id))
-            member_in_sc_ag.update(team=None,position=None)
+        try:
+            member_in_panel=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=panel_id),member=Members.objects.get(ieee_id=member_ieee_id))
+            for i in member_in_panel:
+                member_in_sc_ag=SC_AG_Members.objects.filter(sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),member=Members.objects.get(ieee_id=member_ieee_id))
+                member_in_sc_ag.update(team=None,position=None)
+                i.delete()
             messages.error(request,f"{i.member.name} was removed from the panel!")
-        return True
+            return True
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+    
+    
+    
         
