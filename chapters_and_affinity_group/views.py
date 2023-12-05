@@ -196,15 +196,21 @@ def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
     sc_ag_members=SC_AG_Info.get_sc_ag_members(request,primary)
     
     if(request.method=="POST"):
+        # Add Member to officer panel
         if(request.POST.get('add_officer_to_sc_ag_panel')):
             member_select_list=request.POST.getlist('member_select')
             position=request.POST.get('sc_ag_officer_position')
-            print(position)
             team=request.POST.get('sc_ag_team')
-            print(team)
             if(Sc_Ag.add_sc_ag_members_to_panel(memberList=member_select_list,panel_id=panel_pk,position_id=position,team=team,sc_ag_primary=primary,request=request)):
                 return redirect('chapters_and_affinity_group:sc_ag_panel_details_officers', primary,panel_pk)
-    
+        
+        # Remove Member from Panel
+        if request.POST.get('remove_member_officer'):
+            member_to_remove=request.POST['remove_officer_member']
+            if(Sc_Ag.remove_sc_ag_member_from_panel(request=request,member_ieee_id=member_to_remove,panel_id=panel_pk,sc_ag_primary=primary)):
+                return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+        
+        
     context={
         'all_sc_ag':sc_ag,
         'sc_ag_info':get_sc_ag_info,

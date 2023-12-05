@@ -205,7 +205,7 @@ def getTypeOfEventStats():
     event_stats_keys =[]
     event_stats_values=[]
     # all_event_type=Event_type.objects.all()
-    all_events_number = Events.objects.all().count()
+    # all_events_number = Events.objects.all().count()
     event_percentage ={}
     # for i in all_event_type:
     #     event_count = Events.objects.filter(event_type = i.pk).count()
@@ -229,7 +229,8 @@ def getEventNumberStat():
     year = datetime.date.today().year
     print(year)
     for i in range(5):
-        count = Events.objects.filter(event_date__year=(year-i)).count()
+        count=0
+        # count = Events.objects.filter(event_date__year=(year-i)).count()
         event_num.append(count)
     event_num.reverse()
     return event_num

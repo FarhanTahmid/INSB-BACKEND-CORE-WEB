@@ -192,13 +192,6 @@
             {% endif %}
             <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">Panel Duration:<span style="color:#00629B;"> {{tenure_time}} </span></b></h5>
             <br>
-            <div style="justify-content:center;text-align:center;">  
-                <div class="btn-container">
-                    <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-f" ui-toggle-class="bounce" ui-target="#animate">Delete Panel</button>
-                    <button type="submit" class="btn btn-outline b-info text-info" data-toggle="modal" data-target="#m-s-g" ui-toggle-class="bounce" ui-target="#animate">Panel Settings</button>
-                </div>
-            </div>
-            <br>
             <br>
 
             <!--Tab view for Panels-->
@@ -247,7 +240,7 @@
                             </thead>
                             <tbody>
                             
-                                {% for member in officer_member %}
+                                {% for member in sc_ag_officer_member %}
                                 <tr>
                                     <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.member.ieee_id %}">{{member.member.ieee_id}}</a></td>
                                     <td>{{ member.member.name  }}</td>
@@ -350,111 +343,6 @@
             </div>
 
             <!--Tab view end-->
-            
-            <!-- Delete Panel modal -->
-            <div id="m-s-f" class="modal fade animate" data-backdrop="true">
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="modal-dialog" id="animate">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h5 class="modal-title">Delete Panel</h5>
-                            </div>
-                            
-                            <div class="modal-body text-left p-lg">
-                                <p>Remember, If you choose to Delete the Panel, all the Members Position of the panel will be changed to General Members.<br>They won't be assigned to any teams. All the Panel data would be Deleted.</p>        
-                            </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                            <input type="submit" class="btn btn-danger p-x-md" name="delete_panel" value="Delete Panel"></input>                  
-                            </div>
-                        </div><!-- /.modal-content -->
-                    </div>
-                </form>
-            </div>
-            <!-- / .modal -->
-            <!--Current Panel Modal-->
-            <div id="m-s-g" class="modal fade animate" data-backdrop="true">
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="modal-dialog" id="animate">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h5 class="modal-title">Make Changes to the Panel</h5>
-                            </div>
-                            
-                            <div class="modal-body text-left p-lg">
-                                <div class="row">
-                                    <div class="col-md">
-                                        <div class="form-group">
-                                            <label for="exampleInputPassword3">Tenure</label>
-                                            <input
-                                                placeholder="Panel Tenure"
-                                                class="form-control w-75"
-                                                type="text"
-                                                name="panel_tenure"
-                                                value="{{ panel_info.year }}"
-                                            />
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                                <p>Remember, If you choose to make this Panel the current Panel, all the Teams and Access will change according to it.</p>
-                                <div class="form-group row">
-                                    <label for="inputieeeid3" class="col-sm  form-control-label">Make this panel Current?</label>
-                                        <span style="margin-right:30vh;">
-
-                                            <div class="col-sm-10">
-                                            {% if panel_info.current %}
-                                                <label class="ui-switch">
-                                                <input name="current_panel_check" checked="True" type="checkbox">
-                                                    <i></i>
-                                                </label>
-                                            {% else %}
-                                                <label class="ui-switch">
-                                                <input name="current_panel_check" type="checkbox">
-                                                    <i></i>
-                                                </label>
-                                            {% endif %}
-                                            </div>
-                                        </span>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="exampleInputPassword3">Panel Start Date</label>
-                                            <input
-                                                placeholder="Panel Start Date"
-                                                class="form-control w-75"
-                                                type="date"
-                                                name="panel_start_date"
-                                                value="{{ panel_info.creation_time|date:'Y-m-d' }}"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="exampleInputPassword3">Panel End Date</label>
-                                            <input
-                                                placeholder="Date of Birth"
-                                                class="form-control w-75"
-                                                type="date"
-                                                name="panel_end_date"
-                                                value="{{ panel_info.panel_end_time|date:'Y-m-d' }}"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>        
-                            </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                            <input type="submit" class="btn btn-success p-x-md" name="save_changes" value="Save Changes"></input>                  
-                            </div>
-                        </div><!-- /.modal-content -->
-                    </div>
-                </form>
-            </div>
-            <!-- / .modal -->
         </div>
         <!--PAGE END-->
 
