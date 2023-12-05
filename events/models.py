@@ -111,3 +111,12 @@ class Event_Permission(models.Model):
     event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
     permission_id=models.ForeignKey(Permission_criteria,on_delete=models.CASCADE)
     permission_status=models.BooleanField(null=False,blank=False,default=False)
+    
+class GuestSpeaker(models.Model):
+    spe=models.CharField(null=True,max_length=20)
+    class Meta:
+        verbose_name="dfff"
+    def __str__(self) -> str:
+        return str(self.pk)
+    
+    

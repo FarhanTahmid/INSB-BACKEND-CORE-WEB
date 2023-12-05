@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'central_branch',
-    'events',
     'membership_development_team',
     'port',
     'users',
@@ -67,7 +66,8 @@ INSTALLED_APPS = [
     'ieee_nsu_sb_ras_sbc',
     'ckeditor',
     'chapters_and_affinity_group',
-    
+    'central_events',
+    'events',
 ]
 
 MIDDLEWARE = [
