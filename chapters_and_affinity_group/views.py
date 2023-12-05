@@ -4,20 +4,33 @@ from users import renderData
 from .get_sc_ag_info import SC_AG_Info
 from .renderData import Sc_Ag
 from port.renderData import PortData
+from system_administration.system_error_handling import ErrorHandling
 from central_branch.renderData import Branch
 from datetime import datetime
+from django.http import Http404,HttpResponseBadRequest
+import logging
+import traceback
+
+
 # Create your views here.
+logger=logging.getLogger(__name__)
 
 def sc_ag_homepage(request,primary):
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-    
-    
-    context={
-        'all_sc_ag':sc_ag,
-        'sc_ag_info':get_sc_ag_info
-    }
-    return render(request,'Homepage/sc_ag_homepage.html',context)
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        
+        
+        context={
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info
+        }
+        return render(request,'Homepage/sc_ag_homepage.html',context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 def sc_ag_members(request,primary):
     sc_ag=PortData.get_all_sc_ag(request=request)

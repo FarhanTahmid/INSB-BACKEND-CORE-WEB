@@ -32,6 +32,7 @@ class Sc_Ag:
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not add Member to Database. Something went wrong!")
             return False
     
     def make_panel_members_position_and_team_none_in_sc_ag_database(request,panel_id):
@@ -70,11 +71,14 @@ class Sc_Ag:
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not create panel. Something went worng!")
             return False
     
     def update_sc_ag_panel(request,sc_ag_primary,panel_pk,panel_tenure,is_current_check,panel_start_date,panel_end_date):
+        try:
             # get the panel
             panel_to_update=Panels.objects.get(pk=panel_pk)
+            # first check if the user wants to make a non current panel to current
             if(is_current_check and (panel_to_update.current==False)):
                 # find panels which are current now and make them false
                 previous_current_panel=Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),current=True)
@@ -91,6 +95,7 @@ class Sc_Ag:
                 members_in_panel=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=panel_pk))
                 for member in members_in_panel:
                     if member.team is None:
+                        # update team as none
                         SC_AG_Members.objects.filter(member=Members.objects.get(ieee_id=member.member.ieee_id)).update(team=None,position=Roles_and_Position.objects.get(id=member.position.id))                
                     else:
                         SC_AG_Members.objects.filter(member=Members.objects.get(ieee_id=member.member.ieee_id)).update(team=Teams.objects.get(primary=member.team.primary),position=Roles_and_Position.objects.get(id=member.position.id))
@@ -102,8 +107,9 @@ class Sc_Ag:
                 panel_to_update.save()
                 messages.success(request,"Panel Information was updated!")
                 return True
-
+            # then we check if we are making a current panel to a non current panel.
             elif(not is_current_check and panel_to_update.current):
+                # Make positions and Teams of Members of that panel as None
                 if(Sc_Ag.make_panel_members_position_and_team_none_in_sc_ag_database(request=request,panel_id=panel_to_update.pk)):
                     panel_to_update.current=False
                     panel_to_update.year=panel_tenure
@@ -115,6 +121,7 @@ class Sc_Ag:
                 else:
                     return False
             else:
+                # for all other instances update normally
                 panel_to_update.current=is_current_check
                 panel_to_update.year=panel_tenure
                 panel_to_update.creation_time=panel_start_date
@@ -122,22 +129,35 @@ class Sc_Ag:
                 panel_to_update.save()
                 messages.success(request,"Panel Information was updated!")
                 return True
-            
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not Update Panel. Something went wrong!")
+            return False
 
     def delete_sc_ag_panel(request,sc_ag_primary,panel_pk):
-        # get the panel to delete
-        get_panel=Panels.objects.get(id=panel_pk,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary))
-        # get the members of the panel to delete
-        get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(id=panel_pk))
-        for i in get_panel_members:
-            if(get_panel.current):
-                #if panel is current, change position,Team in SC AG Members as well. Position=None, Team=None
-                SC_AG_Members.objects.filter(member=Members.objects.get(ieee_id=i),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).update(team=None,position=None)
-            # delete members from panel
-            i.delete()
-        # delete panel
-        get_panel.delete()
-        return True
+        try:
+            # get the panel to delete
+            get_panel=Panels.objects.get(id=panel_pk,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary))
+            # get the members of the panel to delete
+            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(id=panel_pk))
+            for i in get_panel_members:
+                if(get_panel.current):
+                    #if panel is current, change position,Team in SC AG Members as well. Position=None, Team=None
+                    SC_AG_Members.objects.filter(member=Members.objects.get(ieee_id=i),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).update(team=None,position=None)
+                # delete members from panel
+                i.delete()
+            # delete panel
+            get_panel.delete()
+            messages.info(request,"A Panel was Deleted!")
+            return True
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not Delete Panel. Something went wrong!")
+            return False
+            
+        
     
     def add_sc_ag_members_to_panel(request,panel_id,memberList,position_id,team,sc_ag_primary):
         '''This method adds Members from SC_AG to their panels'''
@@ -201,6 +221,7 @@ class Sc_Ag:
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not add Member to panel. Something went wrong!")
             return False
     
     def remove_sc_ag_member_from_panel(request,panel_id,member_ieee_id,sc_ag_primary):
@@ -216,6 +237,7 @@ class Sc_Ag:
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not remove member from panel. Something went wrong!")
             return False
     
     
