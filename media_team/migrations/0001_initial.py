@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('media_link', models.URLField(blank=True, max_length=300, null=True)),
                 ('logo_link', models.URLField(blank=True, max_length=300, null=True)),
-                ('event_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='central_events.events')),
+                ('event_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='central_branch.events')),
             ],
         ),
         migrations.CreateModel(
@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('selected_image', models.ImageField(blank=True, default=None, null=True, upload_to='Event Selected Images/')),
-                ('event_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='central_events.events')),
+                ('event_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='central_branch.events')),
             ],
         ),
     ]

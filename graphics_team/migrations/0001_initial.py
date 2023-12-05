@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('graphics_link', models.URLField(blank=True, max_length=300, null=True)),
-                ('event_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='central_events.events')),
+                ('event_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='central_branch.events')),
             ],
         ),
         migrations.CreateModel(
@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('selected_image', django_resized.forms.ResizedImageField(blank=True, crop=None, default=None, force_format='JPEG', keep_meta=True, null=True, quality=80, scale=1.0, size=[1920, 1080], upload_to='Event Banner Image/')),
-                ('event_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='central_events.events')),
+                ('event_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='central_branch.events')),
             ],
         ),
     ]
