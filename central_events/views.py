@@ -92,10 +92,10 @@ def event_creation_form_page(request):
                 messages.info(request,"Database Error Occured! Please try again later.")
             else:
                 #if the method returns true, it will redirect to the new page
-                return redirect('central_branch:event_creation_form2',get_event)
+                return redirect('central_events:event_creation_form2',get_event)
 
         elif(request.POST.get('cancel')):
-            return redirect('central_branch:event_control')
+            return redirect('central_events:event_control')
     return render(request,'Events/event_creation_form.html',context)
 
 @login_required
@@ -114,7 +114,7 @@ def event_creation_form_page2(request,event_id):
                 inter_branch_collaboration_list=inter_branch_collaboration_list,
                 intra_branch_collaboration=intra_branch_collaboration,
                 event_id=event_id)):
-                return redirect('central_branch:event_creation_form3',event_id)
+                return redirect('central_events:event_creation_form3',event_id)
             else:
                 messages.info(request,"Database Error Occured! Please try again later.")
 
@@ -147,7 +147,7 @@ def event_creation_form_page3(request,event_id):
             if(update_event_details==False):
                 messages.info(request, "An error Occured! Please Try again!")
             else:
-                return redirect('central_branch:event_control')
+                return redirect('central_events:event_control')
 
     return render(request,'Events/event_creation_form3.html',context)
 

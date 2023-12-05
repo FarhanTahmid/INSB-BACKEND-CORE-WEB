@@ -132,7 +132,7 @@
                       <tbody>
                         {% for event in events %}
                         <tr>
-                            <td><a style="color:blue;" href="{% url 'central_branch:event_dashboard' event.id %}">{{event.event_name }}</a></td>
+                            <td><a style="color:blue;" href="{% url 'central_events:event_dashboard' event.id %}">{{event.event_name }}</a></td>
                             <td>{{ event.event_organiser }}</td>
                             <td>{{ event.event_date }}</td>
                             
