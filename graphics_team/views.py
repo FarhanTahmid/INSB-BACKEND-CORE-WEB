@@ -10,8 +10,8 @@ from .renderData import GraphicsTeam
 from users.renderData import LoggedinUser
 from . import renderData
 from django.conf import settings
-from central_branch.models import Events
-from .models import Graphics_Banner_Image,Graphics_Link
+# from central_branch.models import Events
+# from .models import Graphics_Banner_Image,Graphics_Link
 import os
 
 # Create your views here.

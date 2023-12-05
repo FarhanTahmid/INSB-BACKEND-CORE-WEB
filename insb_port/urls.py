@@ -44,7 +44,7 @@ urlpatterns = [
     path('portal/SC_AG/',include("chapters_and_affinity_group.urls",namespace="sc_ag")),
      
     #Events Urls
-    path('', include('events.urls', namespace='events')),
+    # path('', include('events.urls', namespace='events')),
     
 ]
 urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

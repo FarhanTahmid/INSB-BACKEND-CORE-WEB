@@ -202,7 +202,8 @@ def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
             print(position)
             team=request.POST.get('sc_ag_team')
             print(team)
-            
+            if(Sc_Ag.add_sc_ag_members_to_panel(memberList=member_select_list,panel_id=panel_pk,position_id=position,team=team,sc_ag_primary=primary,request=request)):
+                return redirect('chapters_and_affinity_group:sc_ag_panel_details_officers', primary,panel_pk)
     
     context={
         'all_sc_ag':sc_ag,

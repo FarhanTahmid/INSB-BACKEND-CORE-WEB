@@ -8,9 +8,9 @@ from port.models import Roles_and_Position
 from django.contrib import messages
 from system_administration.models import Media_Data_Access
 from .renderData import MediaTeam
-from events.models import Events,InterBranchCollaborations
+# from events.models import Events,InterBranchCollaborations
 from django.db.models import Q
-from .models import Media_Link,Media_Images
+# from .models import Media_Link,Media_Images
 from django.conf import settings
 from . import renderData
 from users.renderData import LoggedinUser
