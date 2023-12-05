@@ -131,7 +131,21 @@ def sc_ag_panel_details(request,primary,panel_pk):
         # Delete panel
         if(request.POST.get('delete_panel')):
             if(Sc_Ag.delete_sc_ag_panel(request=request,panel_pk=panel_pk,sc_ag_primary=primary)):
-                return redirect('chapters_and_affinity_group:sc_ag_panels',primary)  
+                return redirect('chapters_and_affinity_group:sc_ag_panels',primary)
+        
+        # update panel settings
+        if(request.POST.get('save_changes')):
+            panel_tenure=request.POST['panel_tenure']
+            current_panel_check=request.POST.get('current_panel_check')
+            if current_panel_check is None:
+                current_panel_check=False
+            else:
+                current_panel_check=True
+            panel_start_date=request.POST['panel_start_date']
+            panel_end_date=request.POST['panel_end_date']
+            if(Sc_Ag.update_sc_ag_panel(is_current_check=current_panel_check,panel_end_date=panel_end_date,panel_pk=panel_pk,panel_start_date=panel_start_date,panel_tenure=panel_tenure,request=request,sc_ag_primary=primary)):
+                return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+            
 
     context={
         'all_sc_ag':sc_ag,

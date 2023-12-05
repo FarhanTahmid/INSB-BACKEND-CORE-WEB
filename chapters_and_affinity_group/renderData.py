@@ -65,12 +65,65 @@ class Sc_Ag:
                             return False
             new_sc_ag_panel=Panels.objects.create(year=tenure_year,creation_time=panel_start_time,current=current_check,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),panel_end_time=panel_end_time)
             new_sc_ag_panel.save()
+            messages.success(request,f"A new panel with Tenure {new_sc_ag_panel.year} was created!")
             return True
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
-        
+    
+    def update_sc_ag_panel(request,sc_ag_primary,panel_pk,panel_tenure,is_current_check,panel_start_date,panel_end_date):
+            # get the panel
+            panel_to_update=Panels.objects.get(pk=panel_pk)
+            if(is_current_check and (panel_to_update.current==False)):
+                # find panels which are current now and make them false
+                previous_current_panel=Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),current=True)
+                if(previous_current_panel.exists()):
+                    # Update the Position,Team of SC AG members in that panel as None
+                    for panel in previous_current_panel:
+                        if(Sc_Ag.make_panel_members_position_and_team_none_in_sc_ag_database(request=request,panel_id=panel.pk)):
+                            # set the current value of Panel to False
+                            panel.current=False
+                            panel.save()
+                        else:
+                            return False
+                # now get the members of the panel and update their team and Position in SC-AG members Table
+                members_in_panel=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=panel_pk))
+                for member in members_in_panel:
+                    if member.team is None:
+                        SC_AG_Members.objects.filter(member=Members.objects.get(ieee_id=member.member.ieee_id)).update(team=None,position=Roles_and_Position.objects.get(id=member.position.id))                
+                    else:
+                        SC_AG_Members.objects.filter(member=Members.objects.get(ieee_id=member.member.ieee_id)).update(team=Teams.objects.get(primary=member.team.primary),position=Roles_and_Position.objects.get(id=member.position.id))
+                #now update the panel
+                panel_to_update.current=True
+                panel_to_update.year=panel_tenure
+                panel_to_update.creation_time=panel_start_date
+                panel_to_update.panel_end_time=panel_end_date
+                panel_to_update.save()
+                messages.success(request,"Panel Information was updated!")
+                return True
+
+            elif(not is_current_check and panel_to_update.current):
+                if(Sc_Ag.make_panel_members_position_and_team_none_in_sc_ag_database(request=request,panel_id=panel_to_update.pk)):
+                    panel_to_update.current=False
+                    panel_to_update.year=panel_tenure
+                    panel_to_update.creation_time=panel_start_date
+                    panel_to_update.panel_end_time=panel_end_date
+                    panel_to_update.save()
+                    messages.success(request,"Panel Information was updated!")
+                    return True
+                else:
+                    return False
+            else:
+                panel_to_update.current=is_current_check
+                panel_to_update.year=panel_tenure
+                panel_to_update.creation_time=panel_start_date
+                panel_to_update.panel_end_time=panel_end_date
+                panel_to_update.save()
+                messages.success(request,"Panel Information was updated!")
+                return True
+            
+
     def delete_sc_ag_panel(request,sc_ag_primary,panel_pk):
         # get the panel to delete
         get_panel=Panels.objects.get(id=panel_pk,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary))
