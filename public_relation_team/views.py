@@ -3,7 +3,7 @@ from django.conf import settings
 from googleapiclient.discovery import build
 from central_branch import renderData
 from django.contrib.auth.decorators import login_required
-from central_branch.models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue
+from events.models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue
 from central_branch.renderData import Branch
 from django.contrib import messages
 from events_and_management_team.renderData import Events_And_Management_Team
