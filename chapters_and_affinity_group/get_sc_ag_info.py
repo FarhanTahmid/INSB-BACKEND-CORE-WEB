@@ -1,5 +1,6 @@
 import logging
 from port.models import Panels,Chapters_Society_and_Affinity_Groups,Roles_and_Position
+from users.models import Panel_Members
 from .models import SC_AG_Members
 from datetime import datetime
 from system_administration.system_error_handling import ErrorHandling
@@ -30,5 +31,28 @@ class SC_AG_Info:
             return Http404
     
     def get_panels_of_sc_ag(request,sc_ag_primary):
-        return Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).order_by('-current','-year')
+        try:
+            return Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).order_by('-current','-year')
+        except Exception as e:
+            SC_AG_Info.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return Http404
+        
+    def get_sc_ag_executive_positions(request,sc_ag_primary):
+        try:
+            return Roles_and_Position.objects.filter(role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),is_eb_member=True)
+        except Exception as e:
+            SC_AG_Info.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return Http404
     
+    def get_sc_ag_executives_from_panels(request,sc_ag_primary,panel_id):
+        get_panel_members=Panel_Members.objects.filter(
+            tenure=Panels.objects.get(id=panel_id),
+        )
+        sc_ag_eb_members=[]
+        for i in get_panel_members:
+            if i.position.is_eb_member:
+                sc_ag_eb_members.append(i)
+        return sc_ag_eb_members
+        
