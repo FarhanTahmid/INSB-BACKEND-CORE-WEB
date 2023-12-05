@@ -88,8 +88,8 @@
             {% if has_access_to_create_event %}
               <div style="justify-content:center;text-align:center;">  
                 <div class="btn-container">
-                  <a href="" class="btn btn-outline b-success text-success">Create a New Super Event</a>
-                  <a href="{% url 'central_branch:event_creation_form1' %}" class="btn btn-outline b-primary text-primary">Create a New Event</a>
+                  <a href="{% url 'events:super_event_creation' %}" class="btn btn-outline b-success text-success">Create a New Super Event</a>
+                  <a href="{% url 'events:event_creation_form1' %}" class="btn btn-outline b-primary text-primary">Create a New Event</a>
                 </div>
               </div> 
             {% endif %}

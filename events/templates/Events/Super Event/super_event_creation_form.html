@@ -16,7 +16,7 @@
             Super Event Creation Form
         </div>
         <div class="form">
-            <form method="POST" action = "{% url 'central_branch:super_event_creation' %}">
+            <form method="POST" action = "{% url 'events:super_event_creation' %}">
                 {% csrf_token %}
                 <div class="inputfield">
                     <label>Name:</label>
