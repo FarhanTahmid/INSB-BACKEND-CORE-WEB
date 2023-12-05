@@ -15,7 +15,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from membership_development_team.renderData import MDT_DATA
 from . import email_handler
 from port.renderData import PortData
-# from central_branch.models import Events
+from central_events.models import Events
 from django.db.models import Q
 
 

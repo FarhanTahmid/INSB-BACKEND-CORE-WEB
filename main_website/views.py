@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-# from central_branch.models import Events
+from central_events.models import Events
 from central_branch.renderData import Branch
 from main_website.models import Research_Papers,Blog
 from django.db.models import Q
@@ -74,7 +74,7 @@ def event_homepage(request):
 def Event_Details(request,event_id):
  
     '''Loads details for the corresponding event page on site'''
-    # get_event = Events.objects.get(id = event_id)
+    get_event = Events.objects.get(id = event_id)
     get_event=[]
     return render(request,"Event.html",{
         "event":get_event

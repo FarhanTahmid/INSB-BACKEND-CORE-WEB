@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branch-Super Event Creation Form- Part-1</title>
+    <link rel="stylesheet" href="{% static 'event_form.css' %}">
+</head>
+
+<body>
+    <div class="event_form">
+        <div class="title">
+            Super Event Creation Form
+        </div>
+        <div class="form">
+            <form method="POST" action = "{% url 'central_events:super_event_creation' %}">
+                {% csrf_token %}
+                <div class="inputfield">
+                    <label>Name:</label>
+                    <input type="text" name="super_event_name" class="input">
+                </div>
+                <div class="inputfield">
+                    <label>Description</label>
+                    <textarea type="text" name="super_event_description" placeholder="Write with in 500 words"
+                        class="textarea"></textarea>
+                </div>
+                <div class="inputfield">
+                    <label for="">Add a Probable Date For the Event</label>
+                    <input type="date" name="probable_date" class="input">
+                </div>
+                <div class="inputfield">
+                    <label for="">Add Final Date For the Event (If finalised)</label>
+                    <input type="date" name="final_date" class="input">
+                </div>
+                <div class="inputfield btn">
+                    <input type="submit" name="cancel" value="Cancel" class="btn">
+                    <input type="submit" value="Submit" name="Submit" class="btn">
+                </div>
+            </form>
+        </div>
+        {% for message in messages %}
+        <p>{{message}}</p>
+        {% endfor %}
+    </div>
+</body>
+
+</html>

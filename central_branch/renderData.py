@@ -3,7 +3,7 @@ from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_G
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
 from system_administration.models import MDT_Data_Access
-# from events.models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission
+from central_events.models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission
 from events_and_management_team.models import Venue_List, Permission_criteria
 from system_administration.render_access import Access_Render
 # from users.models import Executive_commitee,Executive_commitee_members
@@ -287,14 +287,14 @@ class Branch:
         except:
             return DatabaseError
     
-    # def load_all_events():
-    #     return Events.objects.all().order_by('-id')
-    # def load_all_mother_events():
-    #     '''This method loads all the mother/Super events'''
-    #     return SuperEvents.objects.all()
-    # def load_all_inter_branch_collaboration_options():
-    #     '''This loads all the chapters and Societies of the branch'''
-    #     return Chapters_Society_and_Affinity_Groups.objects.all()
+    def load_all_events():
+        return Events.objects.all().order_by('-id')
+    def load_all_mother_events():
+        '''This method loads all the mother/Super events'''
+        return SuperEvents.objects.all()
+    def load_all_inter_branch_collaboration_options():
+        '''This loads all the chapters and Societies of the branch'''
+        return Chapters_Society_and_Affinity_Groups.objects.all()
     
     # def load_all_event_type():
     #     return Type_of_Event.objects.all()
@@ -324,13 +324,13 @@ class Branch:
     def event_interBranch_Collaborations(event_id):
         '''this function loads all the Inter Branch Collaborations from the database. cross match with event_id'''
 
-        # interBranchCollaborations=InterBranchCollaborations.objects.filter(event_id=Events.objects.get(id=event_id))
-        pass
-        # return interBranchCollaborations
+        interBranchCollaborations=InterBranchCollaborations.objects.filter(event_id=Events.objects.get(id=event_id))
+
+        return interBranchCollaborations
 
     def event_IntraBranch_Collaborations(event_id):
         '''this function loads all the Intra Branch Collaborations from the database. cross match with event_id'''
         
-        # intraBranchCollaborations=IntraBranchCollaborations.objects.filter(event_id=Events.objects.get(id=event_id))
-        pass
-        # return intraBranchCollaborations
+        intraBranchCollaborations=IntraBranchCollaborations.objects.filter(event_id=Events.objects.get(id=event_id))
+
+        return intraBranchCollaborations

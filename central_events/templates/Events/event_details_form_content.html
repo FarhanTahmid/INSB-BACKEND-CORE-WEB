@@ -1,0 +1,92 @@
+{% load static %}
+{% block event_details_form %}
+    <div class="container">
+        <div class="padding">
+            <div class="row" >
+                <div class="col-sm-10">
+                    <div class="box">
+                        <div class="box-header" style="text-align:center;">
+                            <h1>Provide Event Collaboration Details</h1>
+                        </div>
+                        <!--Error Message-->
+                        <div class="py-3 text-center">
+                            {% for message in messages %}
+                                <p style="color:red" class="message">{{message}}</p>
+                            {% endfor %}
+                        </div>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="box-body">
+                                    <div class="form-group">
+                                        <label>Event Name <span style="color:red">*<span></label>
+                                            <div class="col-sm-10">
+                                            <input
+                                                placeholder="Event Name"
+                                                class="form-control w-75"
+                                                type="text"
+                                                autocomplete="off"
+                                                required
+                                                name="event_name"/>
+                                            </div>
+                                    </div>
+                                    <br>
+                                    <div class="form-group">
+                                        <label>Event Description:</label>
+                                        <div class="col-sm-10">
+                                            <textarea class="form-control" rows="20" placeholder="Description within 600 words" name="event_description"></textarea>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="form-group">
+                                        <label>Super Event of</label>
+                                            <div class="col-lg-6">
+                                                <select multiple class="form-control" name="super_event">
+                                                <option selected value="null">--------------------</option>
+                                                {% for super_event in super_events %}
+                                                    <option value={{super_event.id}}>{{super_event.super_event_name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Select Event Type</label>
+                                            <div class="col-lg-6">
+                                                <select multiple class="form-control" name="event_type">
+                                                <option selected value="null">--------------------</option>
+                                                    {% for event_type in event_types %}
+                                                    <option value={{event_type.id}}>{{event_type.event_type}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                    </div>
+                                    <br>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword3">Add a date for the Event</label>
+                                            <input
+                                                placeholder="Event Date"
+                                                name="event_date"
+                                                type="date"
+                                            />
+                                        </div>
+                                    </div>
+                                    <br>  
+                                    <div style="text-align: center;">
+                                        <input type="submit" name="cancel" class="btn btn-outline b-danger text-danger" value="Cancel">
+
+                                        <input type="submit" name="next" class="btn btn-outline b-success text-success" value="Continue to Collaborations Tab">
+
+                                        
+                                    </div>
+                                    <br> 
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock event_details_form %}
