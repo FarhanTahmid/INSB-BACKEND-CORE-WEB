@@ -39,8 +39,7 @@ class PortData:
             messages.error(request,"An internal Database error occured loading the Positions!")
             return False
     
-    def get_all_executive_positions_of_branch(request,sc_ag_primary):
-         
+    def get_all_executive_positions_with_sc_ag_id(request,sc_ag_primary):
         try:
             executive_positions=Roles_and_Position.objects.filter(is_eb_member=True,role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).all().order_by('id')
             return executive_positions

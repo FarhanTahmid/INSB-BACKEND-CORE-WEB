@@ -373,7 +373,7 @@ def panel_details(request,panel_id):
             
             
 
-    all_insb_executive_positions=PortData.get_all_executive_positions_of_branch(request,sc_ag_primary=1) #setting sc_ag_primary as 1, because Branch's Primary is 1 by default
+    all_insb_executive_positions=PortData.get_all_executive_positions_with_sc_ag_id(request,sc_ag_primary=1) #setting sc_ag_primary as 1, because Branch's Primary is 1 by default
     all_insb_officer_positions=PortData.get_all_officer_positions_with_sc_ag_id(request,sc_ag_primary=1)
     all_insb_volunteer_positions=PortData.get_all_volunteer_position_with_sc_ag_id(request,sc_ag_primary=1)
     all_insb_teams=PortData.get_teams_of_sc_ag_with_id(request,sc_ag_primary=1)
