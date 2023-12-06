@@ -62,8 +62,12 @@ def super_event_creation(request):
             super_event_description = request.POST.get('super_event_description')
             start_date = request.POST.get('probable_date')
             end_date = request.POST.get('final_date')
-            saving_data = SuperEvents(super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date,end_date=end_date)
-            saving_data.save()
+            if end_date=='':
+                saving_data = SuperEvents(super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date)
+                saving_data.save()
+            else:
+                saving_data = SuperEvents(super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date,end_date=end_date)
+                saving_data.save()
             return redirect('events:event_control')
         
         elif (request.POST.get('cancel')):
