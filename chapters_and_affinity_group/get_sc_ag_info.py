@@ -51,7 +51,7 @@ class SC_AG_Info:
     def get_sc_ag_executive_positions(request,sc_ag_primary):
         '''Gets all the executive positions for SC AG'''
         try:
-            return Roles_and_Position.objects.filter(role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),is_eb_member=True)
+            return Roles_and_Position.objects.filter(role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),is_sc_ag_eb_member=True)
         except Exception as e:
             SC_AG_Info.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
