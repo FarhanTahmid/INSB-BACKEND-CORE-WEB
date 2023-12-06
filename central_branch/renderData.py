@@ -334,3 +334,12 @@ class Branch:
         intraBranchCollaborations=IntraBranchCollaborations.objects.filter(event_id=Events.objects.get(id=event_id))
 
         return intraBranchCollaborations
+    
+    def delete_event(event_id):
+        ''' This function deletes event from database '''
+        try:
+            #Match event id and delete that event
+            Events.objects.get(id = event_id).delete()
+            return True
+        except:
+            return False
