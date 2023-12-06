@@ -202,7 +202,12 @@ def event_description(request,event_id):
             team_under = request.POST.get('team')
             team_member = request.POST.get('team_member')
             probable_date = request.POST.get('probable_date')
-            progress = request.POST.get('progression')    
+            progress = request.POST.get('progression') 
+
+            if request.POST.get('delete_event'):
+                print("Deleting event")
+
+
         context={
             'event_details':get_event_details,
             'event_venue':get_event_venue,
