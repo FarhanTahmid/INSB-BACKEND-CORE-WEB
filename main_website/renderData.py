@@ -2,7 +2,7 @@ from .models import HomePageTopBanner,BannerPictureWithStat
 from django.http import HttpResponseServerError
 from users.models import Members
 from membership_development_team.renderData import MDT_DATA
-from central_branch.models import Events
+# from central_branch.models import Events
 class HomepageItems:
     
     def getHomepageBannerItems():
@@ -40,4 +40,5 @@ class HomepageItems:
     
     def getEventCount():
         '''Gets all the event Count'''
-        return Events.objects.all().count()
+        # return Events.objects.all().count()
+        pass

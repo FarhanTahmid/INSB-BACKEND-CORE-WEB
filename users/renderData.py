@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import DatabaseError
 from PIL import Image
 from recruitment.models import recruitment_session,recruited_members
-from central_branch.models import Events
+# from central_branch.models import Events
 from system_administration.render_access import Access_Render
 from datetime import datetime
 from django.db.models import Q
@@ -205,7 +205,7 @@ def getTypeOfEventStats():
     event_stats_keys =[]
     event_stats_values=[]
     # all_event_type=Event_type.objects.all()
-    all_events_number = Events.objects.all().count()
+    # all_events_number = Events.objects.all().count()
     event_percentage ={}
     # for i in all_event_type:
     #     event_count = Events.objects.filter(event_type = i.pk).count()
@@ -229,7 +229,8 @@ def getEventNumberStat():
     year = datetime.date.today().year
     print(year)
     for i in range(5):
-        count = Events.objects.filter(event_date__year=(year-i)).count()
+        count=0
+        # count = Events.objects.filter(event_date__year=(year-i)).count()
         event_num.append(count)
     event_num.reverse()
     return event_num

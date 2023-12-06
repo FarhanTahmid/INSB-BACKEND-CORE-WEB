@@ -10,16 +10,6 @@ urlpatterns = [
     
     #central_homeage
     path('',views.central_home, name='central_home'),
-    #Event control page 
-    path('event_control',views.event_control_homepage, name='event_control'),
-    #Event Creation Form page 1
-    path('create_event/',views.event_creation_form_page,name='event_creation_form1'),
-    #Event Creation Form Page 2
-    path("create_event/<int:event_id>/page-2", views.event_creation_form_page2, name="event_creation_form2"),
-    #Event creation page 3
-    path("create_event/<int:event_id>/page-3", views.event_creation_form_page3, name="event_creation_form3"),
-    #event dashboard team
-    path('event_details/<int:event_id>',views.event_description,name='event_dashboard'),
     #teams page
     path('teams/',views.teams,name='teams'),
     #team details page
@@ -34,21 +24,17 @@ urlpatterns = [
     
     
     #for updating value in team member select box in event assigning
-    path('get_updated_options/', views.get_updated_options_for_event_dashboard, name='get_updated_options'),
+    # path('get_updated_options/', views.get_updated_options_for_event_dashboard, name='get_updated_options'),
     #others page
     path('others/',views.others,name="others"),
     #addresearch page
     path('add_research/',views.add_research,name="add_research"),
     #addblogs page
     path('add_blogs/',views.add_blogs,name="add_blogs"),
-    #Super Event Creation Form
-    path('create_super_event/',views.super_event_creation,name="super_event_creation"),
     
     #WEBSITE Management URL Path
     path('manage_website/homepage',views.manage_website_homepage,name="manage_website_home"),
 
-    path('manage_access',views.manage_view_access,name="manage_access")
-    
-    
-    
+    path('manage_access',views.manage_view_access,name="manage_access"),
+
 ]
