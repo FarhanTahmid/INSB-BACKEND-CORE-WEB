@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from events_and_management_team.models import Permission_criteria, Venue_List
 from django.core.files.storage import FileSystemStorage
+from logistics_and_operations_team.models import Logistic_Item_List
 
 from port.models import Chapters_Society_and_Affinity_Groups
 
@@ -46,7 +47,7 @@ class SuperEvents(models.Model):
 #The events table. Primary key is the id
 class Events(models.Model):
     event_name=models.CharField(null=False,blank=False,max_length=150)
-    # event_type=models.ForeignKey(Event_type,null=True,blank=True,on_delete=models.CASCADE)
+    event_type=models.ForeignKey(Event_Category,null=True,blank=True,on_delete=models.CASCADE)
     super_event_name=models.ForeignKey(SuperEvents,null=True,blank=True,on_delete=models.CASCADE)
     event_description=models.CharField(null=True,blank=True,max_length=1000)
     event_organiser=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE,default=5)#Default is set to 5 to keep branch as default organizer of events, If a new database is created change this number according to the id of the branch
@@ -111,3 +112,31 @@ class Event_Permission(models.Model):
     event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
     permission_id=models.ForeignKey(Permission_criteria,on_delete=models.CASCADE)
     permission_status=models.BooleanField(null=False,blank=False,default=False)
+
+#Table For Permissions for specific events
+class Event_Logistic_Items(models.Model):
+        event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
+        logistic_item_id=models.ForeignKey(Logistic_Item_List,null=True,blank=True,on_delete=models.CASCADE)
+        buying_status=models.BooleanField(null=False,blank=False,default=False)
+        spending_amount=models.FloatField(null=True,blank=True)
+        item_reciept=models.FileField(upload_to='Logistic Reciepts/',null=True,blank=True)
+
+#Table for Media Links and Images
+class Media_Links(models.Model):
+    event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
+    media_link=models.URLField(null=True,blank=True,max_length=300)
+class Media_Selected_Images(models.Model):
+    event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
+    selected_image=models.ImageField(upload_to='Event Selected Images/',null=True,blank=True,default=None)
+
+######################################################################################    
+
+
+#Table for Graphics Links and Images
+class Graphics_Links(models.Model):
+    event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
+    graphics_link=models.URLField(null=True,blank=True,max_length=300)
+class Graphics_Files(models.Model):
+    event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
+    graphics_file=models.FileField(null=True,blank=True,upload_to='Graphics Items/')
+######################################################################################

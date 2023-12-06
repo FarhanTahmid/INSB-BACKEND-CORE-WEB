@@ -62,12 +62,12 @@ def event_creation_form_page(request):
     
     #loading super/mother event at first
     super_events=Branch.load_all_mother_events()
-    # event_types=Branch.load_all_event_type()
+    event_types=Branch.load_all_event_type()
 
     
     context={
         'super_events':super_events,
-        # 'event_types':event_types,
+        'event_types':event_types,
     }
     
     
@@ -80,7 +80,7 @@ def event_creation_form_page(request):
             event_date=request.POST['event_date']
     
             
-            get_event=renderData.register_event_page1(
+            get_event=renderData.Central_E.register_event_page1(
                 super_event_name=super_event_name,
                 event_name=event_name,
                 event_type=event_type,
@@ -110,7 +110,7 @@ def event_creation_form_page2(request,event_id):
             inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
             intra_branch_collaboration=request.POST['intra_branch_collaboration']
             
-            if(renderData.register_event_page2(
+            if(renderData.Central_E.register_event_page2(
                 inter_branch_collaboration_list=inter_branch_collaboration_list,
                 intra_branch_collaboration=intra_branch_collaboration,
                 event_id=event_id)):
@@ -142,7 +142,7 @@ def event_creation_form_page3(request,event_id):
             permission_criterias_list_for_event=request.POST.getlist('permission_criteria')
             
             #updating data collected from part3 for the event
-            update_event_details=renderData.register_event_page3(venue_list=venue_list_for_event,permission_criteria_list=permission_criterias_list_for_event,event_id=event_id)
+            update_event_details=renderData.Central_E.register_event_page3(venue_list=venue_list_for_event,permission_criteria_list=permission_criterias_list_for_event,event_id=event_id)
             #if return value is false show an error message
             if(update_event_details==False):
                 messages.info(request, "An error Occured! Please Try again!")

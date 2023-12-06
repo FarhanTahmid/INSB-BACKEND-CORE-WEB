@@ -125,7 +125,6 @@ def dashboard(request):
     # Get the SC & AGS
     sc_ag=PortData.get_all_sc_ag(request=request)
 
-
     #Loading current user data from renderData.py
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file

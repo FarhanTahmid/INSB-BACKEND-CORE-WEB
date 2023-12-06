@@ -85,11 +85,11 @@
 
             <br>
             <h1 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;"><b>{{event_details.event_name}}</b></span></h1>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Organised By: <span style="color:#00629B;"><b>{{event_details.event_organiser}}</b></span>.</h4>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Organised By: <span style="color:#00629B;"><b>{{event_details.event_organiser.group_name}}</b></span>.</h4>
             {% if hasCollaboration %}
               <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">In Collaboration With:</h4>
               {% for i in interBranchCollaborations %}
-              <h5 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;">{{i.collaboration_with}}</span></h4>
+              <h5 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;">{{i.collaboration_with.group_name}}</span></h4>
               {% endfor %}
               {% for i in intraBranchCollaborations %}
               <h5 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;">{{i.collaboration_with}}</span></h4>
