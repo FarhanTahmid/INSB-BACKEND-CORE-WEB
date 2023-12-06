@@ -95,11 +95,11 @@ class PortData:
             return False
     
     def create_positions(request,sc_ag_primary,role,is_eb_member,is_sc_ag_eb_member,is_officer,is_co_ordinator,is_faculty,is_mentor):
-        '''Creates Positions in the Roles and Positions Table with Different attributes'''
+        '''Creates Positions in the Roles and Positions Table with Different attributes for sc ag and branch as well'''
         try:
             # get the last object of the model
             get_the_last_object=Roles_and_Position.objects.all().last()
-            # The logic of creating new position is to assign the id = previous objects id + 1.
+            # The logic of creating new position is to assign the id = las objects id + 1.
             # this ensures that ids never conflict with each other
             new_position=Roles_and_Position.objects.create(
                 id=get_the_last_object.id + 1,
@@ -113,4 +113,24 @@ class PortData:
         except Exception as e:
             PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+    
+    def create_team(request,sc_ag_primary,team_name):
+        '''Creates a Team with given name for sc ag and branch'''
+        try:    
+            get_the_last_team_primary=Teams.objects.all().last()
+            # The logic of creating new Team is to assign the primary = last objects primary + 1.
+            # this ensures that primary of teams never conflict with each other
+            new_team=Teams.objects.create(
+                team_name=team_name,
+                primary=get_the_last_team_primary.primary + 1,
+                team_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)
+            )
+            messages.success(request,f"A new team : {new_team.team_name} was created!")
+            new_team.save()
+            return True
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Error Creating Team. Something went wrong!")
             return False

@@ -462,11 +462,20 @@
                             </div>
                             
                             <div class="modal-body text-left p-lg">
-                                <p>Remember, If you choose to Delete the Panel, all the Members Position of the panel will be changed to General Members.<br>They won't be assigned to any teams. All the Panel data would be Deleted.</p>        
+                                <p>Create a new Team here for your Chapter/Affinity Group.</p>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md">
+                                            <label>Team Name</label>
+                                            <input placeholder="Give a Team Name" class="form-control w-75" type="text" name="team_name"/>
+                                        </div>
+                                    </div>
+                                </form>        
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                            <input type="submit" class="btn btn-danger p-x-md" name="delete_panel" value="Delete Panel"></input>                  
+                            <input type="submit" class="btn btn-success p-x-md" name="create_team" value="Create Team"></input>                  
                             </div>
                         </div><!-- /.modal-content -->
                     </div>

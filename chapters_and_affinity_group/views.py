@@ -193,15 +193,23 @@ def sc_ag_panel_details(request,primary,panel_pk):
                     faculty_position_check=True
                     
                 position_name=request.POST['position_name']
-                
+                # create new Position
                 if(PortData.create_positions(request=request,sc_ag_primary=primary,
                                           is_eb_member=False,
                                           is_officer=officer_position_check,
                                           is_sc_ag_eb_member=sc_ag_executive_position_check,is_mentor=mentor_position_check,
                                           is_faculty=faculty_position_check,is_co_ordinator=coordinator_position_check,role=position_name)):
                     return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
-                               
+            
+            #Create New TEam
+            if(request.POST.get('create_team')):
+                team_name=request.POST['team_name']
+                if(PortData.create_team(
+                    request=request,sc_ag_primary=primary,team_name=team_name
+                )):
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
 
+                
         context={
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
