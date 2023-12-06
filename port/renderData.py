@@ -94,3 +94,23 @@ class PortData:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
     
+    def create_positions(request,sc_ag_primary,role,is_eb_member,is_sc_ag_eb_member,is_officer,is_co_ordinator,is_faculty,is_mentor):
+        '''Creates Positions in the Roles and Positions Table with Different attributes'''
+        try:
+            # get the last object of the model
+            get_the_last_object=Roles_and_Position.objects.all().last()
+            # The logic of creating new position is to assign the id = previous objects id + 1.
+            # this ensures that ids never conflict with each other
+            new_position=Roles_and_Position.objects.create(
+                id=get_the_last_object.id + 1,
+                role=role,role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),
+                is_eb_member=is_eb_member,is_sc_ag_eb_member=is_sc_ag_eb_member,
+                is_officer=is_officer,is_co_ordinator=is_co_ordinator,is_faculty=is_faculty,is_mentor=is_mentor
+            )
+            new_position.save()
+            messages.success(request,f"New Position: {role} was created!")
+            return True
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
