@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import DatabaseError
 from PIL import Image
 from recruitment.models import recruitment_session,recruited_members
-from central_branch.models import Events
+from central_events.models import Events
 from system_administration.render_access import Access_Render
 from datetime import datetime
 from django.db.models import Q

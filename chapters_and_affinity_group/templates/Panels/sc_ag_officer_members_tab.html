@@ -291,15 +291,15 @@
                             <form method="POST">
                                 {% csrf_token %}
                                 <label style="margin-left:5px;">Select Position</label>
-                                <select id="position" name="position1">
-                                    {% for position in officer_positions %}
+                                <select id="position" name="sc_ag_officer_position">
+                                    {% for position in sc_ag_officer_positions %}
                                         <option value={{position.id}}>{{ position.role }}</option>
                                     {% endfor %} 
                                 </select>
                 
                                 <label style="margin-left:5px;">Select Team</label>
-                                <select id="team" name="team">
-                                    {% for team in teams %}
+                                <select id="team" name="sc_ag_team">
+                                    {% for team in sc_ag_teams %}
                                         <option value={{team.primary}}>{{ team.team_name }}</option>
                                     {% endfor %} 
                                 </select>
@@ -319,14 +319,14 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for member in insb_members %}
+                                                {% for member in sc_ag_members %}
                                                 <tr>
-                                                    <td>{{ member.name }}</td>
-                                                    <td>{{ member.ieee_id }}</td>
+                                                    <td>{{ member.member.name }}</td>
+                                                    <td>{{ member.member.ieee_id }}</td>
                                                     <td>{{ member.position }}</td>
-                                                    <td>{{ member.email_ieee }}</td>
+                                                    <td>{{ member.member.email_ieee }}</td>
                                                     <td>
-                                                        <input type="checkbox" id="select" name="member_select1" value={{member.ieee_id}}>
+                                                        <input type="checkbox" id="select" name="member_select" value={{member.member.ieee_id}}>
                                                     </td>
                                                 </tr>
                                                 {% endfor %}
@@ -338,7 +338,7 @@
                                 <div class="modal-footer">
                                 <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
                             
-                                    <input type="submit" class="btn primary p-x-md" name="add_officer_to_panel" value="Add Officer Member"></input>  
+                                    <input type="submit" class="btn primary p-x-md" name="add_officer_to_sc_ag_panel" value="Add Officer Member"></input>  
                                 </div>
                             </form>
                 

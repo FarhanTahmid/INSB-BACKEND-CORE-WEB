@@ -1,5 +1,6 @@
 from django.contrib import admin
-from . models import Events,SuperEvents,Event_Venue,InterBranchCollaborations,IntraBranchCollaborations,Media_Links,Media_Selected_Images
+from . models import Media_Links,Media_Selected_Images
+from central_events.models import Events,SuperEvents,Event_Venue,InterBranchCollaborations,IntraBranchCollaborations
 # Register your models here.
 
 #Creating customized View For DJANGO Admin
@@ -26,5 +27,3 @@ class Media_Links(admin.ModelAdmin):
 @admin.register(Media_Selected_Images)
 class Media_Links(admin.ModelAdmin):
     list_display=['event_id','selected_image']
-
-

@@ -1,5 +1,5 @@
 from django.db import models
-from central_branch.models import Events
+from central_events.models import Events
 from django_resized import ResizedImageField
 
 # Create your models here.
