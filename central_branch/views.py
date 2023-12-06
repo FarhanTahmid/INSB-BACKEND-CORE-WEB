@@ -22,7 +22,7 @@ from datetime import datetime
 from django.utils.datastructures import MultiValueDictKeyError
 from users.renderData import Alumnis
 
-
+#testing
 # Create your views here.
 
 def central_home(request):
