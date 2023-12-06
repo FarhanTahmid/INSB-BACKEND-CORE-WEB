@@ -20,23 +20,21 @@
                             <div class="box-body">
                                 <div class="form-group">
                                     <label>Select Probable Venues For the Event: (Press CTRL to select multiple options) </label>
-                                        <div class="col-lg-6">
-                                            <select multiple class="form-control" name="event_venues">
-                                            {% for venue in venues %}
-                                                <option value={{venue.id}}>{{venue.venue_name}}</option>
-                                            {% endfor %}
-                                            </select>
-                                        </div>
+                                    <select multiple class="form-control" name="event_venues">
+                                    {% for venue in venues %}
+                                        <option value={{venue.id}}>{{venue.venue_name}}</option>
+                                    {% endfor %}
+                                    </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label>Select Permission Criterias For the Event: (Press CTRL to select multiple options) <span style="color:red">*<span></label>
-                                        <select multiple class="form-control" name="permission_criteria">
-                                            <option value="null" selected>----------</option>
-                                            {% for permission in permission_criterias %}
-                                            <option value={{permission.id}}>{{permission.permission_name}}</option>
-                                            {% endfor %}
-                                        </select>
+                                    <select multiple class="form-control" name="permission_criteria">
+                                        <option value="null" selected>----------</option>
+                                        {% for permission in permission_criterias %}
+                                        <option value={{permission.id}}>{{permission.permission_name}}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                                     
                                 <div style="text-align: center;">
