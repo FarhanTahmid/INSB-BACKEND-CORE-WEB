@@ -91,17 +91,27 @@ def event_creation_form_page(request):
         'event_types':event_types,
     }
     
-    
+    '''function for creating event'''
+
     if(request.method=="POST"):
+
+        ''' Checking to see if the next button is clicked '''
+
         if(request.POST.get('next')):
-            super_event_name=request.POST.get('super_event')
+
+
+
+            '''Getting data from page and calling the register_event_page1 function to save the event page 1 to database'''
+
+            super_event_id=request.POST.get('super_event')
             event_name=request.POST['event_name']
             event_description=request.POST['event_description']
             event_type = request.POST['event_type']
             event_date=request.POST['event_date']
 
+            #It will return True if register event page 1 is success
             get_event=renderData.Central_E.register_event_page1(
-                super_event_name=super_event_name,
+                super_event_id=super_event_id,
                 event_name=event_name,
                 event_type=event_type,
                 event_description=event_description,
@@ -198,16 +208,15 @@ def event_description(request,event_id):
         get_event_venue = Event_Venue.objects.filter(event_id = get_event_details.id)  
         
         if request.method == "POST":
-            #FOR TASK ASSIGNING
-            team_under = request.POST.get('team')
-            team_member = request.POST.get('team_member')
-            probable_date = request.POST.get('probable_date')
-            progress = request.POST.get('progression') 
-
             if request.POST.get('delete_event'):
-                print("Deleting event")
+                get_event_details.delete()
+                return redirect('central_events:event_control')
 
-
+        #FOR TASK ASSIGNING
+        # team_under = request.POST.get('team')
+        # team_member = request.POST.get('team_member')
+        # probable_date = request.POST.get('probable_date')
+        # progress = request.POST.get('progression')    
         context={
             'event_details':get_event_details,
             'event_venue':get_event_venue,

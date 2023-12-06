@@ -4,11 +4,11 @@ from port.models import Chapters_Society_and_Affinity_Groups
 
 class Central_E:
 
-    def register_event_page1(super_event_name,event_name,event_type,event_description,event_date):
+    def register_event_page1(super_event_id,event_name,event_type,event_description,event_date):
             '''This method creates an event and registers data which are provided in event page1. Returns the id of the event if the method can create a new event successfully
             TAKES SUPER EVENT NAME, EVENT NAME, EVENT DESCRIPTION AS STRING. TAKES PROBABLE & FINAL DATE ALSO AS INPUT'''
             
-            if(super_event_name=="null"):
+            if(super_event_id=="null"):
                     
                     #now create the event as super event is null
                     if(event_date==''):
@@ -43,10 +43,10 @@ class Central_E:
                     if(event_date==''):
                         
                         try:
-                            get_super_event_id = SuperEvents.objects.get(id = super_event_name)
+                            get_super_event_id = SuperEvents.objects.get(id = super_event_id)
                             print(get_super_event_id.super_event_name)
                             new_event=Events(
-                            super_event_name=get_super_event_id,
+                            super_event_id=get_super_event_id,
                             event_name=event_name,
                             event_description=event_description,
                             event_type = Event_Category.objects.get(id = int(event_type)),
@@ -57,10 +57,10 @@ class Central_E:
                             return False #general Error
                     else:
                         try:
-                            get_super_event_id = SuperEvents.objects.get(id = super_event_name)
+                            get_super_event_id = SuperEvents.objects.get(id = super_event_id)
                             print(get_super_event_id.super_event_name)
                             new_event=Events(
-                            super_event_name=get_super_event_id,
+                            super_event_id=get_super_event_id,
                             event_name=event_name,
                             event_description=event_description,
                             event_type = Event_Category.objects.get(id = int(event_type)),
