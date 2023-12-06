@@ -21,11 +21,10 @@
                                 <div class="form-group">
                                     <label>Select Probable Venues For the Event: (Press CTRL to select multiple options) </label>
                                     <select multiple class="form-control" name="event_venues">
-                                    {% for venue in venues %}
-                                        <option value={{venue.id}}>{{venue.venue_name}}</option>
-                                    {% endfor %}
+                                        {% for venue in venues %}
+                                            <option value={{venue.id}}>{{venue.venue_name}}</option>
+                                        {% endfor %}
                                     </select>
-                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label>Select Permission Criterias For the Event: (Press CTRL to select multiple options) <span style="color:red">*<span></label>
