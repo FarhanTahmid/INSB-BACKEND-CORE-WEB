@@ -4,7 +4,7 @@ from .models import Event_Category,SuperEvents,Events,InterBranchCollaborations,
 
 @admin.register(Event_Category)
 class Event_Category(admin.ModelAdmin):
-    list_display = ['id','event_category']
+    list_display = ['id','event_category','event_category_for']
 @admin.register(SuperEvents)
 class Super_Events(admin.ModelAdmin):
     list_display = ['super_event_name','super_event_description','start_date','end_date']

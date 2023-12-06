@@ -3,7 +3,6 @@ from django.urls import reverse
 from events_and_management_team.models import Permission_criteria, Venue_List
 from django.core.files.storage import FileSystemStorage
 from logistics_and_operations_team.models import Logistic_Item_List
-
 from port.models import Chapters_Society_and_Affinity_Groups
 
 # Create your models here.
@@ -18,8 +17,10 @@ event_proposal_files=FileSystemStorage(location='Event Proposals')
 ####### THIS BLOCK OF CODES REPRESENTS THE TABLES FOR SPECIFIC CREATED EVENTS #########
 
 # Event Category Table
+#Event categories are Group based.
 class Event_Category(models.Model):
     event_category=models.CharField(null=False,blank=False,max_length=60)
+    event_category_for = models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
     
     class Meta:
         verbose_name="Event Category"

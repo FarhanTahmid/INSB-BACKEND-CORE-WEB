@@ -296,8 +296,8 @@ class Branch:
         '''This loads all the chapters and Societies of the branch'''
         return Chapters_Society_and_Affinity_Groups.objects.all()
     
-    def load_all_event_type():
-        return Event_Category.objects.all().order_by('-id')
+    def load_all_event_type_for_Group1():
+        return Event_Category.objects.filter(event_category_for = Chapters_Society_and_Affinity_Groups.objects.get(primary = 1))
     
     
     
