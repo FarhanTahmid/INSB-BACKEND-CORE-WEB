@@ -97,7 +97,32 @@
             {% endif %}
 
             
+            <br><br>
+            <!-- Add Delete Button -->
+            <div class="btn-container">
+              <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal">Delete Event</button>
+            </div>
 
+            <!-- Confirm Delete Modal -->
+            <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">
+                          <p>Are you sure you want to delete this event?</p>
+                      </div>
+                      <div class="modal-footer">
+                          <button onclick="deleteEvent()" class="btn btn-outline-danger buttons" data-dismiss="modal">Delete</button>
+                          <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                      </div>
+                  </div>
+              </div>
+            </div>
             
             
         </div>
@@ -123,6 +148,26 @@
     {% endblock common_js %}
 
     <script src="{% static 'table_search.js'%}"></script>
+
+    <script>
+      function showDeleteModal() {
+          var modal = document.getElementById('deleteModal');
+          modal.style.display = 'block';
+      }
+  
+      function closeDeleteModal() {
+          var modal = document.getElementById('deleteModal');
+          modal.style.display = 'none';
+      }
+  
+      function deleteEvent() {
+          // Add logic here to delete the event
+          // You may want to make an AJAX request to the server to perform the actual deletion
+          // After deletion, you can redirect the user or update the UI as needed
+          // For simplicity, this example just closes the modal
+          closeDeleteModal();
+      }
+  </script>
 
 </body>
 </html>
