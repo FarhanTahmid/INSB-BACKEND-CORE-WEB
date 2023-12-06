@@ -200,13 +200,12 @@ def event_description(request,event_id):
             hasCollaboration=True
         
         
-
+        get_event_venue = Event_Venue.objects.filter(event_id = get_event_details.id)
         get_all_team_name = Branch.load_teams()
-        get_event_details = Events.objects.get(id = event_id)
 
+        #Getting the event which the user wants to delete
+        get_event_details = Events.objects.get(id = event_id)
         #print(get_event_details.super_event_name.id)
-        get_event_venue = Event_Venue.objects.filter(event_id = get_event_details.id)  
-        
         if request.method == "POST":
             if request.POST.get('delete_event'):
                 get_event_details.delete()
