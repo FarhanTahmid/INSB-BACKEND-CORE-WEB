@@ -231,7 +231,7 @@ def getEventNumberStat():
     print(year)
     for i in range(5):
         count=0
-        # count = Events.objects.filter(event_date__year=(year-i)).count()
+        count = Events.objects.filter(event_date__year=(year-i)).count()
         event_num.append(count)
     event_num.reverse()
     return event_num
