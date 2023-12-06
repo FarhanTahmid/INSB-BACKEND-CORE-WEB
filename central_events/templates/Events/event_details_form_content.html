@@ -56,7 +56,7 @@
                                                 <select multiple class="form-control" name="event_type">
                                                 <option selected value="null">--------------------</option>
                                                     {% for event_type in event_types %}
-                                                    <option value={{event_type.id}}>{{event_type.event_category}}</option>
+                                                    <option value={{event_type.id}}>{{event_type.event_category | title }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>

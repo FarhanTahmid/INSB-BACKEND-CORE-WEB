@@ -2,10 +2,10 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from central_branch.renderData import Branch
-
+from port.models import Chapters_Society_and_Affinity_Groups
 from central_branch.view_access import Branch_View_Access
 from . import renderData
-from .models import Event_Venue, Events, SuperEvents
+from .models import Event_Venue, Events, SuperEvents,Event_Category
 from django.contrib import messages
 
 from events_and_management_team.renderData import Events_And_Management_Team
@@ -25,7 +25,25 @@ def event_control_homepage(request):
     if(request.method=="POST"):
         if request.POST.get('create_new_event'):
             print("Create")
-    
+        
+        #Creating new event type for Group 1 
+        elif request.POST.get('add_event_type'):
+            event_type = request.POST.get('event_type')
+            event_type_lower = event_type.lower()
+            try:
+                registered_event_category = Event_Category.objects.get(event_category = event_type_lower,event_category_for=Chapters_Society_and_Affinity_Groups.objects.get(primary = 1))
+                registered_event_category = registered_event_category.event_category.lower()
+                print(registered_event_category)
+                if event_type_lower == registered_event_category:
+                    print("Already exists")
+                else:
+                    new_event_type = Event_Category.objects.create(event_category=event_type_lower,event_category_for = Chapters_Society_and_Affinity_Groups.objects.get(primary = 1))
+                    new_event_type.save()
+            except:
+                print("Does not exist")
+                new_event_type = Event_Category.objects.create(event_category=event_type_lower,event_category_for = Chapters_Society_and_Affinity_Groups.objects.get(primary = 1))
+                new_event_type.save()
+
     return render(request,'Events/event_homepage.html',context)
 
 @login_required
@@ -60,9 +78,9 @@ def event_creation_form_page(request):
     
     #######load data to show in the form boxes#########
     
-    #loading super/mother event at first
+    #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
     super_events=Branch.load_all_mother_events()
-    event_types=Branch.load_all_event_type()
+    event_types=Branch.load_all_event_type_for_Group1()
 
     
     context={
@@ -78,8 +96,7 @@ def event_creation_form_page(request):
             event_description=request.POST['event_description']
             event_type = request.POST['event_type']
             event_date=request.POST['event_date']
-    
-            
+
             get_event=renderData.Central_E.register_event_page1(
                 super_event_name=super_event_name,
                 event_name=event_name,

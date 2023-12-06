@@ -90,6 +90,7 @@
                 <div class="btn-container">
                   <a href="{% url 'central_events:super_event_creation' %}" class="btn btn-outline b-success text-success">Create a New Super Event</a>
                   <a href="{% url 'central_events:event_creation_form1' %}" class="btn btn-outline b-primary text-primary">Create a New Event</a>
+                  <button type="button" class="btn btn-outline-success buttons" data-toggle="modal" data-target="#EventTypeModal">Create a New Event Type</button>
                 </div>
               </div> 
             {% endif %}
@@ -167,6 +168,33 @@
         {% endblock theme_switcher %}
     
     </div>
+
+
+    <div class="modal fade" id="EventTypeModal" tabindex="-1" role="dialog" aria-labelledby="EventTypeModalLabel" aria-hidden="true">
+        
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="addModalLabel">Add Event Type</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                <form method="POST">
+                  {% csrf_token %}
+                
+                <label for="label">Event Type:</label>
+                <input type="text" id="label" name="event_type">
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-outline-success txt-success buttons" name="add_event_type" value="Add">Add</button>
+                <button  class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              </div>
+            </form>
+          </div>
+      </div>
+  </div>
     <!-- app end-->
 
     {% block common_js %}
