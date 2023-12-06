@@ -76,7 +76,7 @@ class SC_AG_Info:
             )
             sc_ag_eb_members=[]
             for i in get_panel_members:
-                if i.position.is_eb_member:
+                if i.position.is_sc_ag_eb_member:
                     sc_ag_eb_members.append(i)
             return sc_ag_eb_members
         except Exception as e:
@@ -84,7 +84,7 @@ class SC_AG_Info:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return Http404
         
-    def get_ac_ag_officers_from_panels(request,panel_id):
+    def get_sc_ag_officers_from_panels(request,panel_id):
         '''Gets all the officers of the panel'''
         try:
             get_panel_members=Panel_Members.objects.filter(
@@ -98,4 +98,20 @@ class SC_AG_Info:
         except Exception as e:
             SC_AG_Info.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            return Http404 
+            return Http404
+    
+    def get_sc_ag_volunteer_from_panels(request,panel_id):
+        '''Gets all the volunteers of the panel'''
+        try:
+            get_panel_members=Panel_Members.objects.filter(
+                tenure=Panels.objects.get(id=panel_id),
+            )
+            sc_ag_volunteer_members=[]
+            for i in get_panel_members:
+                if(not i.position.is_eb_member and not i.position.is_sc_ag_eb_member and not i.position.is_co_ordinator and not i.position.is_officer and not i.position.is_faculty and not i.position.is_mentor):
+                    sc_ag_volunteer_members.append(i)
+            return sc_ag_volunteer_members
+        except Exception as e:
+            SC_AG_Info.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return Http404
