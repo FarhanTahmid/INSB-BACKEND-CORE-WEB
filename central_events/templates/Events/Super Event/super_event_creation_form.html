@@ -70,20 +70,13 @@
         
         <!-- ############ PAGE START-->
         <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
-            
-            <!--Instruction Section Start-->
-            {% block instruction %}
-                {% include "Events/instructions.html" %}
-            {% endblock instruction %}
-            <!--Instruction Section End-->
-
             <br>
             <br>
-            
         </div>
         <!--PAGE END-->
 
         <!--TabView for event creation-->
+        
         <div>
             {% block super_event_creation_form %}
                 {% include "Events/Super Event/super_event_details_form_content.html" %}
