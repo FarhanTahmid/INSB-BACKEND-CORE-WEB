@@ -18,11 +18,9 @@ class Central_E:
                             new_event=Events(
                             event_name=event_name,
                             event_description=event_description,
-                            event_type = Event_Category.objects.get(id = int(event_type)),
-                            event_date=event_date
+                            event_type = Event_Category.objects.get(id = int(event_type))
                             )
                             new_event.save()
-                            
                             return new_event.id
                         except:
                             return False #general error
@@ -46,6 +44,7 @@ class Central_E:
                         
                         try:
                             get_super_event_id = SuperEvents.objects.get(id = super_event_name)
+                            print(get_super_event_id.super_event_name)
                             new_event=Events(
                             super_event_name=get_super_event_id,
                             event_name=event_name,

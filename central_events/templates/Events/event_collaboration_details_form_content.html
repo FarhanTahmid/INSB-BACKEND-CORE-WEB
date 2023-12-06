@@ -20,16 +20,13 @@
                             <div class="box-body">
                                 <div class="form-group">
                                     <label>Inter Branch Collaboration With: (Press CTRL to select multiple options) </label>
-                                        <div class="col-lg-6">
-                                            <select multiple class="form-control" name="inter_branch_collaboration">
-                                            <option selected value="null">--------------------</option>
-                                            {% for inter_branch_collaboration_option in inter_branch_collaboration_options %}
-                                                <option value={{inter_branch_collaboration_option.id}}>
-                                                {{inter_branch_collaboration_option.group_name}}</option>
-                                            {% endfor %}
-                                            </select>
-                                        </div>
-                                    </div>
+                                    <select multiple class="form-control" name="inter_branch_collaboration">
+                                    <option selected value="null">--------------------</option>
+                                    {% for inter_branch_collaboration_option in inter_branch_collaboration_options %}
+                                        <option value={{inter_branch_collaboration_option.id}}>
+                                        {{inter_branch_collaboration_option.group_name}}</option>
+                                    {% endfor %}
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label>Intra Branch Collaboration With: <span style="color:red">*<span></label>
