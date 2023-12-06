@@ -36,13 +36,12 @@ def event_control_homepage(request):
                 print(registered_event_category)
                 if event_type_lower == registered_event_category:
                     print("Already exists")
-                else:
-                    new_event_type = Event_Category.objects.create(event_category=event_type_lower,event_category_for = Chapters_Society_and_Affinity_Groups.objects.get(primary = 1))
-                    new_event_type.save()
+                    return redirect('events:event_control') 
             except:
                 print("Does not exist")
                 new_event_type = Event_Category.objects.create(event_category=event_type_lower,event_category_for = Chapters_Society_and_Affinity_Groups.objects.get(primary = 1))
                 new_event_type.save()
+                return redirect('events:event_control')
 
     return render(request,'Events/event_homepage.html',context)
 
