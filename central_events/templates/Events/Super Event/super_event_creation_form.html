@@ -1,50 +1,108 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Branch-Super Event Creation Form- Part-1</title>
-    <link rel="stylesheet" href="{% static 'event_form.css' %}">
+    <meta charset="utf-8" />
+    <title>Create Event | IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+    <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
+
+    <style>
+        body, html {
+            margin: 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .btn-container {
+            text-align: center;
+        }
+
+        .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+        }
+
+        /* Media query for smaller screens (adjust the breakpoint as needed) */
+        @media (max-width: 768px) {
+            .btn {
+                width: 100%; /* Make the button full width on smaller screens */
+            }
+        }
+    </style>
 </head>
-
 <body>
-    <div class="event_form">
-        <div class="title">
-            Super Event Creation Form
-        </div>
-        <div class="form">
-            <form method="POST" action = "{% url 'central_events:super_event_creation' %}">
-                {% csrf_token %}
-                <div class="inputfield">
-                    <label>Name:</label>
-                    <input type="text" name="super_event_name" class="input">
-                </div>
-                <div class="inputfield">
-                    <label>Description</label>
-                    <textarea type="text" name="super_event_description" placeholder="Write with in 500 words"
-                        class="textarea"></textarea>
-                </div>
-                <div class="inputfield">
-                    <label for="">Add a Probable Date For the Event</label>
-                    <input type="date" name="probable_date" class="input">
-                </div>
-                <div class="inputfield">
-                    <label for="">Add Final Date For the Event (If finalised)</label>
-                    <input type="date" name="final_date" class="input">
-                </div>
-                <div class="inputfield btn">
-                    <input type="submit" name="cancel" value="Cancel" class="btn">
-                    <input type="submit" value="Submit" name="Submit" class="btn">
-                </div>
-            </form>
-        </div>
-        {% for message in messages %}
-        <p>{{message}}</p>
-        {% endfor %}
-    </div>
-</body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
 
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+            {% block sidebar %}
+                {% include 'users/sidebar.html' %}
+            {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+                {% include 'navbar.html' %}
+            {% endblock navbar %}
+        </div>
+        <!--navbar content-->
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+            <br>
+            <br>
+        </div>
+        <!--PAGE END-->
+
+        <!--TabView for event creation-->
+        
+        <div>
+            {% block super_event_creation_form %}
+                {% include "Events/Super Event/super_event_details_form_content.html" %}
+            {% endblock super_event_creation_form %}
+            <div>
+                {% for message in messages %}
+                    <p>{{message}}</p>
+                {% endfor %}
+                <p></p>
+            </div>
+        </div>
+        <!--End of TabView-->
+
+        <!--Theme Switcher-->
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+    
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+
+    <script src="{% static 'tab_view.js'%}"></script>
+
+</body>
 </html>
