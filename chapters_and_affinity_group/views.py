@@ -10,6 +10,10 @@ from datetime import datetime
 from django.http import Http404,HttpResponseBadRequest
 import logging
 import traceback
+from django.contrib.auth.decorators import login_required
+from membership_development_team.models import Renewal_Sessions,Renewal_requests
+from central_branch.view_access import Branch_View_Access
+
 
 
 # Create your views here.
@@ -32,6 +36,7 @@ def sc_ag_homepage(request,primary):
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
 
+@login_required
 def sc_ag_members(request,primary):
     sc_ag=PortData.get_all_sc_ag(request=request)
     get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
@@ -74,6 +79,7 @@ def sc_ag_members(request,primary):
     }
     return render(request,'Members/sc_ag_members.html',context=context)
 
+@login_required
 def sc_ag_panels(request,primary):
     sc_ag=PortData.get_all_sc_ag(request=request)
     get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
@@ -108,6 +114,7 @@ def sc_ag_panels(request,primary):
     }
     return render(request,'Panels/panel_homepage.html',context=context)
 
+@login_required
 def sc_ag_panel_details(request,primary,panel_pk):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -225,7 +232,8 @@ def sc_ag_panel_details(request,primary,panel_pk):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request") 
-                
+
+@login_required               
 def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -280,7 +288,7 @@ def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
         return HttpResponseBadRequest("Bad Request")
         
         
-        
+@login_required    
 def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -338,6 +346,7 @@ def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
 
+@login_required
 def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
     get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
@@ -359,3 +368,89 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
 
     }
     return render(request,'Panels/sc_ag_alumni_members_tab.html',context=context)
+
+@login_required
+def sc_ag_membership_renewal_sessions(request,primary):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+    
+    #Load all sessions at first from Central Branch
+    sessions=Renewal_Sessions.objects.order_by('-id')
+    
+    context={
+        'all_sc_ag':sc_ag,
+        'sc_ag_info':get_sc_ag_info,
+        'sessions':sessions,
+        'is_branch':False,
+    }
+    return render(request,"Renewal/renewal_homepage.html",context=context)
+
+def sc_ag_renewal_session_details(request,primary,renewal_session):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+    
+    # get the session
+    renewal_session=Renewal_Sessions.objects.get(pk=renewal_session)
+    
+    if(int(primary)==2):
+        get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,pes_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+    elif(int(primary)==3):
+        get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,ras_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+    elif(int(primary)==4):
+        get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,ias_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+    elif(int(primary)==5):
+        get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,wie_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+
+    context={
+        'all_sc_ag':sc_ag,
+        'sc_ag_info':get_sc_ag_info,
+        'is_branch':False,
+        'session_id':renewal_session.pk,
+        'session_info':renewal_session,
+        'requests':get_renewal_requests,
+    }
+    return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context=context)
+
+@login_required
+def sc_ag_renewal_excel_sheet(request,primary,renewal_session):
+    try:
+        response=Sc_Ag.generate_renewal_excel_sheet(request=request,renewal_session_id=renewal_session,sc_ag_primary=primary)
+        if(not response):
+            return redirect('chapters_and_affinity_group:sc_ag_membership_renewal_details',primary,renewal_session)
+        else:
+            return response
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+        
+@login_required
+def event_control_homepage(request,primary):
+
+    '''This is the event control homepage view function for rest of the groups, except 1'''
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        is_branch= False
+        has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
+        
+        #loading all events for society affinity groups now
+        events= Branch.load_all_events_for_groups(primary)
+        print(events)
+
+
+        context={
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'is_branch':is_branch,
+            'has_access_to_create_event':has_access_to_create_event,
+            'events':events,
+        }
+        return render(request,"Events/event_homepage.html",context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
