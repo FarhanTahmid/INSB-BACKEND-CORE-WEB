@@ -10,6 +10,7 @@ from datetime import datetime
 from django.http import Http404,HttpResponseBadRequest
 import logging
 import traceback
+from central_branch.view_access import Branch_View_Access
 
 
 # Create your views here.
@@ -364,9 +365,11 @@ def event_control_homepage(request,primary):
     sc_ag=PortData.get_all_sc_ag(request=request)
     get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
     is_branch= False
+    has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
     context={
         'all_sc_ag':sc_ag,
         'sc_ag_info':get_sc_ag_info,
         'is_branch':is_branch,
+        'has_access_to_create_event':has_access_to_create_event,
     }
     return render(request,"Events/event_homepage.html",context)

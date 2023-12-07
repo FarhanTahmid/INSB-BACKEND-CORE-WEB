@@ -97,7 +97,12 @@
 
 
             <br>
+            {% if is_branch %}
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to the <span><b>Events</b></span> of <span style="color:#00629B;">IEEE NSU Student Branch</b></span></h2>
+            {% else %}
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to the <span><b>Events</b></span> of <span style="color:#00629B;">{{sc_ag_info.group_name}}</b></span></h2>
+            {% endif %}
+
             {% if has_access_to_create_event %}
               <div style="justify-content:center;text-align:center;"> 
                 {% for message in messages %}

@@ -27,6 +27,7 @@ from django.http import Http404,HttpResponseBadRequest
 import logging
 import traceback
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
+from central_events.forms import EventForm
 
 
 # Create your views here.
@@ -736,6 +737,7 @@ def event_creation_form_page(request):
     
     #######load data to show in the form boxes#########
     try:
+        form = EventForm()
         sc_ag=PortData.get_all_sc_ag(request=request)
 
         #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
@@ -745,6 +747,7 @@ def event_creation_form_page(request):
             'super_events':super_events,
             'event_types':event_types,
             'all_sc_ag':sc_ag,
+            'form':form,
         }
         
         '''function for creating event'''
