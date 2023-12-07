@@ -14,6 +14,8 @@ import traceback
 from central_branch.view_access import Branch_View_Access
 from django.contrib import messages
 from central_events.models import Events
+from central_events.forms import EventForm
+from events_and_management_team.renderData import Events_And_Management_Team
 
 
 # Create your views here.
@@ -452,6 +454,151 @@ def event_description(request,primary,event_id):
         }
         return render(request,"Events/event_description.html",context)
     
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+@login_required
+def event_creation_form_page(request,primary):
+    #######load data to show in the form boxes#########
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        is_branch=False
+        form = EventForm()
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
+        super_events=Branch.load_all_mother_events()
+        event_types=Branch.load_all_event_type_for_groups(primary)
+        context={
+            'super_events':super_events,
+            'event_types':event_types,
+            'all_sc_ag':sc_ag,
+            'form':form,
+            'is_branch':is_branch,
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+        }
+        '''function for creating event'''
+
+        if(request.method=="POST"):
+
+            ''' Checking to see if the next button is clicked '''
+
+            if(request.POST.get('next')):
+
+
+                '''Getting data from page and calling the register_event_page1 function to save the event page 1 to database'''
+
+                super_event_id=request.POST.get('super_event')
+                event_name=request.POST['event_name']
+                event_description=request.POST['event_description']
+                event_type = request.POST['event_type']
+                event_date=request.POST['event_date']
+
+                #It will return True if register event page 1 is success
+                get_event=Branch.register_event_page1(
+                    super_event_id=super_event_id,
+                    event_name=event_name,
+                    event_type=event_type,
+                    event_description=event_description,
+                    event_date=event_date
+                )
+                
+                if(get_event)==False:
+                    messages.info(request,"Database Error Occured! Please try again later.")
+                else:
+                    #if the method returns true, it will redirect to the new page
+                    return redirect('chapters_and_affinity_group:event_creation_form2',primary,get_event)
+
+            elif(request.POST.get('cancel')):
+                return redirect('chapters_and_affinity_group:event_control_homepage',primary)
+        return render(request,'Events/event_creation_form.html',context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+@login_required
+def event_creation_form_page2(request,primary,event_id):
+    #loading all inter branch collaboration Options
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        is_branch = False
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+        context={
+            'inter_branch_collaboration_options':inter_branch_collaboration_options,
+            'all_sc_ag':sc_ag,
+            'is_branch':is_branch,
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+        }
+        if request.method=="POST":
+            if(request.POST.get('next')):
+                inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
+                intra_branch_collaboration=request.POST['intra_branch_collaboration']
+                
+                if(Branch.register_event_page2(
+                    inter_branch_collaboration_list=inter_branch_collaboration_list,
+                    intra_branch_collaboration=intra_branch_collaboration,
+                    event_id=event_id)):
+                    return redirect('chapters_and_affinity_group:event_creation_form3',primary,event_id)
+                else:
+                    messages.info(request,"Database Error Occured! Please try again later.")
+
+            elif(request.POST.get('cancel')):
+                return redirect('chapters_and_affinity_group:event_control_homepage',primary)
+
+
+        return render(request,'Events/event_creation_form2.html',context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+@login_required
+def event_creation_form_page3(request,primary,event_id):
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        is_branch=False
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        #loading all venues from the venue list from event management team database
+        venues=Events_And_Management_Team.getVenues()
+        #loading all the permission criterias from event management team database
+        permission_criterias=Events_And_Management_Team.getPermissionCriterias()
+
+        context={
+            'venues':venues,
+            'permission_criterias':permission_criterias,
+            'all_sc_ag':sc_ag,
+            'is_branch':is_branch,
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+        }
+        if request.method=="POST":
+            if request.POST.get('create_event'):
+                #getting the venues for the event
+                venue_list_for_event=request.POST.getlist('event_venues')
+                #getting the permission criterias for the event
+                permission_criterias_list_for_event=request.POST.getlist('permission_criteria')
+                
+                #updating data collected from part3 for the event
+                update_event_details=Branch.register_event_page3(venue_list=venue_list_for_event,permission_criteria_list=permission_criterias_list_for_event,event_id=event_id)
+                #if return value is false show an error message
+                if(update_event_details==False):
+                    messages.info(request, "An error Occured! Please Try again!")
+                else:
+                    messages.info(request, "New Event Added Succesfully")
+                    return redirect('chapters_and_affinity_group:event_control_homepage',primary)
+
+        return render(request,'Events/event_creation_form3.html',context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

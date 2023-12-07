@@ -871,6 +871,7 @@ def event_description(request,event_id):
         sc_ag=PortData.get_all_sc_ag(request=request) 
         user = request.user
         has_access = Branch.event_page_access(user)
+        is_branch=True
         if has_access:
 
             '''Details page for registered events'''
@@ -913,6 +914,7 @@ def event_description(request,event_id):
                 'intraBranchCollaborations':intraBranchCollaborations,
                 'hasCollaboration':hasCollaboration,
                 'all_sc_ag':sc_ag,
+                'is_branch':is_branch,
             }
         else:
             return redirect('main_website:all-events')
