@@ -86,10 +86,13 @@
             <br>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to the <span><b>Events</b></span> of <span style="color:#00629B;">IEEE NSU Student Branch</b></span></h2>
             {% if has_access_to_create_event %}
-              <div style="justify-content:center;text-align:center;">  
+              <div style="justify-content:center;text-align:center;"> 
+                {% for message in messages %}
+                <p>{{message}}</p>
+                {% endfor %} 
                 <div class="btn-container">
-                  <a href="{% url 'central_events:super_event_creation' %}" class="btn btn-outline b-success text-success">Create a New Super Event</a>
-                  <a href="{% url 'central_events:event_creation_form1' %}" class="btn btn-outline b-primary text-primary">Create a New Event</a>
+                  <a href="{% url 'central_branch:super_event_creation' %}" class="btn btn-outline b-success text-success">Create a New Super Event</a>
+                  <a href="{% url 'central_branch:event_creation_form1' %}" class="btn btn-outline b-primary text-primary">Create a New Event</a>
                   <button type="button" class="btn btn-outline-success buttons" data-toggle="modal" data-target="#EventTypeModal">Create a New Event Type</button>
                 </div>
               </div> 
@@ -134,7 +137,7 @@
                       <tbody>
                         {% for event in events %}
                         <tr>
-                            <td><a style="color:blue;" href="{% url 'central_events:event_dashboard' event.id %}">{{event.event_name }}</a></td>
+                            <td><a style="color:blue;" href="{% url 'central_branch:event_dashboard' event.id %}">{{event.event_name }}</a></td>
                             <td>{{ event.event_organiser.group_name }}</td>
                             <td>{{ event.event_date }}</td>
                             
