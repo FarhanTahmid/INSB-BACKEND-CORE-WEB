@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect
+from django.contrib.auth.decorators import login_required
 from port.renderData import PortData
 from users import renderData
 from .get_sc_ag_info import SC_AG_Info
@@ -11,7 +12,8 @@ from django.http import Http404,HttpResponseBadRequest
 import logging
 import traceback
 from central_branch.view_access import Branch_View_Access
-
+from django.contrib import messages
+from central_events.models import Events
 
 
 # Create your views here.
@@ -362,6 +364,7 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
     }
     return render(request,'Panels/sc_ag_alumni_members_tab.html',context=context)
 
+@login_required
 def event_control_homepage(request,primary):
 
     '''This is the event control homepage view function for rest of the groups, except 1'''
@@ -374,7 +377,19 @@ def event_control_homepage(request,primary):
         
         #loading all events for society affinity groups now
         events= Branch.load_all_events_for_groups(primary)
-        print(events)
+        
+        if request.method=="POST":
+            if request.POST.get('add_event_type'):
+                event_type = request.POST.get('event_type')
+                created_event_type = Branch.add_event_type_for_group(event_type,primary)
+                if created_event_type:
+                    print("Event type did not exists, so new event was created")
+                    messages.info(request,"New Event Type Added Successfully")
+                else:
+                    print("Event type already existed")
+                    messages.info(request,"Event Type Already Exists")
+                return redirect('chapters_and_affinity_group:event_control_homepage',primary)
+
 
 
         context={
@@ -385,6 +400,58 @@ def event_control_homepage(request,primary):
             'events':events,
         }
         return render(request,"Events/event_homepage.html",context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+    
+@login_required
+def event_description(request,primary,event_id):
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        is_branch= False
+        user = request.user
+        has_access = Branch.event_page_access(user)
+        if has_access:
+
+            '''Details page for registered events'''
+
+            # Get collaboration details
+            interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
+            intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
+            # Checking if event has collaborations
+            hasCollaboration=False
+            if(len(interBranchCollaborations)>0 and len(intraBranchCollaborations)>0):
+                hasCollaboration=True
+          
+            #get_all_team_name = Branch.load_teams()
+            get_event_details = Events.objects.get(id = event_id)
+            #print(get_event_details.super_event_name.id)
+            #get_event_venue = Event_Venue.objects.filter(event_id = get_event_details)  
+            
+            if request.method == "POST":
+                ''' To delete event from databse '''
+                if request.POST.get('delete_event'):
+                    if(Branch.delete_event(event_id=event_id)):
+                        messages.info(request,f"Event with EVENT ID {event_id} was Removed successfully")
+                        return redirect('chapters_and_affinity_group:event_control_homepage',primary)
+                    else:
+                        messages.error(request,"Something went wrong while removing the event!")
+                        return redirect('chapters_and_affinity_group:event_control_homepage',primary)
+        context={
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'is_branch':is_branch,
+            'event_details':get_event_details,
+            'interBranchCollaborations':interBranchCollaborations,
+            'intraBranchCollaborations':intraBranchCollaborations,
+            'hasCollaboration':hasCollaboration,
+            
+        }
+        return render(request,"Events/event_description.html",context)
+    
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

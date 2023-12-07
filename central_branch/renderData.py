@@ -46,7 +46,7 @@ class Branch:
             if event_type_lower == registered_event_category:
                 return False 
         except:
-            new_event_type = Event_Category.objects.create(event_category=event_type_lower,event_category_for = Chapters_Society_and_Affinity_Groups.objects.get(primary = 1))
+            new_event_type = Event_Category.objects.create(event_category=event_type_lower,event_category_for = Chapters_Society_and_Affinity_Groups.objects.get(primary = group_number))
             new_event_type.save()
             return True
         

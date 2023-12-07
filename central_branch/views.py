@@ -882,9 +882,7 @@ def event_description(request,event_id):
             hasCollaboration=False
             if(len(interBranchCollaborations)>0 and len(intraBranchCollaborations)>0):
                 hasCollaboration=True
-            
-            
-
+          
             get_all_team_name = Branch.load_teams()
             get_event_details = Events.objects.get(id = event_id)
 

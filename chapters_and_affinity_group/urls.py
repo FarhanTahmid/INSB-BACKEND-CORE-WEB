@@ -11,7 +11,8 @@ urlpatterns = [
     path('<str:primary>/panels/<str:panel_pk>/officers',views.sc_ag_panel_details_officers_tab,name="sc_ag_panel_details_officers"),
     path('<str:primary>/panels/<str:panel_pk>/volunteers',views.sc_ag_panel_details_volunteers_tab,name="sc_ag_panel_details_volunteers"),
     path('<str:primary>/panels/<str:panel_pk>/alumni',views.sc_ag_panel_details_alumni_members_tab,name="sc_ag_panel_details_alumni"),
-    path('<str:primary>/events/',views.event_control_homepage,name="event_control_homepage")
+    path('<str:primary>/events/',views.event_control_homepage,name="event_control_homepage"),
+    path('<str:primary>/events/<int:event_id>',views.event_description,name='event_dashboard'),
     
 
 ]
