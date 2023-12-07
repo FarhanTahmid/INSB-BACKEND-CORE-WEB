@@ -12,7 +12,8 @@ urlpatterns = [
     path('<str:primary>/panels/<str:panel_pk>/volunteers',views.sc_ag_panel_details_volunteers_tab,name="sc_ag_panel_details_volunteers"),
     path('<str:primary>/panels/<str:panel_pk>/alumni',views.sc_ag_panel_details_alumni_members_tab,name="sc_ag_panel_details_alumni"),
     path('<str:primary>/membership_renewal',views.sc_ag_membership_renewal_sessions,name="sc_ag_membership_renewal"),
-    path('<str:primary>/events/',views.event_control_homepage,name="event_control_homepage")
+    path('<str:primary>/membership_renewal/<str:renewal_session>/requests',views.sc_ag_renewal_session_details,name="sc_ag_membership_renewal_details"),
+    path('<str:primary>/events/',views.event_control_homepage,name="event_control_homepage"),
     
 
 ]

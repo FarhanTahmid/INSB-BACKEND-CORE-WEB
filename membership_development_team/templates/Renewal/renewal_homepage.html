@@ -160,8 +160,11 @@
                     <tbody>
                     {% for session in sessions  %}                                
                         <tr>
-
+                            {% if is_branch %}
                             <td style="color:#00629B"><a href="{% url "membership_development_team:renewal_session_data" session.id %}">{{ session.session_name  }}</a></td>
+                            {% else %}
+                            <td style="color:#00629B"><a href="{% url "chapters_and_affinity_group:sc_ag_membership_renewal_details" sc_ag_info.primary session.id %}">{{ session.session_name  }}</a></td>
+                            {% endif %}
                             <td>{{ session.session_time }}</td>           
                         </tr>
                 

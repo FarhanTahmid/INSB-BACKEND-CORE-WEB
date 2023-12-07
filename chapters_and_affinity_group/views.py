@@ -11,7 +11,7 @@ from django.http import Http404,HttpResponseBadRequest
 import logging
 import traceback
 from django.contrib.auth.decorators import login_required
-from membership_development_team.models import Renewal_Sessions
+from membership_development_team.models import Renewal_Sessions,Renewal_requests
 
 
 # Create your views here.
@@ -382,6 +382,32 @@ def sc_ag_membership_renewal_sessions(request,primary):
         'is_branch':False,
     }
     return render(request,"Renewal/renewal_homepage.html",context=context)
+
+def sc_ag_renewal_session_details(request,primary,renewal_session):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+    
+    # get the session
+    renewal_session=Renewal_Sessions.objects.get(pk=renewal_session)
+    
+    if(int(primary)==2):
+        get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,pes_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+    elif(int(primary)==3):
+        get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,ras_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+    elif(int(primary)==4):
+        get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,ias_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+    elif(int(primary)==5):
+        get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,wie_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+
+    context={
+        'all_sc_ag':sc_ag,
+        'sc_ag_info':get_sc_ag_info,
+        'is_branch':False,
+        'session_id':renewal_session,
+        'session_info':renewal_session,
+        'requests':get_renewal_requests,
+    }
+    return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context=context)
 
 @login_required
 def event_control_homepage(request,primary):
