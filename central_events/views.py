@@ -11,7 +11,7 @@ from django.contrib import messages
 from events_and_management_team.renderData import Events_And_Management_Team
 
 # Create your views here.
-
+#A
 @login_required
 def event_control_homepage(request):
     # This function loads all events and super events in the event homepage table
