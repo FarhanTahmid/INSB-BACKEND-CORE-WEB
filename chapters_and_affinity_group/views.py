@@ -16,6 +16,7 @@ from django.contrib import messages
 from central_events.models import Events
 from central_events.forms import EventForm
 from events_and_management_team.renderData import Events_And_Management_Team
+from port.models import Chapters_Society_and_Affinity_Groups
 
 
 # Create your views here.
@@ -497,14 +498,15 @@ def event_creation_form_page(request,primary):
                 event_description=request.POST['event_description']
                 event_type = request.POST['event_type']
                 event_date=request.POST['event_date']
-
+            
                 #It will return True if register event page 1 is success
                 get_event=Branch.register_event_page1(
                     super_event_id=super_event_id,
                     event_name=event_name,
                     event_type=event_type,
                     event_description=event_description,
-                    event_date=event_date
+                    event_date=event_date,
+                    event_organiser=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
                 )
                 
                 if(get_event)==False:
