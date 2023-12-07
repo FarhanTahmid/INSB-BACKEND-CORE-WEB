@@ -359,3 +359,14 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
 
     }
     return render(request,'Panels/sc_ag_alumni_members_tab.html',context=context)
+
+def event_control_homepage(request,primary):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+    is_branch= False
+    context={
+        'all_sc_ag':sc_ag,
+        'sc_ag_info':get_sc_ag_info,
+        'is_branch':is_branch,
+    }
+    return render(request,"Events/event_homepage.html",context)

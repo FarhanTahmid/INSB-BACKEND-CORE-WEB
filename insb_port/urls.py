@@ -41,11 +41,8 @@ urlpatterns = [
     path('portal/finance_and_corporate_team/',include("finance_and_corporate_team.urls",namespace="finanace_and_corporate_team")),
     path('portal/ieee_nsusb_pes_sbc/',include("ieee_nsu_sb_pes_sbc.urls",namespace="ieee_nsu_pes")),
     path('portal/ieee_nsusb_ras_sbc/',include("ieee_nsu_sb_ras_sbc.urls",namespace="ras")),
-    path('portal/SC_AG/',include("chapters_and_affinity_group.urls",namespace="sc_ag")),
-     
-    #Events Urls
-    # path('', include('events.urls', namespace='events')),
-    
+    path('portal/SC_AG/',include("chapters_and_affinity_group.urls",namespace="sc_ag")),  
 ]
+
 urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 urlpatterns+=static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
