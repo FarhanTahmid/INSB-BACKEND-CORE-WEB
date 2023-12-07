@@ -239,6 +239,7 @@ def membership_renewal(request):
     context={
         'sessions':sessions,
         'user_data':user_data,
+        'is_branch':True,
     }
     if request.method=="POST":
         #MUST PERFORM TRY CATCH

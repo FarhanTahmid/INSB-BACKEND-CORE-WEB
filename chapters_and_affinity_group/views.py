@@ -10,6 +10,8 @@ from datetime import datetime
 from django.http import Http404,HttpResponseBadRequest
 import logging
 import traceback
+from django.contrib.auth.decorators import login_required
+from membership_development_team.models import Renewal_Sessions
 
 
 # Create your views here.
@@ -32,6 +34,7 @@ def sc_ag_homepage(request,primary):
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
 
+@login_required
 def sc_ag_members(request,primary):
     sc_ag=PortData.get_all_sc_ag(request=request)
     get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
@@ -74,6 +77,7 @@ def sc_ag_members(request,primary):
     }
     return render(request,'Members/sc_ag_members.html',context=context)
 
+@login_required
 def sc_ag_panels(request,primary):
     sc_ag=PortData.get_all_sc_ag(request=request)
     get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
@@ -108,6 +112,7 @@ def sc_ag_panels(request,primary):
     }
     return render(request,'Panels/panel_homepage.html',context=context)
 
+@login_required
 def sc_ag_panel_details(request,primary,panel_pk):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -225,7 +230,8 @@ def sc_ag_panel_details(request,primary,panel_pk):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request") 
-                
+
+@login_required               
 def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -280,7 +286,7 @@ def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
         return HttpResponseBadRequest("Bad Request")
         
         
-        
+@login_required    
 def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -338,6 +344,7 @@ def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
 
+@login_required
 def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
     get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
@@ -360,6 +367,23 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
     }
     return render(request,'Panels/sc_ag_alumni_members_tab.html',context=context)
 
+@login_required
+def sc_ag_membership_renewal_sessions(request,primary):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+    
+    #Load all sessions at first from Central Branch
+    sessions=Renewal_Sessions.objects.order_by('-id')
+    
+    context={
+        'all_sc_ag':sc_ag,
+        'sc_ag_info':get_sc_ag_info,
+        'sessions':sessions,
+        'is_branch':False,
+    }
+    return render(request,"Renewal/renewal_homepage.html",context=context)
+
+@login_required
 def event_control_homepage(request,primary):
     sc_ag=PortData.get_all_sc_ag(request=request)
     get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)

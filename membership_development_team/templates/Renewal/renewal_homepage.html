@@ -78,9 +78,16 @@
   
         <!-- navbar content -->
         <div id="content" class="app-content box-shadow-z0" role="main">
-            {% block navbar %}
-                {% include 'mdt_navbar.html' %}
-            {% endblock navbar %}
+            {% if is_branch %}
+                {% block navbar %}
+                    {% include 'mdt_navbar.html' %}
+                {% endblock navbar %}
+            {% else %}
+                {% block sc_ag_navbar %}
+                    {% include 'sc_ag_navbar.html' %}
+                {% endblock sc_ag_navbar %}
+            {% endif %}
+            
 
         </div>
         <!--navbar content-->
@@ -91,15 +98,23 @@
             <!--Start from here-->
             
             <br>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to <span style="color:#00629B;"> <b>Renewal Process</b></span> of <b><span style="color:#00629B;">The Membership Development Team</b></span> </h2>
+            {% if is_branch %}
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;"> <b>Renewal - </b></span><span>Membership Development Team</span> </h2>
+            {% else %}
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;"> <b>Renewal - </b></span><span>{{sc_ag_info.group_name}}</span> </h2>
+            {% endif %}
             <br>
 
+
             <!--Create session Part-->
+            {% if is_branch %}
             <div style="justify-content:center;text-align:center;">  
                 <p class="btn-groups">
                     <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Create a New Session</button>
                 </p>
             </div>
+            {% endif %}
+            
 
             <!--Messages-->
             <div style="justify-content:center; text-align:center;">
