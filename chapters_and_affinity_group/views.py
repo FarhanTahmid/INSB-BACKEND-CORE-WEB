@@ -159,8 +159,57 @@ def sc_ag_panel_details(request,primary,panel_pk):
                 panel_end_date=request.POST['panel_end_date']
                 if(Sc_Ag.update_sc_ag_panel(is_current_check=current_panel_check,panel_end_date=panel_end_date,panel_pk=panel_pk,panel_start_date=panel_start_date,panel_tenure=panel_tenure,request=request,sc_ag_primary=primary)):
                     return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+            
+            #Create Positions
+            if(request.POST.get('create_position')):
+                mentor_position_check=request.POST.get('mentor_position_check')
+                if mentor_position_check is None:
+                    mentor_position_check=False
+                else:
+                    mentor_position_check=True
+                    
+                officer_position_check=request.POST.get('officer_position_check')
+                if officer_position_check is None:
+                    officer_position_check=False
+                else:
+                    officer_position_check=True
+                    
+                coordinator_position_check=request.POST.get('coordinator_position_check')
+                if coordinator_position_check is None:
+                    coordinator_position_check=False
+                else:
+                    coordinator_position_check=True
                 
+                sc_ag_executive_position_check=request.POST.get('sc_ag_executive_position_check')
+                if sc_ag_executive_position_check is None:
+                    sc_ag_executive_position_check=False
+                else:
+                    sc_ag_executive_position_check=True
+             
+                faculty_position_check=request.POST.get('faculty_position_check')
+                if faculty_position_check is None:
+                    faculty_position_check=False
+                else:
+                    faculty_position_check=True
+                    
+                position_name=request.POST['position_name']
+                # create new Position
+                if(PortData.create_positions(request=request,sc_ag_primary=primary,
+                                          is_eb_member=False,
+                                          is_officer=officer_position_check,
+                                          is_sc_ag_eb_member=sc_ag_executive_position_check,is_mentor=mentor_position_check,
+                                          is_faculty=faculty_position_check,is_co_ordinator=coordinator_position_check,role=position_name)):
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+            
+            #Create New TEam
+            if(request.POST.get('create_team')):
+                team_name=request.POST['team_name']
+                if(PortData.create_team(
+                    request=request,sc_ag_primary=primary,team_name=team_name
+                )):
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
 
+                
         context={
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
@@ -178,102 +227,116 @@ def sc_ag_panel_details(request,primary,panel_pk):
         return HttpResponseBadRequest("Bad Request") 
                 
 def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
 
-    # get panel information
-    panel_info=Branch.load_panel_by_id(panel_pk)
-    # getting tenure time
-    if(panel_info.panel_end_time is None):
-        present_date=datetime.now()
-        tenure_time=present_date.date()-panel_info.creation_time.date()
-    else:
-        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+        # get panel information
+        panel_info=Branch.load_panel_by_id(panel_pk)
+        # getting tenure time
+        if(panel_info.panel_end_time is None):
+            present_date=datetime.now()
+            tenure_time=present_date.date()-panel_info.creation_time.date()
+        else:
+            tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
 
-    # get sc_ag_officer members
-    sc_ag_officer_members_in_panel=SC_AG_Info.get_sc_ag_officers_from_panels(panel_id=panel_pk,request=request)
-    # get sc_ag members
-    sc_ag_members=SC_AG_Info.get_sc_ag_members(request,primary)
-    
-    if(request.method=="POST"):
-        # Add Member to officer panel
-        if(request.POST.get('add_officer_to_sc_ag_panel')):
-            member_select_list=request.POST.getlist('member_select')
-            position=request.POST.get('sc_ag_officer_position')
-            team=request.POST.get('sc_ag_team')
-            if(Sc_Ag.add_sc_ag_members_to_panel(memberList=member_select_list,panel_id=panel_pk,position_id=position,team=team,sc_ag_primary=primary,request=request)):
-                return redirect('chapters_and_affinity_group:sc_ag_panel_details_officers', primary,panel_pk)
+        # get sc_ag_officer members
+        sc_ag_officer_members_in_panel=SC_AG_Info.get_sc_ag_officers_from_panels(panel_id=panel_pk,request=request)
+        # get sc_ag members
+        sc_ag_members=SC_AG_Info.get_sc_ag_members(request,primary)
         
-        # Remove Member from Panel
-        if request.POST.get('remove_member_officer'):
-            member_to_remove=request.POST['remove_officer_member']
-            if(Sc_Ag.remove_sc_ag_member_from_panel(request=request,member_ieee_id=member_to_remove,panel_id=panel_pk,sc_ag_primary=primary)):
-                return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+        if(request.method=="POST"):
+            # Add Member to officer panel
+            if(request.POST.get('add_officer_to_sc_ag_panel')):
+                member_select_list=request.POST.getlist('member_select')
+                position=request.POST.get('sc_ag_officer_position')
+                team=request.POST.get('sc_ag_team')
+                if(Sc_Ag.add_sc_ag_members_to_panel(memberList=member_select_list,panel_id=panel_pk,position_id=position,team=team,sc_ag_primary=primary,request=request)):
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details_officers', primary,panel_pk)
+            
+            # Remove Member from Panel
+            if request.POST.get('remove_member_officer'):
+                member_to_remove=request.POST['remove_officer_member']
+                if(Sc_Ag.remove_sc_ag_member_from_panel(request=request,member_ieee_id=member_to_remove,panel_id=panel_pk,sc_ag_primary=primary)):
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+            
+            
+        context={
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'panel_info':panel_info,
+            'tenure_time':tenure_time,
+            'sc_ag_members':sc_ag_members,
+            'sc_ag_officer_member':sc_ag_officer_members_in_panel,
+            'sc_ag_officer_positions':SC_AG_Info.get_sc_ag_officer_positions(request=request,sc_ag_primary=primary),
+            'sc_ag_teams':SC_AG_Info.get_teams_of_sc_ag(request=request,sc_ag_primary=primary),
+
+        }
+        return render(request,'Panels/sc_ag_officer_members_tab.html',context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
         
         
-    context={
-        'all_sc_ag':sc_ag,
-        'sc_ag_info':get_sc_ag_info,
-        'panel_info':panel_info,
-        'tenure_time':tenure_time,
-        'sc_ag_members':sc_ag_members,
-        'sc_ag_officer_member':sc_ag_officer_members_in_panel,
-        'sc_ag_officer_positions':SC_AG_Info.get_sc_ag_officer_positions(request=request,sc_ag_primary=primary),
-        'sc_ag_teams':SC_AG_Info.get_teams_of_sc_ag(request=request,sc_ag_primary=primary),
-
-    }
-    return render(request,'Panels/sc_ag_officer_members_tab.html',context=context)
-
+        
 def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
 
-    # get panel information
-    panel_info=Branch.load_panel_by_id(panel_pk)
-    # getting tenure time
-    if(panel_info.panel_end_time is None):
-        present_date=datetime.now()
-        tenure_time=present_date.date()-panel_info.creation_time.date()
-    else:
-        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+        # get panel information
+        panel_info=Branch.load_panel_by_id(panel_pk)
+        # getting tenure time
+        if(panel_info.panel_end_time is None):
+            present_date=datetime.now()
+            tenure_time=present_date.date()-panel_info.creation_time.date()
+        else:
+            tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
 
-    # get sc_ag members
-    sc_ag_members=SC_AG_Info.get_sc_ag_members(request,primary)
-    # get sc ag volunteer positions
-    sc_ag_volunteer_positions=PortData.get_all_volunteer_position_with_sc_ag_id(request=request,sc_ag_primary=primary)
-    
-    # get_sc_ag_officer members from panels
-    sc_ag_volunteer_members_in_panel=SC_AG_Info.get_sc_ag_volunteer_from_panels(request=request,panel_id=panel_pk)
-    
-    if(request.method=="POST"):
-        # Add Member to officer panel
-        if(request.POST.get('add_volunteer_to_sc_ag_panel')):
-            member_select_list=request.POST.getlist('member_select')
-            position=request.POST.get('sc_ag_volunteer_position')
-            team=request.POST.get('sc_ag_team')
-            if(Sc_Ag.add_sc_ag_members_to_panel(memberList=member_select_list,panel_id=panel_pk,position_id=position,team=team,sc_ag_primary=primary,request=request)):
-                return redirect('chapters_and_affinity_group:sc_ag_panel_details_volunteers', primary,panel_pk)
+        # get sc_ag members
+        sc_ag_members=SC_AG_Info.get_sc_ag_members(request,primary)
+        # get sc ag volunteer positions
+        sc_ag_volunteer_positions=PortData.get_all_volunteer_position_with_sc_ag_id(request=request,sc_ag_primary=primary)
         
-        # Remove Member from Panel
-        if request.POST.get('remove_member_volunteer'):
-            member_to_remove=request.POST['remove_volunteer_member']
-            if(Sc_Ag.remove_sc_ag_member_from_panel(request=request,member_ieee_id=member_to_remove,panel_id=panel_pk,sc_ag_primary=primary)):
-                return redirect('chapters_and_affinity_group:sc_ag_panel_details_volunteers', primary,panel_pk)
+        # get_sc_ag_officer members from panels
+        sc_ag_volunteer_members_in_panel=SC_AG_Info.get_sc_ag_volunteer_from_panels(request=request,panel_id=panel_pk)
+        
+        if(request.method=="POST"):
+            # Add Member to officer panel
+            if(request.POST.get('add_volunteer_to_sc_ag_panel')):
+                member_select_list=request.POST.getlist('member_select')
+                position=request.POST.get('sc_ag_volunteer_position')
+                team=request.POST.get('sc_ag_team')
+                if(Sc_Ag.add_sc_ag_members_to_panel(memberList=member_select_list,panel_id=panel_pk,position_id=position,team=team,sc_ag_primary=primary,request=request)):
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details_volunteers', primary,panel_pk)
+            
+            # Remove Member from Panel
+            if request.POST.get('remove_member_volunteer'):
+                member_to_remove=request.POST['remove_volunteer_member']
+                if(Sc_Ag.remove_sc_ag_member_from_panel(request=request,member_ieee_id=member_to_remove,panel_id=panel_pk,sc_ag_primary=primary)):
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details_volunteers', primary,panel_pk)
 
-    
-    
-    
-    context={
-        'all_sc_ag':sc_ag,
-        'sc_ag_info':get_sc_ag_info,
-        'panel_info':panel_info,
-        'tenure_time':tenure_time,
-        'sc_ag_members':sc_ag_members,
-        'sc_ag_volunteer_positions':sc_ag_volunteer_positions,
-        'sc_ag_teams':SC_AG_Info.get_teams_of_sc_ag(request=request,sc_ag_primary=primary),
-        'sc_ag_volunteer_members':sc_ag_volunteer_members_in_panel,
-    }
-    return render(request,'Panels/sc_ag_volunteer_members_tab.html',context=context)
+        
+        
+        
+        context={
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'panel_info':panel_info,
+            'tenure_time':tenure_time,
+            'sc_ag_members':sc_ag_members,
+            'sc_ag_volunteer_positions':sc_ag_volunteer_positions,
+            'sc_ag_teams':SC_AG_Info.get_teams_of_sc_ag(request=request,sc_ag_primary=primary),
+            'sc_ag_volunteer_members':sc_ag_volunteer_members_in_panel,
+        }
+        return render(request,'Panels/sc_ag_volunteer_members_tab.html',context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
@@ -296,3 +359,14 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
 
     }
     return render(request,'Panels/sc_ag_alumni_members_tab.html',context=context)
+
+def event_control_homepage(request,primary):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+    is_branch= False
+    context={
+        'all_sc_ag':sc_ag,
+        'sc_ag_info':get_sc_ag_info,
+        'is_branch':is_branch,
+    }
+    return render(request,"Events/event_homepage.html",context)

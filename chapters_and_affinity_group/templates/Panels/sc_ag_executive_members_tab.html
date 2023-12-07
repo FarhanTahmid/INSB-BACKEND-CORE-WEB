@@ -158,9 +158,9 @@
   
         <!-- navbar content -->
         <div id="content" class="app-content box-shadow-z0" role="main">
-            {% block navbar %}
+            {% block sc_ag_navbar %}
                 {% include 'sc_ag_navbar.html' %}
-            {% endblock navbar %}
+            {% endblock sc_ag_navbar %}
 
         </div>
         <!--navbar content-->
@@ -196,6 +196,13 @@
                 <div class="btn-container">
                     <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-f" ui-toggle-class="bounce" ui-target="#animate">Delete Panel</button>
                     <button type="submit" class="btn btn-outline b-info text-info" data-toggle="modal" data-target="#m-s-g" ui-toggle-class="bounce" ui-target="#animate">Panel Settings</button>
+                    <div class="btn-group dropdown">
+                        <button class="btn  btn-outline b-accent text-accent  dropdown-toggle" data-toggle="dropdown">Create New Positions & Teams</button>
+                        <div class="dropdown-menu dropdown-menu-scale info pull-right">
+                            <button class="dropdown-item" data-toggle="modal" data-target="#m-s-i" ui-toggle-class="bounce" ui-target="#animate">Create New Position</button>
+                            <button class="dropdown-item" data-toggle="modal" data-target="#m-s-j" ui-toggle-class="bounce" ui-target="#animate">Create New Team</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <br>
@@ -443,6 +450,133 @@
                 </form>
             </div>
             <!-- / .modal -->
+
+            <!--Create team Modal-->
+            <div id="m-s-j" class="modal fade animate" data-backdrop="true">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="modal-dialog" id="animate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Create New Team</h5>
+                            </div>
+                            
+                            <div class="modal-body text-left p-lg">
+                                <p>Create a new Team here for your Chapter/Affinity Group.</p>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md">
+                                            <label>Team Name</label>
+                                            <input placeholder="Give a Team Name" class="form-control w-75" type="text" name="team_name"/>
+                                        </div>
+                                    </div>
+                                </form>        
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <input type="submit" class="btn btn-success p-x-md" name="create_team" value="Create Team"></input>                  
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </form>
+            </div>
+            <!--Team Modal Ends-->
+            <!--Create Position Modal-->
+            <div id="m-s-i" class="modal fade animate" data-backdrop="true">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="modal-dialog" id="animate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Create New Position</h5>
+                            </div>
+                            
+                            <div class="modal-body text-left p-lg">
+                                <p>Remember, choose the attributes of the position carefully.<br>The attributes will effect in permissions and view accesses.</p>        
+                            </div>
+                            <br>
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="row" style="margin-left:5px;">
+                                    <div class="col-md">
+                                        <label>Position Name</label>
+                                        <input placeholder="Give a Position Name" class="form-control w-75" type="text" name="position_name"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row" style="margin-left:5px;">
+                                    <div class="col-md-6">
+                                        <label for="inputieeeid3" class="col-sm  form-control-label">Is this a Faculty Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="faculty_position_check" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="inputieeeid3" class="col-sm  form-control-label">Is this a Executive Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="sc_ag_executive_position_check" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" style="margin-left:5px;">
+                                    <div class="col-md-6">
+                                        <label for="inputieeeid3" class="col-sm  form-control-label">Is this a Co-Ordinator Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="coordinator_position_check" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="inputieeeid3" class="col-sm  form-control-label">Is this a Officer Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="officer_position_check" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" style="margin-left:5px;">
+                                    <div class="col-md-12">
+                                        <label for="inputieeeid3" class="col-sm  form-control-label">Is this a Mentor Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="mentor_position_check" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <input type="submit" class="btn btn-success p-x-md" name="create_position" value="Create Position"></input>                  
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </form>
+            </div>
+            <!--Position Modal Ends-->
         </div>
         <!--PAGE END-->
 

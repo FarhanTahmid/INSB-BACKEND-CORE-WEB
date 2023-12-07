@@ -15,7 +15,7 @@
                             {% endfor %}
                         </div>
 
-                        <form method="POST" action="{% url 'central_events:super_event_creation' %}">
+                        <form method="POST" action="{% url 'central_branch:super_event_creation' %}">
                             {% csrf_token %}
                             <div class="box-body">
                                 <div class="form-group">
