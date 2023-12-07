@@ -77,7 +77,7 @@ class Branch:
             saving_data = SuperEvents(super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date,end_date=end_date)
             saving_data.save()
     
-    def register_event_page1(super_event_id,event_name,event_type,event_description,event_date,event_organiser=None):
+    def register_event_page1(super_event_id,event_name,event_type_list,event_description,event_date,event_organiser=None):
             '''This method creates an event and registers data which are provided in event page1. Returns the id of the event if the method can create a new event successfully
             TAKES SUPER EVENT NAME, EVENT NAME, EVENT DESCRIPTION AS STRING. TAKES PROBABLE & FINAL DATE ALSO AS INPUT'''
             if event_organiser==None:
@@ -90,15 +90,16 @@ class Branch:
                         
                         try:
                             #create event without final date included
-                            new_event=Events(
+                            new_event=Events.objects.create(
                             event_name=event_name,
                             event_description=event_description,
-                            event_type = Event_Category.objects.get(id = int(event_type)),
                             event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
+                            new_event.event_type.add(*event_type_list)
                             new_event.save()
                             return new_event.id
                         except:
+                            new_event.delete()
                             return False #general error
                     else:
                         try:
@@ -106,13 +107,14 @@ class Branch:
                             new_event=Events(
                             event_name=event_name,
                             event_description=event_description,
-                            event_type = Event_Category.objects.get(id = int(event_type)),
                             event_date=event_date,
                             event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
+                            new_event.event_type.add(*event_type_list)
                             new_event.save()
                             return new_event.id
                         except:
+                            new_event.delete()
                             return False #general error    
             else:
                     #now create the event under super event in the event models
@@ -126,12 +128,13 @@ class Branch:
                             super_event_id=get_super_event_id,
                             event_name=event_name,
                             event_description=event_description,
-                            event_type = Event_Category.objects.get(id = int(event_type)),
                             event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
+                            new_event.event_type.add(*event_type_list)
                             new_event.save()
                             return new_event.id
                         except:
+                            new_event.delete()
                             return False #general Error
                     else:
                         try:
@@ -141,13 +144,14 @@ class Branch:
                             super_event_id=get_super_event_id,
                             event_name=event_name,
                             event_description=event_description,
-                            event_type = Event_Category.objects.get(id = int(event_type)),
                             event_date=event_date,
                             event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
+                            new_event.event_type.add(*event_type_list)
                             new_event.save()
                             return new_event.id
                         except:
+                            new_event.delete()
                             return False
         
     def register_event_page2(inter_branch_collaboration_list,intra_branch_collaboration,event_id):
@@ -295,6 +299,16 @@ class Branch:
                         return False
                 else:
                     pass
+
+    def update_event_details(event_id, event_name):
+        ''' Update event details and save to database '''
+
+        try:
+            event = Events.objects.filter(pk=event_id)
+            event.update(event_name=event_name)
+            return True
+        except:
+            return False
     # def load_ex_com_panel_list():
     #     panels=Executive_commitee.objects.all().order_by('-pk')
     #     ex_com_panel_list=[]

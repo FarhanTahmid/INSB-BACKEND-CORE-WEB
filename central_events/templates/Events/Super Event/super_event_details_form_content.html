@@ -46,7 +46,11 @@
                                 </div>
                                 <br>
                                 <div style="text-align: center;">
-                                    <input type="submit" name="cancel" class="btn btn-outline b-danger text-danger" value="Cancel">
+                                    {% if is_branch %}
+                                    <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger">Cancel</a>
+                                    {% else %}
+                                    <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger">Cancel</a>
+                                    {% endif %}
                                     <input type="submit" value="Submit" name="Submit" class="btn btn-outline b-success text-success">
                                 </div>
                                 <br>
