@@ -39,7 +39,7 @@ urlpatterns = [
 
     #Events urls
     #Event control page 
-    path('events',views.event_control_homepage, name='event_control'),
+    path('event_details',views.event_control_homepage, name='event_control'),
     #Event Creation Form page 1
     path('events/create_event/',views.event_creation_form_page,name='event_creation_form1'),
     #Event Creation Form Page 2
