@@ -739,13 +739,15 @@ def event_creation_form_page(request):
     try:
         form = EventForm()
         sc_ag=PortData.get_all_sc_ag(request=request)
-        is_branch=True
+        is_branch = True
+
         #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
         super_events=Branch.load_all_mother_events()
         event_types=Branch.load_all_event_type_for_groups(1)
         context={
             'super_events':super_events,
             'event_types':event_types,
+            'is_branch' : is_branch,
             'all_sc_ag':sc_ag,
             'form':form,
             'is_branch':is_branch,
@@ -802,10 +804,12 @@ def event_creation_form_page2(request,event_id):
         is_branch=True
         sc_ag=PortData.get_all_sc_ag(request=request)
         inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+        is_branch = True
+        
         context={
             'inter_branch_collaboration_options':inter_branch_collaboration_options,
             'all_sc_ag':sc_ag,
-            'is_branch':is_branch,
+            'is_branch' : is_branch,
         }
         if request.method=="POST":
             if(request.POST.get('next')):
@@ -840,11 +844,13 @@ def event_creation_form_page3(request,event_id):
         #loading all the permission criterias from event management team database
         permission_criterias=Events_And_Management_Team.getPermissionCriterias()
 
+        is_branch = True
+
         context={
             'venues':venues,
             'permission_criterias':permission_criterias,
             'all_sc_ag':sc_ag,
-            'is_branch':is_branch,
+            'is_branch' : is_branch,
         }
         if request.method=="POST":
             if request.POST.get('create_event'):
