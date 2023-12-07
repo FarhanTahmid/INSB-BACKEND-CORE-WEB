@@ -199,12 +199,13 @@ def event_description(request,event_id):
         if(len(interBranchCollaborations)>0 and len(intraBranchCollaborations)>0):
             hasCollaboration=True
         
+        #Getting the event which the user wants to delete
+        get_event_details = Events.objects.get(id = event_id)
         
         get_event_venue = Event_Venue.objects.filter(event_id = get_event_details.id)
         get_all_team_name = Branch.load_teams()
 
-        #Getting the event which the user wants to delete
-        get_event_details = Events.objects.get(id = event_id)
+        
         #print(get_event_details.super_event_name.id)
         if request.method == "POST":
             if request.POST.get('delete_event'):
