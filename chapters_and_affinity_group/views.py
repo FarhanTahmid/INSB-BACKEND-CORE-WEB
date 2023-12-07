@@ -13,6 +13,7 @@ import traceback
 from central_branch.view_access import Branch_View_Access
 
 
+
 # Create your views here.
 logger=logging.getLogger(__name__)
 
@@ -362,14 +363,30 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
     return render(request,'Panels/sc_ag_alumni_members_tab.html',context=context)
 
 def event_control_homepage(request,primary):
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-    is_branch= False
-    has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
-    context={
-        'all_sc_ag':sc_ag,
-        'sc_ag_info':get_sc_ag_info,
-        'is_branch':is_branch,
-        'has_access_to_create_event':has_access_to_create_event,
-    }
-    return render(request,"Events/event_homepage.html",context)
+
+    '''This is the event control homepage view function for rest of the groups, except 1'''
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        is_branch= False
+        has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
+        
+        #loading all events for society affinity groups now
+        events= Branch.load_all_events_for_groups(primary)
+        print(events)
+
+
+        context={
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'is_branch':is_branch,
+            'has_access_to_create_event':has_access_to_create_event,
+            'events':events,
+        }
+        return render(request,"Events/event_homepage.html",context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")

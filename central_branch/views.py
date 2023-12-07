@@ -742,7 +742,7 @@ def event_creation_form_page(request):
 
         #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
         super_events=Branch.load_all_mother_events()
-        event_types=Branch.load_all_event_type_for_Group1()
+        event_types=Branch.load_all_event_type_for_groups(1)
         context={
             'super_events':super_events,
             'event_types':event_types,
