@@ -459,6 +459,48 @@ def event_description(request,primary,event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
+    
+
+@login_required
+def super_event_creation(request, primary):
+
+    '''function for creating super event'''
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        is_branch= False
+        context={
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'is_branch':is_branch,
+        }
+
+        if request.method == "POST":
+
+            '''Checking to see if either of the submit or cancelled button has been clicked'''
+
+            if (request.POST.get('Submit')):
+
+                '''Getting data from page and saving them in database'''
+
+                super_event_name = request.POST.get('super_event_name')
+                super_event_description = request.POST.get('super_event_description')
+                start_date = request.POST.get('probable_date')
+                end_date = request.POST.get('final_date')
+                Branch.register_super_events(super_event_name,super_event_description,start_date,end_date)
+                messages.info(request,"New Super Event Added Successfully")
+                return redirect('chapters_and_affinity_group:event_control_homepage', primary)
+            
+            elif (request.POST.get('cancel')):
+                return redirect('chapters_and_affinity_group:event_control_homepage', primary)
+            
+        return render(request,"Events/Super Event/super_event_creation_form.html", context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 @login_required
 def event_creation_form_page(request,primary):
