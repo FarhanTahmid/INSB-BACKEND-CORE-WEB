@@ -412,6 +412,20 @@ def sc_ag_renewal_session_details(request,primary,renewal_session):
     return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context=context)
 
 @login_required
+def sc_ag_renewal_excel_sheet(request,primary,renewal_session):
+    try:
+        response=Sc_Ag.generate_renewal_excel_sheet(request=request,renewal_session_id=renewal_session,sc_ag_primary=primary)
+        if(not response):
+            return redirect('chapters_and_affinity_group:sc_ag_membership_renewal_details',primary,renewal_session)
+        else:
+            return response
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+        
+@login_required
 def event_control_homepage(request,primary):
 
     '''This is the event control homepage view function for rest of the groups, except 1'''

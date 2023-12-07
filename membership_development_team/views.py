@@ -11,7 +11,7 @@ from recruitment.models import recruitment_session
 from . import renewal_data
 from . import renderData
 from django.http import JsonResponse, HttpResponse,HttpResponseBadRequest,HttpResponseServerError
-import datetime
+from datetime import datetime
 import xlwt
 from django.contrib import messages
 from django.urls import reverse
@@ -251,7 +251,7 @@ def membership_renewal(request):
                     messages.error(request,"A same session with this name already exists!")
                     return redirect('membership_development_team:membership_renewal')
             except Renewal_Sessions.DoesNotExist:
-                session_time=datetime.datetime.now()
+                session_time=datetime.now()
                 add_session=Renewal_Sessions(session_name=session_name,session_time=session_time)
                 add_session.save()
                 messages.success(request,"A new session has been created!")
@@ -264,7 +264,6 @@ def membership_renewal(request):
 
 # no login required as this will open up for other people
 from system_administration.render_access import Access_Render
-from datetime import datetime
 def membership_renewal_form(request,pk):
     
     #rendering access to view the message section
@@ -518,6 +517,7 @@ def sc_ag_renewal_session_data(request,pk,sc_ag_primary):
         'session_id':pk,
         'requests':get_renewal_requests,
         'session_info':get_session,
+        'is_branch':True,
     }
     return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context)
 
@@ -690,7 +690,7 @@ def generateExcelSheet_renewal_requestList(request,session_id):
     session_name=renewal_data.get_renewal_session_name(pk=session_id)
     date=datetime.now()
     response = HttpResponse(
-        content_type='application/ms-excel')  # eclaring content type for the excel files
+        content_type='application/ms-excel')  # declaring content type for the excel files
     response['Content-Disposition'] = f'attachment; filename=Renewal Application - ' +\
         session_name + ' - ' +\
         str(date.strftime('%m/%d/%Y')) + \
@@ -740,7 +740,7 @@ def generateExcelSheet_renewal_requestList(request,session_id):
 @login_required
 def generateExcelSheet_membersList(request):
     '''This method generates the excel files for The Registered INSB members for MDT'''
-    date=datetime.datetime.now()
+    date=datetime.now()
     response = HttpResponse(
         content_type='application/ms-excel')  # eclaring content type for the excel files
     response['Content-Disposition'] = f'attachment; filename=Registered Member List - ' +\

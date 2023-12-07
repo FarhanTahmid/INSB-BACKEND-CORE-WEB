@@ -150,7 +150,18 @@
             <!--Back button end-->
             <br>
             <br>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Renewal -  <span style="color:#00629B;"><b>{{session_info.session_name}}</b></span><br> for<br> <span style="color:#00629B;"> <b>{{sc_ag_info.group_name}}</b></span></h2>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Renewal -  <span style="color:#00629B;"><b>{{session_info.session_name}} - </b></span><br> <span style="color:#00629B;"> <b>{{sc_ag_info.group_name}}</b></span></h2>
+
+            <!--Buttons-->
+            <div style="justify-content:center;text-align:center;">  
+              <div class="btn-container">
+                {% if is_branch %}
+                  <a href="{% url 'chapters_and_affinity_group:generate_sc_ag_renewal_excel' sc_ag_info.primary session_id %}" class="btn btn-outline b-primary text-primary">Generate Excel Sheet for this Session</a>
+                {% else %}
+                  <a href="{% url 'chapters_and_affinity_group:generate_sc_ag_renewal_excel' sc_ag_info.primary session_info.pk %}" class="btn btn-outline b-primary text-primary">Generate Excel Sheet for this Session</a>
+                {% endif %}
+              </div>
+            </div>
             <br>
             <!--Statistics Part-->
             {% block pie_stat_for_sc_ag_renewal %}
