@@ -532,10 +532,22 @@ class Branch:
         '''This loads all the chapters and Societies of the branch'''
         return Chapters_Society_and_Affinity_Groups.objects.all()
     
-    def load_all_event_type_for_Group1():
-        return Event_Category.objects.filter(event_category_for = Chapters_Society_and_Affinity_Groups.objects.get(primary = 1))
+    def load_all_event_type_for_groups(primary):
+
+        '''This function loads all event type for the specific group'''
+
+        return Event_Category.objects.filter(event_category_for = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary))
     
-    
+    def load_all_events_for_groups(primary):
+
+        '''This function will return a list of only those events associated with that particular group'''
+
+        collabortations = InterBranchCollaborations.objects.filter(collaboration_with = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
+        events =[]
+        for i in collabortations:
+            events.append(Events.objects.get(id = str(i.event_id)))
+        return events
+        
     
     def event_page_access(user):
 

@@ -4,6 +4,7 @@ from events_and_management_team.models import Permission_criteria, Venue_List
 from django.core.files.storage import FileSystemStorage
 from logistics_and_operations_team.models import Logistic_Item_List
 from port.models import Chapters_Society_and_Affinity_Groups
+from ckeditor.fields import RichTextField
 
 # Create your models here.
 
@@ -50,7 +51,7 @@ class Events(models.Model):
     event_name=models.CharField(null=False,blank=False,max_length=150)
     event_type=models.ForeignKey(Event_Category,null=True,blank=True,on_delete=models.CASCADE)
     super_event_id=models.ForeignKey(SuperEvents,null=True,blank=True,on_delete=models.CASCADE)
-    event_description=models.CharField(null=True,blank=True,max_length=1000)
+    event_description=RichTextField(null=True,blank=True)
     event_organiser=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE,default=5)#Default is set to 5 to keep branch as default organizer of events, If a new database is created change this number according to the id of the branch
     event_date=models.DateField(null=True,blank=True)
     registration_fee=models.BooleanField(null=False,blank=False,default=False)
