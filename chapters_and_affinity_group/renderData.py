@@ -6,6 +6,7 @@ import logging
 from system_administration.system_error_handling import ErrorHandling
 import traceback
 from datetime import datetime
+from central_events.models import Events
 
 class Sc_Ag:
     logger=logging.getLogger(__name__)
@@ -239,5 +240,6 @@ class Sc_Ag:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"Can not remove member from panel. Something went wrong!")
             return False
+        
     
     
