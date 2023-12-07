@@ -6,6 +6,7 @@ from logistics_and_operations_team.models import Logistic_Item_List
 from port.models import Chapters_Society_and_Affinity_Groups
 from ckeditor.fields import RichTextField
 
+
 # Create your models here.
 
 ###### THESE MODELS ARE SPECIFICALLY USED FOR EVENT HANDLING PURPOSE ####
@@ -65,6 +66,7 @@ class Events(models.Model):
         return str(self.pk)
     def get_absolute_url(self):
         return reverse("registered_events", kwargs={"event_name": self.event_name})
+    
 
 #Inter NSU Branch-Student Branch Collaboration   
 class InterBranchCollaborations(models.Model):

@@ -175,7 +175,7 @@ class Branch:
             elif(inter_branch_collaboration_list[0]=="null" and intra_branch_collaboration!=""):
                 # Do the intra branch collab only
                 
-                    
+               
                 #check if an event exists with the same id. if so just update the collaboration_with field
                 check_for_existing_events=IntraBranchCollaborations.objects.filter(event_id=event_id)
                 if(check_for_existing_events.exists()):
@@ -187,6 +187,7 @@ class Branch:
                         event_id=Events.objects.get(id=event_id),
                         collaboration_with=intra_branch_collaboration
                     )
+                    print("here")
                     new_event_intra_branch_collaboration.save()
                     return True #intra branch collab created, now go to third page
                 
