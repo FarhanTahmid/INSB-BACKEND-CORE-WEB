@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Create Event | IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+    <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
+
+
+
+    <style>
+        body, html {
+            margin: 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .btn-container {
+            text-align: center;
+        }
+        
+        .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+        }
+        
+        /* Media query for smaller screens (adjust the breakpoint as needed) */
+        @media (max-width: 768px) {
+            .btn {
+                width: 100%; /* Make the button full width on smaller screens */
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+                {% include 'navbar.html' %}
+            {% endblock navbar %}
+
+        </div>
+        <!--navbar content-->
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+            
+            <!--Instruction Section Start-->
+            {% block instruction %}
+            {% include "Events/instructions.html" %}
+            {% endblock instruction %}
+            <!--Instruction Section End-->
+
+            <br>
+            <br>
+            
+            
+
+        </div>
+        <!--PAGE END-->
+
+        <!--TabView for event creation-->
+            
+        <div>
+           
+                {% block collaboration_form %}
+                    {% include "Events/event_collaboration_details_form_content.html" %}
+                {% endblock collaboration_form %}
+        
+            <div>
+                {% for message in messages %}
+                <p>{{message}}</p>
+                {% endfor %}
+                <p></p>
+            </div>
+        </div>
+        <!--End of TabView-->
+        
+        
+
+        
+
+    
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+    
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+
+    <script src="{% static 'tab_view.js'%}"></script>
+
+</body>
+</html>

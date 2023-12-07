@@ -15,7 +15,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from membership_development_team.renderData import MDT_DATA
 from . import email_handler
 from port.renderData import PortData
-# from central_branch.models import Events
+from central_events.models import Events
 from django.db.models import Q
 
 
@@ -124,7 +124,6 @@ def dashboard(request):
     
     # Get the SC & AGS
     sc_ag=PortData.get_all_sc_ag(request=request)
-
 
     #Loading current user data from renderData.py
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
