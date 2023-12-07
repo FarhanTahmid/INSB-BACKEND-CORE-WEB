@@ -34,14 +34,14 @@ class Branch:
         new_team = Teams(team_name = team_name)
         new_team.save()
     
-    def add_event_type_for_group_1(event_type):
-
+    def add_event_type_for_group(event_type,group_number):
+        
         '''This function adds new event category for IEEE Student Branch only''' 
 
 
         event_type_lower = event_type.lower()
         try:
-            registered_event_category = Event_Category.objects.get(event_category = event_type_lower,event_category_for=Chapters_Society_and_Affinity_Groups.objects.get(primary = 1))
+            registered_event_category = Event_Category.objects.get(event_category = event_type_lower,event_category_for=Chapters_Society_and_Affinity_Groups.objects.get(primary = group_number))
             registered_event_category = registered_event_category.event_category.lower()
             if event_type_lower == registered_event_category:
                 return False 

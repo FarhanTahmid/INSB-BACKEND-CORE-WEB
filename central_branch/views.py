@@ -50,7 +50,8 @@ def central_home(request):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        messages.info(request,'Something went wrong fetching the Central Homepage')
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 
 #Panel and Team Management
@@ -659,12 +660,14 @@ def event_control_homepage(request):
     has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
 
     try:
+        is_branch = True
         sc_ag=PortData.get_all_sc_ag(request=request)
         all_insb_events=Branch.load_all_events()
         context={
             'all_sc_ag':sc_ag,
             'events':all_insb_events,
             'has_access_to_create_event':has_access_to_create_event,
+            'is_branch':is_branch,
         }
 
         if(request.method=="POST"):
@@ -674,7 +677,7 @@ def event_control_homepage(request):
             #Creating new event type for Group 1 
             elif request.POST.get('add_event_type'):
                 event_type = request.POST.get('event_type')
-                created_event_type = Branch.add_event_type_for_group_1(event_type)
+                created_event_type = Branch.add_event_type_for_group(event_type,1)
                 if created_event_type:
                     print("Event type did not exists, so new event was created")
                     messages.info(request,"New Event Type Added Successfully")
@@ -687,7 +690,8 @@ def event_control_homepage(request):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        messages.info(request,'Something went wrong fetching the Events Homepage')
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
     
 
 @login_required
@@ -724,7 +728,8 @@ def super_event_creation(request):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        messages.info(request,'Something went wrong fetching the Super Events Page')
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 @login_required
 def event_creation_form_page(request):
@@ -781,7 +786,9 @@ def event_creation_form_page(request):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        messages.info(request,'Something went wrong during registering events')
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+        
 
 @login_required
 def event_creation_form_page2(request,event_id):
@@ -815,7 +822,8 @@ def event_creation_form_page2(request,event_id):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        messages.info(request,'Something went wrong during registering events')
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 def event_creation_form_page3(request,event_id):
     try:
@@ -850,7 +858,8 @@ def event_creation_form_page3(request,event_id):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        messages.info(request,'Something went wrong during registering events')
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 @login_required
 def event_description(request,event_id):
@@ -910,7 +919,8 @@ def event_description(request,event_id):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        messages.info(request,'Something went wrong in displaying in the specified description page of events')
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 @login_required
 def get_updated_options_for_event_dashboard(request):
     #this function updates the select box upon the selection of the team in task assignation. takes event id as parameter. from html file, a script hits the api and fetches the returned dictionary
