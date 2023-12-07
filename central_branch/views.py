@@ -667,6 +667,7 @@ def event_control_homepage(request):
         context={
             'all_sc_ag':sc_ag,
             'events':all_insb_events,
+            # 'sc_ag_info':get_sc_ag_info,
             'has_access_to_create_event':has_access_to_create_event,
             'is_branch':is_branch,
         }
@@ -702,8 +703,11 @@ def super_event_creation(request):
 
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
+        #calling it regardless to run the page
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,5)
         context={
             'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
         }
 
         if request.method == "POST":
