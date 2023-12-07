@@ -140,12 +140,12 @@
                 <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
               </a>
               {% else %}
-              <a href="{% url 'chapters_and_affinity_group:sc_ag_membership_renewal' sc_ag_info.group_name  %}" class="image-button">
+              <a href="{% url 'chapters_and_affinity_group:sc_ag_membership_renewal' sc_ag_info.primary  %}" class="image-button">
                 <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
               </a>
               {% endif %}
               
-              <span class="tooltip-text">Go back to Renewal Session Details</span>
+              <span class="tooltip-text">Go back</span>
             </div>
             <!--Back button end-->
             <br>

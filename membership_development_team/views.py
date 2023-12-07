@@ -513,7 +513,6 @@ def sc_ag_renewal_session_data(request,pk,sc_ag_primary):
 
     # get session info
     get_session = Renewal_Sessions.objects.get(pk=pk)
-    
     context={
         'sc_ag_info':get_sc_ag,
         'session_id':pk,
@@ -526,12 +525,14 @@ def sc_ag_renewal_session_data(request,pk,sc_ag_primary):
 def renewal_request_details(request,pk,request_id):
     '''This function loads the datas for particular renewal requests'''
     #check if the user has access to view
+    print(f"here the pk is{pk}")
+
     user=request.user
     has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
     
     renewal_request_details=Renewal_requests.objects.filter(id=request_id).values('timestamp','name','ieee_id','nsu_id','email_associated','email_ieee','ieee_account_password','ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check','transaction_id','renewal_status','contact_no','comment','official_comment')
     name=renewal_request_details[0]['name']
-    
+
     has_comment=False
     for i in range(len(renewal_request_details)):
         ieee_id=renewal_request_details[i]['ieee_id']

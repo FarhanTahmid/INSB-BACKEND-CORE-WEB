@@ -47,7 +47,7 @@
                               {% if is_branch %}
                               <td style="color:#00629B"><a href="{% url 'membership_development_team:request_details' session_id request.id %}">{{ request.ieee_id  }}</a></td>
                               {% else %}
-                              <td style="color:#00629B"><a href="{% url 'membership_development_team:request_details' session_id request.id %}">{{ request.ieee_id  }}</a></td>
+                              <td style="color:#00629B">{{ request.ieee_id }}</td>
                               {% endif %}
                               <td>{{ request.name  }}</td>
                               <td>{{ request.email_ieee }}</td>

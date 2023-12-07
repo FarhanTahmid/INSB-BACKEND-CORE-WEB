@@ -403,7 +403,7 @@ def sc_ag_renewal_session_details(request,primary,renewal_session):
         'all_sc_ag':sc_ag,
         'sc_ag_info':get_sc_ag_info,
         'is_branch':False,
-        'session_id':renewal_session,
+        'session_id':renewal_session.pk,
         'session_info':renewal_session,
         'requests':get_renewal_requests,
     }
