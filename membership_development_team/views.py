@@ -510,6 +510,8 @@ def sc_ag_renewal_session_data(request,pk,sc_ag_primary):
     elif(int(sc_ag_primary)==5):
         get_renewal_requests=Renewal_requests.objects.filter(session_id=pk,wie_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
 
+    
+    
     context={
         'sc_ag':get_sc_ag,
         'session_id':pk,
