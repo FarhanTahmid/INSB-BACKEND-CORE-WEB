@@ -683,7 +683,7 @@ def event_control_homepage(request):
                 created_event_type = Branch.add_event_type_for_group(event_type,1)
                 if created_event_type:
                     print("Event type did not exists, so new event was created")
-                    messages.info(request,"New Event Type Added Successfully")
+                    messages.success(request,"New Event Type Added Successfully")
                 else:
                     print("Event type already existed")
                     messages.info(request,"Event Type Already Exists")
@@ -726,7 +726,7 @@ def super_event_creation(request):
                 start_date = request.POST.get('probable_date')
                 end_date = request.POST.get('final_date')
                 Branch.register_super_events(super_event_name,super_event_description,start_date,end_date)
-                messages.info(request,"New Super Event Added Successfully")
+                messages.success(request,"New Super Event Added Successfully")
                 return redirect('central_branch:event_control')
                         
         return render(request,"Events/Super Event/super_event_creation_form.html", context)
@@ -785,7 +785,7 @@ def event_creation_form_page(request):
                 )
                 
                 if(get_event)==False:
-                    messages.info(request,"Database Error Occured! Please try again later.")
+                    messages.error(request,"Database Error Occured! Please try again later.")
                 else:
                     #if the method returns true, it will redirect to the new page
                     return redirect('central_branch:event_creation_form2',get_event)
@@ -824,7 +824,7 @@ def event_creation_form_page2(request,event_id):
                     event_id=event_id)):
                     return redirect('central_branch:event_creation_form3',event_id)
                 else:
-                    messages.info(request,"Database Error Occured! Please try again later.")
+                    messages.error(request,"Database Error Occured! Please try again later.")
 
             elif(request.POST.get('cancel')):
                 return redirect('central_branch:event_control')
@@ -866,9 +866,9 @@ def event_creation_form_page3(request,event_id):
                 update_event_details=Branch.register_event_page3(venue_list=venue_list_for_event,permission_criteria_list=permission_criterias_list_for_event,event_id=event_id)
                 #if return value is false show an error message
                 if(update_event_details==False):
-                    messages.info(request, "An error Occured! Please Try again!")
+                    messages.error(request, "An error Occured! Please Try again!")
                 else:
-                    messages.info(request, "New Event Added Succesfully")
+                    messages.success(request, "New Event Added Succesfully")
                     return redirect('central_branch:event_control')
 
         return render(request,'Events/event_creation_form3.html',context)
@@ -909,7 +909,7 @@ def event_description(request,event_id):
                 ''' To delete event from databse '''
                 if request.POST.get('delete_event'):
                     if(Branch.delete_event(event_id=event_id)):
-                        messages.info(request,f"Event with EVENT ID {event_id} was Removed successfully")
+                        messages.success(request,f"Event with EVENT ID {event_id} was Removed successfully")
                         return redirect('central_branch:event_control')
                     else:
                         messages.error(request,"Something went wrong while removing the event!")
@@ -987,7 +987,7 @@ def event_edit_form(request, event_id):
         #         messages.error(request,"Something went wrong while updating the event!")
         #         return redirect('central_branch:event_dashboard', event_id)
 
-        return render(request, '', context)
+        return render(request, 'Events/event_edit_form.html', context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
