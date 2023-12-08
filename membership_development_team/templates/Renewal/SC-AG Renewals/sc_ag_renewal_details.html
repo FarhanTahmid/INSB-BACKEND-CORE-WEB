@@ -164,9 +164,10 @@
             </div>
             <br>
             <!--Statistics Part-->
-            {% block pie_stat_for_sc_ag_renewal %}
-              {% include "Renewal/SC-AG Renewals/pie_chart_stat.html" %}
-            {% endblock pie_stat_for_sc_ag_renewal %}
+            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;">Renewal Statistics for {{sc_ag_info.short_form}}</h4>
+            <div class="card-body">
+                <canvas id="doughnut" data-colors='["#877c8", "#e30b0b"]'></canvas>
+            </div>
             <!--Statistics Part End-->
 
             <!--Table Starts-->
@@ -186,7 +187,77 @@
     
     </div>
     <!-- app end-->
-
+    <script>    
+      // get colors array from the string
+      function getChartColorsArray(chartId) {
+        if (document.getElementById(chartId) !== null) {
+          var colors = document.getElementById(chartId).getAttribute("data-colors");
+          var colors = JSON.parse(colors);
+          return colors.map(function (value) {
+            var newValue = value.replace(" ", "");
+            if (newValue.indexOf("--") != -1) {
+              var color = getComputedStyle(document.documentElement).getPropertyValue(
+                newValue
+              );
+              if (color) return color;
+            } else {
+              return newValue;
+            }
+          });
+        }
+      }
+      
+      // Function to fetch data from Django API
+      async function fetchData() {
+          try {
+          var x = '{{ session_id }}'; // Assuming '{{ session_id }}' is a string representing an integer
+          var sessionValue = parseInt(x, 10); // The second argument (10) specifies the base (decimal in this case)
+          var y='{{ sc_ag_info.primary }}';
+          var sc_ag_value=parseInt(y, 10);
+  
+          var seekValue=sc_ag_value+'-'+sessionValue;
+          const url = `portal/SC_AG/sc_ag_renewal_stats/?seek_value=${encodeURIComponent(seekValue)}`;
+          const response = await fetch(url);
+          console.log(response)
+          const data = await response.json();
+          console.log(data)
+          return data;
+          } catch (error) {
+              console.error('Error fetching data:', error);
+              throw error; // Rethrow the error for further handling
+          }
+      }
+      
+      // ... (getChartColorsArray and fetchData functions remain unchanged)
+      
+      async function initializeDougnutChart() {
+          try {
+          var isdoughnutchart = document.getElementById('doughnut');
+          var data = await fetchData(); // Fetch data from the Django API
+          var doughnutChartColors = getChartColorsArray('doughnut');
+          
+          var doughnutChart = new Chart(isdoughnutchart, {
+              type: 'doughnut',
+              data: {
+              labels: data.labels, // Use the fetched labels
+              datasets: [
+                  {
+                  data: data.values, // Use the fetched data values
+                  backgroundColor: doughnutChartColors,
+                  hoverBackgroundColor: doughnutChartColors,
+                  hoverBorderColor: "#fff"
+                  }
+              ]
+              }
+          });
+          } catch (error) {
+          console.error('Error initializing chart:', error);
+          }
+      }
+      
+      initializeDougnutChart();
+      
+    </script> 
     {% block common_js %}
         {% include "common_js.html" %}
     {% endblock common_js %}

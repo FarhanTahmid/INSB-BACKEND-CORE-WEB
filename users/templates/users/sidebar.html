@@ -365,9 +365,9 @@
                     </a>
                     <ul class="nav-sub nav-mega nav-mega-3">
                       {% for i in all_sc_ag %}
-                      <li>
-                        <span class="nav-icon">
-                          <img src={% static 'logos/PES.png' %} width="20px" height="20px">
+                      <li style="margin-left:5px;">
+                        <span class="nav-icon" >
+                          <img src="/media_files/{{i.logo}}" width="40px" height="40px">
                           <i class="fa-fa-user"></i>
                         </span>
                         <a href={% url 'chapters_and_affinity_group:sc_ag_homepage' i.primary %}>
