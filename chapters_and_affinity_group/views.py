@@ -7,7 +7,7 @@ from port.renderData import PortData
 from system_administration.system_error_handling import ErrorHandling
 from central_branch.renderData import Branch
 from datetime import datetime
-from django.http import Http404,HttpResponseBadRequest
+from django.http import Http404,HttpResponseBadRequest,JsonResponse
 import logging
 import traceback
 from django.contrib.auth.decorators import login_required
@@ -373,7 +373,6 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
 def sc_ag_membership_renewal_sessions(request,primary):
     sc_ag=PortData.get_all_sc_ag(request=request)
     get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-    
     #Load all sessions at first from Central Branch
     sessions=Renewal_Sessions.objects.order_by('-id')
     
@@ -388,7 +387,6 @@ def sc_ag_membership_renewal_sessions(request,primary):
 def sc_ag_renewal_session_details(request,primary,renewal_session):
     sc_ag=PortData.get_all_sc_ag(request=request)
     get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-    
     # get the session
     renewal_session=Renewal_Sessions.objects.get(pk=renewal_session)
     
@@ -410,6 +408,46 @@ def sc_ag_renewal_session_details(request,primary,renewal_session):
         'requests':get_renewal_requests,
     }
     return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context=context)
+
+@login_required
+def get_sc_ag_renewal_stats(request):
+    if request.method=="GET":
+        # get the renewal session id from the URL
+        seek_value=request.GET.get('seek_value')
+        # splitting the seek value by '-' to get sc_ag_primary and renewal session id.
+        seek_value=seek_value.split('-')
+        # get the sc_ag_primary and renewal session id
+        sc_ag_primary=seek_value[0]
+        renewal_session_id=seek_value[1]
+        
+        try:
+            # get the sc_ag_info of total renewal for the session
+            if(int(sc_ag_primary)==2):
+                renewal_count=Renewal_requests.objects.filter(session_id=renewal_session_id,pes_renewal_check=True,renewal_status=True).count()
+                renewal_left=Renewal_requests.objects.filter(session_id=renewal_session_id,pes_renewal_check=True,renewal_status=False).count()
+            if(int(sc_ag_primary)==3):
+                renewal_count=Renewal_requests.objects.filter(session_id=renewal_session_id,ras_renewal_check=True,renewal_status=True).count()
+                renewal_left=Renewal_requests.objects.filter(session_id=renewal_session_id,ras_renewal_check=True,renewal_status=False).count()
+            if(int(sc_ag_primary)==4):
+                renewal_count=Renewal_requests.objects.filter(session_id=renewal_session_id,ias_renewal_check=True,renewal_status=True).count()
+                renewal_left=Renewal_requests.objects.filter(session_id=renewal_session_id,ias_renewal_check=True,renewal_status=False).count()
+            if(int(sc_ag_primary)==5):
+                renewal_count=Renewal_requests.objects.filter(session_id=renewal_session_id,wie_renewal_check=True,renewal_status=True).count()
+                renewal_left=Renewal_requests.objects.filter(session_id=renewal_session_id,wie_renewal_check=True,renewal_status=False).count()
+
+            
+            context={
+                    "labels":["Complete Renewals","Incomplete Renewals"],
+                    "values":[renewal_count,renewal_left]
+                    }
+            return JsonResponse(context)
+        except Exception as e:
+            logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            # TODO: Make a good error code showing page and show it upon errror
+            return HttpResponseBadRequest("Bad Request")
+        
+        
 
 @login_required
 def sc_ag_renewal_excel_sheet(request,primary,renewal_session):
