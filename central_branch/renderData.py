@@ -634,7 +634,22 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error("Can not load intercollaboration details for each events. Something went wrong!")
             return False
+        
+    def load_event_published(event_id):
+        '''This function will return wheather a the event is published or not'''
+
+        return Events.objects.get(id = event_id).publish_in_main_web
     
+    def publish_event(event_id,state):
+        '''This function will publish or unpublish the event'''
+    
+        event = Events.objects.get(id=event_id)
+        if state == "on":
+            event.publish_in_main_web = True
+        else:
+            event.publish_in_main_web= False
+        event.save()
+
     def load_all_mother_events():
         '''This method loads all the mother/Super events'''
         return SuperEvents.objects.all()
