@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Manage Access | {{sc_ag_info.group_name}}</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+
+    <style>
+        body, html {
+        
+        margin: 0;
+        
+        align-items: center;
+        justify-content: center;
+        }
+
+        .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+          }
+          .btn-container {
+            text-align: center;
+          }
+          
+          .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+          }
+          
+          /* Media query for smaller screens (adjust the breakpoint as needed) */
+          @media (max-width: 768px) {
+            .btn {
+              width: 100%; /* Make the button full width on smaller screens */
+            }
+          }
+        
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block sc_ag_navbar %}
+                {% include 'sc_ag_navbar.html' %}
+            {% endblock sc_ag_navbar %}
+
+        </div>
+        <!--navbar content-->
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
+            <!--Start from here-->
+            <br>
+            <br>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;"> {{sc_ag_info.group_name}}</span><b><span style=""><br><br>Manage View Access</b></span> </h2>
+            <br>
+
+            <!--View Access-->
+            <h4 style="justify-content:center;text-align:center;margin-bottom:30px;"><span style="color:#00629B;"><b> View Permission</b> </span>Controls for <span style="color:#00629B;"><b>{{sc_ag_info.short_form}}</b></span></h4>
+
+            <!--View Permission Table-->
+            <div class="box">
+                <div class="box-header">
+                    
+                    <div style="text-align:right;">
+                        <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-b" ui-toggle-class="bounce" ui-target="#animate">Add a new Member To View Permission Controls</button>
+                    </div>
+                    <br>
+                    <small>This table holds the data of Page View Permission assigned to different members. You can add members here only who are registered members of {{sc_ag_info.short_form}}.<br>Update one row at a time.</small>
+                    <br>
+                    <label style="margin-left:5px;">Search:</label>
+                    <input class="form-control w-75" type="text" id="searchInput" placeholder="Search Member by name" onkeyup="searchTable()">
+                    <br>
+                </div>
+                <div class="table-responsive" style="max-height:300px; overflow-y:auto;">
+                  <table class="table table-bordered m-0">
+                    <thead>
+                      <tr>
+                        <th style="text-align:center;">IEEE ID</th>
+                        <th style="text-align:center;">Name</th>
+                        <th style="text-align:center;">Team</th>
+                        <th style="text-align:center;">Current Position</th>
+                        <th style="text-align:center;">Permission Criteria</th>
+                        <th style="text-align:center;">Action?</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                        {% for data_access in data_access %}
+                            <tr>
+                                <td>{{data_access.ieee_id}}</td>
+                                <td>{{data_access.ieee_id.name}}</td>
+                                <td>{{data_access.ieee_id.team}}</td>
+                                <td>{{data_access.ieee_id.position}}</td>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <td>
+                                        
+                                        {% if data_access.insb_member_details %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="insb_member_details" name="insb_member_details">
+                                        <label for="insb_member_details">INSB Registered Member Details Permission
+                                        </label><br>
+                                        {% else %}
+                                        <input type="checkbox" class="checkbox" value="insb_member_details" name="insb_member_details">
+                                        <label for="insb_member_details">INSB Registered Member Details Permission</label><br>
+                                        {% endif %}
+
+
+                                        {% if data_access.recruitment_session %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="recruitment_session" name="recruitment_session">
+                                        <label for="recruitment_session">Recruitment Data View Permission</label><br>
+                                        {% else %}
+                                        <input type="checkbox" class="checkbox" value="recruitment_session" name="recruitment_session">
+                                        <label for="recruitment_session">Recruitment Data View Permission</label><br>
+                                        {% endif %}
+
+
+                                        {% if data_access.recruited_member_details %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="recruited_member_details" name="recruited_member_details">
+                                        <label for="recruited_member_details">Rectuited Member Details Permission</label><br>
+                                        {% else %}
+                                        <input type="checkbox" class="checkbox" value="recruited_member_details" name="recruited_member_details">
+                                        <label for="recruited_member_details">Rectuited Member Details Permission</label><br>
+                                        {% endif %}
+
+
+                                        {% if data_access.renewal_data_access %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="renewal_data_access" name="renewal_data_access">
+                                        <label for="renewal_data_access">Membership Renewal Data Access Permission</label><br>
+                                        {% else %}
+                                        <input type="checkbox" class="checkbox" value="renewal_data_access" name="renewal_data_access">
+                                        <label for="renewal_data_access">Membership Renewal Data Access Permission</label><br>
+                                        {% endif %}
+                                            
+                                    </td>
+                                    <td>
+                                        <input class="btn btn-outline b-success text-success" name="access_update" type="submit" value="Update">
+                                        <input class="btn btn-outline b-danger text-danger" type="submit" value="Remove">
+                                        <input type="hidden" name="access_ieee_id" value={{data_access.ieee_id}}>
+                                    </td>
+                                </form>
+                            </tr>
+                        {% endfor %}
+
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+            <!--View Permission Table End-->
+            <br>
+            <br>
+
+            <!--Modal for adding member to View Permission-->
+            <div id="m-s-b" class="modal" data-backdrop="true">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add member to View Permission Controls!</h5>
+                    </div>
+                    <div class="modal-body p-lg">
+                      <p>Do select the Member Carefully!</p>
+                      <p>Members will be added in the View Permission Table. However, they will not have any access at first.</p>
+                      <br>
+                    </div>
+                    <!--Position Input-->
+
+                    <!--Position Input Ends-->
+
+                    <!--Search table-->
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="table-container">
+                            <input style="margin-left:10px;margin-bottom:5px;" class="w-75" type="text" id="searchInput2" placeholder="Search Member">
+                            <table id="data2" style="margin-left:10px; text-align:center; ">
+                                <thead>
+                                    <tr style="border:1px solid;">
+                                        <th style="text-align:center; border:1px solid;">Name</th>
+                                        <th style="text-align:center; border:1px solid;">IEEE ID</th>
+                                        <th style="text-align:center; border:1px solid;">Current Team</th>
+                                        <th style="text-align:center; border:1px solid;">Current Position</th>
+                                        <th style="text-align:center; border:1px solid;">Email</th>
+                                        <th style="text-align:center; border:1px solid;">Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for member in sc_ag_members %}
+                                        <tr style="border:1px solid;">
+                                            <td style="border:1px solid;">{{ member.member.name }}</td>
+                                            <td style="border:1px solid;">{{ member.member.ieee_id }}</td>
+                                            <td style="border:1px solid;">{{ member.team }}</td>
+                                            <td style="border:1px solid;">{{ member.position }}</td>
+                                            <td style="border:1px solid;">{{ member.member.email_ieee }}</td>
+                                            <td style="border:1px solid;">
+                                                <input type="checkbox" id="select" name="member_select" value={{member.member.ieee_id}}>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--Search Table Ends-->
+                    
+                        <div class="modal-footer">
+                        <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                    
+                            <input type="submit" class="btn primary p-x-md" name="update_data_access_member" value="Add Member to View Permission"></input>  
+                        </div>
+                    </form>
+
+                  </div><!-- /.modal-content -->
+                </div>
+            </div>
+            <!--End of Modal-->
+
+
+
+        </div>
+        <!--PAGE END-->
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+    
+    </div>
+    <!-- app end-->
+    <script>
+        function searchTable() {
+            // Declare variables
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.querySelector("table");
+            tr = table.getElementsByTagName("tr");
+        
+            // Loop through all table rows
+            for (i = 0; i < tr.length; i++) {
+                var rowVisible = false; // Flag to track if any column matches the search query in the current row
+        
+                // Loop through all columns in the current row
+                for (j = 0; j < tr[i].getElementsByTagName("td").length; j++) {
+                    td = tr[i].getElementsByTagName("td")[j];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            rowVisible = true; // If a match is found in any column, set the flag to true
+                        }
+                    }
+                }
+        
+                // Set the display style for the row based on the flag
+                if (rowVisible) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+
+    <script>
+        // Get the input element and table
+        var input = document.getElementById("searchInput2");
+        var table = document.getElementById("data2");
+
+        input.addEventListener("keyup", function () {
+            var filter, row, cell, i, j;
+            filter = input.value.toUpperCase();
+
+            // Loop through all table rows and hide those that don't match the search query
+            for (i = 0; i < table.rows.length; i++) {
+                row = table.rows[i];
+                for (j = 0; j < row.cells.length; j++) {
+                    cell = row.cells[j];
+                    if (cell) {
+                        if (cell.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                            row.style.display = "";
+                            break;
+                        } else {
+                            row.style.display = "none";
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+
+</body>
+</html>

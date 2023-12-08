@@ -353,66 +353,84 @@ def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
 
 @login_required
 def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
 
-    # get panel information
-    panel_info=Branch.load_panel_by_id(panel_pk)
-    # getting tenure time
-    if(panel_info.panel_end_time is None):
-        present_date=datetime.now()
-        tenure_time=present_date.date()-panel_info.creation_time.date()
-    else:
-        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+        # get panel information
+        panel_info=Branch.load_panel_by_id(panel_pk)
+        # getting tenure time
+        if(panel_info.panel_end_time is None):
+            present_date=datetime.now()
+            tenure_time=present_date.date()-panel_info.creation_time.date()
+        else:
+            tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
 
-    context={
-        'all_sc_ag':sc_ag,
-        'sc_ag_info':get_sc_ag_info,
-        'panel_info':panel_info,
-        'tenure_time':tenure_time,
+        context={
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'panel_info':panel_info,
+            'tenure_time':tenure_time,
 
-    }
-    return render(request,'Panels/sc_ag_alumni_members_tab.html',context=context)
+        }
+        return render(request,'Panels/sc_ag_alumni_members_tab.html',context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 @login_required
 def sc_ag_membership_renewal_sessions(request,primary):
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-    #Load all sessions at first from Central Branch
-    sessions=Renewal_Sessions.objects.order_by('-id')
-    
-    context={
-        'all_sc_ag':sc_ag,
-        'sc_ag_info':get_sc_ag_info,
-        'sessions':sessions,
-        'is_branch':False,
-    }
-    return render(request,"Renewal/renewal_homepage.html",context=context)
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        #Load all sessions at first from Central Branch
+        sessions=Renewal_Sessions.objects.order_by('-id')
+        
+        context={
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'sessions':sessions,
+            'is_branch':False,
+        }
+        return render(request,"Renewal/renewal_homepage.html",context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 def sc_ag_renewal_session_details(request,primary,renewal_session):
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-    # get the session
-    renewal_session=Renewal_Sessions.objects.get(pk=renewal_session)
-    
-    if(int(primary)==2):
-        get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,pes_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
-    elif(int(primary)==3):
-        get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,ras_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
-    elif(int(primary)==4):
-        get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,ias_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
-    elif(int(primary)==5):
-        get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,wie_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        # get the session
+        renewal_session=Renewal_Sessions.objects.get(pk=renewal_session)
+        
+        if(int(primary)==2):
+            get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,pes_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+        elif(int(primary)==3):
+            get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,ras_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+        elif(int(primary)==4):
+            get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,ias_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+        elif(int(primary)==5):
+            get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,wie_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
 
-    context={
-        'all_sc_ag':sc_ag,
-        'sc_ag_info':get_sc_ag_info,
-        'is_branch':False,
-        'session_id':renewal_session.pk,
-        'session_info':renewal_session,
-        'requests':get_renewal_requests,
-    }
-    return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context=context)
+        context={
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'is_branch':False,
+            'session_id':renewal_session.pk,
+            'session_info':renewal_session,
+            'requests':get_renewal_requests,
+        }
+        return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 @login_required
 def get_sc_ag_renewal_stats(request):
@@ -452,7 +470,22 @@ def get_sc_ag_renewal_stats(request):
             # TODO: Make a good error code showing page and show it upon errror
             return HttpResponseBadRequest("Bad Request")
         
-        
+@login_required
+def sc_ag_manage_access(request,primary):
+    # get sc ag info
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+    
+    # get SC AG members
+    get_sc_ag_members=SC_AG_Info.get_sc_ag_members(request=request,sc_ag_primary=primary)
+    
+    
+    context={
+        'all_sc_ag':sc_ag,
+        'sc_ag_info':get_sc_ag_info,
+        'sc_ag_members':get_sc_ag_members,
+    }
+    return render(request,'Manage Access/sc_ag_manage_access.html',context=context)       
 
 @login_required
 def sc_ag_renewal_excel_sheet(request,primary,renewal_session):

@@ -41,7 +41,6 @@
         var seekValue=sc_ag_value+'-'+sessionValue;
         const url = `/portal/SC_AG/sc_ag_renewal_stats/?seek_value=${encodeURIComponent(seekValue)}`;
         const response = await fetch(url);
-        console.log(response)
         const data = await response.json();
         console.log(data)
         return data;
