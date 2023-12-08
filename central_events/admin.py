@@ -8,9 +8,14 @@ class Event_Category(admin.ModelAdmin):
 @admin.register(SuperEvents)
 class Super_Events(admin.ModelAdmin):
     list_display = ['super_event_name','super_event_description','start_date','end_date']
+
 @admin.register(Events)
 class Events(admin.ModelAdmin):
-    list_display = ['id','event_name','event_type','super_event_id','event_organiser','event_date','registration_fee','flagship_event','publish_in_main_web']
+    list_display = ['id','event_name','event_types','super_event_id','event_organiser','event_date','registration_fee','flagship_event','publish_in_main_web']
+
+    def event_types(self, obj):
+        return ", ".join([p.event_category for p in obj.event_type.all()])
+
 
 @admin.register(InterBranchCollaborations)
 class InterBranchCollaborations(admin.ModelAdmin):

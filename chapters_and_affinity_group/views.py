@@ -493,9 +493,6 @@ def super_event_creation(request, primary):
                 messages.info(request,"New Super Event Added Successfully")
                 return redirect('chapters_and_affinity_group:event_control_homepage', primary)
             
-            elif (request.POST.get('cancel')):
-                return redirect('chapters_and_affinity_group:event_control_homepage', primary)
-            
         return render(request,"Events/Super Event/super_event_creation_form.html", context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -538,14 +535,14 @@ def event_creation_form_page(request,primary):
                 super_event_id=request.POST.get('super_event')
                 event_name=request.POST['event_name']
                 event_description=request.POST['event_description']
-                event_type = request.POST['event_type']
+                event_type_list = request.POST.getlist('event_type')
                 event_date=request.POST['event_date']
             
                 #It will return True if register event page 1 is success
                 get_event=Branch.register_event_page1(
                     super_event_id=super_event_id,
                     event_name=event_name,
-                    event_type=event_type,
+                    event_type_list=event_type_list,
                     event_description=event_description,
                     event_date=event_date,
                     event_organiser=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
@@ -557,8 +554,6 @@ def event_creation_form_page(request,primary):
                     #if the method returns true, it will redirect to the new page
                     return redirect('chapters_and_affinity_group:event_creation_form2',primary,get_event)
 
-            elif(request.POST.get('cancel')):
-                return redirect('chapters_and_affinity_group:event_control_homepage',primary)
         return render(request,'Events/event_creation_form.html',context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)

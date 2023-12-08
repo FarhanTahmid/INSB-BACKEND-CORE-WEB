@@ -50,7 +50,7 @@ class SuperEvents(models.Model):
 #The events table. Primary key is the id
 class Events(models.Model):
     event_name=models.CharField(null=False,blank=False,max_length=150)
-    event_type=models.ForeignKey(Event_Category,null=True,blank=True,on_delete=models.CASCADE)
+    event_type=models.ManyToManyField(Event_Category,blank=True)
     super_event_id=models.ForeignKey(SuperEvents,null=True,blank=True,on_delete=models.CASCADE)
     event_description=RichTextField()
     event_organiser=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE,default=5)#Default is set to 5 to keep branch as default organizer of events, If a new database is created change this number according to the id of the branch

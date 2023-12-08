@@ -46,6 +46,8 @@ urlpatterns = [
     path("events/create_event/<int:event_id>/page-p2", views.event_creation_form_page2, name="event_creation_form2"),
     #Event creation page 3
     path("events/create_event/<int:event_id>/page-3", views.event_creation_form_page3, name="event_creation_form3"),
+    #Event edit page
+    path('events/<int:event_id>/edit',views.event_edit_page,name='event_edit_page'),
     #Super Event Creation Form
     path('events/create_super_event/',views.super_event_creation,name="super_event_creation"),
     #event dashboard team
