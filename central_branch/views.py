@@ -882,6 +882,7 @@ def event_creation_form_page3(request,event_id):
 def event_description(request,event_id):
     '''Checking to see whether the user has access to view events on portal and edit them'''
     try:
+        # published = Branch.load_event_published(event_id)
         sc_ag=PortData.get_all_sc_ag(request=request) 
         user = request.user
         has_access = Branch.event_page_access(user)
@@ -914,6 +915,12 @@ def event_description(request,event_id):
                     else:
                         messages.error(request,"Something went wrong while removing the event!")
                         return redirect('central_branch:event_control')
+                
+                # if request.POST.get('publish_event'):
+                #     state = request.POST.get('publish_event')
+                #     print(state)
+                #     Branch.publish_event(event_id,state)
+                #     return redirect('central_branch:event_control')
 
 
             #FOR TASK ASSIGNING
@@ -930,6 +937,7 @@ def event_description(request,event_id):
                 'hasCollaboration':hasCollaboration,
                 'all_sc_ag':sc_ag,
                 'is_branch':is_branch,
+                # 'is_published':published,
             }
         else:
             return redirect('main_website:all-events')

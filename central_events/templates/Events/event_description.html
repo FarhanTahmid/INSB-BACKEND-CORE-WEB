@@ -53,6 +53,13 @@
               width: 100%; /* Make the button full width on smaller screens */
             }
           }
+          .slide-button{
+            width: 100px;
+            height: 50px;
+            position: absolute;
+            top: 145px;   /* Set the top property to 0 to position at the top */
+            right:50px ;
+          }
         
     </style>
 </head>
@@ -91,6 +98,20 @@
             <br>
             <h1 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;"><b>{{event_details.event_name}}</b></span></h1>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Organised By: <span style="color:#00629B;"><b>{{event_details.event_organiser.group_name}}</b></span>.</h4>
+              <div class = "slide-button">
+                <form method="POST">
+                  {% csrf_token %}
+                  <label class="form-control-label"><b>Publish:</b></label>
+                  <span>                                    
+                  <label class="ui-switch m-t-xs m-r">
+                    {% comment %} {% if is_published %} {% endcomment %}
+                      <input name="publish_event" type="checkbox" >
+                        <i></i>
+                    {% comment %} {% endif %} {% endcomment %}
+                  </label>                
+                  </span>
+                </form>
+               </div>
             {% if hasCollaboration %}
               <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">In Collaboration With:</h4>
               {% for i in interBranchCollaborations %}
@@ -106,10 +127,8 @@
             <!-- Add Delete Button -->
             <div class="btn-container">
               <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal">Delete Event</button>
-              <a href="#" class="btn btn-outline-primary">Edit Event</a>
-          </div>
-          
-          
+            </div>
+            
 
             <!-- Confirm Delete Modal -->
             <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -178,6 +197,7 @@
           // For simplicity, this example just closes the modal
           closeDeleteModal();
       }
+
   </script>
 
 </body>
