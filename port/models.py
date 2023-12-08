@@ -4,6 +4,9 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
     '''This model Includes Branch and all the Society'''
     group_name=models.CharField(null=False,blank=False,max_length=150)
     primary=models.IntegerField(null=False,blank=False,default=0)
+    short_form=models.CharField(null=True,blank=True,max_length=20)
+    primary_color_code=models.CharField(null=True,blank=True,max_length=20)
+    logo=models.ImageField(null=True,blank=True,upload_to='sc_ag_logos/')
 
     class Meta:
         verbose_name="Chapters-Societies-Affinity Group"

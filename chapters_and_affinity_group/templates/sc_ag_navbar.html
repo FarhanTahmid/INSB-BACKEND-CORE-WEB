@@ -65,6 +65,13 @@
                     </a>
                     <div ui-include="'../views/blocks/dropdown.new.html'"></div>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="{% url 'chapters_and_affinity_group:sc_ag_membership_renewal' sc_ag_info.primary %}">
+                    <i class="fa  fa-refresh"></i>
+                    <span>Membership Renewal</span>
+                    </a>
+                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                </li>
             </ul>
         
             <div ui-include="'../views/blocks/navbar.form.html'"></div>
