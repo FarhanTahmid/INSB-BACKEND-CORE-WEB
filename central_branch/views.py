@@ -663,13 +663,14 @@ def event_control_homepage(request):
     try:
         is_branch = True
         sc_ag=PortData.get_all_sc_ag(request=request)
-        all_insb_events=Branch.load_all_events()
+        all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(1)
         context={
             'all_sc_ag':sc_ag,
-            'events':all_insb_events,
+            'events':all_insb_events_with_interbranch_collaborations,
             # 'sc_ag_info':get_sc_ag_info,
             'has_access_to_create_event':has_access_to_create_event,
             'is_branch':is_branch,
+            
         }
 
         if(request.method=="POST"):
@@ -705,9 +706,11 @@ def super_event_creation(request):
         sc_ag=PortData.get_all_sc_ag(request=request)
         #calling it regardless to run the page
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,5)
+        is_branch = True
         context={
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
+            'is_branch' : is_branch
         }
 
         if request.method == "POST":
@@ -725,10 +728,7 @@ def super_event_creation(request):
                 Branch.register_super_events(super_event_name,super_event_description,start_date,end_date)
                 messages.info(request,"New Super Event Added Successfully")
                 return redirect('central_branch:event_control')
-            
-            elif (request.POST.get('cancel')):
-                return redirect('central_branch:event_control')
-            
+                        
         return render(request,"Events/Super Event/super_event_creation_form.html", context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -772,14 +772,14 @@ def event_creation_form_page(request):
                 super_event_id=request.POST.get('super_event')
                 event_name=request.POST['event_name']
                 event_description=request.POST['event_description']
-                event_type = request.POST['event_type']
+                event_type_list = request.POST.getlist('event_type')
                 event_date=request.POST['event_date']
 
                 #It will return True if register event page 1 is success
                 get_event=Branch.register_event_page1(
                     super_event_id=super_event_id,
                     event_name=event_name,
-                    event_type=event_type,
+                    event_type_list=event_type_list,
                     event_description=event_description,
                     event_date=event_date
                 )
@@ -789,9 +789,7 @@ def event_creation_form_page(request):
                 else:
                     #if the method returns true, it will redirect to the new page
                     return redirect('central_branch:event_creation_form2',get_event)
-
-            elif(request.POST.get('cancel')):
-                return redirect('central_branch:event_control')
+                
         return render(request,'Events/event_creation_form.html',context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -839,6 +837,7 @@ def event_creation_form_page2(request,event_id):
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
 
+@login_required
 def event_creation_form_page3(request,event_id):
     try:
         is_branch=True
@@ -896,8 +895,9 @@ def event_description(request,event_id):
             intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
             # Checking if event has collaborations
             hasCollaboration=False
-            if(len(interBranchCollaborations)>0 and len(intraBranchCollaborations)>0):
+            if(len(interBranchCollaborations)>0 or len(intraBranchCollaborations)>0):
                 hasCollaboration=True
+            
           
             get_all_team_name = Branch.load_teams()
             get_event_details = Events.objects.get(id = event_id)
@@ -957,3 +957,64 @@ def get_updated_options_for_event_dashboard(request):
 
         #returning the dictionary
         return JsonResponse(updated_options, safe=False)
+    
+@login_required
+def event_edit_form(request, event_id):
+
+    ''' This function loads the edit page of events '''
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        is_branch = True
+        #Get event details from databse
+        event_details = Events.objects.get(pk=event_id)
+        
+        context={
+            'all_sc_ag' : sc_ag,
+            'is_branch' : is_branch,
+            'event_details' : event_details
+        }
+
+        # if(request.method == "POST"):
+        #     ''' Get data from form and call update function to update event '''
+
+        #     event_name = request.POST['event_name']
+
+        #     #Check if the update request is successful
+        #     if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name)):
+        #         messages.info(request,f"Event with EVENT ID {event_id} was Updated successfully")
+        #         return redirect('central_branch:event_dashboard', event_id) 
+        #     else:
+        #         messages.error(request,"Something went wrong while updating the event!")
+        #         return redirect('central_branch:event_dashboard', event_id)
+
+        return render(request, '', context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return HttpResponseBadRequest("Bad Request")
+    
+def event_edit_form2(request, event_id):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    is_branch = True
+    #Get event details from databse
+    event_details = Events.objects.get(pk=event_id)
+    
+    context={
+        'all_sc_ag' : sc_ag,
+        'is_branch' : is_branch,
+        'event_details' : event_details
+    }
+    return render(request, '', context)
+
+def event_edit_form3(request, event_id):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    is_branch = True
+    #Get event details from databse
+    event_details = Events.objects.get(pk=event_id)
+    
+    context={
+        'all_sc_ag' : sc_ag,
+        'is_branch' : is_branch,
+        'event_details' : event_details
+    }
+    return render(request, '', context)

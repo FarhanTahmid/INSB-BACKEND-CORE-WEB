@@ -149,20 +149,28 @@
                         <tr>
                             <th>Event Name</th>
                             <th>Event Organiser</th>
+                            <th>Collaborations</th>
                             <th>Date of Event</th>
                             
                         </tr>
                       </thead>
                       <tbody>
-                        {% for event in events %}
+                        {% for key, value in events.items %}
                         <tr>
                             {% if is_branch %}
-                            <td><a style="color:blue;" href="{% url 'central_branch:event_dashboard' event.id %}">{{event.event_name }}</a></td>
+                            <td><a style="color:blue;" href="{% url 'central_branch:event_dashboard' key.id %}">{{key.event_name }}</a></td>
                             {% else %}
-                            <td><a style="color:blue;" href="{% url 'chapters_and_affinity_group:event_dashboard' sc_ag_info.primary event.id %}">{{event.event_name }}</a></td>
+                            <td><a style="color:blue;" href="{% url 'chapters_and_affinity_group:event_dashboard' sc_ag_info.primary key.id %}">{{key.event_name }}</a></td>
                             {% endif %}
-                            <td>{{ event.event_organiser.group_name }}</td>
-                            <td>{{ event.event_date }}</td>
+                            <td>{{ key.event_organiser.group_name }}</td>
+                            <td>
+                              {% for collabs in value %}
+                              <ul>
+                                <li>{{collabs}}</li>
+                              </ul>
+                              {% endfor %}
+                            </td>
+                            <td>{{ key.event_date }}</td>
                             
                         </tr>
                         {% endfor %}

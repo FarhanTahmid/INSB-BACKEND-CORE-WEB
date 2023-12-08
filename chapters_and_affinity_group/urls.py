@@ -4,6 +4,8 @@ from . import views
 app_name="chapters_and_affinity_group"
 
 urlpatterns = [
+    
+    path('sc_ag_renewal_stats/',views.get_sc_ag_renewal_stats,name="sc_ag_renewal_stats"),
     path('<str:primary>/',views.sc_ag_homepage,name='sc_ag_homepage'),
     path('<str:primary>/members',views.sc_ag_members,name='sc_ag_members'),
     path('<str:primary>/panels',views.sc_ag_panels,name="sc_ag_panels"),
@@ -17,5 +19,10 @@ urlpatterns = [
     path('<str:primary>/events/create_event/<int:event_id>/page-p2', views.event_creation_form_page2, name="event_creation_form2"),
     path('<str:primary>/events/create_event/<int:event_id>/page-p3', views.event_creation_form_page3, name="event_creation_form3"),
     path('<str:primary>/events/create_super_event/',views.super_event_creation,name="super_event_creation"),    
+    path('<str:primary>/membership_renewal',views.sc_ag_membership_renewal_sessions,name="sc_ag_membership_renewal"),
+    path('<str:primary>/membership_renewal/<str:renewal_session>/requests',views.sc_ag_renewal_session_details,name="sc_ag_membership_renewal_details"),
+    path('<str:primary>/sc_ag_renewal_excel_sheet/<str:renewal_session>',views.sc_ag_renewal_excel_sheet,name="generate_sc_ag_renewal_excel"),
+    path('<str:primary>/events/',views.event_control_homepage,name="event_control_homepage"),
+    
 
 ]
