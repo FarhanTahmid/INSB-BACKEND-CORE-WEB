@@ -513,6 +513,7 @@ def event_control_homepage(request,primary):
 @login_required
 def event_description(request,primary,event_id):
     try:
+        # published = Branch.load_event_published(event_id)
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         is_branch= False
@@ -544,6 +545,13 @@ def event_description(request,primary,event_id):
                     else:
                         messages.error(request,"Something went wrong while removing the event!")
                         return redirect('chapters_and_affinity_group:event_control_homepage',primary)
+                    
+                # if request.POST.get('publish_event'):
+                #     state = request.POST.get('publish_event')
+                #     print(state)
+                #     Branch.publish_event(event_id,state)
+                #     return redirect('chapters_and_affinity_group:event_dashboard',primary,event_id)
+
         context={
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
@@ -552,6 +560,7 @@ def event_description(request,primary,event_id):
             'interBranchCollaborations':interBranchCollaborations,
             'intraBranchCollaborations':intraBranchCollaborations,
             'hasCollaboration':hasCollaboration,
+            # 'is_published':published,
             
         }
         return render(request,"Events/event_description.html",context)

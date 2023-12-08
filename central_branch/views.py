@@ -882,7 +882,7 @@ def event_creation_form_page3(request,event_id):
 def event_description(request,event_id):
     '''Checking to see whether the user has access to view events on portal and edit them'''
     try:
-        # published = Branch.load_event_published(event_id)
+        # published = Branch.load_event_published(1,event_id)
         sc_ag=PortData.get_all_sc_ag(request=request) 
         user = request.user
         has_access = Branch.event_page_access(user)
