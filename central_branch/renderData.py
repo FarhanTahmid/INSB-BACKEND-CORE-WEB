@@ -46,7 +46,7 @@ class Branch:
             if event_type_lower == registered_event_category:
                 return False 
         except:
-            new_event_type = Event_Category.objects.create(event_category=event_type_lower,event_category_for = Chapters_Society_and_Affinity_Groups.objects.get(primary = 1))
+            new_event_type = Event_Category.objects.create(event_category=event_type_lower,event_category_for = Chapters_Society_and_Affinity_Groups.objects.get(primary = group_number))
             new_event_type.save()
             return True
         
@@ -77,10 +77,12 @@ class Branch:
             saving_data = SuperEvents(super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date,end_date=end_date)
             saving_data.save()
     
-    def register_event_page1(super_event_id,event_name,event_type,event_description,event_date):
+    def register_event_page1(super_event_id,event_name,event_type,event_description,event_date,event_organiser=None):
             '''This method creates an event and registers data which are provided in event page1. Returns the id of the event if the method can create a new event successfully
             TAKES SUPER EVENT NAME, EVENT NAME, EVENT DESCRIPTION AS STRING. TAKES PROBABLE & FINAL DATE ALSO AS INPUT'''
-            
+            if event_organiser==None:
+                event_organiser = 1
+
             if(super_event_id=="null"):
                     
                     #now create the event as super event is null
@@ -91,7 +93,8 @@ class Branch:
                             new_event=Events(
                             event_name=event_name,
                             event_description=event_description,
-                            event_type = Event_Category.objects.get(id = int(event_type))
+                            event_type = Event_Category.objects.get(id = int(event_type)),
+                            event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
                             new_event.save()
                             return new_event.id
@@ -104,7 +107,8 @@ class Branch:
                             event_name=event_name,
                             event_description=event_description,
                             event_type = Event_Category.objects.get(id = int(event_type)),
-                            event_date=event_date
+                            event_date=event_date,
+                            event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
                             new_event.save()
                             return new_event.id
@@ -123,6 +127,7 @@ class Branch:
                             event_name=event_name,
                             event_description=event_description,
                             event_type = Event_Category.objects.get(id = int(event_type)),
+                            event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
                             new_event.save()
                             return new_event.id
@@ -137,7 +142,8 @@ class Branch:
                             event_name=event_name,
                             event_description=event_description,
                             event_type = Event_Category.objects.get(id = int(event_type)),
-                            event_date=event_date
+                            event_date=event_date,
+                            event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
                             new_event.save()
                             return new_event.id
@@ -149,7 +155,19 @@ class Branch:
             '''This method creates collaborations related to the events and registers data which are provided in event page2
             TAKES INTER BRANCH COLLABORATION LIST, INTRA BRANCH COLLABORATION STRING AND EVENT ID AS PARAMETER'''
 
-        
+        #checking who organised the event
+            event_organiser = Events.objects.get(pk = event_id).event_organiser
+            group_name = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser)).group_name
+            print(group_name)
+            print(inter_branch_collaboration_list)
+            if group_name != "IEEE NSU Student Branch":
+                if inter_branch_collaboration_list[0]=="null":
+                    inter_branch_collaboration_list[0]='5'
+                else:
+                    if '5' not in inter_branch_collaboration_list:
+                        inter_branch_collaboration_list.append('5')
+                        print(inter_branch_collaboration_list)
+            print(inter_branch_collaboration_list)
         #first check if both the collaboration options are null. If so, do register nothing on database and redirect to the next page
             if(inter_branch_collaboration_list[0]=="null" and intra_branch_collaboration==""):
                 return True #not registering any collaboration, go to the third page
@@ -157,7 +175,7 @@ class Branch:
             elif(inter_branch_collaboration_list[0]=="null" and intra_branch_collaboration!=""):
                 # Do the intra branch collab only
                 
-                    
+               
                 #check if an event exists with the same id. if so just update the collaboration_with field
                 check_for_existing_events=IntraBranchCollaborations.objects.filter(event_id=event_id)
                 if(check_for_existing_events.exists()):
@@ -169,6 +187,7 @@ class Branch:
                         event_id=Events.objects.get(id=event_id),
                         collaboration_with=intra_branch_collaboration
                     )
+                    print("here")
                     new_event_intra_branch_collaboration.save()
                     return True #intra branch collab created, now go to third page
                 
@@ -176,7 +195,7 @@ class Branch:
             #now checking for the criterias where there are inter branch collaboration
             else:
                 #checking if the intra branch collab option is still null. If null, only register for intra branch collaboration
-                if(intra_branch_collaboration==""):
+                if(intra_branch_collaboration==None):
                     for id in inter_branch_collaboration_list:
                         
                             #check for existing events with the same inter branch collab
@@ -184,13 +203,13 @@ class Branch:
                             if(check_for_existing_events.exists()):
                                 check_for_existing_events.update(collaboration_with=id) #this piece of code is really not needed just used to avoid errors and usage of extra memory
                             else:
-                            #if there is no previous record of this event with particular collab option, register a new one
-                                new_event_inter_branch_collaboration=InterBranchCollaborations(
-                                    event_id=Events.objects.get(id=event_id),
-                                    collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(id=id)
-                                )   
-                                new_event_inter_branch_collaboration.save()
-                                return True
+                                #if there is no previous record of this event with particular collab option, register a new one
+                                    new_event_inter_branch_collaboration=InterBranchCollaborations(
+                                        event_id=Events.objects.get(id=event_id),
+                                        collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(id=id)
+                                    )   
+                                    new_event_inter_branch_collaboration.save()
+                                    return True
                         
                 #now register for the both collaboration option when both are filled
                 else:
@@ -206,7 +225,7 @@ class Branch:
                                 new_event_inter_branch_collaboration=InterBranchCollaborations(
                                     event_id=Events.objects.get(id=event_id),
                                     collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(id=id) 
-                                )   
+                                ) 
                                 new_event_inter_branch_collaboration.save()
                                 
                             
@@ -541,12 +560,7 @@ class Branch:
     def load_all_events_for_groups(primary):
 
         '''This function will return a list of only those events associated with that particular group'''
-
-        collabortations = InterBranchCollaborations.objects.filter(collaboration_with = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
-        events =[]
-        for i in collabortations:
-            events.append(Events.objects.get(id = str(i.event_id)))
-        return events
+        return Events.objects.filter(event_organiser= Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
         
     
     def event_page_access(user):

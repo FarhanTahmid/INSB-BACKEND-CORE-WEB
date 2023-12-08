@@ -65,11 +65,16 @@
   
         <!-- navbar content -->
         <div id="content" class="app-content box-shadow-z0" role="main">
-            {% block navbar %}
-                {% include 'navbar.html' %}
-            {% endblock navbar %}
-
-        </div>
+            {% if is_branch %}
+              {% block navbar %}
+                  {% include 'navbar.html' %}
+              {% endblock navbar %}
+            {% else %}
+              {% block sc_ag_navbar %}
+                {% include 'sc_ag_navbar.html' %}
+              {% endblock sc_ag_navbar %}
+            {% endif %}
+          </div>
         <!--navbar content-->
         
         <!-- ############ PAGE START-->
