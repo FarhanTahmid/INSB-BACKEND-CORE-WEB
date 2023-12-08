@@ -562,6 +562,30 @@ class Branch:
     
     def load_all_events():
         return Events.objects.all().order_by('-id')
+    
+    def load_all_inter_branch_collaborations_with_events(primary):
+        '''This fuction returns a dictionary with key as events id and values a list of inter collaborations 
+            for that specific event'''
+        dic = {}
+        collaborations=[]
+        if primary == 1:
+            events = Branch.load_all_events()
+        else:
+            events = Branch.load_all_events_for_groups(primary)
+        for i in events:
+            all_collaborations_for_this_event = InterBranchCollaborations.objects.filter(event_id = i.id)
+            # print(all_collaborations_for_this_event)
+            for j in all_collaborations_for_this_event:
+                collaborations.append(j.collaboration_with.group_name)  
+            # print(collaborations)
+            dic.update({i:collaborations})
+            # print("dictionary: ")
+            # for key, value in dic.items():
+            #     print(f"{key} : {value}")
+            collaborations=[]
+            # print(collaborations)
+        return dic
+    
     def load_all_mother_events():
         '''This method loads all the mother/Super events'''
         return SuperEvents.objects.all()

@@ -480,7 +480,7 @@ def event_control_homepage(request,primary):
         has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
         
         #loading all events for society affinity groups now
-        events= Branch.load_all_events_for_groups(primary)
+        events= Branch.load_all_inter_branch_collaborations_with_events(primary)
         
         if request.method=="POST":
             if request.POST.get('add_event_type'):

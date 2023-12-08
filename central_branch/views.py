@@ -663,13 +663,14 @@ def event_control_homepage(request):
     try:
         is_branch = True
         sc_ag=PortData.get_all_sc_ag(request=request)
-        all_insb_events=Branch.load_all_events()
+        all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(1)
         context={
             'all_sc_ag':sc_ag,
-            'events':all_insb_events,
+            'events':all_insb_events_with_interbranch_collaborations,
             # 'sc_ag_info':get_sc_ag_info,
             'has_access_to_create_event':has_access_to_create_event,
             'is_branch':is_branch,
+            
         }
 
         if(request.method=="POST"):
