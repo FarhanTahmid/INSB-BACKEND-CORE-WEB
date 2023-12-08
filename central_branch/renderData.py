@@ -6,6 +6,7 @@ from system_administration.models import MDT_Data_Access
 from central_events.models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_Category
 from events_and_management_team.models import Venue_List, Permission_criteria
 from system_administration.render_access import Access_Render
+from system_administration.system_error_handling import ErrorHandling
 # from users.models import Executive_commitee,Executive_commitee_members
 from membership_development_team.renderData import MDT_DATA
 from datetime import datetime
@@ -16,66 +17,113 @@ from django.db.utils import IntegrityError
 import traceback
 import logging
 
+
 class Branch:
+
+    logger=logging.getLogger(__name__)
 
     def getBranchID():
         '''This Method returns the object of Branch from Society chapters and AG Table'''
-        return Chapters_Society_and_Affinity_Groups.objects.get(primary=1)
+        try:
+            return Chapters_Society_and_Affinity_Groups.objects.get(primary=1)
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error("Can not return Branch ID. Something went wrong!")
+            return False
     
     def reset_all_teams():
         '''To remove all members in all teams and assigning them as general memeber'''
-        all_memebers_in_team = Members.objects.all()
-        all_memebers_in_team.update(team=None,position = Roles_and_Position.objects.get(id=13))
+        try:
+            all_memebers_in_team = Members.objects.all()
+            all_memebers_in_team.update(team=None,position = Roles_and_Position.objects.get(id=13))
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error("Can not reset all team. Something went wrong!")
+            return False  
     
     def new_recruitment_session(team_name):
 
-        '''Method to create a new recruitment session for team, bu creating new Team'''
-
-        new_team = Teams(team_name = team_name)
-        new_team.save()
+        '''Method to create a new recruitment session for team, by creating new Team'''
+        try:
+            new_team = Teams(team_name = team_name)
+            new_team.save()
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error("Can not create new recruitment sesssion. Something went wrong!")
+            return False
     
     def add_event_type_for_group(event_type,group_number):
         
-        '''This function adds new event category for IEEE Student Branch only''' 
+        '''This function adds new event category according to the group''' 
 
-
-        event_type_lower = event_type.lower()
         try:
-            registered_event_category = Event_Category.objects.get(event_category = event_type_lower,event_category_for=Chapters_Society_and_Affinity_Groups.objects.get(primary = group_number))
-            registered_event_category = registered_event_category.event_category.lower()
-            if event_type_lower == registered_event_category:
-                return False 
-        except:
-            new_event_type = Event_Category.objects.create(event_category=event_type_lower,event_category_for = Chapters_Society_and_Affinity_Groups.objects.get(primary = group_number))
-            new_event_type.save()
-            return True
+            event_type_lower = event_type.lower()
+            try:
+                registered_event_category = Event_Category.objects.get(event_category = event_type_lower,event_category_for=Chapters_Society_and_Affinity_Groups.objects.get(primary = group_number))
+                registered_event_category = registered_event_category.event_category.lower()
+                if event_type_lower == registered_event_category:
+                    return False 
+            except:
+                new_event_type = Event_Category.objects.create(event_category=event_type_lower,event_category_for = Chapters_Society_and_Affinity_Groups.objects.get(primary = group_number))
+                new_event_type.save()
+                return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error("Can not create new event type. Something went wrong!")
+            return False
         
 
     def load_teams():
         
         '''This function returns all the teams in the database'''
-        
-        teams=Teams.objects.all().values('primary','team_name') #returns a list of dictionaryies with the id and team name
-        return teams
+        try:
+            teams=Teams.objects.all().values('primary','team_name') #returns a list of dictionaryies with the id and team name
+            return teams
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error("Can not return all teams. Something went wrong!")
+            return False
+    
     def load_team_members(team_primary):
         '''This function loads all the team members from the database and also checks if the member is included in the current panel'''
-        team=Teams.objects.get(primary=team_primary)
-        team_id=team.id
-        get_users=Members.objects.order_by('position').filter(team=team_id)
-        get_current_panel=Branch.load_current_panel()
-        team_members=[]
-        for i in get_users:
-            if(Panel_Members.objects.filter(member=i.ieee_id,tenure=get_current_panel.pk).exists()):
-                team_members.append(i)
-        return team_members
+        
+        try:
+            team=Teams.objects.get(primary=team_primary)
+            team_id=team.id
+            get_users=Members.objects.order_by('position').filter(team=team_id)
+            get_current_panel=Branch.load_current_panel()
+            team_members=[]
+            for i in get_users:
+                if(Panel_Members.objects.filter(member=i.ieee_id,tenure=get_current_panel.pk).exists()):
+                    team_members.append(i)
+            return team_members
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error("Can not check member is included in current panel and cannot load all team members. Something went wrong!")
+            return False
     
     def register_super_events(super_event_name,super_event_description,start_date,end_date):
-        if end_date=='':
-            saving_data = SuperEvents(super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date)
-            saving_data.save()
-        else:
-            saving_data = SuperEvents(super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date,end_date=end_date)
-            saving_data.save()
+        
+        '''This function registers the super event'''
+
+        try:
+            if end_date=='':
+                saving_data = SuperEvents(super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date)
+                saving_data.save()
+            else:
+                saving_data = SuperEvents(super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date,end_date=end_date)
+                saving_data.save()
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error("Can not register super event in database. Something went wrong!")
+            return False
     
     def register_event_page1(super_event_id,event_name,event_type_list,event_description,event_date,event_organiser=None):
             '''This method creates an event and registers data which are provided in event page1. Returns the id of the event if the method can create a new event successfully
@@ -564,27 +612,28 @@ class Branch:
         return Events.objects.all().order_by('-id')
     
     def load_all_inter_branch_collaborations_with_events(primary):
-        '''This fuction returns a dictionary with key as events id and values a list of inter collaborations 
+        '''This fuction returns a dictionary with key as events id and values as a list of inter collaborations 
             for that specific event'''
-        dic = {}
-        collaborations=[]
-        if primary == 1:
-            events = Branch.load_all_events()
-        else:
-            events = Branch.load_all_events_for_groups(primary)
-        for i in events:
-            all_collaborations_for_this_event = InterBranchCollaborations.objects.filter(event_id = i.id)
-            # print(all_collaborations_for_this_event)
-            for j in all_collaborations_for_this_event:
-                collaborations.append(j.collaboration_with.group_name)  
-            # print(collaborations)
-            dic.update({i:collaborations})
-            # print("dictionary: ")
-            # for key, value in dic.items():
-            #     print(f"{key} : {value}")
+        try:
+            dic = {}
             collaborations=[]
-            # print(collaborations)
-        return dic
+            if primary == 1:
+                events = Branch.load_all_events()
+            else:
+                events = Branch.load_all_events_for_groups(primary)
+            for i in events:
+                all_collaborations_for_this_event = InterBranchCollaborations.objects.filter(event_id = i.id)
+                for j in all_collaborations_for_this_event:
+                    collaborations.append(j.collaboration_with.group_name)  
+                dic.update({i:collaborations})
+                collaborations=[]
+                
+            return dic
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error("Can not load intercollaboration details for each events. Something went wrong!")
+            return False
     
     def load_all_mother_events():
         '''This method loads all the mother/Super events'''
