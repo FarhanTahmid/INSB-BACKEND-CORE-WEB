@@ -168,7 +168,7 @@ class Branch:
             group_primary = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser)).primary
             print(group_primary)
             print(inter_branch_collaboration_list)
-            if group_primary != "1":
+            if group_primary != 1:
                 if inter_branch_collaboration_list[0]=="null":
                     inter_branch_collaboration_list[0]='1'
                 else:
