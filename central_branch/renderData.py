@@ -126,7 +126,7 @@ class Branch:
                         try:
                             get_super_event_id = SuperEvents.objects.get(id = super_event_id)
                             print(get_super_event_id.super_event_name)
-                            new_event=Events(
+                            new_event=Events.objects.create(
                             super_event_id=get_super_event_id,
                             event_name=event_name,
                             event_description=event_description,

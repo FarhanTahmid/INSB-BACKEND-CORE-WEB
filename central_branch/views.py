@@ -959,7 +959,7 @@ def get_updated_options_for_event_dashboard(request):
         return JsonResponse(updated_options, safe=False)
     
 @login_required
-def event_edit_page(request, event_id):
+def event_edit_form(request, event_id):
 
     ''' This function loads the edit page of events '''
     try:
@@ -974,21 +974,47 @@ def event_edit_page(request, event_id):
             'event_details' : event_details
         }
 
-        if(request.method == "POST"):
-            ''' Get data from form and call update function to update event '''
+        # if(request.method == "POST"):
+        #     ''' Get data from form and call update function to update event '''
 
-            event_name = request.POST['event_name']
+        #     event_name = request.POST['event_name']
 
-            #Check if the update request is successful
-            if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name)):
-                messages.info(request,f"Event with EVENT ID {event_id} was Updated successfully")
-                return redirect('central_branch:event_dashboard', event_id) 
-            else:
-                messages.error(request,"Something went wrong while updating the event!")
-                return redirect('central_branch:event_dashboard', event_id)
+        #     #Check if the update request is successful
+        #     if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name)):
+        #         messages.info(request,f"Event with EVENT ID {event_id} was Updated successfully")
+        #         return redirect('central_branch:event_dashboard', event_id) 
+        #     else:
+        #         messages.error(request,"Something went wrong while updating the event!")
+        #         return redirect('central_branch:event_dashboard', event_id)
 
-        return render(request, 'Events/event_creation_form.html', context)
+        return render(request, '', context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return HttpResponseBadRequest("Bad Request")
+    
+def event_edit_form2(request, event_id):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    is_branch = True
+    #Get event details from databse
+    event_details = Events.objects.get(pk=event_id)
+    
+    context={
+        'all_sc_ag' : sc_ag,
+        'is_branch' : is_branch,
+        'event_details' : event_details
+    }
+    return render(request, '', context)
+
+def event_edit_form3(request, event_id):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    is_branch = True
+    #Get event details from databse
+    event_details = Events.objects.get(pk=event_id)
+    
+    context={
+        'all_sc_ag' : sc_ag,
+        'is_branch' : is_branch,
+        'event_details' : event_details
+    }
+    return render(request, '', context)
