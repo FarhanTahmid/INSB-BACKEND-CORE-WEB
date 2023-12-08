@@ -64,7 +64,7 @@
                                 </div>
                                 <br>  
                                 <div style="text-align: center;">
-                                    <input type="submit" name="cancel" class="btn btn-outline b-danger text-danger" value="Cancel">
+                                    <input type="button" class="btn btn-outline b-danger text-danger" value="Cancel" onclick="goBack()">
                                     <input type="submit" name="next" class="btn btn-outline b-success text-success" value="Continue to Collaborations Tab">
                                 </div>
                                 <br> 
@@ -75,5 +75,14 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function goBack() {
+            // You can add any additional confirmation logic here if needed
+    
+            // Navigate back to the previous page
+            window.history.back();
+        }
+    </script>
 
 {% endblock event_details_form %}
