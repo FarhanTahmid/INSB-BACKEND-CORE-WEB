@@ -4,6 +4,7 @@ from port.renderData import PortData
 from users import renderData
 from .get_sc_ag_info import SC_AG_Info
 from .renderData import Sc_Ag
+from .manage_access import SC_Ag_Render_Access
 from port.renderData import PortData
 from system_administration.system_error_handling import ErrorHandling
 from central_branch.renderData import Branch
@@ -478,8 +479,7 @@ def sc_ag_manage_access(request,primary):
     
     # get SC AG members
     get_sc_ag_members=SC_AG_Info.get_sc_ag_members(request=request,sc_ag_primary=primary)
-    
-    
+    SC_Ag_Render_Access.get_sc_ag_common_access(request,primary)
     context={
         'all_sc_ag':sc_ag,
         'sc_ag_info':get_sc_ag_info,
