@@ -17,6 +17,10 @@ urlpatterns = [
     path('<str:primary>/membership_renewal/<str:renewal_session>/requests',views.sc_ag_renewal_session_details,name="sc_ag_membership_renewal_details"),
     path('<str:primary>/sc_ag_renewal_excel_sheet/<str:renewal_session>',views.sc_ag_renewal_excel_sheet,name="generate_sc_ag_renewal_excel"),
     path('<str:primary>/events/',views.event_control_homepage,name="event_control_homepage"),
-    
+    path('<str:primary>/events/<int:event_id>',views.event_description,name='event_dashboard'),
+    path('<str:primary>/events/create_event/',views.event_creation_form_page,name='event_creation_form1'),
+    path('<str:primary>/events/create_event/<int:event_id>/page-p2', views.event_creation_form_page2, name="event_creation_form2"),
+    path('<str:primary>/events/create_event/<int:event_id>/page-p3', views.event_creation_form_page3, name="event_creation_form3"),
+    path('<str:primary>/events/create_super_event/',views.super_event_creation,name="super_event_creation"),    
 
 ]

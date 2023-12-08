@@ -667,6 +667,7 @@ def event_control_homepage(request):
         context={
             'all_sc_ag':sc_ag,
             'events':all_insb_events,
+            # 'sc_ag_info':get_sc_ag_info,
             'has_access_to_create_event':has_access_to_create_event,
             'is_branch':is_branch,
         }
@@ -702,8 +703,11 @@ def super_event_creation(request):
 
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
+        #calling it regardless to run the page
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,5)
         context={
             'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
         }
 
         if request.method == "POST":
@@ -739,6 +743,7 @@ def event_creation_form_page(request):
     try:
         form = EventForm()
         sc_ag=PortData.get_all_sc_ag(request=request)
+        is_branch = True
 
         #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
         super_events=Branch.load_all_mother_events()
@@ -746,8 +751,10 @@ def event_creation_form_page(request):
         context={
             'super_events':super_events,
             'event_types':event_types,
+            'is_branch' : is_branch,
             'all_sc_ag':sc_ag,
             'form':form,
+            'is_branch':is_branch,
         }
         
         '''function for creating event'''
@@ -798,11 +805,15 @@ def event_creation_form_page2(request,event_id):
     #loading all inter branch collaboration Options
 
     try:
+        is_branch=True
         sc_ag=PortData.get_all_sc_ag(request=request)
         inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+        is_branch = True
+        
         context={
             'inter_branch_collaboration_options':inter_branch_collaboration_options,
             'all_sc_ag':sc_ag,
+            'is_branch' : is_branch,
         }
         if request.method=="POST":
             if(request.POST.get('next')):
@@ -830,16 +841,20 @@ def event_creation_form_page2(request,event_id):
 
 def event_creation_form_page3(request,event_id):
     try:
+        is_branch=True
         sc_ag=PortData.get_all_sc_ag(request=request)
         #loading all venues from the venue list from event management team database
         venues=Events_And_Management_Team.getVenues()
         #loading all the permission criterias from event management team database
         permission_criterias=Events_And_Management_Team.getPermissionCriterias()
 
+        is_branch = True
+
         context={
             'venues':venues,
             'permission_criterias':permission_criterias,
             'all_sc_ag':sc_ag,
+            'is_branch' : is_branch,
         }
         if request.method=="POST":
             if request.POST.get('create_event'):
@@ -871,6 +886,7 @@ def event_description(request,event_id):
         sc_ag=PortData.get_all_sc_ag(request=request) 
         user = request.user
         has_access = Branch.event_page_access(user)
+        is_branch=True
         if has_access:
 
             '''Details page for registered events'''
@@ -880,11 +896,10 @@ def event_description(request,event_id):
             intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
             # Checking if event has collaborations
             hasCollaboration=False
-            if(len(interBranchCollaborations)>0 and len(intraBranchCollaborations)>0):
+            if(len(interBranchCollaborations)>0 or len(intraBranchCollaborations)>0):
                 hasCollaboration=True
             
-            
-
+          
             get_all_team_name = Branch.load_teams()
             get_event_details = Events.objects.get(id = event_id)
 
@@ -915,6 +930,7 @@ def event_description(request,event_id):
                 'intraBranchCollaborations':intraBranchCollaborations,
                 'hasCollaboration':hasCollaboration,
                 'all_sc_ag':sc_ag,
+                'is_branch':is_branch,
             }
         else:
             return redirect('main_website:all-events')

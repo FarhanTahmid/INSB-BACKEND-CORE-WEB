@@ -1,9 +1,14 @@
 {% load static %}
 {% block pie_stat_for_sc_ag_renewal %}
 <h4 style="justify-content:center;text-align:center;margin-bottom:15px;">Renewal Statistics for {{sc_ag_info.short_form}}</h4>
-<div class="card-body">
-    <canvas id="doughnut" data-colors='["#877c8", "#e30b0b"]'></canvas>
+<div class="row">
+  <div class="col-md-6">
+    <div class="card-body">
+      <canvas id="doughnut" data-colors='["{{sc_ag_info.primary_color_code}}", "#e30b0b"]'></canvas>
+    </div>
+  </div>
 </div>
+
 
 <script>    
     // get colors array from the string
@@ -34,7 +39,7 @@
         var sc_ag_value=parseInt(y, 10);
 
         var seekValue=sc_ag_value+'-'+sessionValue;
-        const url = `portal/SC_AG/sc_ag_renewal_stats/?seek_value=${encodeURIComponent(seekValue)}`;
+        const url = `/portal/SC_AG/sc_ag_renewal_stats/?seek_value=${encodeURIComponent(seekValue)}`;
         const response = await fetch(url);
         console.log(response)
         const data = await response.json();
@@ -76,4 +81,6 @@
     initializeDougnutChart();
     
 </script>
+<script src="{% static 'scripts/chartjs.js' %}"></script>
+
 {% endblock pie_stat_for_sc_ag_renewal %}
