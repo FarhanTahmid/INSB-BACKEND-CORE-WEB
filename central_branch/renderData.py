@@ -207,10 +207,10 @@ class Branch:
                     for id in inter_branch_collaboration_list:
                         
                             #check for existing events with the same inter branch collab
-                            check_for_existing_events=InterBranchCollaborations.objects.filter(event_id=event_id,collaboration_with=id)
-                            if(check_for_existing_events.exists()):
-                                check_for_existing_events.update(collaboration_with=id) #this piece of code is really not needed just used to avoid errors and usage of extra memory
-                            else:
+                            # check_for_existing_events=InterBranchCollaborations.objects.filter(event_id=event_id,collaboration_with=id)
+                            # if(check_for_existing_events.exists()):
+                            #     check_for_existing_events.update(collaboration_with=id) #this piece of code is really not needed just used to avoid errors and usage of extra memory
+                            # else:
                                 #if there is no previous record of this event with particular collab option, register a new one
                                     new_event_inter_branch_collaboration=InterBranchCollaborations(
                                         event_id=Events.objects.get(id=event_id),
@@ -225,10 +225,10 @@ class Branch:
                     for id in inter_branch_collaboration_list:
                         
                             #check for existing events with the same inter branch collab
-                            check_for_existing_events=InterBranchCollaborations.objects.filter(event_id=event_id,collaboration_with=id)
-                            if(check_for_existing_events.exists()):
-                                check_for_existing_events.update(collaboration_with=id) #this piece of code is really not needed just used to avoid errors and usage of extra memory
-                            else:
+                            # check_for_existing_events=InterBranchCollaborations.objects.filter(event_id=event_id,collaboration_with=id)
+                            # if(check_for_existing_events.exists()):
+                            #     check_for_existing_events.update(collaboration_with=id) #this piece of code is really not needed just used to avoid errors and usage of extra memory
+                            # else:
                             #if there is no previous record of this event with particular collab option, register a new one
                                 new_event_inter_branch_collaboration=InterBranchCollaborations(
                                     event_id=Events.objects.get(id=event_id),
