@@ -164,6 +164,22 @@ class EMT_Data_Access(models.Model):
     def __str__(self):
         return str(self.ieee_id)
 
+# class for SC AG Data Access
+class SC_AG_Data_Access(models.Model):
+    ieee_id=models.ForeignKey(Members,on_delete=models.CASCADE,null=False,blank=False)
+    member_details_access=models.BooleanField(null=False,blank=False,default=False)
+    create_event_access=models.BooleanField(null=False,blank=False,default=False)
+    event_details_edit_access=models.BooleanField(null=False,blank=False,default=False)
+    panel_edit_access=models.BooleanField(null=False,blank=False,default=False)
+    membership_renewal_access=models.BooleanField(null=False,blank=False,default=False)
+    manage_access=models.BooleanField(null=False,blank=False,default=False)
+    
+    class Meta:
+        verbose_name="Chapter, Society, Affinity Group Data Access"
+    
+    def __str__(self) -> str:
+        return str(self.ieee_id)
+
 #these are for developers database
 class Developer_criteria(models.Model):
     '''This class defines the developer types'''
