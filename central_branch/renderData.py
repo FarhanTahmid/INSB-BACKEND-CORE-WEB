@@ -162,10 +162,10 @@ class Branch:
             print(inter_branch_collaboration_list)
             if group_name != "IEEE NSU Student Branch":
                 if inter_branch_collaboration_list[0]=="null":
-                    inter_branch_collaboration_list[0]='5'
+                    inter_branch_collaboration_list[0]='1'
                 else:
-                    if '5' not in inter_branch_collaboration_list:
-                        inter_branch_collaboration_list.append('5')
+                    if '1' not in inter_branch_collaboration_list:
+                        inter_branch_collaboration_list.append('1')
                         print(inter_branch_collaboration_list)
             print(inter_branch_collaboration_list)
         #first check if both the collaboration options are null. If so, do register nothing on database and redirect to the next page
@@ -206,7 +206,7 @@ class Branch:
                                 #if there is no previous record of this event with particular collab option, register a new one
                                     new_event_inter_branch_collaboration=InterBranchCollaborations(
                                         event_id=Events.objects.get(id=event_id),
-                                        collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(id=id)
+                                        collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(primary = id)
                                     )   
                                     new_event_inter_branch_collaboration.save()
                                     return True
@@ -224,7 +224,7 @@ class Branch:
                             #if there is no previous record of this event with particular collab option, register a new one
                                 new_event_inter_branch_collaboration=InterBranchCollaborations(
                                     event_id=Events.objects.get(id=event_id),
-                                    collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(id=id) 
+                                    collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(primary = id) 
                                 ) 
                                 new_event_inter_branch_collaboration.save()
                                 
@@ -549,7 +549,7 @@ class Branch:
         return SuperEvents.objects.all()
     def load_all_inter_branch_collaboration_options():
         '''This loads all the chapters and Societies of the branch'''
-        return Chapters_Society_and_Affinity_Groups.objects.all()
+        return Chapters_Society_and_Affinity_Groups.objects.all().order_by('primary')
     
     def load_all_event_type_for_groups(primary):
 

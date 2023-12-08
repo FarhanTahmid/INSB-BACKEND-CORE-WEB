@@ -23,7 +23,7 @@
                                     <select multiple class="form-control" name="inter_branch_collaboration">
                                     <option selected value="null">--------------------</option>
                                     {% for inter_branch_collaboration_option in inter_branch_collaboration_options %}
-                                        <option value={{inter_branch_collaboration_option.id}}>
+                                        <option value={{inter_branch_collaboration_option.primary}}>
                                         {{inter_branch_collaboration_option.group_name}}</option>
                                     {% endfor %}
                                     </select>
