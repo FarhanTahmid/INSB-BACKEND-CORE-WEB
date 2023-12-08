@@ -95,6 +95,7 @@ class Branch:
                             event_description=event_description,
                             event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
+                            new_event.save()
                             new_event.event_type.add(*event_type_list)
                             new_event.save()
                             return new_event.id
@@ -110,6 +111,7 @@ class Branch:
                             event_date=event_date,
                             event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
+                            new_event.save()
                             new_event.event_type.add(*event_type_list)
                             new_event.save()
                             return new_event.id
@@ -130,6 +132,7 @@ class Branch:
                             event_description=event_description,
                             event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
+                            new_event.save()
                             new_event.event_type.add(*event_type_list)
                             new_event.save()
                             return new_event.id
@@ -147,6 +150,7 @@ class Branch:
                             event_date=event_date,
                             event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
+                            new_event.save()
                             new_event.event_type.add(*event_type_list)
                             new_event.save()
                             return new_event.id
@@ -161,10 +165,10 @@ class Branch:
 
         #checking who organised the event
             event_organiser = Events.objects.get(pk = event_id).event_organiser
-            group_name = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser)).group_name
-            print(group_name)
+            group_primary = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser)).primary
+            print(group_primary)
             print(inter_branch_collaboration_list)
-            if group_name != "IEEE NSU Student Branch":
+            if group_primary != "1":
                 if inter_branch_collaboration_list[0]=="null":
                     inter_branch_collaboration_list[0]='1'
                 else:
