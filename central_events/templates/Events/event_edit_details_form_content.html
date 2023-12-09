@@ -42,7 +42,7 @@
                                         <option value="null" {% if event_details.super_event_id is none %}selected{% endif %}>--------------------</option>
                                         {% for super_event in super_events %}
                                             <option value="{{ super_event.id }}" 
-                                            {% if super_event == event_details.super_event_id %}selected{% endif %}>
+                                            {% if super_event and super_event == event_details.super_event_id %}selected{% endif %}>
                                                 {{ super_event.super_event_name }}
                                             </option>
                                         {% endfor %}
@@ -56,8 +56,8 @@
                                         <option value="null" {% if event_details.event_type is none %}selected{% endif %}>--------------------</option>
                                         {% for event_type in event_types %}
                                             <option value="{{ event_type.id }}" 
-                                            {% if event_type == event_details.event_type %}selected{% endif %}>
-                                                {{ event_details.event_type }}
+                                            {% if event_type and event_type in event_details.event_type.all %}selected{% endif %}>
+                                                {{ event_type.event_category }}
                                             </option>
                                         {% endfor %}
                                     </select>
@@ -78,9 +78,9 @@
                                 <div class="form-group">
                                     <label>Inter Branch Collaboration With: (Press CTRL to select multiple options) </label>
                                     <select multiple class="form-control" name="inter_branch_collaboration">
-                                        <option value="null" {% if inter_branch_collaboration_option.primary is none %}selected{% endif %}>--------------------</option>
+                                        <option value="null" {% if not hasCollaboration %}selected{% endif %}>--------------------</option>
                                         {% for inter_branch_collaboration_option in inter_branch_collaboration_options %}
-                                            <option value="{{ inter_branch_collaboration_option.primary }}" {% if inter_branch_collaboration_option.primary and inter_branch_collaboration_option.primary == selectedCollaborationOption %}selected{% endif %}>
+                                            <option value="{{ inter_branch_collaboration_option }}" {% if inter_branch_collaboration_option and inter_branch_collaboration_option in interBranchCollaborations %}selected{% endif %}>
                                                 {{ inter_branch_collaboration_option.group_name }}
                                             </option>
                                         {% endfor %}
@@ -95,7 +95,7 @@
                                         class="form-control w-75"
                                         type="text"
                                         name="intra_branch_collaboration"
-                                        value="{{event_intra_branch_collaboration}}"
+                                        value="{{intraBranchCollaborations.collaboration_with}}"
                                     />
                                 </div>
                                 <br>

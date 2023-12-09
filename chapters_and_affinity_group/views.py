@@ -528,9 +528,9 @@ def event_description(request,primary,event_id):
             intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
             # Checking if event has collaborations
             hasCollaboration=False
-            if(len(interBranchCollaborations)>0 and len(intraBranchCollaborations)>0):
+            if(len(interBranchCollaborations)>0):
                 hasCollaboration=True
-          
+            
             #get_all_team_name = Branch.load_teams()
             get_event_details = Events.objects.get(id = event_id)
             #print(get_event_details.super_event_name.id)

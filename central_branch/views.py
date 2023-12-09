@@ -770,9 +770,9 @@ def event_creation_form_page(request):
 
                 '''Getting data from page and calling the register_event_page1 function to save the event page 1 to database'''
 
-                super_event_id=request.POST.get('super_event')
                 event_name=request.POST['event_name']
                 event_description=request.POST['event_description']
+                super_event_id=request.POST.get('super_event')
                 event_type_list = request.POST.getlist('event_type')
                 event_date=request.POST['event_date']
 
@@ -896,10 +896,10 @@ def event_description(request,event_id):
             intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
             # Checking if event has collaborations
             hasCollaboration=False
-            if(len(interBranchCollaborations)>0 or len(intraBranchCollaborations)>0):
+            if(len(interBranchCollaborations)>0):
                 hasCollaboration=True
             
-          
+            
             get_all_team_name = Branch.load_teams()
             get_event_details = Events.objects.get(id = event_id)
 
@@ -940,6 +940,7 @@ def event_description(request,event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
+    
 @login_required
 def get_updated_options_for_event_dashboard(request):
     #this function updates the select box upon the selection of the team in task assignation. takes event id as parameter. from html file, a script hits the api and fetches the returned dictionary
@@ -969,30 +970,57 @@ def event_edit_form(request, event_id):
         #Get event details from databse
         event_details = Events.objects.get(pk=event_id)
 
+        if(request.method == "POST"):
+            ''' Get data from form and call update function to update event '''
+
+            event_name=request.POST['event_name']
+            event_description=request.POST['event_description']
+            super_event_id=request.POST.get('super_event')
+            event_type_list = request.POST.getlist('event_type')
+            event_date=request.POST['event_date']
+            inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
+            intra_branch_collaboration=request.POST['intra_branch_collaboration']
+
+            #Check if the update request is successful
+            if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration)):
+                messages.success(request,f"Event with EVENT ID {event_id} was Updated successfully")
+                return redirect('central_branch:event_dashboard', event_id) 
+            else:
+                messages.error(request,"Something went wrong while updating the event!")
+                return redirect('central_branch:event_dashboard', event_id)
+
+        form = EventForm({'event_description' : event_details.event_description})
+
         #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
         super_events=Branch.load_all_mother_events()
         event_types=Branch.load_all_event_type_for_groups(1)
-        
+
+        inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+
+        # Get collaboration details
+        interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
+        intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
+        # Checking if event has collaborations
+        hasCollaboration=False
+        if(len(interBranchCollaborations)>0):
+            hasCollaboration=True
+
+        interBranchCollaborationsArray = []
+        for i in interBranchCollaborations.all():
+            interBranchCollaborationsArray.append(i.collaboration_with)
+
         context={
             'all_sc_ag' : sc_ag,
             'is_branch' : is_branch,
             'event_details' : event_details,
-            'super_events':super_events,
-            'event_types':event_types,
+            'form' : form,
+            'super_events' : super_events,
+            'event_types' : event_types,
+            'inter_branch_collaboration_options' : inter_branch_collaboration_options,
+            'interBranchCollaborations':interBranchCollaborationsArray,
+            'intraBranchCollaborations':intraBranchCollaborations,
+            'hasCollaboration' : hasCollaboration,
         }
-
-        # if(request.method == "POST"):
-        #     ''' Get data from form and call update function to update event '''
-
-        #     event_name = request.POST['event_name']
-
-        #     #Check if the update request is successful
-        #     if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name)):
-        #         messages.info(request,f"Event with EVENT ID {event_id} was Updated successfully")
-        #         return redirect('central_branch:event_dashboard', event_id) 
-        #     else:
-        #         messages.error(request,"Something went wrong while updating the event!")
-        #         return redirect('central_branch:event_dashboard', event_id)
 
         return render(request, 'Events/event_edit_form.html', context)
     except Exception as e:
