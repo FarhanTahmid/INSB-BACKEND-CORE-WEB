@@ -47,19 +47,39 @@
             width: 100%; /* Make the button full width on smaller screens */
           }
         }
-        
+
+        /* Common styles outside the media query */
         .slide-button {
+          display: flex;
+          align-items: center;
           position: absolute;
           top: 145px;
           right: 50px;
-          display: flex;
-          align-items: center; /* Align items vertically in the center */
-      }
-  
-      .ui-switch {
+        }
+
+        .ui-switch {
           margin-left: 10px;
           margin-bottom: -3.5px;
-      }
+        }
+
+        /* Styles for screens with a maximum width of 1280px */
+        @media (max-width: 1280px) {
+          .slide-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            top: 0;
+            right: 0;
+            margin-top: 20px;
+          }
+
+          .ui-switch {
+            margin-left: 10px;
+            margin-bottom: -3.5px;
+          }
+        }
+
         
     </style>
 </head>
