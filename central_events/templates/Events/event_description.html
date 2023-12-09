@@ -99,19 +99,18 @@
             <h1 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;"><b>{{event_details.event_name}}</b></span></h1>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Organised By: <span style="color:#00629B;"><b>{{event_details.event_organiser.group_name}}</b></span>.</h4>
               <div class = "slide-button">
-                <form method="POST">
-                  {% csrf_token %}
-                  <label class="form-control-label"><b>Publish:</b></label>
-                  <span>                                    
-                  <label class="ui-switch m-t-xs m-r">
-                    {% comment %} {% if is_published %} {% endcomment %}
-                      <input name="publish_event" type="checkbox" >
-                        <i></i>
-                    {% comment %} {% endif %} {% endcomment %}
-                  </label>                
-                  </span>
-                </form>
-               </div>
+                <h3 class = "text-success text-center"></h3>
+                <form method="POST" id="form-submit">
+                    {% csrf_token %}
+                    <label class="form-control-label"><b>Publish:</b></label>
+                    <span>                                    
+                    <label class="ui-switch m-t-xs m-r">
+                        <input id="publish_event" name="publish_event" type="checkbox" {% if is_published %} checked {% endif %}>
+                          <i></i>
+                    </label>                
+                    </span>
+                  </form>
+              </div>
             {% if hasCollaboration %}
               <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">In Collaboration With:</h4>
               {% for i in interBranchCollaborations %}
@@ -180,6 +179,40 @@
     <script src="{% static 'table_search.js'%}"></script>
 
     <script>
+      $(document).ready(function() {
+        // Attach a change event listener to the checkbox
+        $('input[name="publish_event"]').change(function() {
+            // Get the current state of the checkbox (checked or not)
+            var switchStatus = $(this).prop('checked');
+            console.log(switchStatus);
+            $.ajax({
+              type:'POST',
+              {% if is_branch %}
+              url: '{% url 'central_branch:event_published' event_id %}',
+              {% else %}
+              url: '{% url 'chapters_and_affinity_group:event_published_sc_ag' sc_ag_info.primary event_id %}',
+              {% endif %}
+              data:{
+                'publish_event': switchStatus ? 'on' : 'off',
+                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+              },
+              success: function(data){
+                console.log('Ajax request successful:', data);
+              }
+            });
+            $('#publishForm').submit(function(event) {
+              event.preventDefault();
+              // Handle the form submission with AJAX if needed
+            });
+            
+            
+        });
+  
+    });
+
+
+
+
       function showDeleteModal() {
           var modal = document.getElementById('deleteModal');
           modal.style.display = 'block';
@@ -197,6 +230,7 @@
           // For simplicity, this example just closes the modal
           closeDeleteModal();
       }
+
 
   </script>
 
