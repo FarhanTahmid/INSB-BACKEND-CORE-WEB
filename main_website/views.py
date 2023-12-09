@@ -142,7 +142,13 @@ def Research_Paper(request):
     return render(request,"All_Research_Papers.html",{
         "research_paper":get_all_research_papers
     })
-    
+
+
+
+######################### GALLERY WORKS ###########################
+def gallery(request):
+    return render(request, 'gallery.html')
+
 
 # Memeber works
 
