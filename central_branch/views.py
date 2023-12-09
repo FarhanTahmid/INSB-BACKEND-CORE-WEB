@@ -1,6 +1,7 @@
 import logging
 import traceback
 from django.http import JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -1018,3 +1019,5 @@ def event_edit_form3(request, event_id):
         'event_details' : event_details
     }
     return render(request, '', context)
+
+    

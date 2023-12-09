@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from port.renderData import PortData
 from users import renderData
+from django.http import HttpResponse
 from .get_sc_ag_info import SC_AG_Info
 from .renderData import Sc_Ag
 from port.renderData import PortData
@@ -544,6 +545,8 @@ def event_description(request,primary,event_id):
                     else:
                         messages.error(request,"Something went wrong while removing the event!")
                         return redirect('chapters_and_affinity_group:event_control_homepage',primary)
+                
+
         context={
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
@@ -744,3 +747,4 @@ def event_creation_form_page3(request,primary,event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
+    
