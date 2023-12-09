@@ -5,6 +5,7 @@ from port.models import Panels,Chapters_Society_and_Affinity_Groups,Teams,Roles_
 from membership_development_team.models import Renewal_requests,Renewal_Sessions
 import logging
 from system_administration.system_error_handling import ErrorHandling
+from system_administration.models import SC_AG_Data_Access
 import traceback
 from datetime import datetime
 from central_events.models import Events
@@ -311,6 +312,83 @@ class Sc_Ag:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"Can not generate Excel sheet! Something went wrong!")
             return False
+    
+    def get_data_access_members(request,sc_ag_primary):
+        '''This function fetches all the members from data access table'''
+        try:
+            get_data_access_members=SC_AG_Data_Access.objects.filter(data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).order_by('-id')
+            return get_data_access_members
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not fetch members for Data Access! Something went wrong!")
+            return False
+                
+    def add_sc_ag_member_to_data_access(request,member_list,sc_ag_primary):
+        '''This function adds member to data access table'''
+        try:
+            for i in member_list:
+                # first check if the member already exists in the data access table for that SC AG
+                if(SC_AG_Data_Access.objects.filter(member=SC_AG_Members.objects.get(member=Members.objects.get(ieee_id=i),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)),data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).exists()):
+                    messages.info(request,"The member already exists in the Database. Do Search for the member!")
+                else:
+                    new_member_in_table=SC_AG_Data_Access.objects.create(
+                        member=SC_AG_Members.objects.get(member=Members.objects.get(ieee_id=i),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)),data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)
+                    )
+                    new_member_in_table.save()
+                    messages.success(request,f"{new_member_in_table.member.member.ieee_id} added in the View Access Table.")
+            return True
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not add Member! Something went wrong!")
+            return False
+    
+    def update_sc_ag_member_access(*args, **kwargs):
+        '''This function updates the access of the member in the data access table'''
+        try:
+            # get the query at first with member ieee id and sc_ag_primary
+            get_query=SC_AG_Data_Access.objects.filter(member=SC_AG_Members.objects.get(member=Members.objects.get(ieee_id=kwargs['member']),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=kwargs['sc_ag_primary'])),data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=kwargs['sc_ag_primary']))
+            if(get_query.exists()):
+                # if query exists then only update
+                get_query.update(
+                    # get the values from kwargs. To avoid any error or misunderstanding the 'key's of the kwargs were kept same as the model(SC_AG_Data_Access) attributes name
+                    member_details_access=kwargs['member_details_access'],
+                    create_event_access=kwargs['create_event_access'],
+                    event_details_edit_access=kwargs['event_details_edit_access'],
+                    panel_edit_access=kwargs['panel_edit_access'],
+                    membership_renewal_access=kwargs['membership_renewal_access'],
+                    manage_access=kwargs['manage_access']
+                )
+                messages.success(kwargs['request'],f"Data Access for {kwargs['member']} was updated!")
+                return True
+            else:
+                messages.error(kwargs['request'],"Can not Update Data Access for the Member!")
+                return False
+            
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(kwargs['request'],"Can not Data Access for the Member! Something went wrong!")
+            return False
+    
+    def remove_member_from_data_access(request,member,sc_ag_primary):
+        '''This function removes member from data access table'''
+        try:
+            get_query=SC_AG_Data_Access.objects.filter(member=SC_AG_Members.objects.get(member=Members.objects.get(ieee_id=member),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)),data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary))
+            if(get_query.exists()):
+                messages.info(request,f"{get_query[0].member} was removed from the View Access!")
+                get_query.delete()
+                return True
+            else:
+                return False
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not remove member from Data Access! Something went wrong!")
+            return False
+        
+        
 
 
     

@@ -63,3 +63,9 @@ class SystemErrors(admin.ModelAdmin):
     list_display=[
         'pk','date_time','error_name','error_fix_status'
     ]
+
+from .models import SC_AG_Data_Access
+@admin.register(SC_AG_Data_Access)
+class SC_AG_Data_Access(admin.ModelAdmin):
+    list_display=['member','data_access_of']
+
