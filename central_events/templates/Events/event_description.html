@@ -28,38 +28,38 @@
         align-items: center;
         height: 100%;
         }
-        .row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-          }
-          .btn-container {
-            text-align: center;
-          }
-          
+        .btn-container {
+          text-align: center;
+        }
+        
+        .btn {
+          max-width: 100%;
+          width: auto;
+          display: inline-block;
+          white-space: normal; /* Allow text to wrap within the button */
+          word-wrap: break-word; /* Break long words if necessary */
+          font-size: 16px; /* Adjust the font size as needed */
+        }
+        
+        /* Media query for smaller screens (adjust the breakpoint as needed) */
+        @media (max-width: 768px) {
           .btn {
-            max-width: 100%;
-            width: auto;
-            display: inline-block;
-            white-space: normal; /* Allow text to wrap within the button */
-            word-wrap: break-word; /* Break long words if necessary */
-            font-size: 16px; /* Adjust the font size as needed */
+            width: 100%; /* Make the button full width on smaller screens */
           }
-          
-          /* Media query for smaller screens (adjust the breakpoint as needed) */
-          @media (max-width: 768px) {
-            .btn {
-              width: 100%; /* Make the button full width on smaller screens */
-            }
-          }
-          .slide-button{
-            width: 100px;
-            height: 50px;
-            position: absolute;
-            top: 145px;   /* Set the top property to 0 to position at the top */
-            right:50px ;
-          }
+        }
+        
+        .slide-button {
+          position: absolute;
+          top: 145px;
+          right: 50px;
+          display: flex;
+          align-items: center; /* Align items vertically in the center */
+      }
+  
+      .ui-switch {
+          margin-left: 10px;
+          margin-bottom: -3.5px;
+      }
         
     </style>
 </head>
