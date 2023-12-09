@@ -487,7 +487,44 @@ def sc_ag_manage_access(request,primary):
             member_select_list=request.POST.getlist('member_select')
             if(Sc_Ag.add_sc_ag_member_to_data_access(request=request,member_list=member_select_list,sc_ag_primary=primary)):
                 return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
-    
+        if(request.POST.get('access_update')):
+            member=request.POST['access_ieee_id']
+            
+            # data access values
+            member_details_access=False
+            create_event_access=False
+            event_details_edit_access=False
+            panel_edit_access=False
+            membership_renewal_access=False
+            manage_access=False
+            
+            # get values from template and change according to it
+            if(request.POST.get('member_details_access') is not None):
+                member_details_access=True
+            if(request.POST.get('create_event_access') is not None):
+                create_event_access=True
+            if(request.POST.get('event_details_edit_access') is not None):
+                event_details_edit_access=True
+            if(request.POST.get('panel_edit_access') is not None):
+                panel_edit_access=True
+            if(request.POST.get('membership_renewal_access') is not None):
+                membership_renewal_access=True
+            if(request.POST.get('manage_access') is not None):
+                manage_access=True
+            
+            # sending values to functions as kwargs. To further addition to Data access just pass the attribute of model=attribute value(e.g:member_details_access=member_details_access(True/False)) to the function
+            if(Sc_Ag.update_sc_ag_member_access(request=request,member=member,sc_ag_primary=primary,
+                                                member_details_access=member_details_access,
+                                                create_event_access=create_event_access,
+                                                event_details_edit_access=event_details_edit_access,
+                                                panel_edit_access=panel_edit_access,
+                                                membership_renewal_access=membership_renewal_access,
+                                                manage_access=manage_access)):
+                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+            else:
+                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+
+                
     context={
         'all_sc_ag':sc_ag,
         'sc_ag_info':get_sc_ag_info,

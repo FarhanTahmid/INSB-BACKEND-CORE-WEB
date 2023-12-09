@@ -345,7 +345,34 @@ class Sc_Ag:
             messages.error(request,"Can not add Member! Something went wrong!")
             return False
     
-    
+    def update_sc_ag_member_access(*args, **kwargs):
+        '''This function updates the access of the member in the data access table'''
+        try:
+            # get the query at first with member ieee id and sc_ag_primary
+            get_query=SC_AG_Data_Access.objects.filter(member=SC_AG_Members.objects.get(member=Members.objects.get(ieee_id=kwargs['member']),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=kwargs['sc_ag_primary'])),data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=kwargs['sc_ag_primary']))
+            if(get_query.exists()):
+                # if query exists then only update
+                get_query.update(
+                    # get the values from kwargs. To avoid any error or misunderstanding the 'key's of the kwargs were kept same as the model(SC_AG_Data_Access) attributes name
+                    member_details_access=kwargs['member_details_access'],
+                    create_event_access=kwargs['create_event_access'],
+                    event_details_edit_access=kwargs['event_details_edit_access'],
+                    panel_edit_access=kwargs['panel_edit_access'],
+                    membership_renewal_access=kwargs['membership_renewal_access'],
+                    manage_access=kwargs['manage_access']
+                )
+                messages.success(kwargs['request'],f"Data Access for {kwargs['member']} was updated!")
+                return True
+            else:
+                messages.error(kwargs['request'],"Can not Update Data Access for the Member!")
+                return False
+            
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(kwargs['request'],"Can not Data Access for the Member! Something went wrong!")
+            return False
+        
         
 
 
