@@ -55,6 +55,14 @@
             word-wrap: break-word; /* Break long words if necessary */
             font-size: 16px; /* Adjust the font size as needed */
           }
+          /* FR card container css */
+          .container-card{
+            display: grid; 
+            grid-template-columns: repeat(3, 350px);
+            {% comment %} grid-gap: 30px; {% endcomment %}
+            grid-row-gap: 10px;
+            
+          }
           
           /* Media query for smaller screens (adjust the breakpoint as needed) */
           @media (max-width: 768px) {
@@ -137,8 +145,11 @@
             padding-bottom: 100%;
           }
           #image-preview {
-            max-width: 100%;
-            height:auto;
+            /*max-width: 100%;
+            height:auto;  */
+            width: 300px; 
+            height: 300px; 
+            object-fit: cover; 
             cursor: pointer;
             transition: opacity 0.3s ease-in-out; /* Add a smooth transition effect */
         }
@@ -164,6 +175,7 @@
           word-wrap: break-word; /* Break long words if necessary */
           font-size: 16px; /* Adjust the font size as needed */
       }
+
 
       @media (max-width: 768px) {
         .btn.btn-primary {
@@ -215,7 +227,7 @@
         </ol></b>
         
 
-        <div style="text-align:center; margin-top=30px;">  
+        <div style="text-align:center; margin-top=30px; background-color: white;">  
             <div class="container" style="justify-content:center;">
               
               </ul>
@@ -266,7 +278,7 @@
                                                                         <div class="upload__box">
                                                                             <div class="upload__btn-box">
                                                                               <label class="upload__btn">
-                                                                                <p>Upload Image</p>
+                                                                                <p>Upload Image</p> 
                                                                                 <input type="file" multiple="" id="fileInput" name="images" data-max_length="20" class="upload__inputfile">
                                                                               </label>
                                                                             </div>
@@ -291,11 +303,59 @@
                                                 
                                             </div>
                                         </form>
+                                        <div class="container">
+                                          <div class="box-body" style="justify-content:center;">
+                                          {% if image_exists %}
+                                                                                
+                                                                                  <div class="form-group">
+                                                                                      
+                                                                                      <div class="container row container-card" style="justify-content:center;">
+                                                                                      
+                                                                                      {% for i in Img %}
+                                                                                      <form method="POST" enctype="multipart/form-data">
+                                                                                        {% csrf_token %}
+                                                                                      {% comment %} <div class="container">
+                                                                                          <img id="image-preview" src="{{media_url}}{{ i.selected_images}}" alt="Image {{ forloop.counter }}"  width=100% height=auto style="border: 2px solid black;on-hover: opacity;"  onclick="triggerFileInput(this)">
+                                                                                          <input class="d-none" type="file"  id="file-input"   onchange="displayNewImage(this)" name="new_image">
+                                                                                          <input type="hidden" value={{i.id}} name="ImageID">
+                                                                                          
+                                                                                      </div> {% endcomment %}
+                                                                                      <!-- my card FR -->
+                                                                                      <div class="container"> 
+                                                                                        <div class="card" style="width: 18rem;">
+                                                                                          <img id="image-preview" src="{{media_url}}{{ i.selected_images}}" alt="Image {{ forloop.counter }}"  style="border: 2px solid black;on-hover: opacity;"  onclick="triggerFileInput(this)" class="card-img-top img-fluid clickable">
+                                                                                          <div class="card-body my-3">
+                                                                                           
+                                                                                            <input class="d-none" type="file"  id="file-input"   onchange="displayNewImage(this)" name="new_image">
+                                                                                            <input type="hidden" value={{i.id}} name="ImageID">
+                                                                                            <input type="submit" class="btn btn-primary p-x-md" name="submitted_changed_picture" value="Change">
+                              
+                                                                                            <!--delete button added here -->
+                                                                                            <input type="submit" class="btn btn-danger p-x-md" name="submitted_deleted_picture" value="Delete">
+                                                                                          </div>
+                                                                                        </div>
+                                                                                      </div>
+                                                                                      <br>
+                                                                                      {% comment %} <input type="submit" class="btn btn-primary p-x-md" name="submitted_changed_picture" value="Change"> {% endcomment %}
+                              
+                                                                                       <!--delete button added here -->
+                                                                                      {% comment %} <input type="submit" class="btn btn-danger p-x-md" name="submitted_changed_picture" value="Delete"> {% endcomment %}
+                                                                                      
+                                                                                      
+                                                                                      <br>
+                                                                                    </form>  
+                                                                                      {% endfor %}
+                                                                                   
+                                                                                  
+                                                                                      </div>
+                                                              
+                                                                                      </div>
+                                                                                  </div>
+                                                                                  {% endif %}
+                                                                                </div>
+                                        </div> 
+
                                     
-                               
-                            
-                        
-                    
                         
             </div>
           </div>
@@ -309,42 +369,12 @@
     
         </div>
 
-
+        
         <div style="text-align:center; margin-top=30px;">
-          <div class="container">
-            <div class="box-body" style="justify-content:center;margin-right:100px;margin-left:300px;">
-            {% if image_exists %}
-                                                  
-                                                    <div class="form-group row">
-                                                        
-                                                        <div class="container" style="justify-content:center;">
-                                                        
-                                                        {% for i in Img %}
-                                                        <form method="POST" enctype="multipart/form-data">
-                                                          {% csrf_token %}
-                                                        <div class="container">
-                                                            <img id="image-preview" src="{{media_url}}{{ i.selected_images}}" alt="Image {{ forloop.counter }}"  width=100% height=auto style="border: 2px solid black;on-hover: opacity;"  onclick="triggerFileInput(this)">
-                                                            <input class="d-none" type="file"  id="file-input"   onchange="displayNewImage(this)" name="new_image">
-                                                            <input type="hidden" value={{i.id}} name="ImageID">
-                                                            
-                                                        </div>
-                                                        <br>
-                                                        <input type="submit" class="btn btn-primary p-x-md" name="submitted_changed_picture" value="Change">
-                                                       
-                                                        
-                                                        
-                                                        <br><br><br><br><br>
-                                                      </form>  
-                                                        {% endfor %}
-                                                     
-                                                    
-                                                        </div>
-                                
-                                                        </div>
-                                                    </div>
-                                                    {% endif %}
-                                                  </div>
-          </div>
+
+          <!--the container div class-->
+          
+        
         </div>
      <!--Theme Switcher-->
 
@@ -365,6 +395,26 @@
     <script src="{% static 'table_search.js'%}"></script>
     <!--Script for image previewing on modal-->
     <script>
+
+      // full screens
+      $(document).ready(function() {
+        $(".clickable").click(function() {
+          var element = this;
+    
+          if (element.requestFullscreen) {
+            element.requestFullscreen();
+          } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+          } else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+          } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+          }
+        });
+      });
+
+      // full screen code ends here
+
         jQuery(document).ready(function () {
             ImgUpload();
           });
