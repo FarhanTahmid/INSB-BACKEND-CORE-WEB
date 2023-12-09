@@ -101,9 +101,16 @@
 
             {% if has_access_to_create_event %}
               <div style="justify-content:center;text-align:center;"> 
+
                 {% for message in messages %}
-                <p>{{message}}</p>
+                    <p>
+                        {{ message }}
+                        <button type="button" class="close" onclick="removeMessage(this)" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </p>
                 {% endfor %} 
+                
                 <div class="btn-container">
                   {% if is_branch %}
                   <a href="{% url 'central_branch:super_event_creation' %}" class="btn btn-outline b-success text-success">Create a New Super Event</a>
@@ -238,6 +245,14 @@
     {% endblock common_js %}
 
     <script src="{% static 'table_search.js'%}"></script>
+    <script>
+      function removeMessage(button) {
+          // Get the parent element (p tag) and remove it
+          var paragraph = button.parentNode;
+          paragraph.remove();
+      }
+  </script>
+  
 
 </body>
 </html>
