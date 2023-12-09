@@ -117,6 +117,11 @@ class Event_Permission(models.Model):
     permission_id=models.ForeignKey(Permission_criteria,on_delete=models.CASCADE)
     permission_status=models.BooleanField(null=False,blank=False,default=False)
 
+    class Meta:
+        verbose_name="Event Permission"
+    def __str__(self) -> str:
+        return str(self.permission_id)
+
 #Table For Permissions for specific events
 class Event_Logistic_Items(models.Model):
         event_id=models.ForeignKey(Events,on_delete=models.CASCADE)

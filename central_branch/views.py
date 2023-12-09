@@ -1019,5 +1019,3 @@ def event_edit_form3(request, event_id):
         'event_details' : event_details
     }
     return render(request, '', context)
-
-    

@@ -7,7 +7,15 @@ from django.db.models import Q
 from .renderData import HomepageItems
 from django.conf import settings
 from users.models import User
+import logging
+from datetime import datetime
+from django.http import HttpResponseBadRequest,HttpResponseServerError
+from system_administration.system_error_handling import ErrorHandling
+import traceback
+from .renderData import HomepageItems
 
+
+logger=logging.getLogger(__name__)
 
 # Create your views here.
 def homepage(request):
@@ -68,7 +76,24 @@ def index(request):
 
 
 def event_homepage(request):
-    return render(request,'Events/events_homepage.html')
+
+    '''This view function loads all the events for the events homepage'''
+    
+    try:
+        all_events = HomepageItems.load_all_events()
+
+
+        context = {
+            'all_events':all_events,
+            'media_url':settings.MEDIA_URL,
+        }
+
+        return render(request,'Events/events_homepage.html',context)
+    except Exception as e:
+            print(e)
+            response = HttpResponseServerError("Oops! Something went wrong.")
+            return response
+    
 
 
 def Event_Details(request,event_id):
