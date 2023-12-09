@@ -642,13 +642,17 @@ class Branch:
     
     def publish_event(event_id,state):
         '''This function will publish or unpublish the event'''
-    
-        event = Events.objects.get(id=event_id)
-        if state == "on":
-            event.publish_in_main_web = True
-        else:
-            event.publish_in_main_web= False
-        event.save()
+        try:
+            event = Events.objects.get(id=event_id)
+            if state == "on":
+                event.publish_in_main_web = True
+            else:
+                event.publish_in_main_web= False
+            event.save()
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error("Could not publish/unpublish the event. Something went wrong!")
 
     def load_all_mother_events():
         '''This method loads all the mother/Super events'''

@@ -753,10 +753,15 @@ def event_creation_form_page3(request,primary,event_id):
     
 @login_required
 def event_published_sc_ag(request,primary,event_id):
-
-    if request.method == "POST":
-        state = request.POST['publish_event']
-        print(state)
-        Branch.publish_event(event_id,state)
-        success = "Event Published"
-        return HttpResponse(success,primary,event_id)
+    try:
+        if request.method == "POST":
+            state = request.POST['publish_event']
+            print(state)
+            Branch.publish_event(event_id,state)
+            success = "Event Published"
+            return HttpResponse(success,primary,event_id)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
