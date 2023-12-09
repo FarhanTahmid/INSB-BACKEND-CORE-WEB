@@ -4,6 +4,8 @@ from port.models import Teams
 from users.models import Members
 from django_resized import ResizedImageField
 from ckeditor.fields import RichTextField
+from port.models import Chapters_Society_and_Affinity_Groups
+from chapters_and_affinity_group.models import SC_AG_Members
 # Create your models here.
 
 # System Model
@@ -166,7 +168,8 @@ class EMT_Data_Access(models.Model):
 
 # class for SC AG Data Access
 class SC_AG_Data_Access(models.Model):
-    ieee_id=models.ForeignKey(Members,on_delete=models.CASCADE,null=False,blank=False)
+    member=models.ForeignKey(SC_AG_Members,on_delete=models.CASCADE,null=False,blank=False)
+    data_access_of=models.ForeignKey(Chapters_Society_and_Affinity_Groups,on_delete=models.CASCADE,null=False,blank=False,default=1)
     member_details_access=models.BooleanField(null=False,blank=False,default=False)
     create_event_access=models.BooleanField(null=False,blank=False,default=False)
     event_details_edit_access=models.BooleanField(null=False,blank=False,default=False)
@@ -175,10 +178,10 @@ class SC_AG_Data_Access(models.Model):
     manage_access=models.BooleanField(null=False,blank=False,default=False)
     
     class Meta:
-        verbose_name="Chapter, Society, Affinity Group Data Access"
+        verbose_name="Manage Data Access - Chapter, Society, Affinity Group"
     
     def __str__(self) -> str:
-        return str(self.ieee_id)
+        return str(self.member)
 
 #these are for developers database
 class Developer_criteria(models.Model):

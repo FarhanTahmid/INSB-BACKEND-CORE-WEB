@@ -85,6 +85,15 @@
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;"> {{sc_ag_info.group_name}}</span><b><span style=""><br><br>Manage View Access</b></span> </h2>
             <br>
 
+            <!--Message-->
+            <div style="justify-content:center; text-align:center;">
+                {% if messages %}
+                    {% for message in messages %}
+                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <!--Message ends-->
             <!--View Access-->
             <h4 style="justify-content:center;text-align:center;margin-bottom:30px;"><span style="color:#00629B;"><b> View Permission</b> </span>Controls for <span style="color:#00629B;"><b>{{sc_ag_info.short_form}}</b></span></h4>
 
@@ -102,71 +111,87 @@
                     <input class="form-control w-75" type="text" id="searchInput" placeholder="Search Member by name" onkeyup="searchTable()">
                     <br>
                 </div>
-                <div class="table-responsive" style="max-height:300px; overflow-y:auto;">
+                <div class="table-responsive" style="max-height:500px; overflow-y:auto;">
                   <table class="table table-bordered m-0">
                     <thead>
                       <tr>
-                        <th style="text-align:center;">IEEE ID</th>
-                        <th style="text-align:center;">Name</th>
-                        <th style="text-align:center;">Team</th>
-                        <th style="text-align:center;">Current Position</th>
-                        <th style="text-align:center;">Permission Criteria</th>
-                        <th style="text-align:center;">Action?</th>
+                        <th style="text-align:center;border:1px solid;">IEEE ID</th>
+                        <th style="text-align:center;border:1px solid;">Name</th>
+                        <th style="text-align:center;border:1px solid;">Team</th>
+                        <th style="text-align:center;border:1px solid;">Current Position</th>
+                        <th style="text-align:center;border:1px solid;">Permission Criteria</th>
+                        <th style="text-align:center;border:1px solid;">Action?</th>
                       </tr>
                     </thead>
                     <tbody>
                       
-                        {% for data_access in data_access %}
+                        {% for data_access in data_access_members %}
                             <tr>
-                                <td>{{data_access.ieee_id}}</td>
-                                <td>{{data_access.ieee_id.name}}</td>
-                                <td>{{data_access.ieee_id.team}}</td>
-                                <td>{{data_access.ieee_id.position}}</td>
+                                <td style="border:1px solid;text-align:center;">{{data_access.member.member.ieee_id}}</td>
+                                <td style="border:1px solid;text-align:center;">{{data_access.member.member.name}}</td>
+                                <td style="border:1px solid;text-align:center;">{{data_access.member.team}}</td>
+                                <td style="border:1px solid;text-align:center;">{{data_access.member.position}}</td>
                                 <form method="POST">
                                     {% csrf_token %}
-                                    <td>
+                                    <td style="border:1px solid;">
                                         
-                                        {% if data_access.insb_member_details %}
-                                        <input type="checkbox" checked="True" class="checkbox" value="insb_member_details" name="insb_member_details">
-                                        <label for="insb_member_details">INSB Registered Member Details Permission
+                                        {% if data_access.member_details_access %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="insb_member_details" name="member_details_access">
+                                        <label for="insb_member_details">Registered Member Details Access
                                         </label><br>
                                         {% else %}
-                                        <input type="checkbox" class="checkbox" value="insb_member_details" name="insb_member_details">
-                                        <label for="insb_member_details">INSB Registered Member Details Permission</label><br>
+                                        <input type="checkbox" class="checkbox" value="insb_member_details" name="member_details_access">
+                                        <label for="insb_member_details">Registered Member Details Access</label><br>
                                         {% endif %}
 
 
-                                        {% if data_access.recruitment_session %}
-                                        <input type="checkbox" checked="True" class="checkbox" value="recruitment_session" name="recruitment_session">
-                                        <label for="recruitment_session">Recruitment Data View Permission</label><br>
+                                        {% if data_access.create_event_access %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="recruitment_session" name="create_event_access">
+                                        <label for="recruitment_session">Event Creation Access</label><br>
                                         {% else %}
-                                        <input type="checkbox" class="checkbox" value="recruitment_session" name="recruitment_session">
-                                        <label for="recruitment_session">Recruitment Data View Permission</label><br>
+                                        <input type="checkbox" class="checkbox" value="recruitment_session" name="create_event_access">
+                                        <label for="recruitment_session">Event Creation Access</label><br>
                                         {% endif %}
 
 
-                                        {% if data_access.recruited_member_details %}
-                                        <input type="checkbox" checked="True" class="checkbox" value="recruited_member_details" name="recruited_member_details">
-                                        <label for="recruited_member_details">Rectuited Member Details Permission</label><br>
+                                        {% if data_access.event_details_edit_access %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="recruited_member_details" name="event_details_edit_access">
+                                        <label for="recruited_member_details">Event Details Edit Access</label><br>
                                         {% else %}
-                                        <input type="checkbox" class="checkbox" value="recruited_member_details" name="recruited_member_details">
-                                        <label for="recruited_member_details">Rectuited Member Details Permission</label><br>
+                                        <input type="checkbox" class="checkbox" value="recruited_member_details" name="event_details_edit_access">
+                                        <label for="recruited_member_details">Event Details Edit Access</label><br>
                                         {% endif %}
 
 
-                                        {% if data_access.renewal_data_access %}
-                                        <input type="checkbox" checked="True" class="checkbox" value="renewal_data_access" name="renewal_data_access">
-                                        <label for="renewal_data_access">Membership Renewal Data Access Permission</label><br>
+                                        {% if data_access.panel_edit_access %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="renewal_data_access" name="panel_edit_access">
+                                        <label for="renewal_data_access">Panel Edit Access</label><br>
                                         {% else %}
-                                        <input type="checkbox" class="checkbox" value="renewal_data_access" name="renewal_data_access">
-                                        <label for="renewal_data_access">Membership Renewal Data Access Permission</label><br>
+                                        <input type="checkbox" class="checkbox" value="renewal_data_access" name="panel_edit_access">
+                                        <label for="renewal_data_access">Panel Edit Access</label><br>
+                                        {% endif %}
+
+                                        {% if data_access.membership_renewal_access %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="renewal_data_access" name="membership_renewal_access">
+                                        <label for="renewal_data_access">Membership Renewal Access</label><br>
+                                        {% else %}
+                                        <input type="checkbox" class="checkbox" value="renewal_data_access" name="membership_renewal_access">
+                                        <label for="renewal_data_access">Membership Renewal Access</label><br>
+                                        {% endif %}
+
+                                        {% if data_access.manage_access %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="renewal_data_access" name="manage_access">
+                                        <label for="renewal_data_access">Manage View Access</label><br>
+                                        {% else %}
+                                        <input type="checkbox" class="checkbox" value="renewal_data_access" name="manage_access">
+                                        <label for="renewal_data_access">Manage View Access</label><br>
                                         {% endif %}
                                             
                                     </td>
-                                    <td>
+                                    <td style="border:1px solid;text-align:center;">
                                         <input class="btn btn-outline b-success text-success" name="access_update" type="submit" value="Update">
-                                        <input class="btn btn-outline b-danger text-danger" type="submit" value="Remove">
-                                        <input type="hidden" name="access_ieee_id" value={{data_access.ieee_id}}>
+                                        <input class="btn btn-outline b-danger text-danger" type="submit" value="Remove" name="remove_from_data_access">
+                                        <input type="hidden" name="access_ieee_id" value={{data_access.member.member.ieee_id}}>
                                     </td>
                                 </form>
                             </tr>

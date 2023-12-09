@@ -5,6 +5,7 @@ from port.models import Panels,Chapters_Society_and_Affinity_Groups,Teams,Roles_
 from membership_development_team.models import Renewal_requests,Renewal_Sessions
 import logging
 from system_administration.system_error_handling import ErrorHandling
+from system_administration.models import SC_AG_Data_Access
 import traceback
 from datetime import datetime
 from central_events.models import Events
@@ -311,6 +312,41 @@ class Sc_Ag:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"Can not generate Excel sheet! Something went wrong!")
             return False
+    
+    def get_data_access_members(request,sc_ag_primary):
+        '''This function fetches all the members from data access table'''
+        try:
+            get_data_access_members=SC_AG_Data_Access.objects.filter(data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary))
+            return get_data_access_members
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not fetch members for Data Access! Something went wrong!")
+            return False
+                
+    def add_sc_ag_member_to_data_access(request,member_list,sc_ag_primary):
+        '''This function adds member to data access table'''
+        try:
+            for i in member_list:
+                # first check if the member already exists in the data access table for that SC AG
+                if(SC_AG_Data_Access.objects.filter(member=SC_AG_Members.objects.get(member=Members.objects.get(ieee_id=i),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)),data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).exists()):
+                    messages.info(request,"The member already exists in the Database. Do Search for the member!")
+                    return False
+                else:
+                    new_member_in_table=SC_AG_Data_Access.objects.create(
+                        member=SC_AG_Members.objects.get(member=Members.objects.get(ieee_id=i),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)),data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)
+                    )
+                    new_member_in_table.save()
+                    messages.success(request,f"{new_member_in_table.member.member.ieee_id} added in the View Access Table.")
+                    return True
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not add Member! Something went wrong!")
+            return False
+    
+    
+        
 
 
     

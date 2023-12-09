@@ -479,11 +479,20 @@ def sc_ag_manage_access(request,primary):
     
     # get SC AG members
     get_sc_ag_members=SC_AG_Info.get_sc_ag_members(request=request,sc_ag_primary=primary)
-    SC_Ag_Render_Access.get_sc_ag_common_access(request,primary)
+    # get data access Members
+    get_data_access_members=Sc_Ag.get_data_access_members(request=request,sc_ag_primary=primary)
+    
+    if(request.method=="POST"):
+        if(request.POST.get('update_data_access_member')):
+            member_select_list=request.POST.getlist('member_select')
+            if(Sc_Ag.add_sc_ag_member_to_data_access(request=request,member_list=member_select_list,sc_ag_primary=primary)):
+                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+    
     context={
         'all_sc_ag':sc_ag,
         'sc_ag_info':get_sc_ag_info,
         'sc_ag_members':get_sc_ag_members,
+        'data_access_members':get_data_access_members,
     }
     return render(request,'Manage Access/sc_ag_manage_access.html',context=context)       
 
