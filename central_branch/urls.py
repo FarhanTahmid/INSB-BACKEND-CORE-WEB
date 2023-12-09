@@ -53,6 +53,5 @@ urlpatterns = [
     #event dashboard team
     path('event_details/<int:event_id>',views.event_description,name='event_dashboard'),
     #Used ajax to publish event page, so need another link for view funtion
-    path('event_details/<int:event_id>/published',views.event_published,name="event_published")
 
 ]

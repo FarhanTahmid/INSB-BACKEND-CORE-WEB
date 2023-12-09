@@ -883,7 +883,6 @@ def event_creation_form_page3(request,event_id):
 def event_description(request,event_id):
     '''Checking to see whether the user has access to view events on portal and edit them'''
     try:
-        published = Branch.load_event_published(event_id)
         sc_ag=PortData.get_all_sc_ag(request=request) 
         user = request.user
         has_access = Branch.event_page_access(user)
@@ -932,8 +931,6 @@ def event_description(request,event_id):
                 'hasCollaboration':hasCollaboration,
                 'all_sc_ag':sc_ag,
                 'is_branch':is_branch,
-                'event_id':event_id,
-                'is_published':published,
             }
         else:
             return redirect('main_website:all-events')
@@ -1022,19 +1019,5 @@ def event_edit_form3(request, event_id):
         'event_details' : event_details
     }
     return render(request, '', context)
-@login_required
-def event_published(request,event_id):
 
-    try:
-        if request.method == "POST":
-            state = request.POST['publish_event']
-            print(state)
-            Branch.publish_event(event_id,state)
-            success = "Event Published"
-            return HttpResponse(success,event_id)
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
     

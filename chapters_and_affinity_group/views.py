@@ -514,7 +514,6 @@ def event_control_homepage(request,primary):
 @login_required
 def event_description(request,primary,event_id):
     try:
-        published = Branch.load_event_published(event_id)
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         is_branch= False
@@ -556,8 +555,6 @@ def event_description(request,primary,event_id):
             'interBranchCollaborations':interBranchCollaborations,
             'intraBranchCollaborations':intraBranchCollaborations,
             'hasCollaboration':hasCollaboration,
-            'event_id':event_id,
-            'is_published':published,
             
         }
         return render(request,"Events/event_description.html",context)
@@ -751,17 +748,3 @@ def event_creation_form_page3(request,primary,event_id):
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
     
-@login_required
-def event_published_sc_ag(request,primary,event_id):
-    try:
-        if request.method == "POST":
-            state = request.POST['publish_event']
-            print(state)
-            Branch.publish_event(event_id,state)
-            success = "Event Published"
-            return HttpResponse(success,primary,event_id)
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")

@@ -23,7 +23,6 @@ urlpatterns = [
     path('<str:primary>/membership_renewal/<str:renewal_session>/requests',views.sc_ag_renewal_session_details,name="sc_ag_membership_renewal_details"),
     path('<str:primary>/sc_ag_renewal_excel_sheet/<str:renewal_session>',views.sc_ag_renewal_excel_sheet,name="generate_sc_ag_renewal_excel"),
     path('<str:primary>/events/',views.event_control_homepage,name="event_control_homepage"),
-    path('<str:primary>/events/<int:event_id>/published',views.event_published_sc_ag,name="event_published_sc_ag")
     
 
 ]
