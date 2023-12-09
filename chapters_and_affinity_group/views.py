@@ -483,10 +483,12 @@ def sc_ag_manage_access(request,primary):
     get_data_access_members=Sc_Ag.get_data_access_members(request=request,sc_ag_primary=primary)
     
     if(request.method=="POST"):
-        if(request.POST.get('update_data_access_member')):
+        # Adding member to data access Table
+        if(request.POST.get('add_data_access_member')):
             member_select_list=request.POST.getlist('member_select')
             if(Sc_Ag.add_sc_ag_member_to_data_access(request=request,member_list=member_select_list,sc_ag_primary=primary)):
                 return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+        # Updating view access for data access member
         if(request.POST.get('access_update')):
             member=request.POST['access_ieee_id']
             
@@ -523,6 +525,17 @@ def sc_ag_manage_access(request,primary):
                 return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
             else:
                 return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+
+        # remove member from data access
+        if(request.POST.get('remove_from_data_access')):
+            member_to_remove=request.POST['access_ieee_id']
+            
+            if(Sc_Ag.remove_member_from_data_access(request=request,member=member_to_remove,sc_ag_primary=primary)):
+                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+            else:
+                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+
+                
 
                 
     context={

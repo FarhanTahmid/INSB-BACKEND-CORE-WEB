@@ -316,7 +316,7 @@ class Sc_Ag:
     def get_data_access_members(request,sc_ag_primary):
         '''This function fetches all the members from data access table'''
         try:
-            get_data_access_members=SC_AG_Data_Access.objects.filter(data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary))
+            get_data_access_members=SC_AG_Data_Access.objects.filter(data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).order_by('-id')
             return get_data_access_members
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -331,14 +331,13 @@ class Sc_Ag:
                 # first check if the member already exists in the data access table for that SC AG
                 if(SC_AG_Data_Access.objects.filter(member=SC_AG_Members.objects.get(member=Members.objects.get(ieee_id=i),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)),data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).exists()):
                     messages.info(request,"The member already exists in the Database. Do Search for the member!")
-                    return False
                 else:
                     new_member_in_table=SC_AG_Data_Access.objects.create(
                         member=SC_AG_Members.objects.get(member=Members.objects.get(ieee_id=i),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)),data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)
                     )
                     new_member_in_table.save()
                     messages.success(request,f"{new_member_in_table.member.member.ieee_id} added in the View Access Table.")
-                    return True
+            return True
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -371,6 +370,22 @@ class Sc_Ag:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(kwargs['request'],"Can not Data Access for the Member! Something went wrong!")
+            return False
+    
+    def remove_member_from_data_access(request,member,sc_ag_primary):
+        '''This function removes member from data access table'''
+        try:
+            get_query=SC_AG_Data_Access.objects.filter(member=SC_AG_Members.objects.get(member=Members.objects.get(ieee_id=member),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)),data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary))
+            if(get_query.exists()):
+                messages.info(request,f"{get_query[0].member} was removed from the View Access!")
+                get_query.delete()
+                return True
+            else:
+                return False
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not remove member from Data Access! Something went wrong!")
             return False
         
         
