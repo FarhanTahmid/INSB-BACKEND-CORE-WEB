@@ -911,7 +911,7 @@
           maxItems = slider.vars.maxItems;
 		  
 		  // gdlr modify
-		  var is_responsive = !$('body').children().hasClass('gdlr-no-responsive');
+		  var is_responsive = !$('body').children().hasClass('totalbusiness-no-responsive');
 		  if( $(window).width() < 767 && is_responsive ){ minItems = 1; maxItems = 1; }
 		  if( $(window).width() < 419 && is_responsive ){ minItems = 1; maxItems = 1; }
 

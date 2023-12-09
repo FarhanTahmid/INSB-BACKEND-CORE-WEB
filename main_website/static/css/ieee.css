@@ -1,0 +1,266 @@
+* {
+    /* font-family: tran; */
+}
+
+.about_ieee_heading {
+    font-weight: bolder;
+}
+
+.about_ieee_learnmore_btn {
+    background-color: #2575fc;
+    font-weight: 100%;
+    border: 1px solid #2575fc;
+    border-radius: 10px;
+    padding: 15px 35px;
+    color: white;
+    box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s;
+}
+
+.about_ieee_mission_btn {
+    background-color: #3b3a3a;
+    font-weight: 100%;
+    border: 1px solid #3b3a3a;
+    border-radius: 10px;
+    padding: 15px 35px;
+    color: white;
+    box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s;
+}
+
+.about_ieee_mission_btn:hover {
+    background-color: rgb(23, 22, 22);
+}
+
+.about_ieee_learnmore_btn:hover {
+    background-color: rgb(6, 93, 243);
+}
+
+.exploreBtn {
+    background: #002481;
+    color: white;
+    border-radius: 5px;
+    border: 1px solid #002481;
+    padding: 10px 35px;
+    margin: 10px 0px;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.exploreBtn:hover {
+    color: #002481;
+    font-weight: bold;
+}
+.exploreBtn::after {
+    content: "";
+    background: white;
+    position: absolute;
+    z-index: -1;
+    padding: 0.85em 0.75em;
+    display: block;
+}
+
+.ieee_event_confBtn {
+    background: #002481;
+    color: white;
+    border-radius: 5px;
+    border: 1px solid #002481;
+    padding: 5px 30px;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    font-size: 1.1rem;
+}
+
+.ieee_event_confBtn:hover {
+    color: #002481;
+}
+
+.ieee_event_confBtn::after {
+    content: "";
+    background: white;
+    position: absolute;
+    z-index: -1;
+    padding: 0.85em 0.75em;
+    display: block;
+}
+
+.ieee_innovationBtn {
+    background: #002481;
+    color: white;
+    border-radius: 5px;
+    border: 1px solid #002481;
+    padding: 5px 10px;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    font-size: 1.1rem;
+}
+
+.ieee_innovationBtn:hover {
+    color: #002481;
+}
+
+.ieee_innovationBtn::after {
+    content: "";
+    background: white;
+    position: absolute;
+    z-index: -1;
+    padding: 0.85em 0.75em;
+    display: block;
+}
+
+.ieee_publicationBtn {
+    background: #002481;
+    color: white;
+    border-radius: 5px;
+    border: 1px solid #002481;
+    padding: 5px 70px;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.ieee_publicationBtn:hover {
+    color: #002481;
+}
+
+.ieee_publicationBtn::after {
+    content: "";
+    background: white;
+    position: absolute;
+    z-index: -1;
+    padding: 0.85em 0.75em;
+    display: block;
+}
+
+
+
+.ieee_activitiesBtn {
+    position: relative;
+    background-color: #ffffff;
+    color: #204190;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.5);
+    /* font-weight: bold; */
+    font-size: 1.2rem;
+}
+
+.ieee_activitiesBtn .hover-text {
+    position: absolute;
+    bottom: -100%;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    color: #204190;
+    height: 100%;
+    transition: bottom 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.ieee_activitiesBtn:hover .hover-text {
+    bottom: 0;
+}
+
+button[class^="slide"]::after {
+    transition: all 0.35s;
+}
+button[class^="slide"]:hover::after {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    transition: all 0.35s;
+}
+
+button.slide_from_left::after {
+    top: 0;
+    bottom: 0;
+    left: -100%;
+    right: 100%;
+}
+button.slide_from_right::after {
+    top: 0;
+    bottom: 0;
+    left: 100%;
+    right: -100%;
+}
+button.slide_from_bottom::after {
+    left: 0;
+    right: 0;
+    top: 100%;
+    bottom: -100%;
+}
+
+button.slide_from_top::after {
+    left: 0;
+    right: 0;
+    top: -100%;
+    bottom: 100%;
+}
+
+.xplore_link a:hover {
+    color: black;
+}
+
+.ieee_achievement_learnmoreBtn {
+    background-color: #002481;
+    font-weight: 100%;
+    border: 1px solid #002481;
+    border-radius: 2px;
+    padding: 10px 20px;
+    color: white;
+    box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.4);
+    transition: all 0.24s;
+}
+
+.ieee_achievement_learnmoreBtn:hover {
+    background-color: white;
+    border: 0px solid #002481;
+    color: #002481;
+}
+
+.ieee_aboutBtnDiv {
+    float: right;
+}
+
+
+.join_ieeeBtnDiv{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.join_ieeeBtn{
+    transition: all .3s;
+    border-radius: 500px;
+    background-color: white;
+    box-shadow: 0px 0px white;
+    font-weight: bold;
+}
+
+.join_ieeeBtn:hover{
+    background-color: rgb(34, 34, 34);
+    color: white;
+    box-shadow: 0px 0px rgb(0, 0, 0);
+}
+
+@media only screen and (max-width: 766px) {
+    .ieee_aboutBtnDiv {
+        float: left;
+    }
+}

@@ -2,10 +2,16 @@ from django.contrib import messages
 from .models import SC_AG_Members
 from users.models import Members,Panel_Members
 from port.models import Panels,Chapters_Society_and_Affinity_Groups,Teams,Roles_and_Position
+from membership_development_team.models import Renewal_requests,Renewal_Sessions
 import logging
 from system_administration.system_error_handling import ErrorHandling
+from system_administration.models import SC_AG_Data_Access
 import traceback
 from datetime import datetime
+from central_events.models import Events
+from django.http import JsonResponse, HttpResponse
+import xlwt
+from membership_development_team import renewal_data
 
 class Sc_Ag:
     logger=logging.getLogger(__name__)
@@ -239,5 +245,151 @@ class Sc_Ag:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"Can not remove member from panel. Something went wrong!")
             return False
+    
+    def generate_renewal_excel_sheet(request,sc_ag_primary,renewal_session_id):
+        '''This method generates excel sheet for the SC AG's about their Renewal Requests'''
+        try:    
+            date=datetime.now()
+            # get renewal session
+            session_name=renewal_data.get_renewal_session_name(pk=renewal_session_id)
+            # get sc ag
+            get_sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)
+            date=datetime.now()
+            response = HttpResponse(content_type='application/ms-excel')  # declaring content type for the excel files
+            # setting filename
+            response['Content-Disposition'] = f'attachment; filename=Renewal Application - ' +\
+                get_sc_ag.group_name + '-' +\
+                session_name + ' - ' +\
+                str(date.strftime('%m/%d/%Y')) + \
+                '.xls'  # making files downloadable with name of session and timestamp
+            # adding encoding to the workbook
+            workBook = xlwt.Workbook(encoding='utf-8')
+            # opening an worksheet to work with the columns
+            workSheet = workBook.add_sheet(f'Renewal Request List')
+            
+            # generating the first row
+            row_num = 0
+            font_style = xlwt.XFStyle()
+            font_style.font.bold = True
+
+            # Defining columns that will stay in the first row
+            columns = ['Name','IEEE ID', 'Associated Email','IEEE Email','Contact No','Transaction ID','Member Comment',
+                    'Renewal Status']
+            # Defining first column
+            for column in range(len(columns)):
+                workSheet.write(row_num, column, columns[column], font_style)
+
+            # reverting font style to default
+            font_style = xlwt.XFStyle()
+            
+            # get values of renewal requests for sc ag as rows, checking manually
+            if(int(sc_ag_primary)==2):
+                rows=Renewal_requests.objects.filter(session_id=Renewal_Sessions.objects.get(pk=renewal_session_id),pes_renewal_check=True).values_list(
+                    'name','ieee_id','email_associated','email_ieee','contact_no','transaction_id','comment','renewal_status')
+            elif(int(sc_ag_primary)==3):
+                rows=Renewal_requests.objects.filter(session_id=Renewal_Sessions.objects.get(pk=renewal_session_id),ras_renewal_check=True).values_list(
+                    'name','ieee_id','email_associated','email_ieee','contact_no','transaction_id','comment','renewal_status')
+            elif(int(sc_ag_primary)==4):
+                rows=Renewal_requests.objects.filter(session_id=Renewal_Sessions.objects.get(pk=renewal_session_id),ias_renewal_check=True).values_list(
+                    'name','ieee_id','email_associated','email_ieee','contact_no','transaction_id','comment','renewal_status')
+
+            elif(int(sc_ag_primary)==5):
+                            rows=Renewal_requests.objects.filter(session_id=Renewal_Sessions.objects.get(pk=renewal_session_id),wie_renewal_check=True).values_list(
+                                'name','ieee_id','email_associated','email_ieee','contact_no','transaction_id','comment','renewal_status')
+
+            # write in the rows one by one object
+            for row in rows:
+                row_num+=1 #increment rows at first as first row is written as heading
+                for col_num in range(len(row)):
+                    #write in the rows
+                    workSheet.write(row_num, col_num, str(row[col_num]), font_style) 
+            # save the workbook
+            workBook.save(response)
+            # return the workbook as response to download
+            return response
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not generate Excel sheet! Something went wrong!")
+            return False
+    
+    def get_data_access_members(request,sc_ag_primary):
+        '''This function fetches all the members from data access table'''
+        try:
+            get_data_access_members=SC_AG_Data_Access.objects.filter(data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).order_by('-id')
+            return get_data_access_members
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not fetch members for Data Access! Something went wrong!")
+            return False
+                
+    def add_sc_ag_member_to_data_access(request,member_list,sc_ag_primary):
+        '''This function adds member to data access table'''
+        try:
+            for i in member_list:
+                # first check if the member already exists in the data access table for that SC AG
+                if(SC_AG_Data_Access.objects.filter(member=SC_AG_Members.objects.get(member=Members.objects.get(ieee_id=i),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)),data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).exists()):
+                    messages.info(request,"The member already exists in the Database. Do Search for the member!")
+                else:
+                    new_member_in_table=SC_AG_Data_Access.objects.create(
+                        member=SC_AG_Members.objects.get(member=Members.objects.get(ieee_id=i),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)),data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)
+                    )
+                    new_member_in_table.save()
+                    messages.success(request,f"{new_member_in_table.member.member.ieee_id} added in the View Access Table.")
+            return True
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not add Member! Something went wrong!")
+            return False
+    
+    def update_sc_ag_member_access(*args, **kwargs):
+        '''This function updates the access of the member in the data access table'''
+        try:
+            # get the query at first with member ieee id and sc_ag_primary
+            get_query=SC_AG_Data_Access.objects.filter(member=SC_AG_Members.objects.get(member=Members.objects.get(ieee_id=kwargs['member']),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=kwargs['sc_ag_primary'])),data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=kwargs['sc_ag_primary']))
+            if(get_query.exists()):
+                # if query exists then only update
+                get_query.update(
+                    # get the values from kwargs. To avoid any error or misunderstanding the 'key's of the kwargs were kept same as the model(SC_AG_Data_Access) attributes name
+                    member_details_access=kwargs['member_details_access'],
+                    create_event_access=kwargs['create_event_access'],
+                    event_details_edit_access=kwargs['event_details_edit_access'],
+                    panel_edit_access=kwargs['panel_edit_access'],
+                    membership_renewal_access=kwargs['membership_renewal_access'],
+                    manage_access=kwargs['manage_access']
+                )
+                messages.success(kwargs['request'],f"Data Access for {kwargs['member']} was updated!")
+                return True
+            else:
+                messages.error(kwargs['request'],"Can not Update Data Access for the Member!")
+                return False
+            
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(kwargs['request'],"Can not Data Access for the Member! Something went wrong!")
+            return False
+    
+    def remove_member_from_data_access(request,member,sc_ag_primary):
+        '''This function removes member from data access table'''
+        try:
+            get_query=SC_AG_Data_Access.objects.filter(member=SC_AG_Members.objects.get(member=Members.objects.get(ieee_id=member),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)),data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary))
+            if(get_query.exists()):
+                messages.info(request,f"{get_query[0].member} was removed from the View Access!")
+                get_query.delete()
+                return True
+            else:
+                return False
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not remove member from Data Access! Something went wrong!")
+            return False
+        
+        
+
+
     
     

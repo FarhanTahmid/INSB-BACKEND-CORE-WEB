@@ -3,7 +3,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Teams | IEEE NSU Student Branch</title>
+    
+    <title>Renewal Session Details | {{sc_ag_info.group_name}}</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
     {% block common_css %}
@@ -113,9 +114,16 @@
   
         <!-- navbar content -->
         <div id="content" class="app-content box-shadow-z0" role="main">
-            {% block navbar %}
+            {% if is_branch %}
+              {% block navbar %}
                 {% include 'mdt_navbar.html' %}
-            {% endblock navbar %}
+              {% endblock navbar %}
+            {% else %}
+                {% block sc_ag_navbar %}
+                  {% include 'sc_ag_navbar.html' %}
+                {% endblock sc_ag_navbar %}
+            {% endif %}
+            
 
         </div>
         <!--navbar content-->
@@ -127,15 +135,33 @@
             <br>
             <!--Back button-->
             <div class="tooltip-container">
+              {% if is_branch %}
               <a href="{% url 'membership_development_team:renewal_session_data' session_id  %}" class="image-button">
-                  <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+                <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
               </a>
-              <span class="tooltip-text">Go back to Renewal Session Details</span>
+              {% else %}
+              <a href="{% url 'chapters_and_affinity_group:sc_ag_membership_renewal' sc_ag_info.primary  %}" class="image-button">
+                <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+              </a>
+              {% endif %}
+              
+              <span class="tooltip-text">Go back</span>
             </div>
             <!--Back button end-->
             <br>
             <br>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Renewal Details for <span style="color:#00629B;"> <b>{{sc_ag.group_name}}</b></span></h2>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Renewal -  <span style="color:#00629B;"><b>{{session_info.session_name}} - </b></span><br> <span style="color:#00629B;"> <b>{{sc_ag_info.group_name}}</b></span></h2>
+
+            <!--Buttons-->
+            <div style="justify-content:center;text-align:center;">  
+              <div class="btn-container">
+                {% if is_branch %}
+                  <a href="{% url 'chapters_and_affinity_group:generate_sc_ag_renewal_excel' sc_ag_info.primary session_id %}" class="btn btn-outline b-primary text-primary">Generate Excel Sheet for this Session</a>
+                {% else %}
+                  <a href="{% url 'chapters_and_affinity_group:generate_sc_ag_renewal_excel' sc_ag_info.primary session_info.pk %}" class="btn btn-outline b-primary text-primary">Generate Excel Sheet for this Session</a>
+                {% endif %}
+              </div>
+            </div>
             <br>
             <!--Statistics Part-->
             {% block pie_stat_for_sc_ag_renewal %}

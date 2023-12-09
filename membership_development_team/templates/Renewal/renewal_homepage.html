@@ -78,9 +78,16 @@
   
         <!-- navbar content -->
         <div id="content" class="app-content box-shadow-z0" role="main">
-            {% block navbar %}
-                {% include 'mdt_navbar.html' %}
-            {% endblock navbar %}
+            {% if is_branch %}
+                {% block navbar %}
+                    {% include 'mdt_navbar.html' %}
+                {% endblock navbar %}
+            {% else %}
+                {% block sc_ag_navbar %}
+                    {% include 'sc_ag_navbar.html' %}
+                {% endblock sc_ag_navbar %}
+            {% endif %}
+            
 
         </div>
         <!--navbar content-->
@@ -90,16 +97,24 @@
 
             <!--Start from here-->
             
-            <br>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to <span style="color:#00629B;"> <b>Renewal Process</b></span> of <b><span style="color:#00629B;">The Membership Development Team</b></span> </h2>
+            <br><br>
+            {% if is_branch %}
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;"> <b>Renewal - </b></span><span>Membership Development Team</span> </h2>
+            {% else %}
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;"> <b>Renewal - </b></span><span>{{sc_ag_info.group_name}}</span> </h2>
+            {% endif %}
             <br>
 
+
             <!--Create session Part-->
+            {% if is_branch %}
             <div style="justify-content:center;text-align:center;">  
                 <p class="btn-groups">
                     <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Create a New Session</button>
                 </p>
             </div>
+            {% endif %}
+            
 
             <!--Messages-->
             <div style="justify-content:center; text-align:center;">
@@ -145,8 +160,11 @@
                     <tbody>
                     {% for session in sessions  %}                                
                         <tr>
-
+                            {% if is_branch %}
                             <td style="color:#00629B"><a href="{% url "membership_development_team:renewal_session_data" session.id %}">{{ session.session_name  }}</a></td>
+                            {% else %}
+                            <td style="color:#00629B"><a href="{% url "chapters_and_affinity_group:sc_ag_membership_renewal_details" sc_ag_info.primary session.id %}">{{ session.session_name  }}</a></td>
+                            {% endif %}
                             <td>{{ session.session_time }}</td>           
                         </tr>
                 

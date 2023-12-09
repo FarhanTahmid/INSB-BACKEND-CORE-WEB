@@ -5,9 +5,10 @@
 }
 
 .wpgmp_map_container .gm-style-iw {
-    min-height: 50px min-width: 150px
+    min-height: 50px
+    min-width: 150px
 }
 
 .gm-style-iw .wpgmp_map img {
-    max-width: 100%;
+max-width: 100%;
 }
