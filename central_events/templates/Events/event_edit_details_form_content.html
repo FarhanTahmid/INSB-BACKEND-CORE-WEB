@@ -26,7 +26,7 @@
                                         autocomplete="off"
                                         required
                                         name="event_name"
-                                        value="{{event_name}}" 
+                                        value="{{event_details.event_name}}" 
                                     />
                                         
                                 </div>
@@ -39,9 +39,10 @@
                                 <div class="form-group">
                                     <label>Super Event of</label>    
                                     <select multiple class="form-control" name="super_event">
-                                        <option value="null" {% if super_event.id is none %}selected{% endif %}>--------------------</option>
+                                        <option value="null" {% if event_details.super_event_id is none %}selected{% endif %}>--------------------</option>
                                         {% for super_event in super_events %}
-                                            <option value="{{ super_event.id }}" {% if super_event.id and super_event.id == selectedSuperEventId %}selected{% endif %}>
+                                            <option value="{{ super_event.id }}" 
+                                            {% if super_event == event_details.super_event_id %}selected{% endif %}>
                                                 {{ super_event.super_event_name }}
                                             </option>
                                         {% endfor %}
@@ -52,10 +53,11 @@
                                 <div class="form-group">
                                     <label>Select Event Type</label>
                                     <select multiple class="form-control" name="event_type" required>
-                                        <option value="null" {% if event_type.id is none %}selected{% endif %}>--------------------</option>
+                                        <option value="null" {% if event_details.event_type is none %}selected{% endif %}>--------------------</option>
                                         {% for event_type in event_types %}
-                                            <option value="{{ event_type.id }}" {% if event_type.id and event_type.id == selectedEventTypeId %}selected{% endif %}>
-                                                {{ event_type.event_category }}
+                                            <option value="{{ event_type.id }}" 
+                                            {% if event_type == event_details.event_type %}selected{% endif %}>
+                                                {{ event_details.event_type }}
                                             </option>
                                         {% endfor %}
                                     </select>
@@ -69,7 +71,7 @@
                                         name="event_date"
                                         type="date"
                                         class="form-control w-75"
-                                        value="{{event_date}}"
+                                        value="{{event_details.event_date|date:"Y-m-d"}}"
                                     />
                                 </div>
                                 <br>  

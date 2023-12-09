@@ -134,7 +134,7 @@
             <!-- Add Delete Button -->
             <div class="btn-container">
               <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal">Delete Event</button>
-              <a href="#" class="btn btn-outline-primary">Edit Event</a>
+              <a href="{% url 'central_branch:event_edit_form' event_details.id %}" class="btn btn-outline-primary">Edit Event</a>
 
           </div>
           

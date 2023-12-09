@@ -968,11 +968,17 @@ def event_edit_form(request, event_id):
         is_branch = True
         #Get event details from databse
         event_details = Events.objects.get(pk=event_id)
+
+        #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
+        super_events=Branch.load_all_mother_events()
+        event_types=Branch.load_all_event_type_for_groups(1)
         
         context={
             'all_sc_ag' : sc_ag,
             'is_branch' : is_branch,
-            'event_details' : event_details
+            'event_details' : event_details,
+            'super_events':super_events,
+            'event_types':event_types,
         }
 
         # if(request.method == "POST"):
@@ -993,31 +999,6 @@ def event_edit_form(request, event_id):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return HttpResponseBadRequest("Bad Request")
-    
-def event_edit_form2(request, event_id):
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    is_branch = True
-    #Get event details from databse
-    event_details = Events.objects.get(pk=event_id)
-    
-    context={
-        'all_sc_ag' : sc_ag,
-        'is_branch' : is_branch,
-        'event_details' : event_details
-    }
-    return render(request, '', context)
 
-def event_edit_form3(request, event_id):
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    is_branch = True
-    #Get event details from databse
-    event_details = Events.objects.get(pk=event_id)
-    
-    context={
-        'all_sc_ag' : sc_ag,
-        'is_branch' : is_branch,
-        'event_details' : event_details
-    }
-    return render(request, '', context)
 
     
