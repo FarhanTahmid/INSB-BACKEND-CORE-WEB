@@ -748,3 +748,71 @@ def event_creation_form_page3(request,primary,event_id):
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
     
+
+@login_required
+def event_edit_form(request, primary, event_id):
+
+    ''' This function loads the edit page of events '''
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        is_branch = True
+        #Get event details from databse
+        event_details = Events.objects.get(pk=event_id)
+
+        if(request.method == "POST"):
+            ''' Get data from form and call update function to update event '''
+
+            event_name=request.POST['event_name']
+            event_description=request.POST['event_description']
+            super_event_id=request.POST.get('super_event')
+            event_type_list = request.POST.getlist('event_type')
+            event_date=request.POST['event_date']
+            inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
+            intra_branch_collaboration=request.POST['intra_branch_collaboration']
+
+            #Check if the update request is successful
+            if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration)):
+                messages.success(request,f"Event with EVENT ID {event_id} was Updated successfully")
+                return redirect('central_branch:event_dashboard', event_id) 
+            else:
+                messages.error(request,"Something went wrong while updating the event!")
+                return redirect('central_branch:event_dashboard', event_id)
+
+        form = EventForm({'event_description' : event_details.event_description})
+
+        #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
+        super_events=Branch.load_all_mother_events()
+        event_types=Branch.load_all_event_type_for_groups(event_details.event_organiser.primary)
+
+        inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+
+        # Get collaboration details
+        interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
+        intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
+        # Checking if event has collaborations
+        hasCollaboration=False
+        if(len(interBranchCollaborations)>0):
+            hasCollaboration=True
+
+        interBranchCollaborationsArray = []
+        for i in interBranchCollaborations.all():
+            interBranchCollaborationsArray.append(i.collaboration_with)
+
+        context={
+            'all_sc_ag' : sc_ag,
+            'is_branch' : is_branch,
+            'event_details' : event_details,
+            'form' : form,
+            'super_events' : super_events,
+            'event_types' : event_types,
+            'inter_branch_collaboration_options' : inter_branch_collaboration_options,
+            'interBranchCollaborations':interBranchCollaborationsArray,
+            'intraBranchCollaborations':intraBranchCollaborations,
+            'hasCollaboration' : hasCollaboration,
+        }
+
+        return render(request, 'Events/event_edit_form.html', context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return HttpResponseBadRequest("Bad Request")
