@@ -1,5 +1,7 @@
 {% load static %}
 {% block event_details_form %}
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <div class="container">
         <div class="padding">
             <div class="row" >
@@ -7,6 +9,15 @@
                     <div class="box">
                         <div class="box-header" style="text-align:center;">
                             <h1>Update Event Details</h1>
+                        </div>
+                        <div class="publish-switch">
+                            <label class="form-control-label">Publish:</label>
+                            <span>                                            
+                                <label class="ui-switch m-t-xs m-r">
+                                    <input name="current_check" type="checkbox">
+                                        <i></i>
+                                </label>                
+                            </span>
                         </div>
                         <!--Error Message-->
                         <div class="py-3 text-center">
@@ -17,8 +28,10 @@
                         <form method="POST">
                             {% csrf_token %}
                             <div class="box-body">
+                                
+
                                 <div class="form-group">
-                                    <label>Event Name <span style="color:red">*<span></label> 
+                                    <label>Event Name: <span style="color:red">*<span></label> 
                                     <input
                                         placeholder="Event Name"
                                         class="form-control w-75"
@@ -51,7 +64,7 @@
                                 
                                 <br>
                                 <div class="form-group">
-                                    <label>Select Event Type</label>
+                                    <label>Select Event Type: <span style="color:red">*<span></label>
                                     <select multiple class="form-control" name="event_type" required>
                                         <option value="null" {% if event_details.event_type is none %}selected{% endif %}>--------------------</option>
                                         {% for event_type in event_types %}
@@ -96,6 +109,7 @@
                                         type="text"
                                         name="intra_branch_collaboration"
                                         value="{{intraBranchCollaborations.collaboration_with}}"
+                                        required
                                     />
                                 </div>
                                 <br>
@@ -109,6 +123,7 @@
                                             </option>
                                         {% endfor %}
                                     </select>
+                                    <button type="button" class="btn btn-outline-success buttons mt-2" data-toggle="modal" data-target="#addVenueModal">Add Venue</button>
                                 </div>
                                 
                                 <br>
@@ -124,6 +139,60 @@
                                     </select>
                                 </div>
                                 
+                                <br>
+                                <div class="form-group">
+                                    <div class="registration-fee-switch">
+                                        <label class="form-control-label">Registration Fee:</label>
+                                        <span>                                            
+                                            <label class="ui-switch m-t-xs m-r">
+                                                <input name="current_check" type="checkbox" id="registrationCheckbox">
+                                                <i></i>
+                                            </label>                
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Hidden textfield with transition -->
+                                <div class="form-group registration-hidden-field" id="registrationFeeInput">
+                                    <label for="registrationFeeValue">Enter amount:</label>
+                                    <input
+                                        type="text"
+                                        name="registration_fee_value"
+                                        id="registrationFeeValue"
+                                        class="form-control w-75"
+                                        placeholder="Enter Registration Fee"
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <div class="flagship-event-switch">
+                                        <label class="form-control-label">Flagship:</label>
+                                        <span>                                            
+                                            <label class="ui-switch m-t-xs m-r">
+                                                <input name="current_check" type="checkbox" id="Checkbox">
+                                                <i></i>
+                                            </label>                
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <br>
+                                <div class="form-group">
+                                    <label class="form-control-label">Form Link:</label>
+                                    <span>
+                                        <input
+                                        placeholder="Provide Link"
+                                        class="form-control"
+                                        type="url"
+                                        autocomplete="off"
+                                        required
+                                        id="#field1"
+                                        value="{{media_link}}"
+                                        name="drive_link_of_event"/>
+            
+                                    </span>
+                                </div>
+                                
+
                                 <br>
                                 <div style="text-align: center;">
                                     {% if is_branch %}
@@ -142,5 +211,52 @@
         </div>
     </div>
 
+    
+    <div class="modal fade" id="addVenueModal" tabindex="-1" role="dialog" aria-labelledby="addVenueModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addVenueModalLabel">Add Venue</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <label for="venue">Venue:</label>
+                        <input type="text" id="venue" name="venue">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-success txt-success buttons" name="add_venues" value="Add">Add</button>
+                    <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
+    <script>
+        $(document).ready(function () {
+            // Get references to the checkbox and the hidden textfield
+            var checkbox = $('#registrationCheckbox');
+            var feeInput = $('#registrationFeeInput');
+        
+            // Attach a change event listener to the checkbox
+            checkbox.change(function () {
+                if (checkbox.is(':checked')) {
+                    // Show the textfield with a fixed height
+                    feeInput.css({ opacity: 1, height: '85px', visibility: 'visible' }); // Adjust the height value as needed
+                } else {
+                    // Hide the textfield with a fixed height
+                    feeInput.css({ opacity: 0, height: 0, visibility: 'hidden' });
+                }
+            });
+        });
+    </script>
+    
+    
+    
+    
 {% endblock event_details_form %}
