@@ -23,7 +23,7 @@ event_proposal_files=FileSystemStorage(location='Event Proposals')
 class Event_Category(models.Model):
     event_category=models.CharField(null=False,blank=False,max_length=60)
     event_category_for = models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
-    
+    # primary=models.IntegerField(null=False,blank=False)
     class Meta:
         verbose_name="Event Category"
     

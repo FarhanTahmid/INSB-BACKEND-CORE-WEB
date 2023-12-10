@@ -684,7 +684,7 @@ def event_control_homepage(request):
                 created_event_type = Branch.add_event_type_for_group(event_type,1)
                 if created_event_type:
                     print("Event type did not exists, so new event was created")
-                    messages.info(request,"New Event Type Added Successfully")
+                    messages.success(request,"New Event Type Added Successfully")
                 else:
                     print("Event type already existed")
                     messages.info(request,"Event Type Already Exists")
@@ -727,7 +727,7 @@ def super_event_creation(request):
                 start_date = request.POST.get('probable_date')
                 end_date = request.POST.get('final_date')
                 Branch.register_super_events(super_event_name,super_event_description,start_date,end_date)
-                messages.info(request,"New Super Event Added Successfully")
+                messages.success(request,"New Super Event Added Successfully")
                 return redirect('central_branch:event_control')
                         
         return render(request,"Events/Super Event/super_event_creation_form.html", context)
@@ -770,9 +770,9 @@ def event_creation_form_page(request):
 
                 '''Getting data from page and calling the register_event_page1 function to save the event page 1 to database'''
 
-                super_event_id=request.POST.get('super_event')
                 event_name=request.POST['event_name']
                 event_description=request.POST['event_description']
+                super_event_id=request.POST.get('super_event')
                 event_type_list = request.POST.getlist('event_type')
                 event_date=request.POST['event_date']
 
@@ -786,7 +786,7 @@ def event_creation_form_page(request):
                 )
                 
                 if(get_event)==False:
-                    messages.info(request,"Database Error Occured! Please try again later.")
+                    messages.error(request,"Database Error Occured! Please try again later.")
                 else:
                     #if the method returns true, it will redirect to the new page
                     return redirect('central_branch:event_creation_form2',get_event)
@@ -825,7 +825,7 @@ def event_creation_form_page2(request,event_id):
                     event_id=event_id)):
                     return redirect('central_branch:event_creation_form3',event_id)
                 else:
-                    messages.info(request,"Database Error Occured! Please try again later.")
+                    messages.error(request,"Database Error Occured! Please try again later.")
 
             elif(request.POST.get('cancel')):
                 return redirect('central_branch:event_control')
@@ -867,9 +867,9 @@ def event_creation_form_page3(request,event_id):
                 update_event_details=Branch.register_event_page3(venue_list=venue_list_for_event,permission_criteria_list=permission_criterias_list_for_event,event_id=event_id)
                 #if return value is false show an error message
                 if(update_event_details==False):
-                    messages.info(request, "An error Occured! Please Try again!")
+                    messages.error(request, "An error Occured! Please Try again!")
                 else:
-                    messages.info(request, "New Event Added Succesfully")
+                    messages.success(request, "New Event Added Succesfully")
                     return redirect('central_branch:event_control')
 
         return render(request,'Events/event_creation_form3.html',context)
@@ -896,10 +896,10 @@ def event_description(request,event_id):
             intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
             # Checking if event has collaborations
             hasCollaboration=False
-            if(len(interBranchCollaborations)>0 or len(intraBranchCollaborations)>0):
+            if(len(interBranchCollaborations)>0):
                 hasCollaboration=True
             
-          
+            
             get_all_team_name = Branch.load_teams()
             get_event_details = Events.objects.get(id = event_id)
 
@@ -910,7 +910,7 @@ def event_description(request,event_id):
                 ''' To delete event from databse '''
                 if request.POST.get('delete_event'):
                     if(Branch.delete_event(event_id=event_id)):
-                        messages.info(request,f"Event with EVENT ID {event_id} was Removed successfully")
+                        messages.success(request,f"Event with EVENT ID {event_id} was Removed successfully")
                         return redirect('central_branch:event_control')
                     else:
                         messages.error(request,"Something went wrong while removing the event!")
@@ -940,6 +940,7 @@ def event_description(request,event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
+    
 @login_required
 def get_updated_options_for_event_dashboard(request):
     #this function updates the select box upon the selection of the team in task assignation. takes event id as parameter. from html file, a script hits the api and fetches the returned dictionary
@@ -968,54 +969,64 @@ def event_edit_form(request, event_id):
         is_branch = True
         #Get event details from databse
         event_details = Events.objects.get(pk=event_id)
-        
+
+        if(request.method == "POST"):
+            ''' Get data from form and call update function to update event '''
+
+            event_name=request.POST['event_name']
+            event_description=request.POST['event_description']
+            super_event_id=request.POST.get('super_event')
+            event_type_list = request.POST.getlist('event_type')
+            event_date=request.POST['event_date']
+            inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
+            intra_branch_collaboration=request.POST['intra_branch_collaboration']
+
+            #Check if the update request is successful
+            if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration)):
+                messages.success(request,f"Event with EVENT ID {event_id} was Updated successfully")
+                return redirect('central_branch:event_dashboard', event_id) 
+            else:
+                messages.error(request,"Something went wrong while updating the event!")
+                return redirect('central_branch:event_dashboard', event_id)
+
+        form = EventForm({'event_description' : event_details.event_description})
+
+        #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
+        super_events=Branch.load_all_mother_events()
+        event_types=Branch.load_all_event_type_for_groups(1)
+
+        inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+
+        # Get collaboration details
+        interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
+        intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
+        # Checking if event has collaborations
+        hasCollaboration=False
+        if(len(interBranchCollaborations)>0):
+            hasCollaboration=True
+
+        interBranchCollaborationsArray = []
+        for i in interBranchCollaborations.all():
+            interBranchCollaborationsArray.append(i.collaboration_with)
+
         context={
             'all_sc_ag' : sc_ag,
             'is_branch' : is_branch,
-            'event_details' : event_details
+            'event_details' : event_details,
+            'form' : form,
+            'super_events' : super_events,
+            'event_types' : event_types,
+            'inter_branch_collaboration_options' : inter_branch_collaboration_options,
+            'interBranchCollaborations':interBranchCollaborationsArray,
+            'intraBranchCollaborations':intraBranchCollaborations,
+            'hasCollaboration' : hasCollaboration,
         }
 
-        # if(request.method == "POST"):
-        #     ''' Get data from form and call update function to update event '''
-
-        #     event_name = request.POST['event_name']
-
-        #     #Check if the update request is successful
-        #     if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name)):
-        #         messages.info(request,f"Event with EVENT ID {event_id} was Updated successfully")
-        #         return redirect('central_branch:event_dashboard', event_id) 
-        #     else:
-        #         messages.error(request,"Something went wrong while updating the event!")
-        #         return redirect('central_branch:event_dashboard', event_id)
-
-        return render(request, '', context)
+        return render(request, 'Events/event_edit_form.html', context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return HttpResponseBadRequest("Bad Request")
-    
-def event_edit_form2(request, event_id):
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    is_branch = True
-    #Get event details from databse
-    event_details = Events.objects.get(pk=event_id)
-    
-    context={
-        'all_sc_ag' : sc_ag,
-        'is_branch' : is_branch,
-        'event_details' : event_details
-    }
-    return render(request, '', context)
 
-def event_edit_form3(request, event_id):
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    is_branch = True
-    #Get event details from databse
-    event_details = Events.objects.get(pk=event_id)
+
     
-    context={
-        'all_sc_ag' : sc_ag,
-        'is_branch' : is_branch,
-        'event_details' : event_details
-    }
-    return render(request, '', context)

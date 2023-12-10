@@ -352,15 +352,53 @@ class Branch:
                 else:
                     pass
 
-    def update_event_details(event_id, event_name):
+    def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list, event_date, inter_branch_collaboration_list, intra_branch_collaboration):
         ''' Update event details and save to database '''
 
         try:
             event = Events.objects.filter(pk=event_id)
-            event.update(event_name=event_name)
+            if(super_event_id == 'null'):
+                super_event_id = ""
+            event.update(event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_date=event_date)
+            event = Events.objects.get(pk=event_id)
+            event.event_type.clear()
+            event.event_type.add(*event_type_list)
+            event.save()
+
+            if(inter_branch_collaboration_list[0] == 'null'):
+                interbranchcollaborations = InterBranchCollaborations.objects.filter(event_id=event_id)
+                if(interbranchcollaborations.count() != 0):
+                    for i in interbranchcollaborations:
+                        i.delete()
+            else:
+                interbranchcollaborations = InterBranchCollaborations.objects.filter(event_id=event_id).values_list('collaboration_with', flat=True)
+                testArray = []
+                for i in interbranchcollaborations:
+                    testArray.append(str(Chapters_Society_and_Affinity_Groups.objects.get(id=i).primary))
+
+                for i in inter_branch_collaboration_list:
+                    if i not in testArray:
+                        new_event_inter_branch_collaboration = InterBranchCollaborations(event_id=event, collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(primary=int(i)))
+                        new_event_inter_branch_collaboration.save()
+
+                for i in testArray:
+                    if i not in inter_branch_collaboration_list:
+                        InterBranchCollaborations.objects.filter(event_id=event, collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(primary=int(i))).delete()                   
+
+            intrabranchcollaborations = IntraBranchCollaborations.objects.filter(event_id=event_id)
+            if(intra_branch_collaboration == ""):
+                if(intrabranchcollaborations):
+                    intrabranchcollaborations.delete()
+            else:
+                if(intrabranchcollaborations):
+                    intrabranchcollaborations.update(collaboration_with=intra_branch_collaboration)
+                else:
+                    IntraBranchCollaborations.objects.create(event_id=event, collaboration_with=intra_branch_collaboration)
+
             return True
         except:
             return False
+
     # def load_ex_com_panel_list():
     #     panels=Executive_commitee.objects.all().order_by('-pk')
     #     ex_com_panel_list=[]
@@ -704,8 +742,11 @@ class Branch:
         '''this function loads all the Intra Branch Collaborations from the database. cross match with event_id'''
         
         intraBranchCollaborations=IntraBranchCollaborations.objects.filter(event_id=Events.objects.get(id=event_id))
-
-        return intraBranchCollaborations
+        if(intraBranchCollaborations.count() == 0):
+            return ""
+        else:
+            intraBranchCollaborations = IntraBranchCollaborations.objects.get(event_id=Events.objects.get(id=event_id))
+            return intraBranchCollaborations
     
     def delete_event(event_id):
         ''' This function deletes event from database '''

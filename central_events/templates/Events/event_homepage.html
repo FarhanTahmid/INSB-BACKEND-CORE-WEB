@@ -103,7 +103,7 @@
               <div style="justify-content:center;text-align:center;"> 
 
                 {% for message in messages %}
-                    <p>
+                    <p class="{{ message.tags }}">
                         {{ message }}
                         <button type="button" class="close" onclick="removeMessage(this)" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
