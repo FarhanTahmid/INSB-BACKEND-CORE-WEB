@@ -102,7 +102,7 @@
                                 
                                 <br>
                                 <div class="form-group">
-                                    <label>Intra Branch Collaboration With: <span style="color:red">*<span></label>
+                                    <label>Intra Branch Collaboration With:  (Add comma to add multiple options) <span style="color:red">*<span></label>
                                     <input
                                         placeholder="Name of the Branches/Organizations"
                                         class="form-control w-75"
@@ -129,7 +129,7 @@
                                 <br>
                                 <div class="form-group">
                                     <label>Select Permission Criterias For the Event: (Press CTRL to select multiple options) <span style="color:red">*</span></label>
-                                    <select multiple class="form-control" name="permission_criteria">
+                                    <select multiple class="form-control" name="permission_criteria" required>
                                         <option value="null" {% if selectedPermissionId is none %}selected{% endif %}>----------</option>
                                         {% for permission in permission_criterias %}
                                             <option value="{{ permission.id }}" {% if selectedPermissionId and permission.id == selectedPermissionId %}selected{% endif %}>
