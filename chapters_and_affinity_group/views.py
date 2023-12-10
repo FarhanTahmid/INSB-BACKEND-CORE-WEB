@@ -788,7 +788,8 @@ def event_edit_form(request, primary, event_id):
     ''' This function loads the edit page of events '''
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
-        is_branch = True
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        is_branch = False
         #Get event details from databse
         event_details = Events.objects.get(pk=event_id)
 
@@ -842,6 +843,8 @@ def event_edit_form(request, primary, event_id):
             'interBranchCollaborations':interBranchCollaborationsArray,
             'intraBranchCollaborations':intraBranchCollaborations,
             'hasCollaboration' : hasCollaboration,
+            'sc_ag_info':get_sc_ag_info,
+            
         }
 
         return render(request, 'Events/event_edit_form.html', context)
