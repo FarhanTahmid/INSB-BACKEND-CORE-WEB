@@ -356,12 +356,41 @@ class Branch:
         ''' Update event details and save to database '''
 
         try:
-            event = Events.objects.filter(pk=event_id)
-            if(super_event_id == 'null'):
-                super_event_id = ""
-            event.update(event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_date=event_date)
+            #Get the selected event details from database
             event = Events.objects.get(pk=event_id)
+
+            #Check if super id is null
+            if(super_event_id == 'null'):
+
+                #Check if date is empty
+                if(event_date == ""):
+                    #Update without date and super id
+                    event.event_name = event_name
+                    event.event_description = event_description
+                else:
+                    #Update without super id
+                    event.event_name = event_name
+                    event.event_description = event_description
+                    event.event_date = event_date
+            else:
+                ''' Super ID is not null '''
+
+                #Check if date is empty
+                if(event_date == ""):
+                    #Update without date
+                    event.event_name = event_name
+                    event.event_description = event_description
+                    event.super_event_id = super_event_id
+                else:
+                    #Update all
+                    event.event_name = event_name
+                    event.event_description = event_description
+                    event.super_event_id = super_event_id
+                    event.event_date = event_date
+
+            #Clear event type
             event.event_type.clear()
+            #Add the event types from event_type_list
             event.event_type.add(*event_type_list)
             event.save()
 
@@ -369,10 +398,20 @@ class Branch:
                 interbranchcollaborations = InterBranchCollaborations.objects.filter(event_id=event_id)
                 if(interbranchcollaborations.count() != 0):
                     for i in interbranchcollaborations:
-                        i.delete()
+                        print(type(i.collaboration_with.primary))
+                        if(i.collaboration_with.primary != 1):
+                            i.delete()
             else:
                 interbranchcollaborations = InterBranchCollaborations.objects.filter(event_id=event_id).values_list('collaboration_with', flat=True)
                 testArray = []
+
+                group_primary = event.event_organiser.primary
+                print(group_primary)
+                if group_primary != 1:
+                    if '1' not in inter_branch_collaboration_list:
+                        inter_branch_collaboration_list.append('1')
+                        
+
                 for i in interbranchcollaborations:
                     testArray.append(str(Chapters_Society_and_Affinity_Groups.objects.get(id=i).primary))
 
