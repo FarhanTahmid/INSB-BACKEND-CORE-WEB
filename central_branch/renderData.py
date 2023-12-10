@@ -686,7 +686,7 @@ class Branch:
             return DatabaseError
     
     def load_all_events():
-        return Events.objects.all().order_by('-id')
+        return Events.objects.all().order_by('-event_date')
     
     def load_all_inter_branch_collaborations_with_events(primary):
         '''This fuction returns a dictionary with key as events id and values as a list of inter collaborations 
@@ -747,7 +747,7 @@ class Branch:
     def load_all_events_for_groups(primary):
 
         '''This function will return a list of only those events associated with that particular group'''
-        return Events.objects.filter(event_organiser= Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
+        return Events.objects.filter(event_organiser= Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)).order_by('-event_date')
         
     
     def event_page_access(user):

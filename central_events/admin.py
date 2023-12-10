@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Event_Category,SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Media_Links,Media_Selected_Images
+from .models import Event_Category,SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Media_Links,Media_Selected_Images,Event_Venue,Event_Permission
 # Register your models here.
 
 @admin.register(Event_Category)
@@ -32,3 +32,11 @@ class Media_Links(admin.ModelAdmin):
 @admin.register(Media_Selected_Images)
 class Media_Links(admin.ModelAdmin):
     list_display=['event_id','selected_image']
+
+@admin.register(Event_Venue)
+class Event_Venue(admin.ModelAdmin):
+    list_display=['event_id','venue_id','booking_status']
+
+@admin.register(Event_Permission)
+class Event_Permission(admin.ModelAdmin):
+    list_display=['event_id','permission_id','permission_status']

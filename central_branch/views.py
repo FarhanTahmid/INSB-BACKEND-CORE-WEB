@@ -983,10 +983,10 @@ def event_edit_form(request, event_id):
             #Check if the update request is successful
             if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration)):
                 messages.success(request,f"Event with EVENT ID {event_id} was Updated successfully")
-                return redirect('central_branch:event_dashboard', event_id) 
+                return redirect('central_branch:event_edit_form', event_id) 
             else:
                 messages.error(request,"Something went wrong while updating the event!")
-                return redirect('central_branch:event_dashboard', event_id)
+                return redirect('central_branch:event_edit_form', event_id)
 
         form = EventForm({'event_description' : event_details.event_description})
 

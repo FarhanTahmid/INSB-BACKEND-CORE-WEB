@@ -15,6 +15,9 @@ urlpatterns = [
 
     #Achievements
     path('achievements/',views.achievements,name="achievements"),
+
+    #Gallery
+    path('gallery/',views.gallery,name="gallery"),
     
     # Members
     path('panels/',views.current_panel_members,name="panel_members"),

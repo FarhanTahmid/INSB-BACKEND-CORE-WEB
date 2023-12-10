@@ -4,7 +4,7 @@
 
 <head>
 
-    <title>Events - IEEE NSU SB</title>
+    <title>Gallery - IEEE NSU SB</title>
     <link rel="icon" href="{% static 'upload/logo.gif' %}"/>
     
     <!--Common CSS-->
@@ -15,16 +15,6 @@
     <!--Extra CSS-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/event.css' %}"/>
-    <style>
-        .description-container {
-            max-height: 150px; /* Adjust the value based on your preference */
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 4;
-            -webkit-box-orient: vertical;
-        }
-    </style>
 
 </head>
 
@@ -39,17 +29,11 @@
             {% include 'wave.html' %}
         {% endblock %}
 
-        <!--Upcoming Event with Calendar-->
-
-        {% block event_with_calendar %}
-            {% include "Events/next_event_with_calendar.html" %}
-        {% endblock event_with_calendar %}
-
-
-        <!--Event card with search function and load more option-->
-        {% block event_container %}
-            {% include 'Events/event_card_block.html' %}
-        {% endblock  %}
+        <!-- Gallery card -->
+        {% block gallery_content %}
+        {% include "gallery_content.html" %}
+        {% endblock gallery_content %}
+        <!-- Galler Card End-->
 
         <!--Footer-->
         {% block footer %}
@@ -61,10 +45,13 @@
     {% block common_js %}
         {% include "common_js_includes.html" %}
     {% endblock %}
-    <script src="{% static './js/event_script.js'%}">
-       
-        
-    </script>
+    <script src="{% static './js/event_script.js'%}"></script>
 </body>
 
 </html>
+
+
+
+
+
+
