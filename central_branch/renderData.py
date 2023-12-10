@@ -352,7 +352,7 @@ class Branch:
                 else:
                     pass
 
-    def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list, event_date, inter_branch_collaboration_list, intra_branch_collaboration):
+    def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list, event_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event):
         ''' Update event details and save to database '''
 
         try:
