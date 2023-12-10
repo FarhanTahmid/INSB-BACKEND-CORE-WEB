@@ -993,7 +993,7 @@ def event_edit_form(request, event_id):
 
         #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
         super_events=Branch.load_all_mother_events()
-        event_types=Branch.load_all_event_type_for_groups(1)
+        event_types=Branch.load_all_event_type_for_groups(event_details.event_organiser.primary)
 
         inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
 
