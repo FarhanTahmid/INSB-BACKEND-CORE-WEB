@@ -1,0 +1,232 @@
+
+
+.hr-dots {
+    display: inline-block;
+    width: 25px;
+    border-style: dotted none none;
+    border-width: 5px;
+    border-color: #0059ff;
+    margin-left: 0;
+  }
+  
+  /* Thick red border */
+  .hr-dash {
+    display: inline-block;
+    width: 50px;
+    border-radius: 5px;
+    border: 2.75px solid #0059ff;
+    margin-left: 1.5px;
+  }
+
+
+
+  .community_container, .gallery_container, .contact_container{
+    margin: auto;
+    justify-content: center;
+    /* width: 80%; */
+    height: auto;
+  }
+
+
+
+
+    /* .button */
+    .community_section_button {
+      background-color: white;
+      border: none;
+      color: navy;
+      padding: 15px 32px;
+      margin: 45px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      -webkit-transition-duration: 0.4s; /* Safari */
+      transition-duration: 0.4s;
+      box-shadow: 8px 0 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+
+      display: inline-block;
+      position: relative;
+      text-decoration: none;
+      vertical-align: middle;
+      overflow: hidden;
+    }
+    .community_section_button span {
+        transition: 0.6s;
+        transition-delay: 0.2s;
+    }
+    .community_section_button:before,
+    .community_section_button:after {
+        content: '';
+        position: absolute;
+        vertical-align: auto;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        opacity: 0;
+        transition: .4s,opacity .6s;
+    }
+
+    /* :before */
+    .community_section_button:before {
+        content: attr(data-hover);
+        transform: translate(0,150%);
+    }
+    /* :after */
+    .community_section_button:after {
+      content: attr(data-active);
+      transform: translate(0,-150%);
+    }
+    /* Span on :hover and :active */
+    .community_section_button:hover span,
+    .community_section_button:active span {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    /* :before pseudo-element on :hover 
+        and :after pseudo-element on :active */
+    .community_section_button:hover:before,
+    .community_section_button:active:after {
+        opacity: 1;
+        transform: translate(0,0);
+        transition-delay: .4s;
+    }
+    .community_section_button:active:before {
+        transform: translate(0,150%);
+        transition-delay: 0s;
+    }
+  
+
+
+
+
+
+
+  .gallery_row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .gallery_column {
+    
+    padding: 15px;
+  }
+  
+
+  .gallery_column img{
+    width:  350px;
+    height: 300px;
+    object-fit: cover;
+  }
+  
+  
+ 
+
+
+  .contact_container{
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+  }
+
+  .contact_image{
+    width: 50%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .contact_content{
+    padding-top: 25px;
+    margin-left: 40px;
+  }
+
+
+  
+  .contact_button {
+    background-color: navy;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 250px;
+    height: 40px;
+    margin: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 0 white, 8px 0 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-transition: ease-out 0.4s;
+    -moz-transition: ease-out 0.4s;
+    transition: ease-out 0.4s;
+  }
+  .slide_right:hover {
+    color: navy;
+    box-shadow: inset 400px 0 0 0 white, 8px 0 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  }
+  
+
+
+
+
+
+
+  
+  /* For tablets and smaller */
+  @media only screen and (max-width: 991px) {
+    .community_container, .gallery_container, .contact_container{
+      margin: auto;
+      justify-content: center;
+      width: 100%;
+      height: auto;
+    }
+
+    .community_section_button {
+      margin: 10px;
+    }
+
+    .gallery_row {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .gallery_column {
+      margin: auto;
+    }
+    .gallery_column img{
+      width: 1000px;
+      max-width: 100%;
+      height: 250px;
+      object-fit: cover;
+    }
+
+    .contact_container{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .contact_image{
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      object-fit: fill;
+    }
+
+    .contact_content{
+      padding-top: 10px;
+      margin:auto;
+      justify-content: center;
+      text-align: center;
+    }
+    .contact_content>:not(.contact_button){
+      text-align: left;
+    }
+
+    
+  }
+
+
+
+  /* for medium sized devices */
+  @media only screen and (min-width: 991px) and (max-width: 1500px)  {
+    
+  }

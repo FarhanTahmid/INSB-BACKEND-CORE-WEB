@@ -55,6 +55,8 @@ def sc_ag_members(request,primary):
     # get sc_ag members
     sc_ag_members=SC_AG_Info.get_sc_ag_members(request,primary)
     
+    has_access_to_view_member_details=SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary)
+    
     if request.method=="POST":
         if request.POST.get('add_sc_ag_member'):
             position = request.POST['position']
@@ -80,7 +82,8 @@ def sc_ag_members(request,primary):
         'positions':sc_ag_positions,
         'teams':sc_ag_teams,
         'sc_ag_members':sc_ag_members,
-        'member_count':len(sc_ag_members)
+        'member_count':len(sc_ag_members),
+        'has_access_to_view_member_details':has_access_to_view_member_details,
         
     }
     return render(request,'Members/sc_ag_members.html',context=context)

@@ -1,0 +1,44 @@
+/***************************************
+ * Quform Page Stylesheet
+ *
+ * by ThemeCatcher
+ * http://www.themecatcher.net
+ ***************************************/
+* {
+	text-decoration: none;
+	font-size: 1em;
+	outline: none;
+	padding: 0;
+	margin: 0;
+}
+code, kbd, samp, pre, tt, var,
+input, select, isindex, listing, xmp, plaintext {
+	white-space: normal;
+	font-size: 1em;
+	font: inherit;
+}
+textarea {
+	font-size: 1em;
+	font: inherit;
+}
+img {
+	border: 0;
+}
+pre {
+	white-space: pre-wrap;
+}
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #282828;
+	background-color: #f3f3f3;
+	line-height: inherit;
+	height: 100%;
+	margin: 0px;
+}
+p {
+	padding-bottom: 10px;
+}
+.template-outside {
+	margin: 20px;
+}
