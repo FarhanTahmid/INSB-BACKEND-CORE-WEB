@@ -755,7 +755,6 @@ def event_creation_form_page3(request,primary,event_id):
             'permission_criterias':permission_criterias,
             'all_sc_ag':sc_ag,
             'is_branch':is_branch,
-            'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
         }
         if request.method=="POST":
@@ -794,27 +793,37 @@ def event_edit_form(request, primary, event_id):
         event_details = Events.objects.get(pk=event_id)
 
         if(request.method == "POST"):
-            ''' Get data from form and call update function to update event '''
+            if('add_venues' in request.POST):
+                # if(Branch.register_event_venue(event_id=event_id)):
+                #     messages.success(request, "Venue created successfully")
+                #     return redirect('chapters_and_affinity_group:event_edit_form', primary, event_id)
+                # else:
+                #     messages.error(request, "Something went wrong while creating the venue")
+                #     return redirect('chapters_and_affinity_group:event_edit_form', primary, event_id)
+                return redirect('chapters_and_affinity_group:event_edit_form', primary, event_id)
+            elif('next' in request.POST):
+                ''' Get data from form and call update function to update event '''
 
-            event_name=request.POST['event_name']
-            event_description=request.POST['event_description']
-            super_event_id=request.POST.get('super_event')
-            event_type_list = request.POST.getlist('event_type')
-            event_date=request.POST['event_date']
-            inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
-            intra_branch_collaboration=request.POST['intra_branch_collaboration']
+                event_name=request.POST['event_name']
+                event_description=request.POST['event_description']
+                super_event_id=request.POST.get('super_event')
+                event_type_list = request.POST.getlist('event_type')
+                event_date=request.POST['event_date']
+                inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
+                intra_branch_collaboration=request.POST['intra_branch_collaboration']
+                venue_list_for_event=request.POST.getlist('event_venues')
 
-            #Check if the update request is successful
-            if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration)):
-                messages.success(request,f"Event with EVENT ID {event_id} was Updated successfully")
-                return redirect('central_branch:event_dashboard', event_id) 
-            else:
-                messages.error(request,"Something went wrong while updating the event!")
-                return redirect('central_branch:event_dashboard', event_id)
+                #Check if the update request is successful
+                if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event)):
+                    messages.success(request,f"Event with EVENT ID {event_id} was Updated successfully")
+                    return redirect('chapters_and_affinity_group:event_edit_form',primary, event_id) 
+                else:
+                    messages.error(request,"Something went wrong while updating the event!")
+                    return redirect('chapters_and_affinity_group:event_edit_form',primary, event_id)
 
         form = EventForm({'event_description' : event_details.event_description})
 
-        #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
+        #loading super/mother event at first and event categories for depending on which group organised the event
         super_events=Branch.load_all_mother_events()
         event_types=Branch.load_all_event_type_for_groups(event_details.event_organiser.primary)
 
@@ -832,8 +841,12 @@ def event_edit_form(request, primary, event_id):
         for i in interBranchCollaborations.all():
             interBranchCollaborationsArray.append(i.collaboration_with)
 
+        #loading all venues from the venue list from event management team database
+        venues=Events_And_Management_Team.getVenues()
+
         context={
             'all_sc_ag' : sc_ag,
+            'sc_ag_info':get_sc_ag_info,
             'is_branch' : is_branch,
             'event_details' : event_details,
             'form' : form,
@@ -843,8 +856,7 @@ def event_edit_form(request, primary, event_id):
             'interBranchCollaborations':interBranchCollaborationsArray,
             'intraBranchCollaborations':intraBranchCollaborations,
             'hasCollaboration' : hasCollaboration,
-            'sc_ag_info':get_sc_ag_info,
-            
+            'venues' : venues
         }
 
         return render(request, 'Events/event_edit_form.html', context)

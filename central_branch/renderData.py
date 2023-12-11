@@ -352,7 +352,7 @@ class Branch:
                 else:
                     pass
 
-    def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list, event_date, inter_branch_collaboration_list, intra_branch_collaboration):
+    def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list, event_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event):
         ''' Update event details and save to database '''
 
         try:
@@ -380,12 +380,12 @@ class Branch:
                     #Update without date
                     event.event_name = event_name
                     event.event_description = event_description
-                    event.super_event_id = super_event_id
+                    event.super_event_id = SuperEvents.objects.get(id=super_event_id)
                 else:
                     #Update all
                     event.event_name = event_name
                     event.event_description = event_description
-                    event.super_event_id = super_event_id
+                    event.super_event_id = SuperEvents.objects.get(id=super_event_id)
                     event.event_date = event_date
 
             #Clear event type
