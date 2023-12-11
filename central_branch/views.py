@@ -539,8 +539,7 @@ def manage_website_homepage(request):
                 newBanner=HomePageTopBanner.objects.create(
                     banner_picture=request.FILES['banner_picture'],
                     first_layer_text=request.POST['first_layer_text'],
-                    second_layer_text=request.POST['second_layer_text'],
-                    second_layer_text_colored=request.POST['second_layer_text_colored'],
+                    first_layer_text_colored=request.POST['first_layer_text_colored'],
                     third_layer_text=request.POST['third_layer_text'],
                     button_text=request.POST['button_text'],
                     button_url=request.POST['button_url']
