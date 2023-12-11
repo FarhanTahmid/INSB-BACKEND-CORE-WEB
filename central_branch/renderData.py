@@ -55,6 +55,20 @@ class Branch:
             messages.error("Can not create new recruitment sesssion. Something went wrong!")
             return False
     
+    def add_event_venue(venue_name):
+
+        '''This function adds new venue to the database'''
+        try:
+            venue = Venue_List.objects.create(venue_name = venue_name)
+            venue.save()
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error("Can not create new event venue. Something went wrong!")
+            return False
+
+    
     def add_event_type_for_group(event_type,group_number):
         
         '''This function adds new event category according to the group''' 

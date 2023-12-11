@@ -970,15 +970,16 @@ def event_edit_form(request, event_id):
         event_details = Events.objects.get(pk=event_id)
 
         if(request.method == "POST"):
+
             if('add_venues' in request.POST):
-                # if(renderData.Branch.register_event_venue(event_id=event_id)):
-                #     messages.success(request, "Venue created successfully")
-                #     return redirect('central_branch:event_edit_form', event_id)
-                # else:
-                #     messages.error(request, "Something went wrong while creating the venue")
-                #     return redirect('central_branch:event_edit_form', event_id)
+                venue = request.POST.get('venue')
+                if(renderData.Branch.add_event_venue(venue)):
+                    messages.success(request, "Venue created successfully")
+                else:
+                    messages.error(request, "Something went wrong while creating the venue")
                 return redirect('central_branch:event_edit_form', event_id)
-            elif('next' in request.POST):
+            
+            elif('update_event' in request.POST):
                 ''' Get data from form and call update function to update event '''
 
                 event_name=request.POST['event_name']

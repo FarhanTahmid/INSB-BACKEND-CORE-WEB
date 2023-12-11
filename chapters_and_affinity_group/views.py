@@ -793,15 +793,16 @@ def event_edit_form(request, primary, event_id):
         event_details = Events.objects.get(pk=event_id)
 
         if(request.method == "POST"):
+
             if('add_venues' in request.POST):
-                # if(Branch.register_event_venue(event_id=event_id)):
-                #     messages.success(request, "Venue created successfully")
-                #     return redirect('chapters_and_affinity_group:event_edit_form', primary, event_id)
-                # else:
-                #     messages.error(request, "Something went wrong while creating the venue")
-                #     return redirect('chapters_and_affinity_group:event_edit_form', primary, event_id)
+                venue = request.POST.get('venue')
+                if(Branch.add_event_venue(venue)):
+                    messages.success(request, "Venue created successfully")
+                else:
+                    messages.error(request, "Something went wrong while creating the venue")
                 return redirect('chapters_and_affinity_group:event_edit_form', primary, event_id)
-            elif('next' in request.POST):
+                
+            elif('update_event' in request.POST):
                 ''' Get data from form and call update function to update event '''
 
                 event_name=request.POST['event_name']
