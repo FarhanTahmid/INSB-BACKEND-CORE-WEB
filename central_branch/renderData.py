@@ -366,7 +366,8 @@ class Branch:
                 else:
                     pass
 
-    def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event):
+    def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
+                             flagship_event,registration_fee,registration_fee_amount,form_link):
         ''' Update event details and save to database '''
 
         try:
@@ -407,6 +408,10 @@ class Branch:
             #Add the event types from event_type_list
             event.event_type.add(*event_type_list)
             event.publish_in_main_web = publish_event
+            event.flagship_event = flagship_event
+            event.registration_fee = registration_fee
+            event.registration_fee_amount = registration_fee_amount
+            event.form_link = form_link
             event.save()
 
             if(inter_branch_collaboration_list[0] == 'null'):
@@ -728,9 +733,21 @@ class Branch:
             return False
         
     def load_event_published(event_id):
-        '''This function will return wheather a the event is published or not'''
+        '''This function will return wheather the event is published or not'''
 
         return Events.objects.get(id = event_id).publish_in_main_web
+    
+    def is_flagship_event(event_id):
+
+        '''This function will return wheather the event is flagship or not'''
+
+        return Events.objects.get(id = event_id).flagship_event
+    
+    def is_registration_fee_required(event_id):
+        
+        '''This function will return wheather the event requires any regsitration fee or not'''
+
+        return Events.objects.get(id=event_id).registration_fee
     
     def publish_event(event_id,state):
         '''This function will publish or unpublish the event'''
@@ -749,7 +766,7 @@ class Branch:
     def button_status(state):
 
         '''This function returns the status of the toggle button '''
-        
+
         if state == None:
             return False
         else:
