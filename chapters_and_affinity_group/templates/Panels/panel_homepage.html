@@ -101,12 +101,14 @@
             <br>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"><b><span style="color:#00629B;">Panels - </b></span>{{sc_ag_info.group_name}}</h2>
             <br>
-            
+
+            {% if panel_edit_access %}
             <div style="justify-content:center;text-align:center;">  
               <div class="btn-container">
                   <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Create a New Panel</button>
               </div>
             </div>
+            {% endif %}
             
             <br>
             <!--Messages-->
