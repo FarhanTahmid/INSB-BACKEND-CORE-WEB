@@ -966,6 +966,7 @@ def event_edit_form(request, event_id):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         is_branch = True
+        is_event_published = Branch.load_event_published(event_id)
         #Get event details from databse
         event_details = Events.objects.get(pk=event_id)
 
@@ -979,9 +980,11 @@ def event_edit_form(request, event_id):
                     messages.error(request, "Something went wrong while creating the venue")
                 return redirect('central_branch:event_edit_form', event_id)
             
-            elif('update_event' in request.POST):
+            
+            if('update_event' in request.POST):
                 ''' Get data from form and call update function to update event '''
 
+                publish_event_status = request.POST.get('publish_event')
                 event_name=request.POST['event_name']
                 event_description=request.POST['event_description']
                 super_event_id=request.POST.get('super_event')
@@ -991,8 +994,12 @@ def event_edit_form(request, event_id):
                 intra_branch_collaboration=request.POST['intra_branch_collaboration']
                 venue_list_for_event=request.POST.getlist('event_venues')
 
+                #Checking to see of toggle button is on/True or off/False
+                publish_event = Branch.button_status(publish_event_status)
+                
+
                 #Check if the update request is successful
-                if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event)):
+                if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event)):
                     messages.success(request,f"Event with EVENT ID {event_id} was Updated successfully")
                     return redirect('central_branch:event_edit_form', event_id) 
                 else:
@@ -1033,7 +1040,8 @@ def event_edit_form(request, event_id):
             'interBranchCollaborations':interBranchCollaborationsArray,
             'intraBranchCollaborations':intraBranchCollaborations,
             'hasCollaboration' : hasCollaboration,
-            'venues' : venues
+            'venues' : venues,
+            'is_event_published':is_event_published,
         }
 
         return render(request, 'Events/event_edit_form.html', context)

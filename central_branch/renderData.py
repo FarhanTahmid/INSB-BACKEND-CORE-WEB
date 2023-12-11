@@ -366,7 +366,7 @@ class Branch:
                 else:
                     pass
 
-    def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list, event_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event):
+    def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event):
         ''' Update event details and save to database '''
 
         try:
@@ -406,6 +406,7 @@ class Branch:
             event.event_type.clear()
             #Add the event types from event_type_list
             event.event_type.add(*event_type_list)
+            event.publish_in_main_web = publish_event
             event.save()
 
             if(inter_branch_collaboration_list[0] == 'null'):
@@ -744,6 +745,15 @@ class Branch:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error("Could not publish/unpublish the event. Something went wrong!")
+
+    def button_status(state):
+
+        '''This function returns the status of the toggle button '''
+        
+        if state == None:
+            return False
+        else:
+            return True
 
     def load_all_mother_events():
         '''This method loads all the mother/Super events'''
