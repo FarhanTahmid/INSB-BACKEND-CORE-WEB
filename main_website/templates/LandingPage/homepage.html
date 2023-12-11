@@ -11,7 +11,161 @@
         {% include "common_css_includes.html" %}
     {% endblock common_css %}
 
+    <style>
+        #gdlr-parallax-wrapper-2 {
+            position: relative;
+        }
 
+        /* banner_with_numbers_overlay */
+        #gdlr-parallax-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(64, 76, 87, 0.52);
+            z-index: 1;
+        }
+
+        .gdlr-testimonial-item .testimonial-author {
+            color: #002855;
+        }
+        .column-service-title {
+            color: #002855;
+        }
+        
+        .gdlr-header-inner,
+        .gdlr-header-wrapper.header-style-2-wrapper .gdlr-header-inner-overlay {
+            background-color: 	#002855;
+        }
+
+        .gdlr-header-wrapper.header-style-3-wrapper,
+        .gdlr-header-wrapper.header-style-7-wrapper {
+            background-color: #002855;
+        }
+
+        .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+            background-color: #002855;
+        }
+
+        @media only screen and (max-width: 767px) {
+            .gdlr-header-wrapper.header-style-5-wrapper {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-6-wrapper {
+                background-color: #002855;
+            }
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button {
+            background-color: #002855;
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button:hover, #gdlr-responsive-navigation.dl-menuwrapper button.dl-active, #gdlr-responsive-navigation.dl-menuwrapper ul {
+            background-color: #002855;
+        }
+        .dl-menuwrapper li a {
+            display: block;
+            position: relative;
+            padding: 15px 20px;
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 300;
+            color: #fff;
+            outline: none;
+        }
+        .dl-menuwrapper li.dl-back:after, .dl-menuwrapper li > a:not(:only-child):after {
+            position: absolute;
+            top: 0;
+            line-height: 50px;
+            font-family: FontAwesome;
+            speak: none;
+            -webkit-font-smoothing: antialiased;
+            content: "\f105";
+            font-size: 16px;
+            color: #ffffff;
+        }
+        .button-15 {
+            background-image: linear-gradient(#00629B, #00629D);
+            border: 1px solid #0077CC;
+            border-radius: 4px;
+            box-sizing: border-box;
+            color: #FFFFFF;
+            cursor: pointer;
+            direction: ltr;
+            display: block;
+            letter-spacing: -.022em;
+            line-height: 1.47059;
+            min-width: 30px;
+            overflow: visible;
+            padding: 4px 10px;
+            text-align: center;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            white-space: nowrap;
+            margin-top: -3px;
+        }
+
+        .button-15:disabled {
+            cursor: default;
+            opacity: .3;
+        }
+
+        .button-15:hover {
+            background-image: linear-gradient(#51A9EE, #147BCD);
+            text-decoration: none;
+        }
+
+        .container.container-card {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        @media screen and (max-width: 770px) {
+            .container.container-card {
+                display: block;
+            }
+        }
+        .circle {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+        }
+        .circle img {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        #content-section-2 .container{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        @media screen and (max-width: 770px) {
+            #content-section-2 .container{
+                flex-direction: column;
+            }
+        }
+        #content-section-6 .vision-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-around;
+        }
+        @media screen and (max-width: 766px){
+            #content-section-6 .vision-container {
+                flex-direction: column;
+                align-items: normal;
+            }
+        }
+
+    </style>
 
 </head>
 
@@ -47,6 +201,24 @@
                     {% endblock what_we_do %}
 
                     
+                    {% block our_vision %}
+                        {% include "LandingPage/our_vision.html" %}
+                    {% endblock our_vision %}
+
+
+                    <!--Featured Events-->
+    
+                    {% block featured_events %}
+                        {% include "LandingPage/featured_events.html" %}
+                    {% endblock featured_events %}
+
+                    <!--Volunteers_of_the_month-->
+    
+                    {% block volunteer_of_the_month %}
+                        {% include "LandingPage/volunteer_of_the_month.html" %}
+                    {% endblock volunteer_of_the_month %}
+
+
                     <!--Banner with Stats-->
 
                     {% block banner_with_numbers %}
@@ -54,11 +226,7 @@
                     {% endblock banner_with_numbers %}
 
 
-                    <!--Featured Events-->
-                    
-                    {% block featured_events %}
-                        {% include "LandingPage/featured_events.html" %}
-                    {% endblock featured_events %}
+
 
                     <!--News Cards-->
 
@@ -71,6 +239,12 @@
                     {% block blogs_cards %}
                         {% include "LandingPage/blogs_cards.html" %}
                     {% endblock blogs_cards %}
+
+
+                    <!--Testimonial-->
+                    {% block testimonial %}
+                        {% include "LandingPage/testimonial.html" %}
+                    {% endblock testimonial %}
                     
             </div>
             <!-- gdlr-content -->

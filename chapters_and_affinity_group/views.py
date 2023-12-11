@@ -56,6 +56,8 @@ def sc_ag_members(request,primary):
     # get sc_ag members
     sc_ag_members=SC_AG_Info.get_sc_ag_members(request,primary)
     
+    has_access_to_view_member_details=SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary)
+    
     if request.method=="POST":
         if request.POST.get('add_sc_ag_member'):
             position = request.POST['position']
@@ -81,7 +83,8 @@ def sc_ag_members(request,primary):
         'positions':sc_ag_positions,
         'teams':sc_ag_teams,
         'sc_ag_members':sc_ag_members,
-        'member_count':len(sc_ag_members)
+        'member_count':len(sc_ag_members),
+        'has_access_to_view_member_details':has_access_to_view_member_details,
         
     }
     return render(request,'Members/sc_ag_members.html',context=context)
@@ -480,11 +483,70 @@ def sc_ag_manage_access(request,primary):
     
     # get SC AG members
     get_sc_ag_members=SC_AG_Info.get_sc_ag_members(request=request,sc_ag_primary=primary)
-    SC_Ag_Render_Access.get_sc_ag_common_access(request,primary)
+    # get data access Members
+    get_data_access_members=Sc_Ag.get_data_access_members(request=request,sc_ag_primary=primary)
+    
+    if(request.method=="POST"):
+        # Adding member to data access Table
+        if(request.POST.get('add_data_access_member')):
+            member_select_list=request.POST.getlist('member_select')
+            if(Sc_Ag.add_sc_ag_member_to_data_access(request=request,member_list=member_select_list,sc_ag_primary=primary)):
+                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+        # Updating view access for data access member
+        if(request.POST.get('access_update')):
+            member=request.POST['access_ieee_id']
+            
+            # data access values
+            member_details_access=False
+            create_event_access=False
+            event_details_edit_access=False
+            panel_edit_access=False
+            membership_renewal_access=False
+            manage_access=False
+            
+            # get values from template and change according to it
+            if(request.POST.get('member_details_access') is not None):
+                member_details_access=True
+            if(request.POST.get('create_event_access') is not None):
+                create_event_access=True
+            if(request.POST.get('event_details_edit_access') is not None):
+                event_details_edit_access=True
+            if(request.POST.get('panel_edit_access') is not None):
+                panel_edit_access=True
+            if(request.POST.get('membership_renewal_access') is not None):
+                membership_renewal_access=True
+            if(request.POST.get('manage_access') is not None):
+                manage_access=True
+            
+            # sending values to functions as kwargs. To further addition to Data access just pass the attribute of model=attribute value(e.g:member_details_access=member_details_access(True/False)) to the function
+            if(Sc_Ag.update_sc_ag_member_access(request=request,member=member,sc_ag_primary=primary,
+                                                member_details_access=member_details_access,
+                                                create_event_access=create_event_access,
+                                                event_details_edit_access=event_details_edit_access,
+                                                panel_edit_access=panel_edit_access,
+                                                membership_renewal_access=membership_renewal_access,
+                                                manage_access=manage_access)):
+                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+            else:
+                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+
+        # remove member from data access
+        if(request.POST.get('remove_from_data_access')):
+            member_to_remove=request.POST['access_ieee_id']
+            
+            if(Sc_Ag.remove_member_from_data_access(request=request,member=member_to_remove,sc_ag_primary=primary)):
+                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+            else:
+                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+
+                
+
+                
     context={
         'all_sc_ag':sc_ag,
         'sc_ag_info':get_sc_ag_info,
         'sc_ag_members':get_sc_ag_members,
+        'data_access_members':get_data_access_members,
     }
     return render(request,'Manage Access/sc_ag_manage_access.html',context=context)       
 

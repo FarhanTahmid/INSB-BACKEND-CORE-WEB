@@ -16,6 +16,61 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/event.css' %}"/>
     <style>
+        .gdlr-header-inner,
+        .gdlr-header-wrapper.header-style-2-wrapper .gdlr-header-inner-overlay {
+            background-color: 	#002855;
+        }
+
+        .gdlr-header-wrapper.header-style-3-wrapper,
+        .gdlr-header-wrapper.header-style-7-wrapper {
+            background-color: #002855;
+        }
+
+        .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+            background-color: #002855;
+        }
+
+        @media only screen and (max-width: 767px) {
+            .gdlr-header-wrapper.header-style-5-wrapper {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-6-wrapper {
+                background-color: #002855;
+            }
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button {
+            background-color: #002855;
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button:hover, #gdlr-responsive-navigation.dl-menuwrapper button.dl-active, #gdlr-responsive-navigation.dl-menuwrapper ul {
+            background-color: #002855;
+        }
+        .dl-menuwrapper li a {
+            display: block;
+            position: relative;
+            padding: 15px 20px;
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 300;
+            color: #fff;
+            outline: none;
+        }
+        .dl-menuwrapper li.dl-back:after, .dl-menuwrapper li > a:not(:only-child):after {
+            position: absolute;
+            top: 0;
+            line-height: 50px;
+            font-family: FontAwesome;
+            speak: none;
+            -webkit-font-smoothing: antialiased;
+            content: "\f105";
+            font-size: 16px;
+            color: #ffffff;
+        }
+    </style>    <style>
         .description-container {
             max-height: 150px; /* Adjust the value based on your preference */
             overflow: hidden;
