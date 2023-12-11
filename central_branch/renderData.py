@@ -714,10 +714,10 @@ class Branch:
         try:
             dic = {}
             collaborations=[]
-            if primary == 1:
-                events = Branch.load_all_events()
-            else:
-                events = Branch.load_all_events_for_groups(primary)
+            # if primary == 1:
+            #     events = Branch.load_all_events()
+            # else:
+            events = Branch.load_all_events_for_groups(primary)
             for i in events:
                 all_collaborations_for_this_event = InterBranchCollaborations.objects.filter(event_id = i.id)
                 for j in all_collaborations_for_this_event:
