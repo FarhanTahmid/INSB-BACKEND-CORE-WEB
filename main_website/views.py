@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from central_events.models import Events
 from central_branch.renderData import Branch
 from main_website.models import Research_Papers,Blog
-from django.db.models import Q
+from port.renderData import PortData
 from .renderData import HomepageItems
 from django.conf import settings
 from users.models import User
@@ -152,15 +152,14 @@ def current_panel_members(request):
     get_current_panel=Branch.load_current_panel()
     get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
     
-        # TODO:add algo to add SC AG Faculty and EB
+        # TODO:add algo to add SC AG Faculty and Branch Counselor
 
     branch_counselor=[]
     sc_ag_faculty_advisors=[]
     mentors=[]
     branch_chair=[]
     branch_eb=[]
-    sc_ag_chair=[]
-    
+    sc_ag_chair=PortData.get_branch_ex_com_from_sc_ag(request=request)
     for i in get_current_panel_members:
         if (i.position.role_of.primary==1):
             if(i.position.is_faculty):
@@ -254,8 +253,8 @@ def panel_members_page(request,year):
         has_branch_chair=True
     if(len(branch_eb)>0):
         has_branch_eb=True
-    if(len(sc_ag_chair)>0):
-        has_sc_ag_chair=True
+    # if(len(sc_ag_chair)>0):
+    #     has_sc_ag_chair=True
     
     context={
         'has_branch_counselor':has_branch_counselor,'has_sc_ag_faculty_advisor':has_sc_ag_faculty_advisor,'has_mentors':has_mentors,'has_branch_chair':has_branch_chair,'has_branch_eb':has_branch_eb,'has_sc_ag_chair':has_sc_ag_chair,

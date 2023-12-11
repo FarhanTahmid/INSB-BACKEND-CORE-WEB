@@ -1,5 +1,6 @@
 from .models import Chapters_Society_and_Affinity_Groups,Roles_and_Position,Teams,Panels
 from django.contrib import messages
+from users.models import Panel_Members
 from datetime import datetime
 import sqlite3
 import logging
@@ -39,6 +40,27 @@ class PortData:
             messages.error(request,"An internal Database error occured loading the Positions!")
             return False
     
+    def get_branch_ex_com_from_sc_ag(request):
+        '''This method gets all the Chairs of SC AG'''
+        try:
+            chairs_of_sc_ag=[]
+            for i in range(2,6):
+                try:
+                    get_current_panel_of_sc_ag=Panels.objects.get(current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=i))
+                except:
+                    continue
+                get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_current_panel_of_sc_ag.pk))
+                if(get_panel_members.exists()):
+                    for member in get_panel_members:
+                        if(member.position.is_sc_ag_eb_member):
+                            if(member.position.role=="Chair"):
+                                chairs_of_sc_ag.append(member)
+            return chairs_of_sc_ag
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"An internal Database error occured loading the Excom!")
+                
     def get_all_executive_positions_of_branch(request,sc_ag_primary):
          
         try:

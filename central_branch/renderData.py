@@ -481,8 +481,8 @@ class Branch:
             return DatabaseError
 
     def load_current_panel():
-        '''This method loads the current panel. returns the year of the panel'''
-        currentPanel=Panels.objects.filter(current=True)
+        '''This method loads the current panel of Branch. returns the year of the panel'''
+        currentPanel=Panels.objects.filter(current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
         return currentPanel.first()
         
     def load_roles_and_positions():
