@@ -15,7 +15,8 @@
 -------------------------------------------------------------------*/
 
 /*--- reset ---*/
-/*--- reset5 Ã‚Â© 2011 opensource.736cs.com MIT ---*/
+/*--- reset5 Â© 2011 opensource.736cs.com MIT ---*/
+
 html,
 body,
 div,
@@ -202,6 +203,22 @@ em {
 	font-style: italic;
 }
 
+
+::-webkit-scrollbar{
+    width: 13px;
+}
+
+::-webkit-scrollbar-track{
+    border-radius: 15px;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+}
+
+::-webkit-scrollbar-thumb{
+    background: #FFC72C;
+    border-radius: 15px;
+}
+
+
 /*--- clear ---*/
 .clear {
 	display: block;
@@ -226,11 +243,6 @@ em {
 }
 
 /*--- wordpress core ---*/
-
-.logo{
-	height: 40px;
-}
-
 .alignnone {
 	margin: 5px 20px 20px 0;
 }
@@ -313,9 +325,6 @@ a img.aligncenter {
 	padding: 0 4px 5px;
 }
 
-.sticky {}
-
-.bypostauthor {}
 
 dl {
 	width: 100%;
@@ -380,7 +389,7 @@ ol {
 
 body {
 	line-height: 1.7;
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Poppins', sans-serif;
 	overflow-y: scroll;
 	-webkit-text-size-adjust: 100%;
 	-webkit-font-smoothing: antialiased;
@@ -462,7 +471,7 @@ h6 {
 }
 
 .three {
-	width: 20%;
+	width: 25%;
 }
 
 .four {
@@ -885,7 +894,7 @@ img.gdlr-full-boxed-background {
 	margin: 0px;
 	text-transform: uppercase;
 	letter-spacing: 1px;
-	font-weight: 700;
+	font-weight: 500;
 }
 
 .gdlr-navigation-wrapper .gdlr-main-menu>li:first-child>a {
@@ -1000,26 +1009,26 @@ img.gdlr-full-boxed-background {
 	padding-bottom: 32px;
 }
 
-.gdlr-header-wrapper.header-style-4-wrapper {
+.gdlr-header-wrapper.header-style-5-wrapper {
 	position: absolute;
 	left: 0px;
 	right: 0px;
 }
 
-.gdlr-header-wrapper.header-style-4-wrapper .top-navigation-wrapper {
+.gdlr-header-wrapper.header-style-5-wrapper .top-navigation-wrapper {
 	background: transparent;
 }
 
-.gdlr-header-wrapper.header-style-4-wrapper .gdlr-header-inner {
+.gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
 	background: transparent;
 }
 
-.gdlr-header-wrapper.header-style-4-wrapper .gdlr-header-inner-overlay {
+.gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner-overlay {
 	position: absolute;
 	bottom: 0px;
 	left: 15px;
 	right: 15px;
-	border-bottom-width: 1px;
+	border-bottom-width: 0px;
 	border-bottom-style: solid;
 	opacity: 0.4;
 	filter: alpha(opacity=40);
@@ -1304,7 +1313,7 @@ img.gdlr-full-boxed-background {
 }
 
 .footer-container {
-	padding-top: 0;
+	padding-top: 60px;
 }
 
 .ie7 .footer-wrapper {
@@ -1411,7 +1420,6 @@ body.search .page-not-found-block {
 	margin-top: 8px;
 	font-size: 14px;
 	display: block;
-	
 }
 
 .gdlr-item-title-wrapper.gdlr-center {
@@ -1446,7 +1454,6 @@ body.search .page-not-found-block {
 	font-style: normal;
 	text-transform: uppercase;
 	letter-spacing: 1px;
-	color: #FFC72C;
 }
 
 .gdlr-title-item {
@@ -4880,7 +4887,7 @@ body.single .gdlr-blog-full {
 .widget_nav_menu ul li:before,
 .widget_meta ul li:before {
 	content: "\f105";
-	font-family: FontAwesome;
+	font-family: 'Poppins', sans-serif;
 	text-align: center;
 	position: absolute;
 	left: 0px;
@@ -5070,7 +5077,7 @@ ul.gdlr-twitter-widget li:before {
 	float: left;
 	margin-right: 20px;
 	margin-top: 2px;
-	font-family: FontAwesome;
+	font-family: 'Poppins', sans-serif;
 	content: '\f099';
 	*zoom: expression(this.runtimeStyle['zoom']='1', this.innerHTML='&#xf099;');
 }
@@ -5432,51 +5439,7 @@ ul.gdlr-twitter-widget li .gdlr-twitter {
 	right: 0px;
 	background: #000;
 }
-.wrap{
-	display: flex;
-	flex-direction: row;
-	justify-content: space-evenly;
-	margin-top: 2rem;
-	flex-wrap: wrap;
-}
-.wrap span{
-	transition: 0.3s;
-}
-.wrap span:hover{
-	color: #f5be3b;
-}
-.wrap-footer{
-	padding-top: 10px;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-evenly;
-}
-.wrap-footer2{
-	display: flex;
-	flex-direction: row;
-	gap: 10px;
-	list-style: none;
-}
-.wrap-img{
-	display: flex; 
-	flex-direction: row; 
-	flex-wrap: wrap;
-	row-gap: 30px;
-	justify-content: space-evenly; 
-	padding-top: 2rem;
-}
-@media (max-width:800px) {
-	.wrap{
-		justify-content: left;
-		column-gap: 20%;
-	}
-}
-@media (max-width:950px) {
-	.wrap-footer{
-		flex-direction: column;
-		align-items: center;
-	}
-}
+
 /*----------------------------------------------------------------------*/
 /*---------------                RETINA               ------------------*/
 /*----------------------------------------------------------------------*/
@@ -5526,25 +5489,25 @@ only screen and (min-device-pixel-ratio: 2) {
 
 .icon-angle-left:before {
 	content: "\f104";
-	font-family: fontAwesome;
+	font-family: 'FontAwesome';
 	font-style: normal;
 }
 
 .icon-angle-right:before {
 	content: "\f105";
-	font-family: fontAwesome;
+	font-family: 'FontAwesome';
 	font-style: normal;
 }
 
 .icon-minus:before {
 	content: "\f068";
-	font-family: fontAwesome;
+	font-family: 'FontAwesome';
 	font-style: normal;
 }
 
 .icon-plus:before {
 	content: "\f067";
-	font-family: fontAwesome;
+	font-family: 'FontAwesome';
 	font-style: normal;
 }
 
@@ -5553,7 +5516,6 @@ span.gdlr-icon-inline-text {
 	letter-spacing: 1.7px;
 }
 
-
 .submit-button {
 	font-size: 13px;
 	font-weight: bold;
@@ -5561,7 +5523,7 @@ span.gdlr-icon-inline-text {
 	padding: 10px 20px;
 	display: inline-block;
 	-webkit-appearance: none;
-	background-color: #36bddb;
+	background-color: #e6ae48;
 	border: 0;
 	color: #fff;
 	font-style: normal !important;
@@ -5598,5 +5560,63 @@ span.gdlr-icon-inline-text {
 }
 
 .filter a.active {
-	color: #36bddb !important;
+	color: #816c4c !important;
+}
+
+@media screen and (max-width:1100px) {
+	.gdlr-header-container{
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+}
+@media screen and (max-width:766px) {
+	.gdlr-header-container{
+		display: block;
+	}
+}
+.wrap{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	margin-top: 2rem;
+	flex-wrap: wrap;
+}
+.wrap span{
+	transition: 0.3s;
+}
+.wrap span:hover{
+	color: #f5be3b;
+}
+.wrap-footer{
+	padding-top: 10px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+}
+.wrap-footer2{
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	list-style: none;
+}
+.wrap-img{
+	display: flex; 
+	flex-direction: row; 
+	flex-wrap: wrap;
+	row-gap: 30px;
+	justify-content: space-evenly; 
+	padding-top: 2rem;
+}
+@media (max-width:800px) {
+	.wrap{
+		justify-content: left;
+		column-gap: 20%;
+	}
+}
+@media (max-width:950px) {
+	.wrap-footer{
+		flex-direction: column;
+		align-items: center;
+	}
 }
