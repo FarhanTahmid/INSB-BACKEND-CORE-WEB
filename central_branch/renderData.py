@@ -33,8 +33,11 @@ class Branch:
             return False
     
     def get_selected_venues(event_id):
+        lis = []
         venues = Event_Venue.objects.filter(event_id = event_id)
-        return venues
+        for i in venues:
+            lis.append(i.venue_id.venue_name)
+        return lis
 
     def reset_all_teams():
         '''To remove all members in all teams and assigning them as general memeber'''
@@ -417,6 +420,15 @@ class Branch:
             event.registration_fee_amount = registration_fee_amount
             event.form_link = form_link
             event.save()
+            event_venue = Event_Venue.objects.filter(event_id = event_id)
+            for venues in event_venue:
+                venues.delete()
+            for i in venue_list_for_event:
+                register_venue=Event_Venue(
+                            event_id=Events.objects.get(id=event_id),
+                            venue_id=Venue_List.objects.get(id=i)
+                            )
+                register_venue.save()
 
             if(inter_branch_collaboration_list[0] == 'null'):
                 interbranchcollaborations = InterBranchCollaborations.objects.filter(event_id=event_id)

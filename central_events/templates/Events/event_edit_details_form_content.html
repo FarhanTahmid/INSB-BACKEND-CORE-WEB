@@ -119,7 +119,7 @@
                                         <select multiple class="form-control" name="event_venues">
                                             <option value="null" {% if selected_venues is none %}selected{% endif %}>--------------------</option>
                                             {% for venue in venues %}
-                                                <option value="{{ venue.id }}" {% if selected_venues.venue_id.venue_name == venue.id.venue_name %}selected{% endif %}>
+                                                <option value="{{ venue.id }}" {% if venue.venue_name in selected_venues %}selected{% endif %}>
                                                     {{ venue.venue_name }}
                                                 </option>
                                             {% endfor %}

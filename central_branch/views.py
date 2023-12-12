@@ -997,7 +997,7 @@ def event_edit_form(request, event_id):
                 inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
                 intra_branch_collaboration=request.POST['intra_branch_collaboration']
                 venue_list_for_event=request.POST.getlist('event_venues')
-
+                
                 #Checking to see of toggle button is on/True or off/False
                 publish_event = Branch.button_status(publish_event_status)
                 flagship_event = Branch.button_status(flagship_event_status)
@@ -1029,7 +1029,6 @@ def event_edit_form(request, event_id):
         interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
         intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
         selected_venues = Branch.get_selected_venues(event_id=event_id)
-        print(selected_venues)
         # Checking if event has collaborations
         hasCollaboration=False
         if(len(interBranchCollaborations)>0):
