@@ -130,6 +130,8 @@ class PortData:
         try:            
             current_panel=Panels.objects.get(current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
             return current_panel.pk
+        except Panels.DoesNotExist:
+            pass
         except sqlite3.OperationalError:
             return False
         except Exception as e:
