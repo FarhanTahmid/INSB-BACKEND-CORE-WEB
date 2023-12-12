@@ -81,7 +81,7 @@ class MediaTeam:
         
     def add_links_and_images(picture_drive_link,logo_picture_drive_link,selected_images,event_id):
         
-        '''This functions adds the links and images to the database for graphics team'''
+        '''This functions adds the links and images to the database for media team'''
         try:
             #Updating the media links and logo links. If does not exist then new ones are created
             try:
