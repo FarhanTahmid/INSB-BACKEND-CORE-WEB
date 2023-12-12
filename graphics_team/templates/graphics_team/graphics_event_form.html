@@ -354,6 +354,7 @@
                     <br>
                     <hr>
                     <br>
+                    {% if image_exists %}
                     <div class="image-container">
                       <img
                         src="{{media_url}}{{ Img.0.selected_image}}"
@@ -423,6 +424,7 @@
                         </div>
                       </div>
                     </div>
+                    {%endif%}
                        
                   </div>
               </form>     
