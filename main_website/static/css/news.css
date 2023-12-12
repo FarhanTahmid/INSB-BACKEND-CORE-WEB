@@ -14,7 +14,11 @@
 .news-card {
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
   margin: 2rem auto;
+=======
+  margin: 3.5rem auto;
+>>>>>>> 0b64c61e2bd931b44495e1ff202c357044102b4b
   box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.3);
   margin-bottom: 1.6%;
   background: #fff;
@@ -114,6 +118,10 @@
   background: #fff;
   position: relative;
   z-index: 1;
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 0b64c61e2bd931b44495e1ff202c357044102b4b
 }
 
 .news-card .description h1,
@@ -123,7 +131,11 @@
 
 .news-card .description h1 {
   line-height: 1;
+<<<<<<< HEAD
   margin: 0;
+=======
+  margin: 10px 0px;
+>>>>>>> 0b64c61e2bd931b44495e1ff202c357044102b4b
   font-size: 1.7rem;
 }
 
@@ -163,6 +175,10 @@
 .news-card p {
   position: relative;
   margin: 1rem 0 0;
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 0b64c61e2bd931b44495e1ff202c357044102b4b
 }
 
 .news-card p:first-of-type {
@@ -174,16 +190,31 @@
   position: absolute;
   height: 5px;
   background:	#FFC72C;
+<<<<<<< HEAD
   width: 35px;
   top: -0.75rem;
   border-radius: 3px;
+=======
+  width: 50px;
+  top: -0.75rem;
+  border-radius: 3px;
+  
+>>>>>>> 0b64c61e2bd931b44495e1ff202c357044102b4b
 }
 
 .news-card:hover .details {
   left: 0%;
 }
 
+<<<<<<< HEAD
 @media (min-width: 640px) {
+=======
+@media (min-width: 766px) {
+
+    .newsCardTotal{
+    width: 95%;
+  }
+>>>>>>> 0b64c61e2bd931b44495e1ff202c357044102b4b
   .news-card {
     flex-direction: row;
   }
@@ -224,8 +255,11 @@
   }
 }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 0b64c61e2bd931b44495e1ff202c357044102b4b
 .content {
   display: none;
 }
@@ -235,6 +269,7 @@
   color: #000 !important;
   background-color: transparent !important;
   pointer-events: none;
+<<<<<<< HEAD
 }
 
 
@@ -261,4 +296,6 @@
   .newsCardTotal{
     width: 95%;
   }
+=======
+>>>>>>> 0b64c61e2bd931b44495e1ff202c357044102b4b
 }

@@ -124,9 +124,7 @@
               {% for i in interBranchCollaborations %}
               <h5 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;">{{i.collaboration_with.group_name}}</span></h4>
               {% endfor %}
-              {% for i in intraBranchCollaborations %}
-              <h5 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;">{{i.collaboration_with}}</span></h4>
-            {% endfor %}
+              <h5 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;">{{intraBranchCollaborations.collaboration_with}}</span></h4>
             {% endif %}
 
             
@@ -134,7 +132,11 @@
             <!-- Add Delete Button -->
             <div class="btn-container">
               <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal">Delete Event</button>
+              {% if is_branch %}
               <a href="{% url 'central_branch:event_edit_form' event_details.id %}" class="btn btn-outline-primary">Edit Event</a>
+              {% else %}
+              <a href="{% url 'chapters_and_affinity_group:event_edit_form' sc_ag_info.primary event_details.id %}" class="btn btn-outline-primary">Edit Event</a>
+              {% endif %}
 
           </div>
           

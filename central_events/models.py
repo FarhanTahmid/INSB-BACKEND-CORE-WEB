@@ -23,7 +23,7 @@ event_proposal_files=FileSystemStorage(location='Event Proposals')
 class Event_Category(models.Model):
     event_category=models.CharField(null=False,blank=False,max_length=60)
     event_category_for = models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
-    
+    # primary=models.IntegerField(null=False,blank=False)
     class Meta:
         verbose_name="Event Category"
     
@@ -56,8 +56,10 @@ class Events(models.Model):
     event_organiser=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE,default=5)#Default is set to 5 to keep branch as default organizer of events, If a new database is created change this number according to the id of the branch
     event_date=models.DateField(null=True,blank=True)
     registration_fee=models.BooleanField(null=False,blank=False,default=False)
+    registration_fee_amount = models.IntegerField(blank=True, null=True,default = 0)
     flagship_event = models.BooleanField(null=False,blank=False,default=False)
     publish_in_main_web = models.BooleanField(null=False,blank=False,default=False)
+    form_link = models.URLField(null=True,blank=True,max_length=500)
     
     class Meta:
         verbose_name="Registered Event"
@@ -116,6 +118,11 @@ class Event_Permission(models.Model):
     event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
     permission_id=models.ForeignKey(Permission_criteria,on_delete=models.CASCADE)
     permission_status=models.BooleanField(null=False,blank=False,default=False)
+
+    class Meta:
+        verbose_name="Event Permission"
+    def __str__(self) -> str:
+        return str(self.permission_id)
 
 #Table For Permissions for specific events
 class Event_Logistic_Items(models.Model):

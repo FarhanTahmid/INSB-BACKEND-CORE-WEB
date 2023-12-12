@@ -1,0 +1,287 @@
+{% load static %}
+
+{% block gallery_content %}
+<style>
+    /* Media query for hover devices */
+    @media (hover: hover) {
+        .nav-fill .nav-link:hover {
+            background-color: black;
+            color: white;
+        }
+    }
+
+    /* Styling for both hover and touch devices */
+    .nav-fill .nav-link.active,
+    .nav-fill .nav-link:active {
+        background-color: #F4CE14;
+        color: black;
+    }
+
+    .nav-fill .nav-link {
+        background-color: #F2F1EB;
+        color: black;
+        border-radius: 8px;
+        margin: 10px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Rounded corners and cursor pointer for images */
+    .img-fluid {
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    /* Lightbox styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: black;
+    }
+
+    .modal-content {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fefefe;
+        margin: auto;
+        padding: 0;
+        width: 90%;
+        max-width: 1200px;
+    }
+
+    .close {
+        color: white;
+        position: absolute;
+        top: 0px;
+        right: 10px;
+        font-size: 35px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #999;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .mySlides {
+        display: none;
+    }
+
+    .numbertext {
+        color: #f2f2f2;
+        font-size: 12px;
+        padding: 8px 12px;
+        position: absolute;
+        top: 0;
+    }
+
+    .prev,
+    .next {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        width: auto;
+        padding: 16px;
+        margin-top: -50px;
+        color: white;
+        font-weight: bold;
+        font-size: 20px;
+        transition: 0.6s ease;
+        border-radius: 0 3px 3px 0;
+        user-select: none;
+        -webkit-user-select: none;
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+
+    .next {
+        right: 0;
+        border-radius: 3px 0 0 3px;
+    }
+
+    .prev:hover,
+    .next:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .hover-shadow {
+        transition: 0.3s;
+    }
+
+    .hover-shadow:hover {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+</style>
+
+
+<br><br>
+<div class="container full-width-container mt-5">
+    <!-- Navigation pills for Images and Videos -->
+    <ul class="nav nav-pills nav-fill mx-auto">
+        <li class="nav-item">
+            <a class="nav-link active" id="images-tab" data-toggle="pill" href="#images">Images</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="videos-tab" data-toggle="pill" href="#videos">Videos</a>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-2 mx-auto">
+        <!-- Image Tab -->
+        <div id="images" class="tab-pane fade show active">
+            <div class="row">
+                <!-- Manually set your images -->
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <img src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png" class="img-fluid hover-shadow" alt="Image 1" onclick="openModal();currentSlide(1)">
+                </div>
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <img src="https://ieeensusb.org/wp-content/uploads/2021/04/grp3-1-768x357.png" class="img-fluid hover-shadow" alt="Image 2" onclick="openModal();currentSlide(2)">
+                </div>
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <img src="https://ieeensusb.org/wp-content/uploads/2021/04/64649011_1305263279640843_5363310595217031168_n-768x576.jpg" class="img-fluid hover-shadow" alt="Image 3" onclick="openModal();currentSlide(3)">
+                </div>
+                <!-- Add more images as needed -->
+            </div>
+            <div class="row">
+                <!-- Manually set your images -->
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <img src="https://ieeensusb.org/wp-content/uploads/2022/11/Copy-of-DSC_7517-768x512.jpg" class="img-fluid hover-shadow" alt="Image 4" onclick="openModal();currentSlide(4)">
+                </div>
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <img src="https://ieeensusb.org/wp-content/uploads/2021/04/grp4-1-768x477.png" class="img-fluid hover-shadow" alt="Image 5" onclick="openModal();currentSlide(5)">
+                </div>
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <img src="https://ieeensusb.org/wp-content/uploads/2022/11/20171005105150_IMG_5861-768x512.jpg" class="img-fluid hover-shadow" alt="Image 6" onclick="openModal();currentSlide(6)">
+                </div>
+                <!-- Add more images as needed -->
+            </div>
+        </div>
+
+        <!-- Video Tab -->
+        <div id="videos" class="tab-pane fade">
+            <div class="row">
+                <!-- Manually set your YouTube video URLs -->
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <iframe width="100%" height="auto" src="https://www.youtube.com/embed/OKiyhOfZksk" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <iframe width="100%" height="auto" src="https://www.youtube.com/embed/pq0SY_sdKgM" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <iframe width="100%" height="auto" src="https://www.youtube.com/embed/al36onDBdoE" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <iframe width="100%" height="auto" src="https://www.youtube.com/embed/48SdGv6u014" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <!-- Add more videos as needed -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Lightbox Modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <!-- Your slides go here -->
+        <div class="mySlides">
+            <div class="numbertext">1 / 42</div>
+            <img src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png" style="width:100%">
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="mySlides">
+            <div class="numbertext">2 / 42</div>
+            <img src="https://ieeensusb.org/wp-content/uploads/2021/04/grp3-1-768x357.png" style="width:100%">
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="mySlides">
+            <div class="numbertext">3 / 42</div>
+            <img src="https://ieeensusb.org/wp-content/uploads/2021/04/64649011_1305263279640843_5363310595217031168_n-768x576.jpg" style="width:100%">
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="mySlides">
+            <div class="numbertext">4 / 42</div>
+            <img src="https://ieeensusb.org/wp-content/uploads/2022/11/Copy-of-DSC_7517-768x512.jpg" style="width:100%">
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="mySlides">
+            <div class="numbertext">5 / 42</div>
+            <img src="https://ieeensusb.org/wp-content/uploads/2021/04/grp4-1-768x477.png" style="width:100%">
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="mySlides">
+            <div class="numbertext">6 / 42</div>
+            <img src="https://ieeensusb.org/wp-content/uploads/2022/11/20171005105150_IMG_5861-768x512.jpg" style="width:100%">
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+        <!-- Add more slides as needed -->
+
+        <!-- Navigation arrows -->
+        <span class="prev" onclick="plusSlides(-1)">&#10094;</span>
+        <span class="next" onclick="plusSlides(1)">&#10095;</span>
+    </div>
+</div>
+<br><br>
+
+<!-- Include Bootstrap JS and Popper.js -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Lightbox Script -->
+<script>
+    // Open modal function
+    function openModal() {
+        document.getElementById("myModal").style.display = "block";
+    }
+
+    // Close modal function
+    function closeModal() {
+        document.getElementById("myModal").style.display = "none";
+    }
+
+    // Close modal when clicking outside the image
+    window.onclick = function (event) {
+        var modal = document.getElementById("myModal");
+        if (event.target == modal) {
+            closeModal();
+        }
+    };
+
+    // Initialize slide index and show slides
+    var slideIndex = 1;
+    showSlides(slideIndex);
+
+    // Next/previous controls
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    // Thumbnail image controls
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    // Display slides
+    function showSlides(n) {
+        var i;
+        var slides = document.getElementsByClassName("mySlides");
+        if (n > slides.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = slides.length }
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        slides[slideIndex - 1].style.display = "block";
+    }
+</script>
+
+
+{% endblock gallery_content %}

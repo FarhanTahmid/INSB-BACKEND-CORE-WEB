@@ -85,7 +85,7 @@ class PortData:
     def get_current_panel():
         '''Returns the id of the current panel of IEEE NSU SB'''
         try:            
-            current_panel=Panels.objects.get(current=True)
+            current_panel=Panels.objects.get(current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
             return current_panel.pk
         except sqlite3.OperationalError:
             return False

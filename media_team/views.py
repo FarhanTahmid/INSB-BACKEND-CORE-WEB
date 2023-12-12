@@ -141,162 +141,196 @@ def event_page(request):
     return render(request,"Events/media_event_homepage.html",context)
 
 @login_required
-def event_form(request,event_ID):
+def event_form(request,event_id):
 
-    #Initially loading the events whose  links and images were previously uploaded
-    #and can be editible
-
-    event_id = event_ID
-    event = Events.objects.get(id = event_id)
-    media = Media_Link.objects.filter(event_id = event)
-    Img  = Media_Images.objects.filter(event_id = event)
-    image_length=len(Img)
-    x=6
     try:
-        media_link = media[0].media_link
-        logo_link = media[0].logo_link
-        Img_photo = Img
-        image_exists=True
-        if image_length<6:
-            all_image_exists = False
-            x= 6-image_length
-        else:
-            all_image_exists=True
+        media_links = Media_Link.objects.get(event_id = Events.objects.get(pk=event_id))
+        media_images = Media_Images.objects.filter(event_id = Events.objects.get(pk=event_id))
+        number_of_uploaded_images = len(media_images)
     except:
-        image_exists=False
-        all_image_exists=False
-        media_link=None
-        logo_link=None
-        Img_photo=None
+        media_links = None
+        media_images = None
+        number_of_uploaded_images = 0
+    
+
+    if request.method == "POST":
+
+        if request.POST.get('save'):
+
+            #getting all data from page
+
+            folder_drive_link_for_event_pictures = request.POST.get('drive_link_of_event')
+            folder_drive_link_for_pictures_with_logos = request.POST.get('logo_drive_link_of_event')
+            selected_images = request.FILES.getlist('image')
+            print(folder_drive_link_for_event_pictures)
+            print(folder_drive_link_for_pictures_with_logos)
+            print(selected_images)
+            MediaTeam.add_links_and_images(folder_drive_link_for_event_pictures,folder_drive_link_for_pictures_with_logos,
+                                           selected_images,event_id)
+            return redirect("media_team:event_form",event_id)
 
 
-    if request.method=="POST":
+    context={
+        'media_links' : media_links,
+        'media_images':media_images,
+        'media_url':settings.MEDIA_URL,
+        'allowed_image_upload':6-number_of_uploaded_images,
 
-        #When user hits ADD on the page to insert the links and images for the events
+    }
 
-        if request.POST.get('add_event_pic_and_others'):
-            targetted_event = Events.objects.get(id = event_id)
-            drive_link_of_event = request.POST.get('drive_link_of_event')
-            print(drive_link_of_event)
-            logo_link_of_event = request.POST.get('logo_link_of_event')
-            images= request.FILES.getlist('images')
-            images = images[0:6]
-            print(images)
 
-            #If no images are added i.e only links then
+    
+    # event_id = event_ID
+    # event = Events.objects.get(id = event_id)
+    # media = Media_Link.objects.filter(event_id = event)
+    # Img  = Media_Images.objects.filter(event_id = event)
+    # image_length=len(Img)
+    # x=6
+    # try:
+    #     media_link = media[0].media_link
+    #     logo_link = media[0].logo_link
+    #     Img_photo = Img
+    #     image_exists=True
+    #     if image_length<6:
+    #         all_image_exists = False
+    #         x= 6-image_length
+    #     else:
+    #         all_image_exists=True
+    # except:
+    #     image_exists=False
+    #     all_image_exists=False
+    #     media_link=None
+    #     logo_link=None
+    #     Img_photo=None
 
-            if len(images)==0:
 
-                #If only links are updated as images already existed, and the user made no
-                #changes to them
+    # if request.method=="POST":
+
+    #     #When user hits ADD on the page to insert the links and images for the events
+
+    #     if request.POST.get('add_event_pic_and_others'):
+    #         targetted_event = Events.objects.get(id = event_id)
+    #         drive_link_of_event = request.POST.get('drive_link_of_event')
+    #         print(drive_link_of_event)
+    #         logo_link_of_event = request.POST.get('logo_link_of_event')
+    #         images= request.FILES.getlist('images')
+    #         images = images[0:6]
+    #         print(images)
+
+    #         #If no images are added i.e only links then
+
+    #         if len(images)==0:
+
+    #             #If only links are updated as images already existed, and the user made no
+    #             #changes to them
                 
-                if image_exists:
-                    media_id = media[0].id
-                    extracted_from_table = Media_Link.objects.get(id = media_id)
-                    extracted_from_table.media_link = drive_link_of_event
-                    extracted_from_table.logo_link = logo_link_of_event
-                    extracted_from_table.save()
-                    return redirect('media_team:event_page')
-                else:
+    #             if image_exists:
+    #                 media_id = media[0].id
+    #                 extracted_from_table = Media_Link.objects.get(id = media_id)
+    #                 extracted_from_table.media_link = drive_link_of_event
+    #                 extracted_from_table.logo_link = logo_link_of_event
+    #                 extracted_from_table.save()
+    #                 return redirect('media_team:event_page')
+    #             else:
 
-                    #Image didn't exist. So the user is adding new links only
-                    try:
-                        links = Media_Link.objects.create(
-                        event_id = targetted_event,
-                        media_link = drive_link_of_event,
-                        logo_link = logo_link_of_event
-                        )
-                        links.save()
-                        messages.success(request,"Successfully Added!")
-                        return redirect('media_team:event_page')
-                    except:
-                        print("Error")
+    #                 #Image didn't exist. So the user is adding new links only
+    #                 try:
+    #                     links = Media_Link.objects.create(
+    #                     event_id = targetted_event,
+    #                     media_link = drive_link_of_event,
+    #                     logo_link = logo_link_of_event
+    #                     )
+    #                     links.save()
+    #                     messages.success(request,"Successfully Added!")
+    #                     return redirect('media_team:event_page')
+    #                 except:
+    #                     print("Error")
                     
                 
-            #If new images are being added as well along with the links
-            else:
-                try:
-                    links = Media_Link.objects.create(
-                    event_id = targetted_event,
-                    media_link = drive_link_of_event,
-                    logo_link = logo_link_of_event
-                    )
-                    links.save()
-                    for image in images:
-                        Image_save = Media_Images.objects.create(
-                        event_id = targetted_event,
-                        selected_images = image
-                        )
-                        Image_save.save()
-                    messages.success(request,"Successfully Added!")
-                    return redirect('media_team:event_page')
-                except:
-                    print("Error")
+    #         #If new images are being added as well along with the links
+    #         else:
+    #             try:
+    #                 links = Media_Link.objects.create(
+    #                 event_id = targetted_event,
+    #                 media_link = drive_link_of_event,
+    #                 logo_link = logo_link_of_event
+    #                 )
+    #                 links.save()
+    #                 for image in images:
+    #                     Image_save = Media_Images.objects.create(
+    #                     event_id = targetted_event,
+    #                     selected_images = image
+    #                     )
+    #                     Image_save.save()
+    #                 messages.success(request,"Successfully Added!")
+    #                 return redirect('media_team:event_page')
+    #             except:
+    #                 print("Error")
 
-        #If less than 6 images were uploaded and the user wants to add upto 6 or less
-        #then this loop is executed where whether the link field is also updated or not
-        #is also checked
+    #     #If less than 6 images were uploaded and the user wants to add upto 6 or less
+    #     #then this loop is executed where whether the link field is also updated or not
+    #     #is also checked
              
-        if request.POST.get('add_more_pic_and_update_link'):
-            targetted_event = Events.objects.get(id = event_id)
-            images= request.FILES.getlist('images')
-            result = 6-image_length
-            images = images[0:result]
-            drive_link_of_event = request.POST.get('drive_link_of_event')
-            print(drive_link_of_event)
-            logo_link_of_event = request.POST.get('logo_link_of_event')
-            try:
-                media_id = media[0].id
-                extracted_from_table = Media_Link.objects.get(id = media_id)
-                extracted_from_table.media_link = drive_link_of_event
-                extracted_from_table.logo_link = logo_link_of_event
-                extracted_from_table.save()
-                for image in images:
-                    Image_save = Media_Images.objects.create(
-                    event_id = targetted_event,
-                    selected_images = image
-                    )
-                    Image_save.save()
-                messages.success(request,"Successfully Added!")
-                return redirect('media_team:event_page')
-            except:
-                print("Error")
+    #     if request.POST.get('add_more_pic_and_update_link'):
+    #         targetted_event = Events.objects.get(id = event_id)
+    #         images= request.FILES.getlist('images')
+    #         result = 6-image_length
+    #         images = images[0:result]
+    #         drive_link_of_event = request.POST.get('drive_link_of_event')
+    #         print(drive_link_of_event)
+    #         logo_link_of_event = request.POST.get('logo_link_of_event')
+    #         try:
+    #             media_id = media[0].id
+    #             extracted_from_table = Media_Link.objects.get(id = media_id)
+    #             extracted_from_table.media_link = drive_link_of_event
+    #             extracted_from_table.logo_link = logo_link_of_event
+    #             extracted_from_table.save()
+    #             for image in images:
+    #                 Image_save = Media_Images.objects.create(
+    #                 event_id = targetted_event,
+    #                 selected_images = image
+    #                 )
+    #                 Image_save.save()
+    #             messages.success(request,"Successfully Added!")
+    #             return redirect('media_team:event_page')
+    #         except:
+    #             print("Error")
 
             
-        #when user updates the saved picture from the page, it deletes the existing one
-        #and replaces it with the new in the User Files folder
+    #     #when user updates the saved picture from the page, it deletes the existing one
+    #     #and replaces it with the new in the User Files folder
         
-        if request.POST.get('submitted_changed_picture'):
-            try:
-                picture_id= request.POST.get('ImageID')
-                print(picture_id)
-                picture = Media_Images.objects.get(id=picture_id)
-                new_picture = request.FILES['new_image']
-                print(new_picture)
-                path = settings.MEDIA_ROOT+str(picture.selected_images)
-                os.remove(path)
-                picture.selected_images = new_picture
-                picture.save()
-                return redirect('media_team:event_page')
-            except:
-                print("Error")
+    #     if request.POST.get('submitted_changed_picture'):
+    #         try:
+    #             picture_id= request.POST.get('ImageID')
+    #             print(picture_id)
+    #             picture = Media_Images.objects.get(id=picture_id)
+    #             new_picture = request.FILES['new_image']
+    #             print(new_picture)
+    #             path = settings.MEDIA_ROOT+str(picture.selected_images)
+    #             os.remove(path)
+    #             picture.selected_images = new_picture
+    #             picture.save()
+    #             return redirect('media_team:event_page')
+    #         except:
+    #             print("Error")
            
 
 
 
 
 
-    context={
-        'media_link':media_link,
-        'logo_link':logo_link,
-        'Img':Img_photo,
-        'image_exists':image_exists,
-        'all_image_exists':all_image_exists,
-        'required':x,
-        'images_length':image_length,
-        'media_url':settings.MEDIA_URL,
-        'event_name':event.event_name,
-    }
+    # context={
+    #     'media_link':media_link,
+    #     'logo_link':logo_link,
+    #     'Img':Img_photo,
+    #     'image_exists':image_exists,
+    #     'all_image_exists':all_image_exists,
+    #     'required':x,
+    #     'images_length':image_length,
+    #     'media_url':settings.MEDIA_URL,
+    #     'event_name':event.event_name,
+    # }
 
     return render(request,"media_team/media_event_form.html",context)
 

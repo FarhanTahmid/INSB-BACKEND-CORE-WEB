@@ -1,7 +1,10 @@
-from port.models import Roles_and_Position,Teams
+from port.models import Roles_and_Position,Teams,Chapters_Society_and_Affinity_Groups
 from users.models import Members,Panel_Members
+from chapters_and_affinity_group.models import SC_AG_Members
 from django.contrib.auth .models import User
 from port.renderData import PortData
+from django.core.exceptions import ObjectDoesNotExist
+
 class Access_Render:
 
     '''
@@ -54,6 +57,20 @@ class Access_Render:
             return False
         except:
             return False
+    
+    def sc_ag_eb_access(username,sc_ag_primary):
+        try:
+            try:
+                get_member_from_sc_ag_database=SC_AG_Members.objects.get(sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),member=Members.objects.get(ieee_id=username))
+            except ObjectDoesNotExist:
+                return False
+            if(get_member_from_sc_ag_database.position.is_sc_ag_eb_member):
+                return True
+            else:
+                return False
+        except Exception as e:
+            return False
+            
     def co_ordinator_access(username):
         
         try:

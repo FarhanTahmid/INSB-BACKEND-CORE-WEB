@@ -55,6 +55,20 @@ class Branch:
             messages.error("Can not create new recruitment sesssion. Something went wrong!")
             return False
     
+    def add_event_venue(venue_name):
+
+        '''This function adds new venue to the database'''
+        try:
+            venue = Venue_List.objects.create(venue_name = venue_name)
+            venue.save()
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error("Can not create new event venue. Something went wrong!")
+            return False
+
+    
     def add_event_type_for_group(event_type,group_number):
         
         '''This function adds new event category according to the group''' 
@@ -352,15 +366,98 @@ class Branch:
                 else:
                     pass
 
-    def update_event_details(event_id, event_name):
+    def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
+                             flagship_event,registration_fee,registration_fee_amount,form_link):
         ''' Update event details and save to database '''
 
         try:
-            event = Events.objects.filter(pk=event_id)
-            event.update(event_name=event_name)
+            #Get the selected event details from database
+            event = Events.objects.get(pk=event_id)
+
+            #Check if super id is null
+            if(super_event_id == 'null'):
+
+                #Check if date is empty
+                if(event_date == ""):
+                    #Update without date and super id
+                    event.event_name = event_name
+                    event.event_description = event_description
+                else:
+                    #Update without super id
+                    event.event_name = event_name
+                    event.event_description = event_description
+                    event.event_date = event_date
+            else:
+                ''' Super ID is not null '''
+
+                #Check if date is empty
+                if(event_date == ""):
+                    #Update without date
+                    event.event_name = event_name
+                    event.event_description = event_description
+                    event.super_event_id = SuperEvents.objects.get(id=super_event_id)
+                else:
+                    #Update all
+                    event.event_name = event_name
+                    event.event_description = event_description
+                    event.super_event_id = SuperEvents.objects.get(id=super_event_id)
+                    event.event_date = event_date
+
+            #Clear event type
+            event.event_type.clear()
+            #Add the event types from event_type_list
+            event.event_type.add(*event_type_list)
+            event.publish_in_main_web = publish_event
+            event.flagship_event = flagship_event
+            event.registration_fee = registration_fee
+            event.registration_fee_amount = registration_fee_amount
+            event.form_link = form_link
+            event.save()
+
+            if(inter_branch_collaboration_list[0] == 'null'):
+                interbranchcollaborations = InterBranchCollaborations.objects.filter(event_id=event_id)
+                if(interbranchcollaborations.count() != 0):
+                    for i in interbranchcollaborations:
+                        print(type(i.collaboration_with.primary))
+                        if(i.collaboration_with.primary != 1):
+                            i.delete()
+            else:
+                interbranchcollaborations = InterBranchCollaborations.objects.filter(event_id=event_id).values_list('collaboration_with', flat=True)
+                testArray = []
+
+                group_primary = event.event_organiser.primary
+                print(group_primary)
+                if group_primary != 1:
+                    if '1' not in inter_branch_collaboration_list:
+                        inter_branch_collaboration_list.append('1')
+                        
+
+                for i in interbranchcollaborations:
+                    testArray.append(str(Chapters_Society_and_Affinity_Groups.objects.get(id=i).primary))
+
+                for i in inter_branch_collaboration_list:
+                    if i not in testArray:
+                        new_event_inter_branch_collaboration = InterBranchCollaborations(event_id=event, collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(primary=int(i)))
+                        new_event_inter_branch_collaboration.save()
+
+                for i in testArray:
+                    if i not in inter_branch_collaboration_list:
+                        InterBranchCollaborations.objects.filter(event_id=event, collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(primary=int(i))).delete()                   
+
+            intrabranchcollaborations = IntraBranchCollaborations.objects.filter(event_id=event_id)
+            if(intra_branch_collaboration == ""):
+                if(intrabranchcollaborations):
+                    intrabranchcollaborations.delete()
+            else:
+                if(intrabranchcollaborations):
+                    intrabranchcollaborations.update(collaboration_with=intra_branch_collaboration)
+                else:
+                    IntraBranchCollaborations.objects.create(event_id=event, collaboration_with=intra_branch_collaboration)
+
             return True
         except:
             return False
+
     # def load_ex_com_panel_list():
     #     panels=Executive_commitee.objects.all().order_by('-pk')
     #     ex_com_panel_list=[]
@@ -609,7 +706,7 @@ class Branch:
             return DatabaseError
     
     def load_all_events():
-        return Events.objects.all().order_by('-id')
+        return Events.objects.all().order_by('-event_date')
     
     def load_all_inter_branch_collaborations_with_events(primary):
         '''This fuction returns a dictionary with key as events id and values as a list of inter collaborations 
@@ -617,10 +714,10 @@ class Branch:
         try:
             dic = {}
             collaborations=[]
-            if primary == 1:
-                events = Branch.load_all_events()
-            else:
-                events = Branch.load_all_events_for_groups(primary)
+            # if primary == 1:
+            #     events = Branch.load_all_events()
+            # else:
+            events = Branch.load_all_events_for_groups(primary)
             for i in events:
                 all_collaborations_for_this_event = InterBranchCollaborations.objects.filter(event_id = i.id)
                 for j in all_collaborations_for_this_event:
@@ -636,9 +733,21 @@ class Branch:
             return False
         
     def load_event_published(event_id):
-        '''This function will return wheather a the event is published or not'''
+        '''This function will return wheather the event is published or not'''
 
         return Events.objects.get(id = event_id).publish_in_main_web
+    
+    def is_flagship_event(event_id):
+
+        '''This function will return wheather the event is flagship or not'''
+
+        return Events.objects.get(id = event_id).flagship_event
+    
+    def is_registration_fee_required(event_id):
+        
+        '''This function will return wheather the event requires any regsitration fee or not'''
+
+        return Events.objects.get(id=event_id).registration_fee
     
     def publish_event(event_id,state):
         '''This function will publish or unpublish the event'''
@@ -653,6 +762,15 @@ class Branch:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error("Could not publish/unpublish the event. Something went wrong!")
+
+    def button_status(state):
+
+        '''This function returns the status of the toggle button '''
+
+        if state == None:
+            return False
+        else:
+            return True
 
     def load_all_mother_events():
         '''This method loads all the mother/Super events'''
@@ -670,7 +788,7 @@ class Branch:
     def load_all_events_for_groups(primary):
 
         '''This function will return a list of only those events associated with that particular group'''
-        return Events.objects.filter(event_organiser= Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
+        return Events.objects.filter(event_organiser= Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)).order_by('-event_date')
         
     
     def event_page_access(user):
@@ -704,8 +822,11 @@ class Branch:
         '''this function loads all the Intra Branch Collaborations from the database. cross match with event_id'''
         
         intraBranchCollaborations=IntraBranchCollaborations.objects.filter(event_id=Events.objects.get(id=event_id))
-
-        return intraBranchCollaborations
+        if(intraBranchCollaborations.count() == 0):
+            return ""
+        else:
+            intraBranchCollaborations = IntraBranchCollaborations.objects.get(event_id=Events.objects.get(id=event_id))
+            return intraBranchCollaborations
     
     def delete_event(event_id):
         ''' This function deletes event from database '''

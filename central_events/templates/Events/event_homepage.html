@@ -172,9 +172,10 @@
                             <td>{{ key.event_organiser.group_name }}</td>
                             <td>
                               {% for collabs in value %}
-                              <ul>
-                                <li>{{collabs}}</li>
+                              <ul style="list-style-type: none; text-align:left;">
+                                    <li>{{ collabs }}</li>
                               </ul>
+                            
                               {% endfor %}
                             </td>
                             <td>{{ key.event_date }}</td>

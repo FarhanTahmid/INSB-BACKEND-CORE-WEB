@@ -202,7 +202,7 @@
                 -->
                 <a href="{% url 'graphics_team:event_form' event.id %}"> {{event.event_name}}</a><br>
               </td>
-              <td>{{ event.event_organiser }}</td>
+              <td>{{ event.event_organiser.group_name }}</td>
               <td>{{ event.event_date }}</td>
               
           </tr>

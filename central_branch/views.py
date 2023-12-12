@@ -540,8 +540,7 @@ def manage_website_homepage(request):
                 newBanner=HomePageTopBanner.objects.create(
                     banner_picture=request.FILES['banner_picture'],
                     first_layer_text=request.POST['first_layer_text'],
-                    second_layer_text=request.POST['second_layer_text'],
-                    second_layer_text_colored=request.POST['second_layer_text_colored'],
+                    first_layer_text_colored=request.POST['first_layer_text_colored'],
                     third_layer_text=request.POST['third_layer_text'],
                     button_text=request.POST['button_text'],
                     button_url=request.POST['button_url']
@@ -770,9 +769,9 @@ def event_creation_form_page(request):
 
                 '''Getting data from page and calling the register_event_page1 function to save the event page 1 to database'''
 
-                super_event_id=request.POST.get('super_event')
                 event_name=request.POST['event_name']
                 event_description=request.POST['event_description']
+                super_event_id=request.POST.get('super_event')
                 event_type_list = request.POST.getlist('event_type')
                 event_date=request.POST['event_date']
 
@@ -896,14 +895,13 @@ def event_description(request,event_id):
             intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
             # Checking if event has collaborations
             hasCollaboration=False
-            if(len(interBranchCollaborations)>0 or len(intraBranchCollaborations)>0):
+            if(len(interBranchCollaborations)>0):
                 hasCollaboration=True
             
-          
+            
             get_all_team_name = Branch.load_teams()
             get_event_details = Events.objects.get(id = event_id)
 
-            #print(get_event_details.super_event_name.id)
             get_event_venue = Event_Venue.objects.filter(event_id = get_event_details)  
             
             if request.method == "POST":
@@ -940,6 +938,7 @@ def event_description(request,event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
+    
 @login_required
 def get_updated_options_for_event_dashboard(request):
     #this function updates the select box upon the selection of the team in task assignation. takes event id as parameter. from html file, a script hits the api and fetches the returned dictionary
@@ -966,33 +965,97 @@ def event_edit_form(request, event_id):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         is_branch = True
+        is_event_published = Branch.load_event_published(event_id)
+        is_flagship_event = Branch.is_flagship_event(event_id)
+        is_registraion_fee_true = Branch.is_registration_fee_required(event_id)
         #Get event details from databse
         event_details = Events.objects.get(pk=event_id)
 
-        #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
+        if(request.method == "POST"):
+
+            if('add_venues' in request.POST):
+                venue = request.POST.get('venue')
+                if(renderData.Branch.add_event_venue(venue)):
+                    messages.success(request, "Venue created successfully")
+                else:
+                    messages.error(request, "Something went wrong while creating the venue")
+                return redirect('central_branch:event_edit_form', event_id)
+            
+            
+            if('update_event' in request.POST):
+                ''' Get data from form and call update function to update event '''
+
+                form_link = request.POST.get('drive_link_of_event')
+                publish_event_status = request.POST.get('publish_event')
+                flagship_event_status = request.POST.get('flagship_event')
+                registration_event_status = request.POST.get('registration_fee')
+                event_name=request.POST['event_name']
+                event_description=request.POST['event_description']
+                super_event_id=request.POST.get('super_event')
+                event_type_list = request.POST.getlist('event_type')
+                event_date=request.POST['event_date']
+                inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
+                intra_branch_collaboration=request.POST['intra_branch_collaboration']
+                venue_list_for_event=request.POST.getlist('event_venues')
+
+                #Checking to see of toggle button is on/True or off/False
+                publish_event = Branch.button_status(publish_event_status)
+                flagship_event = Branch.button_status(flagship_event_status)
+                registration_fee = Branch.button_status(registration_event_status)
+
+                #if there is registration fee then taking the amount from field
+                if registration_fee:
+                    registration_fee_amount = int(request.POST.get('registration_fee_amount'))
+                else:
+                    registration_fee_amount=0
+                #Check if the update request is successful
+                if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
+                                                          flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,form_link = form_link)):
+                    messages.success(request,f"EVENT: {event_name} was Updated successfully")
+                    return redirect('central_branch:event_edit_form', event_id) 
+                else:
+                    messages.error(request,"Something went wrong while updating the event!")
+                    return redirect('central_branch:event_edit_form', event_id)
+
+        form = EventForm({'event_description' : event_details.event_description})
+
+        #loading super/mother event at first and event categories for depending on which group organised the event
         super_events=Branch.load_all_mother_events()
-        event_types=Branch.load_all_event_type_for_groups(1)
-        
+        event_types=Branch.load_all_event_type_for_groups(event_details.event_organiser.primary)
+
+        inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+
+        # Get collaboration details
+        interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
+        intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
+        # Checking if event has collaborations
+        hasCollaboration=False
+        if(len(interBranchCollaborations)>0):
+            hasCollaboration=True
+
+        interBranchCollaborationsArray = []
+        for i in interBranchCollaborations.all():
+            interBranchCollaborationsArray.append(i.collaboration_with)
+
+        #loading all venues from the venue list from event management team database
+        venues=Events_And_Management_Team.getVenues()
+
         context={
             'all_sc_ag' : sc_ag,
             'is_branch' : is_branch,
             'event_details' : event_details,
-            'super_events':super_events,
-            'event_types':event_types,
+            'form' : form,
+            'super_events' : super_events,
+            'event_types' : event_types,
+            'inter_branch_collaboration_options' : inter_branch_collaboration_options,
+            'interBranchCollaborations':interBranchCollaborationsArray,
+            'intraBranchCollaborations':intraBranchCollaborations,
+            'hasCollaboration' : hasCollaboration,
+            'venues' : venues,
+            'is_event_published':is_event_published,
+            'is_flagship_event':is_flagship_event,
+            'is_registration_fee_required':is_registraion_fee_true
         }
-
-        # if(request.method == "POST"):
-        #     ''' Get data from form and call update function to update event '''
-
-        #     event_name = request.POST['event_name']
-
-        #     #Check if the update request is successful
-        #     if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name)):
-        #         messages.info(request,f"Event with EVENT ID {event_id} was Updated successfully")
-        #         return redirect('central_branch:event_dashboard', event_id) 
-        #     else:
-        #         messages.error(request,"Something went wrong while updating the event!")
-        #         return redirect('central_branch:event_dashboard', event_id)
 
         return render(request, 'Events/event_edit_form.html', context)
     except Exception as e:

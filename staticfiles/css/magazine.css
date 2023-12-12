@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+
+* {
+    box-sizing: border-box;
+    font-family: 'Raleway', sans-serif;
+  }
+  
+
+  .header {
+    text-align: center;
+    text-transform: uppercase;
+    padding: 32px;
+    background-color: #0a0a23;
+    color: #fff;
+    border-bottom: 4px solid #fdb347;
+  }
+  
+
+  .card {
+    /* Add shadows to create the "card" effect */
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    display: flex;
+    flex-direction: row;
+    margin: 5% 10%;
+    border-radius: 5px;
+    width: auto;
+    height: 25rem;
+  }
+  
+  /* On mouse-over, add a deeper shadow */
+  .card:hover {
+    box-shadow: 8px 8px 16px 8px rgba(0,0,0,0.2);
+  }
+  
+  /* Add some padding inside the card container */
+  .container {
+    padding: 10px 5% 10px 0;
+  }
+
+  /* Some styles added to the card cover image */
+  .card .cover{
+    box-shadow: 0 4px 12px 0 rgba(0,0,0,0.3);
+    max-width: 100%;
+    margin: 25px;
+    justify-content: left;
+    border-radius: 5px;
+  }
+
+
+  /* Some styles added to the card title */
+  .container .card-title{
+    font-weight: 900;
+    text-shadow: 0px 1px, 1px 0px, 1px 1px;
+    margin-bottom: -10px;
+  }
+
+  .hr-dots {
+    display: inline-block;
+    width: 25px;
+    border-style: dotted none none;
+    border-width: 5px;
+    border-color: #0059ff;
+    margin-left: 0;
+  }
+  
+  /* Thick red border */
+  .hr-dash {
+    display: inline-block;
+    width: 50px;
+    border-radius: 5px;
+    border: 2.75px solid #0059ff;
+    margin-left: 1.5px;
+  }
+
+  /* Font size adjustment of paragraphs n card */
+  .container p{
+    font-size: 14px;
+  }
+
+  /* Some styles added to button */
+  .button {
+    background-color: white; 
+    color: black; 
+    transition: 0.5s;
+    border: 2px solid #008CBA;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 200px;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  /* Button hover effect added */
+  .button:hover {
+    background-color: #008CBA;
+    color: white;
+  }
+
+  .slide-up-fade-in{
+    animation: slide-up-fade-in ease 1s;
+    animation-iteration-count: 1;
+    transform-origin: 50% 50%;
+    animation-fill-mode:forwards; /*when the spec is finished*/
+
+
+    opacity:0;
+    opacity: 1\9;
+
+  }
+
+
+
+  /* Animations added */
+  @keyframes slide-up-fade-in{
+      0% {
+          opacity:0;
+          transform:  translate(0px,1000px)  ;
+      }
+      50% {
+          opacity:1;
+          transform:  translate(0px,-25px)  ;
+      }
+      75% {
+        opacity:1;
+        transform:  translate(0px,25px)  ;
+      }
+      100% {
+        opacity:1;
+        transform:  translate(0px,0px)  ;
+      }
+  }
+
+
+
+  /* For tablets and smaller */
+  @media only screen and (max-width: 991px) {
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+      transition: 0.3s;
+      width: 95%;
+      height: auto;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      margin: 5% auto;
+      align-items: center;
+      justify-content: center;
+    }
+    .card:hover {
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+    .card .cover {
+      box-shadow: 0 4px 12px 0 rgba(0,0,0,0.3);
+      border-radius: 5px;
+      width:  400px;
+      margin-top: 25px;
+      justify-content: center;
+      border-radius: 5px;
+    }
+    .container {
+      padding: 2px 16px;
+      margin: 25px;
+    }
+
+    .container .card-title{
+      font-weight: 900;
+      text-shadow: 0px 1px, 1px 0px, 1px 1px;
+    }
+  
+    /* Font size adjustment of paragraphs n card */
+    .container p{
+      font-size: 14px;
+    }
+
+    .button {
+      font-size: 16px;
+      margin: auto;
+      width: 100%;
+      justify-content: center;
+    }
+    
+    /* Button hover effect added */
+    .button:hover {
+      background-color: #008CBA;
+      color: white;
+    }
+  }
+
+
+
+  /* for medium sized devices */
+  @media only screen and (min-width: 991px) and (max-width: 1500px)  {
+    .card{
+      
+      margin: 5% 7%;
+    }  
+  }
