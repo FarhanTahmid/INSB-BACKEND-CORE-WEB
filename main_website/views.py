@@ -1,13 +1,21 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from central_branch.models import Events
+from central_events.models import Events
 from central_branch.renderData import Branch
 from main_website.models import Research_Papers,Blog
 from django.db.models import Q
 from .renderData import HomepageItems
 from django.conf import settings
 from users.models import User
+import logging
+from datetime import datetime
+from django.http import HttpResponseBadRequest,HttpResponseServerError
+from system_administration.system_error_handling import ErrorHandling
+import traceback
+from .renderData import HomepageItems
 
+
+logger=logging.getLogger(__name__)
 
 # Create your views here.
 def homepage(request):
@@ -68,13 +76,31 @@ def index(request):
 
 
 def event_homepage(request):
-    return render(request,'Events/events_homepage.html')
+
+    '''This view function loads all the events for the events homepage'''
+    
+    try:
+        all_events = HomepageItems.load_all_events()
+
+
+        context = {
+            'all_events':all_events,
+            'media_url':settings.MEDIA_URL,
+        }
+
+        return render(request,'Events/events_homepage.html',context)
+    except Exception as e:
+            print(e)
+            response = HttpResponseServerError("Oops! Something went wrong.")
+            return response
+    
 
 
 def Event_Details(request,event_id):
  
     '''Loads details for the corresponding event page on site'''
     get_event = Events.objects.get(id = event_id)
+    get_event=[]
     return render(request,"Event.html",{
         "event":get_event
         
@@ -141,7 +167,13 @@ def Research_Paper(request):
     return render(request,"All_Research_Papers.html",{
         "research_paper":get_all_research_papers
     })
-    
+
+
+
+######################### GALLERY WORKS ###########################
+def gallery(request):
+    return render(request, 'gallery.html')
+
 
 # Memeber works
 

@@ -1116,9 +1116,23 @@
 }
 
 .msp-preset-btn-159 {
-    box-shadow: 2px 2px 15px 4px rgba(80, 80, 80, 0.556);
-    background-color: #050D3A;
-    color: #fff;
+    background-color: #00000000;
+    color: #FFC72C;
+    font-weight: 600;
+    border: 1px solid #75787B;
+    text-transform: uppercase;
+    padding: 15px 25px;
+    letter-spacing: 1px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    top: 25px;
+    transition: all 0.3s ease;
+}
+
+.msp-preset-btn-159:hover {
+    background-color: #002855;
+    color: #ffffff;
     font-weight: 600;
     text-transform: uppercase;
     padding: 15px 25px;
@@ -1126,64 +1140,122 @@
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
+    transition: all 0.3s ease;
 }
 
-.msp-preset-btn-159:hover {
-    background-color: #050D3A;
-    color: #ffda09;
-    font-weight: 600;
-    text-transform: uppercase;
-    padding: 15px 25px;
-}
+.msp-preset-btn-159:active {}
 
-.msp-preset-btn-159:active {
-    background-color: #050D3A;
-    color: #ffda09;
-    font-weight: 600;
-    text-transform: uppercase;
-    padding: 15px 25px;
-}
-
-.ms-parent-id-11>.master-slider {
+.ms-parent-id-1>.master-slider {
     background: #353535;
 }
 
-.msp-cn-11-1 {
-    font-family: "Raleway";
-    font-weight: 700;
-    font-size: 63px;
+.msp-cn-1-1 {
+    padding-top: 15px;
+    padding-right: 25px;
+    padding-bottom: 15px;
+    padding-left: 25px;
+    border-top: 2px;
+    border-right: 2px;
+    border-bottom: 2px;
+    border-left: 2px;
+    border-style: solid;
+    font-weight: normal;
+    font-size: 26px;
     line-height: normal;
     color: #ffffff;
+    font-weight: 200;
+    text-align: center;
 }
 
-.msp-cn-11-2 {
-    font-family: "Roboto";
-    font-weight: normal;
-    font-size: 108px;
-    letter-spacing: 3px;
+.msp-cn-1-2 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    font-size: 97px;
+    letter-spacing: 4px;
     line-height: normal;
     color: #ffffff;
     text-transform: uppercase;
-    font-weight: 600;
 }
 
-.msp-cn-11-4 {
-    font-weight: normal;
-    font-size: 30px;
-    line-height: normal;
+.msp-cn-1-4 {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1.5;
     color: #ffffff;
+    max-width: 80vh;
 }
-
-.msp-cn-11-5 {
-    font-weight: normal;
-    font-size: 117px;
-    line-height: normal;
-    color: #ffffff;
-    font-weight: 800;
+.ms-layer.msp-cn-1-7{
+    top: 350px;
+    left: 7%;
 }
-
-.msp-cn-11-7 {
-    font-family: "Roboto";
-    line-height: 1.5rem;
+.msp-cn-1-7 {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.5;
+}
+.msp-cn-1-7 .title{
+    font-size: 60px;
+    font-weight: 700;
     color: #ffffff;
+    padding-bottom: 30px;
+}
+.msp-cn-1-7 .description{
+    max-width: 90vh;
+    font-size: 18px;
+    color: #ffffff;
+    padding-bottom: 30px;
+    line-height: 1.5;
+}
+.msp-cn-1-7 .btn{
+    color: #ffffff;
+    font-size: 15px;
+    background-color: 	#00629b00;
+    padding: 13px;
+    border: 1px solid 	#75787B;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+.msp-cn-1-7 .btn:hover{
+    color: 	#FFC72C;
+    background-color: 		#002855;
+    transition: all 0.3s;
+}
+.msp-cn-1-7 span{
+    color: #FFC72C;
+}
+@media screen and (max-width:1080px) {
+	.msp-cn-1-7 .title{
+		font-size: 40px;
+	}
+    .msp-cn-1-7 .description{
+		font-size: 15px;
+        max-width: 60vh;
+	}
+}
+@media screen and (max-width:800px) {
+	.ms-layer.msp-cn-1-7{
+        left: 10%;
+    }
+}
+@media screen and (max-width:766px) {
+    .ms-layer.msp-cn-1-7{
+        top: 200px;
+    }
+	.msp-cn-1-4{
+		max-width: 50vh;
+	}
+}
+@media screen and (max-width:600px) {
+    .msp-cn-1-7 .title{
+		font-size: 20px;
+        padding-bottom: 5px;
+	}
+    .msp-cn-1-7 .description{
+		font-size: 10px;
+        max-width: 50vh;
+        padding-bottom: 10px;
+	}
+    .msp-cn-1-7 .btn{
+		font-size: 10px;
+        padding: 5px;
+	}
 }

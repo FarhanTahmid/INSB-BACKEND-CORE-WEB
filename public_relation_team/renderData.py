@@ -1,4 +1,4 @@
-from central_branch.models import Events
+from central_events.models import Events
 from .models import Manage_Team
 from port.models import Teams,Roles_and_Position
 from users.models import Members

@@ -73,7 +73,7 @@ class Alumni_Members(models.Model):
 will be extracted from "Members" table and those who are not in insb database will be extracted from "Ex Panel Members" Table.
 '''
 class Panel_Members(models.Model):
-    tenure=models.ForeignKey(Panels,on_delete=models.CASCADE)
+    tenure=models.ForeignKey(Panels,on_delete=models.CASCADE) #think this like panel_pk
     member=models.ForeignKey(Members,on_delete=models.CASCADE,null=True,blank=True)
     ex_member=models.ForeignKey(Alumni_Members,on_delete=models.CASCADE,null=True,blank=True)
     position=models.ForeignKey(Roles_and_Position,on_delete=models.CASCADE)

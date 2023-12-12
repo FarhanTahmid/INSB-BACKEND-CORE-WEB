@@ -39,7 +39,8 @@ class PortData:
             messages.error(request,"An internal Database error occured loading the Positions!")
             return False
     
-    def get_all_executive_positions_with_sc_ag_id(request,sc_ag_primary):
+    def get_all_executive_positions_of_branch(request,sc_ag_primary):
+         
         try:
             executive_positions=Roles_and_Position.objects.filter(is_eb_member=True,role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).all().order_by('id')
             return executive_positions
@@ -84,7 +85,7 @@ class PortData:
     def get_current_panel():
         '''Returns the id of the current panel of IEEE NSU SB'''
         try:            
-            current_panel=Panels.objects.get(current=True)
+            current_panel=Panels.objects.get(current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
             return current_panel.pk
         except sqlite3.OperationalError:
             return False
@@ -93,3 +94,43 @@ class PortData:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
     
+    def create_positions(request,sc_ag_primary,role,is_eb_member,is_sc_ag_eb_member,is_officer,is_co_ordinator,is_faculty,is_mentor):
+        '''Creates Positions in the Roles and Positions Table with Different attributes for sc ag and branch as well'''
+        try:
+            # get the last object of the model
+            get_the_last_object=Roles_and_Position.objects.all().last()
+            # The logic of creating new position is to assign the id = las objects id + 1.
+            # this ensures that ids never conflict with each other
+            new_position=Roles_and_Position.objects.create(
+                id=get_the_last_object.id + 1,
+                role=role,role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),
+                is_eb_member=is_eb_member,is_sc_ag_eb_member=is_sc_ag_eb_member,
+                is_officer=is_officer,is_co_ordinator=is_co_ordinator,is_faculty=is_faculty,is_mentor=is_mentor
+            )
+            new_position.save()
+            messages.success(request,f"New Position: {role} was created!")
+            return True
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+    
+    def create_team(request,sc_ag_primary,team_name):
+        '''Creates a Team with given name for sc ag and branch'''
+        try:    
+            get_the_last_team_primary=Teams.objects.all().last()
+            # The logic of creating new Team is to assign the primary = last objects primary + 1.
+            # this ensures that primary of teams never conflict with each other
+            new_team=Teams.objects.create(
+                team_name=team_name,
+                primary=get_the_last_team_primary.primary + 1,
+                team_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)
+            )
+            messages.success(request,f"A new team : {new_team.team_name} was created!")
+            new_team.save()
+            return True
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Error Creating Team. Something went wrong!")
+            return False

@@ -1,5 +1,5 @@
 {% load static %}
-{% block navbar %}
+{% block sc_ag_navbar %}
     <style>
         .nav a.active {
             color: #FFA300;
@@ -52,9 +52,30 @@
                     <div ui-include="'../views/blocks/dropdown.new.html'"></div>
                 </li>
                 <li class="nav-item dropdown">
+                    <a class="nav-link" href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}">
+                    <i class="fa fa-user text-muted"></i>
+                    <span>Events</span>
+                    </a>
+                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                </li>
+                <li class="nav-item dropdown">
                     <a class="nav-link" href="{% url 'chapters_and_affinity_group:sc_ag_panels' sc_ag_info.primary %}">
                     <i class="fa  fa-graduation-cap"></i>
                     <span>Panels</span>
+                    </a>
+                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="{% url 'chapters_and_affinity_group:sc_ag_membership_renewal' sc_ag_info.primary %}">
+                    <i class="fa  fa-refresh"></i>
+                    <span>Membership Renewal</span>
+                    </a>
+                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="{% url 'chapters_and_affinity_group:sc_ag_manage_access' sc_ag_info.primary %}">
+                    <i class="fa  fa-lock"></i>
+                    <span>Manage Access</span>
                     </a>
                     <div ui-include="'../views/blocks/dropdown.new.html'"></div>
                 </li>
@@ -91,4 +112,4 @@
             </ul>
             <!-- / navbar right -->
     </div>
-{% endblock navbar %}
+{% endblock sc_ag_navbar %}

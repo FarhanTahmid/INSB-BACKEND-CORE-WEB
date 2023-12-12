@@ -66,7 +66,7 @@ INSTALLED_APPS = [
     'ieee_nsu_sb_ras_sbc',
     'ckeditor',
     'chapters_and_affinity_group',
-    
+    'central_events',
 ]
 
 MIDDLEWARE = [

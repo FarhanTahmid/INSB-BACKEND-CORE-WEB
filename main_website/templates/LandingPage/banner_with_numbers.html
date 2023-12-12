@@ -65,27 +65,49 @@
     <div class="clear"></div>
 </section>
 <script>
-let nums = document.querySelectorAll(".gdlr-skill-item-title");
-let section = document.querySelector(".container-card");
-let started = false; // Function Started ? No
+  let calcScrollValue = () => {
+      let scrollProgress = document.getElementById("progress");
+      let progressValue = document.getElementById("progress-value");
+      let pos = document.documentElement.scrollTop;
+      let calcHeight =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+      let scrollValue = Math.round((pos * 100) / calcHeight);
+      if (pos > 100) {
+          scrollProgress.style.display = "grid";
+      } else {
+          scrollProgress.style.display = "none";
+      }
+      scrollProgress.addEventListener("click", () => {
+          document.documentElement.scrollTop = 0;
+      });
+      scrollProgress.style.background = 'conic-gradient(#03cc65 ${scrollValue}%, #d7d7d7 ${scrollValue}%)';
+  };
+  window.onscroll = calcScrollValue;
+  window.onload = calcScrollValue;
+</script>
+<script>
+  let nums = document.querySelectorAll(".gdlr-skill-item-title");
+  let section = document.querySelector(".container-card");
+  let started = false; // Function Started ? No
 
-window.onscroll = function () {
-  if (window.scrollY >= section.offsetTop) {
-    if (!started) {
-      nums.forEach((num) => startCount(num));
-    }
-    started = true;
+  window.onscroll = function () {
+      if (window.scrollY >= section.offsetTop) {
+          if (!started) {
+              nums.forEach((num) => startCount(num));
+          }
+          started = true;
+      }
+  };
+
+  function startCount(el) {
+      let goal = el.dataset.goal;
+      let count = setInterval(() => {
+          el.textContent++;
+          if (el.textContent == goal) {
+              clearInterval(count);
+          }
+      }, 2000 / goal);
   }
-};
-
-function startCount(el) {
-  let goal = el.dataset.goal;
-  let count = setInterval(() => {
-    el.textContent++;
-    if (el.textContent == goal) {
-      clearInterval(count);
-    }
-  }, 2000 / goal);
-}
 </script>
 {% endblock banner_with_numbers %}

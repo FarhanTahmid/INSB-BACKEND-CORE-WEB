@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Teams | IEEE NSU Student Branch</title>
+    <title>Members | {{sc_ag_info.group_name}}</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
     {% block common_css %}
@@ -86,9 +86,9 @@
   
         <!-- navbar content -->
         <div id="content" class="app-content box-shadow-z0" role="main">
-            {% block navbar %}
+            {% block sc_ag_navbar %}
                 {% include 'sc_ag_navbar.html' %}
-            {% endblock navbar %}
+            {% endblock sc_ag_navbar %}
 
         </div>
         <!--navbar content-->
