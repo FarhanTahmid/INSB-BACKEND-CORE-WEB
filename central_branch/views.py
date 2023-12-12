@@ -893,9 +893,10 @@ def event_description(request,event_id):
             # Get collaboration details
             interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
             intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
+           
             # Checking if event has collaborations
             hasCollaboration=False
-            if(len(interBranchCollaborations)>0):
+            if(len(interBranchCollaborations)>0 or intraBranchCollaborations.collaboration_with!=""):
                 hasCollaboration=True
             
             
