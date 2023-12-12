@@ -7,7 +7,7 @@
     
     <link rel='stylesheet' href='css/jquery.fancybox.css' type='text/css' media='all' />
 
-    <title>Document</title>
+    <title>Events | {{event.event_name}}</title>
     <style>
         body{
             padding: 0%;
@@ -209,7 +209,11 @@
 <body>
     <section class="banner_gradient">
         <!--Event Banner Image-->
+        {% if event_banner_image %}
         <img src="{{media_url}}{{event_banner_image}}" alt="" class="banner_image">
+        {% else %}
+        <div style="height:30px"></div>
+        {% endif %}
         <div class="event_header" style="text-align: left; margin-left: 10%;">
             <!--Event Date and Time-->
             {% comment %} <h4>Friday,October 12 2023 at 12:00 pm - 12:45 pm UTC +06</h4> {% endcomment %}

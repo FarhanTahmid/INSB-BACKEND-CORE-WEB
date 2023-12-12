@@ -20,11 +20,13 @@ class HomepageItems:
         return dic
     
     def load_event_banner_image(event_id):
-        return Graphics_Banner_Image.objects.get(event_id = event_id)
+        try:
+            return Graphics_Banner_Image.objects.get(event_id = event_id).selected_image
+        except:
+            return False
     
     def load_event_gallery_images(event_id):
-        images = Media_Images.objects.filter(event_id = event_id)
-        return images
+        return Media_Images.objects.filter(event_id = event_id)
 
         
 
