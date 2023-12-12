@@ -409,7 +409,7 @@ class Branch:
                     event.event_description = event_description
                     event.super_event_id = SuperEvents.objects.get(id=super_event_id)
                     event.event_date = event_date
-
+                    
             #Clear event type
             event.event_type.clear()
             #Add the event types from event_type_list
