@@ -150,60 +150,72 @@ def current_panel_members(request):
     # load all panels at first
     get_all_panels=Branch.load_all_panels()
     get_current_panel=Branch.load_current_panel()
-    get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
-    
-    # TODO:add algo to add SC AG Faculty and Branch Counselor
+    has_current_panel=True
+    if(get_current_panel is not None):
+        # get the latest panel of branch and redirect to there
+        has_current_panel=True
+        
+        get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
+        
+        # TODO:add algo to add SC AG Faculty and Branch Counselor
 
-    branch_counselor=[]
-    sc_ag_faculty_advisors=[]
-    mentors=[]
-    branch_chair=[]
-    branch_eb=[]
-    sc_ag_chair=PortData.get_branch_ex_com_from_sc_ag(request=request)
-    for i in get_current_panel_members:
-        if (i.position.role_of.primary==1):
-            if(i.position.is_faculty):
-                branch_counselor.append(i)
-            elif(i.position.is_eb_member):
-                if(i.position.role=='Chair'):
-                    branch_chair.append(i)
-                elif(i.position.is_mentor):
-                    mentors.append(i)
-                else:
-                    branch_eb.append(i)
-    
-    # check of having different members
-    has_branch_counselor=False
-    has_sc_ag_faculty_advisor=False
-    has_mentors=False
-    has_branch_chair=False
-    has_branch_eb=False
-    has_sc_ag_chair=False
-    if(len(branch_counselor)>0):
-        has_branch_counselor=True
-    if(len(sc_ag_faculty_advisors)>0):
-        has_sc_ag_faculty_advisor=True
-    if(len(mentors)>0):
-        has_mentors=True
-    if(len(branch_chair)>0):
-        has_branch_chair=True
-    if(len(branch_eb)>0):
-        has_branch_eb=True
-    if(len(sc_ag_chair)>0):
-        has_sc_ag_chair=True
-    
-    
-    context={
-        'has_branch_counselor':has_branch_counselor,'has_sc_ag_faculty_advisor':has_sc_ag_faculty_advisor,'has_mentors':has_mentors,'has_branch_chair':has_branch_chair,'has_branch_eb':has_branch_eb,'has_sc_ag_chair':has_sc_ag_chair,
-        'panels':get_all_panels,
-        'branch_counselor':branch_counselor,
-        'sc_ag_faculty_advisors':sc_ag_faculty_advisors,
-        'mentors':mentors,
-        'chair':branch_chair,
-        'eb':branch_eb,
-        'sc_ag_chair':sc_ag_chair,
-        'page_title':"Current Panel of IEEE NSU SB"
-    }
+        branch_counselor=[]
+        sc_ag_faculty_advisors=[]
+        mentors=[]
+        branch_chair=[]
+        branch_eb=[]
+        sc_ag_chair=PortData.get_branch_ex_com_from_sc_ag(request=request)
+        for i in get_current_panel_members:
+            if (i.position.role_of.primary==1):
+                if(i.position.is_faculty):
+                    branch_counselor.append(i)
+                elif(i.position.is_eb_member):
+                    if(i.position.role=='Chair'):
+                        branch_chair.append(i)
+                    elif(i.position.is_mentor):
+                        mentors.append(i)
+                    else:
+                        branch_eb.append(i)
+        
+        # check of having different members
+        has_branch_counselor=False
+        has_sc_ag_faculty_advisor=False
+        has_mentors=False
+        has_branch_chair=False
+        has_branch_eb=False
+        has_sc_ag_chair=False
+        if(len(branch_counselor)>0):
+            has_branch_counselor=True
+        if(len(sc_ag_faculty_advisors)>0):
+            has_sc_ag_faculty_advisor=True
+        if(len(mentors)>0):
+            has_mentors=True
+        if(len(branch_chair)>0):
+            has_branch_chair=True
+        if(len(branch_eb)>0):
+            has_branch_eb=True
+        if(len(sc_ag_chair)>0):
+            has_sc_ag_chair=True
+        context={
+            'has_branch_counselor':has_branch_counselor,'has_sc_ag_faculty_advisor':has_sc_ag_faculty_advisor,'has_mentors':has_mentors,'has_branch_chair':has_branch_chair,'has_branch_eb':has_branch_eb,'has_sc_ag_chair':has_sc_ag_chair,
+            'has_current_panel':has_current_panel,
+            'panels':get_all_panels,
+            'branch_counselor':branch_counselor,
+            'sc_ag_faculty_advisors':sc_ag_faculty_advisors,
+            'mentors':mentors,
+            'chair':branch_chair,
+            'eb':branch_eb,
+            'sc_ag_chair':sc_ag_chair,
+            'page_title':"Current Panel of IEEE NSU SB"
+        }
+    else:
+        has_current_panel=False
+        context={
+            'has_current_panel':has_current_panel,
+            'panels':get_all_panels,
+            'page_title':"Panels of IEEE NSU SB",
+
+        }
     
     return render(request,'Members/Panel/panel_members.html',context)
 
@@ -265,6 +277,7 @@ def panel_members_page(request,year):
         'chair':branch_chair,
         'eb':branch_eb,
         'sc_ag_chair':sc_ag_chair,
+        'has_current_panel':True,
         'page_title':f"Executive Panel - {year}"
     }
     return render(request,'Members/Panel/panel_members.html',context)
