@@ -1028,6 +1028,8 @@ def event_edit_form(request, event_id):
         # Get collaboration details
         interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
         intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
+        selected_venues = Branch.get_selected_venues(event_id=event_id)
+        print(selected_venues)
         # Checking if event has collaborations
         hasCollaboration=False
         if(len(interBranchCollaborations)>0):
@@ -1054,7 +1056,8 @@ def event_edit_form(request, event_id):
             'venues' : venues,
             'is_event_published':is_event_published,
             'is_flagship_event':is_flagship_event,
-            'is_registration_fee_required':is_registraion_fee_true
+            'is_registration_fee_required':is_registraion_fee_true,
+            'selected_venues':selected_venues,
         }
 
         return render(request, 'Events/event_edit_form.html', context)

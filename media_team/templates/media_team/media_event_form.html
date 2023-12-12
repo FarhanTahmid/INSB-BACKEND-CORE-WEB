@@ -462,7 +462,7 @@
                         <form method="post">
                             {% csrf_token %}
                             <div class="modal-body">
-                                <p><input id="image_id" name= "remove_image" type="text"></p>
+                                <p><input id="image_id" name= "remove_image" type="hidden"></p>
                                 <p>Are you sure you want to delete this image?</p>
                             </div>
                             <div class="modal-footer">
@@ -475,41 +475,9 @@
                   </div>
                 {% endfor %}
               </div>
-              
-              
-              
-              
-
-              {% comment %} {% if not all_image_exists %}
-              <div class="container" style="justify-content:center;">
-                <label class="form-group row"><b>Upload Maximum {{required}} images<b></label>
-
-                <div class="upload__box">
-                  <div class="upload__btn-box">
-                    <label class="upload__btn">
-                      <p>Upload Image</p>
-                      <input type="file" multiple="" id="fileInput" name="images" data-max_length="20"
-                        class="upload__inputfile">
-                    </label>
-                  </div>
-                  <div class="upload__img-wrap"></div>
-                </div>
-
-              </div>
-              {% endif %} {% endcomment %}
-
+      
               <br>
               <div class="footer" style="position:right;">
-                {% comment %} {% if all_image_exists %}
-                <button type="submit" name="add_event_pic_and_others" class="btn btn-success p-x-md"
-                  value="Update">Update</button>
-                {% elif not all_image_exists and image_exists %}
-                <button type="submit" name="add_more_pic_and_update_link" class="btn btn-success p-x-md"
-                  value="Add">Update</button>
-                {% else %} 
-                <button type="submit" name="save" class="btn btn-success p-x-md"
-                  value="Add">Save</button>
-                 {% endif %} {% endcomment %}
               </div>
             </div>
           </form>
@@ -521,15 +489,7 @@
     </div>
   </div>
 
-
-
-
-
-
-
-
   </div>
-
 
   <div style="text-align:center; margin-top=30px;">
 
@@ -558,112 +518,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <!--Script for image previewing on modal-->
-  {% comment %}
-  <script>
-
-
-
-    // full screen code ends here
-
-    jQuery(document).ready(function () {
-      ImgUpload();
-    });
-
-    function ImgUpload() {
-      var imgWrap = "";
-      var imgArray = [];
-
-      $('.upload__inputfile').each(function () {
-        $(this).on('change', function (e) {
-          imgWrap = $(this).closest('.upload__box').find('.upload__img-wrap');
-          var maxLength = $(this).attr('data-max_length');
-
-          var files = e.target.files;
-          var filesArr = Array.prototype.slice.call(files);
-          var iterator = 0;
-          filesArr.forEach(function (f, index) {
-
-            if (!f.type.match('image.*')) {
-              return;
-            }
-
-            if (imgArray.length > maxLength) {
-              return false
-            } else {
-              var len = 0;
-              for (var i = 0; i < imgArray.length; i++) {
-                if (imgArray[i] !== undefined) {
-                  len++;
-                }
-              }
-              if (len > maxLength) {
-                return false;
-              } else {
-                imgArray.push(f);
-
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                  var html = "<div class='upload__img-box'><div style='background-image: url(" + e.target.result + ")' data-number='" + $(".upload__img-close").length + "' data-file='" + f.name + "' class='img-bg'><div class='upload__img-close'></div></div></div>";
-                  imgWrap.append(html);
-                  iterator++;
-                }
-                reader.readAsDataURL(f);
-              }
-            }
-          });
-        });
-      });
-
-      $('body').on('click', ".upload__img-close", function (e) {
-        var file = $(this).parent().data("file");
-        for (var i = 0; i < imgArray.length; i++) {
-          if (imgArray[i].name === file) {
-            imgArray.splice(i, 1);
-            break;
-          }
-        }
-        $(this).parent().parent().remove();
-
-        updateInputField(imgArray);
-      });
-    }
-
-    function updateInputField(files) {
-      // Assuming your input field has an ID like "fileInput"
-      var inputField = $('#fileInput')[0];  // Adjust the ID accordingly
-
-      // Create a new FileList object
-      var newFileList = new DataTransfer();
-
-      // Add files to the FileList
-      for (var i = 0; i < files.length; i++) {
-        newFileList.items.add(files[i]);
-      }
-
-      // Set the input field's files to the new FileList
-      inputField.files = newFileList.files;
-    }
-    function triggerFileInput(element) {
-      element.nextElementSibling.click();
-    }
-
-    function displayNewImage(input) {
-      var preview = input.previousElementSibling;
-      var file = input.files[0];
-
-      if (file) {
-        var reader = new FileReader();
-
-        reader.onload = function (e) {
-          preview.src = e.target.result;
-        };
-
-        reader.readAsDataURL(file);
-      }
-    }
-
-  </script> {% endcomment %}
-
+  
   <script>
     $(document).ready(function () {
       $('#image-input').on('change', function () {

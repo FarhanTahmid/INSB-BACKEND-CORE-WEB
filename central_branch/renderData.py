@@ -32,6 +32,10 @@ class Branch:
             messages.error("Can not return Branch ID. Something went wrong!")
             return False
     
+    def get_selected_venues(event_id):
+        venues = Event_Venue.objects.filter(event_id = event_id)
+        return venues
+
     def reset_all_teams():
         '''To remove all members in all teams and assigning them as general memeber'''
         try:
