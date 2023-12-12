@@ -235,18 +235,19 @@
 
     .form-group {
       margin-bottom: 15px;
-  }
-  @media only screen and (max-width: 768px) {
-    .form-group.row {
-        flex-direction: column;
+    }
+    @media only screen and (max-width: 768px) {
+      .form-group.row {
+          flex-direction: column;
+      }
+
+      .custom-file {
+          margin-bottom: 10px;
+      }
     }
 
-    .custom-file {
-        margin-bottom: 10px;
-    }
-  }
-  .selected-image-container {
-    max-width: 200px; /* Set the maximum width for the image container */
+    .selected-image-container {
+      max-width: 200px; /* Set the maximum width for the image container */
     }
     
     .selected-image {
@@ -254,6 +255,64 @@
         height: auto;    /* Maintain the aspect ratio */
     }
 
+    .image-container-item{
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .image-container-item:hover {
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    }
+
+    .image-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .cross-button {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 1.5rem;
+      color: white; /* Set the initial color */
+      z-index: 2;
+      transition: color 0.3s ease; /* Add transition for color change */
+    }
+
+    .cross-button:hover {
+        color: gray; /* Change color on hover */
+    }
+
+    /* Custom styles for the full view modal */
+    #fullViewModal {
+        overflow: hidden;
+    }
+
+    #fullViewModal .modal-dialog {
+        max-width: 75vw; /* Set maximum width to 75% of viewport width */
+    }
+
+    #fullViewModal .modal-content {
+        background-color: rgba(0, 0, 0, 0.8); /* Opaque black background */
+        border: none;
+        padding: 0;
+    }
+
+    #fullViewModal .modal-body {
+        padding: 0;
+    }
+
+    #fullViewImage {
+        width: 100%;
+        height: auto;
+    }
     
   </style>
 </head>
@@ -340,11 +399,58 @@
                 <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple images.</small>
               </div>
               <hr>
-              <div id="image-container">
+              <div id="image-container" class="row">
                 {% for image_url in media_images %}
-                    <img src="{{media_url}}{{image_url.selected_images}}" alt="Image">
+                  <div class="col-lg-4 col-md-6 my-3">
+                    <div class="image-container">
+                        <img src="{{ media_url }}{{ image_url.selected_images }}" alt="Image" class="img-fluid image-container-item">
+        
+                        <!-- Cross button to trigger modal -->
+                        <button type="button" class="cross-button" data-toggle="modal" data-target="#deleteModal{{ forloop.counter }}">
+                            &#10006; <!-- Unicode for a cross symbol -->
+                        </button>
+                    </div>
+                  </div>
+
+                    <!-- Confirm Delete Modal -->
+                  <div id="deleteModal{{ forloop.counter }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this image?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="submit" class="btn btn-outline-danger buttons" value="Delete" name="delete_image">
+                                <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
                 {% endfor %}
+
+                <!-- Full View Modal -->
+                <div id="fullViewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="fullViewModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                          <div class="modal-body">
+                              <img id="fullViewImage" src="" alt="Full View" class="img-fluid">
+                          </div>
+                      </div>
+                  </div>
+                </div>
               </div>
+              
+              
               
               
 
@@ -425,6 +531,23 @@
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+        $('.image-container-item').click(function () {
+            // Get the source of the clicked image
+            var imageUrl = $(this).attr('src');
+
+            // Set the source of the modal image
+            $('#fullViewImage').attr('src', imageUrl);
+
+            // Show the full view modal
+            $('#fullViewModal').modal('show');
+        });
+    });
+</script>
+
   <!--Script for image previewing on modal-->
   {% comment %}
   <script>
