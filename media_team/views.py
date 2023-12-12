@@ -168,6 +168,15 @@ def event_form(request,event_id):
             MediaTeam.add_links_and_images(folder_drive_link_for_event_pictures,folder_drive_link_for_pictures_with_logos,
                                            selected_images,event_id)
             return redirect("media_team:event_form",event_id)
+        
+        if request.POST.get('remove_image'):
+
+            image_url = request.POST.get('remove_image')
+            MediaTeam.remove_image(image_url,event_id)
+            return redirect("media_team:event_form",event_id)
+        
+            
+            
 
 
     context={

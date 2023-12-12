@@ -348,11 +348,9 @@
 
       <ol style="justify-content:center;margin-bottom:15px;"><b>
           <li>Provide the Links of the folder for both Event Pictures and Pictures with Logo</li>
-          <li>If Pictures are already added you can change the particular picture by clicking on it.
-            Select the desired picture and hit <span style="color:blue;">'Change'</span> to confirm.</li>
           <li>Maximum 6 pictures can be uploaded.</li>
-          <li>If there are less than 6 images uploaded, you can upload more and hit 'Update' to make changes</li>
-          <li>To change links and media use the 'Update' button. Use the 'Change' button for updating pictures</li>
+          <li>To change any picture, delete it and add new one</li>
+          <li>Don't forget to <b>save</b> the changes made by clicking save button</li>
       </ol></b>
 
 
@@ -406,14 +404,14 @@
                         <img src="{{ media_url }}{{ image_url.selected_images }}" alt="Image" class="img-fluid image-container-item">
         
                         <!-- Cross button to trigger modal -->
-                        <button type="button" class="cross-button" data-toggle="modal" data-target="#deleteModal{{ forloop.counter }}">
+                        <button type="button" class="cross-button" data-toggle="modal" data-target="#deleteModal"  onclick="openModal('{{image_url.selected_images}}')">
                             &#10006; <!-- Unicode for a cross symbol -->
                         </button>
                     </div>
                   </div>
 
                     <!-- Confirm Delete Modal -->
-                  <div id="deleteModal{{ forloop.counter }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                  <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
@@ -426,6 +424,7 @@
                         <form method="post">
                             {% csrf_token %}
                             <div class="modal-body">
+                                <p><input id="image_id" name= "remove_image" type="text"></p>
                                 <p>Are you sure you want to delete this image?</p>
                             </div>
                             <div class="modal-footer">
@@ -729,6 +728,13 @@
       hiddenInput.value = fileNames.join(", ");
     }
   });
+
+  function openModal(image_id) {
+    // Set data in the modal
+    var inputElement = document.getElementById('image_id');
+    inputElement.value=image_id;
+
+  }
    
   </script>
 

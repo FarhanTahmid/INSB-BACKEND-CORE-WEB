@@ -101,6 +101,15 @@ class MediaTeam:
                     Image_save = Media_Images.objects.create(event_id = Events.objects.get(pk=event_id),selected_images = image)
                     Image_save.save()
 
+    def remove_image(image_url,event_id):
+
+        image = Media_Images.objects.get(event_id = Events.objects.get(pk = event_id),selected_images = image_url)
+        path = settings.MEDIA_ROOT+str(image.selected_images)
+        os.remove(path)
+        image.delete()
+
+
+
             
 
 
