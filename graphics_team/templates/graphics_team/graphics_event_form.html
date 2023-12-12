@@ -7,6 +7,8 @@
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
 
     {% block common_css %}
         {% include "common_css.html" %}
@@ -170,7 +172,87 @@
         .btn.btn-primary {
             width: 100%; /* Make the button full width on smaller screens */
         }
+      }
+
+
+      #selectedImages {
+        margin-top: 10px;
+      }
+  
+  
+      .remove-image {
+        cursor: pointer;
+        color: red;
+        font-weight: bold;
+      }
+  
+      .form-group {
+        margin-bottom: 15px;
+      }
+      @media only screen and (max-width: 768px) {
+        .form-group.row {
+            flex-direction: column;
+        }
+  
+        .custom-file {
+            margin-bottom: 10px;
+        }
+      }
+  
+      .selected-image-container {
+        max-width: 200px; /* Set the maximum width for the image container */
+      }
+      
+      .selected-image {
+          max-width: 100%; /* Make the image responsive within its container */
+          height: auto;    /* Maintain the aspect ratio */
+      }
+  
+      .image-container {
+        position: relative;
+        display: inline-block;
+        width: 100%;
     }
+    
+    .image-container-item {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        transition: box-shadow 0.3s ease;
+        object-fit: cover; /* Ensure the image fills the container */
+    }
+    
+  
+      .image-container-item:hover {
+          box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+      }
+  
+      .cross-button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        cursor: pointer;
+        background-color: white; /* Set the background color to white */
+        border: none;
+        padding: 0;
+        width: 25px; /* Set the width and height to create a circle */
+        height: 25px;
+        border-radius: 50%; /* Make it a circle */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2rem; /* Adjust font size */
+        color: black; /* Set the initial color */
+        z-index: 2;
+        transition: background-color 0.3s ease, color 0.3s ease; /* Add transitions for color and background-color changes */
+        line-height: 1; /* Ensure line height does not affect vertical alignment */
+    }
+    
+    
+      .cross-button:hover {
+          color: gray; /* Change color on hover */
+      }
     
           
           
@@ -204,134 +286,154 @@
 
 
         <br>
+        <br>
         <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
-        
+        <h6>Note:</h6>
         <ol style="justify-content:center;margin-bottom:15px;"><b>
-          <li>Provide the Links of the folder for the Banner Images </li>
-          <li>If the banner picture is already uploaded, change it by clicking on the image.
-            Select the desired picture and hit <span style="color:blue;">'Change'</span> to confirm.</li>
-          <li>To change link use the 'Update' button. Use the 'Change' button for updating picture</li>
+          <li>Provide the Link of the folder for the Banner Images </li>
+          <li>If the banner picture is already uploaded, you can change it by deleting existing one.
+            Select the desired picture and hit <span style="color:blue;">'Save'</span>.</li>
+          <li>Make sure to save any changes made before leaving</li>
         </ol></b>
         
 
-        <div style="text-align:center; margin-top=30px;">  
+      <div style="text-align:center; margin-top=30px; background-color: white;">
             <div class="container" style="justify-content:center;">
               
               </ul>
               
                 <br><br>
-                   
-                                        <div class="box-header">
-                                            <h1 style="text-align:center;font-size:30px;">Add Details</h1>
-                                        </div>
-                                        
-                                        <form method="POST" enctype="multipart/form-data">
-                                            {% csrf_token %}
-                                            <div class="box-body">
-                                              
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-2 form-control-label">Folder Drive Link for Banner Pictures</label>
-                                                        <div class="col-sm-10">
-                                                            <input
-                                                            placeholder="Provide Drive Link for The Banner Pictures"
-                                                            class="form-control"
-                                                            type="url"
-                                                            autocomplete="off"
-                                                            required
-                                                            id="#field1"
-                                                            value="{{media_link}}"
-                                                            name="drive_link_of_graphics"/>
-                                
-                                                        </div>
-                                                    </div>
-                                                    
-                                                   {% if not image_exists %}
-                                                    <div class="container" style="justify-content:center;">
-                                                        <label class="form-group row"><b>Add Banner Image<b></label>
-                                                                       
-                                                                        <div class="upload__box">
-                                                                            <div class="upload__btn-box">
-                                                                              <label class="upload__btn">
-                                                                                <p>Upload Image</p>
-                                                                                <input type="file" id="fileInput" name="image" data-max_length="20" class="upload__inputfile">
-                                                                              </label>
-                                                                            </div>
-                                                                            <div class="upload__img-wrap"></div>
-                                                                          </div>
-                                                         
-                                                    </div>
-                                                    {% endif %}
-                                                    
-                                          
-                                                    <br>
-                                                    <div class="footer" style="position:right;">
-                                                        {% if not image_exists  %}
-                                                        <button type="submit" name="add_banner_pic_and_link" class="btn btn-success p-x-md" value="Add">Add</button>
-                                                        {% else %} 
-                                                        <button type="submit" name="update_link" class="btn btn-success p-x-md" value="Add">Update</button>
-                                                        {% endif %}
 
-                                                    </div>  
-                                                </div>
-                                                
-                                                
-                                            </div>
-                                        </form>
-                                    
-                               
-                            
-                        
+              <div class="box-header">
+                  <h1 style="text-align:center;font-size:30px;">Add Details</h1>
+              </div>
+              
+              <div class="py-3 text-center">
+                {% for message in messages %}
+                    <p style="color: red;" class="message">
+                        {{ message }}
+                        <button class="close-message" onclick="closeMessage(this)" style="border: none; background: none;">✖</button>
+                    </p>
+                {% endfor %}
+              </div>
+
+              <form method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="box-body">
                     
-                        
+                    <div class="form-group row">
+                        <label class="col-sm-2 form-control-label">Folder Drive Link for Banner Pictures</label>
+                        <div class="col-sm-10">
+                            <input
+                            placeholder="Provide Drive Link for The Banner Pictures"
+                            class="form-control"
+                            type="url"
+                            autocomplete="off"
+                            required
+                            id="field1"
+                            value="{{graphic_links.graphics_link}}"
+                            name="drive_link_of_graphics"/>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="images" class="col-sm-2 form-control-label">Upload Image:</label>
+                      <div class="col-sm-8">
+                          <div class="custom-file" style="margin-top: 5px;">
+                              <input type="file" class="custom-file-input" id="image-input" name="image" accept="image/*">
+                              <label class="custom-file-label bg-light" for="image-input">Choose file</label>
+                          </div>
+                      </div>
+                      <button type="submit" name="save" class="btn btn-outline-success p-x-md col-sm-2" value="Add">Save</button>
+                      <br>
+                      <div id="selected-image-container"></div>
+                      <input type="hidden" name="selected_image" id="selected-image">
+                    </div>
+
+                    <br>
+                    <hr>
+                    <br>
+                    {% if graphics_banner_image.selected_image is not None %}
+                    <div class="image-container">
+                      <img
+                        src="{{media_url}}{{ graphics_banner_image.selected_image}}"
+                        alt="Image"
+                        class="img-fluid image-container-item"
+                        data-toggle="modal"
+                        data-target="#fullViewModal"
+                      />
+                    
+                      <!-- Full View Modal -->
+                      <div
+                        id="fullViewModal"
+                        class="modal fade"
+                        tabindex="-1"
+                        role="dialog"
+                        aria-labelledby="fullViewModalLabel"
+                        aria-hidden="true"
+                      >
+                        <div class="modal-dialog modal-lg" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="fullViewModalLabel">Image Full View</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                    
+                            <div class="modal-body">
+                              <img
+                                src="{{media_url}}{{graphics_banner_image.selected_image}}"
+                                alt="Image"
+                                class="img-fluid"
+                                style="width: 100%; margin: 0 auto; display: block;"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    
+                      <!-- Cross button to trigger modal -->
+                      <button type="button" class="cross-button" data-toggle="modal" data-target="#deleteModal" onclick="openModal('{{graphics_banner_image.selected_image}}')">
+                        &times; <!-- Use the "times" symbol (X) as a close icon -->
+                      </button>
+                    
+                      <!-- Confirm Delete Modal -->
+                      <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                    
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <p><input id="image_id" name= "remove_image" type="hidden"></p>
+                                    <p>Are you sure you want to delete this image?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="submit" class="btn btn-outline-danger buttons" value="Delete" name="delete_image">
+                                    <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                       
+                  </div>
+              </form>     
             </div>
           </div>
-
-         
-        
-    
-    
-    
-    
-    
-        </div>
+      </div>
 
 
-        <div style="text-align:center; margin-top=30px;">
-          <div class="container">
-            <div class="box-body" style="justify-content:center;margin-right:100px;margin-left:300px;">
-            {% if image_exists %}
-                                                  
-                                                    <div class="form-group row">
-                                                        
-                                                        <div class="container" style="justify-content:center;">
-                                                        
-                                                        
-                                                        <form method="POST" enctype="multipart/form-data">
-                                                          {% csrf_token %}
-                                                        <div class="container">
-                                                            <img id="image-preview" src="{{media_url}}{{ Img.0.selected_image}}" alt="Image"  width=100% height=auto style="border: 2px solid black;on-hover: opacity;"  onclick="triggerFileInput(this)">
-                                                            <input class="d-none" type="file"  id="file-input"   onchange="displayNewImage(this)" name="new_image">
-                                                            <input type="hidden" value={{Img.0.id}} name="ImageID">
-                                                            
-                                                        </div>
-                                                        <br>
-                                                        <input type="submit" class="btn btn-primary p-x-md" name="submitted_changed_picture" value="Change">
-                                                       
-                                                        
-                                                        
-                                                        <br><br><br><br><br>
-                                                      </form>  
-                                                      
-                                                     
-                                                    
-                                                        </div>
-                                
-                                                        </div>
-                                                    </div>
-                                                    {% endif %}
-                                                  </div>
-          </div>
-        </div>
      <!--Theme Switcher-->
 
      {% block theme_switcher %}
@@ -349,59 +451,89 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'table_search.js'%}"></script> 
     <script src="{% static 'table_search.js'%}"></script>
-    <!--Script for image previewing on modal-->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+
+
     <script>
-      function removeImage(element) {
-          var imgBox = $(element).closest('.upload__img-box');
-          imgBox.remove();
-          // Optionally, you may want to update the input field and perform other tasks here
+      function closeMessage(button) {
+          // Find the parent element (the <p> tag) and remove it
+          var messageElement = button.parentNode;
+          messageElement.parentNode.removeChild(messageElement);
       }
+    </script>
+    
+    <script>
+      $(document).ready(function () {
+          $('#image-input').on('change', function () {
+              var container = $('#selected-image-container');
+              container.empty();
   
-      jQuery(document).ready(function () {
-          ImgUpload();
+              var input = $(this)[0];
+              var file = input.files[0];
+  
+              if (file) {
+                  var reader = new FileReader();
+  
+                  reader.onload = function (e) {
+                      var selectedImage = $('<img class="selected-image" src="' + e.target.result + '">');
+                      container.append(selectedImage);
+                  };
+  
+                  reader.readAsDataURL(file);
+              }
+          });
       });
   
-      function ImgUpload() {
-          $('.upload__inputfile').on('change', function (e) {
-              var imgWrap = $(this).closest('.upload__box').find('.upload__img-wrap');
-              var file = e.target.files[0];
+      document.addEventListener("DOMContentLoaded", function () {
+          const fileInput = document.getElementById("image-input");
   
-              if (!file || !file.type.match('image.*')) {
-                  return;
+          fileInput.addEventListener("change", function () {
+              const selectedFiles = this.files;
+              const maxAllowedFiles = 1; // Allow only 1 file to be selected
+  
+              if (selectedFiles.length > maxAllowedFiles) {
+                  alert("You can upload only one image.");
+                  // Clear the file input or handle it based on your requirements
+                  this.value = null;
               }
   
-              var reader = new FileReader();
-              reader.onload = function (e) {
-                  imgWrap.html(
-                      "<div class='upload__img-box'>" +
-                      "<div style='background-image: url(" + e.target.result + ")' class='img-bg'>" +
-                      "<div class='upload__img-close' onclick='removeImage(this)'></div>" +
-                      "</div></div>"
-                  );
-              };
-              reader.readAsDataURL(file);
+              // Update the selected image container or perform other actions as needed
+              updateSelectedImageContainer(selectedFiles);
           });
-      }
-      function triggerFileInput(element) {
-        element.nextElementSibling.click();
-    }
+  
+          function updateSelectedImageContainer(files) {
+              const container = document.getElementById("selected-image-container");
+              container.innerHTML = ""; // Clear existing content
+  
+              if (files.length > 0) {
+                  const file = files[0];
+                  const fileName = file.name;
+                  const selectedImage = document.createElement("img");
+                  selectedImage.src = URL.createObjectURL(file);
+                  selectedImage.className = "selected-image";
+                  container.appendChild(selectedImage);
+              }
+  
+              // Update the hidden input with the selected image's information
+              updateHiddenInput(files);
+          }
+  
+          function updateHiddenInput(files) {
+              const hiddenInput = document.getElementById("selected-image");
+              const fileNames = Array.from(files).map((file) => file.name);
+              hiddenInput.value = fileNames.join(", ");
+          }
+      });
 
-
-      function displayNewImage(input) {
-        var preview = input.previousElementSibling;
-        var file = input.files[0];
-
-        if (file) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                preview.src = e.target.result;
-            };
-
-            reader.readAsDataURL(file);
-        }
-    }
-  </script>
+      function openModal(image_id) {
+        // Set data in the modal
+        var inputElement = document.getElementById('image_id');
+        inputElement.value=image_id;
     
+      }
+  </script>
 </body>
 </html>

@@ -222,9 +222,6 @@
       }
     }
 
-    #selectedImages {
-      margin-top: 10px;
-    }
 
 
     .remove-image {
@@ -247,12 +244,14 @@
     }
 
     .selected-image-container {
-      max-width: 200px; /* Set the maximum width for the image container */
+      max-width: 100%; /* Set the maximum width for the image container */
     }
     
     .selected-image {
-        max-width: 100%; /* Make the image responsive within its container */
-        height: auto;    /* Maintain the aspect ratio */
+      width: auto; /* Set the width to 100% */
+      height: 100px; /* Set the height to 150px */
+      object-fit: cover; /* Maintain aspect ratio and cover the container */
+      margin-top:10px;
     }
 
     .image-container-item{
@@ -294,10 +293,6 @@
   }
   
   
-  
-  
-  
-
     .cross-button:hover {
         color: gray; /* Change color on hover */
     }
@@ -355,11 +350,16 @@
           <div class="box-header">
             <h1 style="text-align:center;font-size:30px;">Add Details</h1>
           </div>
+
           <div class="py-3 text-center">
             {% for message in messages %}
-                <p style="color:red" class="message">{{message}}</p>
+                <p style="color: red;" class="message">
+                    {{ message }}
+                    <button class="close-message" onclick="closeMessage(this)" style="border: none; background: none;">✖</button>
+                </p>
             {% endfor %}
           </div>
+
           <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="box-body">
@@ -391,6 +391,7 @@
                 </div>
                 <button type="submit" name="save" class="btn btn-outline-success p-x-md col-sm-2"
                   value="Add">Save</button>
+                <br>
 
                 <div id="selected-images-container"></div>
                 <input type="hidden" name="selected_images" id="selected-images">
@@ -517,7 +518,15 @@
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <!--Script for image previewing on modal-->
+  
+
+  <script>
+    function closeMessage(button) {
+        // Find the parent element (the <p> tag) and remove it
+        var messageElement = button.parentNode;
+        messageElement.parentNode.removeChild(messageElement);
+    }
+  </script>
   
   <script>
     $(document).ready(function () {
@@ -528,32 +537,35 @@
           var input = $(this)[0];
           var files = input.files;
   
-          var rowContainer = $('<div class="row"></div>'); // New row container
+          var rowContainer;
   
           for (var i = 0; i < files.length; i++) {
               var file = files[i];
               var reader = new FileReader();
   
-              (function (index) { // Use a self-invoking function to capture the correct index value
+              (function (index) {
                   reader.onload = function (e) {
-                      var imageContainer = $('<div class="selected-image-container col-md-4"></div>'); // Three columns
+                      if (index % 3 === 0) {
+                          rowContainer = $('<div class="row"></div>'); // Start a new row for every three images
+                      }
+  
+                      var imageContainer = $('<div class="selected-image-container col-md-4"></div>');
                       var image = $('<img class="selected-image" src="' + e.target.result + '">');
   
                       imageContainer.append(image);
                       rowContainer.append(imageContainer);
   
-                      // Create a new row container after every three images
                       if ((index + 1) % 3 === 0 || index === files.length - 1) {
-                          container.append(rowContainer);
-                          rowContainer = $('<div class="row"></div>');
+                          container.append(rowContainer); // Append the row when it's full or it's the last image
                       }
                   };
-              })(i); // Pass the current index to the self-invoking function
+              })(i);
   
               reader.readAsDataURL(file);
           }
       });
   });
+  
 
   document.addEventListener("DOMContentLoaded", function () {
     const fileInput = document.getElementById("image-input");

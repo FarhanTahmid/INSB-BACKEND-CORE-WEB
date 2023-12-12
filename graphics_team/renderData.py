@@ -1,8 +1,17 @@
 from users.models import Members
 from port.models import Teams,Roles_and_Position
 from system_administration.models import Graphics_Data_Access
-
+import os
+import logging
+from datetime import datetime
+from system_administration.system_error_handling import ErrorHandling
+import traceback
+from .models import Graphics_Link,Graphics_Banner_Image
+from central_events.models import Events
+from django.conf import settings
 class GraphicsTeam:
+
+    logger=logging.getLogger(__name__)
 
     def get_co_ordinator():
         roles = Roles_and_Position.objects.get(is_co_ordinator=True)
@@ -83,4 +92,42 @@ class GraphicsTeam:
             else:
                 return False
         except:
+            return False
+        
+    def add_links_and_images(graphics_drive_link,selected_image,event_id):
+
+        '''This functions adds the links and images to the database for graphics team'''
+
+        try:
+            #Updating the media link. If does not exist then new ones are created
+            try:
+                graphics_link = Graphics_Link.objects.get(event_id = Events.objects.get(pk=event_id))
+                graphics_link.graphics_link = graphics_drive_link
+            except Graphics_Link.DoesNotExist:
+                graphics_link = Graphics_Link.objects.create(event_id = Events.objects.get(pk=event_id),graphics_link = graphics_drive_link)
+
+            graphics_link.save()
+
+            if selected_image != None:
+                upload_image = Graphics_Banner_Image.objects.create(event_id=Events.objects.get(pk=event_id),selected_image = selected_image)
+                upload_image.save()
+            return True
+        except Exception as e:
+            GraphicsTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def remove_image(image_url,event_id):
+        try:
+
+            #Deleting the image that the user wants from the database and from the OS
+
+            image = Graphics_Banner_Image.objects.get(event_id = Events.objects.get(pk = event_id),selected_image = image_url)
+            path = settings.MEDIA_ROOT+str(image.selected_image)
+            os.remove(path)
+            image.delete()
+            return True
+        except Exception as e:
+            GraphicsTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
