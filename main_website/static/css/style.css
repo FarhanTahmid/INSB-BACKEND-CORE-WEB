@@ -1411,7 +1411,6 @@ body.search .page-not-found-block {
 	margin-top: 8px;
 	font-size: 14px;
 	display: block;
-	
 }
 
 .gdlr-item-title-wrapper.gdlr-center {
@@ -1446,7 +1445,6 @@ body.search .page-not-found-block {
 	font-style: normal;
 	text-transform: uppercase;
 	letter-spacing: 1px;
-	color: #FFC72C;
 }
 
 .gdlr-title-item {
@@ -2110,13 +2108,13 @@ input[type="submit"] {
 .gdlr-box-with-icon-item.type-circle .box-with-circle-icon {
 	padding: 18px;
 	display: inline-block;
-	width: 22px;
+	width: 70px;
 	text-align: center;
 	line-height: 22px;
 	position: absolute;
-	-moz-border-radius: 30px;
-	-webkit-border-radius: 30px;
-	border-radius: 30px;
+	-moz-border-radius: 40px;
+	-webkit-border-radius: 40px;
+	border-radius: 40px;
 }
 
 .gdlr-box-with-icon-item.type-circle .box-with-circle-icon>i {
