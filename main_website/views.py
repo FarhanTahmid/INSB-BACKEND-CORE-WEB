@@ -100,9 +100,9 @@ def event_details(request,event_id):
  
     '''Loads details for the corresponding event page on site'''
     get_event = Events.objects.get(id = event_id)
-    event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id).selected_image
+    event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
     event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
-    # get_event=[]
+
     return render(request,"Events/event_description_main.html",{
         "event":get_event,
         'media_url':settings.MEDIA_URL,
