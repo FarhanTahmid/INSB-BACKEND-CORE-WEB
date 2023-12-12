@@ -9,6 +9,7 @@ urlpatterns = [
     #ACTIVITY URLS
     # Event
     path('events/',views.event_homepage,name="event_homepage"),
+    path('events/<int:event_id>/', views.event_details, name="event_details"),
     
     #SOCIETY AG URLS
     path('ras_sbc/',views.rasPage,name="ras_home"),

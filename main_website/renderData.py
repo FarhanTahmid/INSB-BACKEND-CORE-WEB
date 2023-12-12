@@ -5,6 +5,7 @@ from membership_development_team.renderData import MDT_DATA
 from central_events.models import Events
 from port.models import Chapters_Society_and_Affinity_Groups
 from graphics_team.models import Graphics_Banner_Image
+from media_team.models import Media_Images
 class HomepageItems:
 
     def load_all_events():
@@ -17,7 +18,13 @@ class HomepageItems:
             except:
                 dic.update({i:"#"})
         return dic
-
+    
+    def load_event_banner_image(event_id):
+        return Graphics_Banner_Image.objects.get(event_id = event_id)
+    
+    def load_event_gallery_images(event_id):
+        images = Media_Images.objects.filter(event_id = event_id)
+        return images
 
         
 
