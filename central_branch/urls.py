@@ -20,8 +20,11 @@ urlpatterns = [
     #PANEL
     path('panels',views.panel_home,name="panels"),
     #panel details
-    path('panels/<int:panel_id>',views.panel_details,name="panel_details"),
-    
+    path('panels/<int:panel_id>',views.branch_panel_details,name="panel_details"),
+    path('panels/<int:panel_id>/officers',views.branch_panel_officers_tab,name="panel_details_officers"),
+    path('panels/<int:panel_id>/volunteers',views.branch_panel_volunteers_tab,name="panel_details_volunteers"),
+    path('panels/<int:panel_id>/alumni',views.branch_panel_alumni_tab,name="panel_details_alumni"),
+
     
     #for updating value in team member select box in event assigning
     # path('get_updated_options/', views.get_updated_options_for_event_dashboard, name='get_updated_options'),

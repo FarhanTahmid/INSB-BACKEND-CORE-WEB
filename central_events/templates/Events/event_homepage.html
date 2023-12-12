@@ -156,11 +156,20 @@
                       <tbody>
                         {% for event in events %}
                         <tr>
+                          {% if has_access_to_edit_event %}
                             {% if is_branch %}
                             <td><a style="color:blue;" href="{% url 'central_branch:event_dashboard' event.id %}">{{event.event_name }}</a></td>
                             {% else %}
                             <td><a style="color:blue;" href="{% url 'chapters_and_affinity_group:event_dashboard' sc_ag_info.primary event.id %}">{{event.event_name }}</a></td>
                             {% endif %}
+                          {% else %}
+                            {% if is_branch %}
+                              <td>{{event.event_name }}</td>
+                              {% else %}
+                              <td>{{event.event_name }}</td>
+                              {% endif %}
+                          {% endif %}
+                              
                             <td>{{ event.event_organiser.group_name }}</td>
                             <td>{{ event.event_date }}</td>
                             

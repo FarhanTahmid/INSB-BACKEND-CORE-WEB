@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from central_events.models import Events
 from central_branch.renderData import Branch
 from main_website.models import Research_Papers,Blog
-from django.db.models import Q
+from port.renderData import PortData
 from .renderData import HomepageItems
 from django.conf import settings
 from users.models import User
@@ -152,15 +152,14 @@ def current_panel_members(request):
     get_current_panel=Branch.load_current_panel()
     get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
     
-        # TODO:add algo to add SC AG Faculty and EB
+    # TODO:add algo to add SC AG Faculty and Branch Counselor
 
     branch_counselor=[]
     sc_ag_faculty_advisors=[]
     mentors=[]
     branch_chair=[]
     branch_eb=[]
-    sc_ag_chair=[]
-    
+    sc_ag_chair=PortData.get_branch_ex_com_from_sc_ag(request=request)
     for i in get_current_panel_members:
         if (i.position.role_of.primary==1):
             if(i.position.is_faculty):
@@ -202,7 +201,8 @@ def current_panel_members(request):
         'mentors':mentors,
         'chair':branch_chair,
         'eb':branch_eb,
-        'sc_ag_chair':sc_ag_chair
+        'sc_ag_chair':sc_ag_chair,
+        'page_title':"Current Panel of IEEE NSU SB"
     }
     
     return render(request,'Members/Panel/panel_members.html',context)
@@ -210,7 +210,6 @@ def current_panel_members(request):
 def panel_members_page(request,year):
     get_all_panels=Branch.load_all_panels()
     get_panel=Branch.get_panel_by_year(year)
-    
     get_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_panel.pk)
     # TODO:add algo to add SC AG Faculty and EB
     branch_counselor=[]
@@ -218,7 +217,7 @@ def panel_members_page(request,year):
     mentors=[]
     branch_chair=[]
     branch_eb=[]
-    sc_ag_chair=[]
+    sc_ag_chair=PortData.get_branch_ex_com_from_sc_ag_by_year(panel_year=get_panel.year,request=request)
     # alumni_member=[]
     
     for i in get_panel_members:
@@ -265,6 +264,7 @@ def panel_members_page(request,year):
         'mentors':mentors,
         'chair':branch_chair,
         'eb':branch_eb,
-        'sc_ag_chair':sc_ag_chair
+        'sc_ag_chair':sc_ag_chair,
+        'page_title':f"Executive Panel - {year}"
     }
     return render(request,'Members/Panel/panel_members.html',context)
