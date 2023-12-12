@@ -172,9 +172,7 @@ def event_form(request,event_id):
                 folder_drive_link_for_event_pictures = request.POST.get('drive_link_of_event')
                 folder_drive_link_for_pictures_with_logos = request.POST.get('logo_drive_link_of_event')
                 selected_images = request.FILES.getlist('image')
-                print(folder_drive_link_for_event_pictures)
-                print(folder_drive_link_for_pictures_with_logos)
-                print(selected_images)
+
                 if(MediaTeam.add_links_and_images(folder_drive_link_for_event_pictures,folder_drive_link_for_pictures_with_logos,
                                             selected_images,event_id)):
                     messages.success(request,'Saved Changes!')
