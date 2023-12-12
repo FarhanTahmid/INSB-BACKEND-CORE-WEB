@@ -18,6 +18,7 @@ import traceback
 import logging
 from django.http import Http404,HttpResponseBadRequest,JsonResponse
 from datetime import datetime
+from port.renderData import PortData
 from system_administration.system_error_handling import ErrorHandling
 
 logger=logging.getLogger(__name__)
@@ -149,7 +150,7 @@ def event_page(request):
 def event_form(request,event_id):
     
     try:
-
+        sc_ag=PortData.get_all_sc_ag(request=request)
         #Getting media links and images from database. If does not exist then they are set to none
 
         try:
@@ -197,6 +198,7 @@ def event_form(request,event_id):
             'media_images':media_images,
             'media_url':settings.MEDIA_URL,
             'allowed_image_upload':6-number_of_uploaded_images,
+            'all_sc_ag':sc_ag,
 
         }
 
