@@ -5,8 +5,12 @@ from .models import Media_Images,Media_Link
 from django.conf import settings
 from central_events.models import Events
 import os
-import ast
+import logging
+from datetime import datetime
+from system_administration.system_error_handling import ErrorHandling
+import traceback
 class MediaTeam:
+    logger=logging.getLogger(__name__)
 
     def get_member_with_postion(position):
         '''Returns Media Team Members with positions'''
@@ -77,29 +81,55 @@ class MediaTeam:
         
     def add_links_and_images(picture_drive_link,logo_picture_drive_link,selected_images,event_id):
         
-        '''This functions adds the links and images to the database for graphics team'''
-
+        '''This functions adds the links and images to the database for media team'''
         try:
-            media_link = Media_Link.objects.get(event_id = Events.objects.get(pk=event_id))
-            media_link.media_link = picture_drive_link
-            media_link.logo_link = logo_picture_drive_link
+            #Updating the media links and logo links. If does not exist then new ones are created
+            try:
+                media_link = Media_Link.objects.get(event_id = Events.objects.get(pk=event_id))
+                media_link.media_link = picture_drive_link
+                media_link.logo_link = logo_picture_drive_link
 
-        except Media_Link.DoesNotExist:
-            media_link = Media_Link.objects.create(event_id = Events.objects.get(pk=event_id),media_link = picture_drive_link,logo_link = logo_picture_drive_link)
-   
-        media_link.save()
-        
-        if len(selected_images)>0:
+            except Media_Link.DoesNotExist:
+                media_link = Media_Link.objects.create(event_id = Events.objects.get(pk=event_id),media_link = picture_drive_link,logo_link = logo_picture_drive_link)
     
-            uploaded_images = Media_Images.objects.filter(event_id=Events.objects.get(pk=event_id))
-            number_of_uploaded_images = len(uploaded_images)
-            if number_of_uploaded_images>=6:
-                return False
+            media_link.save()
+            
+            if len(selected_images)>0:
                 
-            else:     
-                for image in selected_images:
-                    Image_save = Media_Images.objects.create(event_id = Events.objects.get(pk=event_id),selected_images = image)
-                    Image_save.save()
+                #If images are uploaded then initailly checking if for this event any picture were intially uploaded or not
+                #If not then new image is being added to the database for the event
+
+                uploaded_images = Media_Images.objects.filter(event_id=Events.objects.get(pk=event_id))
+                number_of_uploaded_images = len(uploaded_images)
+                if number_of_uploaded_images>=6:
+                    return False
+                    
+                else:     
+                    for image in selected_images:
+                        Image_save = Media_Images.objects.create(event_id = Events.objects.get(pk=event_id),selected_images = image)
+                        Image_save.save()
+            return True
+        except Exception as e:
+            MediaTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+
+    def remove_image(image_url,event_id):
+        try:
+
+            #Deleting the image that the user wants from the database and from the OS
+
+            image = Media_Images.objects.get(event_id = Events.objects.get(pk = event_id),selected_images = image_url)
+            path = settings.MEDIA_ROOT+str(image.selected_images)
+            os.remove(path)
+            image.delete()
+            return True
+        except Exception as e:
+            MediaTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+
+
 
             
 

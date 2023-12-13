@@ -32,6 +32,13 @@ class Branch:
             messages.error("Can not return Branch ID. Something went wrong!")
             return False
     
+    def get_selected_venues(event_id):
+        lis = []
+        venues = Event_Venue.objects.filter(event_id = event_id)
+        for i in venues:
+            lis.append(i.venue_id.venue_name)
+        return lis
+
     def reset_all_teams():
         '''To remove all members in all teams and assigning them as general memeber'''
         try:
@@ -402,7 +409,7 @@ class Branch:
                     event.event_description = event_description
                     event.super_event_id = SuperEvents.objects.get(id=super_event_id)
                     event.event_date = event_date
-
+                    
             #Clear event type
             event.event_type.clear()
             #Add the event types from event_type_list
@@ -413,6 +420,15 @@ class Branch:
             event.registration_fee_amount = registration_fee_amount
             event.form_link = form_link
             event.save()
+            event_venue = Event_Venue.objects.filter(event_id = event_id)
+            for venues in event_venue:
+                venues.delete()
+            for i in venue_list_for_event:
+                register_venue=Event_Venue(
+                            event_id=Events.objects.get(id=event_id),
+                            venue_id=Venue_List.objects.get(id=i)
+                            )
+                register_venue.save()
 
             if(inter_branch_collaboration_list[0] == 'null'):
                 interbranchcollaborations = InterBranchCollaborations.objects.filter(event_id=event_id)

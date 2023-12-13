@@ -7,7 +7,7 @@
     
     <link rel='stylesheet' href='css/jquery.fancybox.css' type='text/css' media='all' />
 
-    <title>Document</title>
+    <title>Events | {{event.event_name}}</title>
     <style>
         body{
             padding: 0%;
@@ -209,22 +209,24 @@
 <body>
     <section class="banner_gradient">
         <!--Event Banner Image-->
-        <img src="pic.jpg" alt="" class="banner_image">
+        {% if event_banner_image %}
+        <img src="{{media_url}}{{event_banner_image}}" alt="" class="banner_image">
+        {% else %}
+        <div style="height:30px"></div>
+        {% endif %}
         <div class="event_header" style="text-align: left; margin-left: 10%;">
             <!--Event Date and Time-->
-            <h4>Friday,October 12 2023 at 12:00 pm - 12:45 pm UTC +06</h4>
+            {% comment %} <h4>Friday,October 12 2023 at 12:00 pm - 12:45 pm UTC +06</h4> {% endcomment %}
+            <h4>{{event.event_date | date:"l, F d Y"}}</h4>
             <!--Event Header-->
-            <h1 style="margin-top: -2%;">Technical Visit at Cyber-Physical Systems Research Lab</h1>
+            <h1 style="margin-top: -2%;">{{event.event_name}}</h1>
         </div>
         <hr style="width:80%;margin-left:10% ;margin-top: -1%; border: solid .5px black;">
     </section>
     <section class="below_banner">
         <!--Event Description-->
         <div>
-            <p>Technology has significantly impacted our daily lives leading to the emergence of Cyber-Physical Systems (CPS). CPS aims to develop scientific foundations and technologies to integrate the physical world with the cyberspace of computing and communications, enhancing our ability to interact with our surroundings automatically and in real-time.
-            With the IEEE DAY celebrations along with all the advancements and possibilities of improving the technical knowledge of our members and enthusiastic students, IEEE NSU PES Student Branch Chapter in collaboration with IEEE NSU Student Branch and IEEE NSU Student Branch WIE Affinity Group is organizing a Technical Visit at the Cyber-Physical Systems Research Lab of North South University.
-            Technical visits are essential to improve the vision and networking of the technology industry. With the participation of researchers and enthusiastic students on the visit, both the institution and the visitors get introduced to all the machinery parks and technologies of the industry, thus also providing a future collaboration opportunity with the institution. The technical visit will benefit the participants as they will get to know the project goals, academia for vulnerability assessment, impact analysis, system testing, attack-defense exercises, and operator training.
-            The Technical visit will take place on 12th October 2023 at the Cyber-Physical Systems Research Lab SAC 801B.</p>
+            <p>{{event.event_description | safe}}</p>
         </div>
         <div>
             <!--Register Box-->
@@ -232,7 +234,11 @@
                 <div>
                     <div class="inner_box">
                         <h4><i class="fa-solid fa-wallet" style="color: #007cfa;"></i><span style="margin-left: 10px;">COST</span></h4>
-                        <h5>Free</h5>
+                        {% if event.registration_fee %}
+                            <h5>{{event.registration_fee_amount}}</h5>
+                        {% else %}
+                            <h5>Free</h5>
+                        {% endif %}
                     </div>
                     <div class="inner_box">
                         <h4><i class="fa-solid fa-circle-info" style="color: #007cfa;"></i><span style="margin-left: 10px;">MORE INFO</span></h4>
@@ -241,7 +247,7 @@
                     </div>
                     <div class="register">
                         <!--Registration button-->
-                        <a href="" class="register_btn">REGISTER</a>
+                        <a href="{{event.form_link}}" class="register_btn">REGISTER</a>
                     </div>
                 </div>
             </div>
@@ -261,24 +267,11 @@
 
     <!--Gallery-->
     <section class="gallery" style="margin-bottom: 40px;">
+        {% for imageFile in event_gallery_images %}
         <div>
-            <a href="upload/moo04.jpg" data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img src="upload/moo04-400x300.jpg" alt="" width="400" height="300" /></a>
+            <a href="{{media_url}}{{imageFile.selected_images}}" data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img src="{{media_url}}{{imageFile.selected_images}}" alt="" width="400" height="300" /></a>
         </div>
-       <div>
-            <a href="upload/moo06.jpg" data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img src="upload/moo06-400x300.jpg" alt="" width="400" height="300" /></a>
-        </div>
-        <div>
-            <a href="upload/card07.jpg" data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img src="upload/card07-400x300.jpg" alt="" width="400" height="300" /></a>
-        </div>
-        <div>
-            <a href="upload/card05.jpg" data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img src="upload/card05-400x300.jpg" alt="" width="400" height="300" /></a>
-        </div>
-        <div>
-            <a href="upload/card04.jpg" data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img src="upload/card04-400x300.jpg" alt="" width="400" height="300" /></a>
-        </div>
-        <div>
-            <img src="upload/card02-400x300.jpg" alt="" width="400" height="300" />
-        </div>
+        {% endfor %}
     </section>
 
     <!--Leave a reply section-->
