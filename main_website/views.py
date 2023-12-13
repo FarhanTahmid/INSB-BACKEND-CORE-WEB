@@ -7,7 +7,7 @@ from port.renderData import PortData
 from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
 from .renderData import HomepageItems
 from django.conf import settings
-from users.models import User
+from users.models import User,Members
 from users.renderData import PanelMembersData
 from users import renderData as userData
 
@@ -379,8 +379,9 @@ def all_members(request):
     get_all_members = userData.get_all_registered_members(request=request)
     
     context={
-        'page_title':"All Registered Members of IEEE NSU SB",
+        'page_title':"All Registered Members & Member Statistics of IEEE NSU SB",
         'members':get_all_members,
-        
+        'male_count':Members.objects.filter(gender="Male").count(),
+        'female_count':Members.objects.filter(gender="Female").count(),
     }
     return render(request,'Members/All Members/all_members.html',context=context)
