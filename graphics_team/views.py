@@ -43,12 +43,9 @@ def team_homepage(request):
 
 @login_required
 def manage_team(request):
-
     '''This function loads the manage team page for graphics team and is accessable
-    by the co-ordinatior only, unless the co-ordinators gives access to others as well'''
-    # user = request.user
-    # has_access=(Access_Render.team_co_ordinator_access(team_id=GraphicsTeam.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username)
-    # or GraphicsTeam.graphics_manage_team_access(user.username))
+    by the co-ordinatiors and other admin users only, unless the co-ordinators gives access to others as well'''
+
     has_access = GraphicsTeam_Render_Access.get_common_access(request)
     if has_access:
         data_access = GraphicsTeam.load_data_access()
