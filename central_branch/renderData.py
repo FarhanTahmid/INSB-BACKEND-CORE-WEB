@@ -844,6 +844,11 @@ class Branch:
             intraBranchCollaborations = IntraBranchCollaborations.objects.get(event_id=Events.objects.get(id=event_id))
             return intraBranchCollaborations
     
+    def load_insb_organised_events():
+        
+        return Events.objects.filter(event_organiser=5).order_by('-event_date')
+    
+
     def delete_event(event_id):
         ''' This function deletes event from database '''
         try:
