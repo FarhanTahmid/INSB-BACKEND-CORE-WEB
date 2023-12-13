@@ -1,12 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from central_events.models import Events
 from central_branch.renderData import Branch
 from main_website.models import Research_Papers,Blog
 from port.renderData import PortData
+from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
 from .renderData import HomepageItems
 from django.conf import settings
 from users.models import User
+from users.renderData import PanelMembersData
 
 
 # Create your views here.
@@ -210,12 +212,9 @@ def current_panel_members(request):
         }
     else:
         has_current_panel=False
-        context={
-            'has_current_panel':has_current_panel,
-            'panels':get_all_panels,
-            'page_title':"Panels of IEEE NSU SB",
+        get_the_latest_panel_of_branch=Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1)).order_by('-year').first()
 
-        }
+        return redirect('main_website:panel_members_previous',get_the_latest_panel_of_branch.year)
     
     return render(request,'Members/Panel/panel_members.html',context)
 
@@ -281,3 +280,70 @@ def panel_members_page(request,year):
         'page_title':f"Executive Panel - {year}"
     }
     return render(request,'Members/Panel/panel_members.html',context)
+
+def officers_page(request):
+    # get all teams of IEEE NSU Student Branch
+    get_teams=PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+    # get all officers of branch. to get the current officers load the current panel of branch
+    get_current_panel=Branch.load_current_panel()
+    if(get_current_panel is None):
+        # there is no current panel, so there will be no officer, so pass just the team contexts.
+        context={
+        'page_title':'Officers of IEEE NSU Student Branch',
+        'teams':get_teams,
+        }
+    else:
+        get_panel_officers=PanelMembersData.get_officer_members_from_branch_panel(request=request,panel=get_current_panel.pk)
+        co_ordinators=[]
+        incharges=[]
+        for i in get_panel_officers:
+            if(i.member.position.is_co_ordinator):
+                co_ordinators.append(i)
+            else:
+                incharges.append(i)
+        
+        context={
+            'page_title':'Officers of IEEE NSU Student Branch',
+            'teams':get_teams,
+            'co_ordinators':co_ordinators,
+            'incharges':incharges,
+        }
+    return render(request,'Members/Officers/officer_page.html',context=context)
+
+def team_based_officers_page(request,team_primary):
+    # get the team
+    try:
+        team=Teams.objects.get(primary=team_primary)
+        team_name=team.team_name
+    except Teams.DoesNotExist:
+        team_name=""
+    
+    # get all teams of IEEE NSU Student Branch
+    get_teams=PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+    
+    # get current panel of branch to load officers of the team from there
+    get_current_panel=Branch.load_current_panel()
+    if(get_current_panel is None):
+        context={
+            'page_title':f"Officers - {team_name}",
+            'teams':get_teams,
+            }
+    else:
+        # get team members
+        team_members=PanelMembersData.get_members_of_teams_from_branch_panel(request=request,team_primary=team_primary,panel_id=get_current_panel.pk)
+        co_ordinators=[]
+        incharges=[]
+        for member in team_members:
+            if(member.position.is_officer):
+                if(member.position.is_co_ordinator):
+                    co_ordinators.append(member)
+                else:
+                    incharges.append(member)          
+        
+        context={
+            'page_title':f"Officers - {team_name}",
+            'teams':get_teams,
+            'co_ordinators':co_ordinators,
+            'incharges':incharges,
+        }
+    return render(request,'Members/Officers/officer_page.html',context=context)

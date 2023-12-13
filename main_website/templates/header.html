@@ -1,5 +1,27 @@
 {% load static %}
 {% block header %}
+<style>
+    a.active{
+        color:yellow;
+    }
+    
+</style>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get the current page's URL
+        const currentPageUrl = window.location.href;
+      
+        // Find the links in the navigation bar
+        const navLinks = document.querySelectorAll("a");
+      
+        // Loop through the links and add a "active" class to the matching link
+        navLinks.forEach(function (link) {
+          if (link.href === currentPageUrl) {
+            link.classList.add("current-menu-item");
+          }
+        });
+      });
+</script>
 <header class="gdlr-header-wrapper header-style-5-wrapper gdlr-header-with-top-bar">
     <!-- top navigation -->
     <div id="gdlr-header-substitute"></div>
@@ -10,7 +32,7 @@
             <!-- logo -->
             <div class="gdlr-logo">
                 <div class="gdlr-logo-inner">
-                    <a href="#">
+                    <a href="{% url 'main_website:homepage' %}">
                         <img src="{% static 'logos/logo.gif' %}" alt="" style="max-width: 40px;" /> </a>
                 </div>
                 <div class="gdlr-responsive-navigation dl-menuwrapper" id="gdlr-responsive-navigation">
@@ -42,7 +64,7 @@
                             <ul class="dl-submenu">
                                 <li class="menu-item"><a
                                         href="{% url 'main_website:panel_members' %}">Panels</a></li>
-                                <li class="menu-item"><a href="#">Officers</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:officer_page' %}">Officers</a></li>
                                 <li class="menu-item"><a href="#">Core Volunteers</a></li>
                                 <li class="menu-item"><a href="#">Exemplary Members</a></li>
                                 <li class="menu-item"><a href="#">All Members</a></li>
@@ -85,7 +107,7 @@
             <div class="gdlr-navigation-wrapper">
                 <nav class="gdlr-navigation" id="gdlr-main-navigation">
                     <ul id="menu-main-menu-1" class="sf-menu gdlr-main-menu">
-                        <li class="menu-item menu-item-home current-menu-item  gdlr-normal-menu"><a
+                        <li class="menu-item menu-item-home gdlr-normal-menu"><a
                                 href="{% url 'main_website:homepage' %}">Home</a></li>
                         <li class="menu-item menu-item-has-children gdlr-normal-menu"><a href="#"
                                 class="sf-with-ul-pre">Activities</a>
@@ -112,7 +134,7 @@
                             <ul class="sub-menu">
                                 <li class="menu-item"><a
                                         href="{% url 'main_website:panel_members' %}">Panels</a></li>
-                                <li class="menu-item"><a href="#">Officers</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:officer_page' %}">Officers</a></li>
                                 <li class="menu-item"><a href="#">Core Volunteers</a></li>
                                 <li class="menu-item"><a href="#">Exemplary Members</a></li>
                                 <li class="menu-item"><a href="#">All Members</a></li>
