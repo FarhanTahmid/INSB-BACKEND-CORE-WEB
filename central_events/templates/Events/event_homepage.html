@@ -164,6 +164,7 @@
                       <tbody>
                         {% for key, value in events.items %}
                         <tr>
+                          {% if has_access_to_edit_event %}
                             {% if is_branch %}
                             <td><a style="color:blue;" href="{% url 'central_branch:event_dashboard' key.id %}">{{key.event_name }}</a></td>
                             {% else %}
