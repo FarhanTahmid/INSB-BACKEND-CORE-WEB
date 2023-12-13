@@ -8,4 +8,4 @@ class Content_Team_Document(admin.ModelAdmin):
 
 @admin.register(Content_Caption)
 class Content_Caption(admin.ModelAdmin):
-    list_display = ['event_id','caption']
+    list_display = ['event_id','title','caption']

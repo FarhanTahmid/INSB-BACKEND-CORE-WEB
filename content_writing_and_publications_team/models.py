@@ -25,6 +25,7 @@ class Content_Team_Document(models.Model):
 
 class Content_Caption(models.Model):
     event_id = models.ForeignKey(Events,on_delete=models.CASCADE)
+    title = models.CharField(null=True,blank=True,max_length=150)
     caption = RichTextField(null=True,blank=True)
 
     class Meta:
