@@ -37,9 +37,9 @@ class GraphicsTeam:
         '''Gets the team id from the database only for Graphics Team. Not the right approach'''
         
         team=Teams.objects.get(team_name="Graphics")
-        return team
+        return team.id
     
-    def load_manage_team_access():
+    def load_data_access():
         return Graphics_Data_Access.objects.all()
     
     def load_team_members():
@@ -56,9 +56,9 @@ class GraphicsTeam:
         team_id=GraphicsTeam.get_team_id()
         Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
 
-    def graphics_manage_team_access_modifications(manage_team_access,ieee_id):
+    def graphics_manage_team_access_modifications(manage_team_access, event_access, ieee_id):
         try:
-            Graphics_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access)
+            Graphics_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access, event_access=event_access)
             return True
         except Graphics_Data_Access.DoesNotExist:
             return False
