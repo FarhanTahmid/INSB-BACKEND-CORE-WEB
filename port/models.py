@@ -45,6 +45,7 @@ class Roles_and_Position(models.Model):
     is_co_ordinator=models.BooleanField(default=False)
     is_faculty=models.BooleanField(default=False)
     is_mentor=models.BooleanField(default=False)
+    is_core_volunteer=models.BooleanField(default=False)
     
     class Meta:
         verbose_name='Registered positions'

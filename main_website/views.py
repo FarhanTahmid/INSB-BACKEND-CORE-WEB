@@ -347,3 +347,28 @@ def team_based_officers_page(request,team_primary):
             'incharges':incharges,
         }
     return render(request,'Members/Officers/officer_page.html',context=context)
+
+def volunteers_page(request):
+    # get all volunteers of branch. to get the current volunteers load the current panel of branch
+    get_current_panel=Branch.load_current_panel()
+    if(get_current_panel is None):
+        # there is no current panel, so there will be no officer, so pass just the team contexts.
+        context={
+        'page_title':'Officers of IEEE NSU Student Branch',
+        }
+    else:
+        get_panel_officers=PanelMembersData.get_volunteer_members_from_branch_panel(request=request,panel=get_current_panel.pk)
+        core_volunteers=[]
+        team_volunteers=[]
+        for i in get_panel_officers:
+            if(i.member.position.is_core_volunteer):
+                core_volunteers.append(i)
+            else:
+                team_volunteers.append(i)
+        
+        context={
+            'page_title':'Volunteers of IEEE NSU Student Branch',
+            'core_volunteers':core_volunteers,
+            'team_volunteers':team_volunteers,
+        }
+    return render(request,'Members/Volunteers/volunteers_page.html',context=context)

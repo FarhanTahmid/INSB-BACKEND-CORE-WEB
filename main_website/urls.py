@@ -20,5 +20,7 @@ urlpatterns = [
     path('panels/',views.current_panel_members,name="panel_members"),
     path('panels/<str:year>',views.panel_members_page,name="panel_members_previous"),
     path('officers',views.officers_page,name="officer_page"),
-    path('officers/<str:team_primary>',views.team_based_officers_page,name="team_officer")
+    path('officers/<str:team_primary>',views.team_based_officers_page,name="team_officer"),
+    path('volunteers',views.volunteers_page,name="volunteers_page"),
+    
 ]
