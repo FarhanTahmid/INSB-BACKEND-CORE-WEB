@@ -1,3 +1,4 @@
+from central_branch.renderData import Branch
 from users.models import Members
 from port.models import Teams,Roles_and_Position
 from system_administration.models import Graphics_Data_Access
@@ -32,12 +33,12 @@ class GraphicsTeam:
         team_members=Members.objects.filter(team=GraphicsTeam.get_team_id(),position=position)
         return team_members
 
-    def get_team_id():
+    def get_team():
         
-        '''Gets the team id from the database only for Graphics Team. Not the right approach'''
+        '''Gets the team from the database only for Graphics Team. Not the right approach'''
         
-        team=Teams.objects.get(team_name="Graphics")
-        return team.id
+        team=Teams.objects.get(primary=10)
+        return team
     
     def load_data_access():
         return Graphics_Data_Access.objects.all()
@@ -46,7 +47,8 @@ class GraphicsTeam:
         
         '''This function loads all the team members for the Graphics team'''
 
-        load_team_members=Members.objects.filter(team=GraphicsTeam.get_team_id()).order_by('position')
+        # load_team_members=Members.objects.filter(team=GraphicsTeam.get_team_id()).order_by('position')
+        load_team_members=Branch.load_team_members(team_primary=GraphicsTeam.get_team().primary)
         team_members=[]
         for i in range(len(load_team_members)):
             team_members.append(load_team_members[i])
