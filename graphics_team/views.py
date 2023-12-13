@@ -130,7 +130,7 @@ def event_page(request):
 
     '''Only events organised by INSB would be shown on the event page of Graphics Team
        So, only those events are being retrieved from database'''
-    insb_organised_events = Events.objects.filter(event_organiser=5).order_by('-event_date')
+    insb_organised_events = Branch.load_insb_organised_events()
    
    
     context = {'events_of_insb_only':insb_organised_events,
