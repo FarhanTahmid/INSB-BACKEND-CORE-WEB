@@ -57,7 +57,7 @@ h4,
 h5,
 h6,
 .gdlr-title-font {
-	font-family: 'Poppins', sans-serif;
+	font-family: "Raleway";
 }
 
 body,
@@ -65,22 +65,22 @@ input,
 textarea,
 select,
 .gdlr-content-font {
-	font-family: 'Poppins', sans-serif;
+	font-family: "Lato";
 }
 
 .gdlr-info-font,
 .gdlr-modern-portfolio .portfolio-info,
 .gdlr-plain .about-us-caption,
 .gdlr-normal .about-us-caption {
-	font-family: 'Poppins', sans-serif;
+	font-family: "Crete Round";
 }
 
 .gdlr-navigation {
-	font-family: 'Poppins', sans-serif;
+	font-family: "Lato";
 }
 
 .gdlr-slider-item {
-	font-family: 'Poppins', sans-serif;
+	font-family: "Raleway";
 }
 
 body {
@@ -125,7 +125,7 @@ h6 {
 
 .gdlr-header-inner,
 .gdlr-header-wrapper.header-style-2-wrapper .gdlr-header-inner-overlay {
-	background-color: 	#002855;
+	background-color: #02082b;
 }
 
 .gdlr-header-wrapper.header-style-3-wrapper,
@@ -164,7 +164,7 @@ h6 {
 .gdlr-main-menu>li:hover>a,
 .gdlr-main-menu>li.current-menu-item>a,
 .gdlr-main-menu>li.current-menu-ancestor>a {
-	color: #FFC72C;
+	color: #ffda09;
 	opacity: 1;
 	filter: alpha(opacity=100);
 }
@@ -206,7 +206,7 @@ h6 {
 .gdlr-main-menu>li>.sf-mega a:hover,
 .gdlr-main-menu>li>.sf-mega .current-menu-item>a,
 .gdlr-main-menu>li>.sf-mega .current-menu-ancestor>a {
-	color: #000000;
+	background-color: #ffe02e;
 }
 
 .gdlr-main-menu .gdlr-normal-menu li>a.sf-with-ul:after {
@@ -294,7 +294,7 @@ body {
 }
 
 a {
-	color: 	#FFC72C;
+	color: #ffd000;
 }
 
 a:hover {

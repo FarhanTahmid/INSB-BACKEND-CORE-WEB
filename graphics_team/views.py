@@ -12,8 +12,15 @@ from . import renderData
 from django.conf import settings
 from central_events.models import Events
 from .models import Graphics_Banner_Image,Graphics_Link
-import os
+import traceback
+import logging
+from system_administration.system_error_handling import ErrorHandling
+from django.http import Http404,HttpResponseBadRequest
+from datetime import datetime
+from port.renderData import PortData
 
+
+logger=logging.getLogger(__name__)
 # Create your views here.
 @login_required
 def team_homepage(request):
@@ -133,136 +140,59 @@ def event_page(request):
     return render(request,"Events/graphics_team_events.html",context)
 
 @login_required
-def event_form(request,event_ID):
+def event_form(request,event_id):
 
     #Initially loading the events whose  links and images were previously uploaded
     #and can be editible
 
-    event_id = event_ID
-    event = Events.objects.get(id = event_id)
+    # try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        #Getting media links and images from database. If does not exist then they are set to none
+        try:
+            graphics_link = Graphics_Link.objects.get(event_id = Events.objects.get(pk=event_id))
+        except:
+            graphics_link = None
+        try:
+            graphic_banner_image = Graphics_Banner_Image.objects.get(event_id = Events.objects.get(pk=event_id))
+        except:
+            graphic_banner_image = None
 
-    media = Graphics_Link.objects.filter(event_id = event)
-    Img  = Graphics_Banner_Image.objects.filter(event_id = event)
-
-    try:
-        media_link = media[0].graphics_link
-        print(media_link)
-        Img_photo = Img
-        if len(Img)>0:
-            image_exists=True
-        else:
-            image_exists=False
-    except:
-        image_exists=False
-        media_link=None
-        Img_photo=None
-
-    if Img_photo != None:
-        media_exists = True
-    else:
-        media_exists=False
-
-    if request.method == "POST":
-
-        if request.POST.get('add_banner_pic_and_link'):
-            targetted_event = Events.objects.get(id = event_id)
-            drive_link_of_banner_picture = request.POST.get('drive_link_of_graphics')
-            print(drive_link_of_banner_picture)
-            image= request.FILES.getlist('image')
-            print(image)
-
-            if len(image)==0:
-                if media_link!=None:
-                    media_id = media[0].id
-                    extracted_from_table = Graphics_Link.objects.get(id = media_id)
-                    extracted_from_table.graphics_link = drive_link_of_banner_picture
-                    extracted_from_table.save()
-                    return redirect('graphics_team:event_page')
-                else:
-                    try:
-                        links = Graphics_Link.objects.create(
-                        event_id = targetted_event,
-                        graphics_link = drive_link_of_banner_picture,
-                        )
-                        links.save()
-                        messages.success(request,"Successfully Added!")
-                        return redirect('graphics_team:event_page')
-                    except:
-                        print("Error")
-            
-            else:
-                if media_link!=None:
-                    media_id = media[0].id
-                    extracted_from_table = Graphics_Link.objects.get(id = media_id)
-                    extracted_from_table.graphics_link = drive_link_of_banner_picture
-                    extracted_from_table.save()
-                    Image_save = Graphics_Banner_Image.objects.create(
-                    event_id = targetted_event,
-                    selected_image = image[0],
-                    )
-                    Image_save.save()
-                    messages.success(request,"Successfully Added!")
-                    return redirect('graphics_team:event_page')
-                else:
-                    try:
-                        links = Graphics_Link.objects.create(
-                        event_id = targetted_event,
-                        graphics_link = drive_link_of_banner_picture
-                        )
-                        links.save()
-                    
-                        Image_save = Graphics_Banner_Image.objects.create(
-                        event_id = targetted_event,
-                        selected_image = image[0],
-                        )
-                        Image_save.save()
-                        messages.success(request,"Successfully Added!")
-                        return redirect('graphics_team:event_page')
-                    except:
-                        print("Error")
-
-        if request.POST.get('update_link'):
-            targetted_event = Events.objects.get(id = event_id)
-            drive_link_of_banner_picture = request.POST.get('drive_link_of_graphics')
-            print(drive_link_of_banner_picture)
-            try:
-                media_id = media[0].id
-                extracted_from_table = Graphics_Link.objects.get(id = media_id)
-                extracted_from_table.graphics_link = drive_link_of_banner_picture
-                extracted_from_table.save()
-                messages.success(request,"Successfully Added!")
-                return redirect('graphics_team:event_page')
-            except:
-                print("Error")
         
-        if request.POST.get('submitted_changed_picture'):
-            try:
-                picture_id= request.POST.get('ImageID')
-                print(picture_id)
-                picture = Graphics_Banner_Image.objects.get(id=picture_id)
-                new_picture = request.FILES['new_image']
-                print(new_picture)
-                path = settings.MEDIA_ROOT+str(picture.selected_image)
-                os.remove(path)
-                picture.selected_image = new_picture
-                picture.save()
-                return redirect('graphics_team:event_page')
-            except:
-                print("Error")
+        if request.method == "POST":
+
+            if request.POST.get('save'):
+
+                #getting all data from page
+                drive_link_folder = request.POST.get('drive_link_of_graphics')
+                selected_images = request.FILES.get('image')
+                if(GraphicsTeam.add_links_and_images(drive_link_folder,selected_images,event_id)):
+                    messages.success(request,'Saved Changes!')
+                else:
+                    messages.error(request,'Please Fill All Fields Properly!')
+                return redirect("graphics_team:event_form",event_id)
             
+            if request.POST.get('remove_image'):
 
+                #When a particular picture is deleted, it gets the image url from the modal
 
+                image_url = request.POST.get('remove_image')
+                if(GraphicsTeam.remove_image(image_url,event_id)):
+                    messages.success(request,'Saved Changes!')
+                else:
+                    messages.error(request,'Something went wrong')
+                return redirect("graphics_team:event_form",event_id)
 
+        context={
+            'all_sc_ag':sc_ag,
+            'graphic_links' : graphics_link,
+            'graphics_banner_image':graphic_banner_image,
+            'media_url':settings.MEDIA_URL,
 
+        }
 
-
-    context={
-        'event_name':event.event_name,
-        'image_exists':image_exists,
-        'Img':Img_photo,
-        'media_link':media_link,
-        'media_url':settings.MEDIA_URL,
-        'media_exists':media_exists,
-    }
-
-    return render(request,"graphics_team/graphics_event_form.html",context)
+        return render(request,"graphics_team/graphics_event_form.html",context)
+    # except Exception as e:
+    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+    #     # TODO: Make a good error code showing page and show it upon errror
+    #     return HttpResponseBadRequest("Bad Request")
