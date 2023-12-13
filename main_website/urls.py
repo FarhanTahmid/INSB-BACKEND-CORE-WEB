@@ -22,5 +22,6 @@ urlpatterns = [
     path('officers',views.officers_page,name="officer_page"),
     path('officers/<str:team_primary>',views.team_based_officers_page,name="team_officer"),
     path('volunteers',views.volunteers_page,name="volunteers_page"),
+    path('all_members',views.all_members,name="all_members"),
     
 ]

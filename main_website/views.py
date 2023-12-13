@@ -9,6 +9,7 @@ from .renderData import HomepageItems
 from django.conf import settings
 from users.models import User
 from users.renderData import PanelMembersData
+from users import renderData as userData
 
 
 # Create your views here.
@@ -372,3 +373,14 @@ def volunteers_page(request):
             'team_volunteers':team_volunteers,
         }
     return render(request,'Members/Volunteers/volunteers_page.html',context=context)
+
+def all_members(request):
+    # get all registered members of INSB
+    get_all_members = userData.get_all_registered_members(request=request)
+    
+    context={
+        'page_title':"All Registered Members of IEEE NSU SB",
+        'members':get_all_members,
+        
+    }
+    return render(request,'Members/All Members/all_members.html',context=context)
