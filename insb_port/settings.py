@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'chapters_and_affinity_group',
     'central_events',
+    'django_apscheduler',
 ]
 
 MIDDLEWARE = [

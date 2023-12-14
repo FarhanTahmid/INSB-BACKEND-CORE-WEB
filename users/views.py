@@ -18,6 +18,7 @@ from . import email_handler
 from port.renderData import PortData
 from central_events.models import Events
 from django.db.models import Q
+from .scheduler import scheduler
 
 
 
@@ -103,7 +104,7 @@ def dashboard(request):
     '''This function loads all the dashboard activities for the program'''
     
     #### LOOK into registerUser.py for manual input of data from csv. Templates are created there.
-
+    scheduler.start()
     is_eb_or_admin = renderData.is_eb_or_admin(request.user)
     #getting year list for the last 5 years event chart
     years = renderData.getEventNumberStatYear()
