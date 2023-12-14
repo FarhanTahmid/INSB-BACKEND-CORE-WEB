@@ -385,13 +385,16 @@ class MDT_DATA:
         )
         return renewal_list,total_amount
     
-    def check_active_members():
+    def check_active_members(self):
         
         all_users = Members.objects.all()
         for member in all_users:
             is_active = MDT_DATA.get_member_account_status(member.ieee_id)
 
             if is_active:
-                member.ieee_id = True
+                member.is_active_member = True
                 member.save()
+                print("true")
+            print("false")
+            
 

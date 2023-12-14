@@ -22,6 +22,7 @@ import traceback
 import logging
 from system_administration.system_error_handling import ErrorHandling
 
+
 class LoggedinUser:
     
     def __init__(self,user):
@@ -336,8 +337,8 @@ def getMaleFemaleRationAndActiveStatusStats():
 
     all_females = Members.objects.filter(gender="Female").count()
     all_males = Members.objects.filter(gender="Male").count()
-    active_members = recruited_members.objects.filter(ieee_payment_status=True).count()
-    inactive_members = recruited_members.objects.all().count() - active_members
+    active_members = Members.objects.filter(is_active_member=True).count()
+    inactive_members = Members.objects.all().count() - active_members
     total_members = Members.objects.all().count()
     total_list_keys = ['Males','Females','Active Members','Inactive Members']
     total_list_values = [all_males,all_females,active_members,inactive_members]
