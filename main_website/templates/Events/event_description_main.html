@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel='stylesheet' href='css/jquery.fancybox.css' type='text/css' media='all' />
+
+    <title>Events | {{event.event_name}}</title>
+    <style>
+        body{
+            padding: 0%;
+            margin: 0%;
+            font-family: "Open Sans",sans-serif;
+        }
+        .banner_image{
+            height: 80%;
+            width: 80%;
+            margin-top: 1%;
+            margin-bottom: -2%;
+            border-radius: 4px;
+        }
+        .banner_gradient{
+            background-image: linear-gradient(#35a2c7,white);
+            text-align: center;
+        }
+        h1{
+            font-size: 24px;
+        }
+        .box{
+            border:1px solid#ebebeb;
+            background: white;
+            margin-bottom: 6%;
+        }
+        .inner_box{
+            margin: 5% 6%;
+            padding-left: 4%;
+            display: flex;
+            flex-direction: column;
+            background: #f7f7f7; 
+        }
+        .below_banner{
+            display: grid;
+            grid-template-columns: 2.5fr 1fr;
+            gap: 2%;
+            margin: 0% 10%;
+        }
+        .below_banner h5{
+            color: #9d9d9d;
+            margin-left: 30px;
+            margin-top: -20px;
+        }
+        .read_more_btn{
+            text-decoration: none;
+            color: #9d9d9d;
+        }
+        .register_btn{
+            text-decoration: none;
+            margin: 5% 6%;
+            padding: 8% 15%;
+            display: flex;
+            flex-direction: column;
+            background: #007ccd;
+            text-align: center;
+            color: white;
+            font-size: smaller;
+        }
+        .socialmedia_icon{
+            display: flex;
+            justify-content: center;
+            gap: 2%;
+            padding: 5%;
+        }
+        .icon{
+            font-size: 34px;
+        }
+        img{
+            width: 100%;
+            height: 100%;
+        }
+        .leave_reply_section{
+            gap: 2%;
+            margin: 0% 10%;   
+        }
+        .leave_reply_section p{
+            font-size: larger; 
+            font-weight: bold;  
+        }
+        .leave_reply_box{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto;
+            grid-template-areas: 
+            "name email website"
+            "comment comment comment"
+                "null null submit_btn";
+                grid-column-gap: 2%;
+                grid-row-gap: 4%;
+            }
+        #name{
+            grid-area: name;
+        }
+        #email{
+            grid-area: email;
+        }
+        #website{
+            grid-area: website;
+        }
+        #comment{
+            grid-area: comment;
+        }
+        .placement{
+            padding: 1% 2%;
+            font: inherit;
+            font-size: smaller;
+        }
+        .submit_btn{
+            text-decoration: none;
+            margin: 5% 25%;
+            padding: 10px 5px;
+            background: #007ccd;
+            color: white;
+            text-align: center;
+            grid-area: submit_btn;
+        }
+        .gallery{
+            display: grid;
+            grid-template-columns: auto auto auto;
+            justify-content:center;
+            gap: 1%; 
+            margin: 0% 2%; 
+        }
+        /*hover effects*/
+        .read_more_btn:hover{
+            color: #007cfa;
+        }
+        .register_btn:hover{
+            background: #000;
+            transition: .5s;
+        }
+        .submit_btn:hover{
+            background: #ffc938;
+            transition: .5s;
+        }
+        /*media queries*/
+        @media only screen and (max-width: 768px){
+            .below_banner{
+                display: grid;
+                grid-template-columns: auto;
+                grid-template-rows: auto auto;
+                gap: 2%;
+                margin: 0% 10%;
+                font-size: small;
+                margin-bottom: 40px;
+            }
+            .gallery{
+                display: grid;
+                grid-template-columns: auto auto;
+                justify-content:center;
+                gap: 1%;
+            }
+            .leave_reply_box{
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto auto auto;
+            grid-template-areas: 
+            "name"
+            "email" 
+            "website"
+            "comment"
+            "submit_btn";
+                grid-column-gap: 2%;
+                grid-row-gap: 4%;
+            }
+            .leave_reply_section{
+                gap: 2%;
+                margin: 60px 10%;   
+            }
+        }
+        @media only screen and (min-width: 1160px) and (max-width:4000px){
+            .banner_image{
+                height: 100%;
+                width: 65%;
+                margin-bottom: -1%;
+            }
+            
+            .below_banner{
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                gap: 2%;
+                margin: 0% 10%;
+            }
+            .inner_box{
+                font-size: larger;
+            }
+            .register_btn{
+                font-size: 20px;
+            }
+            .banner_gradient h4{
+                margin-bottom: 2%;
+            }
+            .banner_gradient h1{
+                margin-bottom: 2%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="banner_gradient">
+        <!--Event Banner Image-->
+        {% if event_banner_image %}
+        <img src="{{media_url}}{{event_banner_image}}" alt="" class="banner_image">
+        {% else %}
+        <div style="height:30px"></div>
+        {% endif %}
+        <div class="event_header" style="text-align: left; margin-left: 10%;">
+            <!--Event Date and Time-->
+            {% comment %} <h4>Friday,October 12 2023 at 12:00 pm - 12:45 pm UTC +06</h4> {% endcomment %}
+            <h4>{{event.event_date | date:"l, F d Y"}}</h4>
+            <!--Event Header-->
+            <h1 style="margin-top: -2%;">{{event.event_name}}</h1>
+        </div>
+        <hr style="width:80%;margin-left:10% ;margin-top: -1%; border: solid .5px black;">
+    </section>
+    <section class="below_banner">
+        <!--Event Description-->
+        <div>
+            <p>{{event.event_description | safe}}</p>
+        </div>
+        <div>
+            <!--Register Box-->
+            <div class="box">
+                <div>
+                    <div class="inner_box">
+                        <h4><i class="fa-solid fa-wallet" style="color: #007cfa;"></i><span style="margin-left: 10px;">COST</span></h4>
+                        {% if event.registration_fee %}
+                            <h5>{{event.registration_fee_amount}}</h5>
+                        {% else %}
+                            <h5>Free</h5>
+                        {% endif %}
+                    </div>
+                    <div class="inner_box">
+                        <h4><i class="fa-solid fa-circle-info" style="color: #007cfa;"></i><span style="margin-left: 10px;">MORE INFO</span></h4>
+                        <!--READ MORE LINK-->
+                        <h5><a href="" class="read_more_btn" >Read More</a></h5>
+                    </div>
+                    <div class="register">
+                        <!--Registration button-->
+                        <a href="{{event.form_link}}" class="register_btn">REGISTER</a>
+                    </div>
+                </div>
+            </div>
+            <div class="box">
+                    <!--Share event box-->
+                    <h6 style="text-align: center; font-size: small; font-weight: bold;">SHARE THIS EVENT</h6>
+                    <hr style="width:80%;margin-left:10% ;margin-top: -1%; border: solid .5px #ebebeb;">
+                <div class="socialmedia_icon">
+                    <a href=""><i class="fa-brands fa-square-facebook icon" style="color: #3b5996;"></i></a>
+                    <a href=""><i class="fa-brands fa-square-twitter icon" style="color: #00b2ee;"></i></a>
+                    <a href=""><i class="fa-brands fa-linkedin icon" style="color: #457399;"></i></a>
+                    <a href=""><i class="fa-solid fa-square-envelope icon" style="color: #ff5d5e;"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--Gallery-->
+    <section class="gallery" style="margin-bottom: 40px;">
+        {% for imageFile in event_gallery_images %}
+        <div>
+            <a href="{{media_url}}{{imageFile.selected_images}}" data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img src="{{media_url}}{{imageFile.selected_images}}" alt="" width="400" height="300" /></a>
+        </div>
+        {% endfor %}
+    </section>
+
+    <!--Leave a reply section-->
+    <section class="leave_reply_section">      
+            <p>Leave a Reply</p>
+            <form class="leave_reply_box">
+                <!--Name-->
+                <input id="name" class="placement" type="text" placeholder="Name (required)">
+                <!--Email-->
+                <input id="email" class="placement" type="text" placeholder="Email (required)" >
+                <!--website-->
+                <input id="website" class="placement" type="text" placeholder="Website">
+                <!--comment-->
+                <textarea rows="6" id="comment" class="placement" placeholder="Your comment here..."></textarea>
+                <!--submit button-->
+                <a href="" class="submit_btn" name="">SUBMIT</a>
+            </form>
+    </section>
+
+    <script type='text/javascript' src='js/jquery.js'></script>
+    <script type='text/javascript' src='js/jquery-migrate.min.js'></script>
+    <script type='text/javascript' src='js/scripts.js'></script>
+    <script type='text/javascript' src='js/superfish.js'></script>
+    <script type='text/javascript' src='js/hoverIntent.min.js'></script>
+    <script type='text/javascript' src='js/modernizr.custom.js'></script>
+    <script type='text/javascript' src='js/jquery.dlmenu.js'></script>
+    <script type='text/javascript' src='js/jquery.easing.js'></script>
+    <script type='text/javascript' src='js/jquery.fancybox.pack.js'></script>
+    <script type='text/javascript' src='js/helpers/jquery.fancybox-media.js'></script>
+    <script type='text/javascript' src='js/helpers/jquery.fancybox-thumbs.js'></script>
+    <script type='text/javascript' src='js/jquery.flexslider.js'></script>
+    <script type='text/javascript' src='js/jquery.isotope.min.js'></script>
+    <script type='text/javascript' src='js/gdlr-script.js'></script>
+    <script type='text/javascript' src='js/jquery.transit.min.js'></script>
+    <script type='text/javascript' src='js/gdlr-portfolio-script.js'></script>
+</body>
+</html>

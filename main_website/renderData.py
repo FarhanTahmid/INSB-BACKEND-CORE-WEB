@@ -3,8 +3,35 @@ from django.http import HttpResponseServerError
 from users.models import Members
 from membership_development_team.renderData import MDT_DATA
 from central_events.models import Events
+from port.models import Chapters_Society_and_Affinity_Groups
+from graphics_team.models import Graphics_Banner_Image
+from media_team.models import Media_Images
 class HomepageItems:
+
+    def load_all_events():
+        dic = {}
+        events =  Events.objects.filter(publish_in_main_web= True).order_by('-event_date')
+        for i in events:
+            try:
+                event = Graphics_Banner_Image.objects.get(event_id = i.pk)
+                dic.update({i:event.selected_image})
+            except:
+                dic.update({i:"#"})
+        return dic
     
+    def load_event_banner_image(event_id):
+        try:
+            return Graphics_Banner_Image.objects.get(event_id = event_id).selected_image
+        except:
+            return False
+    
+    def load_event_gallery_images(event_id):
+        return Media_Images.objects.filter(event_id = event_id)
+
+        
+
+
+
     def getHomepageBannerItems():
         try:
             return HomePageTopBanner.objects.all()

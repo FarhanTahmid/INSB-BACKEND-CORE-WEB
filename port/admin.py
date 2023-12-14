@@ -9,7 +9,7 @@ class Roles(admin.ModelAdmin):
     list_display= ['id','role','role_of','is_eb_member','is_mentor','is_sc_ag_eb_member','is_officer','is_co_ordinator','is_faculty']
 @admin.register(Chapters_Society_and_Affinity_Groups)
 class Chapter_Society(admin.ModelAdmin):
-    list_display=['id','group_name','primary']
+    list_display=['id','group_name','primary','short_form']
     
 from .models import Panels  
 @admin.register(Panels)

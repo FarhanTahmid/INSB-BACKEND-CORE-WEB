@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from port.renderData import PortData
 from users import renderData
+from django.http import HttpResponse
 from .get_sc_ag_info import SC_AG_Info
 from .renderData import Sc_Ag
 from .manage_access import SC_Ag_Render_Access
@@ -114,12 +115,12 @@ def sc_ag_panels(request,primary):
                                             sc_ag_primary=primary,tenure_year=tenure_year)
               ):
                 return redirect('chapters_and_affinity_group:sc_ag_panels',primary)  
-    
+    panel_edit_access=SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary)
     context={
         'all_sc_ag':sc_ag,
         'sc_ag_info':get_sc_ag_info,
         'panels':all_panels,
-        
+        'panel_edit_access':panel_edit_access,
     }
     return render(request,'Panels/panel_homepage.html',context=context)
 
@@ -225,7 +226,7 @@ def sc_ag_panel_details(request,primary,panel_pk):
                 )):
                     return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
 
-                
+               
         context={
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
@@ -233,7 +234,9 @@ def sc_ag_panel_details(request,primary,panel_pk):
             'tenure_time':tenure_time,
             'sc_ag_members':sc_ag_members,
             'sc_ag_eb_members':sc_ag_eb_members,
-            'sc_ag_eb_positions':SC_AG_Info.get_sc_ag_executive_positions(request=request,sc_ag_primary=primary)
+            'sc_ag_eb_positions':SC_AG_Info.get_sc_ag_executive_positions(request=request,sc_ag_primary=primary),
+            'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
+            'member_details_access':SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary),
         }
         return render(request,'Panels/sc_ag_executive_members_tab.html',context=context)
     except Exception as e:
@@ -287,6 +290,8 @@ def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
             'sc_ag_officer_member':sc_ag_officer_members_in_panel,
             'sc_ag_officer_positions':SC_AG_Info.get_sc_ag_officer_positions(request=request,sc_ag_primary=primary),
             'sc_ag_teams':SC_AG_Info.get_teams_of_sc_ag(request=request,sc_ag_primary=primary),
+            'member_details_access':SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary),
+            'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
 
         }
         return render(request,'Panels/sc_ag_officer_members_tab.html',context=context)
@@ -347,6 +352,9 @@ def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
             'sc_ag_volunteer_positions':sc_ag_volunteer_positions,
             'sc_ag_teams':SC_AG_Info.get_teams_of_sc_ag(request=request,sc_ag_primary=primary),
             'sc_ag_volunteer_members':sc_ag_volunteer_members_in_panel,
+            'member_details_access':SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary),
+            'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
+
         }
         return render(request,'Panels/sc_ag_volunteer_members_tab.html',context=context)
     except Exception as e:
@@ -396,7 +404,7 @@ def sc_ag_membership_renewal_sessions(request,primary):
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'sessions':sessions,
-            'is_branch':False,
+            'is_branch':False,            
         }
         return render(request,"Renewal/renewal_homepage.html",context=context)
     except Exception as e:
@@ -407,29 +415,34 @@ def sc_ag_membership_renewal_sessions(request,primary):
 
 def sc_ag_renewal_session_details(request,primary,renewal_session):
     try:
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-        # get the session
-        renewal_session=Renewal_Sessions.objects.get(pk=renewal_session)
-        
-        if(int(primary)==2):
-            get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,pes_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
-        elif(int(primary)==3):
-            get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,ras_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
-        elif(int(primary)==4):
-            get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,ias_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
-        elif(int(primary)==5):
-            get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,wie_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+        if(SC_Ag_Render_Access.access_for_membership_renewal_access(request=request,sc_ag_primary=primary)):
+            
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+            # get the session
+            renewal_session=Renewal_Sessions.objects.get(pk=renewal_session)
+            
+            if(int(primary)==2):
+                get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,pes_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+            elif(int(primary)==3):
+                get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,ras_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+            elif(int(primary)==4):
+                get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,ias_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+            elif(int(primary)==5):
+                get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,wie_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
 
-        context={
-            'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info,
-            'is_branch':False,
-            'session_id':renewal_session.pk,
-            'session_info':renewal_session,
-            'requests':get_renewal_requests,
-        }
-        return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context=context)
+            context={
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'is_branch':False,
+                'session_id':renewal_session.pk,
+                'session_info':renewal_session,
+                'requests':get_renewal_requests,
+            }
+            return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context=context)
+        else:
+            return render(request,"access_denied.html")
+
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -476,79 +489,84 @@ def get_sc_ag_renewal_stats(request):
         
 @login_required
 def sc_ag_manage_access(request,primary):
-    # get sc ag info
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+    try:
+        if(SC_Ag_Render_Access.access_for_manage_access(request=request,sc_ag_primary=primary)):
+            # get sc ag info
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+            
+            # get SC AG members
+            get_sc_ag_members=SC_AG_Info.get_sc_ag_members(request=request,sc_ag_primary=primary)
+            # get data access Members
+            get_data_access_members=Sc_Ag.get_data_access_members(request=request,sc_ag_primary=primary)
+            
+            if(request.method=="POST"):
+                # Adding member to data access Table
+                if(request.POST.get('add_data_access_member')):
+                    member_select_list=request.POST.getlist('member_select')
+                    if(Sc_Ag.add_sc_ag_member_to_data_access(request=request,member_list=member_select_list,sc_ag_primary=primary)):
+                        return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+                # Updating view access for data access member
+                if(request.POST.get('access_update')):
+                    member=request.POST['access_ieee_id']
+                    
+                    # data access values
+                    member_details_access=False
+                    create_event_access=False
+                    event_details_edit_access=False
+                    panel_edit_access=False
+                    membership_renewal_access=False
+                    manage_access=False
+                    
+                    # get values from template and change according to it
+                    if(request.POST.get('member_details_access') is not None):
+                        member_details_access=True
+                    if(request.POST.get('create_event_access') is not None):
+                        create_event_access=True
+                    if(request.POST.get('event_details_edit_access') is not None):
+                        event_details_edit_access=True
+                    if(request.POST.get('panel_edit_access') is not None):
+                        panel_edit_access=True
+                    if(request.POST.get('membership_renewal_access') is not None):
+                        membership_renewal_access=True
+                    if(request.POST.get('manage_access') is not None):
+                        manage_access=True
+                    
+                    # sending values to functions as kwargs. To further addition to Data access just pass the attribute of model=attribute value(e.g:member_details_access=member_details_access(True/False)) to the function
+                    if(Sc_Ag.update_sc_ag_member_access(request=request,member=member,sc_ag_primary=primary,
+                                                        member_details_access=member_details_access,
+                                                        create_event_access=create_event_access,
+                                                        event_details_edit_access=event_details_edit_access,
+                                                        panel_edit_access=panel_edit_access,
+                                                        membership_renewal_access=membership_renewal_access,
+                                                        manage_access=manage_access)):
+                        return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+                    else:
+                        return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+
+                # remove member from data access
+                if(request.POST.get('remove_from_data_access')):
+                    member_to_remove=request.POST['access_ieee_id']
+                    
+                    if(Sc_Ag.remove_member_from_data_access(request=request,member=member_to_remove,sc_ag_primary=primary)):
+                        return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+                    else:
+                        return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)          
+            context={
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'sc_ag_members':get_sc_ag_members,
+                'data_access_members':get_data_access_members,
+            }
+            return render(request,'Manage Access/sc_ag_manage_access.html',context=context)       
+        else:
+            return render(request,'access_denied.html')
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
     
-    # get SC AG members
-    get_sc_ag_members=SC_AG_Info.get_sc_ag_members(request=request,sc_ag_primary=primary)
-    # get data access Members
-    get_data_access_members=Sc_Ag.get_data_access_members(request=request,sc_ag_primary=primary)
-    
-    if(request.method=="POST"):
-        # Adding member to data access Table
-        if(request.POST.get('add_data_access_member')):
-            member_select_list=request.POST.getlist('member_select')
-            if(Sc_Ag.add_sc_ag_member_to_data_access(request=request,member_list=member_select_list,sc_ag_primary=primary)):
-                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
-        # Updating view access for data access member
-        if(request.POST.get('access_update')):
-            member=request.POST['access_ieee_id']
-            
-            # data access values
-            member_details_access=False
-            create_event_access=False
-            event_details_edit_access=False
-            panel_edit_access=False
-            membership_renewal_access=False
-            manage_access=False
-            
-            # get values from template and change according to it
-            if(request.POST.get('member_details_access') is not None):
-                member_details_access=True
-            if(request.POST.get('create_event_access') is not None):
-                create_event_access=True
-            if(request.POST.get('event_details_edit_access') is not None):
-                event_details_edit_access=True
-            if(request.POST.get('panel_edit_access') is not None):
-                panel_edit_access=True
-            if(request.POST.get('membership_renewal_access') is not None):
-                membership_renewal_access=True
-            if(request.POST.get('manage_access') is not None):
-                manage_access=True
-            
-            # sending values to functions as kwargs. To further addition to Data access just pass the attribute of model=attribute value(e.g:member_details_access=member_details_access(True/False)) to the function
-            if(Sc_Ag.update_sc_ag_member_access(request=request,member=member,sc_ag_primary=primary,
-                                                member_details_access=member_details_access,
-                                                create_event_access=create_event_access,
-                                                event_details_edit_access=event_details_edit_access,
-                                                panel_edit_access=panel_edit_access,
-                                                membership_renewal_access=membership_renewal_access,
-                                                manage_access=manage_access)):
-                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
-            else:
-                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
-
-        # remove member from data access
-        if(request.POST.get('remove_from_data_access')):
-            member_to_remove=request.POST['access_ieee_id']
-            
-            if(Sc_Ag.remove_member_from_data_access(request=request,member=member_to_remove,sc_ag_primary=primary)):
-                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
-            else:
-                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
-
-                
-
-                
-    context={
-        'all_sc_ag':sc_ag,
-        'sc_ag_info':get_sc_ag_info,
-        'sc_ag_members':get_sc_ag_members,
-        'data_access_members':get_data_access_members,
-    }
-    return render(request,'Manage Access/sc_ag_manage_access.html',context=context)       
-
 @login_required
 def sc_ag_renewal_excel_sheet(request,primary,renewal_session):
     try:
@@ -575,7 +593,7 @@ def event_control_homepage(request,primary):
         has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
         
         #loading all events for society affinity groups now
-        events= Branch.load_all_events_for_groups(primary)
+        events= Branch.load_all_inter_branch_collaborations_with_events(primary)
         
         if request.method=="POST":
             if request.POST.get('add_event_type'):
@@ -597,6 +615,11 @@ def event_control_homepage(request,primary):
             'is_branch':is_branch,
             'has_access_to_create_event':has_access_to_create_event,
             'events':events,
+            'has_access_to_create_event':SC_Ag_Render_Access.access_for_create_event(request=request,sc_ag_primary=primary),
+            # TODO:
+            # if dont have event edit access, make people redirect to event in main web
+            'has_access_to_edit_event':SC_Ag_Render_Access.access_for_event_details_edit(request=request,sc_ag_primary=primary),
+            
         }
         return render(request,"Events/event_homepage.html",context)
     except Exception as e:
@@ -607,6 +630,7 @@ def event_control_homepage(request,primary):
     
 @login_required
 def event_description(request,primary,event_id):
+    
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
@@ -622,9 +646,9 @@ def event_description(request,primary,event_id):
             intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
             # Checking if event has collaborations
             hasCollaboration=False
-            if(len(interBranchCollaborations)>0 and len(intraBranchCollaborations)>0):
+            if(len(interBranchCollaborations)>0 or intraBranchCollaborations):
                 hasCollaboration=True
-          
+            
             #get_all_team_name = Branch.load_teams()
             get_event_details = Events.objects.get(id = event_id)
             #print(get_event_details.super_event_name.id)
@@ -639,6 +663,8 @@ def event_description(request,primary,event_id):
                     else:
                         messages.error(request,"Something went wrong while removing the event!")
                         return redirect('chapters_and_affinity_group:event_control_homepage',primary)
+                
+
         context={
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
@@ -689,9 +715,6 @@ def super_event_creation(request, primary):
                 messages.info(request,"New Super Event Added Successfully")
                 return redirect('chapters_and_affinity_group:event_control_homepage', primary)
             
-            elif (request.POST.get('cancel')):
-                return redirect('chapters_and_affinity_group:event_control_homepage', primary)
-            
         return render(request,"Events/Super Event/super_event_creation_form.html", context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -734,14 +757,14 @@ def event_creation_form_page(request,primary):
                 super_event_id=request.POST.get('super_event')
                 event_name=request.POST['event_name']
                 event_description=request.POST['event_description']
-                event_type = request.POST['event_type']
+                event_type_list = request.POST.getlist('event_type')
                 event_date=request.POST['event_date']
             
                 #It will return True if register event page 1 is success
                 get_event=Branch.register_event_page1(
                     super_event_id=super_event_id,
                     event_name=event_name,
-                    event_type=event_type,
+                    event_type_list=event_type_list,
                     event_description=event_description,
                     event_date=event_date,
                     event_organiser=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
@@ -753,8 +776,6 @@ def event_creation_form_page(request,primary):
                     #if the method returns true, it will redirect to the new page
                     return redirect('chapters_and_affinity_group:event_creation_form2',primary,get_event)
 
-            elif(request.POST.get('cancel')):
-                return redirect('chapters_and_affinity_group:event_control_homepage',primary)
         return render(request,'Events/event_creation_form.html',context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -819,7 +840,6 @@ def event_creation_form_page3(request,primary,event_id):
             'permission_criterias':permission_criterias,
             'all_sc_ag':sc_ag,
             'is_branch':is_branch,
-            'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
         }
         if request.method=="POST":
@@ -843,4 +863,114 @@ def event_creation_form_page3(request,primary,event_id):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+    
+
+@login_required
+def event_edit_form(request, primary, event_id):
+
+    ''' This function loads the edit page of events '''
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        is_branch = False
+        is_flagship_event = Branch.is_flagship_event(event_id)
+        is_event_published = Branch.load_event_published(event_id)
+        is_registraion_fee_true = Branch.is_registration_fee_required(event_id)
+        #Get event details from databse
+        event_details = Events.objects.get(pk=event_id)
+
+        if(request.method == "POST"):
+
+            if('add_venues' in request.POST):
+                venue = request.POST.get('venue')
+                if(Branch.add_event_venue(venue)):
+                    messages.success(request, "Venue created successfully")
+                else:
+                    messages.error(request, "Something went wrong while creating the venue")
+                return redirect('chapters_and_affinity_group:event_edit_form', primary, event_id)
+                
+            if('update_event' in request.POST):
+                ''' Get data from form and call update function to update event '''
+
+                form_link = request.POST.get('drive_link_of_event')
+                publish_event_status = request.POST.get('publish_event')
+                flagship_event_status = request.POST.get('flagship_event')
+                registration_event_status = request.POST.get('registration_fee')
+                event_name=request.POST['event_name']
+                event_description=request.POST['event_description']
+                super_event_id=request.POST.get('super_event')
+                event_type_list = request.POST.getlist('event_type')
+                event_date=request.POST['event_date']
+                inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
+                intra_branch_collaboration=request.POST['intra_branch_collaboration']
+                venue_list_for_event=request.POST.getlist('event_venues')
+
+                #Checking to see of toggle button is on/True or off/False
+                publish_event = Branch.button_status(publish_event_status)
+                flagship_event = Branch.button_status(flagship_event_status)
+                registration_fee = Branch.button_status(registration_event_status)
+
+                #if there is registration fee then taking the amount from field
+                if registration_fee:
+                    registration_fee_amount = int(request.POST.get('registration_fee_amount'))
+                else:
+                    registration_fee_amount = 0
+
+                #Check if the update request is successful
+                if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
+                                               flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,form_link = form_link)):
+                    messages.success(request,f"EVENT: {event_name} was Updated successfully")
+                    return redirect('chapters_and_affinity_group:event_edit_form',primary, event_id) 
+                else:
+                    messages.error(request,"Something went wrong while updating the event!")
+                    return redirect('chapters_and_affinity_group:event_edit_form',primary, event_id)
+
+        form = EventForm({'event_description' : event_details.event_description})
+
+        #loading super/mother event at first and event categories for depending on which group organised the event
+        super_events=Branch.load_all_mother_events()
+        event_types=Branch.load_all_event_type_for_groups(event_details.event_organiser.primary)
+
+        inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+
+        # Get collaboration details
+        interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
+        intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
+        selected_venues = Branch.get_selected_venues(event_id=event_id)
+        # Checking if event has collaborations
+        hasCollaboration=False
+        if(len(interBranchCollaborations)>0):
+            hasCollaboration=True
+
+        interBranchCollaborationsArray = []
+        for i in interBranchCollaborations.all():
+            interBranchCollaborationsArray.append(i.collaboration_with)
+
+        #loading all venues from the venue list from event management team database
+        venues=Events_And_Management_Team.getVenues()
+
+        context={
+            'all_sc_ag' : sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'is_branch' : is_branch,
+            'event_details' : event_details,
+            'form' : form,
+            'super_events' : super_events,
+            'event_types' : event_types,
+            'inter_branch_collaboration_options' : inter_branch_collaboration_options,
+            'interBranchCollaborations':interBranchCollaborationsArray,
+            'intraBranchCollaborations':intraBranchCollaborations,
+            'hasCollaboration' : hasCollaboration,
+            'venues' : venues,
+            'is_event_published':is_event_published,
+            'is_flagship_event':is_flagship_event,
+            'is_registration_fee_required':is_registraion_fee_true,
+            'selected_venues':selected_venues,
+        }
+
+        return render(request, 'Events/event_edit_form.html', context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return HttpResponseBadRequest("Bad Request")

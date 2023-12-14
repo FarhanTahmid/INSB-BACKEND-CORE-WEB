@@ -23,18 +23,18 @@
                                     <select multiple class="form-control" name="inter_branch_collaboration">
                                     <option selected value="null">--------------------</option>
                                     {% for inter_branch_collaboration_option in inter_branch_collaboration_options %}
-                                        <option value={{inter_branch_collaboration_option.id}}>
+                                        <option value={{inter_branch_collaboration_option.primary}}>
                                         {{inter_branch_collaboration_option.group_name}}</option>
                                     {% endfor %}
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Intra Branch Collaboration With: <span style="color:red">*<span></label>
+                                    <label>Intra Branch Collaboration With: (Add comma to add multiple options)</label>
                                     <input
                                         placeholder="Name of the Branches/Organizations"
                                         class="form-control w-75"
                                         type="text"
-                                        name="intra_branch_collaboration"
+                                        name="intra_branch_collaboration"                                        
                                         />
                                 </div>
                                     

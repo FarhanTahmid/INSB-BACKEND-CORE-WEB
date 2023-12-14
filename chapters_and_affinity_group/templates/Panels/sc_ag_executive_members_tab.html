@@ -192,6 +192,7 @@
             {% endif %}
             <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">Panel Duration:<span style="color:#00629B;"> {{tenure_time}} </span></b></h5>
             <br>
+            {% if panel_edit_access %}
             <div style="justify-content:center;text-align:center;">  
                 <div class="btn-container">
                     <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-f" ui-toggle-class="bounce" ui-target="#animate">Delete Panel</button>
@@ -205,6 +206,8 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
+            
             <br>
             <br>
 
@@ -230,10 +233,11 @@
                     <!--Executive Commitee Table For the Panel-->
                     <div class="box">
                         <div class="box-header">
-                            
+                            {% if panel_edit_access %}
                             <div style="text-align:right;">
-                            <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add Executive Member</button>
+                                <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add Executive Member</button>
                             </div>
+                            {% endif %}
                             <small>This table holds the data of Executive Members in the panel</small>
                             <small style="color:green;"><span style="color:red;">* </span>Make this panel the current Panel from Panel Settings if we wish to add members in the current team as well.</small>
                             <br>
@@ -248,24 +252,33 @@
                                 <th style="text-align:center;">Name</th>
                                 <th style="text-align:center;">IEEE Email</th>
                                 <th style="text-align:center;">Current Position</th>
+                                {% if panel_edit_access %}
                                 <th style="text-align:center;">Remove Member?</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
                             
                                 {% for member in sc_ag_eb_members %}
                                 <tr>
+                                    {% if member_details_access %}
                                     <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.member.ieee_id %}">{{member.member.ieee_id}}</a></td>
+                                    {% else %}
+                                    <td>{{member.member.ieee_id}}</td>
+                                    {% endif %}
                                     <td>{{ member.member.name  }}</td>
                                     <td>{{member.member.email_ieee}}</td>
                                     <td>{{member.position}}</td>
+                                    {% if panel_edit_access %}
                                     <td>
-                                    <form method="POST">
-                                        {% csrf_token %}
-                                            <input class="btn btn-outline b-danger text-danger" name="remove_member" type="submit" value="Remove Member">
-                                            <input type="hidden" name="remove_panel_member" value={{member.member.ieee_id}}>
-                                        </form>
+                                        <form method="POST">
+                                            {% csrf_token %}
+                                                <input class="btn btn-outline b-danger text-danger" name="remove_member" type="submit" value="Remove Member">
+                                                <input type="hidden" name="remove_panel_member" value={{member.member.ieee_id}}>
+                                            </form>
                                     </td>
+                                    {% endif %}
+                                    
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -382,9 +395,11 @@
                                 <div class="row">
                                     <div class="col-md">
                                         <div class="form-group">
-                                            <label for="exampleInputPassword3">Tenure</label>
+                                            <label for="exampleInputPassword3">Tenure</label><br>
+                                            <small style="color:red;">You must name the Panels as shown in the box. There must be no space.</small>
+
                                             <input
-                                                placeholder="Panel Tenure"
+                                                placeholder="E.g: 2023-2024"
                                                 class="form-control w-75"
                                                 type="text"
                                                 name="panel_tenure"

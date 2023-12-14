@@ -1,6 +1,7 @@
 import logging
 import traceback
 from django.http import JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -126,6 +127,9 @@ def team_details(request,primary,name):
                         messages.error(request,"Member couldn't be added!")
                     elif(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)==DatabaseError):
                         messages.error(request,"An internal Database Error Occured! Please try again!")
+                    elif(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position) is None):
+                        messages.info(request,"You need to make a Panel that is current to add members to Teams!")
+
                 return redirect('central_branch:team_details',primary,name)
             
         if(request.POST.get('remove_member')):
@@ -203,47 +207,27 @@ def panel_home(request):
     
     return render(request,"Panel/panel_homepage.html",context)
 
-@login_required
-def panel_details(request,panel_id):
-    # Load the panel information
-    panel_info = Branch.load_panel_by_id(panel_id)
-    # Load the Members data associated with the panel
-    panel_members=Branch.load_panel_members_by_panel_id(panel_id=panel_id)
-    # Creating list to get different types of members
-    eb_member=[]
-    officer_member=[]
-    faculty_member=[]
-    volunteer_members=[]
-    alumni_members=[]
-    
-    for i in panel_members:
-        # if the member position is eb_member, avoiding alumni member with none clause
-        if((i.member is not None) and i.position.is_eb_member):
-            eb_member.append(i)
-        # if the member position is officer member
-        elif(i.position.is_officer):
-            officer_member.append(i)
-        # if the member position is faculty member
-        elif(i.position.is_faculty):
-            faculty_member.append(i)
-        elif(i.member is None):
-            alumni_members.append(i)
-        else:
-        # generally add rest of the members as volunteers as one can only be added to Panel Member list if he is in any position or team. 
-            volunteer_members.append(i)
-    
-    all_insb_members=port_render.get_all_registered_members(request)
-    all_alumni_members=Alumnis.getAllAlumns()
 
-    if request.method=="POST":
-        '''Block of code for Executive Members'''
-        
+@login_required
+def branch_panel_details(request,panel_id):
+    # get panel information
+    panel_info = Branch.load_panel_by_id(panel_id)
+    # get panel tenure time
+    if(panel_info.panel_end_time is None):
+        present_date=datetime.now()
+        tenure_time=present_date.date()-panel_info.creation_time.date()
+    else:
+        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+    # get all insb members
+    all_insb_members=port_render.get_all_registered_members(request)
+    
+    if(request.method=="POST"):
         # Delete panel
         if(request.POST.get('delete_panel')):
             if(Branch.delete_panel(request,panel_id)):
                 return redirect('central_branch:panels')
         
-        # Save changes to the Panel
+        # Update Panel Settings
         if(request.POST.get('save_changes')):
             panel_tenure=request.POST.get('panel_tenure')
             current_panel_check=request.POST.get('current_panel_check')
@@ -256,29 +240,9 @@ def panel_details(request,panel_id):
             if(panel_end_date==""):
                 panel_end_date=None
             
-            panel_obj=Panels.objects.get(pk=panel_id)
-
-            if(current_panel_check):
-                # if current panel check is true that means we need to mark other panels current as False
-                try:
-                    Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1),current=True).update(current=False)
-                    # updating the panel to be the current one
-                    panel_obj.year=panel_tenure
-                    panel_obj.current=True
-                    panel_obj.creation_time=panel_start_date
-                    panel_obj.panel_end_time=panel_end_date
-                    panel_obj.save()
-                    messages.success(request,"Successfully Updated Panel Informations")
-                    return redirect('central_branch:panel_details',panel_id)
-                except:
-                    messages.error(request,"Something went wrong while making the panel current panel")
+            if(Branch.update_panel_settings(request=request,panel_tenure=panel_tenure,panel_end_date=panel_end_date,is_current_check=current_panel_check,panel_id=panel_id,panel_start_date=panel_start_date)):
+                return redirect('central_branch:panel_details',panel_id)
             else:
-                panel_obj.year=panel_tenure
-                panel_obj.current=False
-                panel_obj.creation_time=panel_start_date
-                panel_obj.panel_end_time=panel_end_date
-                panel_obj.save()
-                messages.success(request,"Successfully Updated Panel Informations")
                 return redirect('central_branch:panel_details',panel_id)
             
         # Check whether the add executive button was pressed
@@ -290,7 +254,7 @@ def panel_details(request,panel_id):
 
             if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=1)): #team_primary=1 as branchs primary is always 1
                 return redirect('central_branch:panel_details',panel_id)
-            
+        
         # check whether the remove member button was pressed
         if (request.POST.get('remove_member')):
             # get ieee_id of the member
@@ -298,9 +262,32 @@ def panel_details(request,panel_id):
             # remove member
             if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
                 return redirect('central_branch:panel_details',panel_id)
-        
-        '''Block of code for Officer Members'''
 
+        
+    context={
+        'panel_id':panel_id,
+        'panel_info':panel_info,
+        'tenure_time':tenure_time,
+        'insb_members':all_insb_members,
+        'positions':PortData.get_all_executive_positions_of_branch(request=request,sc_ag_primary=1),#as this is for branch, the primary=1
+        'eb_member':PanelMembersData.get_eb_members_from_branch_panel(request=request,panel=panel_id),
+    }
+    return render(request,'Panel/panel_details.html',context=context)
+
+@login_required
+def branch_panel_officers_tab(request,panel_id):
+    # get panel information
+    panel_info = Branch.load_panel_by_id(panel_id)
+     # get panel tenure time
+    if(panel_info.panel_end_time is None):
+        present_date=datetime.now()
+        tenure_time=present_date.date()-panel_info.creation_time.date()
+    else:
+        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+    # get all insb members
+    all_insb_members=port_render.get_all_registered_members(request)
+    
+    if(request.method=="POST"):
         # Check whether the add officer button was pressed
         if(request.POST.get('add_officer_to_panel')):
             # get position
@@ -311,7 +298,7 @@ def panel_details(request,panel_id):
             members=request.POST.getlist('member_select1')
 
             if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=team)):
-                return redirect('central_branch:panel_details',panel_id)
+                return redirect('central_branch:panel_details_officers',panel_id)
         
         # Check whether the update button was pressed
         if(request.POST.get('remove_member_officer')):
@@ -319,11 +306,35 @@ def panel_details(request,panel_id):
             ieee_id=request.POST['remove_officer_member']
             # remove member
             if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
-                return redirect('central_branch:panel_details',panel_id)
+                return redirect('central_branch:panel_details_officers',panel_id)
 
-        
+    
+    context={
+        'panel_id':panel_id,
+        'panel_info':panel_info,
+        'tenure_time':tenure_time,
+        'officer_member':PanelMembersData.get_officer_members_from_branch_panel(panel=panel_id,request=request),
+        'insb_members':all_insb_members,
+        'officer_positions':PortData.get_all_officer_positions_with_sc_ag_id(request=request,sc_ag_primary=1),#as this is for branch, the primary=1
+        'teams':PortData.get_teams_of_sc_ag_with_id(request,sc_ag_primary=1),
+    }
+    return render(request,'Panel/officer_members_tab.html',context=context)
 
-        '''Block of code for Volunteer Members'''
+@login_required
+def branch_panel_volunteers_tab(request,panel_id):
+    # get panel information
+    panel_info = Branch.load_panel_by_id(panel_id)
+     # get panel tenure time
+    if(panel_info.panel_end_time is None):
+        present_date=datetime.now()
+        tenure_time=present_date.date()-panel_info.creation_time.date()
+    else:
+        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+    
+    # get all insb members
+    all_insb_members=port_render.get_all_registered_members(request)
+    
+    if(request.method=="POST"):
         # check whether the add buton was pressed
         if(request.POST.get('add_volunteer_to_panel')):
             # get_position
@@ -334,16 +345,41 @@ def panel_details(request,panel_id):
             members=request.POST.getlist('member_select2')
 
             if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=team)):
-                return redirect('central_branch:panel_details',panel_id)
+                return redirect('central_branch:panel_details_volunteers',panel_id)
         # check whether the remove button was pressed
         if(request.POST.get('remove_member_volunteer')):
             # get ieee id of the member
             ieee_id=request.POST['remove_officer_member']
             # remove member
             if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
-                return redirect('central_branch:panel_details',panel_id)
+                return redirect('central_branch:panel_details_volunteers',panel_id)
 
-        '''Block of code for Alumni Members'''
+    
+    
+    context={
+        'panel_id':panel_id,
+        'panel_info':panel_info,
+        'tenure_time':tenure_time,
+        'insb_members':all_insb_members,
+        'all_insb_volunteer_positions':PortData.get_all_volunteer_position_with_sc_ag_id(request,sc_ag_primary=1),
+        'volunteer_positions':PortData.get_all_volunteer_position_with_sc_ag_id(request=request,sc_ag_primary=1),
+        'teams':PortData.get_teams_of_sc_ag_with_id(request,sc_ag_primary=1),
+        'volunteer_members':PanelMembersData.get_volunteer_members_from_branch_panel(request=request,panel=panel_id),
+    }
+    return render(request,'Panel/volunteer_members_tab.html',context=context)
+
+@login_required
+def branch_panel_alumni_tab(request,panel_id):
+    # get panel information
+    panel_info = Branch.load_panel_by_id(panel_id)
+     # get panel tenure time
+    if(panel_info.panel_end_time is None):
+        present_date=datetime.now()
+        tenure_time=present_date.date()-panel_info.creation_time.date()
+    else:
+        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+    
+    if(request.method=="POST"):
         # Create New Alumni Member
         if(request.POST.get('create_new_alumni')):
             try:
@@ -365,7 +401,7 @@ def panel_details(request,panel_id):
                     linkedin_link=alumni_linkedin_link,
                     name=alumni_name,
                     picture=alumni_picture)):
-                    return redirect('central_branch:panel_details',panel_id)
+                    return redirect('central_branch:panel_details_alumni',panel_id)
                 else:
                     messages.error(request,'Failed to Add new alumni!')
         
@@ -377,43 +413,23 @@ def panel_details(request,panel_id):
             for i in alumni_to_add:            
                 if(PanelMembersData.add_alumns_to_branch_panel(request=request,alumni_id=alumni_to_add,panel_id=panel_id,position=position)):
                     pass
-            return redirect('central_branch:panel_details',panel_id)
+            return redirect('central_branch:panel_details_alumni',panel_id)
         
         if(request.POST.get('remove_member_alumni')):
             alumni_to_remove=request.POST['remove_alumni_member']
             if(PanelMembersData.remove_alumns_from_branch_panel(request=request,member_to_remove=alumni_to_remove,panel_id=panel_id)):
-                return redirect('central_branch:panel_details',panel_id)
-
-            
-            
-
-    all_insb_executive_positions=PortData.get_all_executive_positions_of_branch(request,sc_ag_primary=1) #setting sc_ag_primary as 1, because Branch's Primary is 1 by default
-    all_insb_officer_positions=PortData.get_all_officer_positions_with_sc_ag_id(request,sc_ag_primary=1)
-    all_insb_volunteer_positions=PortData.get_all_volunteer_position_with_sc_ag_id(request,sc_ag_primary=1)
-    all_insb_teams=PortData.get_teams_of_sc_ag_with_id(request,sc_ag_primary=1)
+                return redirect('central_branch:panel_details_alumni',panel_id)
     
-    if(panel_info.panel_end_time is None):
-        present_date=datetime.now()
-        tenure_time=present_date.date()-panel_info.creation_time.date()
-    else:
-        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
-            
     context={
+        'panel_id':panel_id,
         'panel_info':panel_info,
-        'eb_member':eb_member,
-        'officer_member':officer_member,
-        'faculty_member':faculty_member,
-        'volunteer_members':volunteer_members,
-        'alumni_members_in_panel':alumni_members,
-        'insb_members':all_insb_members,
-        'positions':all_insb_executive_positions,
-        'officer_positions':all_insb_officer_positions,
-        'volunteer_positions':all_insb_volunteer_positions,
-        'teams':all_insb_teams,
         'tenure_time':tenure_time,
-        'alumni_members':all_alumni_members,
+        'alumni_members':Alumnis.getAllAlumns(),
+        'positions':PortData.get_all_executive_positions_of_branch(request=request,sc_ag_primary=1),#as this is for branch, the primary=1
+        'alumni_members_in_panel':PanelMembersData.get_alumni_members_from_panel(panel=panel_id,request=request)
     }
-    return render(request,'Panel/panel_details.html',context)
+    return render(request,'Panel/alumni_members_tab.html',context=context)
+
 
 
 @login_required
@@ -662,13 +678,14 @@ def event_control_homepage(request):
     try:
         is_branch = True
         sc_ag=PortData.get_all_sc_ag(request=request)
-        all_insb_events=Branch.load_all_events()
+        all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(1)
         context={
             'all_sc_ag':sc_ag,
-            'events':all_insb_events,
+            'events':all_insb_events_with_interbranch_collaborations,
             # 'sc_ag_info':get_sc_ag_info,
             'has_access_to_create_event':has_access_to_create_event,
             'is_branch':is_branch,
+            
         }
 
         if(request.method=="POST"):
@@ -681,7 +698,7 @@ def event_control_homepage(request):
                 created_event_type = Branch.add_event_type_for_group(event_type,1)
                 if created_event_type:
                     print("Event type did not exists, so new event was created")
-                    messages.info(request,"New Event Type Added Successfully")
+                    messages.success(request,"New Event Type Added Successfully")
                 else:
                     print("Event type already existed")
                     messages.info(request,"Event Type Already Exists")
@@ -704,9 +721,11 @@ def super_event_creation(request):
         sc_ag=PortData.get_all_sc_ag(request=request)
         #calling it regardless to run the page
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,5)
+        is_branch = True
         context={
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
+            'is_branch' : is_branch
         }
 
         if request.method == "POST":
@@ -722,12 +741,9 @@ def super_event_creation(request):
                 start_date = request.POST.get('probable_date')
                 end_date = request.POST.get('final_date')
                 Branch.register_super_events(super_event_name,super_event_description,start_date,end_date)
-                messages.info(request,"New Super Event Added Successfully")
+                messages.success(request,"New Super Event Added Successfully")
                 return redirect('central_branch:event_control')
-            
-            elif (request.POST.get('cancel')):
-                return redirect('central_branch:event_control')
-            
+                        
         return render(request,"Events/Super Event/super_event_creation_form.html", context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -768,29 +784,27 @@ def event_creation_form_page(request):
 
                 '''Getting data from page and calling the register_event_page1 function to save the event page 1 to database'''
 
-                super_event_id=request.POST.get('super_event')
                 event_name=request.POST['event_name']
                 event_description=request.POST['event_description']
-                event_type = request.POST['event_type']
+                super_event_id=request.POST.get('super_event')
+                event_type_list = request.POST.getlist('event_type')
                 event_date=request.POST['event_date']
 
                 #It will return True if register event page 1 is success
                 get_event=Branch.register_event_page1(
                     super_event_id=super_event_id,
                     event_name=event_name,
-                    event_type=event_type,
+                    event_type_list=event_type_list,
                     event_description=event_description,
                     event_date=event_date
                 )
                 
                 if(get_event)==False:
-                    messages.info(request,"Database Error Occured! Please try again later.")
+                    messages.error(request,"Database Error Occured! Please try again later.")
                 else:
                     #if the method returns true, it will redirect to the new page
                     return redirect('central_branch:event_creation_form2',get_event)
-
-            elif(request.POST.get('cancel')):
-                return redirect('central_branch:event_control')
+                
         return render(request,'Events/event_creation_form.html',context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -825,7 +839,7 @@ def event_creation_form_page2(request,event_id):
                     event_id=event_id)):
                     return redirect('central_branch:event_creation_form3',event_id)
                 else:
-                    messages.info(request,"Database Error Occured! Please try again later.")
+                    messages.error(request,"Database Error Occured! Please try again later.")
 
             elif(request.POST.get('cancel')):
                 return redirect('central_branch:event_control')
@@ -838,6 +852,7 @@ def event_creation_form_page2(request,event_id):
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
 
+@login_required
 def event_creation_form_page3(request,event_id):
     try:
         is_branch=True
@@ -866,9 +881,9 @@ def event_creation_form_page3(request,event_id):
                 update_event_details=Branch.register_event_page3(venue_list=venue_list_for_event,permission_criteria_list=permission_criterias_list_for_event,event_id=event_id)
                 #if return value is false show an error message
                 if(update_event_details==False):
-                    messages.info(request, "An error Occured! Please Try again!")
+                    messages.error(request, "An error Occured! Please Try again!")
                 else:
-                    messages.info(request, "New Event Added Succesfully")
+                    messages.success(request, "New Event Added Succesfully")
                     return redirect('central_branch:event_control')
 
         return render(request,'Events/event_creation_form3.html',context)
@@ -893,23 +908,23 @@ def event_description(request,event_id):
             # Get collaboration details
             interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
             intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
+           
             # Checking if event has collaborations
             hasCollaboration=False
-            if(len(interBranchCollaborations)>0 or len(intraBranchCollaborations)>0):
+            if(len(interBranchCollaborations)>0 or intraBranchCollaborations):
                 hasCollaboration=True
             
-          
+            
             get_all_team_name = Branch.load_teams()
             get_event_details = Events.objects.get(id = event_id)
 
-            #print(get_event_details.super_event_name.id)
             get_event_venue = Event_Venue.objects.filter(event_id = get_event_details)  
             
             if request.method == "POST":
                 ''' To delete event from databse '''
                 if request.POST.get('delete_event'):
                     if(Branch.delete_event(event_id=event_id)):
-                        messages.info(request,f"Event with EVENT ID {event_id} was Removed successfully")
+                        messages.success(request,f"Event with EVENT ID {event_id} was Removed successfully")
                         return redirect('central_branch:event_control')
                     else:
                         messages.error(request,"Something went wrong while removing the event!")
@@ -939,6 +954,7 @@ def event_description(request,event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
+    
 @login_required
 def get_updated_options_for_event_dashboard(request):
     #this function updates the select box upon the selection of the team in task assignation. takes event id as parameter. from html file, a script hits the api and fetches the returned dictionary
@@ -957,3 +973,113 @@ def get_updated_options_for_event_dashboard(request):
 
         #returning the dictionary
         return JsonResponse(updated_options, safe=False)
+    
+@login_required
+def event_edit_form(request, event_id):
+
+    ''' This function loads the edit page of events '''
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        is_branch = True
+        is_event_published = Branch.load_event_published(event_id)
+        is_flagship_event = Branch.is_flagship_event(event_id)
+        is_registraion_fee_true = Branch.is_registration_fee_required(event_id)
+        #Get event details from databse
+        event_details = Events.objects.get(pk=event_id)
+
+        if(request.method == "POST"):
+
+            if('add_venues' in request.POST):
+                venue = request.POST.get('venue')
+                if(renderData.Branch.add_event_venue(venue)):
+                    messages.success(request, "Venue created successfully")
+                else:
+                    messages.error(request, "Something went wrong while creating the venue")
+                return redirect('central_branch:event_edit_form', event_id)
+            
+            
+            if('update_event' in request.POST):
+                ''' Get data from form and call update function to update event '''
+
+                form_link = request.POST.get('drive_link_of_event')
+                publish_event_status = request.POST.get('publish_event')
+                flagship_event_status = request.POST.get('flagship_event')
+                registration_event_status = request.POST.get('registration_fee')
+                event_name=request.POST['event_name']
+                event_description=request.POST['event_description']
+                super_event_id=request.POST.get('super_event')
+                event_type_list = request.POST.getlist('event_type')
+                event_date=request.POST['event_date']
+                inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
+                intra_branch_collaboration=request.POST['intra_branch_collaboration']
+                venue_list_for_event=request.POST.getlist('event_venues')
+                
+                #Checking to see of toggle button is on/True or off/False
+                publish_event = Branch.button_status(publish_event_status)
+                flagship_event = Branch.button_status(flagship_event_status)
+                registration_fee = Branch.button_status(registration_event_status)
+
+                #if there is registration fee then taking the amount from field
+                if registration_fee:
+                    registration_fee_amount = int(request.POST.get('registration_fee_amount'))
+                else:
+                    registration_fee_amount=0
+                #Check if the update request is successful
+                if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
+                                                          flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,form_link = form_link)):
+                    messages.success(request,f"EVENT: {event_name} was Updated successfully")
+                    return redirect('central_branch:event_edit_form', event_id) 
+                else:
+                    messages.error(request,"Something went wrong while updating the event!")
+                    return redirect('central_branch:event_edit_form', event_id)
+
+        form = EventForm({'event_description' : event_details.event_description})
+
+        #loading super/mother event at first and event categories for depending on which group organised the event
+        super_events=Branch.load_all_mother_events()
+        event_types=Branch.load_all_event_type_for_groups(event_details.event_organiser.primary)
+
+        inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+
+        # Get collaboration details
+        interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
+        intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
+        selected_venues = Branch.get_selected_venues(event_id=event_id)
+        # Checking if event has collaborations
+        hasCollaboration=False
+        if(len(interBranchCollaborations)>0):
+            hasCollaboration=True
+
+        interBranchCollaborationsArray = []
+        for i in interBranchCollaborations.all():
+            interBranchCollaborationsArray.append(i.collaboration_with)
+
+        #loading all venues from the venue list from event management team database
+        venues=Events_And_Management_Team.getVenues()
+
+        context={
+            'all_sc_ag' : sc_ag,
+            'is_branch' : is_branch,
+            'event_details' : event_details,
+            'form' : form,
+            'super_events' : super_events,
+            'event_types' : event_types,
+            'inter_branch_collaboration_options' : inter_branch_collaboration_options,
+            'interBranchCollaborations':interBranchCollaborationsArray,
+            'intraBranchCollaborations':intraBranchCollaborations,
+            'hasCollaboration' : hasCollaboration,
+            'venues' : venues,
+            'is_event_published':is_event_published,
+            'is_flagship_event':is_flagship_event,
+            'is_registration_fee_required':is_registraion_fee_true,
+            'selected_venues':selected_venues,
+        }
+
+        return render(request, 'Events/event_edit_form.html', context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return HttpResponseBadRequest("Bad Request")
+
+
+    
