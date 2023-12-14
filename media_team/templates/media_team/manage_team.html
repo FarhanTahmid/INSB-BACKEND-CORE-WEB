@@ -209,14 +209,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for member in insb_members %}
+                                    {% for current_panel_member in current_panel_members %}
                                         <tr>
-                                            <td>{{ member.name }}</td>
-                                            <td>{{ member.ieee_id }}</td>
-                                            <td>{{ member.position }}</td>
-                                            <td>{{ member.email_ieee }}</td>
+                                            <td>{{ current_panel_member.member.name }}</td>
+                                            <td><a href="{% url 'membership_development_team:member_details' current_panel_member.member.ieee_id %}">{{ current_panel_member.member.ieee_id }}</a></td>
+                                            <td>{{ current_panel_member.member.position }}</td>
+                                            <td>{{ current_panel_member.member.email_ieee }}</td>
                                             <td>
-                                                <input type="checkbox" id="select" name="member_select1" value={{member.ieee_id}}>
+                                                <input type="checkbox" id="select" name="member_select1" value={{current_panel_member.member.ieee_id}}>
                                             </td>
                                         </tr>
                                     {% endfor %}
