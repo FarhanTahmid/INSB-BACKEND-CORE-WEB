@@ -158,12 +158,10 @@ def event_form(request,event_id):
 
             try:
                 media_links = Media_Link.objects.get(event_id = Events.objects.get(pk=event_id))
-                media_images = Media_Images.objects.filter(event_id = Events.objects.get(pk=event_id))
-                number_of_uploaded_images = len(media_images)
             except:
                 media_links = None
-                media_images = None
-                number_of_uploaded_images = 0
+            media_images = Media_Images.objects.filter(event_id = Events.objects.get(pk=event_id))
+            number_of_uploaded_images = len(media_images)
             
 
             if request.method == "POST":
