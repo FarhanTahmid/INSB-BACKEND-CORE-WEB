@@ -602,6 +602,10 @@ def manage_website_homepage(request):
     }
     return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
 
+@login_required
+def manage_achievements(request):
+    return render(request,'Manage Website/Activities/manage_achievements.html')
+
 
 @login_required
 def manage_view_access(request):

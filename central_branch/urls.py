@@ -37,6 +37,7 @@ urlpatterns = [
     
     #WEBSITE Management URL Path
     path('manage_website/homepage',views.manage_website_homepage,name="manage_website_home"),
+    path('manage_website/achievements',views.manage_achievements,name="manage_achievements"),
 
     path('manage_access',views.manage_view_access,name="manage_access"),
 
