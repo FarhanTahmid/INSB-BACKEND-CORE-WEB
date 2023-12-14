@@ -3,7 +3,7 @@ from django.core.files.storage import FileSystemStorage
 from port.models import Chapters_Society_and_Affinity_Groups
 from django_resized import ResizedImageField
 from PIL import Image
-
+from ckeditor.fields import RichTextField
 # Create your models here.
     
 # Tables for Homepage
@@ -63,3 +63,17 @@ class Blog(models.Model):
         verbose_name = "Blog"
     def __str__(self):
         return self.title
+
+#Table for Achievements
+class Achievements(models.Model):
+    award_name=models.CharField(null=False,blank=False,max_length=100)
+    award_short_description=models.CharField(null=False,blank=False,max_length=100)
+    award_long_description=RichTextField(null=False,blank=False,max_length=200)
+    award_of=models.ForeignKey(Chapters_Society_and_Affinity_Groups,on_delete=models.CASCADE)
+    award_picture=models.ImageField(null=True,blank=True,upload_to='main_website_files/achievements/')
+    
+    class Meta:
+        verbose_name="Achievements"
+    
+    def __str__(self) -> str:
+        return str(self.pk)

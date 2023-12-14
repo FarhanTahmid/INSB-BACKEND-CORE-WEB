@@ -180,8 +180,7 @@ def get_all_registered_members(request):
         messages.error(request,"Soemthing went wrong. Please try again!")
         
 
-def getRecruitmentStats():
-    
+def getRecruitmentStats():    
     """Returns a lists of the recruitment stats for the last 5 sessions.
     Return the seesion name and the number of people per session in seperate lists"""
 
@@ -374,6 +373,20 @@ class PanelMembersData:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"Something went wrong while loading Officer Members")
     
+    
+    def get_members_of_teams_from_branch_panel(request,panel_id,team_primary):
+        '''this method gets all the members associated with a team within the current panel'''
+        try:
+            get_panel=Panels.objects.get(pk=panel_id)
+            get_panel_members_of_team=Panel_Members.objects.filter(tenure=get_panel.pk,team=Teams.objects.get(primary=team_primary))
+            return get_panel_members_of_team
+        except Exception as e:
+            PanelMembersData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Something went wrong while loading Officer Members")
+     
+        
+            
     def get_volunteer_members_from_branch_panel(request,panel):
         '''This method gets all the Volunteer members from the panel of branch and returns them in a list'''
         try:

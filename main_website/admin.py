@@ -31,3 +31,9 @@ from . models import BannerPictureWithStat
 @admin.register(BannerPictureWithStat)
 class RibbonPicture(admin.ModelAdmin):
     list_display=['id']
+    
+# Achievements
+from .models import Achievements
+@admin.register(Achievements)
+class Achievements(admin.ModelAdmin):
+    list_display=['id','award_name','award_of']

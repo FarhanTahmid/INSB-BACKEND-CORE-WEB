@@ -1,12 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from central_events.models import Events
 from central_branch.renderData import Branch
 from main_website.models import Research_Papers,Blog
 from port.renderData import PortData
+from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
 from .renderData import HomepageItems
 from django.conf import settings
-from users.models import User
+from users.models import User,Members
+from users.renderData import PanelMembersData
+from users import renderData as userData
 
 
 # Create your views here.
@@ -85,7 +88,11 @@ def Event_Details(request,event_id):
 # ###################### ACHIEVEMENTS ##############################
 
 def achievements(request):
-    return render(request,"Activities/achievements.html")
+    context={
+        'page_title':"Achievements"
+    }
+    
+    return render(request,"Activities/achievements.html",context=context)
 
     
 
@@ -150,60 +157,69 @@ def current_panel_members(request):
     # load all panels at first
     get_all_panels=Branch.load_all_panels()
     get_current_panel=Branch.load_current_panel()
-    get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
-    
-    # TODO:add algo to add SC AG Faculty and Branch Counselor
+    has_current_panel=True
+    if(get_current_panel is not None):
+        # get the latest panel of branch and redirect to there
+        has_current_panel=True
+        
+        get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
+        
+        # TODO:add algo to add SC AG Faculty and Branch Counselor
 
-    branch_counselor=[]
-    sc_ag_faculty_advisors=[]
-    mentors=[]
-    branch_chair=[]
-    branch_eb=[]
-    sc_ag_chair=PortData.get_branch_ex_com_from_sc_ag(request=request)
-    for i in get_current_panel_members:
-        if (i.position.role_of.primary==1):
-            if(i.position.is_faculty):
-                branch_counselor.append(i)
-            elif(i.position.is_eb_member):
-                if(i.position.role=='Chair'):
-                    branch_chair.append(i)
-                elif(i.position.is_mentor):
-                    mentors.append(i)
-                else:
-                    branch_eb.append(i)
-    
-    # check of having different members
-    has_branch_counselor=False
-    has_sc_ag_faculty_advisor=False
-    has_mentors=False
-    has_branch_chair=False
-    has_branch_eb=False
-    has_sc_ag_chair=False
-    if(len(branch_counselor)>0):
-        has_branch_counselor=True
-    if(len(sc_ag_faculty_advisors)>0):
-        has_sc_ag_faculty_advisor=True
-    if(len(mentors)>0):
-        has_mentors=True
-    if(len(branch_chair)>0):
-        has_branch_chair=True
-    if(len(branch_eb)>0):
-        has_branch_eb=True
-    if(len(sc_ag_chair)>0):
-        has_sc_ag_chair=True
-    
-    
-    context={
-        'has_branch_counselor':has_branch_counselor,'has_sc_ag_faculty_advisor':has_sc_ag_faculty_advisor,'has_mentors':has_mentors,'has_branch_chair':has_branch_chair,'has_branch_eb':has_branch_eb,'has_sc_ag_chair':has_sc_ag_chair,
-        'panels':get_all_panels,
-        'branch_counselor':branch_counselor,
-        'sc_ag_faculty_advisors':sc_ag_faculty_advisors,
-        'mentors':mentors,
-        'chair':branch_chair,
-        'eb':branch_eb,
-        'sc_ag_chair':sc_ag_chair,
-        'page_title':"Current Panel of IEEE NSU SB"
-    }
+        branch_counselor=[]
+        sc_ag_faculty_advisors=[]
+        mentors=[]
+        branch_chair=[]
+        branch_eb=[]
+        sc_ag_chair=PortData.get_branch_ex_com_from_sc_ag(request=request)
+        for i in get_current_panel_members:
+            if (i.position.role_of.primary==1):
+                if(i.position.is_faculty):
+                    branch_counselor.append(i)
+                elif(i.position.is_eb_member):
+                    if(i.position.role=='Chair'):
+                        branch_chair.append(i)
+                    elif(i.position.is_mentor):
+                        mentors.append(i)
+                    else:
+                        branch_eb.append(i)
+        
+        # check of having different members
+        has_branch_counselor=False
+        has_sc_ag_faculty_advisor=False
+        has_mentors=False
+        has_branch_chair=False
+        has_branch_eb=False
+        has_sc_ag_chair=False
+        if(len(branch_counselor)>0):
+            has_branch_counselor=True
+        if(len(sc_ag_faculty_advisors)>0):
+            has_sc_ag_faculty_advisor=True
+        if(len(mentors)>0):
+            has_mentors=True
+        if(len(branch_chair)>0):
+            has_branch_chair=True
+        if(len(branch_eb)>0):
+            has_branch_eb=True
+        if(len(sc_ag_chair)>0):
+            has_sc_ag_chair=True
+        context={
+            'has_branch_counselor':has_branch_counselor,'has_sc_ag_faculty_advisor':has_sc_ag_faculty_advisor,'has_mentors':has_mentors,'has_branch_chair':has_branch_chair,'has_branch_eb':has_branch_eb,'has_sc_ag_chair':has_sc_ag_chair,
+            'has_current_panel':has_current_panel,
+            'panels':get_all_panels,
+            'branch_counselor':branch_counselor,
+            'sc_ag_faculty_advisors':sc_ag_faculty_advisors,
+            'mentors':mentors,
+            'chair':branch_chair,
+            'eb':branch_eb,
+            'sc_ag_chair':sc_ag_chair,
+            'page_title':"Current Panel of IEEE NSU SB"
+        }
+    else:
+        has_current_panel=False
+        get_the_latest_panel_of_branch=Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1)).order_by('-year').first()
+
+        return redirect('main_website:panel_members_previous',get_the_latest_panel_of_branch.year)
     
     return render(request,'Members/Panel/panel_members.html',context)
 
@@ -265,6 +281,115 @@ def panel_members_page(request,year):
         'chair':branch_chair,
         'eb':branch_eb,
         'sc_ag_chair':sc_ag_chair,
+        'has_current_panel':True,
         'page_title':f"Executive Panel - {year}"
     }
     return render(request,'Members/Panel/panel_members.html',context)
+
+def officers_page(request):
+    # get all teams of IEEE NSU Student Branch
+    get_teams=PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+    # get all officers of branch. to get the current officers load the current panel of branch
+    get_current_panel=Branch.load_current_panel()
+    if(get_current_panel is None):
+        # there is no current panel, so there will be no officer, so pass just the team contexts.
+        context={
+        'page_title':'Officers of IEEE NSU Student Branch',
+        'teams':get_teams,
+        }
+    else:
+        get_panel_officers=PanelMembersData.get_officer_members_from_branch_panel(request=request,panel=get_current_panel.pk)
+        co_ordinators=[]
+        incharges=[]
+        for i in get_panel_officers:
+            if(i.member.position.is_co_ordinator):
+                co_ordinators.append(i)
+            else:
+                incharges.append(i)
+        
+        context={
+            'page_title':'Officers of IEEE NSU Student Branch',
+            'teams':get_teams,
+            'co_ordinators':co_ordinators,
+            'incharges':incharges,
+        }
+    return render(request,'Members/Officers/officer_page.html',context=context)
+
+def team_based_officers_page(request,team_primary):
+    # get the team
+    try:
+        team=Teams.objects.get(primary=team_primary)
+        team_name=team.team_name
+    except Teams.DoesNotExist:
+        team_name=""
+    
+    # get all teams of IEEE NSU Student Branch
+    get_teams=PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+    
+    # get current panel of branch to load officers of the team from there
+    get_current_panel=Branch.load_current_panel()
+    if(get_current_panel is None):
+        context={
+            'page_title':f"Officers - {team_name}",
+            'teams':get_teams,
+            }
+    else:
+        # get team members
+        team_members=PanelMembersData.get_members_of_teams_from_branch_panel(request=request,team_primary=team_primary,panel_id=get_current_panel.pk)
+        co_ordinators=[]
+        incharges=[]
+        for member in team_members:
+            if(member.position.is_officer):
+                if(member.position.is_co_ordinator):
+                    co_ordinators.append(member)
+                else:
+                    incharges.append(member)          
+        
+        context={
+            'page_title':f"Officers - {team_name}",
+            'teams':get_teams,
+            'co_ordinators':co_ordinators,
+            'incharges':incharges,
+        }
+    return render(request,'Members/Officers/officer_page.html',context=context)
+
+def volunteers_page(request):
+    # get all volunteers of branch. to get the current volunteers load the current panel of branch
+    get_current_panel=Branch.load_current_panel()
+    if(get_current_panel is None):
+        # there is no current panel, so there will be no officer, so pass just the team contexts.
+        context={
+        'page_title':'Officers of IEEE NSU Student Branch',
+        }
+    else:
+        get_panel_officers=PanelMembersData.get_volunteer_members_from_branch_panel(request=request,panel=get_current_panel.pk)
+        core_volunteers=[]
+        team_volunteers=[]
+        for i in get_panel_officers:
+            if(i.member.position.is_core_volunteer):
+                core_volunteers.append(i)
+            else:
+                team_volunteers.append(i)
+        
+        context={
+            'page_title':'Volunteers of IEEE NSU Student Branch',
+            'core_volunteers':core_volunteers,
+            'team_volunteers':team_volunteers,
+        }
+    return render(request,'Members/Volunteers/volunteers_page.html',context=context)
+
+def all_members(request):
+    # get all registered members of INSB
+    get_all_members = userData.get_all_registered_members(request=request)
+    recruitment_stat=userData.getRecruitmentStats()
+    
+    
+    context={
+        'page_title':"All Registered Members & Member Statistics of IEEE NSU SB",
+        'members':get_all_members,
+        'male_count':Members.objects.filter(gender="Male").count(),
+        'female_count':Members.objects.filter(gender="Female").count(),
+        'session_name':recruitment_stat[0],
+        'session_recruitee':recruitment_stat[1],
+    }
+    return render(request,'Members/All Members/all_members.html',context=context)
