@@ -18,7 +18,7 @@ from . import email_handler
 from port.renderData import PortData
 from central_events.models import Events
 from django.db.models import Q
-from .scheduler import scheduler
+
 
 
 
