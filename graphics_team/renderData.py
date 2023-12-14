@@ -54,8 +54,15 @@ class GraphicsTeam:
             team_members.append(load_team_members[i])
         return team_members
     
+    def get_team_id():
+        
+        '''Gets the team id from the database only for Media Team. Not the right approach'''
+        
+        team=Teams.objects.get(team_name="Graphics")
+        return team
+
     def add_member_to_team(ieee_id,position):
-        team_id=GraphicsTeam.get_team_id()
+        team_id=GraphicsTeam.get_team_id().id
         Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
 
     def graphics_manage_team_access_modifications(manage_team_access, event_access, ieee_id):

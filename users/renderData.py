@@ -13,6 +13,7 @@ from django.db.models import Q
 from users.models import User
 from recruitment.models import recruited_members
 import math
+from membership_development_team.renderData import MDT_DATA
 import sqlite3
 from django.contrib import messages
 from . models import Panel_Members,Alumni_Members
@@ -595,5 +596,3 @@ class Alumnis:
             return False
 
       
-    
-
