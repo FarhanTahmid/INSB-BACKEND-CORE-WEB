@@ -158,8 +158,10 @@ def event_form(request,event_id):
                 graphics_link = None
             try:
                 graphic_banner_image = Graphics_Banner_Image.objects.get(event_id = Events.objects.get(pk=event_id))
+                image_number = 1
             except:
                 graphic_banner_image = None
+                image_number = 0
 
             
             if request.method == "POST":
@@ -191,6 +193,7 @@ def event_form(request,event_id):
                 'graphic_links' : graphics_link,
                 'graphics_banner_image':graphic_banner_image,
                 'media_url':settings.MEDIA_URL,
+                'allowed_image_upload':1-image_number,
 
             }
             return render(request,"graphics_team/graphics_event_form.html",context)
