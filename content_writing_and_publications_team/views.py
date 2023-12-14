@@ -111,3 +111,11 @@ def event_page(request):
     
 
     return render(request,"Events/content_team_events_homepage.html",context)
+
+
+
+
+@login_required
+def event_form(request):
+
+    return render(request,"content_team_event_form.html")
