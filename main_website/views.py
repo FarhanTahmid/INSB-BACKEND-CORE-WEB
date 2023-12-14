@@ -88,7 +88,11 @@ def Event_Details(request,event_id):
 # ###################### ACHIEVEMENTS ##############################
 
 def achievements(request):
-    return render(request,"Activities/achievements.html")
+    context={
+        'page_title':"Achievements"
+    }
+    
+    return render(request,"Activities/achievements.html",context=context)
 
     
 
