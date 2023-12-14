@@ -122,6 +122,7 @@ class Branch:
             for i in get_users:
                 if(Panel_Members.objects.filter(member=i.ieee_id,tenure=get_current_panel.pk).exists()):
                     team_members.append(i)
+
         return team_members
     
     def register_super_events(super_event_name,super_event_description,start_date,end_date):

@@ -120,7 +120,8 @@ class Media_Data_Access(models.Model):
 
     ieee_id = models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE,verbose_name="IEEE ID")
     manage_team_access = models.BooleanField(default=False,null=False,blank=False,verbose_name="Access")
-
+    event_access = models.BooleanField(default=False,null=False,blank=False, verbose_name="Event Access")
+    
     class Meta:
 
         verbose_name = "Manage Team Access - Media Team"
