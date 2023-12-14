@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Home | Content Writing And Publications Team</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+
+
+    <style>
+        body, html {
+        
+        margin: 0;
+        
+        align-items: center;
+        justify-content: center;
+        }
+
+        .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+                {% include 'content_navbar.html' %}
+            {% endblock navbar %}
+
+        </div>
+        <!--navbar content-->
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
+
+            <br>
+<h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to <span style="color:#00629B;"> <b>The Content Writing And Pulications Team</b></span> of <b><span style="color:#00629B;">IEEE NSU Student Branch</b></span> </h2>
+        {% block co_ordinators_and_incharges %}
+          {% include 'Common_Templates/co_ordinators_and_incharges.html' %}
+        {% endblock %}
+          
+
+
+            <!--The other panel members-->
+            {% block cardbody %}
+                {% include "Homepage/content_cardbody.html" %}
+            {% endblock %}
+
+        </div>
+        <!--PAGE END-->
+
+    
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+    
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+
+</body>
+</html>

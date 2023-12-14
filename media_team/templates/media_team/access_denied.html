@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Access Denied | Media Team</title>
+  <title>Access Denied | IEEE NSU Student Branch</title>
   <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -37,10 +37,12 @@
 
   <!-- aside -->
   <div id="aside" class="app-aside modal nav-dropdown">
+  
   	{% block sidebar %}
-	  {% include 'users/sidebar.html' %}
+	    {% include 'users/sidebar.html' %}
   	{% endblock %}
-  </div>
+  
+</div>
   <!-- END OF SIDE BAR -->
   
   <!-- NAVIGATION BAR START -->
@@ -70,6 +72,11 @@
         
             <!-- navbar right -->
             <ul class="nav navbar-nav ml-auto flex-row">
+              <li class="nav-item hidden-md-up">
+                <a class="nav-link pl-2" data-toggle="collapse" data-target="#collapse">
+                  <i class="material-icons">more_horiz</i>
+                </a>
+              </li>
               <li class="nav-item dropdown pos-stc-xs">
                 <a class="nav-link mr-2" href data-toggle="dropdown">
                   <i class="material-icons">&#xe7f5;</i>
@@ -80,16 +87,11 @@
               <li class="nav-item dropdown">
                 <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
                   <span class="avatar w-32">
-                    <img src="{{ user_data.profile_picture }}" alt="...">
+                    <img src="{{ user_data.profile_picture }}" alt="user_profile">
                     <i class="on b-white bottom"></i>
                   </span>
                 </a>
                 <div ui-include="'../views/blocks/dropdown.user.html'"></div>
-            </li>
-              <li class="nav-item hidden-md-up">
-                <a class="nav-link pl-2" data-toggle="collapse" data-target="#collapse">
-                  <i class="material-icons">&#xe5d4;</i>
-                </a>
               </li>
             </ul>
             <!-- / navbar right -->
@@ -106,7 +108,7 @@
     </h1>
     <h2 class="h1 m-y-lg text-black">OOPS!</h2>
     <p class="h5 m-y-lg text-u font-bold text-black" style="font-size:25px;">Sorry! You currently do not have access to view this page.</p>
-    <p style="font-size:20px;">If you have permission to view this page please contact the <b>Team Co-Ordinator</b> or <b>The System administrators!</b></p>
+    <p style="font-size:20px;">If you have permission to view this page please contact the <b>Executives</b>/ <b>Team Co-Ordinators</b>/ <b>The System administrators!</b></p>
     <a href="{% url 'users:dashboard' %}" class="md-btn blue-700 md-raised p-x-md">
       <span class="text-white">Dashboard</span>
     </a>
