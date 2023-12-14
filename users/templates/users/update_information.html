@@ -151,36 +151,64 @@
             <!--Start from here-->
             <div class="body">
                 <div class="container">
-                    <form action="" method="get" style="padding: 0 5%;">
+                    <form action="" method="post" enctype="multipart/form-data" style="padding: 0 5%;">
+                        {% csrf_token %}
                         <h2 style="font-weight: 600;
                         text-align: center;
                         margin-bottom: 20px;
                         text-transform: uppercase;">Update Information</h2>
+                        <div style="text-align:center">
+                            {% for message in messages %}
+                            <p>{{message}}</p>
+                            {% endfor %}
+                        </div>
+                        
                         <div class="profile">
                             <figure><img src="{{ user_data.profile_picture }}" alt="profile" width="250px" height="250px">
                             </figure>
                         </div>
                         <label for="image-upload">Update your profile picture</label> 
-                        <input class="input-img" type="file" id="image-upload" accept="image/*"><br>
+                        <input class="input-img" name="profile_picture" type="file" id="image-upload" accept="image/*"><br>
                         <div class="profile_info">
+                            {% if user_data.is_admin_user %}
                             <div>
                                 <label for="name">Full Name</label>
-                                <input class="input" type="text" name="name" value="{{ user_data.name }}" required><br>
-                                <label for="address">Address</label>
-                                <input class="input" type="text" name="address" value="{{ user_data.home_address }}" required><br>
-                                <label for="email">Email</label>
-                                <input class="input" type="email" name="email" value="{{ user_data.email_personal }}" required><br>
-                                <label for="phone">Contact</label>
-                                <input class="input" type="phone" name="phone" value="{{ user_data.contact_no }}" required><br>
+                                <input class="input" type="text" name="name" value="{{ user_data.name }}" required><br>                                
                             </div>
                             <div>
+                                <label for="email_personal">Email</label>
+                                <input class="input" type="email" name="email" value="{{ user_data.email }}" required><br>
+                            </div>
+                            {% else %}
+                            <div>
+                                <label for="name">Full Name</label>
+                                <input class="input" type="text" name="name" value="{{ user_data.name }}" required><br>                   
+                                <label for="address">Address</label>
+                                <input class="input" type="text" name="address" value="{{ user_data.home_address }}" required><br>
+                                <label for="email_personal">Email</label>
+                                <input class="input" type="email" name="email_personal" value="{{ user_data.email_personal }}" required><br>
+                                <label for="email_nsu">NSU Email</label>
+                                <input class="input" type="email" name="email_nsu" value="{{ user_data.email_nsu }}" required><br>
+                                <label for="contact_no">Contact</label>
+                                <input class="input" type="phone" name="contact_no" value="{{ user_data.contact_no }}" required><br>
+                                <label for="linkedin_url">Linkedin Profile Link</label>
+                                <input class="input" type="url" name="linkedin_url" value="{{ user_data.linkedin_url }}"><br>
+                            </div>
+                            <div>
+                                <label for="nsu_id">NSU ID</label>
+                                <input class="input" type="text" name="nsu_id" value="{{ user_data.nsu_id }}" required><br>
                                 <label for="dob">Date of Birth</label>
-                                <input class="input" type="text" name="dob" value="{{ user_data.dob }}" placeholder="Format: January 01, 2023" required><br>
+                                <input class="input" type="date" name="dob" value="{{ user_data.dob | safe}}" required><br>
                                 <label for="gender">Gender</label>
                                 <input class="input" type="text" name="gender" value="{{ user_data.gender }}" required><br>
+                                <label for="email_ieee">IEEE Mail</label>
+                                <input class="input" type="email" name="email_ieee" value="{{ user_data.email_ieee }}"><br>
                                 <label for="major">Major in NSU</label>
                                 <input class="input" type="text" name="major" value="{{ user_data.major }}" required><br>
+                                <label for="facebook_url">Facebook Profile Link</label>
+                                <input class="input" type="url" name="facebook_url" value="{{ user_data.facebook_url }}" required><br>
                             </div>
+                            {% endif %}
                         </div>
                         
 

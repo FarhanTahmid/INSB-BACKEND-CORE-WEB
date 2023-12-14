@@ -3,6 +3,7 @@ from django.http import HttpResponseBadRequest, JsonResponse
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from system_administration.models import adminUsers
 from users import registerUser
 from django.db import connection
 from django.db.utils import IntegrityError
@@ -168,7 +169,6 @@ def getDashboardStats(request):
             return HttpResponseBadRequest
     
 
-
 def profile_page(request):
     
     '''This function loads all the view for User profile View'''
@@ -208,9 +208,81 @@ def profile_page(request):
 def change_password(request):
     return render(request,"users/change_password.html")
 
+@login_required
 # update profile information
 def update_information(request):
-    return render(request,"users/update_information.html")
+
+    #Get current logged in user
+    current_user=renderData.LoggedinUser(request.user)
+    #Get the profile details of the logged in user from database
+    profile_data=current_user.getUserData()
+
+    if(request.method == "POST"):
+        #Update clicked
+        try:
+            #Check if an image file was sent in request. If yes then update the current profile pic with the new one
+            if('profile_picture' in request.FILES):
+                #Get the image file
+                file=request.FILES.get('profile_picture')
+                change_pro_pic=current_user.change_profile_picture(file) #Calling function to change profile picture of the user
+                if(change_pro_pic==False):
+                    return DatabaseError
+                else:
+                    messages.info(request,"Profile Picture was changed successfully!")
+        except MultiValueDictKeyError:
+            messages.info(request,"Please select a file first!")
+
+        #Check if the logged in user is admin user
+        if(profile_data['is_admin_user']):
+            #If yes then collect the name and email only
+            name = request.POST['name']
+            email = request.POST['email']
+
+            #Call the update admin function to update admin user profile information
+            if(current_user.update_admin_user_data(name=name, email=email)):
+                messages.success(request, "Profile updated successfully")
+            else:
+                messages.error(request, "Something went wrong while updating profile information")
+        else:
+            #Not admin user
+            #Collect all the details
+            name = request.POST['name']
+            email_personal = request.POST['email_personal']
+            nsu_id = request.POST['nsu_id']
+            home_address = request.POST['address']
+            date_of_birth = request.POST['dob']
+            gender = request.POST['gender']
+            email_nsu = request.POST['email_nsu']
+            email_ieee = request.POST['email_ieee']
+            contact_no = request.POST['contact_no']
+            major = request.POST['major']
+            facebook_url = request.POST['facebook_url']
+            linkedin_url = request.POST['linkedin_url']
+
+            #Call the update user data function to update the user profile information
+            if(current_user.update_user_data(name=name,
+                                        nsu_id=nsu_id,
+                                        home_address=home_address,
+                                        date_of_birth=date_of_birth,
+                                        email_personal=email_personal,
+                                        gender=gender,
+                                        email_nsu=email_nsu,
+                                        email_ieee=email_ieee,
+                                        contact_no=contact_no,
+                                        major=major,
+                                        facebook_url=facebook_url,
+                                        linkedin_url=linkedin_url)):
+                messages.success(request, "Profile updated successfully")
+            else:
+                messages.error(request, "Something went wrong while updating profile information")                          
+
+        return redirect('users:update_information')
+
+    context={
+        'user_data' : profile_data
+    }
+
+    return render(request,"users/update_information.html", context)
 
 
 @login_required
