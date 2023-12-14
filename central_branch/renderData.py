@@ -16,12 +16,13 @@ from system_administration.models import Branch_Data_Access
 from django.db.utils import IntegrityError
 import traceback
 import logging
+from system_administration.system_error_handling import ErrorHandling
 
 
 class Branch:
 
     logger=logging.getLogger(__name__)
-
+    
     def getBranchID():
         '''This Method returns the object of Branch from Society chapters and AG Table'''
         try:
@@ -112,22 +113,17 @@ class Branch:
     
     def load_team_members(team_primary):
         '''This function loads all the team members from the database and also checks if the member is included in the current panel'''
-        
-        try:
-            team=Teams.objects.get(primary=team_primary)
-            team_id=team.id
-            get_users=Members.objects.order_by('position').filter(team=team_id)
-            get_current_panel=Branch.load_current_panel()
-            team_members=[]
+        team=Teams.objects.get(primary=team_primary)
+        team_id=team.id
+        get_users=Members.objects.order_by('position').filter(team=team_id)
+        get_current_panel=Branch.load_current_panel()
+        team_members=[]
+        if(get_current_panel is not None):
             for i in get_users:
                 if(Panel_Members.objects.filter(member=i.ieee_id,tenure=get_current_panel.pk).exists()):
                     team_members.append(i)
-            return team_members
-        except Exception as e:
-            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error("Can not check member is included in current panel and cannot load all team members. Something went wrong!")
-            return False
+
+        return team_members
     
     def register_super_events(super_event_name,super_event_description,start_date,end_date):
         
@@ -625,6 +621,84 @@ class Branch:
         except:
             messages.error(request,'Can not delete this panel. Something went wrong!')
             return False
+        
+    def change_panel_member_position_and_team_none_in_branch(request,panel_id):
+        '''This function finds the members in a panel and makes their Position and team None
+        in the SC_AG_Members Table when required.'''
+        try:
+            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=panel_id))
+            for member in get_panel_members:
+                if(member.member is not None):
+                    Members.objects.filter(ieee_id=member.member.ieee_id).update(position=Roles_and_Position.objects.get(id=13),team=None)
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def update_panel_settings(request,panel_id,panel_tenure,is_current_check,panel_start_date,panel_end_date):
+        '''This function updates the panel settings and makes changes according to it'''
+        try:
+            # get the panel
+            panel_to_update=Panels.objects.get(id=panel_id)
+            # first check if the user wants to make a non current panel to current
+            if(is_current_check and (panel_to_update.current==False)):
+                # find panels which are current now and make them false
+                previous_current_panel=Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1),current=True)
+                if(previous_current_panel.exists()):
+                    # Update the Position,Team of Branch members in that panel as None
+                    for panel in previous_current_panel:
+                        if(Branch.change_panel_member_position_and_team_none_in_branch(request=request,panel_id=panel.pk)):
+                            # set the current value of Panel to False
+                            panel.current=False
+                            panel.save()
+                        else:
+                            return False
+                # now get the members of the panel and update their team and Position in INSB members Table
+                members_in_panel=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=panel_id))
+                for member in members_in_panel:
+                    if(member.member is not None):
+                        if member.team is None:
+                            # update team as none
+                            Members.objects.filter(ieee_id=member.member.ieee_id).update(team=None,position=Roles_and_Position.objects.get(id=member.position.id))                
+                        else:
+                            Members.objects.filter(ieee_id=member.member.ieee_id).update(team=Teams.objects.get(primary=member.team.primary),position=Roles_and_Position.objects.get(id=member.position.id))
+                #now update the panel
+                panel_to_update.current=True
+                panel_to_update.year=panel_tenure
+                panel_to_update.creation_time=panel_start_date
+                panel_to_update.panel_end_time=panel_end_date
+                panel_to_update.save()
+                messages.success(request,"Panel Information was updated!")
+                return True
+            # then we check if we are making a current panel to a non current panel.
+            elif(not is_current_check and panel_to_update.current):
+                # Make positions and Teams of Members of that panel as None
+                if(Branch.change_panel_member_position_and_team_none_in_branch(request=request,panel_id=panel_to_update.pk)):
+                    panel_to_update.current=False
+                    panel_to_update.year=panel_tenure
+                    panel_to_update.creation_time=panel_start_date
+                    panel_to_update.panel_end_time=panel_end_date
+                    panel_to_update.save()
+                    messages.success(request,"Panel Information was updated!")
+                    return True
+                else:
+                    return False
+            else:
+                # for all other instances update normally
+                panel_to_update.current=is_current_check
+                panel_to_update.year=panel_tenure
+                panel_to_update.creation_time=panel_start_date
+                panel_to_update.panel_end_time=panel_end_date
+                panel_to_update.save()
+                messages.success(request,"Panel Information was updated!")
+                return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not Update Panel. Something went wrong!")
+            return False
+            
 
     def load_panel_by_id(panel_id):
         '''This loads all the select panel's information from Panels table'''
@@ -650,6 +724,7 @@ class Branch:
             return get_panel_members
         except:
             raise Http404("The requested page does not exist.")
+    
                                 
     def load_all_panels():
         '''This function loads all the panels from the database'''
@@ -660,8 +735,8 @@ class Branch:
             return DatabaseError
 
     def load_current_panel():
-        '''This method loads the current panel. returns the year of the panel'''
-        currentPanel=Panels.objects.filter(current=True)
+        '''This method loads the current panel of Branch. returns the year of the panel'''
+        currentPanel=Panels.objects.filter(current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
         return currentPanel.first()
         
     def load_roles_and_positions():
@@ -679,48 +754,50 @@ class Branch:
         # Assign positions according to Panels
         getCurrentPanel=Branch.load_current_panel()
         team=getTeam.id
-        try:
-            if(team_primary==7): #Checking if the team is MDT as its id is 7. this is basically done for the data access which is not necessary to do for every team.
-                
-                Members.objects.filter(ieee_id=ieee_id).update(team=team,position=position)
-                try:
-                    # check if Member existed in the current panel
-                    check_member=Panel_Members.objects.filter(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=ieee_id).exists()
-                    if(check_member):
-                        # updating position and team for the member
-                        Panel_Members.objects.filter(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=ieee_id).update(position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
+        if(getCurrentPanel is not None):
+            try:
+                if(team_primary==7): #Checking if the team is MDT as its id is 7. this is basically done for the data access which is not necessary to do for every team.
                     
-                    else:
-                        # add member in the Current panel
-                        new_member_in_panel=Panel_Members.objects.create(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=Members.objects.get(ieee_id=ieee_id),
-                                                                        position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(id=team))
-                        new_member_in_panel.save()
-                except:
-                    return DatabaseError
+                    Members.objects.filter(ieee_id=ieee_id).update(team=team,position=position)
+                    try:
+                        # check if Member existed in the current panel
+                        check_member=Panel_Members.objects.filter(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=ieee_id).exists()
+                        if(check_member):
+                            # updating position and team for the member
+                            Panel_Members.objects.filter(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=ieee_id).update(position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
+                        
+                        else:
+                            # add member in the Current panel
+                            new_member_in_panel=Panel_Members.objects.create(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=Members.objects.get(ieee_id=ieee_id),
+                                                                            position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(id=team))
+                            new_member_in_panel.save()
+                    except:
+                        return DatabaseError
 
-                return True
-            else:
-                
-                Members.objects.filter(ieee_id=ieee_id).update(team=team,position=position)
-                try:
-                    # check if member existed in the current panel
-                    check_member=Panel_Members.objects.filter(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=ieee_id).exists()
-                    if(check_member):
-                        # updating position and team for the member
-                        Panel_Members.objects.filter(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=ieee_id).update(position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
-                    else:
-                        # add member to current panel
-                        new_member_in_panel=Panel_Members.objects.create(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=Members.objects.get(ieee_id=ieee_id),
-                                                                        position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(id=team))
-                        new_member_in_panel.save()
-                except:
-                    return DatabaseError
-                return True
-        except Members.DoesNotExist:
-            return False
-        except:
-            return DatabaseError
-    
+                    return True
+                else:
+                    Members.objects.filter(ieee_id=ieee_id).update(team=team,position=position)
+                    try:
+                        # check if member existed in the current panel
+                        check_member=Panel_Members.objects.filter(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=ieee_id).exists()
+                        if(check_member):
+                            # updating position and team for the member
+                            Panel_Members.objects.filter(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=ieee_id).update(position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
+                        else:
+                            # add member to current panel
+                            new_member_in_panel=Panel_Members.objects.create(tenure=Panels.objects.get(id=getCurrentPanel.pk),member=Members.objects.get(ieee_id=ieee_id),
+                                                                            position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(id=team))
+                            new_member_in_panel.save()
+                    except:
+                        return DatabaseError
+                    return True
+            except Members.DoesNotExist:
+                return False
+            except:
+                return DatabaseError
+        else:
+            return None
+        
     def load_all_events():
         return Events.objects.all().order_by('-event_date')
     

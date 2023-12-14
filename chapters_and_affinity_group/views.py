@@ -115,12 +115,12 @@ def sc_ag_panels(request,primary):
                                             sc_ag_primary=primary,tenure_year=tenure_year)
               ):
                 return redirect('chapters_and_affinity_group:sc_ag_panels',primary)  
-    
+    panel_edit_access=SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary)
     context={
         'all_sc_ag':sc_ag,
         'sc_ag_info':get_sc_ag_info,
         'panels':all_panels,
-        
+        'panel_edit_access':panel_edit_access,
     }
     return render(request,'Panels/panel_homepage.html',context=context)
 
@@ -226,7 +226,7 @@ def sc_ag_panel_details(request,primary,panel_pk):
                 )):
                     return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
 
-                
+               
         context={
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
@@ -234,7 +234,9 @@ def sc_ag_panel_details(request,primary,panel_pk):
             'tenure_time':tenure_time,
             'sc_ag_members':sc_ag_members,
             'sc_ag_eb_members':sc_ag_eb_members,
-            'sc_ag_eb_positions':SC_AG_Info.get_sc_ag_executive_positions(request=request,sc_ag_primary=primary)
+            'sc_ag_eb_positions':SC_AG_Info.get_sc_ag_executive_positions(request=request,sc_ag_primary=primary),
+            'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
+            'member_details_access':SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary),
         }
         return render(request,'Panels/sc_ag_executive_members_tab.html',context=context)
     except Exception as e:
@@ -288,6 +290,8 @@ def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
             'sc_ag_officer_member':sc_ag_officer_members_in_panel,
             'sc_ag_officer_positions':SC_AG_Info.get_sc_ag_officer_positions(request=request,sc_ag_primary=primary),
             'sc_ag_teams':SC_AG_Info.get_teams_of_sc_ag(request=request,sc_ag_primary=primary),
+            'member_details_access':SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary),
+            'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
 
         }
         return render(request,'Panels/sc_ag_officer_members_tab.html',context=context)
@@ -348,6 +352,9 @@ def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
             'sc_ag_volunteer_positions':sc_ag_volunteer_positions,
             'sc_ag_teams':SC_AG_Info.get_teams_of_sc_ag(request=request,sc_ag_primary=primary),
             'sc_ag_volunteer_members':sc_ag_volunteer_members_in_panel,
+            'member_details_access':SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary),
+            'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
+
         }
         return render(request,'Panels/sc_ag_volunteer_members_tab.html',context=context)
     except Exception as e:
@@ -397,7 +404,7 @@ def sc_ag_membership_renewal_sessions(request,primary):
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'sessions':sessions,
-            'is_branch':False,
+            'is_branch':False,            
         }
         return render(request,"Renewal/renewal_homepage.html",context=context)
     except Exception as e:
@@ -408,29 +415,34 @@ def sc_ag_membership_renewal_sessions(request,primary):
 
 def sc_ag_renewal_session_details(request,primary,renewal_session):
     try:
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-        # get the session
-        renewal_session=Renewal_Sessions.objects.get(pk=renewal_session)
-        
-        if(int(primary)==2):
-            get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,pes_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
-        elif(int(primary)==3):
-            get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,ras_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
-        elif(int(primary)==4):
-            get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,ias_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
-        elif(int(primary)==5):
-            get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,wie_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+        if(SC_Ag_Render_Access.access_for_membership_renewal_access(request=request,sc_ag_primary=primary)):
+            
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+            # get the session
+            renewal_session=Renewal_Sessions.objects.get(pk=renewal_session)
+            
+            if(int(primary)==2):
+                get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,pes_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+            elif(int(primary)==3):
+                get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,ras_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+            elif(int(primary)==4):
+                get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,ias_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+            elif(int(primary)==5):
+                get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,wie_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
 
-        context={
-            'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info,
-            'is_branch':False,
-            'session_id':renewal_session.pk,
-            'session_info':renewal_session,
-            'requests':get_renewal_requests,
-        }
-        return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context=context)
+            context={
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'is_branch':False,
+                'session_id':renewal_session.pk,
+                'session_info':renewal_session,
+                'requests':get_renewal_requests,
+            }
+            return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context=context)
+        else:
+            return render(request,"access_denied.html")
+
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -477,79 +489,84 @@ def get_sc_ag_renewal_stats(request):
         
 @login_required
 def sc_ag_manage_access(request,primary):
-    # get sc ag info
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+    try:
+        if(SC_Ag_Render_Access.access_for_manage_access(request=request,sc_ag_primary=primary)):
+            # get sc ag info
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+            
+            # get SC AG members
+            get_sc_ag_members=SC_AG_Info.get_sc_ag_members(request=request,sc_ag_primary=primary)
+            # get data access Members
+            get_data_access_members=Sc_Ag.get_data_access_members(request=request,sc_ag_primary=primary)
+            
+            if(request.method=="POST"):
+                # Adding member to data access Table
+                if(request.POST.get('add_data_access_member')):
+                    member_select_list=request.POST.getlist('member_select')
+                    if(Sc_Ag.add_sc_ag_member_to_data_access(request=request,member_list=member_select_list,sc_ag_primary=primary)):
+                        return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+                # Updating view access for data access member
+                if(request.POST.get('access_update')):
+                    member=request.POST['access_ieee_id']
+                    
+                    # data access values
+                    member_details_access=False
+                    create_event_access=False
+                    event_details_edit_access=False
+                    panel_edit_access=False
+                    membership_renewal_access=False
+                    manage_access=False
+                    
+                    # get values from template and change according to it
+                    if(request.POST.get('member_details_access') is not None):
+                        member_details_access=True
+                    if(request.POST.get('create_event_access') is not None):
+                        create_event_access=True
+                    if(request.POST.get('event_details_edit_access') is not None):
+                        event_details_edit_access=True
+                    if(request.POST.get('panel_edit_access') is not None):
+                        panel_edit_access=True
+                    if(request.POST.get('membership_renewal_access') is not None):
+                        membership_renewal_access=True
+                    if(request.POST.get('manage_access') is not None):
+                        manage_access=True
+                    
+                    # sending values to functions as kwargs. To further addition to Data access just pass the attribute of model=attribute value(e.g:member_details_access=member_details_access(True/False)) to the function
+                    if(Sc_Ag.update_sc_ag_member_access(request=request,member=member,sc_ag_primary=primary,
+                                                        member_details_access=member_details_access,
+                                                        create_event_access=create_event_access,
+                                                        event_details_edit_access=event_details_edit_access,
+                                                        panel_edit_access=panel_edit_access,
+                                                        membership_renewal_access=membership_renewal_access,
+                                                        manage_access=manage_access)):
+                        return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+                    else:
+                        return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+
+                # remove member from data access
+                if(request.POST.get('remove_from_data_access')):
+                    member_to_remove=request.POST['access_ieee_id']
+                    
+                    if(Sc_Ag.remove_member_from_data_access(request=request,member=member_to_remove,sc_ag_primary=primary)):
+                        return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
+                    else:
+                        return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)          
+            context={
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'sc_ag_members':get_sc_ag_members,
+                'data_access_members':get_data_access_members,
+            }
+            return render(request,'Manage Access/sc_ag_manage_access.html',context=context)       
+        else:
+            return render(request,'access_denied.html')
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
     
-    # get SC AG members
-    get_sc_ag_members=SC_AG_Info.get_sc_ag_members(request=request,sc_ag_primary=primary)
-    # get data access Members
-    get_data_access_members=Sc_Ag.get_data_access_members(request=request,sc_ag_primary=primary)
-    
-    if(request.method=="POST"):
-        # Adding member to data access Table
-        if(request.POST.get('add_data_access_member')):
-            member_select_list=request.POST.getlist('member_select')
-            if(Sc_Ag.add_sc_ag_member_to_data_access(request=request,member_list=member_select_list,sc_ag_primary=primary)):
-                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
-        # Updating view access for data access member
-        if(request.POST.get('access_update')):
-            member=request.POST['access_ieee_id']
-            
-            # data access values
-            member_details_access=False
-            create_event_access=False
-            event_details_edit_access=False
-            panel_edit_access=False
-            membership_renewal_access=False
-            manage_access=False
-            
-            # get values from template and change according to it
-            if(request.POST.get('member_details_access') is not None):
-                member_details_access=True
-            if(request.POST.get('create_event_access') is not None):
-                create_event_access=True
-            if(request.POST.get('event_details_edit_access') is not None):
-                event_details_edit_access=True
-            if(request.POST.get('panel_edit_access') is not None):
-                panel_edit_access=True
-            if(request.POST.get('membership_renewal_access') is not None):
-                membership_renewal_access=True
-            if(request.POST.get('manage_access') is not None):
-                manage_access=True
-            
-            # sending values to functions as kwargs. To further addition to Data access just pass the attribute of model=attribute value(e.g:member_details_access=member_details_access(True/False)) to the function
-            if(Sc_Ag.update_sc_ag_member_access(request=request,member=member,sc_ag_primary=primary,
-                                                member_details_access=member_details_access,
-                                                create_event_access=create_event_access,
-                                                event_details_edit_access=event_details_edit_access,
-                                                panel_edit_access=panel_edit_access,
-                                                membership_renewal_access=membership_renewal_access,
-                                                manage_access=manage_access)):
-                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
-            else:
-                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
-
-        # remove member from data access
-        if(request.POST.get('remove_from_data_access')):
-            member_to_remove=request.POST['access_ieee_id']
-            
-            if(Sc_Ag.remove_member_from_data_access(request=request,member=member_to_remove,sc_ag_primary=primary)):
-                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
-            else:
-                return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
-
-                
-
-                
-    context={
-        'all_sc_ag':sc_ag,
-        'sc_ag_info':get_sc_ag_info,
-        'sc_ag_members':get_sc_ag_members,
-        'data_access_members':get_data_access_members,
-    }
-    return render(request,'Manage Access/sc_ag_manage_access.html',context=context)       
-
 @login_required
 def sc_ag_renewal_excel_sheet(request,primary,renewal_session):
     try:
@@ -598,6 +615,11 @@ def event_control_homepage(request,primary):
             'is_branch':is_branch,
             'has_access_to_create_event':has_access_to_create_event,
             'events':events,
+            'has_access_to_create_event':SC_Ag_Render_Access.access_for_create_event(request=request,sc_ag_primary=primary),
+            # TODO:
+            # if dont have event edit access, make people redirect to event in main web
+            'has_access_to_edit_event':SC_Ag_Render_Access.access_for_event_details_edit(request=request,sc_ag_primary=primary),
+            
         }
         return render(request,"Events/event_homepage.html",context)
     except Exception as e:
@@ -608,6 +630,7 @@ def event_control_homepage(request,primary):
     
 @login_required
 def event_description(request,primary,event_id):
+    
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)

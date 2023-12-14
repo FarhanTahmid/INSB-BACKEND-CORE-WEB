@@ -13,6 +13,7 @@ from django.db.models import Q
 from users.models import User
 from recruitment.models import recruited_members
 import math
+from membership_development_team.renderData import MDT_DATA
 import sqlite3
 from django.contrib import messages
 from . models import Panel_Members,Alumni_Members
@@ -380,8 +381,86 @@ def getMonthName(numb: int)->str:
 class PanelMembersData:
     logger=logging.getLogger(__name__)
 
+    def get_eb_members_from_branch_panel(request,panel):
+        '''This method gets all the EB members from the panel of branch and returns them in a list'''
+        try:
+            # get panel
+            get_panel=Panels.objects.get(pk=panel)
+            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk)).order_by('position')
+            eb_member=[]
+            for i in get_panel_members:
+                if(i.member is not None):
+                    if(i.position.is_eb_member):
+                        eb_member.append(i)
+            return eb_member
+        except Exception as e:
+            PanelMembersData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Something went wrong while loading Executive Members")
+    
+    def get_officer_members_from_branch_panel(request,panel):
+        '''This method gets all the Officer members from the panel of branch and returns them in a list'''
+        try:
+            # get panel
+            get_panel=Panels.objects.get(pk=panel)
+            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk)).order_by('position')
+            officer_member=[]
+            for i in get_panel_members:
+                if(i.position.is_officer):
+                    officer_member.append(i)
+            return officer_member
+        except Exception as e:
+            PanelMembersData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Something went wrong while loading Officer Members")
+    
+    
+    def get_members_of_teams_from_branch_panel(request,panel_id,team_primary):
+        '''this method gets all the members associated with a team within the current panel'''
+        try:
+            get_panel=Panels.objects.get(pk=panel_id)
+            get_panel_members_of_team=Panel_Members.objects.filter(tenure=get_panel.pk,team=Teams.objects.get(primary=team_primary))
+            return get_panel_members_of_team
+        except Exception as e:
+            PanelMembersData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Something went wrong while loading Officer Members")
+     
+        
+            
+    def get_volunteer_members_from_branch_panel(request,panel):
+        '''This method gets all the Volunteer members from the panel of branch and returns them in a list'''
+        try:
+            # get panel
+            get_panel=Panels.objects.get(pk=panel)
+            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk)).order_by('position')
+            volunteer_member=[]
+            for i in get_panel_members:
+                if(not i.position.is_officer and not i.position.is_eb_member and not i.position.is_co_ordinator and not i.position.is_faculty and not i.position.is_mentor and not i.position.is_sc_ag_eb_member):
+                    volunteer_member.append(i)
+            return volunteer_member
+        except Exception as e:
+            PanelMembersData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Something went wrong while loading Officer Members")
+    
+    def get_alumni_members_from_panel(request,panel):
+        '''This method gets all the Alumni members from the panel of branch and returns them in a list'''
+        try:
+            # get panel
+            get_panel=Panels.objects.get(pk=panel)
+            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk)).order_by('position')
+            alumni_member=[]
+            for i in get_panel_members:
+                if(i.member is None): #as alumni member has no registered IEEE ID
+                    alumni_member.append(i)
+            return alumni_member
+        except Exception as e:
+            PanelMembersData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Something went wrong while loading Officer Members")
+    
     def add_members_to_branch_panel(request,members,position,panel_info,team_primary):
-
         try:
             for i in members:
                 # check if Member already exists in the Panel
@@ -517,5 +596,3 @@ class Alumnis:
             return False
 
       
-    
-

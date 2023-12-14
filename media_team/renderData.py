@@ -6,11 +6,25 @@ from django.conf import settings
 from central_events.models import Events
 import os
 import logging
+from central_branch.renderData import Branch
 from datetime import datetime
 from system_administration.system_error_handling import ErrorHandling
 import traceback
 class MediaTeam:
     logger=logging.getLogger(__name__)
+
+    def get_co_ordinator():
+        roles = Roles_and_Position.objects.get(is_co_ordinator=True)
+        members = Members.objects.filter(position=roles,team=MediaTeam.get_team_id())
+        print(members)
+        return members
+
+    def get_officer():
+        roles = Roles_and_Position.objects.get(is_officer = True,is_co_ordinator=False)
+        members = Members.objects.filter(position = roles,team=MediaTeam.get_team_id())
+        
+        print(roles,members)
+        return members
 
     def get_member_with_postion(position):
         '''Returns Media Team Members with positions'''
@@ -27,15 +41,15 @@ class MediaTeam:
     def load_manage_team_access():
         return Media_Data_Access.objects.all()
     
-    def load_team_members():
+    # def load_team_members():
         
-        '''This function loads all the team members for the Media team'''
+    #     '''This function loads all the team members for the Media team'''
 
-        load_team_members=Members.objects.filter(team=MediaTeam.get_team_id()).order_by('position')
-        team_members=[]
-        for i in range(len(load_team_members)):
-            team_members.append(load_team_members[i])
-        return team_members
+    #     load_team_members=Members.objects.filter(team=MediaTeam.get_team_id()).order_by('position')
+    #     team_members=[]
+    #     for i in range(len(load_team_members)):
+    #         team_members.append(load_team_members[i])
+    #     return team_members
     
     def add_member_to_team(ieee_id,position):
         team_id=MediaTeam.get_team_id().id
@@ -128,7 +142,33 @@ class MediaTeam:
             MediaTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
+   
+    def load_data_access():
+        return Media_Data_Access.objects.all()
+    
+    def get_team():
+        
+        '''Gets the team from the database only for Media Team. Not the right approach'''
+        
+        team=Teams.objects.get(primary=9)
+        return team
+    
+    def load_team_members():
+        
+        '''This function loads all the team members for the Media team'''
 
+        load_team_members=Members.objects.filter(team=MediaTeam.get_team_id()).order_by('position')
+        team_members=[]
+        for i in range(len(load_team_members)):
+            team_members.append(load_team_members[i])
+        return team_members
+    
+    def media_manage_team_access_modifications(manage_team_access, event_access, ieee_id):
+        try:
+            Media_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access, event_access=event_access)
+            return True
+        except Media_Data_Access.DoesNotExist:
+            return False
 
 
             

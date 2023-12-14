@@ -20,6 +20,7 @@ from django.http import Http404,HttpResponseBadRequest,JsonResponse
 from datetime import datetime
 from port.renderData import PortData
 from system_administration.system_error_handling import ErrorHandling
+from .manage_access import MediaTeam_Render_Access
 
 logger=logging.getLogger(__name__)
 # Create your views here.
@@ -47,90 +48,90 @@ def manage_team(request):
 
     '''This function loads the manage team page for media team and is accessable
     by the co-ordinatior only, unless the co-ordinators gives access to others as well'''
-    user = request.user
-    has_access=(Access_Render.team_co_ordinator_access(team_id=MediaTeam.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username)
-    or MediaTeam.media_manage_team_access(user.username))
-
-    data_access = MediaTeam.load_manage_team_access()
-    team_members = MediaTeam.load_team_members()
-    #load all position for insb members
-    position=Branch.load_roles_and_positions()
-    #load all insb members
-    all_insb_members=Members.objects.all()
-
-    if request.method == "POST":
-        if (request.POST.get('add_member_to_team')):
-            #get selected members
-            members_to_add=request.POST.getlist('member_select1')
-            #get position
-            position=request.POST.get('position')
-            print(position)
-            print(members_to_add)
-            for member in members_to_add:
-                MediaTeam.add_member_to_team(member,position)
-            return redirect('media_team:manage_team')
-        
-        if (request.POST.get('remove_member')):
-            '''To remove member from team table'''
-            x = request.POST.get('remove_ieee_id')
-            print(x)
-            try:
-                Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
-                try:
-                    Media_Data_Access.objects.filter(ieee_id=request.POST['remove_ieee_id']).delete()
-                except Media_Data_Access.DoesNotExist:
-                     return redirect('media_team:manage_team')
-                return redirect('media_team:manage_team')
-            except:
-                pass
-
-        if request.POST.get('access_update'):
-            manage_team_access = False
-            if(request.POST.get('manage_team_access')):
-                manage_team_access=True
-            ieee_id=request.POST['access_ieee_id']
-            if (MediaTeam.media_manage_team_access_modifications(manage_team_access,ieee_id)):
-                permission_updated_for=Members.objects.get(ieee_id=ieee_id)
-                messages.info(request,f"Permission Details Was Updated for {permission_updated_for.name}")
-            else:
-                messages.info(request,f"Something Went Wrong! Please Contact System Administrator about this issue")
-
-        if request.POST.get('access_remove'):
-            '''To remove record from data access table'''
-            
-            ieeeId=request.POST['access_ieee_id']
-            if(MediaTeam.remove_member_from_manage_team_access(ieee_id=ieeeId)):
-                messages.info(request,"Removed member from Managing Team")
-                return redirect('media_team:manage_team')
-            else:
-                messages.info(request,"Something went wrong!")
-
-        if request.POST.get('update_data_access_member'):
-            
-            new_data_access_member_list=request.POST.getlist('member_select')
-            
-            if(len(new_data_access_member_list)>0):
-                for ieeeID in new_data_access_member_list:
-                    if(MediaTeam.add_member_to_manage_team_access(ieeeID)=="exists"):
-                        messages.info(request,f"The member with IEEE Id: {ieeeID} already exists in the Data Access Table")
-                    elif(MediaTeam.add_member_to_manage_team_access(ieeeID)==False):
-                        messages.info(request,"Something Went wrong! Please try again")
-                    elif(MediaTeam.add_member_to_manage_team_access(ieeeID)==True):
-                        messages.info(request,f"Member with {ieeeID} was added to the team table!")
-                        return redirect('media_team:manage_team')
-
-
-    context={
-        'data_access':data_access,
-        'members':team_members,
-        'insb_members':all_insb_members,
-        'positions':position,
-        
-    }
-
+    
+    has_access=MediaTeam_Render_Access.get_common_access(request)
     if has_access:
+        data_access = MediaTeam.load_data_access()
+        team_members = MediaTeam.load_team_members()
+        #load all position for insb members
+        position=Branch.load_roles_and_positions()
+
+        # Excluding position of EB, Faculty and SC-AG members
+        for i in position:
+            if(i.is_eb_member or i.is_faculty or i.is_sc_ag_eb_member):
+                position=position.exclude(pk=i.pk)
+        #load all insb members
+        all_insb_members=Members.objects.all()
+
+        if request.method == "POST":
+            if (request.POST.get('add_member_to_team')):
+                #get selected members
+                members_to_add=request.POST.getlist('member_select1')
+                #get position
+                position=request.POST.get('position')
+                for member in members_to_add:
+                    MediaTeam.add_member_to_team(member,position)
+                return redirect('media_team:manage_team')
+            
+            if (request.POST.get('remove_member')):
+                '''To remove member from team table'''
+                try:
+                    Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
+                    try:
+                        Media_Data_Access.objects.filter(ieee_id=request.POST['remove_ieee_id']).delete()
+                    except Media_Data_Access.DoesNotExist:
+                        return redirect('media_team:manage_team')
+                    return redirect('media_team:manage_team')
+                except:
+                    pass
+
+            if request.POST.get('access_update'):
+                manage_team_access = False
+                if(request.POST.get('manage_team_access')):
+                    manage_team_access=True
+                event_access=False
+                if(request.POST.get('event_access')):
+                    event_access=True
+                ieee_id=request.POST['access_ieee_id']
+                if (MediaTeam.media_manage_team_access_modifications(manage_team_access, event_access, ieee_id)):
+                    permission_updated_for=Members.objects.get(ieee_id=ieee_id)
+                    messages.info(request,f"Permission Details Was Updated for {permission_updated_for.name}")
+                else:
+                    messages.info(request,f"Something Went Wrong! Please Contact System Administrator about this issue")
+
+            if request.POST.get('access_remove'):
+                '''To remove record from data access table'''
+                
+                ieeeId=request.POST['access_ieee_id']
+                if(MediaTeam.remove_member_from_manage_team_access(ieee_id=ieeeId)):
+                    messages.info(request,"Removed member from Managing Team")
+                    return redirect('media_team:manage_team')
+                else:
+                    messages.info(request,"Something went wrong!")
+
+            if request.POST.get('update_data_access_member'):
+                
+                new_data_access_member_list=request.POST.getlist('member_select')
+                
+                if(len(new_data_access_member_list)>0):
+                    for ieeeID in new_data_access_member_list:
+                        if(MediaTeam.add_member_to_manage_team_access(ieeeID)=="exists"):
+                            messages.info(request,f"The member with IEEE Id: {ieeeID} already exists in the Data Access Table")
+                        elif(MediaTeam.add_member_to_manage_team_access(ieeeID)==False):
+                            messages.info(request,"Something Went wrong! Please try again")
+                        elif(MediaTeam.add_member_to_manage_team_access(ieeeID)==True):
+                            messages.info(request,f"Member with {ieeeID} was added to the team table!")
+                            return redirect('media_team:manage_team')
+        context={
+            'data_access':data_access,
+            'members':team_members,
+            'insb_members':all_insb_members,
+            'positions':position,
+            
+        } 
         return render(request,"media_team/manage_team.html",context=context)
-    return render(request,"access_denied2.html")
+    else:
+        return render(request,"media_team/access_denied.html")
 
 @login_required
 def event_page(request):
@@ -151,56 +152,60 @@ def event_form(request,event_id):
     
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
-        #Getting media links and images from database. If does not exist then they are set to none
+        has_access = MediaTeam_Render_Access.access_for_events(request)
+        if(has_access):
+            #Getting media links and images from database. If does not exist then they are set to none
 
-        try:
-            media_links = Media_Link.objects.get(event_id = Events.objects.get(pk=event_id))
-            media_images = Media_Images.objects.filter(event_id = Events.objects.get(pk=event_id))
-            number_of_uploaded_images = len(media_images)
-        except:
-            media_links = None
-            media_images = None
-            number_of_uploaded_images = 0
-        
-
-        if request.method == "POST":
-
-            if request.POST.get('save'):
-
-                #getting all data from page
-
-                folder_drive_link_for_event_pictures = request.POST.get('drive_link_of_event')
-                folder_drive_link_for_pictures_with_logos = request.POST.get('logo_drive_link_of_event')
-                selected_images = request.FILES.getlist('image')
-
-                if(MediaTeam.add_links_and_images(folder_drive_link_for_event_pictures,folder_drive_link_for_pictures_with_logos,
-                                            selected_images,event_id)):
-                    messages.success(request,'Saved Changes!')
-                else:
-                    messages.error(request,'Please Fill All Fields Properly!')
-                return redirect("media_team:event_form",event_id)
+            try:
+                media_links = Media_Link.objects.get(event_id = Events.objects.get(pk=event_id))
+                media_images = Media_Images.objects.filter(event_id = Events.objects.get(pk=event_id))
+                number_of_uploaded_images = len(media_images)
+            except:
+                media_links = None
+                media_images = None
+                number_of_uploaded_images = 0
             
-            if request.POST.get('remove_image'):
 
-                #When a particular picture is deleted, it gets the image url from the modal
+            if request.method == "POST":
 
-                image_url = request.POST.get('remove_image')
-                if(MediaTeam.remove_image(image_url,event_id)):
-                    messages.success(request,'Saved Changes!')
-                else:
-                    messages.error(request,'Something went wrong')
-                return redirect("media_team:event_form",event_id)
-       
-        context={
-            'media_links' : media_links,
-            'media_images':media_images,
-            'media_url':settings.MEDIA_URL,
-            'allowed_image_upload':6-number_of_uploaded_images,
-            'all_sc_ag':sc_ag,
+                if request.POST.get('save'):
 
-        }
+                    #getting all data from page
 
-        return render(request,"media_team/media_event_form.html",context)
+                    folder_drive_link_for_event_pictures = request.POST.get('drive_link_of_event')
+                    folder_drive_link_for_pictures_with_logos = request.POST.get('logo_drive_link_of_event')
+                    selected_images = request.FILES.getlist('image')
+
+                    if(MediaTeam.add_links_and_images(folder_drive_link_for_event_pictures,folder_drive_link_for_pictures_with_logos,
+                                                selected_images,event_id)):
+                        messages.success(request,'Saved Changes!')
+                    else:
+                        messages.error(request,'Please Fill All Fields Properly!')
+                    return redirect("media_team:event_form",event_id)
+                
+                if request.POST.get('remove_image'):
+
+                    #When a particular picture is deleted, it gets the image url from the modal
+
+                    image_url = request.POST.get('remove_image')
+                    if(MediaTeam.remove_image(image_url,event_id)):
+                        messages.success(request,'Saved Changes!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("media_team:event_form",event_id)
+        
+            context={
+                'media_links' : media_links,
+                'media_images':media_images,
+                'media_url':settings.MEDIA_URL,
+                'allowed_image_upload':6-number_of_uploaded_images,
+                'all_sc_ag':sc_ag,
+
+            }
+            return render(request,"media_team/media_event_form.html",context)
+        else:
+            return redirect('main_website:event_details', event_id)
+        
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
