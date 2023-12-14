@@ -180,8 +180,7 @@ def get_all_registered_members(request):
         messages.error(request,"Soemthing went wrong. Please try again!")
         
 
-def getRecruitmentStats():
-    
+def getRecruitmentStats():    
     """Returns a lists of the recruitment stats for the last 5 sessions.
     Return the seesion name and the number of people per session in seperate lists"""
 

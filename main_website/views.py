@@ -377,11 +377,15 @@ def volunteers_page(request):
 def all_members(request):
     # get all registered members of INSB
     get_all_members = userData.get_all_registered_members(request=request)
+    recruitment_stat=userData.getRecruitmentStats()
+    
     
     context={
         'page_title':"All Registered Members & Member Statistics of IEEE NSU SB",
         'members':get_all_members,
         'male_count':Members.objects.filter(gender="Male").count(),
         'female_count':Members.objects.filter(gender="Female").count(),
+        'session_name':recruitment_stat[0],
+        'session_recruitee':recruitment_stat[1],
     }
     return render(request,'Members/All Members/all_members.html',context=context)
