@@ -394,7 +394,5 @@ class MDT_DATA:
             if is_active:
                 member.is_active_member = True
                 member.save()
-                print("true")
-            print("false")
             
 

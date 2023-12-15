@@ -219,12 +219,12 @@ DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
 CELERY_BROKER_URL = "amqps://fhfqmapx:YUA5So69ozn0PUIB8eJHSrwz6dhCA07W@rattlesnake.rmq.cloudamqp.com/fhfqmapx"
 
 CELERY_BEAT_SCHEDULE = {
-    "active_inactive_member_status_task":{
-        "task":"users.tasks.running_task",
-        "schedule":crontab(minute=0,hour=0),
-    },
+    # "active_inactive_member_status_task":{
+    #     "task":"users.tasks.running_task",
+    #     "schedule":crontab(minute=0,hour=0),
+    # },
     "sending_email_task":{
         "task":"users.tasks.sending_email",
-        "schedule":crontab(minute=0,hour='*/2'),
+        "schedule":60,
     },
 }
