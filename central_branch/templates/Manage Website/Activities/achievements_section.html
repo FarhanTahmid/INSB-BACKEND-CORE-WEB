@@ -64,73 +64,73 @@
     <!--Table Ends-->
     <br>
     <br>
-    <!--Add modal-->
-    <div id="m-s-a" class="modal" data-backdrop="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add New Achievement!</h5>
-            </div>
-            <div class="modal-body p-lg">
-              <p>Do select the Position of the Member Carefully!</p>
-              <p>This will update the Members Position in the Database and also keep a record of the Member in the Panel.</p>
-              <br>
-            </div>
-            <!--Position Input-->
-
-            <!--Position Input Ends-->
-
-            <!--Search table-->
-            <form method="POST">
-                {% csrf_token %}
-                <label style="margin-left:5px;">Select Position</label>
-                <select id="position" name="position">
-                    {% for position in positions %}
-                        <option value={{position.id}}>{{ position.role }}</option>
-                    {% endfor %} 
-                </select>
-                <div class="table-container">
-                    <label style="margin-left: 5px;">Search</label>
-                    <input class="w-75" type="text" id="searchInput2" placeholder="Search Member" onkeyup="searchTable2()">
-                    <div class="table-wrapper">
-                        <table class="table2" id="data2">
-                            <thead>
-                                <tr id="row">
-                                    <th>Name</th>
-                                    <th>IEEE ID</th>
-                                    <th>Current Position</th>
-                                    <th>Email</th>
-                                    <th>Select</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for member in insb_members %}
-                                <tr>
-                                    <td>{{ member.name }}</td>
-                                    <td>{{ member.ieee_id }}</td>
-                                    <td>{{ member.position }}</td>
-                                    <td>{{ member.email_ieee }}</td>
-                                    <td>
-                                        <input type="checkbox" id="select" name="member_select" value={{member.ieee_id}}>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+    <!--Modal form-->
+    <div id="m-s-a" class="modal fade animate" data-backdrop="true">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-dialog modal-lg" id="animate">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title">Add a New Achievements</h5>
                     </div>
-                </div>
-            
-                <div class="modal-footer">
-                <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-            
-                    <input type="submit" class="btn primary p-x-md" name="add_executive_to_panel" value="Add Executive Member"></input>  
-                </div>
-            </form>
+                    
+                    <div class="modal-body text-left p-lg">
+                        
+                        <p>View the Image given below to understand about the fields and fill the Form according to it.</p>
+                        <!-- Thumbnail image (clickable) -->
+                        <!--If you wish to change photo, make changes in both of the places-->
+                        <div style="text-align:center;">
+                            <img src="{% static 'images/homepage_banner_tutorial.jpg'%}" alt="Thumbnail" width="250" height="150" onclick="openLightbox('{% static 'images/homepage_banner_tutorial.jpg' %}')">
+                        </div>
 
-          </div><!-- /.modal-content -->
+                        <!--Form start-->
+
+                        <div class="container">
+                            <div class="padding">
+                                <div class="row" >
+                                    <div class="col-sm-10">
+                                        <div class="box">
+                                            <div class="box-header">
+                                                <h1 style="text-align:center;">Provide Achievement Details</h1>
+                                            </div>
+                                            
+                                            <div class="box-body">
+                                                <div class="form-control">
+                                                    {{form.media}}
+                                                    {{form.as_p}}
+                                                    <label for="award">Award Winner:</label>
+                                                    <select name="award_of" id="award">
+                                                        <option class="form-control" value="volvo">Volvo</option>
+                                                        <option value="saab">Saab</option>
+                                                        <option value="mercedes">Mercedes</option>
+                                                        <option value="audi">Audi</option>
+                                                    </select>
+                                                </div>
+                                                <br>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            
+                    </div>
+
+                    <div class="modal-footer">
+                    <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                    <input type="submit" name="add_banner" class="btn btn-success p-x-md" value="Add"></input>               
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </form>
+        <!-- Lightbox overlay (hidden by default) -->
+        <div id="lightbox" class="overlay">
+            <span class="close-btn" onclick="closeLightbox()">&times;</span>
+            <img id="lightbox-img">
         </div>
     </div>
-    <!--Add modal ends-->
+    <br>
     <script>
         function searchTable() {
             // Declare variables

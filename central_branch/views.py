@@ -28,6 +28,7 @@ import logging
 import traceback
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from central_events.forms import EventForm
+from .forms import *
 
 
 # Create your views here.
@@ -604,7 +605,11 @@ def manage_website_homepage(request):
 
 @login_required
 def manage_achievements(request):
-    return render(request,'Manage Website/Activities/manage_achievements.html')
+    form=AchievementForm
+    context={
+        'form':form
+    }
+    return render(request,'Manage Website/Activities/manage_achievements.html',context=context)
 
 
 @login_required

@@ -67,8 +67,8 @@ class Blog(models.Model):
 #Table for Achievements
 class Achievements(models.Model):
     award_name=models.CharField(null=False,blank=False,max_length=100)
-    award_short_description=models.CharField(null=False,blank=False,max_length=100)
-    award_long_description=RichTextField(null=False,blank=False,max_length=200)
+    award_description=RichTextField(null=True,blank=True,max_length=500)
+    award_winning_year=models.IntegerField(null=False,blank=False)
     award_of=models.ForeignKey(Chapters_Society_and_Affinity_Groups,on_delete=models.CASCADE)
     award_picture=models.ImageField(null=True,blank=True,upload_to='main_website_files/achievements/')
     
