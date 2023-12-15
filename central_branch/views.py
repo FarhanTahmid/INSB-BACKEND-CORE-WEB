@@ -1,7 +1,7 @@
 import logging
 import traceback
 from django.http import JsonResponse
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from central_events.models import Event_Category, Event_Venue, Events, SuperEvents
@@ -620,6 +620,11 @@ def manage_achievements(request):
                 return redirect('central_branch:manage_achievements')
             else:
                 return redirect('central_branch:manage_achievements')
+        if(request.POST.get('remove_achievement')):
+            if(MainWebsiteRenderData.delete_achievement(request=request)):
+                return redirect('central_branch:manage_achievements')
+            else:
+                return redirect('central_branch:manage_achievements')
 
     context={
         'form':form,
@@ -628,6 +633,26 @@ def manage_achievements(request):
     }
     return render(request,'Manage Website/Activities/manage_achievements.html',context=context)
 
+@login_required
+def update_achievements(request,pk):
+    # get the achievement and form
+    achievement_to_update=get_object_or_404(Achievements,pk=pk)
+    if(request.method=="POST"):
+        if(request.POST.get('update_achievement')):
+            form=AchievementForm(request.POST,request.FILES,instance=achievement_to_update)
+            if(form.is_valid()):
+                form.save()
+                messages.info(request,"Achievement Informations were updates")
+                return redirect('central_branch:manage_achievements')
+    else:
+        form=AchievementForm(instance=achievement_to_update)
+    
+    context={
+        'form':form,
+        'achievement':achievement_to_update,
+    }
+
+    return render(request,"Manage Website/Activities/achievements_update_section.html",context=context)
 
 @login_required
 def manage_view_access(request):

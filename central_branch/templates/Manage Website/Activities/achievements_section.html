@@ -1,135 +1,138 @@
 {% block achievements_section %}
 {% load static %}
-    <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>Achievements Section</b></h2>
-    
-    <!--Messages-->
-    <div style="justify-content:center; text-align:center;">
-        {% if messages %}
-            {% for message in messages %}
-                <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
-            {% endfor %}
-        {% endif %}
-    </div>
-    <!--Messages End-->
-    
-    <!--Executive Commitee Table For the Panel-->
-    <div class="box">
-        <div class="box-header">
+<body>
+    <div class="app" id="app">
+        <div ui-view class="app-body" style="justify-content:center; margin-left:25%; margin-right:15%;" id="view">
+
+            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>Achievements Section</b></h2>
             
-            <div style="text-align:right;">
-            <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add New Achievements</button>
+            <!--Messages-->
+            <div style="justify-content:center; text-align:center;">
+                {% if messages %}
+                    {% for message in messages %}
+                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                    {% endfor %}
+                {% endif %}
             </div>
-            <small>This table holds the data of Achievements in the main website of IEEE NSU SB</small>
-            <small style="color:green;"><span style="color:red;">* </span>Adding achievements here will update them in the Main Website.</small>
-            <br>
-            <label style="margin-left:5px;">Search:</label>
-            <input class="form-control w-75" type="text" id="searchInput" placeholder="Search..." onkeyup="searchTable()">
-        </div>
-        <div class="table-responsive" style="max-height:300px; overflow-y:auto;">
-        <table class="table table-bordered m-0" style="text-align:center;">
-            <thead>
-            <tr>
-                <th style="text-align:center;">Achievement Title</th>
-                <th style="text-align:center;">Achievement of</th>
-                <th style="text-align:center;">Winning Year</th>
-                <th style="text-align:center;">Action</th>
-            </tr>
-            </thead>
-            <tbody>
+            <!--Messages End-->
             
-                {% for i in all_achievements %}
-                <tr>
-                    <td><a style="text-decoration:none;color:#00629B;" href="#">{{i.award_name}}</a></td>
-                    <td>{{ i.award_of.group_name  }}</td>
-                    <td>{{ i.award_winning_year }}</td>
-                    <td>
-                    <form method="POST">
-                        {% csrf_token %}
-                            <div style="justify-content:center;text-align:center;">  
-                                <div class="btn-container">
-                                    <input class="btn btn-outline b-danger text-danger" name="remove_member" type="submit" value="Remove">
-                                    <input class="btn btn-outline b-warn text-warn" name="remove_member" type="submit" value="Update">
-
-                                </div>
-                              </div>
-                            <input type="hidden" name="award_pk" value={{i.pk}}>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        </div>
-    </div>
-    <!--Table Ends-->
-    <br>
-    <br>
-    <!--Modal form-->
-    <div id="m-s-a" class="modal fade animate" data-backdrop="true">
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="modal-dialog modal-lg" id="animate">
-                <div class="modal-content">
-                    <div class="modal-header">
-                    <h5 class="modal-title">Add a New Achievements</h5>
-                    </div>
+            <!--Achievements Table-->
+            <div class="box">
+                <div class="box-header">
                     
-                    <div class="modal-body text-left p-lg">
-                        
-                        <p>View the Image given below to understand about the fields and fill the Form according to it.</p>
-                        <!-- Thumbnail image (clickable) -->
-                        <!--If you wish to change photo, make changes in both of the places-->
-                        <div style="text-align:center;">
-                            <img src="{% static 'images/homepage_banner_tutorial.jpg'%}" alt="Thumbnail" width="250" height="150" onclick="openLightbox('{% static 'images/homepage_banner_tutorial.jpg' %}')">
-                        </div>
-
-                        <!--Form start-->
-
-                        <div class="container">
-                            <div class="padding">
-                                <div class="row" >
-                                    <div class="col-sm-10">
-                                        <div class="box">
-                                            <div class="box-header">
-                                                <h1 style="text-align:center;">Provide Achievement Details</h1>
-                                            </div>
-                                            
-                                            <div class="box-body">
-                                                <div class="form-control">
-                                                    {{form.media}}
-                                                    {{form.as_p}}
-                                                    <label for="award">Award Winner:</label>
-                                                    <select class="form-control" name="award_of" id="award">
-                                                        {% for i in load_all_sc_ag %}
-                                                            <option  value="{{i.primary}}">{{i.group_name}}</option>
-                                                        {% endfor %}
-                                                    </select>
+                    <div style="text-align:right;">
+                    <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add New Achievements</button>
+                    </div>
+                    <small>This table holds the data of Achievements in the main website of IEEE NSU SB</small>
+                    <small style="color:green;"><span style="color:red;">* </span>Adding achievements here will update them in the Main Website.</small>
+                    <br>
+                    <label style="margin-left:5px;">Search:</label>
+                    <input class="form-control w-75" type="text" id="searchInput" placeholder="Search..." onkeyup="searchTable()">
+                </div>
+                <div class="table-responsive" style="max-height:300px; overflow-y:auto;">
+                <table class="table table-bordered m-0" style="text-align:center;">
+                    <thead>
+                    <tr>
+                        <th style="text-align:center;">Achievement Title</th>
+                        <th style="text-align:center;">Achievement of</th>
+                        <th style="text-align:center;">Winning Year</th>
+                        <th style="text-align:center;">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    
+                        {% for i in all_achievements %}
+                        <tr>
+                            <td><a style="text-decoration:none;color:#00629B;" href="{% url 'central_branch:achievements_update' i.pk %}">{{i.award_name}}</a></td>
+                            <td>{{ i.award_of.group_name  }}</td>
+                            <td>{{ i.award_winning_year }}</td>
+                            <td>
+                            <form method="POST">
+                                {% csrf_token %}
+                                    <div style="justify-content:center;text-align:center;">  
+                                        <div class="btn-container">
+                                            <input class="btn btn-outline b-danger text-danger" name="remove_achievement" type="submit" value="Remove">
+                                            <a class="btn btn-outline b-warn text-warn" href="{% url 'central_branch:achievements_update' i.pk %}">Update</a>
+        
+                                        </div>
+                                      </div>
+                                    <input type="hidden" name="remove_achievement" value={{i.pk}}>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            <!--Table Ends-->
+            <br>
+            <br>
+            <!--Modal form-->
+            <div id="m-s-a" class="modal fade animate" data-backdrop="true">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-dialog modal-lg" id="animate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Add a New Achievements</h5>
+                            </div>
+                            
+                            <div class="modal-body text-left p-lg">
+                                
+                                <p>View the Image given below to understand about the fields and fill the Form according to it.</p>
+                                <!-- Thumbnail image (clickable) -->
+                                <!--If you wish to change photo, make changes in both of the places-->
+                                <div style="text-align:center;">
+                                    <img src="{% static 'images/homepage_banner_tutorial.jpg'%}" alt="Thumbnail" width="250" height="150" onclick="openLightbox('{% static 'images/homepage_banner_tutorial.jpg' %}')">
+                                </div>
+        
+                                <!--Form start-->
+        
+                                <div class="container">
+                                    <div class="padding">
+                                        <div class="row" >
+                                            <div class="col-sm-10">
+                                                <div class="box">
+                                                    <div class="box-header">
+                                                        <h1 style="text-align:center;">Provide Achievement Details</h1>
+                                                    </div>
+                                                    
+                                                    <div class="box-body">
+                                                        <div class="form-control">
+                                                            {{form.media}}
+                                                            {{form.as_p}}
+                                                        </div>
+                                                        <br>
+                                                    </div>
+                                                    
                                                 </div>
-                                                <br>
                                             </div>
-                                            
                                         </div>
                                     </div>
                                 </div>
+                                    
                             </div>
-                        </div>
-                            
+        
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <input type="submit" name="add_achievement" class="btn btn-success p-x-md" value="Add"></input>               
+                            </div>
+                        </div><!-- /.modal-content -->
                     </div>
-
-                    <div class="modal-footer">
-                    <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                    <input type="submit" name="add_achievement" class="btn btn-success p-x-md" value="Add"></input>               
-                    </div>
-                </div><!-- /.modal-content -->
+                </form>
+                <!-- Lightbox overlay (hidden by default) -->
+                <div id="lightbox" class="overlay">
+                    <span class="close-btn" onclick="closeLightbox()">&times;</span>
+                    <img id="lightbox-img">
+                </div>
             </div>
-        </form>
-        <!-- Lightbox overlay (hidden by default) -->
-        <div id="lightbox" class="overlay">
-            <span class="close-btn" onclick="closeLightbox()">&times;</span>
-            <img id="lightbox-img">
+            <br>
         </div>
     </div>
-    <br>
+    
+</body>
+
     <script>
         function searchTable() {
             // Declare variables
