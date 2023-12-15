@@ -682,6 +682,25 @@ def manage_news(request):
     return render(request,"Manage Website/Activities/manage_news.html",context=context)
 
 @login_required
+def update_news(request,pk):
+    # get the news instance to update
+    news_to_update = get_object_or_404(News, pk=pk)
+    if request.method == "POST":
+        form = NewsForm(request.POST, request.FILES, instance=news_to_update)
+        if form.is_valid():
+            form.save()
+            messages.info(request,"News Informations were updates")
+            return redirect('central_branch:manage_news')
+    else:
+        form = NewsForm(instance=news_to_update)
+    context={
+        'form':form,
+        'news':news_to_update,
+    }
+    return render(request,'Manage Website/Activities/news_update_section.html',context=context)
+
+
+@login_required
 def manage_view_access(request):
     # get access of the page first
 

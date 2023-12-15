@@ -43,7 +43,7 @@ class NewsForm(forms.ModelForm):
 
         # Delete the previous image if it exists
         if instance.pk and 'news_picture' in self.changed_data:
-            previous_instance = Achievements.objects.get(pk=instance.pk)
+            previous_instance = News.objects.get(pk=instance.pk)
             previous_picture = previous_instance.news_picture
 
             # Delete the associated file from the file system
