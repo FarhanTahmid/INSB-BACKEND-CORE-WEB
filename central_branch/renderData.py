@@ -16,7 +16,6 @@ from django.db.utils import IntegrityError
 import traceback
 import logging
 from system_administration.system_error_handling import ErrorHandling
-
 class Branch:
 
     logger=logging.getLogger(__name__)

@@ -29,7 +29,7 @@ import traceback
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from central_events.forms import EventForm
 from .forms import *
-
+from .website_render_data import MainWebsiteRenderData
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -605,9 +605,26 @@ def manage_website_homepage(request):
 
 @login_required
 def manage_achievements(request):
+    # load the achievement form
     form=AchievementForm
+    # load all SC AG And Branch
+    load_award_of=Chapters_Society_and_Affinity_Groups.objects.all().order_by('primary')
+    
+    # load all achievements
+    all_achievements=MainWebsiteRenderData.get_all_achievements(request=request)
+    
+    if(request.method=="POST"):
+        if(request.POST.get('add_achievement')):
+            # add award
+            if(MainWebsiteRenderData.add_awards(request=request)):
+                return redirect('central_branch:manage_achievements')
+            else:
+                return redirect('central_branch:manage_achievements')
+
     context={
-        'form':form
+        'form':form,
+        'load_all_sc_ag':load_award_of,
+        'all_achievements':all_achievements,
     }
     return render(request,'Manage Website/Activities/manage_achievements.html',context=context)
 

@@ -37,11 +37,11 @@
             </thead>
             <tbody>
             
-                {% for member in eb_member %}
+                {% for i in all_achievements %}
                 <tr>
-                    <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.member.ieee_id %}">{{member.member.ieee_id}}</a></td>
-                    <td>{{ member.member.name  }}</td>
-                    <td>{{member.member.email_ieee}}</td>
+                    <td><a style="text-decoration:none;color:#00629B;" href="#">{{i.award_name}}</a></td>
+                    <td>{{ i.award_of.group_name  }}</td>
+                    <td>{{ i.award_winning_year }}</td>
                     <td>
                     <form method="POST">
                         {% csrf_token %}
@@ -52,7 +52,7 @@
 
                                 </div>
                               </div>
-                            <input type="hidden" name="remove_panel_member" value={{member.member.ieee_id}}>
+                            <input type="hidden" name="award_pk" value={{i.pk}}>
                         </form>
                     </td>
                 </tr>
@@ -99,11 +99,10 @@
                                                     {{form.media}}
                                                     {{form.as_p}}
                                                     <label for="award">Award Winner:</label>
-                                                    <select name="award_of" id="award">
-                                                        <option class="form-control" value="volvo">Volvo</option>
-                                                        <option value="saab">Saab</option>
-                                                        <option value="mercedes">Mercedes</option>
-                                                        <option value="audi">Audi</option>
+                                                    <select class="form-control" name="award_of" id="award">
+                                                        {% for i in load_all_sc_ag %}
+                                                            <option  value="{{i.primary}}">{{i.group_name}}</option>
+                                                        {% endfor %}
                                                     </select>
                                                 </div>
                                                 <br>
@@ -119,7 +118,7 @@
 
                     <div class="modal-footer">
                     <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                    <input type="submit" name="add_banner" class="btn btn-success p-x-md" value="Add"></input>               
+                    <input type="submit" name="add_achievement" class="btn btn-success p-x-md" value="Add"></input>               
                     </div>
                 </div><!-- /.modal-content -->
             </div>
