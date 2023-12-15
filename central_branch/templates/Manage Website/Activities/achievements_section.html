@@ -1,136 +1,138 @@
 {% block achievements_section %}
 {% load static %}
-    <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>Achievements Section</b></h2>
-    
-    <!--Messages-->
-    <div style="justify-content:center; text-align:center;">
-        {% if messages %}
-            {% for message in messages %}
-                <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
-            {% endfor %}
-        {% endif %}
-    </div>
-    <!--Messages End-->
-    
-    <!--Executive Commitee Table For the Panel-->
-    <div class="box">
-        <div class="box-header">
+<body>
+    <div class="app" id="app">
+        <div ui-view class="app-body" style="justify-content:center; margin-left:25%; margin-right:15%;" id="view">
+
+            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>Achievements Section</b></h2>
             
-            <div style="text-align:right;">
-            <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add New Achievements</button>
+            <!--Messages-->
+            <div style="justify-content:center; text-align:center;">
+                {% if messages %}
+                    {% for message in messages %}
+                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                    {% endfor %}
+                {% endif %}
             </div>
-            <small>This table holds the data of Achievements in the main website of IEEE NSU SB</small>
-            <small style="color:green;"><span style="color:red;">* </span>Adding achievements here will update them in the Main Website.</small>
-            <br>
-            <label style="margin-left:5px;">Search:</label>
-            <input class="form-control w-75" type="text" id="searchInput" placeholder="Search..." onkeyup="searchTable()">
-        </div>
-        <div class="table-responsive" style="max-height:300px; overflow-y:auto;">
-        <table class="table table-bordered m-0" style="text-align:center;">
-            <thead>
-            <tr>
-                <th style="text-align:center;">Achievement Title</th>
-                <th style="text-align:center;">Achievement of</th>
-                <th style="text-align:center;">Winning Year</th>
-                <th style="text-align:center;">Action</th>
-            </tr>
-            </thead>
-            <tbody>
+            <!--Messages End-->
             
-                {% for member in eb_member %}
-                <tr>
-                    <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.member.ieee_id %}">{{member.member.ieee_id}}</a></td>
-                    <td>{{ member.member.name  }}</td>
-                    <td>{{member.member.email_ieee}}</td>
-                    <td>
-                    <form method="POST">
-                        {% csrf_token %}
-                            <div style="justify-content:center;text-align:center;">  
-                                <div class="btn-container">
-                                    <input class="btn btn-outline b-danger text-danger" name="remove_member" type="submit" value="Remove">
-                                    <input class="btn btn-outline b-warn text-warn" name="remove_member" type="submit" value="Update">
-
-                                </div>
-                              </div>
-                            <input type="hidden" name="remove_panel_member" value={{member.member.ieee_id}}>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        </div>
-    </div>
-    <!--Table Ends-->
-    <br>
-    <br>
-    <!--Add modal-->
-    <div id="m-s-a" class="modal" data-backdrop="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add New Achievement!</h5>
-            </div>
-            <div class="modal-body p-lg">
-              <p>Do select the Position of the Member Carefully!</p>
-              <p>This will update the Members Position in the Database and also keep a record of the Member in the Panel.</p>
-              <br>
-            </div>
-            <!--Position Input-->
-
-            <!--Position Input Ends-->
-
-            <!--Search table-->
-            <form method="POST">
-                {% csrf_token %}
-                <label style="margin-left:5px;">Select Position</label>
-                <select id="position" name="position">
-                    {% for position in positions %}
-                        <option value={{position.id}}>{{ position.role }}</option>
-                    {% endfor %} 
-                </select>
-                <div class="table-container">
-                    <label style="margin-left: 5px;">Search</label>
-                    <input class="w-75" type="text" id="searchInput2" placeholder="Search Member" onkeyup="searchTable2()">
-                    <div class="table-wrapper">
-                        <table class="table2" id="data2">
-                            <thead>
-                                <tr id="row">
-                                    <th>Name</th>
-                                    <th>IEEE ID</th>
-                                    <th>Current Position</th>
-                                    <th>Email</th>
-                                    <th>Select</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for member in insb_members %}
-                                <tr>
-                                    <td>{{ member.name }}</td>
-                                    <td>{{ member.ieee_id }}</td>
-                                    <td>{{ member.position }}</td>
-                                    <td>{{ member.email_ieee }}</td>
-                                    <td>
-                                        <input type="checkbox" id="select" name="member_select" value={{member.ieee_id}}>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+            <!--Achievements Table-->
+            <div class="box">
+                <div class="box-header">
+                    
+                    <div style="text-align:right;">
+                    <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add New Achievements</button>
                     </div>
+                    <small>This table holds the data of Achievements in the main website of IEEE NSU SB</small>
+                    <small style="color:green;"><span style="color:red;">* </span>Adding achievements here will update them in the Main Website.</small>
+                    <br>
+                    <label style="margin-left:5px;">Search:</label>
+                    <input class="form-control w-75" type="text" id="searchInput" placeholder="Search..." onkeyup="searchTable()">
                 </div>
-            
-                <div class="modal-footer">
-                <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-            
-                    <input type="submit" class="btn primary p-x-md" name="add_executive_to_panel" value="Add Executive Member"></input>  
+                <div class="table-responsive" style="max-height:300px; overflow-y:auto;">
+                <table class="table table-bordered m-0" style="text-align:center;">
+                    <thead>
+                    <tr>
+                        <th style="text-align:center;">Achievement Title</th>
+                        <th style="text-align:center;">Achievement of</th>
+                        <th style="text-align:center;">Winning Year</th>
+                        <th style="text-align:center;">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    
+                        {% for i in all_achievements %}
+                        <tr>
+                            <td><a style="text-decoration:none;color:#00629B;" href="{% url 'central_branch:achievements_update' i.pk %}">{{i.award_name}}</a></td>
+                            <td>{{ i.award_of.group_name  }}</td>
+                            <td>{{ i.award_winning_year }}</td>
+                            <td>
+                            <form method="POST">
+                                {% csrf_token %}
+                                    <div style="justify-content:center;text-align:center;">  
+                                        <div class="btn-container">
+                                            <input class="btn btn-outline b-danger text-danger" name="remove_achievement" type="submit" value="Remove">
+                                            <a class="btn btn-outline b-warn text-warn" href="{% url 'central_branch:achievements_update' i.pk %}">Update</a>
+        
+                                        </div>
+                                      </div>
+                                    <input type="hidden" name="remove_achievement" value={{i.pk}}>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
                 </div>
-            </form>
-
-          </div><!-- /.modal-content -->
+            </div>
+            <!--Table Ends-->
+            <br>
+            <br>
+            <!--Modal form-->
+            <div id="m-s-a" class="modal fade animate" data-backdrop="true">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-dialog modal-lg" id="animate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Add a New Achievements</h5>
+                            </div>
+                            
+                            <div class="modal-body text-left p-lg">
+                                
+                                <p>View the Image given below to understand about the fields and fill the Form according to it.</p>
+                                <!-- Thumbnail image (clickable) -->
+                                <!--If you wish to change photo, make changes in both of the places-->
+                                <div style="text-align:center;">
+                                    <img src="{% static 'images/homepage_banner_tutorial.jpg'%}" alt="Thumbnail" width="250" height="150" onclick="openLightbox('{% static 'images/homepage_banner_tutorial.jpg' %}')">
+                                </div>
+        
+                                <!--Form start-->
+        
+                                <div class="container">
+                                    <div class="padding">
+                                        <div class="row" >
+                                            <div class="col-sm-10">
+                                                <div class="box">
+                                                    <div class="box-header">
+                                                        <h1 style="text-align:center;">Provide Achievement Details</h1>
+                                                    </div>
+                                                    
+                                                    <div class="box-body">
+                                                        <div class="form-control">
+                                                            {{form.media}}
+                                                            {{form.as_p}}
+                                                        </div>
+                                                        <br>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                    
+                            </div>
+        
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <input type="submit" name="add_achievement" class="btn btn-success p-x-md" value="Add"></input>               
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </form>
+                <!-- Lightbox overlay (hidden by default) -->
+                <div id="lightbox" class="overlay">
+                    <span class="close-btn" onclick="closeLightbox()">&times;</span>
+                    <img id="lightbox-img">
+                </div>
+            </div>
+            <br>
         </div>
     </div>
-    <!--Add modal ends-->
+    
+</body>
+
     <script>
         function searchTable() {
             // Declare variables
