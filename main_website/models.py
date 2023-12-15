@@ -77,3 +77,16 @@ class Achievements(models.Model):
     
     def __str__(self) -> str:
         return str(self.pk)
+
+# Table for news
+class News(models.Model):
+    news_title=models.CharField(null=False,blank=False,max_length=150)
+    news_subtitle=models.CharField(null=True,blank=True,max_length=100)
+    news_description=RichTextField(null=False,blank=False,max_length=500)
+    news_picture=models.ImageField(null=False,blank=False,upload_to='main_website_files/news/')
+    news_date=models.DateField(null=True,blank=True,help_text = "Please use the following format: <em>YYYY-MM-DD</em>.")
+    
+    class Meta:
+        verbose_name="News"
+    def __str__(self) -> str:
+        return str(self.pk)

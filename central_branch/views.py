@@ -655,6 +655,33 @@ def update_achievements(request,pk):
     return render(request,"Manage Website/Activities/achievements_update_section.html",context=context)
 
 @login_required
+def manage_news(request):
+    form=NewsForm
+    get_all_news=News.objects.all().order_by('-news_date')
+    
+    if(request.method=="POST"):
+        if(request.POST.get('add_news')):
+            form=NewsForm(request.POST,request.FILES)
+            if(form.is_valid()):
+                form.save()
+                messages.success(request,"A new News was added to the main page")
+                return redirect('central_branch:manage_news')
+        if(request.POST.get('remove_news')):
+            news_to_delete=request.POST['remove_news']
+            news_obj=News.objects.get(pk=news_to_delete)
+            if(os.path.isfile(news_obj.news_picture.path)):
+                os.remove(news_obj.news_picture.path)
+            news_obj.delete()
+            messages.info(request,"A news item was deleted!")
+            return redirect('central_branch:manage_news')
+    
+    context={
+        'form':form,
+        'all_news':get_all_news
+    }
+    return render(request,"Manage Website/Activities/manage_news.html",context=context)
+
+@login_required
 def manage_view_access(request):
     # get access of the page first
 
