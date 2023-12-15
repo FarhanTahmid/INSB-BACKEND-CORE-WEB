@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>event Tab</title>
+    <style>
+        body{
+            background-color: #A9A9A9;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        .mytabs{
+           
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 881px;
+            margin: 50px auto;
+            background: #ffff;
+            padding: 25px;
+            /* border-radius: 10px; */
+            box-shadow: 0 0 10px #0000;
+        }
+
+        .mytabs input[type="radio"]{
+            display: none;
+        }
+        .mytabs label {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            background: #050D3A;
+            font-weight: bold;
+            color: #ffff;
+            transition: background 0.3s ease;
+        }
+        .mytabs .tab{
+            width: 100%;
+            padding: 20px;
+            background: #ffff;
+            order: 1;
+            display: none;
+            border-radius: 0 0 5px 5px;
+        }
+
+        .mytabs .tab h2{
+            font-size: 2em;
+            
+
+        }
+
+        .mytabs input[type="radio"]:checked + label + .tab {
+            display: block;
+
+        }
+        .mytabs input[type="radio"]:checked + label{
+            background: #ECA220;
+
+        }
+
+        /* @media screen and (max-width: 881px) {
+            .mytabs label {
+                flex-basis: 100%;
+                border-radius: 10px;
+                margin-bottom: -1px;
+            }
+        } */
+
+
+
+    </style>
+</head>
+<body>
+
+    <!-- Tab starts here -->
+    <div class="mytabs">
+        <input type="radio" id="tab1" name="mytabs" checked="checked">
+        <label for="tab1">Tab 1</label>
+        <div class="tab">
+            <h2>This is the first tab.</h2>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quaerat adipisci explicabo quae, dolores est doloremque laboriosam nostrum, dignissimos aperiam ducimus eos. Tenetur hic in nemo consectetur? Laudantium, velit. Non, possimus illo dignissimos modi natus placeat ipsum officia, dolorum suscipit error rerum. Velit aliquam voluptate nostrum alias error iusto accusantium consectetur?</p>
+        </div>
+
+        <input type="radio" id="tab2" name="mytabs">
+        <label for="tab2">Tab 2</label>
+        <div class="tab">
+            <h2>This is the second tab.</h2>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quaerat adipisci explicabo quae, dolores est doloremque laboriosam nostrum, dignissimos aperiam ducimus eos. Tenetur hic in nemo consectetur? Laudantium, velit. Non, possimus illo dignissimos modi natus placeat ipsum officia, dolorum suscipit error rerum. Velit aliquam voluptate nostrum alias error iusto accusantium consectetur?</p>
+            </div>
+
+        <input type="radio" id="tab3" name="mytabs">
+        <label for="tab3">Tab 3</label>
+        <div class="tab">
+            <h2>This is the third tab.</h2>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quaerat adipisci explicabo quae, dolores est doloremque laboriosam nostrum, dignissimos aperiam ducimus eos. Tenetur hic in nemo consectetur? Laudantium, velit. Non, possimus illo dignissimos modi natus placeat ipsum officia, dolorum suscipit error rerum. Velit aliquam voluptate nostrum alias error iusto accusantium consectetur?</p>
+           </div> 
+           <!-- Add more tabs the same way -->
+
+
+
+
+        
+    </div>
+    
+</body>
+</html>
