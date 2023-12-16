@@ -36,14 +36,14 @@
                         <th style="text-align:center;">News Title</th>
                         <th style="text-align:center;">News Sub-title</th>
                         <th style="text-align:center;">News Date</th>
-
+                        <th style="text-align:center;">Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     
                         {% for i in all_news %}
                         <tr>
-                            <td><a style="text-decoration:none;color:#00629B;" href="#">{{i.news_title}}</a></td>
+                            <td><a style="text-decoration:none;color:#00629B;" href="{% url 'central_branch:update_news' i.pk %}">{{i.news_title}}</a></td>
                             <td>{{ i.news_subtitle  }}</td>
                             <td>{{ i.news_date  }}</td>
                             <td>

@@ -94,6 +94,12 @@ def achievements(request):
     
     return render(request,"Activities/achievements.html",context=context)
 
+def news(request):
+    context={
+        'page_title':"News"
+    }
+    return render(request,'Activities/news.html',context=context)
+
     
 
 ######################### SOCIETY & AG WORKS #######################
