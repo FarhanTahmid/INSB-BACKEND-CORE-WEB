@@ -9,12 +9,21 @@
                         <div class="box-header" style="text-align:center;">
                             <h1>Provide Event Collaboration Details</h1>
                         </div>
+                        
+
                         <!--Error Message-->
-                        <div class="py-3 text-center">
+
+                        <div class="py-3 text-center" style="justify-content:center; text-align:center;">
+                            {% if messages %}
                             {% for message in messages %}
-                                <p style="color:red" class="message">{{message}}</p>
+                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
                             {% endfor %}
+                            {% endif %}
                         </div>
+
+                        <!--Error Messages End-->
+
+
                         <form method="POST">
                             {% csrf_token %}
                             <div class="box-body">

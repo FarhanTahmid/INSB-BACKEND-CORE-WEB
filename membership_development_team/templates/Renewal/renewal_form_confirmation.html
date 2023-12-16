@@ -50,14 +50,19 @@
                                 
                             </h4>
                         </div>
-                        <div style="justify-content:center; text-align:center;">
-                            {% if messages %}
-                                {% for message in messages %}
-                                    <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
+                       
                 
+                <!--Messages-->
+                <div style="justify-content:center; text-align:center;">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <!--Messages End-->
+                
+
                         
         <!--search session start -->
 

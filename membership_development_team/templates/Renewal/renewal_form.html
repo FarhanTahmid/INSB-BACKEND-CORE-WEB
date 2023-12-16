@@ -67,11 +67,18 @@
                                 <div class="py-3 text-center">
 
                                     {% if has_access_to_view %}
-                                        {% for message in messages %}
-                                            <p style="font-size:25px;color:red;" class="message">{{message}}</p>
-                                        {% endfor %}
-                                    {% endif %}
-                                
+                                                   
+                <!--Messages-->
+                <div style="justify-content:center; text-align:center;">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <!--Messages End-->
+                
+
                     
                                 </div>
                                 

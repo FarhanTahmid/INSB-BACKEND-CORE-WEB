@@ -351,14 +351,15 @@
             <h1 style="text-align:center;font-size:30px;">Add Details</h1>
           </div>
 
-          <div class="py-3 text-center">
-            {% for message in messages %}
-                <p style="color: red;" class="message">
-                    {{ message }}
-                    <button class="close-message" onclick="closeMessage(this)" style="border: none; background: none;">✖</button>
-                </p>
-            {% endfor %}
-          </div>
+         <!--Messages-->
+         <div style="justify-content:center; text-align:center;">
+          {% if messages %}
+              {% for message in messages %}
+                  <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+              {% endfor %}
+          {% endif %}
+      </div>
+      <!--Messages End-->
 
           <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}

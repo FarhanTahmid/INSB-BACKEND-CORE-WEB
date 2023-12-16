@@ -10,15 +10,20 @@
         </div>
         <small>This table holds the data of the Registered Members of {{sc_ag_info.group_name}}</small>
         <strong>Total Number of Registered Members in Database:<span style="color:blue;"> {{member_count}}</span></strong>
-        <!--Messages-->
-        <div style="justify-content:center; text-align:center;">
-            {% if messages %}
-                {% for message in messages %}
-                    <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
-                {% endfor %}
-            {% endif %}
-        </div>
-        <!--Messages End-->
+        
+                
+                <!--Messages-->
+                <div style="justify-content:center; text-align:center;">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <!--Messages End-->
+                
+
+
         <br>
         <label style="margin-left:5px;">Search:</label>
         <input class="form-control w-75" type="text" id="searchInput" placeholder="Search Member by name" onkeyup="searchTable()">

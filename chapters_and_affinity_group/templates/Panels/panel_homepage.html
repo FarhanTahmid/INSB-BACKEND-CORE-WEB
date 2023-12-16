@@ -111,15 +111,20 @@
             {% endif %}
             
             <br>
-            <!--Messages-->
-            <div style="justify-content:center; text-align:center;">
-                {% if messages %}
-                    {% for message in messages %}
-                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
-                    {% endfor %}
-                {% endif %}
-            </div>
-            <!--Messages End-->
+            
+                
+                <!--Messages-->
+                <div style="justify-content:center; text-align:center;">
+                  {% if messages %}
+                      {% for message in messages %}
+                          <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                      {% endfor %}
+                  {% endif %}
+              </div>
+              <!--Messages End-->
+              
+
+
             
             <!--Panel Tenure Table Start-->
             <div style="text-align:center; margin-top=30px;">  

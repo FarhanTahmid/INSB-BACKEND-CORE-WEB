@@ -102,12 +102,19 @@
                     {% include "Events/event_collaboration_details_form_content.html" %}
                 {% endblock collaboration_form %}
         
-            <div>
-                {% for message in messages %}
-                <p>{{message}}</p>
-                {% endfor %}
-                <p></p>
-            </div>
+            
+                        <!--Error Message-->
+
+                        <div class="py-3 text-center" style="justify-content:center; text-align:center;">
+                            {% if messages %}
+                            {% for message in messages %}
+                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <!--Error Messages End-->
+
         </div>
         <!--End of TabView-->
         

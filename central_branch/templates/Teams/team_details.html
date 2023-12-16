@@ -173,15 +173,20 @@
             <br>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Manage <span style="color:#00629B;"><b>{{team_name}}</b></span> Team</h2>
             <br>
-            <!--Messages-->
-            <div style="justify-content:center; text-align:center;">
-                {% if messages %}
-                    {% for message in messages %}
-                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
-                    {% endfor %}
-                {% endif %}
-            </div>
-            <!--Messages End-->
+            
+                
+                <!--Messages-->
+                <div style="justify-content:center; text-align:center;">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <!--Messages End-->
+                
+
+
             <br>
             <div style="justify-content:center;text-align:center;">  
                 <p class="btn-groups">

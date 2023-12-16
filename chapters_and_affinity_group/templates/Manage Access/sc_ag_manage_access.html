@@ -85,15 +85,20 @@
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;"> {{sc_ag_info.group_name}}</span><b><span style=""><br><br>Manage View Access</b></span> </h2>
             <br>
 
-            <!--Message-->
-            <div style="justify-content:center; text-align:center;">
-                {% if messages %}
-                    {% for message in messages %}
-                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
-                    {% endfor %}
-                {% endif %}
-            </div>
-            <!--Message ends-->
+           
+                
+                <!--Messages-->
+                <div style="justify-content:center; text-align:center;">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <!--Messages End-->
+                
+
+
             <!--View Access-->
             <h4 style="justify-content:center;text-align:center;margin-bottom:30px;"><span style="color:#00629B;"><b> View Permission</b> </span>Controls for <span style="color:#00629B;"><b>{{sc_ag_info.short_form}}</b></span></h4>
 
