@@ -40,6 +40,7 @@ class Members(models.Model):
     position=models.ForeignKey(Roles_and_Position,default=13,on_delete=models.CASCADE) #Default=13 means the position of a general member, check roles and positions table
     session=models.ForeignKey(recruitment_session,null=True,blank=True,on_delete=models.CASCADE) #recruitment session
     last_renewal_session=models.ForeignKey(Renewal_Sessions,null=True,blank=True,on_delete=models.CASCADE) #last renewal session    
+    is_active_member = models.BooleanField(null=False,blank=False,default=False)
     class Meta:
         verbose_name='INSB Registered Members'
     

@@ -423,11 +423,17 @@
     
                           {% if data_access.manage_team_access %}
                           <input type="checkbox" checked="True" class="checkbox" value="manage_team_access" name="manage_team_access">
-                          <label for="manage_team_access">Provide Access
-                          </label><br>
+                          <label for="manage_team_access">Manage Team Access</label><br>
                           {% else %}
                           <input type="checkbox" class="checkbox" value="manage_team_access" name="manage_team_access">
-                          <label for="manage_team_access">Provide Access</label><br>
+                          <label for="manage_team_access">Manage Team Access</label><br>
+                          {% endif %}
+                          {% if data_access.event_access %}
+                          <input type="checkbox" checked="True" class="checkbox" value="event_access" name="event_access">
+                          <label for="event_access">Event Access</label><br>
+                          {% else %}
+                          <input type="checkbox" class="checkbox" value="event_access" name="event_access">
+                          <label for="event_access">Event Access</label><br>
                           {% endif %}
                     </p>
                   </div>

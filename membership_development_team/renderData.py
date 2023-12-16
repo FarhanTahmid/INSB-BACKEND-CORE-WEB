@@ -7,6 +7,8 @@ from system_administration.render_access import Access_Render
 from datetime import date
 from datetime import datetime
 
+
+
 class MDT_DATA:
     
     def get_member_data(ieee_id):
@@ -382,3 +384,17 @@ class MDT_DATA:
             renewal_amount_dict['IEEE WIE Membership']
         )
         return renewal_list,total_amount
+    
+    def check_active_members(self):
+        
+        all_users = Members.objects.all()
+        for member in all_users:
+            is_active = MDT_DATA.get_member_account_status(member.ieee_id)
+
+            if is_active:
+                member.is_active_member = True
+                member.save()
+                print("true")
+            print("false")
+            
+

@@ -8,9 +8,18 @@ from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
 from .renderData import HomepageItems
 from django.conf import settings
 from users.models import User,Members
+from users.models import User
+import logging
+from datetime import datetime
+from django.http import HttpResponseBadRequest,HttpResponseServerError
+from system_administration.system_error_handling import ErrorHandling
+import traceback
+from .renderData import HomepageItems
 from users.renderData import PanelMembersData
 from users import renderData as userData
 
+
+logger=logging.getLogger(__name__)
 
 # Create your views here.
 def homepage(request):
@@ -71,17 +80,38 @@ def index(request):
 
 
 def event_homepage(request):
-    return render(request,'Events/events_homepage.html')
+
+    '''This view function loads all the events for the events homepage'''
+    
+    try:
+        all_events = HomepageItems.load_all_events()
 
 
-def Event_Details(request,event_id):
+        context = {
+            'all_events':all_events,
+            'media_url':settings.MEDIA_URL,
+        }
+
+        return render(request,'Events/events_homepage.html',context)
+    except Exception as e:
+            print(e)
+            response = HttpResponseServerError("Oops! Something went wrong.")
+            return response
+    
+
+
+def event_details(request,event_id):
  
     '''Loads details for the corresponding event page on site'''
     get_event = Events.objects.get(id = event_id)
-    get_event=[]
-    return render(request,"Event.html",{
-        "event":get_event
-        
+    event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
+    event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
+
+    return render(request,"Events/event_description_main.html",{
+        "event":get_event,
+        'media_url':settings.MEDIA_URL,
+        'event_banner_image' : event_banner_image,
+        'event_gallery_images' : event_gallery_images
     })
 
 
@@ -155,7 +185,13 @@ def Research_Paper(request):
     return render(request,"All_Research_Papers.html",{
         "research_paper":get_all_research_papers
     })
-    
+
+
+
+######################### GALLERY WORKS ###########################
+def gallery(request):
+    return render(request, 'gallery.html')
+
 
 # Memeber works
 

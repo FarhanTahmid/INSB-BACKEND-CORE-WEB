@@ -28,31 +28,58 @@
         align-items: center;
         height: 100%;
         }
-        .row {
+        .btn-container {
+          text-align: center;
+        }
+        
+        .btn {
+          max-width: 100%;
+          width: auto;
+          display: inline-block;
+          white-space: normal; /* Allow text to wrap within the button */
+          word-wrap: break-word; /* Break long words if necessary */
+          font-size: 16px; /* Adjust the font size as needed */
+        }
+        
+        /* Media query for smaller screens (adjust the breakpoint as needed) */
+        @media (max-width: 768px) {
+          .btn {
+            width: 100%; /* Make the button full width on smaller screens */
+          }
+        }
+
+        /* Common styles outside the media query */
+        .slide-button {
+          display: flex;
+          align-items: center;
+          position: absolute;
+          top: 145px;
+          right: 50px;
+        }
+
+        .ui-switch {
+          margin-left: 10px;
+          margin-bottom: -3.5px;
+        }
+
+        /* Styles for screens with a maximum width of 1280px */
+        @media (max-width: 1280px) {
+          .slide-button {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%;
+            position: relative;
+            top: 0;
+            right: 0;
+            margin-top: 20px;
           }
-          .btn-container {
-            text-align: center;
+
+          .ui-switch {
+            margin-left: 10px;
+            margin-bottom: -3.5px;
           }
-          
-          .btn {
-            max-width: 100%;
-            width: auto;
-            display: inline-block;
-            white-space: normal; /* Allow text to wrap within the button */
-            word-wrap: break-word; /* Break long words if necessary */
-            font-size: 16px; /* Adjust the font size as needed */
-          }
-          
-          /* Media query for smaller screens (adjust the breakpoint as needed) */
-          @media (max-width: 768px) {
-            .btn {
-              width: 100%; /* Make the button full width on smaller screens */
-            }
-          }
+        }
+
         
     </style>
 </head>
@@ -91,14 +118,13 @@
             <br>
             <h1 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;"><b>{{event_details.event_name}}</b></span></h1>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Organised By: <span style="color:#00629B;"><b>{{event_details.event_organiser.group_name}}</b></span>.</h4>
+      
             {% if hasCollaboration %}
               <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">In Collaboration With:</h4>
               {% for i in interBranchCollaborations %}
               <h5 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;">{{i.collaboration_with.group_name}}</span></h4>
               {% endfor %}
-              {% for i in intraBranchCollaborations %}
-              <h5 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;">{{i.collaboration_with}}</span></h4>
-            {% endfor %}
+              <h5 style="justify-content:center;text-align:center;margin-bottom:15px;"><span style="color:#00629B;">{{intraBranchCollaborations.collaboration_with}}</span></h4>
             {% endif %}
 
             
@@ -106,7 +132,15 @@
             <!-- Add Delete Button -->
             <div class="btn-container">
               <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal">Delete Event</button>
-            </div>
+              {% if is_branch %}
+              <a href="{% url 'central_branch:event_edit_form' event_details.id %}" class="btn btn-outline-primary">Edit Event</a>
+              {% else %}
+              <a href="{% url 'chapters_and_affinity_group:event_edit_form' sc_ag_info.primary event_details.id %}" class="btn btn-outline-primary">Edit Event</a>
+              {% endif %}
+
+          </div>
+          
+            
 
             <!-- Confirm Delete Modal -->
             <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -158,6 +192,7 @@
     <script src="{% static 'table_search.js'%}"></script>
 
     <script>
+    
       function showDeleteModal() {
           var modal = document.getElementById('deleteModal');
           modal.style.display = 'block';
@@ -175,6 +210,8 @@
           // For simplicity, this example just closes the modal
           closeDeleteModal();
       }
+
+
   </script>
 
 </body>
