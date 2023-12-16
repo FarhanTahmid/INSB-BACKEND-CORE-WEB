@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from central_events.models import Events
 from central_branch.renderData import Branch
-from main_website.models import Research_Papers,Blog
+from main_website.models import Research_Papers,Blog,Achievements
 from port.renderData import PortData
 from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
 from .renderData import HomepageItems
@@ -118,8 +118,11 @@ def event_details(request,event_id):
 # ###################### ACHIEVEMENTS ##############################
 
 def achievements(request):
+    # load achievement of INSB
+    load_all_achievements=Achievements.objects.all().order_by('-award_winning_year')
     context={
-        'page_title':"Achievements"
+        'page_title':"Achievements",
+        'achievements':load_all_achievements,
     }
     
     return render(request,"Activities/achievements.html",context=context)
