@@ -812,10 +812,11 @@ class Branch:
         try:
             dic = {}
             collaborations=[]
-            # if primary == 1:
-            #     events = Branch.load_all_events()
-            # else:
-            events = Branch.load_all_events_for_groups(primary)
+            if primary == 1:
+                events = Branch.load_all_events()
+            else:
+                events = Branch.load_all_events_for_groups(primary)
+                
             for i in events:
                 all_collaborations_for_this_event = InterBranchCollaborations.objects.filter(event_id = i.id)
                 for j in all_collaborations_for_this_event:
@@ -887,12 +888,9 @@ class Branch:
 
         '''This function will return a list of only those events associated with that particular group'''
         events = Events.objects.filter(event_organiser= Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
-        if(primary == 1):
-            return events.order_by('-event_date')
-        else:
-            collaborations_list = InterBranchCollaborations.objects.filter(collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)).values_list('event_id')
-            events_with_collaborated_events = events.union(Events.objects.filter(pk__in=collaborations_list))
-            return events_with_collaborated_events.order_by('-event_date')
+        collaborations_list = InterBranchCollaborations.objects.filter(collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)).values_list('event_id')
+        events_with_collaborated_events = events.union(Events.objects.filter(pk__in=collaborations_list))
+        return events_with_collaborated_events.order_by('-event_date')
         
     
     def event_page_access(user):
