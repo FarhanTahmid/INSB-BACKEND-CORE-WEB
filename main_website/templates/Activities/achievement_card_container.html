@@ -3,6 +3,8 @@
 {% block achievement_card_container %}
 
 
+
+
 <style>
 
     {% comment %} .achievement_card{
@@ -22,7 +24,7 @@
         -webkit-box-orient: vertical;
     }
 
-    .card-text {
+    .description-container {
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
@@ -30,21 +32,20 @@
         -webkit-box-orient: vertical;
     }
 
-    .card-text.collapsed,
+    .description-container.collapsed,
     .card-title.collapsed {
         -webkit-line-clamp: unset;
     }
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
 <script>
     $(document).ready(function () {
         $(".read-more-link").click(function (event) {
             event.preventDefault();
 
             var cardBody = $(this).closest(".card-body");
-            var cardText = cardBody.find(".card-text");
+            var cardText = cardBody.find(".description-container");
             var cardTitle = cardBody.find(".card-title");
             var card = cardBody.closest(".card");
 
@@ -52,7 +53,7 @@
             cardTitle.toggleClass("collapsed");
 
             // Check if any card text is collapsed
-            var isCollapsed = card.find(".card-text.collapsed").length > 0;
+            var isCollapsed = card.find(".description-container.collapsed").length > 0;
 
             // Set card height based on collapsed state
             card.css("height", isCollapsed ? "auto" : "425px");
@@ -63,6 +64,10 @@
         });
     });
 </script>
+
+
+
+
 
 <div class="container">
     <div class="row m-0">
@@ -79,7 +84,9 @@
 
                 <div class="card-body">
                     <h5 class="card-title fw-bold mt-2">{{i.award_name}} - <span style="color:{{i.award_of.primary_color_code}};">{{i.award_of.group_name}}</span></h5>
-                    <p class="card-text">{{i.award_description|safe}}</p>
+                    <div class="description-container">
+                        <p class="card-text">{{i.award_description|safe}}</p>
+                    </div>
                     <a href="#" class="read-more-link" >Read More</a>
 
                     
