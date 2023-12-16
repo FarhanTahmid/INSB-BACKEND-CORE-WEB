@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from central_events.models import Events
 from central_branch.renderData import Branch
-from main_website.models import Research_Papers,Blog,Achievements
+from main_website.models import Research_Papers,Blog,Achievements,News
 from port.renderData import PortData
 from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
 from .renderData import HomepageItems
@@ -128,8 +128,11 @@ def achievements(request):
     return render(request,"Activities/achievements.html",context=context)
 
 def news(request):
+    # load news of insb
+    load_all_news=News.objects.all().order_by('-news_date')
     context={
-        'page_title':"News"
+        'page_title':"News",
+        'all_news':load_all_news,
     }
     return render(request,'Activities/news.html',context=context)
 

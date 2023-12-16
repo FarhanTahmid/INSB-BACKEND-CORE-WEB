@@ -19,6 +19,60 @@
         *{
             box-sizing: border-box;
         }
+        .gdlr-header-inner,
+        .gdlr-header-wrapper.header-style-2-wrapper .gdlr-header-inner-overlay {
+            background-color: 	#002855;
+        }
+
+        .gdlr-header-wrapper.header-style-3-wrapper,
+        .gdlr-header-wrapper.header-style-7-wrapper {
+            background-color: #002855;
+        }
+
+        .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+            background-color: #002855;
+        }
+
+        @media only screen and (max-width: 767px) {
+            .gdlr-header-wrapper.header-style-5-wrapper {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-6-wrapper {
+                background-color: #002855;
+            }
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button {
+            background-color: #002855;
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button:hover, #gdlr-responsive-navigation.dl-menuwrapper button.dl-active, #gdlr-responsive-navigation.dl-menuwrapper ul {
+            background-color: #002855;
+        }
+        .dl-menuwrapper li a {
+            display: block;
+            position: relative;
+            padding: 15px 20px;
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 300;
+            color: #fff;
+            outline: none;
+        }
+        .dl-menuwrapper li.dl-back:after, .dl-menuwrapper li > a:not(:only-child):after {
+            position: absolute;
+            top: 0;
+            line-height: 50px;
+            font-family: FontAwesome;
+            speak: none;
+            -webkit-font-smoothing: antialiased;
+            content: "\f105";
+            font-size: 16px;
+            color: #ffffff;
+        }
     </style>
 
 </head>
@@ -47,164 +101,38 @@
 
             <div class="flex">
                 <!-- This card for left image. Absent of "alt" class -->
+                {% for i in all_news %}
                 <div class="content">
                     <div class="news-card">
-                    <div class="meta">
-                        <div
-                            class="photo"
-                            style="
-                                background-image: url(http://ece.northsouth.edu/wp-content/uploads/2018/11/183_INSB_award.jpg);
-                            "
-                        ></div>
-                        <ul class="details">
-                            <li class="author"><a href="#">John Doe</a></li>
-                            <li class="date">Aug. 24, 2015</li>
-                            <li class="tags">
-                                <ul>
-                                    <li><a href="#">IEEE</a></li>
-                                    <li><a href="#">NSU</a></li>
-                                    <li><a href="#">Success</a></li>
-                                    <li><a href="#">INSB</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="description">
-                        <h1>IEEE NSU STUDENT BRANCH GOES GLOBAL -A SONG OF GLORY</h1>
-                        <h2>Opening a door to the future</h2>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit. Ad eum dolorum architecto obcaecati enim dicta
-                            praesentium, quam nobis! Neque ad aliquam facilis
-                            numquam. Veritatis, sit. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veniam dolorum rerum ullam harum possimus, om, nobis delectus aliquid, eos sed voluptates possimus maxime dolor qpa? Velit voluptatibus expedita assumenda omnis.
-                        </p>
-                        <p class="read-more">
-                            <a href="#">Read More</a>
-                        </p>
+                        <div class="meta">
+                            <div
+                                class="photo"
+                                style="
+                                    background-image: url(/media_files/{{i.news_picture}});
+                                "
+                            ></div>
+                            <ul class="details">
+                                <li class="author"><a href="#">IEEE NSU SB</a></li>
+                                <li class="date">{{i.news_date}}</li>
+                                <li class="tags">
+                                    <ul>
+                                        <li><a href="#">IEEE</a></li>
+                                        <li><a href="#">NSU</a></li>
+                                        <li><a href="#">Success</a></li>
+                                        <li><a href="#">INSB</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="description">
+                            <h1>{{i.news_title}}</h1>
+                            <h2>{{i.news_subtitle}}</h2>
+                            <p>{{i.news_description|safe}}</p>
+                        </div>
                     </div>
                 </div>
-                </div>
-
-
-                <!-- This card for right image. Present "alt" class -->
-                <div class="content">
-                    <div class="news-card  alt">
-                    <div class="meta">
-                        <div
-                            class="photo"
-                            style="
-                                background-image: url(http://ece.northsouth.edu/wp-content/uploads/2018/12/183_workshop_PCB.jpg);
-                            "
-                        ></div>
-                        <ul class="details">
-                            <li class="author"><a href="#">Fazlul Karim</a></li>
-                            <li class="date">September. 28, 2023</li>
-                            <li class="tags">
-                                <ul>
-                                    <li><a href="#">INSB</a></li>
-                                    <li><a href="#">Workshop</a></li>
-                                    <li><a href="#">PCB</a></li>
-                                    <li><a href="#">RAS</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="description">
-                        <h1>WORKSHOP ON PRINTED CIRCUIT BOARD (PCB) BY IEEE NSU RAS SBC</h1>
-                        <h2>Java is not the same as JavaScript</h2>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit. Ad eum dolorum architecto obcaecati enim dicta
-                            praesentium, quam nobis! Neque ad aliquam facilis
-                            numquam. Veritatis, sit. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veniam dolorum rerum ullam harum possimus, om, nobis delectus aliquid, eos sed voluptates possimus maxime dolor qpa? Velit voluptatibus expedita assumenda omnis.
-                        </p>
-                        <p class="read-more">
-                            <a href="#">Read More</a>
-                        </p>
-                    </div>
-                </div>
-                </div>
-
-
-                <!-- This card for left image. Absent of "alt" class -->
-                <div class="content">
-                    <div class="news-card ">
-                    <div class="meta">
-                        <div
-                            class="photo"
-                            style="
-                                background-image: url(http://ece.northsouth.edu/wp-content/uploads/2018/11/183_INSB_award.jpg);
-                            "
-                        ></div>
-                        <ul class="details">
-                            <li class="author"><a href="#">John Doe</a></li>
-                            <li class="date">Aug. 24, 2015</li>
-                            <li class="tags">
-                                <ul>
-                                    <li><a href="#">IEEE</a></li>
-                                    <li><a href="#">NSU</a></li>
-                                    <li><a href="#">Success</a></li>
-                                    <li><a href="#">INSB</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="description">
-                        <h1>IEEE NSU STUDENT BRANCH GOES GLOBAL -A SONG OF GLORY</h1>
-                        <h2>Opening a door to the future</h2>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit. Ad eum dolorum architecto obcaecati enim dicta
-                            praesentium, quam nobis! Neque ad aliquam facilis
-                            numquam. Veritatis, sit. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veniam dolorum rerum ullam harum possimus, om, nobis delectus aliquid, eos sed voluptates possimus maxime dolor qpa? Velit voluptatibus expedita assumenda omnis.
-                        </p>
-                        <p class="read-more">
-                            <a href="#">Read More</a>
-                        </p>
-                    </div>
-                </div>
-                </div>
-
-                <!-- This card for right image. Present "alt" class -->
-                <div class="content">
-                    <div class="news-card  alt">
-                    <div class="meta">
-                        <div
-                            class="photo"
-                            style="
-                                background-image: url(http://ece.northsouth.edu/wp-content/uploads/2018/12/183_workshop_PCB.jpg);
-                            "
-                        ></div>
-                        <ul class="details">
-                            <li class="author"><a href="#">Fazlul Karim</a></li>
-                            <li class="date">September. 28, 2023</li>
-                            <li class="tags">
-                                <ul>
-                                    <li><a href="#">INSB</a></li>
-                                    <li><a href="#">Workshop</a></li>
-                                    <li><a href="#">PCB</a></li>
-                                    <li><a href="#">RAS</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="description">
-                        <h1>WORKSHOP ON PRINTED CIRCUIT BOARD (PCB) BY IEEE NSU RAS SBC</h1>
-                        <h2>Java is not the same as JavaScript</h2>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit. Ad eum dolorum architecto obcaecati enim dicta
-                            praesentium, quam nobis! Neque ad aliquam facilis
-                            numquam. Veritatis, sit. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veniam dolorum rerum ullam harum possimus, om, nobis delectus aliquid, eos sed voluptates possimus maxime dolor qpa? Velit voluptatibus expedita assumenda omnis.
-                        </p>
-                        <p class="read-more">
-                            <a href="#">Read More</a>
-                        </p>
-                    </div>
-                </div>
-                </div>
-
-            </div>
+                {% endfor %}
+                
             </div>
         </div>
 
@@ -218,542 +146,17 @@
 
 
         <!-- Footer -->
-        <footer class="footer-wrapper">
-            <div>
-                <div>
-                    <section>
-                        <div>
-                            <div>
-                                <div>
-                                    <section class="wrap-img">
-                                        <div>
-                                            <div>
-                                                <div>
-                                                    <div>
-                                                        <img width="200" height="84"
-                                                            src="https://ieeensusb.org/wp-content/uploads/2021/03/ieee-mb-blue.png"
-                                                            class="attachment-large size-large wp-image-3430" alt=""
-                                                            loading="lazy">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div>
-                                                <div>
-                                                    <div>
-                                                        <img width="200" height="84"
-                                                            src="https://ieeensusb.org/wp-content/uploads/2021/03/INSB.png"
-                                                            class="attachment-large size-large wp-image-5155"
-                                                            alt="INSB Logo" loading="lazy">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
-                                    <section class="footer-container container">
-                                        <div class="wrap">
-                                            <div>
-                                                <div>
-                                                    <div>
-                                                        <div>
-                                                            <ul>
-                                                                <li>
-                                                                    <a href="https://www.ieee.org/" target="_blank">
-                                                                        <span>
-                                                                            <i class="icon icon-home2"></i> </span>
-                                                                        <span>Ieee.org</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="https://ieeexplore.ieee.org/"
-                                                                        target="_blank">
+        {% block footer %}
+        {% include "footer_block.html" %}
+        {% endblock footer %}
 
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="hm hm-globe3"></i> </span>
-                                                                        <span class="elementor-icon-list-text">IEEE
-                                                                            Explore</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="https://standards.ieee.org/"
-                                                                        target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="hm hm-globe3"></i> </span>
-                                                                        <span class="elementor-icon-list-text">IEEE
-                                                                            Standards</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="https://spectrum.ieee.org/"
-                                                                        target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="hm hm-globe3"></i> </span>
-                                                                        <span class="elementor-icon-list-text">IEEE
-                                                                            Specturm</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="https://ieee-collabratec.ieee.org/"
-                                                                        target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="hm hm-globe3"></i> </span>
-                                                                        <span class="elementor-icon-list-text">IEEE
-                                                                            Collaboratec</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="https://www.ieee.org/sitemap.html">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="hm hm-globe3"></i> </span>
-                                                                        <span class="elementor-icon-list-text">More
-                                                                            sites </span>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div>
-                                                    <div>
-                                                        <div>
-                                                            <ul>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span class="elementor-icon-list-text">Ask a
-                                                                            Question</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span class="elementor-icon-list-text">About
-                                                                            INSB</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span class="elementor-icon-list-text">About
-                                                                            INSB IAS</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span class="elementor-icon-list-text">About
-                                                                            INSB PES</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span class="elementor-icon-list-text">About
-                                                                            INSB RAS</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span class="elementor-icon-list-text">About
-                                                                            INSB WIE</span>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div>
-                                                    <div>
-                                                        <div>
-                                                            <ul>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span
-                                                                            class="elementor-icon-list-text">News</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="all-events.html" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span class="elementor-icon-list-text">Upcoming
-                                                                            Events</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span
-                                                                            class="elementor-icon-list-text">ToolKit</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span
-                                                                            class="elementor-icon-list-text">Gallery</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span
-                                                                            class="elementor-icon-list-text">Magazines</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span class="elementor-icon-list-text">Research
-                                                                            Papers</span>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div>
-                                                    <div>
-                                                        <div>
-                                                            <ul>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span class="elementor-icon-list-text">Join
-                                                                            INSB</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span class="elementor-icon-list-text">Write a
-                                                                            Blog</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span
-                                                                            class="elementor-icon-list-text">Blogs</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span
-                                                                            class="elementor-icon-list-text">Achivements</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span class="elementor-icon-list-text">Current
-                                                                            Executive Body</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i aria-hidden="true"
-                                                                                class="fas fa-external-link-alt"></i>
-                                                                        </span>
-                                                                        <span class="elementor-icon-list-text">Exemplary
-                                                                            Members</span>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div>
-                                                    <div>
-                                                        <div>
-                                                            <h2>
-                                                                Follow Us:
-                                                            </h2>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div>
-                                                            <div style="padding-left: 10%;padding-bottom: 10%;">
-                                                                <span>
-                                                                    <a href="https://www.facebook.com/ieeensusb/"
-                                                                        target="_blank">
-                                                                        <i class="gdlr-icon fa fa-facebook"
-                                                                            style="vertical-align: middle;  font-size: 20px; "></i>
-                                                                        <!-- <span>Facebook</span> -->
-                                                                    </a>
-                                                                </span>
-                                                                <span>
-                                                                    <a href="https://www.linkedin.com/company/ieeensusb"
-                                                                        target="_blank">
-                                                                        <i class="gdlr-icon fa fa-linkedin"
-                                                                            style="vertical-align: middle;  font-size: 20px; "></i>
-                                                                        <!-- <span
-                                                                            class="elementor-screen-only">Linkedin</span> -->
-                                                                    </a>
-                                                                </span>
-                                                                <span>
-                                                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-instagram elementor-animation-grow elementor-repeater-item-8c259b8"
-                                                                        href="https://instagram.com/ieeensusb?igshid=1g0f6asti4d02"
-                                                                        target="_blank">
-                                                                        <i class="gdlr-icon fa fa-instagram"
-                                                                            style="vertical-align: middle;  font-size: 20px; "></i>
-                                                                        <!-- <span
-                                                                            class="elementor-screen-only">Instagram</span> -->
-                                                                    </a>
-                                                                </span>
-                                                                <span>
-                                                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-twitter elementor-animation-grow elementor-repeater-item-c01fbf2"
-                                                                        href="https://www.twitter.com/ieeensusb"
-                                                                        target="_blank">
-                                                                        <i class="gdlr-icon fa fa-twitter"
-                                                                            style="vertical-align: middle;  font-size: 20px; "></i>
-                                                                        <!-- <span
-                                                                            class="elementor-screen-only">Twitter</span> -->
-                                                                    </a>
-                                                                </span>
-                                                                <span>
-                                                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-youtube elementor-animation-grow elementor-repeater-item-a3eee86"
-                                                                        href="https://youtube.com/channel/UCR--MNc_lCe9lvgdnSWm6kA"
-                                                                        target="_blank">
-                                                                        <i class="gdlr-icon fa fa-youtube"
-                                                                            style="vertical-align: middle;  font-size: 20px; "></i>
-                                                                        <!-- <span
-                                                                            class="elementor-screen-only">Youtube</span> -->
-                                                                    </a>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div>
-                                                            <ul style="list-style: none;">
-                                                                <li>
-                                                                    <a href="mailto:info@ieeensusb.org" target="_blank">
-
-                                                                        <span class="elementor-icon-list-icon">
-                                                                            <i class="gdlr-icon fa fa-envelope"
-                                                                                style="vertical-align: middle;  font-size: 15px; "></i>
-                                                                        </span>
-                                                                        <span
-                                                                            class="elementor-icon-list-text">info@ieeensusb.org</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="mailto:contact@ieeensusb.org"
-                                                                        target="_blank">
-
-                                                                        <span>
-                                                                            <i class="gdlr-icon fa fa-envelope"
-                                                                                style="vertical-align: middle;  font-size: 15px; "></i>
-                                                                        </span>
-                                                                        <span>contact@ieeensusb.org</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-
-                                                                        <span>
-                                                                            <i aria-hidden="true"
-                                                                                class="hm hm-refresh-time"></i> </span>
-                                                                        <span class="elementor-icon-list-text">Last
-                                                                            Updated: 31 march 2021</span>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    <section class="copyright-wrapper">
-                        <div>
-                            <div>
-                                <div>
-                                    <section>
-                                        <div class="wrap-footer">
-                                            <div>
-                                                <div>
-                                                    <div>
-                                                        <div>
-                                                            <ul class="wrap-footer2">
-                                                                <li>
-                                                                    <a href="index.html">
-
-                                                                        <span
-                                                                            class="elementor-icon-list-text">Home</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#">
-
-                                                                        <span
-                                                                            class="elementor-icon-list-text">Contact</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#">
-
-                                                                        <span
-                                                                            class="elementor-icon-list-text">FAQ</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#">
-
-                                                                        <span
-                                                                            class="elementor-icon-list-text">Sitemap</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#">
-
-                                                                        <span
-                                                                            class="elementor-icon-list-text">Feedback</span>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div>
-                                                    <div>
-                                                        <div>
-                                                            © Copyright 2021 INSB – All rights reserved. Developed
-                                                            by<strong> <a href="#" style="color:#FFC936;">INSB Web
-                                                                    Development
-                                                                    Team</a></strong> </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </div>
-        </footer>
 
     </div>
     <!-- body-wrapper -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <script type='text/javascript' src='js/jquery.js'></script>
-    <script type='text/javascript' src='js/jquery-migrate.min.js'></script>
-    <script type='text/javascript' src='js/scripts.js'></script>
-    <script type='text/javascript' src='js/superfish.js'></script>
-    <script type='text/javascript' src='js/hoverIntent.min.js'></script>
-    <script type='text/javascript' src='js/modernizr.custom.js'></script>
-    <script type='text/javascript' src='js/jquery.dlmenu.js'></script>
-    <script type='text/javascript' src='js/jquery.easing.js'></script>
-    <script type='text/javascript' src='js/jquery.fancybox.pack.js'></script>
-    <script type='text/javascript' src='js/helpers/jquery.fancybox-media.js'></script>
-    <script type='text/javascript' src='js/helpers/jquery.fancybox-thumbs.js'></script>
-    <script type='text/javascript' src='js/jquery.flexslider.js'></script>
-    <script type='text/javascript' src='js/jquery.isotope.min.js'></script>
-    <script type='text/javascript' src='js/gdlr-script.js'></script>
-    <script type='text/javascript' src='js/jquery.transit.min.js'></script>
-    <script type='text/javascript' src='js/gdlr-portfolio-script.js'></script>
-    <script>var ms_grabbing_curosr = 'images/grabbing.cur', ms_grab_curosr = 'images/grab.cur';</script>
+    {% block common_js %}
+        {% include "common_js_includes.html" %}
+    {% endblock %}      
+    
     <script type="text/javascript">
         (function (url) {
             if (/(?:Chrome\/26\.0\.1410\.63 Safari\/537\.31|WordfenceTestMonBot)/.test(navigator.userAgent)) { return; }
@@ -877,8 +280,6 @@
     </script>
 
 
-    <script type='text/javascript' src='masterslider/public/assets/js/masterslider.min.js'></script>
-    <script src="./js/event_script.js"></script>
 </body>
 
 </html>
