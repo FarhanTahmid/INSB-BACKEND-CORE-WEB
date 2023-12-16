@@ -35,8 +35,8 @@
 	background: #fff;
 	top: 8px;
 	left: 17%;
-	box-shadow:
-		0 10px 0 #fff,
+	box-shadow: 
+		0 10px 0 #fff, 
 		0 20px 0 #fff;
 }
 
@@ -60,21 +60,21 @@
 	font-size: 16px;
 	line-height: 20px;
 	font-weight: 300;
-	color: #000000;
+	color: #fff;
 	outline: none;
 }
 
 .no-touch .dl-menuwrapper li a:hover {
-	background: rgba(255, 255, 255, 0.1);
+	background: rgba(255,255,255,0.1);
 }
 
-.dl-menuwrapper li.dl-back>a {
+.dl-menuwrapper li.dl-back > a {
 	padding-left: 38px;
-	background: rgba(0, 0, 0, 0.1);
+	background: rgba(0,0,0,0.1);
 }
 
 .dl-menuwrapper li.dl-back:after,
-.dl-menuwrapper li>a:not(:only-child):after {
+.dl-menuwrapper li > a:not(:only-child):after {
 	position: absolute;
 	top: 0;
 	line-height: 50px;
@@ -83,7 +83,7 @@
 	-webkit-font-smoothing: antialiased;
 	content: "\f105";
 	font-size: 16px;
-	color: #000000;
+	color: #ffffff;
 }
 
 .dl-menuwrapper li.dl-back:after {
@@ -93,9 +93,9 @@
 	transform: rotate(180deg);
 }
 
-.dl-menuwrapper li>a:after {
+.dl-menuwrapper li > a:after {
 	right: 15px;
-	color: rgba(0, 0, 0, 0.15);
+	color: rgba(0,0,0,0.15);
 }
 
 .dl-menuwrapper .dl-menu {
@@ -133,21 +133,21 @@ The opened submenu will get the class "dl-subviewopen".
 All this is done for any sub-level being entered.
 */
 .dl-menu.dl-subview li,
-.dl-menu.dl-subview li.dl-subviewopen>a,
-.dl-menu.dl-subview li.dl-subview>a {
+.dl-menu.dl-subview li.dl-subviewopen > a,
+.dl-menu.dl-subview li.dl-subview > a {
 	display: none;
 }
 
 .dl-menu.dl-subview li.dl-subview,
 .dl-menu.dl-subview li.dl-subview .dl-submenu,
 .dl-menu.dl-subview li.dl-subviewopen,
-.dl-menu.dl-subview li.dl-subviewopen>.dl-submenu,
-.dl-menu.dl-subview li.dl-subviewopen>.dl-submenu>li {
+.dl-menu.dl-subview li.dl-subviewopen > .dl-submenu,
+.dl-menu.dl-subview li.dl-subviewopen > .dl-submenu > li {
 	display: block;
 }
 
 /* Dynamically added submenu outside of the menu context */
-.dl-menuwrapper>.dl-submenu {
+.dl-menuwrapper > .dl-submenu {
 	position: absolute;
 	width: 100%;
 	left: 0;
@@ -190,12 +190,10 @@ All this is done for any sub-level being entered.
 	50% {
 		-webkit-transform: translateZ(-250px) rotateY(30deg);
 	}
-
 	75% {
 		-webkit-transform: translateZ(-372.5px) rotateY(15deg);
 		opacity: .5;
 	}
-
 	100% {
 		-webkit-transform: translateZ(-500px) rotateY(0deg);
 		opacity: 0;
@@ -234,12 +232,10 @@ All this is done for any sub-level being entered.
 	50% {
 		-moz-transform: translateZ(-250px) rotateY(30deg);
 	}
-
 	75% {
 		-moz-transform: translateZ(-372.5px) rotateY(15deg);
 		opacity: .5;
 	}
-
 	100% {
 		-moz-transform: translateZ(-500px) rotateY(0deg);
 		opacity: 0;
@@ -278,12 +274,10 @@ All this is done for any sub-level being entered.
 	50% {
 		transform: translateZ(-250px) rotateY(30deg);
 	}
-
 	75% {
 		transform: translateZ(-372.5px) rotateY(15deg);
 		opacity: .5;
 	}
-
 	100% {
 		transform: translateZ(-500px) rotateY(0deg);
 		opacity: 0;
@@ -353,12 +347,10 @@ All this is done for any sub-level being entered.
 		-webkit-transform: translateZ(-500px) rotateY(0deg);
 		opacity: 0;
 	}
-
 	20% {
 		-webkit-transform: translateZ(-250px) rotateY(30deg);
 		opacity: 0.5;
 	}
-
 	100% {
 		-webkit-transform: translateZ(0px) rotateY(0deg);
 		opacity: 1;
@@ -370,7 +362,6 @@ All this is done for any sub-level being entered.
 		-webkit-transform: translateX(-100%);
 		opacity: 0;
 	}
-
 	100% {
 		-webkit-transform: translateX(0px);
 		opacity: 1;
@@ -382,7 +373,6 @@ All this is done for any sub-level being entered.
 		-webkit-transform: translateZ(300px);
 		opacity: 0;
 	}
-
 	100% {
 		-webkit-transform: translateZ(0px);
 		opacity: 1;
@@ -394,7 +384,6 @@ All this is done for any sub-level being entered.
 		-webkit-transform: translateZ(-300px);
 		opacity: 0;
 	}
-
 	100% {
 		-webkit-transform: translateZ(0px);
 		opacity: 1;
@@ -406,7 +395,6 @@ All this is done for any sub-level being entered.
 		-webkit-transform: translateY(40%);
 		opacity: 0;
 	}
-
 	100% {
 		-webkit-transform: translateY(0);
 		opacity: 1;
@@ -418,12 +406,10 @@ All this is done for any sub-level being entered.
 		-moz-transform: translateZ(-500px) rotateY(0deg);
 		opacity: 0;
 	}
-
 	20% {
 		-moz-transform: translateZ(-250px) rotateY(30deg);
 		opacity: 0.5;
 	}
-
 	100% {
 		-moz-transform: translateZ(0px) rotateY(0deg);
 		opacity: 1;
@@ -435,7 +421,6 @@ All this is done for any sub-level being entered.
 		-moz-transform: translateX(-100%);
 		opacity: 0;
 	}
-
 	100% {
 		-moz-transform: translateX(0px);
 		opacity: 1;
@@ -447,7 +432,6 @@ All this is done for any sub-level being entered.
 		-moz-transform: translateZ(300px);
 		opacity: 0;
 	}
-
 	100% {
 		-moz-transform: translateZ(0px);
 		opacity: 1;
@@ -459,7 +443,6 @@ All this is done for any sub-level being entered.
 		-moz-transform: translateZ(-300px);
 		opacity: 0;
 	}
-
 	100% {
 		-moz-transform: translateZ(0px);
 		opacity: 1;
@@ -471,7 +454,6 @@ All this is done for any sub-level being entered.
 		-moz-transform: translateY(40%);
 		opacity: 0;
 	}
-
 	100% {
 		-moz-transform: translateY(0);
 		opacity: 1;
@@ -483,12 +465,10 @@ All this is done for any sub-level being entered.
 		transform: translateZ(-500px) rotateY(0deg);
 		opacity: 0;
 	}
-
 	20% {
 		transform: translateZ(-250px) rotateY(30deg);
 		opacity: 0.5;
 	}
-
 	100% {
 		transform: translateZ(0px) rotateY(0deg);
 		opacity: 1;
@@ -500,7 +480,6 @@ All this is done for any sub-level being entered.
 		transform: translateX(-100%);
 		opacity: 0;
 	}
-
 	100% {
 		transform: translateX(0px);
 		opacity: 1;
@@ -512,7 +491,6 @@ All this is done for any sub-level being entered.
 		transform: translateZ(300px);
 		opacity: 0;
 	}
-
 	100% {
 		transform: translateZ(0px);
 		opacity: 1;
@@ -524,7 +502,6 @@ All this is done for any sub-level being entered.
 		transform: translateZ(-300px);
 		opacity: 0;
 	}
-
 	100% {
 		transform: translateZ(0px);
 		opacity: 1;
@@ -536,38 +513,37 @@ All this is done for any sub-level being entered.
 		transform: translateY(40%);
 		opacity: 0;
 	}
-
 	100% {
 		transform: translateY(0);
 		opacity: 1;
 	}
 }
 
-.dl-menuwrapper>.dl-submenu.dl-animate-in-1 {
+.dl-menuwrapper > .dl-submenu.dl-animate-in-1 {
 	-webkit-animation: SubMenuAnimIn1 0.4s ease;
 	-moz-animation: SubMenuAnimIn1 0.4s ease;
 	animation: SubMenuAnimIn1 0.4s ease;
 }
 
-.dl-menuwrapper>.dl-submenu.dl-animate-in-2 {
+.dl-menuwrapper > .dl-submenu.dl-animate-in-2 {
 	-webkit-animation: SubMenuAnimIn2 0.3s ease-in-out;
 	-moz-animation: SubMenuAnimIn2 0.3s ease-in-out;
 	animation: SubMenuAnimIn2 0.3s ease-in-out;
 }
 
-.dl-menuwrapper>.dl-submenu.dl-animate-in-3 {
+.dl-menuwrapper > .dl-submenu.dl-animate-in-3 {
 	-webkit-animation: SubMenuAnimIn3 0.4s ease;
 	-moz-animation: SubMenuAnimIn3 0.4s ease;
 	animation: SubMenuAnimIn3 0.4s ease;
 }
 
-.dl-menuwrapper>.dl-submenu.dl-animate-in-4 {
+.dl-menuwrapper > .dl-submenu.dl-animate-in-4 {
 	-webkit-animation: SubMenuAnimIn4 0.4s ease;
 	-moz-animation: SubMenuAnimIn4 0.4s ease;
 	animation: SubMenuAnimIn4 0.4s ease;
 }
 
-.dl-menuwrapper>.dl-submenu.dl-animate-in-5 {
+.dl-menuwrapper > .dl-submenu.dl-animate-in-5 {
 	-webkit-animation: SubMenuAnimIn5 0.4s ease;
 	-moz-animation: SubMenuAnimIn5 0.4s ease;
 	animation: SubMenuAnimIn5 0.4s ease;
@@ -578,7 +554,6 @@ All this is done for any sub-level being entered.
 		-webkit-transform: translateX(50%);
 		opacity: 0;
 	}
-
 	100% {
 		-webkit-transform: translateX(0px);
 		opacity: 1;
@@ -590,7 +565,6 @@ All this is done for any sub-level being entered.
 		-webkit-transform: translateX(100%);
 		opacity: 0;
 	}
-
 	100% {
 		-webkit-transform: translateX(0px);
 		opacity: 1;
@@ -602,7 +576,6 @@ All this is done for any sub-level being entered.
 		-webkit-transform: translateZ(-300px);
 		opacity: 0;
 	}
-
 	100% {
 		-webkit-transform: translateZ(0px);
 		opacity: 1;
@@ -614,7 +587,6 @@ All this is done for any sub-level being entered.
 		-webkit-transform: translateZ(300px);
 		opacity: 0;
 	}
-
 	100% {
 		-webkit-transform: translateZ(0px);
 		opacity: 1;
@@ -626,7 +598,6 @@ All this is done for any sub-level being entered.
 		-webkit-transform: translateZ(-200px);
 		opacity: 0;
 	}
-
 	100% {
 		-webkit-transform: translateZ(0);
 		opacity: 1;
@@ -638,7 +609,6 @@ All this is done for any sub-level being entered.
 		-moz-transform: translateX(50%);
 		opacity: 0;
 	}
-
 	100% {
 		-moz-transform: translateX(0px);
 		opacity: 1;
@@ -650,7 +620,6 @@ All this is done for any sub-level being entered.
 		-moz-transform: translateX(100%);
 		opacity: 0;
 	}
-
 	100% {
 		-moz-transform: translateX(0px);
 		opacity: 1;
@@ -662,7 +631,6 @@ All this is done for any sub-level being entered.
 		-moz-transform: translateZ(-300px);
 		opacity: 0;
 	}
-
 	100% {
 		-moz-transform: translateZ(0px);
 		opacity: 1;
@@ -674,7 +642,6 @@ All this is done for any sub-level being entered.
 		-moz-transform: translateZ(300px);
 		opacity: 0;
 	}
-
 	100% {
 		-moz-transform: translateZ(0px);
 		opacity: 1;
@@ -686,7 +653,6 @@ All this is done for any sub-level being entered.
 		-moz-transform: translateZ(-200px);
 		opacity: 0;
 	}
-
 	100% {
 		-moz-transform: translateZ(0);
 		opacity: 1;
@@ -698,7 +664,6 @@ All this is done for any sub-level being entered.
 		transform: translateX(50%);
 		opacity: 0;
 	}
-
 	100% {
 		transform: translateX(0px);
 		opacity: 1;
@@ -710,7 +675,6 @@ All this is done for any sub-level being entered.
 		transform: translateX(100%);
 		opacity: 0;
 	}
-
 	100% {
 		transform: translateX(0px);
 		opacity: 1;
@@ -722,7 +686,6 @@ All this is done for any sub-level being entered.
 		transform: translateZ(-300px);
 		opacity: 0;
 	}
-
 	100% {
 		transform: translateZ(0px);
 		opacity: 1;
@@ -734,7 +697,6 @@ All this is done for any sub-level being entered.
 		transform: translateZ(300px);
 		opacity: 0;
 	}
-
 	100% {
 		transform: translateZ(0px);
 		opacity: 1;
@@ -746,38 +708,37 @@ All this is done for any sub-level being entered.
 		transform: translateZ(-200px);
 		opacity: 0;
 	}
-
 	100% {
 		transform: translateZ(0);
 		opacity: 1;
 	}
 }
 
-.dl-menuwrapper>.dl-submenu.dl-animate-out-1 {
+.dl-menuwrapper > .dl-submenu.dl-animate-out-1 {
 	-webkit-animation: SubMenuAnimOut1 0.4s ease;
 	-moz-animation: SubMenuAnimOut1 0.4s ease;
 	animation: SubMenuAnimOut1 0.4s ease;
 }
 
-.dl-menuwrapper>.dl-submenu.dl-animate-out-2 {
+.dl-menuwrapper > .dl-submenu.dl-animate-out-2 {
 	-webkit-animation: SubMenuAnimOut2 0.3s ease-in-out;
 	-moz-animation: SubMenuAnimOut2 0.3s ease-in-out;
 	animation: SubMenuAnimOut2 0.3s ease-in-out;
 }
 
-.dl-menuwrapper>.dl-submenu.dl-animate-out-3 {
+.dl-menuwrapper > .dl-submenu.dl-animate-out-3 {
 	-webkit-animation: SubMenuAnimOut3 0.4s ease;
 	-moz-animation: SubMenuAnimOut3 0.4s ease;
 	animation: SubMenuAnimOut3 0.4s ease;
 }
 
-.dl-menuwrapper>.dl-submenu.dl-animate-out-4 {
+.dl-menuwrapper > .dl-submenu.dl-animate-out-4 {
 	-webkit-animation: SubMenuAnimOut4 0.4s ease;
 	-moz-animation: SubMenuAnimOut4 0.4s ease;
 	animation: SubMenuAnimOut4 0.4s ease;
 }
 
-.dl-menuwrapper>.dl-submenu.dl-animate-out-5 {
+.dl-menuwrapper > .dl-submenu.dl-animate-out-5 {
 	-webkit-animation: SubMenuAnimOut5 0.4s ease;
 	-moz-animation: SubMenuAnimOut5 0.4s ease;
 	animation: SubMenuAnimOut5 0.4s ease;
@@ -788,7 +749,6 @@ All this is done for any sub-level being entered.
 		-webkit-transform: translateX(0%);
 		opacity: 1;
 	}
-
 	100% {
 		-webkit-transform: translateX(50%);
 		opacity: 0;
@@ -800,7 +760,6 @@ All this is done for any sub-level being entered.
 		-webkit-transform: translateX(0%);
 		opacity: 1;
 	}
-
 	100% {
 		-webkit-transform: translateX(100%);
 		opacity: 0;
@@ -812,7 +771,6 @@ All this is done for any sub-level being entered.
 		-webkit-transform: translateZ(0px);
 		opacity: 1;
 	}
-
 	100% {
 		-webkit-transform: translateZ(-300px);
 		opacity: 0;
@@ -824,7 +782,6 @@ All this is done for any sub-level being entered.
 		-webkit-transform: translateZ(0px);
 		opacity: 1;
 	}
-
 	100% {
 		-webkit-transform: translateZ(300px);
 		opacity: 0;
@@ -836,7 +793,6 @@ All this is done for any sub-level being entered.
 		-webkit-transform: translateZ(0);
 		opacity: 1;
 	}
-
 	100% {
 		-webkit-transform: translateZ(-200px);
 		opacity: 0;
@@ -848,7 +804,6 @@ All this is done for any sub-level being entered.
 		-moz-transform: translateX(0%);
 		opacity: 1;
 	}
-
 	100% {
 		-moz-transform: translateX(50%);
 		opacity: 0;
@@ -860,7 +815,6 @@ All this is done for any sub-level being entered.
 		-moz-transform: translateX(0%);
 		opacity: 1;
 	}
-
 	100% {
 		-moz-transform: translateX(100%);
 		opacity: 0;
@@ -872,7 +826,6 @@ All this is done for any sub-level being entered.
 		-moz-transform: translateZ(0px);
 		opacity: 1;
 	}
-
 	100% {
 		-moz-transform: translateZ(-300px);
 		opacity: 0;
@@ -884,7 +837,6 @@ All this is done for any sub-level being entered.
 		-moz-transform: translateZ(0px);
 		opacity: 1;
 	}
-
 	100% {
 		-moz-transform: translateZ(300px);
 		opacity: 0;
@@ -896,7 +848,6 @@ All this is done for any sub-level being entered.
 		-moz-transform: translateZ(0);
 		opacity: 1;
 	}
-
 	100% {
 		-moz-transform: translateZ(-200px);
 		opacity: 0;
@@ -908,7 +859,6 @@ All this is done for any sub-level being entered.
 		transform: translateX(0%);
 		opacity: 1;
 	}
-
 	100% {
 		transform: translateX(50%);
 		opacity: 0;
@@ -920,7 +870,6 @@ All this is done for any sub-level being entered.
 		transform: translateX(0%);
 		opacity: 1;
 	}
-
 	100% {
 		transform: translateX(100%);
 		opacity: 0;
@@ -932,7 +881,6 @@ All this is done for any sub-level being entered.
 		transform: translateZ(0px);
 		opacity: 1;
 	}
-
 	100% {
 		transform: translateZ(-300px);
 		opacity: 0;
@@ -944,7 +892,6 @@ All this is done for any sub-level being entered.
 		transform: translateZ(0px);
 		opacity: 1;
 	}
-
 	100% {
 		transform: translateZ(300px);
 		opacity: 0;
@@ -956,7 +903,6 @@ All this is done for any sub-level being entered.
 		transform: translateZ(0);
 		opacity: 1;
 	}
-
 	100% {
 		transform: translateZ(-200px);
 		opacity: 0;
@@ -980,10 +926,10 @@ All this is done for any sub-level being entered.
 	display: none;
 }
 
-.no-js .dl-menuwrapper li>a:not(:only-child) {
-	background: rgba(0, 0, 0, 0.1);
+.no-js .dl-menuwrapper li > a:not(:only-child) {
+	background: rgba(0,0,0,0.1);
 }
 
-.no-js .dl-menuwrapper li>a:not(:only-child):after {
+.no-js .dl-menuwrapper li > a:not(:only-child):after {
 	content: '';
 }

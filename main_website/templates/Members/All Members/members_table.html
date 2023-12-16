@@ -105,10 +105,8 @@
               <th data-priority="1" style="background:#00629B;color:#ffff;border:1px solid;">IEEE ID</th>
               <th data-priority="1" style="background:#00629B;color:#ffff ;border:1px solid;">NSU ID</th>
               <th data-priority="1" style="background:#00629B;color:#ffff ;border:1px solid;">Name</th>
-              <th data-priority="1" style="background:#00629B;color:#ffff ;border:1px solid;">Email</th>
-              <th data-priority="1" style="background:#00629B;color:#ffff ;border:1px solid;">Current Position</th>
-              <th data-priority="1" style="background:#00629B;color:#ffff ;border:1px solid;">Current Team</th>
-              <th data-priority="1" style="background:#00629B;color:#ffff ;border:1px solid;">Contact No</th>
+              <th data-priority="1" style="background:#00629B;color:#ffff ;border:1px solid;">IEEE Email</th>
+              <th data-priority="1" style="background:#00629B;color:#ffff ;border:1px solid;">Personal Email</th>
             </tr>
           </thead>
           <tbody>
@@ -119,11 +117,9 @@
                   <td style="color:#00629B"><a href="{% url 'membership_development_team:member_details' member.ieee_id %}">{{ member.ieee_id  }}</a></td>
                   <td>{{ member.nsu_id }}</td>
                   <td>{{ member.name  }}</td>
-                  <td>{{ member.email_ieee }}</td=>
-                  <td>{{ member.position.role }}</td=>
-                  <td>{{ member.team.team_name }}</tde=>
-                  <td>{{ member.contact_no }}</td>
-                                
+                  <td>{{ member.email_ieee }}</td>
+                  <td>{{ member.email_personal }}</td>
+                              
               </tr>
       
             {% endfor %}
