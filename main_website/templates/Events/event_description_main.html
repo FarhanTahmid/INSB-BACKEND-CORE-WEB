@@ -283,7 +283,6 @@
             .event_header{
                 text-align: left; 
                 margin-left: 10%; 
-                text-transform: uppercase;
             }
         }
         @media (min-width: 802px) and (max-width: 4000px){        
@@ -310,7 +309,7 @@
         {% else %}
         <div style="height:30px"></div>
         {% endif %}
-        <div class="event_header">
+        <div class="event_header" style="text-transform: uppercase;">
             <!--Event Date and Time-->
             {% comment %} <h4>Friday,October 12 2023 at 12:00 pm - 12:45 pm UTC +06</h4> {% endcomment %}
             <h4 style="color: #BA0C2F;">{{event.event_date | date:"l, F d Y"}}</h4>
