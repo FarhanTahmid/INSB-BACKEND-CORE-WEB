@@ -1,109 +1,199 @@
 {% load static %}
 
 {% block achievement_card_container %}
+
+
+<style>
+
+    {% comment %} .achievement_card{
+        height: 425px;
+    } {% endcomment %}
+
+    .card-img-top {
+        object-fit: cover;
+        height: 250px; /* Set a fixed height for the image */
+    }
+
+    .card-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Show 2 lines of text */
+        -webkit-box-orient: vertical;
+    }
+
+    .card-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+    }
+
+    .card-text.collapsed,
+    .card-title.collapsed {
+        -webkit-line-clamp: unset;
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $(".read-more-link").click(function (event) {
+            event.preventDefault();
+
+            var cardBody = $(this).closest(".card-body");
+            var cardText = cardBody.find(".card-text");
+            var cardTitle = cardBody.find(".card-title");
+            var card = cardBody.closest(".card");
+
+            cardText.toggleClass("collapsed");
+            cardTitle.toggleClass("collapsed");
+
+            // Check if any card text is collapsed
+            var isCollapsed = card.find(".card-text.collapsed").length > 0;
+
+            // Set card height based on collapsed state
+            card.css("height", isCollapsed ? "auto" : "425px");
+
+            // Change the link text based on collapsed state
+            var linkText = isCollapsed ? "Read Less" : "Read More";
+            $(this).text(linkText);
+        });
+    });
+</script>
+
 <div class="container">
-    <div class="row m-0 my-5">
+    <div class="row m-0">
 
         <!-- Repeat the card -->
-        <div class="col-md-6">
+        <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
             <div class="card shadow achievement_card">
-                <img class="ard-img-top" style="height: 250px;" src="https://ieeensusb.org/wp-content/uploads/2021/03/Winner-Networking-Session-Region-10-SYWLC-Virtual-Congress-1187x1536.jpg" alt="">
+                <img class="card-img-top" src="https://ieeensusb.org/wp-content/uploads/2021/03/Winner-Networking-Session-Region-10-SYWLC-Virtual-Congress-1187x1536.jpg" alt="">
 
                 <div class="position-absolute">
                     <span style="background-color: #00629B;" class=" text-white px-3 py-2 rounded h6">2050</span>
                 </div>
 
                 <div class="card-body">
-                    <h5 class="card-title fw-bold mt-2">Winner, Networking Session, Region 10 SYWLC Virtual Congress</h5>
+                    <h5 class="card-title fw-bold mt-2">Winner, Networking Session, Region 10 SYWLC Virtual Congress asd fgasdgsdggsdg</h5>
                     <p class="card-text">
-                        Some quick example text to build on the card title and make up the bulk of the card's content.
-
-                        <div class="collapse" id="collapseExample1">
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorum facere molestiae exercitationem accusamus consectetur aliquid in necessitatibus inventore vitae alias.
-                        </div>
-
-                        <a data-toggle="collapse" href="#collapseExample1">Show more...</a>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sit amet mauris commodo quis. Sit amet purus gravida quis blandit turpis. Eu tincidunt tortor aliquam nulla facilisi. Commodo ullamcorper a lacus vestibulum sed. Sit amet massa vitae tortor condimentum lacinia. Vivamus arcu felis bibendum ut tristique. Fermentum et sollicitudin ac orci. Lacus viverra vitae congue eu. Nunc aliquet bibendum enim facilisis. Lobortis scelerisque fermentum dui faucibus in ornare. Egestas fringilla phasellus faucibus scelerisque eleifend donec pretium. Ac feugiat sed lectus vestibulum mattis ullamcorper velit. Sed velit dignissim sodales ut eu sem. Sed odio morbi quis commodo odio aenean sed. Risus quis varius quam quisque id diam. Nisi vitae suscipit tellus mauris a.                   
                     </p>
+                    <a href="#" class="read-more-link" >Read More</a>
+
                     
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
             <div class="card shadow achievement_card">
-                <img class="ard-img-top" style="height: 250px;" src="https://ieeensusb.org/wp-content/uploads/2021/04/R10Exemplary-300x300.png" alt="">
+                <img class="card-img-top" src="https://ieeensusb.org/wp-content/uploads/2021/04/R10Exemplary-300x300.png" alt="">
 
                 <div class="position-absolute">
-                    <span style="background-color: #00629B;" class=" text-white px-3 py-2 rounded h6">2075</span>
+                    <span style="background-color: #00629B;" class=" text-white px-3 py-2 rounded h6">2050</span>
                 </div>
 
                 <div class="card-body">
                     <h5 class="card-title fw-bold mt-2">IEEE R10 Exemplary Student Branch Award</h5>
                     <p class="card-text">
-                        Some quick example text to build on the card title and make up the bulk of the card's content.
-
-                        <div class="collapse" id="collapseExample2">
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorum facere molestiae exercitationem accusamus consectetur aliquid in necessitatibus inventore vitae alias.
-                        </div>
-
-                        <a data-toggle="collapse" href="#collapseExample2">Show more...</a>
-
+                        Fermentum leo vel orci porta non. Risus nullam eget felis eget nunc lobortis. Diam sollicitudin tempor id eu nisl nunc. Vulputate mi sit amet mauris commodo quis imperdiet. Luctus venenatis lectus magna fringilla. Mi sit amet mauris commodo quis imperdiet massa tincidunt. Proin sed libero enim sed faucibus turpis. Placerat duis ultricies lacus sed. Gravida cum sociis natoque penatibus et. Dictumst quisque sagittis purus sit amet volutpat. Id cursus metus aliquam eleifend mi in nulla. Amet risus nullam eget felis eget nunc lobortis mattis aliquam. Pretium quam vulputate dignissim suspendisse. Mauris rhoncus aenean vel elit. Tempus iaculis urna id volutpat lacus laoreet. Vestibulum lorem sed risus ultricies tristique nulla aliquet enim tortor. Suspendisse ultrices gravida dictum fusce ut. A cras semper auctor neque vitae tempus quam.
                     </p>
+                    <a href="#" class="read-more-link">Read More</a>
+
                     
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6 mt-5">
+        <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
             <div class="card shadow achievement_card">
-                <img class="ard-img-top" style="height: 250px;" src="https://ieeensusb.org/wp-content/uploads/2021/03/3-Best-Student-Branch-Award-2019-1465x1536.png" alt="">
+                <img class="card-img-top" src="https://ieeensusb.org/wp-content/uploads/2021/03/3-Best-Student-Branch-Award-2019-1465x1536.png" alt="">
 
                 <div class="position-absolute">
-                    <span style="background-color: #00629B;" class=" text-white px-3 py-2 rounded h6">2090</span>
+                    <span style="background-color: #00629B;" class=" text-white px-3 py-2 rounded h6">2050</span>
                 </div>
 
                 <div class="card-body">
                     <h5 class="card-title fw-bold mt-2">Best Student Branch Award</h5>
                     <p class="card-text">
-                        Some quick example text to build on the card title and make up the bulk of the card's content.
-
-                        <div class="collapse" id="collapseExample3">
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorum facere molestiae exercitationem accusamus consectetur aliquid in necessitatibus inventore vitae alias.
-                        </div>
-
-                        <a data-toggle="collapse" href="#collapseExample3">Show more...</a>
-
+                        Dui accumsan sit amet nulla facilisi morbi tempus iaculis urna. Sit amet risus nullam eget felis eget nunc lobortis mattis. Ridiculus mus mauris vitae ultricies. Accumsan tortor posuere ac ut consequat semper viverra nam. Ullamcorper velit sed ullamcorper morbi tincidunt ornare massa. Eu feugiat pretium nibh ipsum consequat nisl vel. Ultrices vitae auctor eu augue ut lectus. Nulla aliquet porttitor lacus luctus. Quis risus sed vulputate odio ut enim blandit volutpat maecenas. In massa tempor nec feugiat nisl pretium. Bibendum at varius vel pharetra. Platea dictumst quisque sagittis purus sit amet volutpat. Laoreet suspendisse interdum consectetur libero id. Blandit massa enim nec dui nunc mattis enim ut. Maecenas volutpat blandit aliquam etiam erat velit. Vulputate sapien nec sagittis aliquam. Feugiat in fermentum posuere urna nec. Et netus et malesuada fames ac turpis egestas sed. Maecenas pharetra convallis posuere morbi leo.
                     </p>
+                    <a href="#" class="read-more-link">Read More</a>
+
                     
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6 mt-5">
+        <!-- Repeat the card -->
+        <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
             <div class="card shadow achievement_card">
-                <img class="ard-img-top" style="height: 250px;" src="https://ieeensusb.org/wp-content/uploads/2021/03/7-IEEE-Day-Photo-Contest-2nd-Position-250-USD-1536x1536.png" alt="">
+                <img class="card-img-top" src="https://ieeensusb.org/wp-content/uploads/2021/03/7-IEEE-Day-Photo-Contest-2nd-Position-250-USD-1536x1536.png" alt="">
 
                 <div class="position-absolute">
-                    <span style="background-color: #00629B;" class=" text-white px-3 py-2 rounded h6">2045</span>
+                    <span style="background-color: #00629B;" class=" text-white px-3 py-2 rounded h6">2050</span>
                 </div>
 
                 <div class="card-body">
                     <h5 class="card-title fw-bold mt-2">IEEE Day Photo Contest- 2 nd Position (250 USD)</h5>
                     <p class="card-text">
-                        Some quick example text to build on the card title and make up the bulk of the card's content.
-
-                        <div class="collapse" id="collapseExample4">
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorum facere molestiae exercitationem accusamus consectetur aliquid in necessitatibus inventore vitae alias.
-                        </div>
-
-                        <a data-toggle="collapse" href="#collapseExample4">Show more...</a>
-
+                        Blandit libero volutpat sed cras. Nisi quis eleifend quam adipiscing vitae proin. Lobortis scelerisque fermentum dui faucibus in ornare quam. Nisi quis eleifend quam adipiscing vitae proin sagittis nisl rhoncus. Felis eget nunc lobortis mattis aliquam faucibus purus in massa. Eget sit amet tellus cras adipiscing. Urna porttitor rhoncus dolor purus. Duis tristique sollicitudin nibh sit. Enim neque volutpat ac tincidunt vitae semper. Egestas tellus rutrum tellus pellentesque eu tincidunt. Mi sit amet mauris commodo. Nibh nisl condimentum id venenatis a condimentum vitae sapien pellentesque.
                     </p>
+                    <a href="#" class="read-more-link" >Read More</a>
+
                     
                 </div>
             </div>
         </div>
-        
+
+        <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
+            <div class="card shadow achievement_card">
+                <img class="card-img-top" src="https://ieeensusb.org/wp-content/uploads/2021/03/Winner-Networking-Session-Region-10-SYWLC-Virtual-Congress-1187x1536.jpg" alt="">
+
+                <div class="position-absolute">
+                    <span style="background-color: #00629B;" class=" text-white px-3 py-2 rounded h6">2050</span>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mt-2">IEEE R10 Exemplary Student Branch Award
+                    </h5>
+                    <p class="card-text">
+                        Sit amet est placerat in egestas erat imperdiet. Cras ornare arcu dui vivamus arcu. Et leo duis ut diam quam nulla porttitor massa. Magnis dis parturient montes nascetur ridiculus mus mauris vitae. Pulvinar neque laoreet suspendisse interdum consectetur. Ultrices in iaculis nunc sed. Facilisi morbi tempus iaculis urna id volutpat lacus. Eget dolor morbi non arcu risus quis varius quam quisque. Vulputate dignissim suspendisse in est ante in. At auctor urna nunc id cursus metus aliquam. Purus sit amet luctus venenatis lectus magna fringilla urna porttitor. Aliquam eleifend mi in nulla. Nam libero justo laoreet sit amet cursus sit. Purus non enim praesent elementum facilisis leo vel fringilla. Enim facilisis gravida neque convallis a cras semper auctor.
+                    </p>
+                    <a href="#" class="read-more-link">Read More</a>
+
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
+            <div class="card shadow achievement_card">
+                <img class="card-img-top" src="https://ieeensusb.org/wp-content/uploads/2021/04/R10Exemplary-300x300.png" alt="">
+
+                <div class="position-absolute">
+                    <span style="background-color: #00629B;" class=" text-white px-3 py-2 rounded h6">2050</span>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mt-2">IEEE R10 Exemplary Student Branch Award
+                    </h5>
+                    <p class="card-text">
+                        In est ante in nibh mauris cursus mattis molestie a. Quam adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus urna. Orci sagittis eu volutpat odio facilisis. Aliquet nibh praesent tristique magna sit amet purus gravida quis. Neque aliquam vestibulum morbi blandit cursus. Auctor urna nunc id cursus metus aliquam eleifend. Turpis tincidunt id aliquet risus. Neque volutpat ac tincidunt vitae semper quis lectus. Congue eu consequat ac felis donec et odio. Sapien faucibus et molestie ac feugiat sed lectus vestibulum. Pellentesque pulvinar pellentesque habitant morbi tristique senectus et netus. Urna nec tincidunt praesent semper feugiat nibh sed pulvinar.
+                    </p>
+                    <a href="#" class="read-more-link">Read More</a>
+
+                    
+                </div>
+            </div>
+        </div>
+     
     </div>
 </div>
+<br><br>
+
+
 {% endblock achievement_card_container %}
