@@ -189,7 +189,7 @@
                                             type="url"
                                             autocomplete="off"
                                             id="#field1"
-                                            value="{{event_details.form_link}}"
+                                            value="{% if event_details.form_link %}{{event_details.form_link}}{% endif %}"
                                             name="drive_link_of_event"
                                             />
                                             
