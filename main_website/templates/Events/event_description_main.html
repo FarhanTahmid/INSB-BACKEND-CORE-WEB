@@ -20,18 +20,11 @@
             height: 460px;
             width: 768px;
             margin-top: 1%;
-            margin-bottom: -3%;
             border-radius: 8px;
             object-fit: fill;
-        }        
-        .banner_gradient h4{
-            margin-bottom: 2%;
-        }
-        .banner_gradient h1{
-            margin-bottom: 2%;
         }
         .banner_gradient{
-            background-image:url("{{media_url}}{{event_banner_image}}");
+            background-image:white;
             object-fit: cover;
             text-align: center;
         }
@@ -39,6 +32,7 @@
             border:1px solid#ebebeb;
             background: white;
             margin-bottom: 6%;
+            margin-top: 2%;
         }
         .inner_box{
             margin: 5% 6%;
@@ -85,7 +79,7 @@
         }
         .leave_reply_section{
             gap: 2%;
-            margin: 0% 10%;   
+            margin: 0% 4%;   
         }
         .leave_reply_section p{
             font-size: larger; 
@@ -131,17 +125,16 @@
         }
         /*gallery css*/
         .gallery img{
-            width: 300px;
+            width: 90%;
             height: 200px;
             object-fit: cover;
         }
         .gallery{
-            justify-content:center;
-            margin: 2% 0%;
-            display: flex;
-            flex-wrap: wrap;
-            width: 100%;
-            column-gap: 8px;
+            margin: 2% 4%;
+            width: 95%;
+            display: grid;
+            grid-template-columns: auto auto auto;
+            row-gap: 2%;
         }
         /*hover effects*/
         .read_more_btn:hover{
@@ -189,11 +182,10 @@
             "submit_btn";
                 grid-column-gap: 2%;
                 grid-row-gap: 4%;
-            }
-            
+            }         
             .leave_reply_section{
                 gap: 2%;
-                margin: 20px 10%;   
+                margin: 20px 4%;   
             }
         }
         @media only screen and (min-width: 1160px) and (max-width:4000px){           
@@ -201,9 +193,6 @@
                 display: grid;
                 grid-template-columns: 2fr 1fr;
                 gap: 2%;
-            }
-            .register_btn{
-                font-size: px;
             }
         }
         /*minor alignmenet adjustment in inner box*/
@@ -213,17 +202,69 @@
             } 
         } 
         /*gallery*/
-        @media (min-width: 1223px) and (max-width: 4000px){        
+        @media only screen and (max-width: 425px){
             .gallery{
-                display: grid;
-                grid-template-columns: auto auto auto;
+                grid-template-columns: auto auto ;
             }
             .gallery img{
-                width: 400px;
-                height: 300px;
-                object-fit: cover;
+                width: 90%;
+                height: 15vh;
             }
-        }    
+        }
+        @media (min-width: 426px) and (max-width: 510px){
+            .gallery img{
+                width: 90%;
+                height: 20vh;
+            }
+        }
+        @media (min-width: 510px) and (max-width: 740px){
+            .gallery img{
+                width: 90%;
+                height: 20vh;
+            }
+        }
+        @media (min-width: 740px) and (max-width: 900px){
+            .gallery img{
+                width: 90%;
+                height: 25vh;
+            }
+        }
+        @media (min-width: 900px) and (max-width: 1024px){
+            .gallery img{
+                width: 90%;
+                height: 30vh;
+            }
+        }
+        @media (min-width: 1024px) and (max-width: 1224px){
+            .gallery img{
+                width: 90%;
+                height: 35vh;
+            }
+        }
+        @media (min-width: 1224px) and (max-width: 1800px){
+            .gallery img{
+                width: 90%;
+                height: 45vh;
+            }
+        } 
+        @media (min-width: 1800px) and (max-width: 2000px){
+            .gallery img{
+                width: 90%;
+                height: 50vh;
+            }
+            .gallery{
+                row-gap: 6%;
+            }
+        }   
+        @media (min-width: 2000px) and (max-width: 2800px){
+            .gallery img{
+                width: 90%;
+                height: 60vh;
+            }
+            .gallery{
+                row-gap: 8%;
+            }
+        }   
         /*responsive banner*/
         @media only screen and (max-width: 801px){        
             .banner_image{
@@ -232,38 +273,30 @@
                 height: 40%;
                 width: 100%;
             }
-        }
-        @media (min-width: 962px) and (max-width:1550px){   
-            .banner_image{
-                margin-bottom: -2%;
-            }   
-            .banner_gradient h4{
-                margin-bottom: 15px;
-            }
             .banner_gradient h1{
-                margin-bottom: 15px;
+                margin-bottom: 0px;
             }
-        }
-        @media (min-width: 1550px) and (max-width:2000px){   
-            .banner_image{
-                margin-bottom: -1%;
-            }   
             .banner_gradient h4{
-                margin-bottom: 25px;
+                margin-top: 5px;
+                margin-bottom: -20px;
             }
-            .banner_gradient h1{
-                margin-bottom: 15px;
+            .event_header{
+                text-align: left; 
+                margin-left: 10%; 
+                text-transform: uppercase;
             }
         }
-        @media (min-width: 2000px) and (max-width:3000px){   
-            .banner_image{
-                margin-bottom: -1%;
-            }   
-            .banner_gradient h4{
-                margin-bottom: 40px;
-            }
+        @media (min-width: 802px) and (max-width: 4000px){        
             .banner_gradient h1{
-                margin-bottom: 25px;
+                margin-bottom: -2px;
+            }
+            .banner_gradient h4{
+                margin-top: -2px;
+                margin-bottom: -25px;
+            }
+            .event_header{
+                text-align: left; 
+                margin-left: 5%;
             }
         }
     </style>
@@ -277,19 +310,19 @@
         {% else %}
         <div style="height:30px"></div>
         {% endif %}
-        <div class="event_header" style="text-align: left; margin-left: 10%; text-transform: uppercase;">
+        <div class="event_header">
             <!--Event Date and Time-->
             {% comment %} <h4>Friday,October 12 2023 at 12:00 pm - 12:45 pm UTC +06</h4> {% endcomment %}
             <h4 style="color: #BA0C2F;">{{event.event_date | date:"l, F d Y"}}</h4>
             <!--Event Header-->
-            <h1 style="margin-top: -2%; ">{{event.event_name}}</h1>
+            <h1>{{event.event_name}}</h1>
         </div>
-        <hr style="width:80%;margin-left:10% ;margin-top: -1%; border: solid .5px black;">
+        <hr style="width:92%;margin-left:4% ;margin-top: 0%; border: solid .5px black;">
     </section>
     <section class="below_banner">
         <!--Event Description-->
         <div>
-            <p>{{event.event_description | safe}}</p>
+            <p style="  text-align: justify;">{{event.event_description | safe}}</p>
         </div>
         <div>
             <!--Register Box-->
