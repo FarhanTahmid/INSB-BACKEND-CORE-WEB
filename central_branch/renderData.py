@@ -715,6 +715,11 @@ class Branch:
             return panel
         except:
             raise Http404("The requested page does not exist.")
+        
+    def load_current_panel_members():
+        current_panel = Branch.load_current_panel()
+        current_panel_members = Branch.load_panel_members_by_panel_id(panel_id=current_panel)
+        return current_panel_members
 
     
     def load_panel_members_by_panel_id(panel_id):

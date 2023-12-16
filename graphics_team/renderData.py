@@ -53,7 +53,7 @@ class GraphicsTeam:
         for i in range(len(load_team_members)):
             team_members.append(load_team_members[i])
         return team_members
-    
+        
     def get_team_id():
         
         '''Gets the team id from the database only for Media Team. Not the right approach'''
