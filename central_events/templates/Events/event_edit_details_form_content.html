@@ -131,7 +131,7 @@
                     <select multiple class="form-control" name="inter_branch_collaboration">
                         <option value="null" {% if not hasCollaboration %}selected{% endif %}>--------------------</option>
                         {% for inter_branch_collaboration_option in inter_branch_collaboration_options %}
-                            <option value="{{ inter_branch_collaboration_option }}" {% if inter_branch_collaboration_option and inter_branch_collaboration_option in interBranchCollaborations %}selected{% endif %}>
+                            <option value="{{ inter_branch_collaboration_option.primary }}" {% if inter_branch_collaboration_option and inter_branch_collaboration_option in interBranchCollaborations %}selected{% endif %}>
                                 {{ inter_branch_collaboration_option.group_name }}
                             </option>
                         {% endfor %}

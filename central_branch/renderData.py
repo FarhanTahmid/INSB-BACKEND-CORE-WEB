@@ -438,7 +438,6 @@ class Branch:
                 testArray = []
 
                 group_primary = event.event_organiser.primary
-                print(group_primary)
                 if group_primary != 1:
                     if '1' not in inter_branch_collaboration_list:
                         inter_branch_collaboration_list.append('1')
