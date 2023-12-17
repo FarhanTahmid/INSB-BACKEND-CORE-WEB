@@ -8,6 +8,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from central_events.models import Event_Category, Event_Venue, Events, SuperEvents
 from events_and_management_team.renderData import Events_And_Management_Team
+from graphics_team.models import Graphics_Banner_Image, Graphics_Link
+from graphics_team.renderData import GraphicsTeam
+from media_team.models import Media_Images, Media_Link
+from media_team.renderData import MediaTeam
 from system_administration.system_error_handling import ErrorHandling
 from . import renderData
 from port.models import Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
@@ -1159,6 +1163,7 @@ def event_edit_form(request, event_id):
             'all_sc_ag' : sc_ag,
             'is_branch' : is_branch,
             'event_details' : event_details,
+            'event_id' : event_id,
             'form' : form,
             'super_events' : super_events,
             'event_types' : event_types,
@@ -1186,24 +1191,133 @@ def event_edit_media_form_tab(request, event_id):
 
     ''' This function loads the media tab page of events '''
 
-    #Get event details from databse
-    event_details = Events.objects.get(pk=event_id)
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        #Get event details from databse
+        # event_details = Events.objects.get(pk=event_id)
+        # has_access = MediaTeam_Render_Access.access_for_events(request)
+        if(True):
+            #Getting media links and images from database. If does not exist then they are set to none
 
-    context = {
-        'event_details' : event_details
-    }
+            try:
+                media_links = Media_Link.objects.get(event_id = Events.objects.get(pk=event_id))
+            except:
+                media_links = None
+            media_images = Media_Images.objects.filter(event_id = Events.objects.get(pk=event_id))
+            number_of_uploaded_images = len(media_images)
+            
 
-    return render(request, 'Events/event_edit_media_form_tab.html', context)
+            if request.method == "POST":
+
+                if request.POST.get('save'):
+
+                    #getting all data from page
+
+                    folder_drive_link_for_event_pictures = request.POST.get('drive_link_of_event')
+                    folder_drive_link_for_pictures_with_logos = request.POST.get('logo_drive_link_of_event')
+                    selected_images = request.FILES.getlist('image')
+
+                    if(MediaTeam.add_links_and_images(folder_drive_link_for_event_pictures,folder_drive_link_for_pictures_with_logos,
+                                                selected_images,event_id)):
+                        messages.success(request,'Saved Changes!')
+                    else:
+                        messages.error(request,'Please Fill All Fields Properly!')
+                    return redirect("central_branch:event_edit_media_form_tab",event_id)
+                
+                if request.POST.get('remove_image'):
+
+                    #When a particular picture is deleted, it gets the image url from the modal
+
+                    image_url = request.POST.get('remove_image')
+                    if(MediaTeam.remove_image(image_url,event_id)):
+                        messages.success(request,'Saved Changes!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("central_branch:event_edit_media_form_tab",event_id)
+        
+            context={
+                'event_id' : event_id,
+                'media_links' : media_links,
+                'media_images':media_images,
+                'media_url':settings.MEDIA_URL,
+                'allowed_image_upload':6-number_of_uploaded_images,
+                'all_sc_ag':sc_ag,
+            }
+            return render(request,"Events/event_edit_media_form_tab.html",context)
+        else:
+            return redirect('main_website:event_details', event_id)
+        
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 @login_required
 def event_edit_graphics_form_tab(request, event_id):
 
     ''' This function loads the graphics tab page of events '''
-    #Get event details from databse
-    event_details = Events.objects.get(pk=event_id)
 
-    context = {
-        'event_details' : event_details
-    }
-    
-    return render(request, 'Events/event_edit_graphics_form_tab.html', context)
+     #Initially loading the events whose  links and images were previously uploaded
+    #and can be editible
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        #Get event details from databse
+        # event_details = Events.objects.get(pk=event_id)
+        # has_access = GraphicsTeam_Render_Access.access_for_events(request)
+        if(True):
+            #Getting media links and images from database. If does not exist then they are set to none
+            try:
+                graphics_link = Graphics_Link.objects.get(event_id = Events.objects.get(pk=event_id))
+            except:
+                graphics_link = None
+            try:
+                graphic_banner_image = Graphics_Banner_Image.objects.get(event_id = Events.objects.get(pk=event_id))
+                image_number = 1
+            except:
+                graphic_banner_image = None
+                image_number = 0
+
+            
+            if request.method == "POST":
+
+                if request.POST.get('save'):
+
+                    #getting all data from page
+                    drive_link_folder = request.POST.get('drive_link_of_graphics')
+                    selected_images = request.FILES.get('image')
+                    if(GraphicsTeam.add_links_and_images(drive_link_folder,selected_images,event_id)):
+                        messages.success(request,'Saved Changes!')
+                    else:
+                        messages.error(request,'Please Fill All Fields Properly!')
+                    return redirect("central_branch:event_edit_graphics_form_tab",event_id)
+                
+                if request.POST.get('remove_image'):
+
+                    #When a particular picture is deleted, it gets the image url from the modal
+
+                    image_url = request.POST.get('remove_image')
+                    if(GraphicsTeam.remove_image(image_url,event_id)):
+                        messages.success(request,'Saved Changes!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("central_branch:event_edit_graphics_form_tab",event_id)
+
+            context={
+                'event_id' : event_id,
+                'all_sc_ag':sc_ag,
+                'graphic_links' : graphics_link,
+                'graphics_banner_image':graphic_banner_image,
+                'media_url':settings.MEDIA_URL,
+                'allowed_image_upload':1-image_number,
+
+            }
+            return render(request,"Events/event_edit_graphics_form_tab.html",context)
+        else:
+            return redirect('main_website:event_details', event_id)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
