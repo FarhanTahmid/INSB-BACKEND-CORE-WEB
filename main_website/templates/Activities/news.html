@@ -91,6 +91,8 @@
             {% include 'wave.html' %}
         {% endblock %}
         <!-- end of wAVE PART  -->
+        <br>
+        <h3 style="color:#00629B;text-align:center;">IEEE NSU Student Branch News</h3>
 
         <!-- News card start -->
 
@@ -141,8 +143,11 @@
         </div>
 
 
-
-
+        <!--Online News Section-->
+        {% block online_news %}
+        {% include "Activities/online_news_card_container.html" %}
+        {% endblock online_news %}
+        <!--Online news section Ends-->
 
 
         <!-- Footer -->

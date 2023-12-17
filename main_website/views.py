@@ -17,6 +17,7 @@ import traceback
 from .renderData import HomepageItems
 from users.renderData import PanelMembersData
 from users import renderData as userData
+import json,requests
 
 
 logger=logging.getLogger(__name__)
@@ -130,9 +131,54 @@ def achievements(request):
 def news(request):
     # load news of insb
     load_all_news=News.objects.all().order_by('-news_date')
+    
+    # apis to get online news
+    url_robotics=f'https://newsdata.io/api/1/news?apikey={settings.NEWS_API_KEY}&q=robotics&language=en&category=education,science,technology'
+    url_wie_news=f'https://newsdata.io/api/1/news?apikey={settings.NEWS_API_KEY}&q="women%20in%20STEM"&category=technology'
+    url_ai_machine_learning=f'https://newsdata.io/api/1/news?apikey={settings.NEWS_API_KEY}&q="artificial%20neural%20network"%20OR%20"deep%20learning"&language=en&category=technology,top '
+
+    # keeping urls as list
+    url_list=[url_robotics,url_ai_machine_learning,url_wie_news]
+    
+    json_datas=[]
+    # extracting response from the apis and keeping all the three datas of the api in a list
+    for url in url_list:
+        response=requests.get(url)
+        if(response.status_code==200):
+            # if response is okay then load data
+            json_datas.append(json.loads(response.text))
+    
+    all_online_news=[]
+    # extracting article results
+    for i in json_datas:
+        articles=i.get('results',[])
+        for article in articles:
+            # extracting article values
+            title=article.get('title',[])
+            article_link=article.get('link',[])
+            article_description=article.get('description',[])
+            article_picture=article.get('image_url',[])
+            article_creator=article.get('creator',[])
+            # storing all articles as dictionary key value items
+            news_item={
+                'title':title,
+                'article_link':article_link,
+                'article_description':article_description,
+                'article_picture':article_picture,
+                'article_creator':article_creator
+            }
+            # storing all articles in a list
+            all_online_news.append(news_item)
+    has_online_news=False
+    if(len(all_online_news)>0):
+        has_online_news=True
+    print(all_online_news)
     context={
         'page_title':"News",
         'all_news':load_all_news,
+        'all_online_news':all_online_news,
+        'has_online_news':has_online_news,
+        
     }
     return render(request,'Activities/news.html',context=context)
 
