@@ -1186,11 +1186,24 @@ def event_edit_media_form_tab(request, event_id):
 
     ''' This function loads the media tab page of events '''
 
-    return render(request, 'Events/event_edit_media_form_tab.html')
+    #Get event details from databse
+    event_details = Events.objects.get(pk=event_id)
+
+    context = {
+        'event_details' : event_details
+    }
+
+    return render(request, 'Events/event_edit_media_form_tab.html', context)
 
 @login_required
 def event_edit_graphics_form_tab(request, event_id):
 
     ''' This function loads the graphics tab page of events '''
+    #Get event details from databse
+    event_details = Events.objects.get(pk=event_id)
+
+    context = {
+        'event_details' : event_details
+    }
     
-    return render(request, 'Events/event_edit_graphics_form_tab.html')
+    return render(request, 'Events/event_edit_graphics_form_tab.html', context)
