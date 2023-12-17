@@ -105,6 +105,13 @@
       </ol></b>
 
 
+      <!--Tab view for Events-->
+      <!--Tab view Start-->
+      {% block event_edit_tab %}
+          {% include "Events/event_edit_tabs.html" %}
+      {% endblock event_edit_tab %}
+      <!--Tab view end-->
+
       
       {% block media_form %}
           {% include "Events/media_event_form_content.html" %}

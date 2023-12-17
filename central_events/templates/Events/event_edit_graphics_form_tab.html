@@ -96,9 +96,16 @@
             
             
 
-                        {% block graphics_form %}
-                            {% include "Events/graphics_event_form_content.html" %}
-                        {% endblock graphics_form %}
+            <!--Tab view for Events-->
+            <!--Tab view Start-->
+            {% block event_edit_tab %}
+                {% include "Events/event_edit_tabs.html" %}
+            {% endblock event_edit_tab %}
+            <!--Tab view end-->
+            
+            {% block graphics_form %}
+                {% include "Events/graphics_event_form_content.html" %}
+            {% endblock graphics_form %}
 
                         
 

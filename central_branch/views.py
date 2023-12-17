@@ -1180,4 +1180,17 @@ def event_edit_form(request, event_id):
         return HttpResponseBadRequest("Bad Request")
 
 
+
+@login_required
+def event_edit_media_form_tab(request, event_id):
+
+    ''' This function loads the media tab page of events '''
+
+    return render(request, 'Events/event_edit_media_form_tab.html')
+
+@login_required
+def event_edit_graphics_form_tab(request, event_id):
+
+    ''' This function loads the graphics tab page of events '''
     
+    return render(request, 'Events/event_edit_graphics_form_tab.html')
