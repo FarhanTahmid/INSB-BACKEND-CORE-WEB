@@ -205,7 +205,7 @@ def event_form(request,event_id):
                 'allowed_image_upload':1-image_number,
 
             }
-            return render(request,"graphics_team/graphics_event_form.html",context)
+            return render(request,"Events/graphics_event_form.html",context)
         else:
             return redirect('main_website:event_details', event_id)
     except Exception as e:

@@ -1,219 +1,254 @@
 {% load static %}
 {% block event_details_form %}
 
+
+<style>
+    .publish-switch {
+        display: flex;
+        justify-content: flex-end; /* Align to the right end */
+        align-items: center;
+        position: relative;
+    }
+
+    .registration-fee-switch, .flagship-event-switch{
+        display: flex;
+        justify-content: flex-start; /* Align to the right end */
+        align-items: center;
+        position: relative;
+    }
+
+    .ui-switch{
+        /* Add shadow to the icon */
+        box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.2);
+        display: inline-block;
+
+        /* You can customize the shadow properties */
+    }
+    .form-control-label {
+        display: inline-block;
+        margin-right: 10px; /* Add margin for spacing between elements */
+    }
+
+    .registration-hidden-field{
+        opacity: 0; 
+        height: 0; 
+        overflow: hidden; 
+        visibility: hidden; 
+        transition: all 0.5s 
+        ease-in-out;
+    }
+</style>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <div class="container">
-        <div class="padding">
-            <div class="row" >
-                <div class="col-sm-10">
-                    <div class="box">
-                        <form method = "POST">
-                            {% csrf_token %}
-                            <div class="box-header" style="text-align:center;">
-                                <h1>Update Event Details</h1>
-                            </div>
-                            <div class="publish-switch">
-                                <label class="form-control-label">Publish Event:</label>
-                                <span>                                            
-                                    <label class="ui-switch m-t-xs m-r">
-                                        <input name="publish_event" type="checkbox" {% if is_event_published %} checked {% endif %}>
-                                            <i></i>
-                                    </label>                
-                                </span>
-                            </div>
-                            <!--Error Message-->
-                            <div class="py-3 text-center">
-                                {% for message in messages %}
-                                    <p style="color:red" class="message">{{message}}</p>
-                                {% endfor %}
-                            </div>
-                            
-                                <div class="box-body">
-                                    
-
-                                    <div class="form-group">
-                                        <label>Event Name: <span style="color:red">*<span></label> 
-                                        <input
-                                            placeholder="Event Name"
-                                            class="form-control w-75"
-                                            type="text"
-                                            autocomplete="off"
-                                            required
-                                            name="event_name"
-                                            value="{{event_details.event_name}}" 
-                                        />
-                                            
-                                    </div>
-                                    <br>
-                                    <div class="form-group">
-                                        {{form.media}}
-                                        {{form.as_p}}
-                                    </div>
-                                    <br>
-                                    <div class="form-group">
-                                        <label>Super Event of</label>    
-                                        <select multiple class="form-control" name="super_event">
-                                            <option value="null" {% if event_details.super_event_id is none %}selected{% endif %}>--------------------</option>
-                                            {% for super_event in super_events %}
-                                                <option value="{{ super_event.id }}" 
-                                                {% if super_event and super_event == event_details.super_event_id %}selected{% endif %}>
-                                                    {{ super_event.super_event_name }}
-                                                </option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    
-                                    <br>
-                                    <div class="form-group">
-                                        <label>Select Event Type: <span style="color:red">*<span></label>
-                                        <select multiple class="form-control" name="event_type" required>
-                                            <option value="null" {% if event_details.event_type is none %}selected{% endif %}>--------------------</option>
-                                            {% for event_type in event_types %}
-                                                <option value="{{ event_type.id }}" 
-                                                {% if event_type and event_type in event_details.event_type.all %}selected{% endif %}>
-                                                    {{ event_type.event_category }}
-                                                </option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    
-                                    <br>
-                                    <div class="form-group">
-                                        <label for="exampleInputPassword3">Add a date for the Event</label>
-                                        <input
-                                            placeholder="Event Date"
-                                            name="event_date"
-                                            type="date"
-                                            class="form-control w-75"
-                                            value="{{event_details.event_date|date:"Y-m-d"}}"
-                                        />
-                                    </div>
-                                    <br>  
-                                    <div class="form-group">
-                                        <label>Inter Branch Collaboration With: (Press CTRL to select multiple options) </label>
-                                        <select multiple class="form-control" name="inter_branch_collaboration">
-                                            <option value="null" {% if not hasCollaboration %}selected{% endif %}>--------------------</option>
-                                            {% for inter_branch_collaboration_option in inter_branch_collaboration_options %}
-                                                <option value="{{ inter_branch_collaboration_option }}" {% if inter_branch_collaboration_option and inter_branch_collaboration_option in interBranchCollaborations %}selected{% endif %}>
-                                                    {{ inter_branch_collaboration_option.group_name }}
-                                                </option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    
-                                    <br>
-                                    <div class="form-group">
-                                        <label>Intra Branch Collaboration With:  (Add comma to add multiple)</label>
-                                        <input
-                                            placeholder="Name of the Branches/Organizations"
-                                            class="form-control w-75"
-                                            type="text"
-                                            name="intra_branch_collaboration"
-                                            value="{{intraBranchCollaborations.collaboration_with}}"
-                                        />
-                                    </div>
-                                    <br>
-                                    <div class="form-group">
-                                        <label>Select Probable Venues For the Event: (Press CTRL to select multiple options)</label>
-                                        <select multiple class="form-control" name="event_venues">
-                                            <option value="null" {% if selected_venues is none %}selected{% endif %}>--------------------</option>
-                                            {% for venue in venues %}
-                                                <option value="{{ venue.id }}" {% if venue.venue_name in selected_venues %}selected{% endif %}>
-                                                    {{ venue.venue_name }}
-                                                </option>
-                                            {% endfor %}
-                                        </select>
-                                        <button type="button" class="btn btn-outline-success buttons mt-2" data-toggle="modal" data-target="#addVenueModal">Add Venue</button>
-                                    </div>
-                                    
-                                    <br>
-                                    <div class="form-group">
-                                        <label>Select Permission Criterias For the Event: (Press CTRL to select multiple options) <span style="color:red">*</span></label>
-                                        <select multiple class="form-control" name="permission_criteria" required>
-                                            <option value="null" {% if selectedPermissionId is none %}selected{% endif %}>----------</option>
-                                            {% for permission in permission_criterias %}
-                                                <option value="{{ permission.id }}" {% if selectedPermissionId and permission.id == selectedPermissionId %}selected{% endif %}>
-                                                    {{ permission.permission_name }}
-                                                </option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    
-                                    <br>
-                                    <div class="form-group">
-                                        <div class="registration-fee-switch">
-                                            <label class="form-control-label">Registration Fee:</label>
-                                            <span>                                            
-                                                <label class="ui-switch m-t-xs m-r">
-                                                    <input name="registration_fee" type="checkbox" id="registrationCheckbox" {% if is_registration_fee_required %} checked {% endif %}>
-                                                    <i></i>
-                                                </label>                
-                                            </span>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Hidden textfield with transition -->
-                                   
-                                    <div class="form-group registration-hidden-field" id="registrationFeeInput">
-                                        <label for="registrationFeeValue">Enter amount:</label>
-                                        <input
-                                            type="text"
-                                            name="registration_fee_amount"
-                                            id="registrationFeeValue"
-                                            class="form-control w-75"
-                                            placeholder="Enter Registration Fee"
-                                            value="{{event_details.registration_fee_amount}}"
-                                            {% if is_registration_fee_required %} required {% endif %}
-                                        />
-                                    </div>
+    
+                        
+<div class="container">
+    <div class="box">
         
-                                    <div class="form-group">
-                                        <div class="flagship-event-switch">
-                                            <label class="form-control-label">Flagship:</label>
-                                            <span>                                            
-                                                <label class="ui-switch m-t-xs m-r">
-                                                    <input name="flagship_event" type="checkbox" id="Checkbox" {% if is_flagship_event%} checked {% endif %}>
-                                                    <i></i>
-                                                </label>                
-                                            </span>
-                                        </div>
-                                    </div>
+        <br>
+        <div class="box-header" style="text-align:center;">
+            <h1>Update Event Details</h1>
+        </div>
+        <div class="publish-switch">
+            <label class="form-control-label">Publish Event:</label>
+            <span>                                            
+                <label class="ui-switch m-t-xs m-r">
+                    <input name="publish_event" type="checkbox" {% if is_event_published %} checked {% endif %}>
+                        <i></i>
+                </label>                
+            </span>
+        </div>
+        <!--Error Message-->
+        <div class="py-3 text-center">
+            {% for message in messages %}
+                <p style="color:red" class="message">{{message}}</p>
+            {% endfor %}
+        </div>
+        
+        <form method = "POST">
+        {% csrf_token %}
+            <div class="box-body">
 
-                                    <br>
-                                    <div class="form-group">
-                                        <label class="form-control-label">Form Link:</label>
-                                        <span>
-                                            <input
-                                            placeholder="Provide Link"
-                                            class="form-control"
-                                            type="url"
-                                            autocomplete="off"
-                                            id="#field1"
-                                            value="{% if event_details.form_link %}{{event_details.form_link}}{% endif %}"
-                                            name="drive_link_of_event"
-                                            />
-                                            
-                                        </span>
-                                    </div>
-                                    
-
-                                    <br>
-                                    <div style="text-align: center;">
-                                        {% if is_branch %}
-                                        <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger">Cancel</a>
-                                        {% else %}
-                                        <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger">Cancel</a>
-                                        {% endif %}
-                                        <input type="submit" name="update_event" class="btn btn-outline b-success text-success" value="Update Changes">
-                                    </div>
-                                    <br> 
-                                </div>
-                        </form>
+                <div class="form-group">
+                    <label>Event Name: <span style="color:red">*<span></label> 
+                    <input
+                        placeholder="Event Name"
+                        class="form-control"
+                        type="text"
+                        autocomplete="off"
+                        required
+                        name="event_name"
+                        value="{{event_details.event_name}}" 
+                    />
+                        
+                </div>
+                <br>
+                <div class="form-group">
+                    {{form.media}}
+                    {{form.as_p}}
+                </div>
+                <br>
+                <div class="form-group">
+                    <label>Super Event of</label>    
+                    <select multiple class="form-control" name="super_event">
+                        <option value="null" {% if event_details.super_event_id is none %}selected{% endif %}>--------------------</option>
+                        {% for super_event in super_events %}
+                            <option value="{{ super_event.id }}" 
+                            {% if super_event and super_event == event_details.super_event_id %}selected{% endif %}>
+                                {{ super_event.super_event_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <br>
+                <div class="form-group">
+                    <label>Select Event Type: <span style="color:red">*<span></label>
+                    <select multiple class="form-control" name="event_type" required>
+                        <option value="null" {% if event_details.event_type is none %}selected{% endif %}>--------------------</option>
+                        {% for event_type in event_types %}
+                            <option value="{{ event_type.id }}" 
+                            {% if event_type and event_type in event_details.event_type.all %}selected{% endif %}>
+                                {{ event_type.event_category }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <br>
+                <div class="form-group">
+                    <label for="exampleInputPassword3">Add a date for the Event</label>
+                    <input
+                        placeholder="Event Date"
+                        name="event_date"
+                        type="date"
+                        class="form-control"
+                        value="{{event_details.event_date|date:"Y-m-d"}}"
+                    />
+                </div>
+                <br>  
+                <div class="form-group">
+                    <label>Inter Branch Collaboration With: (Press CTRL to select multiple options) </label>
+                    <select multiple class="form-control" name="inter_branch_collaboration">
+                        <option value="null" {% if not hasCollaboration %}selected{% endif %}>--------------------</option>
+                        {% for inter_branch_collaboration_option in inter_branch_collaboration_options %}
+                            <option value="{{ inter_branch_collaboration_option }}" {% if inter_branch_collaboration_option and inter_branch_collaboration_option in interBranchCollaborations %}selected{% endif %}>
+                                {{ inter_branch_collaboration_option.group_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <br>
+                <div class="form-group">
+                    <label>Intra Branch Collaboration With:  (Add comma to add multiple)</label>
+                    <input
+                        placeholder="Name of the Branches/Organizations"
+                        class="form-control"
+                        type="text"
+                        name="intra_branch_collaboration"
+                        value="{{intraBranchCollaborations.collaboration_with}}"
+                    />
+                </div>
+                <br>
+                <div class="form-group">
+                    <label>Select Probable Venues For the Event: (Press CTRL to select multiple options)</label>
+                    <select multiple class="form-control" name="event_venues">
+                        <option value="null" {% if selected_venues is none %}selected{% endif %}>--------------------</option>
+                        {% for venue in venues %}
+                            <option value="{{ venue.id }}" {% if venue.venue_name in selected_venues %}selected{% endif %}>
+                                {{ venue.venue_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" class="btn btn-outline-success buttons mt-2" data-toggle="modal" data-target="#addVenueModal">Add Venue</button>
+                </div>
+                
+                <br>
+                <div class="form-group">
+                    <label>Select Permission Criterias For the Event: (Press CTRL to select multiple options) <span style="color:red">*</span></label>
+                    <select multiple class="form-control" name="permission_criteria" required>
+                        <option value="null" {% if selectedPermissionId is none %}selected{% endif %}>----------</option>
+                        {% for permission in permission_criterias %}
+                            <option value="{{ permission.id }}" {% if selectedPermissionId and permission.id == selectedPermissionId %}selected{% endif %}>
+                                {{ permission.permission_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <br>
+                <div class="form-group">
+                    <div class="registration-fee-switch">
+                        <label class="form-control-label">Registration Fee:</label>
+                        <span>                                            
+                            <label class="ui-switch m-t-xs m-r">
+                                <input name="registration_fee" type="checkbox" id="registrationCheckbox" {% if is_registration_fee_required %} checked {% endif %}>
+                                <i></i>
+                            </label>                
+                        </span>
                     </div>
                 </div>
+                
+                <!-- Hidden textfield with transition -->
+                
+                <div class="form-group registration-hidden-field" id="registrationFeeInput">
+                    <label for="registrationFeeValue">Enter amount:</label>
+                    <input
+                        type="text"
+                        name="registration_fee_amount"
+                        id="registrationFeeValue"
+                        class="form-control"
+                        placeholder="Enter Registration Fee"
+                        value="{{event_details.registration_fee_amount}}"
+                        {% if is_registration_fee_required %} required {% endif %}
+                    />
+                </div>
+
+                <div class="form-group">
+                    <div class="flagship-event-switch">
+                        <label class="form-control-label">Flagship:</label>
+                        <span>                                            
+                            <label class="ui-switch m-t-xs m-r">
+                                <input name="flagship_event" type="checkbox" id="Checkbox" {% if is_flagship_event%} checked {% endif %}>
+                                <i></i>
+                            </label>                
+                        </span>
+                    </div>
+                </div>
+
+                <br>
+                <div class="form-group">
+                    <label class="form-control-label">Form Link:</label>
+                    <span>
+                        <input
+                        placeholder="Provide Link"
+                        class="form-control"
+                        type="url"
+                        autocomplete="off"
+                        id="#field1"
+                        value="{% if event_details.form_link %}{{event_details.form_link}}{% endif %}"
+                        name="drive_link_of_event"
+                        />
+                        
+                    </span>
+                </div>
+                
+                <br>
+                <div style="text-align: center;">
+                    {% if is_branch %}
+                    <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger">Cancel</a>
+                    {% else %}
+                    <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger">Cancel</a>
+                    {% endif %}
+                    <input type="submit" name="update_event" class="btn btn-outline b-success text-success" value="Update Changes">
+                </div>
+                <br> 
+
             </div>
-        </div>
+        </form>
     </div>
+</div>               
+                    
 
     
     <div class="modal fade" id="addVenueModal" tabindex="-1" role="dialog" aria-labelledby="addVenueModalLabel" aria-hidden="true">

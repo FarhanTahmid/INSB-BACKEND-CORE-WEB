@@ -156,7 +156,7 @@
 .ms-slide .ms-layer,
 .ms-fixed-layers .ms-layer,
 .ms-overlay-layers .ms-layer {
-    position: absolute;
+    position:absolute;
     pointer-events: auto;
 }
 
