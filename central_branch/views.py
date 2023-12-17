@@ -469,6 +469,11 @@ def add_research(request):
     return render(request,"research_papers.html")
 
 @login_required
+def manage_blogs(request):
+    return render(request,"Manage Website/Publications/manage_publications_base.html")
+
+
+@login_required
 def add_blogs(request):
 
     '''function to add new blog to the page'''

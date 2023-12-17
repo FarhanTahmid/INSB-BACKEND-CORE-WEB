@@ -172,7 +172,6 @@ def news(request):
     has_online_news=False
     if(len(all_online_news)>0):
         has_online_news=True
-    print(all_online_news)
     context={
         'page_title':"News",
         'all_news':load_all_news,
