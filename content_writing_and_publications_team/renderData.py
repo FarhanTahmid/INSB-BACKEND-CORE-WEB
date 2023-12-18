@@ -27,9 +27,9 @@ class ContentWritingTeam:
         team_id=ContentWritingTeam.get_team_id()
         Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
 
-    def cwp_manage_team_access_modifications(manage_team_access,ieee_id):
+    def cwp_manage_team_access_modifications(manage_team_access, event_access, ieee_id):
         try:
-            CWP_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access)
+            CWP_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access, event_access=event_access)
             return True
         except CWP_Data_Access.DoesNotExist:
             return False
