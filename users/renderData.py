@@ -13,6 +13,7 @@ from django.db.models import Q
 from users.models import User
 from recruitment.models import recruited_members
 import math
+from membership_development_team.renderData import MDT_DATA
 import sqlite3
 from django.contrib import messages
 from . models import Panel_Members,Alumni_Members
@@ -20,6 +21,7 @@ from port.models import Panels
 import traceback
 import logging
 from system_administration.system_error_handling import ErrorHandling
+
 
 class LoggedinUser:
     
@@ -32,13 +34,14 @@ class LoggedinUser:
         try:
             get_Member_details=Members.objects.get(ieee_id=ieee_id)
             return {
+            'is_admin_user': False,
             'name':get_Member_details.name,
             'position':get_Member_details.position,
             'team':get_Member_details.team,
             'ieee_id':get_Member_details.ieee_id,
-            'email':get_Member_details.email_ieee,
+            'email_nsu':get_Member_details.email_nsu,
             'nsu_id':get_Member_details.nsu_id,
-            'ieee_email':get_Member_details.email_ieee,
+            'email_ieee':get_Member_details.email_ieee,
             'email_personal':get_Member_details.email_personal,
             'home_address':get_Member_details.home_address,
             'contact_no':get_Member_details.contact_no,
@@ -47,6 +50,8 @@ class LoggedinUser:
             'major':get_Member_details.major,
             'joining_session':get_Member_details.session,
             'last_renewal':get_Member_details.last_renewal_session,
+            'facebook_url':get_Member_details.facebook_url,
+            'linkedin_url':get_Member_details.linkedin_url,
             'profile_picture':'/media_files/'+str(get_Member_details.user_profile_picture),
         
         }
@@ -54,6 +59,7 @@ class LoggedinUser:
             try:
                 get_Member_details=adminUsers.objects.get(username=self.user.username) #getting data of the admin from database table. the admin must be in the database table.
                 return {
+                'is_admin_user': True,
                 'name':get_Member_details.name,
                 'email':get_Member_details.email,
                 'profile_picture':'/media_files/'+str(get_Member_details.profile_picture),
@@ -64,6 +70,7 @@ class LoggedinUser:
             try:
                 get_Member_details=adminUsers.objects.get(username=self.user.username)
                 return {
+                'is_admin_user': True,
                 'name':get_Member_details.name,
                 'email':get_Member_details.email,
                 'profile_picture':'/media_files/'+str(get_Member_details.profile_picture),
@@ -162,6 +169,40 @@ class LoggedinUser:
                 
             except adminUsers.DoesNotExist:
                 return False
+    
+    def update_user_data(self, name, nsu_id, home_address, date_of_birth, email_personal, gender, email_nsu, email_ieee, contact_no, major, facebook_url, linkedin_url):
+        ''' This function updates the user profile information. It takes name, nsu_id, home_address, date_of_birth, email_personal, gender, email_nsu, email_ieee, contact_no, major, facebook_url and linkedin_url '''
+        try:
+            #Get user details from database
+            get_user=Members.objects.filter(ieee_id=self.user.username)
+            #Update the user profile information
+            get_user.update(name=name,
+                            nsu_id=nsu_id,
+                            home_address=home_address,
+                            date_of_birth=date_of_birth,
+                            email_personal=email_personal,
+                            gender=gender,
+                            email_nsu=email_nsu,
+                            email_ieee=email_ieee,
+                            contact_no=contact_no,
+                            major=major,
+                            facebook_url=facebook_url,
+                            linkedin_url=linkedin_url)           
+            return True
+        except Members.DoesNotExist:
+            return False
+        
+    def update_admin_user_data(self, name, email):
+        ''' This function updates the admin user profile information. It takes a name and an email only '''
+        try:
+            #Get admin user details from database
+            get_user=adminUsers.objects.filter(username=self.user.username)
+            #Update the admin user profile information
+            get_user.update(name=name, email=email)
+            return True
+        except adminUsers.DoesNotExist:
+            return False
+
 def is_eb_or_admin(user):
     has_access = Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username)
     if has_access:
@@ -295,8 +336,8 @@ def getMaleFemaleRationAndActiveStatusStats():
 
     all_females = Members.objects.filter(gender="Female").count()
     all_males = Members.objects.filter(gender="Male").count()
-    active_members = recruited_members.objects.filter(ieee_payment_status=True).count()
-    inactive_members = recruited_members.objects.all().count() - active_members
+    active_members = Members.objects.filter(is_active_member=True).count()
+    inactive_members = Members.objects.all().count() - active_members
     total_members = Members.objects.all().count()
     total_list_keys = ['Males','Females','Active Members','Inactive Members']
     total_list_values = [all_males,all_females,active_members,inactive_members]
@@ -555,5 +596,3 @@ class Alumnis:
             return False
 
       
-    
-

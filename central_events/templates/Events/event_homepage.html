@@ -101,9 +101,16 @@
 
             {% if has_access_to_create_event %}
               <div style="justify-content:center;text-align:center;"> 
+
                 {% for message in messages %}
-                <p>{{message}}</p>
+                    <p class="{{ message.tags }}">
+                        {{ message }}
+                        <button type="button" class="close" onclick="removeMessage(this)" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </p>
                 {% endfor %} 
+                
                 <div class="btn-container">
                   {% if is_branch %}
                   <a href="{% url 'central_branch:super_event_creation' %}" class="btn btn-outline b-success text-success">Create a New Super Event</a>
@@ -120,7 +127,7 @@
 
             <!--Events Table-->
             <br>
-            <div style="text-align:center; margin-top=30px;">  
+            <div style="text-align:center; margin-top:30px;">  
                 <div class="container" style="justify-content:center;">
                   <div class="header_wrap">
                     <div class="num_rows">
@@ -149,30 +156,29 @@
                         <tr>
                             <th>Event Name</th>
                             <th>Event Organiser</th>
+                            <th>Collaboration With</th>
                             <th>Date of Event</th>
                             
                         </tr>
                       </thead>
                       <tbody>
-                        {% for event in events %}
+                        {% for key, value in events.items %}
                         <tr>
-                          {% if has_access_to_edit_event %}
                             {% if is_branch %}
-                            <td><a style="color:blue;" href="{% url 'central_branch:event_dashboard' event.id %}">{{event.event_name }}</a></td>
+                            <td><a style="color:blue;" href="{% url 'central_branch:event_dashboard' key.id %}">{{key.event_name }}</a></td>
                             {% else %}
-                            <td><a style="color:blue;" href="{% url 'chapters_and_affinity_group:event_dashboard' sc_ag_info.primary event.id %}">{{event.event_name }}</a></td>
+                            <td><a style="color:blue;" href="{% url 'chapters_and_affinity_group:event_dashboard' sc_ag_info.primary key.id %}">{{key.event_name }}</a></td>
                             {% endif %}
-                          {% else %}
-                            {% if is_branch %}
-                              <td>{{event.event_name }}</td>
-                              {% else %}
-                              <td>{{event.event_name }}</td>
-                              {% endif %}
-                          {% endif %}
-                              
-                            <td>{{ event.event_organiser.group_name }}</td>
-                            <td>{{ event.event_date }}</td>
+                            <td>{{ key.event_organiser.group_name }}</td>
+                            <td>
+                              {% for collabs in value %}
+                              <ul style="list-style-type: none; text-align:left;">
+                                    <li>{{ collabs }}</li>
+                              </ul>
                             
+                              {% endfor %}
+                            </td>
+                            <td>{{ key.event_date }}</td>
                         </tr>
                         {% endfor %}
                         
@@ -208,7 +214,7 @@
 
     <div class="modal fade" id="EventTypeModal" tabindex="-1" role="dialog" aria-labelledby="EventTypeModalLabel" aria-hidden="true">
         
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
               <div class="modal-header">
                   <h5 class="modal-title" id="addModalLabel">Add Event Type</h5>
@@ -231,7 +237,7 @@
             </form>
           </div>
       </div>
-  </div>
+    </div>
     <!-- app end-->
 
     {% block common_js %}
@@ -239,6 +245,14 @@
     {% endblock common_js %}
 
     <script src="{% static 'table_search.js'%}"></script>
+    <script>
+      function removeMessage(button) {
+          // Get the parent element (p tag) and remove it
+          var paragraph = button.parentNode;
+          paragraph.remove();
+      }
+  </script>
+  
 
 </body>
 </html>

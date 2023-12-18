@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from celery.schedules import crontab
 import os
 # import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -67,6 +68,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'chapters_and_affinity_group',
     'central_events',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -213,3 +215,18 @@ DJANGORESIZED_DEFAULT_KEEP_META = True
 DJANGORESIZED_DEFAULT_FORCE_FORMAT = 'JPEG'
 DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {'JPEG': ".jpg"}
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
+
+CELERY_BROKER_URL = "amqps://fhfqmapx:YUA5So69ozn0PUIB8eJHSrwz6dhCA07W@rattlesnake.rmq.cloudamqp.com/fhfqmapx"
+
+CELERY_BEAT_SCHEDULE = {
+    "active_inactive_member_status_task":{
+        "task":"users.tasks.running_task",
+        "schedule":crontab(minute=0,hour=0),
+    },
+    "sending_email_task":{
+        "task":"users.tasks.sending_email",
+        "schedule":crontab(minute=0,hour='*/2'),
+    },
+}
+
+NEWS_API_KEY=os.environ.get('news_api_key')

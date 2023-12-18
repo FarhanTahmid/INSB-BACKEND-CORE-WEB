@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from port.renderData import PortData
 from users import renderData
+from django.http import HttpResponse
 from .get_sc_ag_info import SC_AG_Info
 from .renderData import Sc_Ag
 from .manage_access import SC_Ag_Render_Access
@@ -592,7 +593,7 @@ def event_control_homepage(request,primary):
         has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
         
         #loading all events for society affinity groups now
-        events= Branch.load_all_events_for_groups(primary)
+        events= Branch.load_all_inter_branch_collaborations_with_events(primary)
         
         if request.method=="POST":
             if request.POST.get('add_event_type'):
@@ -645,9 +646,9 @@ def event_description(request,primary,event_id):
             intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
             # Checking if event has collaborations
             hasCollaboration=False
-            if(len(interBranchCollaborations)>0 and len(intraBranchCollaborations)>0):
+            if(len(interBranchCollaborations)>0 or intraBranchCollaborations):
                 hasCollaboration=True
-          
+            
             #get_all_team_name = Branch.load_teams()
             get_event_details = Events.objects.get(id = event_id)
             #print(get_event_details.super_event_name.id)
@@ -662,6 +663,8 @@ def event_description(request,primary,event_id):
                     else:
                         messages.error(request,"Something went wrong while removing the event!")
                         return redirect('chapters_and_affinity_group:event_control_homepage',primary)
+                
+
         context={
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
@@ -712,9 +715,6 @@ def super_event_creation(request, primary):
                 messages.info(request,"New Super Event Added Successfully")
                 return redirect('chapters_and_affinity_group:event_control_homepage', primary)
             
-            elif (request.POST.get('cancel')):
-                return redirect('chapters_and_affinity_group:event_control_homepage', primary)
-            
         return render(request,"Events/Super Event/super_event_creation_form.html", context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -757,14 +757,14 @@ def event_creation_form_page(request,primary):
                 super_event_id=request.POST.get('super_event')
                 event_name=request.POST['event_name']
                 event_description=request.POST['event_description']
-                event_type = request.POST['event_type']
+                event_type_list = request.POST.getlist('event_type')
                 event_date=request.POST['event_date']
             
                 #It will return True if register event page 1 is success
                 get_event=Branch.register_event_page1(
                     super_event_id=super_event_id,
                     event_name=event_name,
-                    event_type=event_type,
+                    event_type_list=event_type_list,
                     event_description=event_description,
                     event_date=event_date,
                     event_organiser=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
@@ -776,8 +776,6 @@ def event_creation_form_page(request,primary):
                     #if the method returns true, it will redirect to the new page
                     return redirect('chapters_and_affinity_group:event_creation_form2',primary,get_event)
 
-            elif(request.POST.get('cancel')):
-                return redirect('chapters_and_affinity_group:event_control_homepage',primary)
         return render(request,'Events/event_creation_form.html',context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -842,7 +840,6 @@ def event_creation_form_page3(request,primary,event_id):
             'permission_criterias':permission_criterias,
             'all_sc_ag':sc_ag,
             'is_branch':is_branch,
-            'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
         }
         if request.method=="POST":
@@ -866,4 +863,114 @@ def event_creation_form_page3(request,primary,event_id):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+    
+
+@login_required
+def event_edit_form(request, primary, event_id):
+
+    ''' This function loads the edit page of events '''
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        is_branch = False
+        is_flagship_event = Branch.is_flagship_event(event_id)
+        is_event_published = Branch.load_event_published(event_id)
+        is_registraion_fee_true = Branch.is_registration_fee_required(event_id)
+        #Get event details from databse
+        event_details = Events.objects.get(pk=event_id)
+
+        if(request.method == "POST"):
+
+            if('add_venues' in request.POST):
+                venue = request.POST.get('venue')
+                if(Branch.add_event_venue(venue)):
+                    messages.success(request, "Venue created successfully")
+                else:
+                    messages.error(request, "Something went wrong while creating the venue")
+                return redirect('chapters_and_affinity_group:event_edit_form', primary, event_id)
+                
+            if('update_event' in request.POST):
+                ''' Get data from form and call update function to update event '''
+
+                form_link = request.POST.get('drive_link_of_event')
+                publish_event_status = request.POST.get('publish_event')
+                flagship_event_status = request.POST.get('flagship_event')
+                registration_event_status = request.POST.get('registration_fee')
+                event_name=request.POST['event_name']
+                event_description=request.POST['event_description']
+                super_event_id=request.POST.get('super_event')
+                event_type_list = request.POST.getlist('event_type')
+                event_date=request.POST['event_date']
+                inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
+                intra_branch_collaboration=request.POST['intra_branch_collaboration']
+                venue_list_for_event=request.POST.getlist('event_venues')
+
+                #Checking to see of toggle button is on/True or off/False
+                publish_event = Branch.button_status(publish_event_status)
+                flagship_event = Branch.button_status(flagship_event_status)
+                registration_fee = Branch.button_status(registration_event_status)
+
+                #if there is registration fee then taking the amount from field
+                if registration_fee:
+                    registration_fee_amount = int(request.POST.get('registration_fee_amount'))
+                else:
+                    registration_fee_amount = 0
+
+                #Check if the update request is successful
+                if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
+                                               flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,form_link = form_link)):
+                    messages.success(request,f"EVENT: {event_name} was Updated successfully")
+                    return redirect('chapters_and_affinity_group:event_edit_form',primary, event_id) 
+                else:
+                    messages.error(request,"Something went wrong while updating the event!")
+                    return redirect('chapters_and_affinity_group:event_edit_form',primary, event_id)
+
+        form = EventForm({'event_description' : event_details.event_description})
+
+        #loading super/mother event at first and event categories for depending on which group organised the event
+        super_events=Branch.load_all_mother_events()
+        event_types=Branch.load_all_event_type_for_groups(event_details.event_organiser.primary)
+
+        inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+
+        # Get collaboration details
+        interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
+        intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
+        selected_venues = Branch.get_selected_venues(event_id=event_id)
+        # Checking if event has collaborations
+        hasCollaboration=False
+        if(len(interBranchCollaborations)>0):
+            hasCollaboration=True
+
+        interBranchCollaborationsArray = []
+        for i in interBranchCollaborations.all():
+            interBranchCollaborationsArray.append(i.collaboration_with)
+
+        #loading all venues from the venue list from event management team database
+        venues=Events_And_Management_Team.getVenues()
+
+        context={
+            'all_sc_ag' : sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'is_branch' : is_branch,
+            'event_details' : event_details,
+            'form' : form,
+            'super_events' : super_events,
+            'event_types' : event_types,
+            'inter_branch_collaboration_options' : inter_branch_collaboration_options,
+            'interBranchCollaborations':interBranchCollaborationsArray,
+            'intraBranchCollaborations':intraBranchCollaborations,
+            'hasCollaboration' : hasCollaboration,
+            'venues' : venues,
+            'is_event_published':is_event_published,
+            'is_flagship_event':is_flagship_event,
+            'is_registration_fee_required':is_registraion_fee_true,
+            'selected_venues':selected_venues,
+        }
+
+        return render(request, 'Events/event_edit_form.html', context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return HttpResponseBadRequest("Bad Request")

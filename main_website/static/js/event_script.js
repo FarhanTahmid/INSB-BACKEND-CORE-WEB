@@ -1,4 +1,4 @@
-// Dummy events data for demonstration, this is the calendar event load function
+// Dummy events data for demonstration
 const eventsData = {
     '2023-07-27': ['Event 1', 'Event 2'],
     '2023-07-23': ['Event 3'],

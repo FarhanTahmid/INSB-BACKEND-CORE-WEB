@@ -10,7 +10,7 @@ urlpatterns = [
     #Event page
     path('event_page/',views.event_page,name="event_page"),
     #Event Form
-    path('event_page/<int:event_ID>',views.event_form,name="event_form")
+    path('event_page/<int:event_id>',views.event_form,name="event_form")
 
 
 ]

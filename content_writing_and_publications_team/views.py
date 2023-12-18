@@ -8,11 +8,12 @@ from django.contrib import messages
 from .renderData import ContentWritingTeam
 from system_administration.models import CWP_Data_Access
 
+
 # Create your views here.
 
 @login_required
 def homepage(request):
-    return render(request,"content_writing_and_publications_team/team_homepage.html")
+    return render(request,"Homepage/content_homepage.html")
 @login_required
 def manage_team(request):
 
@@ -98,4 +99,23 @@ def manage_team(request):
     else:
         return render(request,"content_writing_and_publications_team/access_denied.html")
 
+@login_required
+def event_page(request):
+
+    '''Only events organised by INSB would be shown on the event page of Content and Publications Team
+       So, only those events are being retrieved from database'''
     
+    insb_organised_events = Branch.load_insb_organised_events()
+
+    context = {'events_of_insb_only':insb_organised_events,}
+    
+
+    return render(request,"Events/content_team_events_homepage.html",context)
+
+
+
+
+@login_required
+def event_form(request,event_id):
+
+    return render(request,"content_team_event_form.html")
