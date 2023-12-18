@@ -5,9 +5,7 @@ from django.core.files.base import ContentFile
 import json
 from datetime import datetime
 from django_celery_beat.models import ClockedSchedule,PeriodicTask
-from django.core.files.storage import default_storage
-from insb_port import settings
-import os
+
 class PRT_Email_System:
     
     def get_all_selected_emails_from_backend(single_emails,to_email_list,cc_email_list,bcc_email_list):
@@ -235,7 +233,7 @@ class PRT_Email_System:
         unique_task_name = f"{subject}_{scheduled_email_date_time.timestamp()}"
 
         # file_path = default_storage.save('uploads/' + attachment.name, attachment)
-        # attachment= os.path.join(settings.MEDIA_ROOT, file_path)
+        # attachment="User Files/"+file_path
         
         # email_attachment_content = base64.b64encode(attachment.read()).decode('utf-8')
         # to_email_attachment_json = json.dumps({
