@@ -223,8 +223,8 @@ CELERY_BEAT_SCHEDULE = {
     #     "task":"users.tasks.running_task",
     #     "schedule":crontab(minute=0,hour=0),
     # },
-    "sending_email_task":{
-        "task":"users.tasks.sending_email",
-        "schedule":60,
-    },
+    # "sending_email_task":{
+    #     "task":"users.tasks.sending_email",
+    #     "schedule":60,
+    # },
 }
