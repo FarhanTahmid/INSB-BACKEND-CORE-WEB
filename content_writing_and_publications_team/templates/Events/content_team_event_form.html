@@ -71,22 +71,22 @@
         min-width: 50px; /* Set minimum width */
         min-height: 50px; /* Set minimum height */
         background-color: transparent; /* Set to transparent or any other color for the inside */
-        border: 2px solid #28a745; /* Border color is green */
+        border: 2px solid #78BE20; /* Border color is green */
         border-radius: 50%;
-        color: #28a745; /* Text color is green */
+        color: #78BE20; /* Text color is green */
         font-size: 24px; /* Adjust the font size as needed */
         cursor: pointer;
         transition: background-color 0.3s, color 0.3s; /* Add smooth transition effect */
-      }
-  
-      .circle-btn:hover {
-        background-color: #28a745; /* Hover background color is green */
+    }
+
+    .circle-btn:hover {
+        background-color: #78BE20; /* Hover background color is green */
         color: #fff; /* Hover text color is white */
-      }
-  
-      .plus-sign::before {
+    }
+
+    .plus-sign::before {
         content: '+';
-      }
+    }
     
     
   </style>
@@ -146,7 +146,7 @@
                             <label>Event Name: <span style="color:red">*<span></label> 
                             <input
                                 placeholder="Event Name"
-                                class="form-control w-75"
+                                class="form-control"
                                 type="text"
                                 autocomplete="off"
                                 required
@@ -161,22 +161,23 @@
                             {{form.as_p}}
                         </div>
 
-                        <div class="form-group row">
-                            <label for="images" class="col-sm-1 form-control-label">Upload:</label>
-                            <div class="col-sm-9">
-                                <div class="custom-file" style="margin-top: 5px;">
-                                    <input type="file" class="custom-file-input" id="image-input" name="image" accept="image/*" multiple>
-                                    <label class="custom-file-label bg-light" for="image-input">Choose files</label>
-                                </div>
+                        <div class="form-group">
+                            <label for="images">Upload Images:</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="media-image-input" name="image" accept="image/*" multiple>
+                                <label class="custom-file-label bg-light" for="media-image-input">Choose files</label>
                             </div>
-                            <button type="submit" name="save" class="btn btn-outline-success p-x-md col-sm-2"
-                            value="Add">Save</button>
+                            
                             <br>
-
-                            <div id="selected-images-container"></div>
-                            <input type="hidden" name="selected_images" id="selected-images">
+                    
+                            <div id="media-selected-images-container"></div>
+                            <input type="hidden" name="selected_images" id="media-selected-images">
+                            <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple images.</small>
                         </div>
-                        <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple.</small>
+                            
+                        <div class="form-group text-center">
+                            <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
+                        </div>
 
                         <hr>
                         

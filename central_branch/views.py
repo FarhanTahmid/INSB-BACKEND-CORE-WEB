@@ -1190,7 +1190,9 @@ def event_edit_media_form_tab(request, event_id):
     event_details = Events.objects.get(pk=event_id)
 
     context = {
-        'event_details' : event_details
+        'event_details' : event_details,
+        'is_branch' : True
+
     }
 
     return render(request, 'Events/event_edit_media_form_tab.html', context)
@@ -1202,8 +1204,10 @@ def event_edit_graphics_form_tab(request, event_id):
     #Get event details from databse
     event_details = Events.objects.get(pk=event_id)
 
+
     context = {
-        'event_details' : event_details
+        'event_details' : event_details,
+        'is_branch' : True
     }
     
     return render(request, 'Events/event_edit_graphics_form_tab.html', context)
