@@ -127,4 +127,4 @@ def event_page(request):
 @login_required
 def event_form(request,event_id):
 
-    return render(request,"content_team_event_form.html")
+    return render(request,"Events/content_team_event_form.html")

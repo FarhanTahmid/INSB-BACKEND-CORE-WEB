@@ -55,7 +55,7 @@
             {% endfor %}
         </div>
         
-        <form method = "POST">
+        <form id="myForm" method = "POST">
         {% csrf_token %}
             <div class="box-body">
                 <div class="publish-switch">
@@ -275,6 +275,35 @@
                     </div>
                 </div>
     </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          var form = document.getElementById('myForm');
+          var isFormDirty = false;
+    
+          // Listen for changes in the form fields
+          form.addEventListener('input', function () {
+            isFormDirty = true;
+          });
+    
+          // Warn the user before leaving the page if the form is dirty
+          window.addEventListener('beforeunload', function (event) {
+            if (isFormDirty) {
+              event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+            }
+          });
+    
+          // Optionally, you can also prevent navigation using the 'unload' event
+          // window.addEventListener('unload', function (event) {
+          //   if (isFormDirty) {
+          //     alert('You have unsaved changes. Please save before leaving.');
+          //     event.preventDefault();
+          //   }
+          // });
+        });
+      </script>
+      
 
     <script>
         $(document).ready(function () {
