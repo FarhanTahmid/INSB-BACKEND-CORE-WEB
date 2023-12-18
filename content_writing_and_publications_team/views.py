@@ -127,4 +127,8 @@ def event_page(request):
 @login_required
 def event_form(request,event_id):
 
-    return render(request,"Events/content_team_event_form.html")
+    if(request.method == "POST"):
+        # print(request.POST.get('caption'))
+        print(request.POST.get('LOL'))
+
+    return render(request,"content_team_event_form.html")
