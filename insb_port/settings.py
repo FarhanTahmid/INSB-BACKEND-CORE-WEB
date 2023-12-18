@@ -181,7 +181,7 @@ DATE_INPUT_FORMATS = ['%d-%m-%Y']
 
 #static directory
 STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
-STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static'))
+STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static/'))
 #Media Files
 MEDIA_ROOT= os.path.join(BASE_DIR, 'User Files/')
 MEDIA_URL= "/media_files/" 

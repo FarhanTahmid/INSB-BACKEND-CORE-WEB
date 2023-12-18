@@ -37,7 +37,12 @@ urlpatterns = [
     
     #WEBSITE Management URL Path
     path('manage_website/homepage',views.manage_website_homepage,name="manage_website_home"),
+    path('manage_website/achievements',views.manage_achievements,name="manage_achievements"),
+    path('manage_website/achievements/update/<int:pk>',views.update_achievements,name="achievements_update"),
+    path('manage_website/news',views.manage_news,name="manage_news"),
+    path('manage_website/news/update/<int:pk>',views.update_news,name="update_news"),
 
+    
     path('manage_access',views.manage_view_access,name="manage_access"),
 
     #Events urls
@@ -51,6 +56,10 @@ urlpatterns = [
     path("events/create_event/<int:event_id>/page-3", views.event_creation_form_page3, name="event_creation_form3"),
     #Event edit page
     path('event_details/<int:event_id>/edit/',views.event_edit_form,name='event_edit_form'),
+    #Event media tab page
+    path('event_details/<int:event_id>/edit/media',views.event_edit_media_form_tab,name='event_edit_media_form_tab'),
+    #Event graphics tab page
+    path('event_details/<int:event_id>/edit/graphics',views.event_edit_graphics_form_tab,name='event_edit_graphics_form_tab'),
     #Super Event Creation Form
     path('events/create_super_event/',views.super_event_creation,name="super_event_creation"),
     #event dashboard team

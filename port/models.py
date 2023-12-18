@@ -11,7 +11,7 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
     class Meta:
         verbose_name="Chapters-Societies-Affinity Group"
     def __str__(self) -> str:
-        return str(self.primary) 
+        return str(self.group_name) 
 
 class Teams(models.Model):
     '''
