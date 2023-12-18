@@ -16,6 +16,7 @@ urlpatterns = [
 
     #Achievements
     path('achievements/',views.achievements,name="achievements"),
+    path('news/',views.news,name="news"),
 
     #Gallery
     path('gallery/',views.gallery,name="gallery"),

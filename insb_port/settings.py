@@ -228,3 +228,5 @@ CELERY_BEAT_SCHEDULE = {
         "schedule":crontab(minute=0,hour='*/2'),
     },
 }
+
+NEWS_API_KEY=os.environ.get('news_api_key')
