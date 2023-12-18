@@ -5,11 +5,15 @@
     <meta charset="utf-8" />
     <title>Update Event | IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+    
+    <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     {% block common_css %}
         {% include "common_css.html" %}
     {% endblock common_css %}
-    <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
 
 
 
@@ -48,43 +52,8 @@
             }
         }
 
-        .publish-switch {
-            display: flex;
-            justify-content: flex-end; /* Align to the right end */
-            align-items: center;
-            position: relative;
-        }
 
-        .registration-fee-switch, .flagship-event-switch{
-            display: flex;
-            justify-content: flex-start; /* Align to the right end */
-            align-items: center;
-            position: relative;
-        }
 
-        .ui-switch{
-            /* Add shadow to the icon */
-            box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.2);
-            display: inline-block;
-
-            /* You can customize the shadow properties */
-        }
-        .form-control-label {
-            display: inline-block;
-            margin-right: 10px; /* Add margin for spacing between elements */
-        }
-
-        .registration-hidden-field{
-            opacity: 0; 
-            height: 0; 
-            overflow: hidden; 
-            visibility: hidden; 
-            transition: all 0.5s 
-            ease-in-out;
-        }
-        
-       
-        
         
     </style>
 </head>
@@ -122,33 +91,36 @@
             
             <br>
             <br>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span
+                style="color:#00629B;">{{event_name}}</b></span></h2><br>
+            <h6>Note:</h6>
+            <ol style="justify-content:center;margin-bottom:15px;"><b>
+                <li>If you want to add new venues, <span><b>update</b></span> any changes made first or <b>add</b> the venues first to prevent data loss</li>
+                    <li>If you don't want to submit form link, then just erase the value <b>None</b> from the text field, if it appears</li>
+            </ol></b>
             
             
+
+                            
+            <!--Tab view for Events-->
+            <!--Tab view Start-->
+            {% block event_edit_tab %}
+                {% include "Events/event_edit_tabs.html" %}
+            {% endblock event_edit_tab %}
+            <!--Tab view end-->
+
+            {% block event_edit_form %}
+                {% include "Events/event_edit_details_form_content.html" %}
+            {% endblock event_edit_form %}
+                            
+                            
+
+            <!--End of TabView-->
 
         </div>
         <!--PAGE END-->
 
-        <!--TabView for event creation-->
-        <div  style="margin-left:215px; font-size:1rem;">
-            <br>
-            <h6>Note:</h6>
-            <!--List Start-->
-            <div style="margin-right:25px;justify-content:center;text-align:justify;">
-            
-            <ul>
-                <li>If you want to add new venues, <span><b>update</b></span> any changes made first or <b>add</b> the venues first to prevent data loss</li>
-                <li>If you don't want to submit form link, then just erase the value <b>None</b> from the text field, if it appears</li>
-            </ul>
-            </div>
-            <!--List End-->
-        </div>  
-        <div>
-                {% block event_edit_form %}
-                    {% include "Events/event_edit_details_form_content.html" %}
-                {% endblock event_edit_form %}
-            
-        </div>
-        <!--End of TabView-->
+        
         
         
 
@@ -170,6 +142,16 @@
     {% endblock common_js %}
 
     <script src="{% static 'tab_view.js'%}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+
     
 
 </body>

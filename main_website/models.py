@@ -3,7 +3,7 @@ from django.core.files.storage import FileSystemStorage
 from port.models import Chapters_Society_and_Affinity_Groups
 from django_resized import ResizedImageField
 from PIL import Image
-
+from ckeditor.fields import RichTextField
 # Create your models here.
     
 # Tables for Homepage
@@ -63,3 +63,30 @@ class Blog(models.Model):
         verbose_name = "Blog"
     def __str__(self):
         return self.title
+
+#Table for Achievements
+class Achievements(models.Model):
+    award_name=models.CharField(null=False,blank=False,max_length=100)
+    award_description=RichTextField(null=True,blank=True,max_length=1000)
+    award_winning_year=models.IntegerField(null=False,blank=False)
+    award_of=models.ForeignKey(Chapters_Society_and_Affinity_Groups,on_delete=models.CASCADE)
+    award_picture=models.ImageField(null=False,blank=False,upload_to='main_website_files/achievements/')
+    
+    class Meta:
+        verbose_name="Achievements"
+    
+    def __str__(self) -> str:
+        return str(self.pk)
+
+# Table for news
+class News(models.Model):
+    news_title=models.CharField(null=False,blank=False,max_length=150)
+    news_subtitle=models.CharField(null=True,blank=True,max_length=100)
+    news_description=RichTextField(null=False,blank=False,max_length=500)
+    news_picture=models.ImageField(null=False,blank=False,upload_to='main_website_files/news/')
+    news_date=models.DateField(null=True,blank=True,help_text = "Please use the following format: <em>YYYY-MM-DD</em>.")
+    
+    class Meta:
+        verbose_name="News"
+    def __str__(self) -> str:
+        return str(self.pk)

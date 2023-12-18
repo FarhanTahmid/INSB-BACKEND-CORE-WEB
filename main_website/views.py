@@ -2,11 +2,12 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from central_events.models import Events
 from central_branch.renderData import Branch
-from main_website.models import Research_Papers,Blog
+from main_website.models import Research_Papers,Blog,Achievements
 from port.renderData import PortData
 from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
 from .renderData import HomepageItems
 from django.conf import settings
+from users.models import User,Members
 from users.models import User
 import logging
 from datetime import datetime
@@ -102,22 +103,41 @@ def event_homepage(request):
 def event_details(request,event_id):
  
     '''Loads details for the corresponding event page on site'''
-    get_event = Events.objects.get(id = event_id)
-    event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
-    event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
+    try:
+        get_event = Events.objects.get(id = event_id)
+        if(get_event.publish_in_main_web):
+            event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
+            event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
-    return render(request,"Events/event_description_main.html",{
-        "event":get_event,
-        'media_url':settings.MEDIA_URL,
-        'event_banner_image' : event_banner_image,
-        'event_gallery_images' : event_gallery_images
-    })
+            return render(request,"Events/event_description_main.html",{
+                "event":get_event,
+                'media_url':settings.MEDIA_URL,
+                'event_banner_image' : event_banner_image,
+                'event_gallery_images' : event_gallery_images
+            })
+        else:
+            return redirect('main_website:event_homepage')
+    except:
+        return redirect('main_website:event_homepage')
 
 
 # ###################### ACHIEVEMENTS ##############################
 
 def achievements(request):
-    return render(request,"Activities/achievements.html")
+    # load achievement of INSB
+    load_all_achievements=Achievements.objects.all().order_by('-award_winning_year')
+    context={
+        'page_title':"Achievements",
+        'achievements':load_all_achievements,
+    }
+    
+    return render(request,"Activities/achievements.html",context=context)
+
+def news(request):
+    context={
+        'page_title':"News"
+    }
+    return render(request,'Activities/news.html',context=context)
 
     
 
@@ -412,10 +432,15 @@ def volunteers_page(request):
 def all_members(request):
     # get all registered members of INSB
     get_all_members = userData.get_all_registered_members(request=request)
+    recruitment_stat=userData.getRecruitmentStats()
+    
     
     context={
-        'page_title':"All Registered Members of IEEE NSU SB",
+        'page_title':"All Registered Members & Member Statistics of IEEE NSU SB",
         'members':get_all_members,
-        
+        'male_count':Members.objects.filter(gender="Male").count(),
+        'female_count':Members.objects.filter(gender="Female").count(),
+        'session_name':recruitment_stat[0],
+        'session_recruitee':recruitment_stat[1],
     }
     return render(request,'Members/All Members/all_members.html',context=context)

@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'chapters_and_affinity_group',
     'central_events',
     'django_celery_beat',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -181,7 +182,7 @@ DATE_INPUT_FORMATS = ['%d-%m-%Y']
 
 #static directory
 STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
-STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static'))
+STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static/'))
 #Media Files
 MEDIA_ROOT= os.path.join(BASE_DIR, 'User Files/')
 MEDIA_URL= "/media_files/" 
@@ -216,15 +217,17 @@ DJANGORESIZED_DEFAULT_FORCE_FORMAT = 'JPEG'
 DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {'JPEG': ".jpg"}
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
 
-CELERY_BROKER_URL = "amqps://fhfqmapx:YUA5So69ozn0PUIB8eJHSrwz6dhCA07W@rattlesnake.rmq.cloudamqp.com/fhfqmapx"
-
-CELERY_BEAT_SCHEDULE = {
-    "active_inactive_member_status_task":{
-        "task":"users.tasks.running_task",
-        "schedule":crontab(minute=0,hour=0),
-    },
-    "sending_email_task":{
-        "task":"users.tasks.sending_email",
-        "schedule":crontab(minute=0,hour='*/2'),
-    },
-}
+#CELERY_BROKER_URL = "amqps://fhfqmapx:YUA5So69ozn0PUIB8eJHSrwz6dhCA07W@rattlesnake.rmq.cloudamqp.com/fhfqmapx"
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_RESULT_EXTENDED = True
+CELERY_TASK_SERIALIZER = 'json'
+# CELERY_BEAT_SCHEDULE = {
+#     # "active_inactive_member_status_task":{
+#     #     "task":"users.tasks.running_task",
+#     #     "schedule":crontab(minute=0,hour=0),
+#     # },
+#     # "sending_email_task":{
+#     #     "task":"users.tasks.sending_email",
+#     #     "schedule":60,
+#     # },
+# }
