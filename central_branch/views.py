@@ -1236,6 +1236,7 @@ def event_edit_media_form_tab(request, event_id):
                     return redirect("central_branch:event_edit_media_form_tab",event_id)
         
             context={
+                'is_branch' : True,
                 'event_id' : event_id,
                 'media_links' : media_links,
                 'media_images':media_images,
@@ -1305,6 +1306,7 @@ def event_edit_graphics_form_tab(request, event_id):
                     return redirect("central_branch:event_edit_graphics_form_tab",event_id)
 
             context={
+                'is_branch' : True,
                 'event_id' : event_id,
                 'all_sc_ag':sc_ag,
                 'graphic_links' : graphics_link,
