@@ -488,6 +488,10 @@ def manage_blogs(request):
                 form2.save()
                 messages.success(request,"A new Blog Category was added!")
                 return redirect('central_branch:manage_blogs')
+        if(request.POST.get('remove_blog')):
+            MainWebsiteRenderData.delete_blog(request=request)
+            return redirect('central_branch:manage_blogs')
+
 
     else:
         form=BlogsForm
