@@ -640,9 +640,8 @@ def event_description(request,primary,event_id):
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         is_branch= False
-        user = request.user
-        # has_access = Branch.event_page_access(user)
-        if True:
+        has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
+        if has_access:
 
             '''Details page for registered events'''
 
@@ -669,18 +668,19 @@ def event_description(request,primary,event_id):
                         messages.error(request,"Something went wrong while removing the event!")
                         return redirect('chapters_and_affinity_group:event_control_homepage',primary)
                 
-
-        context={
-            'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info,
-            'is_branch':is_branch,
-            'event_details':get_event_details,
-            'interBranchCollaborations':interBranchCollaborations,
-            'intraBranchCollaborations':intraBranchCollaborations,
-            'hasCollaboration':hasCollaboration,
-            
-        }
-        return render(request,"Events/event_description.html",context)
+            context={
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'is_branch':is_branch,
+                'event_details':get_event_details,
+                'interBranchCollaborations':interBranchCollaborations,
+                'intraBranchCollaborations':intraBranchCollaborations,
+                'hasCollaboration':hasCollaboration,
+                
+            }
+            return render(request,"Events/event_description.html",context)
+        else:
+            return redirect('main_website:event_details', event_id)
     
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -695,32 +695,37 @@ def super_event_creation(request, primary):
     '''function for creating super event'''
 
     try:
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-        is_branch= False
-        context={
-            'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info,
-            'is_branch':is_branch,
-        }
+        has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
+        if has_access:
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+            is_branch= False
+            context={
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'is_branch':is_branch,
+            }
 
-        if request.method == "POST":
+            if request.method == "POST":
 
-            '''Checking to see if either of the submit or cancelled button has been clicked'''
+                '''Checking to see if either of the submit or cancelled button has been clicked'''
 
-            if (request.POST.get('Submit')):
+                if (request.POST.get('Submit')):
 
-                '''Getting data from page and saving them in database'''
+                    '''Getting data from page and saving them in database'''
 
-                super_event_name = request.POST.get('super_event_name')
-                super_event_description = request.POST.get('super_event_description')
-                start_date = request.POST.get('probable_date')
-                end_date = request.POST.get('final_date')
-                Branch.register_super_events(super_event_name,super_event_description,start_date,end_date)
-                messages.info(request,"New Super Event Added Successfully")
-                return redirect('chapters_and_affinity_group:event_control_homepage', primary)
-            
-        return render(request,"Events/Super Event/super_event_creation_form.html", context)
+                    super_event_name = request.POST.get('super_event_name')
+                    super_event_description = request.POST.get('super_event_description')
+                    start_date = request.POST.get('probable_date')
+                    end_date = request.POST.get('final_date')
+                    Branch.register_super_events(super_event_name,super_event_description,start_date,end_date)
+                    messages.info(request,"New Super Event Added Successfully")
+                    return redirect('chapters_and_affinity_group:event_control_homepage', primary)
+                
+            return render(request,"Events/Super Event/super_event_creation_form.html", context)
+        else:
+            return render(request, 'access_denied.html')
+        
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -731,57 +736,61 @@ def super_event_creation(request, primary):
 def event_creation_form_page(request,primary):
     #######load data to show in the form boxes#########
     try:
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-        is_branch=False
-        form = EventForm()
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
-        super_events=Branch.load_all_mother_events()
-        event_types=Branch.load_all_event_type_for_groups(primary)
-        context={
-            'super_events':super_events,
-            'event_types':event_types,
-            'all_sc_ag':sc_ag,
-            'form':form,
-            'is_branch':is_branch,
-            'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info,
-        }
-        '''function for creating event'''
+        has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
+        if has_access:
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+            is_branch=False
+            form = EventForm()
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
+            super_events=Branch.load_all_mother_events()
+            event_types=Branch.load_all_event_type_for_groups(primary)
+            context={
+                'super_events':super_events,
+                'event_types':event_types,
+                'all_sc_ag':sc_ag,
+                'form':form,
+                'is_branch':is_branch,
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+            }
+            '''function for creating event'''
 
-        if(request.method=="POST"):
+            if(request.method=="POST"):
 
-            ''' Checking to see if the next button is clicked '''
+                ''' Checking to see if the next button is clicked '''
 
-            if(request.POST.get('next')):
+                if(request.POST.get('next')):
 
 
-                '''Getting data from page and calling the register_event_page1 function to save the event page 1 to database'''
+                    '''Getting data from page and calling the register_event_page1 function to save the event page 1 to database'''
 
-                super_event_id=request.POST.get('super_event')
-                event_name=request.POST['event_name']
-                event_description=request.POST['event_description']
-                event_type_list = request.POST.getlist('event_type')
-                event_date=request.POST['event_date']
-            
-                #It will return True if register event page 1 is success
-                get_event=Branch.register_event_page1(
-                    super_event_id=super_event_id,
-                    event_name=event_name,
-                    event_type_list=event_type_list,
-                    event_description=event_description,
-                    event_date=event_date,
-                    event_organiser=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
-                )
+                    super_event_id=request.POST.get('super_event')
+                    event_name=request.POST['event_name']
+                    event_description=request.POST['event_description']
+                    event_type_list = request.POST.getlist('event_type')
+                    event_date=request.POST['event_date']
                 
-                if(get_event)==False:
-                    messages.info(request,"Database Error Occured! Please try again later.")
-                else:
-                    #if the method returns true, it will redirect to the new page
-                    return redirect('chapters_and_affinity_group:event_creation_form2',primary,get_event)
+                    #It will return True if register event page 1 is success
+                    get_event=Branch.register_event_page1(
+                        super_event_id=super_event_id,
+                        event_name=event_name,
+                        event_type_list=event_type_list,
+                        event_description=event_description,
+                        event_date=event_date,
+                        event_organiser=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary).primary
+                    )
+                    
+                    if(get_event)==False:
+                        messages.info(request,"Database Error Occured! Please try again later.")
+                    else:
+                        #if the method returns true, it will redirect to the new page
+                        return redirect('chapters_and_affinity_group:event_creation_form2',primary,get_event)
 
-        return render(request,'Events/event_creation_form.html',context)
+            return render(request,'Events/event_creation_form.html',context)
+        else:
+            return render(request, 'access_denied.html')
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -793,36 +802,43 @@ def event_creation_form_page2(request,primary,event_id):
     #loading all inter branch collaboration Options
 
     try:
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-        is_branch = False
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
-        context={
-            'inter_branch_collaboration_options':inter_branch_collaboration_options,
-            'all_sc_ag':sc_ag,
-            'is_branch':is_branch,
-            'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info,
-        }
-        if request.method=="POST":
-            if(request.POST.get('next')):
-                inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
-                intra_branch_collaboration=request.POST['intra_branch_collaboration']
-                
-                if(Branch.register_event_page2(
-                    inter_branch_collaboration_list=inter_branch_collaboration_list,
-                    intra_branch_collaboration=intra_branch_collaboration,
-                    event_id=event_id)):
-                    return redirect('chapters_and_affinity_group:event_creation_form3',primary,event_id)
-                else:
-                    messages.info(request,"Database Error Occured! Please try again later.")
+        print(request.META.get("HTTP_REFERER"))
+        has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
+        # if (request.META.get('HTTP_REFERER') == 
+        if has_access:
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+            is_branch = False
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+            context={
+                'inter_branch_collaboration_options':inter_branch_collaboration_options,
+                'all_sc_ag':sc_ag,
+                'is_branch':is_branch,
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+            }
+            if request.method=="POST":
+                if(request.POST.get('next')):
+                    inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
+                    intra_branch_collaboration=request.POST['intra_branch_collaboration']
+                    
+                    if(Branch.register_event_page2(
+                        inter_branch_collaboration_list=inter_branch_collaboration_list,
+                        intra_branch_collaboration=intra_branch_collaboration,
+                        event_id=event_id)):
+                        return redirect('chapters_and_affinity_group:event_creation_form3',primary,event_id)
+                    else:
+                        messages.info(request,"Database Error Occured! Please try again later.")
 
-            elif(request.POST.get('cancel')):
-                return redirect('chapters_and_affinity_group:event_control_homepage',primary)
+                elif(request.POST.get('cancel')):
+                    return redirect('chapters_and_affinity_group:event_control_homepage',primary)
 
 
-        return render(request,'Events/event_creation_form2.html',context)
+            return render(request,'Events/event_creation_form2.html',context)
+        else:
+            return render(request, 'access_denied.html')
+        
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -831,39 +847,44 @@ def event_creation_form_page2(request,primary,event_id):
 @login_required
 def event_creation_form_page3(request,primary,event_id):
     try:
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-        is_branch=False
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        #loading all venues from the venue list from event management team database
-        venues=Events_And_Management_Team.getVenues()
-        #loading all the permission criterias from event management team database
-        permission_criterias=Events_And_Management_Team.getPermissionCriterias()
+        has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
+        if has_access:
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+            is_branch=False
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            #loading all venues from the venue list from event management team database
+            venues=Events_And_Management_Team.getVenues()
+            #loading all the permission criterias from event management team database
+            permission_criterias=Events_And_Management_Team.getPermissionCriterias()
 
-        context={
-            'venues':venues,
-            'permission_criterias':permission_criterias,
-            'all_sc_ag':sc_ag,
-            'is_branch':is_branch,
-            'sc_ag_info':get_sc_ag_info,
-        }
-        if request.method=="POST":
-            if request.POST.get('create_event'):
-                #getting the venues for the event
-                venue_list_for_event=request.POST.getlist('event_venues')
-                #getting the permission criterias for the event
-                permission_criterias_list_for_event=request.POST.getlist('permission_criteria')
-                
-                #updating data collected from part3 for the event
-                update_event_details=Branch.register_event_page3(venue_list=venue_list_for_event,permission_criteria_list=permission_criterias_list_for_event,event_id=event_id)
-                #if return value is false show an error message
-                if(update_event_details==False):
-                    messages.info(request, "An error Occured! Please Try again!")
-                else:
-                    messages.info(request, "New Event Added Succesfully")
-                    return redirect('chapters_and_affinity_group:event_control_homepage',primary)
+            context={
+                'venues':venues,
+                'permission_criterias':permission_criterias,
+                'all_sc_ag':sc_ag,
+                'is_branch':is_branch,
+                'sc_ag_info':get_sc_ag_info,
+            }
+            if request.method=="POST":
+                if request.POST.get('create_event'):
+                    #getting the venues for the event
+                    venue_list_for_event=request.POST.getlist('event_venues')
+                    #getting the permission criterias for the event
+                    permission_criterias_list_for_event=request.POST.getlist('permission_criteria')
+                    
+                    #updating data collected from part3 for the event
+                    update_event_details=Branch.register_event_page3(venue_list=venue_list_for_event,permission_criteria_list=permission_criterias_list_for_event,event_id=event_id)
+                    #if return value is false show an error message
+                    if(update_event_details==False):
+                        messages.info(request, "An error Occured! Please Try again!")
+                    else:
+                        messages.info(request, "New Event Added Succesfully")
+                        return redirect('chapters_and_affinity_group:event_control_homepage',primary)
 
-        return render(request,'Events/event_creation_form3.html',context)
+            return render(request,'Events/event_creation_form3.html',context)
+        else:
+            return render(request, 'access_denied.html')
+        
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
