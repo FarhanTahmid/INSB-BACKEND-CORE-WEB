@@ -331,7 +331,7 @@
                                                                                             <input type="submit" class="btn btn-primary p-x-md" name="submitted_changed_picture" value="Change">
                               
                                                                                             <!--delete button added here -->
-                                                                                            <input type="submit" class="btn btn-danger p-x-md" name="submitted_deleted_picture" value="Delete">
+                                                                                            {% comment %} <input type="submit" class="btn btn-danger p-x-md" name="submitted_deleted_picture" value="Delete"> {% endcomment %}
                                                                                           </div>
                                                                                         </div>
                                                                                       </div>
@@ -396,24 +396,7 @@
     <!--Script for image previewing on modal-->
     <script>
 
-      // full screens
-      $(document).ready(function() {
-        $(".clickable").click(function() {
-          var element = this;
-    
-          if (element.requestFullscreen) {
-            element.requestFullscreen();
-          } else if (element.mozRequestFullScreen) {
-            element.mozRequestFullScreen();
-          } else if (element.webkitRequestFullscreen) {
-            element.webkitRequestFullscreen();
-          } else if (element.msRequestFullscreen) {
-            element.msRequestFullscreen();
-          }
-        });
-      });
-
-      // full screen code ends here
+      
 
         jQuery(document).ready(function () {
             ImgUpload();
