@@ -892,12 +892,13 @@ class Branch:
         return events_with_collaborated_events.order_by('-event_date')
         
     
-    def event_page_access(user):
+    def event_page_access(request):
 
         '''function for acceessing particular memebers into event page through
         portal'''
 
         try:
+            user = request.user
             user_id = user.username
             member = Members.objects.get(ieee_id=int(user_id))
             roles_and_positions = Roles_and_Position.objects.get(id = member.position.id)

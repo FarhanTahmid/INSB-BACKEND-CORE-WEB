@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Access Denied | IEEE NSU Student Branch</title>
+  <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- for ios 7 style, multi-resolution icon of 152x152 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
+  <link rel="apple-touch-icon" href="{% static 'logos/logo.png' %}">
+  <meta name="apple-mobile-web-app-title" content="Flatkit">
+  <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="shortcut icon" sizes="196x196" href="{% static 'logos/logo.png' %}">
+  
+  <!-- style -->
+  <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+  <link rel="stylesheet" href="{% static '/assets/animate.css/animate.min.css'%}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/glyphicons/glyphicons.css'%}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/font-awesome/css/font-awesome.min.css'%}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/material-design-icons/material-design-icons.css'%}" type="text/css" />
+
+  <link rel="stylesheet" href="{% static '/assets/bootstrap/dist/css/bootstrap.min.css'%}" type="text/css" />
+  <!-- build:css ../assets/styles/app.min.css -->
+  <link rel="stylesheet" href="{% static '/assets/styles/app.css'%}" type="text/css" />
+  <!-- endbuild -->
+  <link rel="stylesheet" href="{% static '/assets/styles/font.css'%}" type="text/css" />
+</head>
+<body>
+  <div class="app" id="app">
+
+<!-- ############ LAYOUT START-->
+
+  <!-- aside -->
+  <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	{% block sidebar %}
+	    {% include 'users/sidebar.html' %}
+  	{% endblock %}
+  
+</div>
+  <!-- END OF SIDE BAR -->
+  
+  <!-- NAVIGATION BAR START -->
+  <div id="content" class="app-content box-shadow-z0" role="main">
+    <div class="app-header white box-shadow">
+        <div class="navbar navbar-toggleable-sm flex-row align-items-center">
+            <!-- Open side - Naviation on mobile -->
+            <a data-toggle="modal" data-target="#aside" class="hidden-lg-up mr-3">
+              <i class="material-icons">&#xe5d2;</i>
+            </a>
+            <!-- / -->
+        
+            <!-- Page title - Bind to $state's title -->
+            <div class="mb-0 h5 no-wrap" ng-bind="$state.current.data.title" id="pageTitle"></div>
+        
+            <!-- navbar collapse -->
+            <div class="collapse navbar-collapse" id="collapse">
+              <!-- link and dropdown -->
+              <ul class="nav navbar-nav mr-auto">
+            
+              </ul>
+        
+              <div ui-include="'../views/blocks/navbar.form.html'"></div>
+              <!-- / -->
+            </div>
+            <!-- / navbar collapse -->
+        
+            <!-- navbar right -->
+            <ul class="nav navbar-nav ml-auto flex-row">
+              <li class="nav-item hidden-md-up">
+                <a class="nav-link pl-2" data-toggle="collapse" data-target="#collapse">
+                  <i class="material-icons">more_horiz</i>
+                </a>
+              </li>
+              <li class="nav-item dropdown pos-stc-xs">
+                <a class="nav-link mr-2" href data-toggle="dropdown">
+                  <i class="material-icons">&#xe7f5;</i>
+                  <span class="label label-sm up warn">3</span>
+                </a>
+                <div ui-include="'../views/blocks/dropdown.notification.html'"></div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
+                  <span class="avatar w-32">
+                    <img src="{{ user_data.profile_picture }}" alt="user_profile">
+                    <i class="on b-white bottom"></i>
+                  </span>
+                </a>
+                <div ui-include="'../views/blocks/dropdown.user.html'"></div>
+              </li>
+            </ul>
+            <!-- / navbar right -->
+        </div>
+    </div>
+	<!-- NAVIGATION BAR END -->
+
+<!-- ############ Main Content of PAGE START-->
+<div ui-view class="app-body" id="view">
+
+  <div class="text-center pos-rlt p-y-md">
+    <h1 class="text-shadow m-0 text-white text-4x">
+      <span class="text-2x font-bold block m-t-lg" style="color:#BA0C2F">Access Denied!</span>
+    </h1>
+    <h2 class="h1 m-y-lg text-black">OOPS!</h2>
+    <p class="h5 m-y-lg text-u font-bold text-black" style="font-size:25px;">Sorry! You currently do not have access to view this page.</p>
+    <p style="font-size:20px;">If you have permission to view this page please contact the <b>Executives</b>/ <b>Team Co-Ordinators</b>/ <b>The System administrators!</b></p>
+    <a href="{% url 'users:dashboard' %}" class="md-btn blue-700 md-raised p-x-md">
+      <span class="text-white">Dashboard</span>
+    </a>
+  </div>
+
+<!-- ############ PAGE END-->
+
+    </div>
+  </div>
+  <!-- / -->
+
+  <!-- theme switcher -->
+  <div id="switcher">
+    <div class="switcher box-color dark-white text-color" id="sw-theme">
+      <a href ui-toggle-class="active" target="#sw-theme" class="box-color dark-white text-color sw-btn">
+        <i class="fa fa-gear"></i>
+      </a>
+      <div class="box-header">
+        <h2>Switch Page Mode</h2>
+      </div>
+      <div class="box-divider"></div>
+      <div class="box-body">
+        <p class="hidden-md-down">
+          <label class="md-check m-y-xs"  data-target="folded">
+            <input type="checkbox">
+            <i class="green"></i>
+            <span class="hidden-folded">Hide Sidebar</span>
+          </label>
+        </p>
+      </div>
+    </div>
+  </div>
+  <!-- / -->
+
+<!-- ############ LAYOUT END-->
+
+  </div>
+<!-- build:js scripts/app.html.js -->
+<!-- jQuery -->
+  <script src="{% static '/libs/jquery/jquery/dist/jquery.js'%}"></script>
+  <script src="{% static '/libs/jquery/screenfull/dist/screenfull.min.js'%}"></script>
+
+
+<!-- Bootstrap -->
+  <script src="{% static '/libs/jquery/tether/dist/js/tether.min.js'%}"></script>
+  <script src="{% static '/libs/jquery/bootstrap/dist/js/bootstrap.js'%}"></script>
+<!-- core -->
+  <script src="{% static '/libs/jquery/underscore/underscore-min.js'%}"></script>
+  <script src="{% static '/libs/jquery/jQuery-Storage-API/jquery.storageapi.min.js'%}"></script>
+  <script src="{% static '/libs/jquery/PACE/pace.min.js'%}"></script>
+
+  {% comment %} <script src="{% static 'script/config.lazyload.js'%}"></script> {% endcomment %}
+
+  <script src="{% static 'script/palette.js'%}"></script>
+  <script src="{% static 'script/ui-load.js'%}"></script>
+  <script src="{% static 'script/ui-jp.js' %}"></script>
+  <script src="{% static 'script/ui-include.js'%}"></script>
+  <script src="{% static 'script/ui-device.js'%}"></script>
+  <script src="{% static 'script/ui-form.js'%}"></script>
+  <script src="{% static 'script/ui-nav.js'%}"></script>
+  <script src="{% static 'script/ui-screenfull.js'%}"></script>
+  <script src="{% static 'script/ui-scroll-to.js'%}"></script>
+  <script src="{% static 'script/ui-toggle-class.js'%}"></script>
+  {% comment %} <script src="{% static 'script/screenfull.min.js'%}"></script> {% endcomment %}
+  <script src="{% static 'script/app.js'%}"></script>
+
+
+<!-- endbuild -->
+
+</body>
+</html>
