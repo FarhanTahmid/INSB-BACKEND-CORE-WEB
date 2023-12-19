@@ -8,13 +8,13 @@
         }
       }
   
-      .selected-image-container {
+      #media-selected-images-container {
         max-width: 100%; /* Set the maximum width for the image container */
       }
       
-      .selected-image {
-        width: auto; /* Set the width to 100% */
-        height: 100px; /* Set the height to 150px */
+      #media-selected-images {
+        width: 200px; /* Set the width to 100% */
+        height: auto; /* Set the height to 150px */
         object-fit: cover; /* Maintain aspect ratio and cover the container */
         margin-top:10px;
       }
@@ -200,7 +200,6 @@
   </div>
 </div>       
         
-    
 
 
 
@@ -210,8 +209,13 @@
       var isFormDirty = false;
     
       // Listen for changes in the form fields
-      form.addEventListener('input', function () {
-        isFormDirty = true;
+      form.addEventListener('input', function (event) {
+        var target = event.target;
+    
+        // Check if the input is not the file input
+        if (target !== document.getElementById('media-image-input')) {
+            isFormDirty = true;
+        }
       });
     
       // Handle form submission
@@ -252,8 +256,8 @@
                           rowContainer = $('<div class="row"></div>'); // Start a new row for every three images
                       }
   
-                      var imageContainer = $('<div class="media-selected-image-container col-md-4"></div>');
-                      var image = $('<img class="media-selected-image" src="' + e.target.result + '">');
+                      var imageContainer = $('<div class="media-selected-image-container"></div>');
+                      var image = $('<img class="media-selected-image" src="' + e.target.result + '"  style="width: auto; height: 100px; margin: 5px 10px;">');
   
                       imageContainer.append(image);
                       rowContainer.append(imageContainer);

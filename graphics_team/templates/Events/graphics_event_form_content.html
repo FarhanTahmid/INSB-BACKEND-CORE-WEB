@@ -219,8 +219,13 @@
         var isFormDirty = false;
 
         // Listen for changes in the form fields
-        form.addEventListener('input', function () {
-            isFormDirty = true;
+        form.addEventListener('input', function (event) {
+            var target = event.target;
+        
+            // Check if the input is not the file input
+            if (target !== document.getElementById('media-image-input')) {
+                isFormDirty = true;
+            }
         });
 
         // Handle form submission
