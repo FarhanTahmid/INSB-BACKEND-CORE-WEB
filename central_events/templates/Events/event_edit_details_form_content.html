@@ -48,15 +48,6 @@
         <div class="box-header" style="text-align:center;">
             <h1>Update Event Details</h1>
         </div>
-        <div class="publish-switch">
-            <label class="form-control-label">Publish Event:</label>
-            <span>                                            
-                <label class="ui-switch m-t-xs m-r">
-                    <input name="publish_event" type="checkbox" {% if is_event_published %} checked {% endif %}>
-                        <i></i>
-                </label>                
-            </span>
-        </div>
         <!--Error Message-->
         <div class="py-3 text-center">
             {% for message in messages %}
@@ -67,7 +58,15 @@
         <form id="myForm" method = "POST">
         {% csrf_token %}
             <div class="box-body">
-
+                <div class="publish-switch">
+                    <label class="form-control-label">Publish Event:</label>
+                    <span>                                            
+                        <label class="ui-switch m-t-xs m-r">
+                            <input name="publish_event" type="checkbox" {% if is_event_published %} checked {% endif %}>
+                                <i></i>
+                        </label>                
+                    </span>
+                </div>
                 <div class="form-group">
                     <label>Event Name: <span style="color:red">*<span></label> 
                     <input
@@ -131,7 +130,7 @@
                     <select multiple class="form-control" name="inter_branch_collaboration">
                         <option value="null" {% if not hasCollaboration %}selected{% endif %}>--------------------</option>
                         {% for inter_branch_collaboration_option in inter_branch_collaboration_options %}
-                            <option value="{{ inter_branch_collaboration_option }}" {% if inter_branch_collaboration_option and inter_branch_collaboration_option in interBranchCollaborations %}selected{% endif %}>
+                            <option value="{{ inter_branch_collaboration_option.primary }}" {% if inter_branch_collaboration_option and inter_branch_collaboration_option in interBranchCollaborations %}selected{% endif %}>
                                 {{ inter_branch_collaboration_option.group_name }}
                             </option>
                         {% endfor %}
@@ -226,16 +225,13 @@
                         type="url"
                         autocomplete="off"
                         id="#field1"
-                        value="{{event_details.form_link}}"
+                        value="{% if event_details.form_link %}{{event_details.form_link}}{% endif %}"
                         name="drive_link_of_event"
                         />
                         
                     </span>
                 </div>
                 
-
-
-
                 <br>
                 <div style="text-align: center;">
                     {% if is_branch %}

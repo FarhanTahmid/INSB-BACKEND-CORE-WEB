@@ -207,7 +207,6 @@ class Branch:
                     else:
                         try:
                             get_super_event_id = SuperEvents.objects.get(id = super_event_id)
-                            print(get_super_event_id.super_event_name)
                             new_event=Events(
                             super_event_id=get_super_event_id,
                             event_name=event_name,
@@ -438,7 +437,6 @@ class Branch:
                 testArray = []
 
                 group_primary = event.event_organiser.primary
-                print(group_primary)
                 if group_primary != 1:
                     if '1' not in inter_branch_collaboration_list:
                         inter_branch_collaboration_list.append('1')
@@ -812,10 +810,11 @@ class Branch:
         try:
             dic = {}
             collaborations=[]
-            # if primary == 1:
-            #     events = Branch.load_all_events()
-            # else:
-            events = Branch.load_all_events_for_groups(primary)
+            if primary == 1:
+                events = Branch.load_all_events()
+            else:
+                events = Branch.load_all_events_for_groups(primary)
+                
             for i in events:
                 all_collaborations_for_this_event = InterBranchCollaborations.objects.filter(event_id = i.id)
                 for j in all_collaborations_for_this_event:
@@ -886,15 +885,19 @@ class Branch:
     def load_all_events_for_groups(primary):
 
         '''This function will return a list of only those events associated with that particular group'''
-        return Events.objects.filter(event_organiser= Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)).order_by('-event_date')
+        events = Events.objects.filter(event_organiser= Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
+        collaborations_list = InterBranchCollaborations.objects.filter(collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)).values_list('event_id')
+        events_with_collaborated_events = events.union(Events.objects.filter(pk__in=collaborations_list))
+        return events_with_collaborated_events.order_by('-event_date')
         
     
-    def event_page_access(user):
+    def event_page_access(request):
 
         '''function for acceessing particular memebers into event page through
         portal'''
 
         try:
+            user = request.user
             user_id = user.username
             member = Members.objects.get(ieee_id=int(user_id))
             roles_and_positions = Roles_and_Position.objects.get(id = member.position.id)
