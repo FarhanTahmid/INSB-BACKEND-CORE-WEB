@@ -11,13 +11,18 @@ from .renderData import PRT_Data
 from system_administration.render_access import Access_Render
 from users.models import Members
 from port.models import Roles_and_Position
+from django.http import HttpResponse
 from .models import Manage_Team
 # from main_website.forms import HomePageBannerWithTextForm
-
+from datetime import datetime,timedelta
 from users import renderData
+import json
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from users.renderData import LoggedinUser
 from django.utils.datastructures import MultiValueDictKeyError
 from .render_email import PRT_Email_System
+
 # Create your views here.
 
 def team_home_page(request):
@@ -353,34 +358,61 @@ def send_email(request):
             email_bcc_list=request.POST.getlist('bcc')
             email_subject=request.POST['subject']
             email_body=request.POST['body']
-            
-            
-            
-            if(email_single_email=='' and email_to_list[0]=='' and email_cc_list[0]=='' and email_bcc_list[0]==''):
-                messages.error(request,"Select atleast one recipient")
-            else:
-            
-                try:
-                    # If there is a file 
-                    email_attachment=request.FILES['attachment']
+            email_schedule_date_time = request.POST['date_time']
 
-                    to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
-                        email_single_email,email_to_list,email_cc_list,email_bcc_list
-                    )
-                    if PRT_Email_System.send_email(to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,attachment=email_attachment):
-                        messages.success(request,"Email sent successfully!")
-                    else:
-                        messages.error(request,"Email sending failed! Try again Later")
-                    
-                # IF there is no files
-                except MultiValueDictKeyError:
-                    to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
-                        email_single_email,email_to_list,email_cc_list,email_bcc_list
-                    )
-                    if PRT_Email_System.send_email(to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body):
-                        messages.success(request,"Email sent successfully!")
-                    else:
-                        messages.error(request,"Email sending failed! Try again Later")
+            
+            if email_schedule_date_time != "":
+                
+                if(email_single_email=='' and email_to_list[0]=='' and email_cc_list[0]=='' and email_bcc_list[0]==''):
+                    messages.error(request,"Select atleast one recipient")
+                else:
+                    try:
+                      # If there is a file 
+                        email_attachment=request.FILES.getlist('attachment')                       
+                        to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
+                            email_single_email,email_to_list,email_cc_list,email_bcc_list
+                        )
+                        
+                        if PRT_Email_System.send_scheduled_email(to_email_list,cc_email_list,bcc_email_list,email_subject,email_body,email_schedule_date_time,email_attachment):
+                            messages.success(request,"Email scheduled successfully!")
+                        else:
+                            messages.error(request,"Email could not be scheduled! Try again Later") 
+                    except MultiValueDictKeyError:
+                        to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
+                            email_single_email,email_to_list,email_cc_list,email_bcc_list
+                        )
+                        if PRT_Email_System.send_scheduled_email(to_email_list,cc_email_list,bcc_email_list,email_subject,email_body,email_schedule_date_time):
+                            messages.success(request,"Email scheduled successfully!")
+                        else:
+                            messages.error(request,"Email could not be scheduled! Try again Later")
+                                    
+            else:   
+
+                if(email_single_email=='' and email_to_list[0]=='' and email_cc_list[0]=='' and email_bcc_list[0]==''):
+                    messages.error(request,"Select atleast one recipient")
+                else:
+                
+                    try:
+                        # If there is a file 
+                        email_attachment=request.FILES['attachment']
+
+                        to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
+                            email_single_email,email_to_list,email_cc_list,email_bcc_list
+                        )
+                        if PRT_Email_System.send_email(to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,is_scheduled=False,attachment=email_attachment):
+                            messages.success(request,"Email sent successfully!")
+                        else:
+                            messages.error(request,"Email sending failed! Try again Later")
+                        
+                    # IF there is no files
+                    except MultiValueDictKeyError:
+                        to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
+                            email_single_email,email_to_list,email_cc_list,email_bcc_list
+                        )
+                        if PRT_Email_System.send_email(to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,is_scheduled=False):
+                            messages.success(request,"Email sent successfully!")
+                        else:
+                            messages.error(request,"Email sending failed! Try again Later")
 
                 
     
