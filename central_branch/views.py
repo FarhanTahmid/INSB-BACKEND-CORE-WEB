@@ -1034,68 +1034,6 @@ def event_creation_form_page3(request,event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
-
-@login_required
-def event_description(request,event_id):
-    '''Checking to see whether the user has access to view events on portal and edit them'''
-    try:
-        sc_ag=PortData.get_all_sc_ag(request=request) 
-        # has_access = Branch.event_page_access(request)
-        is_branch=True
-        if True:
-
-            '''Details page for registered events'''
-
-            # Get collaboration details
-            interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
-            intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
-           
-            # Checking if event has collaborations
-            hasCollaboration=False
-            if(len(interBranchCollaborations)>0 or intraBranchCollaborations):
-                hasCollaboration=True
-            
-            
-            get_all_team_name = Branch.load_teams()
-            get_event_details = Events.objects.get(id = event_id)
-
-            get_event_venue = Event_Venue.objects.filter(event_id = get_event_details)  
-            
-            if request.method == "POST":
-                ''' To delete event from databse '''
-                if request.POST.get('delete_event'):
-                    if(Branch.delete_event(event_id=event_id)):
-                        messages.success(request,f"Event with EVENT ID {event_id} was Removed successfully")
-                        return redirect('central_branch:event_control')
-                    else:
-                        messages.error(request,"Something went wrong while removing the event!")
-                        return redirect('central_branch:event_control')
-
-
-            #FOR TASK ASSIGNING
-            # team_under = request.POST.get('team')
-            # team_member = request.POST.get('team_member')
-            # probable_date = request.POST.get('probable_date')
-            # progress = request.POST.get('progression')    
-            context={
-                'event_details':get_event_details,
-                'event_venue':get_event_venue,
-                'team_names':get_all_team_name,
-                'interBranchCollaborations':interBranchCollaborations,
-                'intraBranchCollaborations':intraBranchCollaborations,
-                'hasCollaboration':hasCollaboration,
-                'all_sc_ag':sc_ag,
-                'is_branch':is_branch,
-            }
-            return render(request,"Events/event_description.html",context)
-        else:
-            return redirect('main_website:event_details', event_id)
-        
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
     
 @login_required
 def get_updated_options_for_event_dashboard(request):
@@ -1176,6 +1114,15 @@ def event_edit_form(request, event_id):
                     else:
                         messages.error(request,"Something went wrong while updating the event!")
                         return redirect('central_branch:event_edit_form', event_id)
+                    
+                if request.POST.get('delete_event'):
+                    ''' To delete event from databse '''
+                    if(Branch.delete_event(event_id=event_id)):
+                        messages.success(request,f"Event with EVENT ID {event_id} was Removed successfully")
+                        return redirect('central_branch:event_control')
+                    else:
+                        messages.error(request,"Something went wrong while removing the event!")
+                        return redirect('central_branch:event_control')
 
             form = EventForm({'event_description' : event_details.event_description})
 
@@ -1222,7 +1169,8 @@ def event_edit_form(request, event_id):
 
             return render(request, 'Events/event_edit_form.html', context)
         else:
-            return render(request, 'access_denied2.html')
+            return redirect('main_website:event_details', event_id)
+        
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
