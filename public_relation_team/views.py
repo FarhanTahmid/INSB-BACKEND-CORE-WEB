@@ -394,7 +394,7 @@ def send_email(request):
                 
                     try:
                         # If there is a file 
-                        email_attachment=request.FILES['attachment']
+                        email_attachment=request.FILES.getlist('attachment')
 
                         to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
                             email_single_email,email_to_list,email_cc_list,email_bcc_list
