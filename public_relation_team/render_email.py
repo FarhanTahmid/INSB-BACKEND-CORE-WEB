@@ -270,7 +270,7 @@ class PRT_Email_System:
             
             
             to_email_list_json = json.dumps(to_email_list_final)
-            cc_email_list_json = json.dumps()
+            cc_email_list_json = json.dumps(cc_email_list_final)
             bcc_email_list_json = json.dumps(bcc_email_list_final)
             unique_task_name_json = json.dumps(unique_task_name)
             email_attachments = None
