@@ -220,39 +220,38 @@
     </div>  
     
 
-<script>
-    function closeMessage(button) {
-        // Find the parent element (the <p> tag) and remove it
-        var messageElement = button.parentNode;
-        messageElement.parentNode.removeChild(messageElement);
-    }
+    <script>
+        function closeMessage(button) {
+            // Find the parent element (the <p> tag) and remove it
+            var messageElement = button.parentNode;
+            messageElement.parentNode.removeChild(messageElement);
+        }
   </script>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var form = document.getElementById('myForm');
-      var isFormDirty = false;
+        document.addEventListener('DOMContentLoaded', function () {
+        var form = document.getElementById('myForm');
+        var isFormDirty = false;
 
-      // Listen for changes in the form fields
-      form.addEventListener('input', function () {
-        isFormDirty = true;
-      });
+        // Listen for changes in the form fields
+        form.addEventListener('input', function () {
+            isFormDirty = true;
+        });
 
-      // Warn the user before leaving the page if the form is dirty
-      window.addEventListener('beforeunload', function (event) {
-        if (isFormDirty) {
-          event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
-        }
-      });
+        // Handle form submission
+        form.addEventListener('submit', function () {
+            // Set isFormDirty to false when the form is submitted
+            isFormDirty = false;
+        });
 
-      // Optionally, you can also prevent navigation using the 'unload' event
-      // window.addEventListener('unload', function (event) {
-      //   if (isFormDirty) {
-      //     alert('You have unsaved changes. Please save before leaving.');
-      //     event.preventDefault();
-      //   }
-      // });
-    });
+        // Warn the user before leaving the page if the form is dirty
+        window.addEventListener('beforeunload', function (event) {
+            if (isFormDirty) {
+            event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+            }
+        });
+        });
+
   </script>
   
   <script>

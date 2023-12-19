@@ -224,27 +224,26 @@
     document.addEventListener('DOMContentLoaded', function () {
       var form = document.getElementById('myForm');
       var isFormDirty = false;
-
+    
       // Listen for changes in the form fields
       form.addEventListener('input', function () {
         isFormDirty = true;
       });
-
+    
+      // Handle form submission
+      form.addEventListener('submit', function () {
+        // Set isFormDirty to false when the form is submitted
+        isFormDirty = false;
+      });
+    
       // Warn the user before leaving the page if the form is dirty
       window.addEventListener('beforeunload', function (event) {
         if (isFormDirty) {
           event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
         }
       });
-
-      // Optionally, you can also prevent navigation using the 'unload' event
-      // window.addEventListener('unload', function (event) {
-      //   if (isFormDirty) {
-      //     alert('You have unsaved changes. Please save before leaving.');
-      //     event.preventDefault();
-      //   }
-      // });
     });
+    
   </script>
   
   
