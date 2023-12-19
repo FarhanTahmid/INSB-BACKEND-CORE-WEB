@@ -74,14 +74,8 @@
       <h1 style="text-align:center;font-size:30px;">Add Details</h1>
     </div>
 
-    <div class="py-3 text-center">
-      {% for message in messages %}
-          <p style="color: red;" class="message">
-              {{ message }}
-              <button class="close-message" onclick="closeMessage(this)" style="border: none; background: none;">✖</button>
-          </p>
-      {% endfor %}
-    </div>
+    
+    
 
     <form id="myForm" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
@@ -207,17 +201,7 @@
 </div>       
         
     
-    
-    
-    
 
-  <script>
-    function closeMessage(button) {
-        // Find the parent element (the <p> tag) and remove it
-        var messageElement = button.parentNode;
-        messageElement.parentNode.removeChild(messageElement);
-    }
-  </script>
 
 
   <script>
@@ -294,6 +278,7 @@
         const maxAllowedFiles = {{allowed_image_upload}};
 
         if (selectedFiles.length > maxAllowedFiles) {
+          
           alert("You can upload a maximum of "+maxAllowedFiles+" images.");
           // Clear the file input or handle it based on your requirements
           this.value = null;

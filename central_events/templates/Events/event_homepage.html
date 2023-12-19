@@ -99,17 +99,25 @@
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to the <span><b>Events</b></span> of <span style="color:#00629B;">{{sc_ag_info.group_name}}</b></span></h2>
             {% endif %}
 
+            <div class="container">
+              <br>
+              {% for message in messages  %}
+                  <p>
+                      <div class="alert alert-success alert-dismissible fade show" role="alert">
+                          {{message}}
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                  </p>
+                {% endfor %}
+                <br>
+            </div>
+
             {% if has_access_to_create_event %}
               <div style="justify-content:center;text-align:center;"> 
 
-                {% for message in messages %}
-                    <p class="{{ message.tags }}">
-                        {{ message }}
-                        <button type="button" class="close" onclick="removeMessage(this)" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </p>
-                {% endfor %} 
+                
                 
                 <div class="btn-container">
                   {% if is_branch %}
@@ -245,13 +253,6 @@
     {% endblock common_js %}
 
     <script src="{% static 'table_search.js'%}"></script>
-    <script>
-      function removeMessage(button) {
-          // Get the parent element (p tag) and remove it
-          var paragraph = button.parentNode;
-          paragraph.remove();
-      }
-  </script>
   
 
 </body>
