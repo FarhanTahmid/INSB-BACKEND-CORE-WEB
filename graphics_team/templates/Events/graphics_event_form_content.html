@@ -281,7 +281,7 @@
 
         fileInput.addEventListener("change", function () {
             const selectedFiles = this.files;
-            const maxAllowedFiles = 1; // Allow only 1 file to be selected
+            const maxAllowedFiles = {{allowed_image_upload}}; // Allow only 1 file to be selected
 
             if (selectedFiles.length > maxAllowedFiles) {
                 alert("You can upload only one image.");
