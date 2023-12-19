@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Create Event | IEEE NSU Student Branch</title>
+    <title>Update Event | IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
     {% block common_css %}
@@ -47,6 +47,43 @@
                 width: 100%; /* Make the button full width on smaller screens */
             }
         }
+
+        .publish-switch {
+            display: flex;
+            justify-content: flex-end; /* Align to the right end */
+            align-items: center;
+            position: relative;
+        }
+
+        .registration-fee-switch, .flagship-event-switch{
+            display: flex;
+            justify-content: flex-start; /* Align to the right end */
+            align-items: center;
+            position: relative;
+        }
+
+        .ui-switch{
+            /* Add shadow to the icon */
+            box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+
+            /* You can customize the shadow properties */
+        }
+        .form-control-label {
+            display: inline-block;
+            margin-right: 10px; /* Add margin for spacing between elements */
+        }
+
+        .registration-hidden-field{
+            opacity: 0; 
+            height: 0; 
+            overflow: hidden; 
+            visibility: hidden; 
+            transition: all 0.5s 
+            ease-in-out;
+        }
+       
+        
         
     </style>
 </head>
@@ -81,12 +118,7 @@
         <!-- ############ PAGE START-->
         <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
             
-            <!--Instruction Section Start-->
-            {% block instruction %}
-            {% include "Events/instructions.html" %}
-            {% endblock instruction %}
-            <!--Instruction Section End-->
-
+            
             <br>
             <br>
             
@@ -96,13 +128,25 @@
         <!--PAGE END-->
 
         <!--TabView for event creation-->
+        <div  style="margin-left:215px; font-size:1rem;">
+            <br>
+            <h6>Note:</h6>
+            <!--List Start-->
+            <div style="margin-right:25px;justify-content:center;text-align:justify;">
             
+            <ul>
+                <li>If you want to add new venues, <span><b>update</b></span> any changes made first or <b>add</b> the venues first to prevent data loss</li>
+            </ul>
+            </div>
+            <!--List End-->
+        </div>  
         <div>
            
-                {% block event_creation_form %}
-                    {% include "Events/event_details_form_content.html" %}
-                {% endblock event_creation_form %}
-                
+                {% block event_edit_form %}
+                    {% include "Events/event_edit_details_form_content.html" %}
+                {% endblock event_edit_form %}
+        
+            
         </div>
         <!--End of TabView-->
         
@@ -126,6 +170,7 @@
     {% endblock common_js %}
 
     <script src="{% static 'tab_view.js'%}"></script>
+    
 
 </body>
 </html>

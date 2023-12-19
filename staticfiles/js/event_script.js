@@ -1,8 +1,8 @@
 // Dummy events data for demonstration, this is the calendar event load function
 const eventsData = {
-    '2023-07-27': ['Event 1', 'Event 2'],
+    '2023-09-10': ['Event 1', 'Event 2'],
     '2023-07-23': ['Event 3'],
-    '2023-07-15': ['Spac event'],
+    '2023-07-20': ['Spac event'],
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dayElement.classList.add('day');
         dayElement.textContent = date.getDate();
         dayElement.date = date;
-        dayElement.addEventListener('click', () => showEventsForDate(date));
+        dayElement.addEventListener('click', () => showEventsForDate((date)));
         return dayElement;
     }
 
@@ -101,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCalendar(currentDate);
     });
 });
-
 
 function eventFilterFunction() {
     var input, filter, box, eventName, i, txtValue;
