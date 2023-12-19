@@ -2,13 +2,19 @@ from central_branch.renderData import Branch
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
 from django.core.files.base import ContentFile
-import json
+import json,os
 from datetime import datetime
-from django_celery_beat.models import ClockedSchedule,PeriodicTask
-from django.core.files.storage import default_storage
 from insb_port import settings
-import os
+from .models import Email_Attachements
+import traceback
+import logging
+from django_celery_beat.models import ClockedSchedule,PeriodicTask
+from system_administration.system_error_handling import ErrorHandling
+from django.contrib import messages
+
 class PRT_Email_System:
+
+    logger=logging.getLogger(__name__)
     
     def get_all_selected_emails_from_backend(single_emails,to_email_list,cc_email_list,bcc_email_list):
         
@@ -142,7 +148,7 @@ class PRT_Email_System:
         
         return to_email_final_list,cc_email_final_list,bcc_email_final_list
     
-    def send_email(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,attachment=None):
+    def send_email(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment=None):
         
         '''Checking to see if 'to' mail and 'bcc' mail length is more than 40 or not. If so
         it will send the email to the first 40 and then the first 40 mail would be removed
@@ -157,7 +163,7 @@ class PRT_Email_System:
             while len(to_email_list)!=0 and len(bcc_email_list)!=0:
                 print(to_email_list)
                 print(bcc_email_list)
-                if PRT_Email_System.send_email_confirmation(to_email_list[0:41],cc_email_list,bcc_email_list[0:41],subject,mail_body,attachment):
+                if PRT_Email_System.send_email_confirmation(to_email_list[0:41],cc_email_list,bcc_email_list[0:41],subject,mail_body,is_scheduled,attachment):
                     del to_email_list[:41]
                     del bcc_email_list[:41]
                 else:
@@ -166,7 +172,7 @@ class PRT_Email_System:
         if len(to_email_list)>=40:
             while len(to_email_list)!=0:
                 
-                if PRT_Email_System.send_email_confirmation(to_email_list[0:41],cc_email_list,bcc_email_list,subject,mail_body,attachment):
+                if PRT_Email_System.send_email_confirmation(to_email_list[0:41],cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment):
                     del to_email_list[:41]
                 else:
                     return False
@@ -174,7 +180,7 @@ class PRT_Email_System:
         if len(bcc_email_list)>=40:
             while len(bcc_email_list)!=0:
                 
-                if PRT_Email_System.send_email_confirmation(to_email_list,cc_email_list,bcc_email_list[0:41],subject,mail_body,attachment):
+                if PRT_Email_System.send_email_confirmation(to_email_list,cc_email_list,bcc_email_list[0:41],subject,mail_body,is_scheduled,attachment):
                     del bcc_email_list[:41]
                 else:
                     return False
@@ -183,13 +189,13 @@ class PRT_Email_System:
         #If both list does not have more than 40 than normal just sending the emails without any
         #changes in the lists'''
         else:
-            if PRT_Email_System.send_email_confirmation(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,attachment):
+            if PRT_Email_System.send_email_confirmation(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment):
                 return True
             else:
                 return False
 
 
-    def send_email_confirmation(to_email_list_final,cc_email_list_final,bcc_email_list_final,subject,mail_body,attachment):
+    def send_email_confirmation(to_email_list_final,cc_email_list_final,bcc_email_list_final,subject,mail_body,is_scheduled,attachment):
             email_from = settings.EMAIL_HOST_USER 
             to_email_list_final=["skmdsakib2186@gmail.com"]
             cc_email_list_final=[]
@@ -210,18 +216,45 @@ class PRT_Email_System:
                     return False    
             else:
                 try:
-                    #Create a ContentFile from the uploaded file
-                    content_file = ContentFile(attachment.read())
-                    content_file.name = attachment.name  # Set the filename
-                    email=EmailMultiAlternatives(subject,mail_body,
-                            email_from,
-                            to_email_list_final,
-                            bcc=bcc_email_list_final,
-                            cc=cc_email_list_final
-                            )
-                    email.attach(attachment.name,content_file.read(),attachment.content_type)
-                    email.send()
-                    return True
+                    if is_scheduled:
+                        email=EmailMultiAlternatives(subject,mail_body,
+                                email_from,
+                                to_email_list_final,
+                                bcc=bcc_email_list_final,
+                                cc=cc_email_list_final
+                                )
+                        email_name=None
+                        for i in attachment:
+                            email.attach_file(settings.MEDIA_ROOT+str(i.email_content))
+                            email_name = i.email_name
+                        email.send()
+
+                        #Removing those file and deleting the object from database after sending email
+                        email_attachements = Email_Attachements.objects.filter(email_name = email_name)
+                        for i in email_attachements:
+                            path = settings.MEDIA_ROOT+str(i.email_content)
+                            os.remove(path)
+                            i.delete()
+                        return True
+                    
+                    
+                    else:
+                        #Create a ContentFile from the uploaded file
+                        # content_file = ContentFile(attachment.read())
+                        # content_file.name = attachment.name  # Set the filename
+                        email=EmailMultiAlternatives(subject,mail_body,
+                                email_from,
+                                to_email_list_final,
+                                bcc=bcc_email_list_final,
+                                cc=cc_email_list_final
+                                )
+                        # email.attach(attachment.name,content_file.read(),attachment.content_type)
+                        for attachment in attachment:
+                            content_file = ContentFile(attachment.read())
+                            content_file.name = attachment.name
+                            email.attach(attachment.name, content_file.read(), attachment.content_type)
+                        email.send()
+                        return True
                 except Exception as e:
                     print(e)
                     return False
@@ -229,34 +262,39 @@ class PRT_Email_System:
     def send_scheduled_email(to_email_list_final,cc_email_list_final,bcc_email_list_final,subject,mail_body,email_schedule_date_time,attachment=None):
         
         '''This funciton sends the schedules email on time '''
+        try:
 
-        #formatting the time and date and assigning unique name to it to store it in database of celery beat
-        scheduled_email_date_time = datetime.strptime(email_schedule_date_time, '%Y-%m-%dT%H:%M')
-        unique_task_name = f"{subject}_{scheduled_email_date_time.timestamp()}"
-
-        # file_path = default_storage.save('uploads/' + attachment.name, attachment)
-        # attachment= os.path.join(settings.MEDIA_ROOT, file_path)
-        
-        # email_attachment_content = base64.b64encode(attachment.read()).decode('utf-8')
-        # to_email_attachment_json = json.dumps({
-        #                                     'filename':attachment.name,
-        #                                     'content': email_attachment_content
-        #                                     })
-    
-        #converting the lists to json
-        to_email_list_json = json.dumps(to_email_list_final)
-        cc_email_list_json = json.dumps(cc_email_list_final)
-        bcc_email_list_json = json.dumps(bcc_email_list_final)
-        
-        #Creating a periodic schedule for the email, where clockedschedules returns a tuple with clocked instance on 0 index
-        #and clocked argument is foregined key with ClockedScheudle
-        PeriodicTask.objects.create(
-                            clocked = ClockedSchedule.objects.get_or_create(clocked_time=scheduled_email_date_time)[0],
-                            name=unique_task_name ,
-                            task = "public_relation_team.tasks.send_scheduled_email",
-                            args =json.dumps([to_email_list_json,cc_email_list_json,bcc_email_list_json,subject,mail_body,attachment]),
-                            one_off = True,
-                            enabled = True,
-                        )
-        return True
+            #formatting the time and date and assigning unique name to it to store it in database of celery beat
+            scheduled_email_date_time = datetime.strptime(email_schedule_date_time, '%Y-%m-%dT%H:%M')
+            unique_task_name = f"{subject}_{scheduled_email_date_time.timestamp()}"
+            
+            
+            to_email_list_json = json.dumps(to_email_list_final)
+            cc_email_list_json = json.dumps()
+            bcc_email_list_json = json.dumps(bcc_email_list_final)
+            unique_task_name_json = json.dumps(unique_task_name)
+            email_attachments = None
+            if attachment != None:
+                for i in attachment:
+                    email_attachments = Email_Attachements.objects.create(email_name=unique_task_name,email_content = i)
+                    email_attachments.save()
+                
+            
+            #Creating a periodic schedule for the email, where clockedschedules returns a tuple with clocked instance on 0 index
+            #and clocked argument is foregined key with ClockedScheudle
+            
+            PeriodicTask.objects.create(
+                                clocked = ClockedSchedule.objects.get_or_create(clocked_time=scheduled_email_date_time)[0],
+                                name=unique_task_name ,
+                                task = "public_relation_team.tasks.send_scheduled_email",
+                                args =json.dumps([to_email_list_json,cc_email_list_json,bcc_email_list_json,subject,mail_body,unique_task_name_json]),
+                                one_off = True,
+                                enabled = True,
+                            )
+            return True
+        except Exception as e:
+            PRT_Email_System.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error("Could not scheduled the email!")
+            return False
         

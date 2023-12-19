@@ -1000,10 +1000,9 @@ def event_description(request,event_id):
     '''Checking to see whether the user has access to view events on portal and edit them'''
     try:
         sc_ag=PortData.get_all_sc_ag(request=request) 
-        user = request.user
-        has_access = Branch.event_page_access(user)
+        # has_access = Branch.event_page_access(request)
         is_branch=True
-        if has_access:
+        if True:
 
             '''Details page for registered events'''
 
@@ -1048,9 +1047,10 @@ def event_description(request,event_id):
                 'all_sc_ag':sc_ag,
                 'is_branch':is_branch,
             }
+            return render(request,"Events/event_description.html",context)
         else:
-            return redirect('main_website:all-events')
-        return render(request,"Events/event_description.html",context)
+            return redirect('main_website:event_details', event_id)
+        
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1081,104 +1081,108 @@ def event_edit_form(request, event_id):
 
     ''' This function loads the edit page of events '''
     try:
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        is_branch = True
-        is_event_published = Branch.load_event_published(event_id)
-        is_flagship_event = Branch.is_flagship_event(event_id)
-        is_registraion_fee_true = Branch.is_registration_fee_required(event_id)
-        #Get event details from databse
-        event_details = Events.objects.get(pk=event_id)
+        # has_access = Branch.event_page_access(request)
+        if True:
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            is_branch = True
+            is_event_published = Branch.load_event_published(event_id)
+            is_flagship_event = Branch.is_flagship_event(event_id)
+            is_registraion_fee_true = Branch.is_registration_fee_required(event_id)
+            #Get event details from databse
+            event_details = Events.objects.get(pk=event_id)
 
-        if(request.method == "POST"):
+            if(request.method == "POST"):
 
-            if('add_venues' in request.POST):
-                venue = request.POST.get('venue')
-                if(renderData.Branch.add_event_venue(venue)):
-                    messages.success(request, "Venue created successfully")
-                else:
-                    messages.error(request, "Something went wrong while creating the venue")
-                return redirect('central_branch:event_edit_form', event_id)
-            
-            
-            if('update_event' in request.POST):
-                ''' Get data from form and call update function to update event '''
-
-                form_link = request.POST.get('drive_link_of_event')
-                publish_event_status = request.POST.get('publish_event')
-                flagship_event_status = request.POST.get('flagship_event')
-                registration_event_status = request.POST.get('registration_fee')
-                event_name=request.POST['event_name']
-                event_description=request.POST['event_description']
-                super_event_id=request.POST.get('super_event')
-                event_type_list = request.POST.getlist('event_type')
-                event_date=request.POST['event_date']
-                inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
-                intra_branch_collaboration=request.POST['intra_branch_collaboration']
-                venue_list_for_event=request.POST.getlist('event_venues')
-                
-                #Checking to see of toggle button is on/True or off/False
-                publish_event = Branch.button_status(publish_event_status)
-                flagship_event = Branch.button_status(flagship_event_status)
-                registration_fee = Branch.button_status(registration_event_status)
-
-                #if there is registration fee then taking the amount from field
-                if registration_fee:
-                    registration_fee_amount = int(request.POST.get('registration_fee_amount'))
-                else:
-                    registration_fee_amount=0
-                #Check if the update request is successful
-                if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
-                                                          flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,form_link = form_link)):
-                    messages.success(request,f"EVENT: {event_name} was Updated successfully")
-                    return redirect('central_branch:event_edit_form', event_id) 
-                else:
-                    messages.error(request,"Something went wrong while updating the event!")
+                if('add_venues' in request.POST):
+                    venue = request.POST.get('venue')
+                    if(renderData.Branch.add_event_venue(venue)):
+                        messages.success(request, "Venue created successfully")
+                    else:
+                        messages.error(request, "Something went wrong while creating the venue")
                     return redirect('central_branch:event_edit_form', event_id)
+                
+                
+                if('update_event' in request.POST):
+                    ''' Get data from form and call update function to update event '''
 
-        form = EventForm({'event_description' : event_details.event_description})
+                    form_link = request.POST.get('drive_link_of_event')
+                    publish_event_status = request.POST.get('publish_event')
+                    flagship_event_status = request.POST.get('flagship_event')
+                    registration_event_status = request.POST.get('registration_fee')
+                    event_name=request.POST['event_name']
+                    event_description=request.POST['event_description']
+                    super_event_id=request.POST.get('super_event')
+                    event_type_list = request.POST.getlist('event_type')
+                    event_date=request.POST['event_date']
+                    inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
+                    intra_branch_collaboration=request.POST['intra_branch_collaboration']
+                    venue_list_for_event=request.POST.getlist('event_venues')
+                    
+                    #Checking to see of toggle button is on/True or off/False
+                    publish_event = Branch.button_status(publish_event_status)
+                    flagship_event = Branch.button_status(flagship_event_status)
+                    registration_fee = Branch.button_status(registration_event_status)
 
-        #loading super/mother event at first and event categories for depending on which group organised the event
-        super_events=Branch.load_all_mother_events()
-        event_types=Branch.load_all_event_type_for_groups(event_details.event_organiser.primary)
+                    #if there is registration fee then taking the amount from field
+                    if registration_fee:
+                        registration_fee_amount = int(request.POST.get('registration_fee_amount'))
+                    else:
+                        registration_fee_amount=0
+                    #Check if the update request is successful
+                    if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
+                                                            flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,form_link = form_link)):
+                        messages.success(request,f"EVENT: {event_name} was Updated successfully")
+                        return redirect('central_branch:event_edit_form', event_id) 
+                    else:
+                        messages.error(request,"Something went wrong while updating the event!")
+                        return redirect('central_branch:event_edit_form', event_id)
 
-        inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+            form = EventForm({'event_description' : event_details.event_description})
 
-        # Get collaboration details
-        interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
-        intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
-        selected_venues = Branch.get_selected_venues(event_id=event_id)
-        # Checking if event has collaborations
-        hasCollaboration=False
-        if(len(interBranchCollaborations)>0):
-            hasCollaboration=True
+            #loading super/mother event at first and event categories for depending on which group organised the event
+            super_events=Branch.load_all_mother_events()
+            event_types=Branch.load_all_event_type_for_groups(event_details.event_organiser.primary)
 
-        interBranchCollaborationsArray = []
-        for i in interBranchCollaborations.all():
-            interBranchCollaborationsArray.append(i.collaboration_with)
+            inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
 
-        #loading all venues from the venue list from event management team database
-        venues=Events_And_Management_Team.getVenues()
+            # Get collaboration details
+            interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
+            intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
+            selected_venues = Branch.get_selected_venues(event_id=event_id)
+            # Checking if event has collaborations
+            hasCollaboration=False
+            if(len(interBranchCollaborations)>0):
+                hasCollaboration=True
 
-        context={
-            'all_sc_ag' : sc_ag,
-            'is_branch' : is_branch,
-            'event_details' : event_details,
-            'event_id' : event_id,
-            'form' : form,
-            'super_events' : super_events,
-            'event_types' : event_types,
-            'inter_branch_collaboration_options' : inter_branch_collaboration_options,
-            'interBranchCollaborations':interBranchCollaborationsArray,
-            'intraBranchCollaborations':intraBranchCollaborations,
-            'hasCollaboration' : hasCollaboration,
-            'venues' : venues,
-            'is_event_published':is_event_published,
-            'is_flagship_event':is_flagship_event,
-            'is_registration_fee_required':is_registraion_fee_true,
-            'selected_venues':selected_venues,
-        }
+            interBranchCollaborationsArray = []
+            for i in interBranchCollaborations.all():
+                interBranchCollaborationsArray.append(i.collaboration_with)
 
-        return render(request, 'Events/event_edit_form.html', context)
+            #loading all venues from the venue list from event management team database
+            venues=Events_And_Management_Team.getVenues()
+
+            context={
+                'all_sc_ag' : sc_ag,
+                'is_branch' : is_branch,
+                'event_details' : event_details,
+                'event_id' : event_id,
+                'form' : form,
+                'super_events' : super_events,
+                'event_types' : event_types,
+                'inter_branch_collaboration_options' : inter_branch_collaboration_options,
+                'interBranchCollaborations':interBranchCollaborationsArray,
+                'intraBranchCollaborations':intraBranchCollaborations,
+                'hasCollaboration' : hasCollaboration,
+                'venues' : venues,
+                'is_event_published':is_event_published,
+                'is_flagship_event':is_flagship_event,
+                'is_registration_fee_required':is_registraion_fee_true,
+                'selected_venues':selected_venues,
+            }
+
+            return render(request, 'Events/event_edit_form.html', context)
+        else:
+            return render(request, 'access_denied2.html')
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1192,10 +1196,10 @@ def event_edit_media_form_tab(request, event_id):
     ''' This function loads the media tab page of events '''
 
     try:
+        # has_access = Branch.event_page_access(request)
         sc_ag=PortData.get_all_sc_ag(request=request)
         #Get event details from databse
         # event_details = Events.objects.get(pk=event_id)
-        # has_access = MediaTeam_Render_Access.access_for_events(request)
         if(True):
             #Getting media links and images from database. If does not exist then they are set to none
 
@@ -1236,6 +1240,7 @@ def event_edit_media_form_tab(request, event_id):
                     return redirect("central_branch:event_edit_media_form_tab",event_id)
         
             context={
+                'is_branch' : True,
                 'event_id' : event_id,
                 'media_links' : media_links,
                 'media_images':media_images,
@@ -1245,7 +1250,7 @@ def event_edit_media_form_tab(request, event_id):
             }
             return render(request,"Events/event_edit_media_form_tab.html",context)
         else:
-            return redirect('main_website:event_details', event_id)
+            return render(request, 'access_denied2.html')
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -1265,7 +1270,7 @@ def event_edit_graphics_form_tab(request, event_id):
         sc_ag=PortData.get_all_sc_ag(request=request)
         #Get event details from databse
         # event_details = Events.objects.get(pk=event_id)
-        # has_access = GraphicsTeam_Render_Access.access_for_events(request)
+        # has_access = Branch.event_page_access(request)
         if(True):
             #Getting media links and images from database. If does not exist then they are set to none
             try:
@@ -1305,6 +1310,7 @@ def event_edit_graphics_form_tab(request, event_id):
                     return redirect("central_branch:event_edit_graphics_form_tab",event_id)
 
             context={
+                'is_branch' : True,
                 'event_id' : event_id,
                 'all_sc_ag':sc_ag,
                 'graphic_links' : graphics_link,
@@ -1315,7 +1321,8 @@ def event_edit_graphics_form_tab(request, event_id):
             }
             return render(request,"Events/event_edit_graphics_form_tab.html",context)
         else:
-            return redirect('main_website:event_details', event_id)
+            return render(request, 'access_denied2.html')
+        
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

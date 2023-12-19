@@ -368,8 +368,7 @@ def send_email(request):
                 else:
                     try:
                       # If there is a file 
-                        email_attachment=request.FILES['attachment']
-                       
+                        email_attachment=request.FILES.getlist('attachment')                       
                         to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
                             email_single_email,email_to_list,email_cc_list,email_bcc_list
                         )
@@ -400,7 +399,7 @@ def send_email(request):
                         to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
                             email_single_email,email_to_list,email_cc_list,email_bcc_list
                         )
-                        if PRT_Email_System.send_email(to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,attachment=email_attachment):
+                        if PRT_Email_System.send_email(to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,is_scheduled=False,attachment=email_attachment):
                             messages.success(request,"Email sent successfully!")
                         else:
                             messages.error(request,"Email sending failed! Try again Later")
@@ -410,7 +409,7 @@ def send_email(request):
                         to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
                             email_single_email,email_to_list,email_cc_list,email_bcc_list
                         )
-                        if PRT_Email_System.send_email(to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body):
+                        if PRT_Email_System.send_email(to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,is_scheduled=False):
                             messages.success(request,"Email sent successfully!")
                         else:
                             messages.error(request,"Email sending failed! Try again Later")
