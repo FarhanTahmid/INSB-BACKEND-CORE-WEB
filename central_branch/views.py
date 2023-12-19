@@ -473,6 +473,46 @@ def add_research(request):
     return render(request,"research_papers.html")
 
 @login_required
+def manage_blogs(request):
+    
+    # Load all blogs
+    all_blogs=Blog.objects.all()
+    
+    if(request.method=="POST"):
+        form=BlogsForm(request.POST,request.FILES)
+        if(request.POST.get('add_blog')):
+            if(form.is_valid()):
+                form.save()
+                messages.success(request,"A new Blog was added!")
+                return redirect('central_branch:manage_blogs')
+        
+        if(request.POST.get('add_blog_category')):
+            form2=BlogCategoryForm(request.POST)
+            if(form2.is_valid()):
+                form2.save()
+                messages.success(request,"A new Blog Category was added!")
+                return redirect('central_branch:manage_blogs')
+        if(request.POST.get('remove_blog')):
+            MainWebsiteRenderData.delete_blog(request=request)
+            return redirect('central_branch:manage_blogs')
+
+
+    else:
+        form=BlogsForm
+        form2=BlogCategoryForm
+
+    context={
+        # get form
+        'form':form,
+        'form2':form2,
+        'all_blogs':all_blogs,
+        
+    }
+    
+    return render(request,"Manage Website/Publications/Blogs/manage_blogs.html",context=context)
+
+
+@login_required
 def add_blogs(request):
 
     '''function to add new blog to the page'''

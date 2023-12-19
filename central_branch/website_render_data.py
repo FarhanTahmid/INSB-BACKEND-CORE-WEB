@@ -55,4 +55,16 @@ class MainWebsiteRenderData:
             MainWebsiteRenderData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"Can not load Achievements. Something went wrong!")
-        
+    
+    def delete_blog(request):
+        try:
+            get_the_blog=Blog.objects.get(pk=request.POST['blog_pk'])
+            if(os.path.isfile(get_the_blog.blog_banner_picture.path)):
+                os.remove(get_the_blog.blog_banner_picture.path)
+            get_the_blog.delete()
+            return messages.info(request,'A blog was deleted!')
+        except Exception as e:
+            MainWebsiteRenderData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not delete Blogs. Something went wrong!")
+            
