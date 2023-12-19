@@ -14,12 +14,13 @@
                         <img src="{% static 'masterslider/public/assets/css/blank.gif' %}" alt="" title="" data-src="{{media_url}}{{i.banner_picture}}" />
                         <div id="gdlr-parallax-overlay"></div>
                         <div class="ms-layer  msp-cn-1-7">
-                            <div class="title">
-                                {{i.first_layer_text}}
+                            <div class="title" style="text-transform:uppercase;">
+                                {{i.first_layer_text}}<span> {{i.first_layer_text_colored}}</span>
                             </div>
                             <div class="description">
                                 {{i.third_layer_text}}
                             </div>
+                            <br>
                             <div class="links">
                                 <a href="{{i.button_url}}" class="btn">{{i.button_text}}</a>
                             </div>

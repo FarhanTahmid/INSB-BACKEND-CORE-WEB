@@ -11,7 +11,7 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
     class Meta:
         verbose_name="Chapters-Societies-Affinity Group"
     def __str__(self) -> str:
-        return str(self.primary) 
+        return str(self.group_name) 
 
 class Teams(models.Model):
     '''
@@ -45,6 +45,7 @@ class Roles_and_Position(models.Model):
     is_co_ordinator=models.BooleanField(default=False)
     is_faculty=models.BooleanField(default=False)
     is_mentor=models.BooleanField(default=False)
+    is_core_volunteer=models.BooleanField(default=False)
     
     class Meta:
         verbose_name='Registered positions'

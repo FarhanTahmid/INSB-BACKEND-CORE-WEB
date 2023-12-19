@@ -44,7 +44,7 @@ class Media_Data_Access(admin.ModelAdmin):
     list_display = ['ieee_id','manage_team_access']
 @admin.register(Graphics_Data_Access)
 class Graphics_Data_Access(admin.ModelAdmin):
-    list_display = ['ieee_id','manage_team_access']
+    list_display = ['ieee_id','manage_team_access', 'event_access']
 @admin.register(FCT_Data_Access)
 class FCT_Data_Access(admin.ModelAdmin):
     list_display = ['ieee_id','manage_team_access']

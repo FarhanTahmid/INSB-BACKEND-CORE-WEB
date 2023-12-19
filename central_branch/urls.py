@@ -20,8 +20,11 @@ urlpatterns = [
     #PANEL
     path('panels',views.panel_home,name="panels"),
     #panel details
-    path('panels/<int:panel_id>',views.panel_details,name="panel_details"),
-    
+    path('panels/<int:panel_id>',views.branch_panel_details,name="panel_details"),
+    path('panels/<int:panel_id>/officers',views.branch_panel_officers_tab,name="panel_details_officers"),
+    path('panels/<int:panel_id>/volunteers',views.branch_panel_volunteers_tab,name="panel_details_volunteers"),
+    path('panels/<int:panel_id>/alumni',views.branch_panel_alumni_tab,name="panel_details_alumni"),
+
     
     #for updating value in team member select box in event assigning
     # path('get_updated_options/', views.get_updated_options_for_event_dashboard, name='get_updated_options'),
@@ -34,7 +37,14 @@ urlpatterns = [
     
     #WEBSITE Management URL Path
     path('manage_website/homepage',views.manage_website_homepage,name="manage_website_home"),
+    path('manage_website/achievements',views.manage_achievements,name="manage_achievements"),
+    path('manage_website/achievements/update/<int:pk>',views.update_achievements,name="achievements_update"),
+    path('manage_website/news',views.manage_news,name="manage_news"),
+    path('manage_website/news/update/<int:pk>',views.update_news,name="update_news"),
+    path('manage_website/blogs',views.manage_blogs,name="manage_blogs"),
+    path('manage_website/blogs/update/<int:pk>',views.update_blogs,name="update_blogs"),
 
+    
     path('manage_access',views.manage_view_access,name="manage_access"),
 
     #Events urls

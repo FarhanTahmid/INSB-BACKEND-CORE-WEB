@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <title>News - IEEE NSU SB</title>
+    <meta charset="UTF-8">
+    <link rel="icon" href="{% static 'upload/logo.gif'%}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <!--Common CSS-->
+    {% block common_css %}
+        {% include "common_css_includes.html" %}
+    {% endblock common_css %}
+    <link rel="stylesheet" href="{% static 'css/news.css'%} ">
+
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        .gdlr-header-inner,
+        .gdlr-header-wrapper.header-style-2-wrapper .gdlr-header-inner-overlay {
+            background-color: 	#002855;
+        }
+
+        .gdlr-header-wrapper.header-style-3-wrapper,
+        .gdlr-header-wrapper.header-style-7-wrapper {
+            background-color: #002855;
+        }
+
+        .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+            background-color: #002855;
+        }
+
+        @media only screen and (max-width: 767px) {
+            .gdlr-header-wrapper.header-style-5-wrapper {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-6-wrapper {
+                background-color: #002855;
+            }
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button {
+            background-color: #002855;
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button:hover, #gdlr-responsive-navigation.dl-menuwrapper button.dl-active, #gdlr-responsive-navigation.dl-menuwrapper ul {
+            background-color: #002855;
+        }
+        .dl-menuwrapper li a {
+            display: block;
+            position: relative;
+            padding: 15px 20px;
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 300;
+            color: #fff;
+            outline: none;
+        }
+        .dl-menuwrapper li.dl-back:after, .dl-menuwrapper li > a:not(:only-child):after {
+            position: absolute;
+            top: 0;
+            line-height: 50px;
+            font-family: 'FontAwesome';
+            speak: none;
+            -webkit-font-smoothing: antialiased;
+            content: "\f105";
+            font-size: 16px;
+            color: #ffffff;
+        }
+    </style>
+
+</head>
+
+<body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+    <div class="body-wrapper  float-menu">
+    
+        <!--Header-->
+        {% block header %}
+            {% include 'header.html' %}
+        {% endblock header %}
+        <!--Header End-->                   
+       
+        <!--Wave-->
+        {% block wave_design %}
+            {% include 'wave.html' %}
+        {% endblock %}
+        <!-- end of wAVE PART  -->
+        <br>
+        <h3 style="color:#00629B;text-align:center;">IEEE NSU Student Branch News</h3>
+
+        <!-- News card start -->
+
+        <!-- Make sure all card is under "newsCardTotal" class -->
+        <!-- "alt" class only making difference between left right image. Just add or remove the class -->
+        <!-- For "Load more" button, under "newsCardTotal", class flow will be ==> flex > content, content, content....... -->
+        <div class="newsCardTotal container my-5"> 
+
+            <div class="flex">
+                <!-- This card for left image. Absent of "alt" class -->
+                {% for i in all_news %}
+                <div class="content">
+                    <div class="news-card">
+                        <div class="meta">
+                            <div
+                                class="photo"
+                                style="
+                                    background-image: url(/media_files/{{i.news_picture}});
+                                "
+                            ></div>
+                            <ul class="details">
+                                <li class="author"><a href="#">IEEE NSU SB</a></li>
+                                <li class="date">{{i.news_date}}</li>
+                                <li class="tags">
+                                    <ul>
+                                        <li><a href="#">IEEE</a></li>
+                                        <li><a href="#">NSU</a></li>
+                                        <li><a href="#">Success</a></li>
+                                        <li><a href="#">INSB</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="description">
+                            <h1>{{i.news_title}}</h1>
+                            <h2>{{i.news_subtitle}}</h2>
+                            <p>{{i.news_description|safe}}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+            </div>
+        </div>
+
+        <div class="text-center">
+            <div class="btn btn-outline-primary px-5 py-2 mb-5"  id="loadMore">Load more</div>
+        </div>
+
+
+        <!--Online News Section-->
+        {% block online_news %}
+        {% include "Activities/online_news_card_container.html" %}
+        {% endblock online_news %}
+        <!--Online news section Ends-->
+
+
+        <!-- Footer -->
+        {% block footer %}
+        {% include "footer_block.html" %}
+        {% endblock footer %}
+
+
+    </div>
+    <!-- body-wrapper -->
+    {% block common_js %}
+        {% include "common_js_includes.html" %}
+    {% endblock %}      
+    
+    <script type="text/javascript">
+        (function (url) {
+            if (/(?:Chrome\/26\.0\.1410\.63 Safari\/537\.31|WordfenceTestMonBot)/.test(navigator.userAgent)) { return; }
+            var addEvent = function (evt, handler) {
+                if (window.addEventListener) {
+                    document.addEventListener(evt, handler, false);
+                } else if (window.attachEvent) {
+                    document.attachEvent('on' + evt, handler);
+                }
+            };
+            var removeEvent = function (evt, handler) {
+                if (window.removeEventListener) {
+                    document.removeEventListener(evt, handler, false);
+                } else if (window.detachEvent) {
+                    document.detachEvent('on' + evt, handler);
+                }
+            };
+            var evts = 'contextmenu dblclick drag dragend dragenter dragleave dragover dragstart drop keydown keypress keyup mousedown mousemove mouseout mouseover mouseup mousewheel scroll'.split(' ');
+            var logHuman = function () {
+                if (window.wfLogHumanRan) { return; }
+                window.wfLogHumanRan = true;
+                var wfscr = document.createElement('script');
+                wfscr.type = 'text/javascript';
+                wfscr.async = true;
+                wfscr.src = url + '&r=' + Math.random();
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(wfscr);
+                for (var i = 0; i < evts.length; i++) {
+                    removeEvent(evts[i], logHuman);
+                }
+            };
+            for (var i = 0; i < evts.length; i++) {
+                addEvent(evts[i], logHuman);
+            }
+        });
+    </script>
+    <script>
+        (window.MSReady = window.MSReady || []).push(function ($) {
+
+            "use strict";
+            var masterslider_8b8a = new MasterSlider();
+
+            // slider controls
+            masterslider_8b8a.control('bullets', {
+                autohide: false,
+                overVideo: true,
+                dir: 'h',
+                align: 'bottom',
+                space: 6,
+                margin: 35
+            });
+            // slider setup
+            masterslider_8b8a.setup("MS5bab48b0b8b8a", {
+                width: 1140,
+                height: 740,
+                minHeight: 0,
+                space: 0,
+                start: 1,
+                grabCursor: true,
+                swipe: false,
+                mouse: false,
+                keyboard: true,
+                layout: "fullwidth",
+                wheel: false,
+                autoplay: true,
+                instantStartLayers: false,
+                mobileBGVideo: false,
+                loop: true,
+                shuffle: false,
+                preload: 0,
+                heightLimit: true,
+                autoHeight: false,
+                smoothHeight: true,
+                endPause: false,
+                overPause: true,
+                fillMode: "fill",
+                centerControls: true,
+                startOnAppear: false,
+                layersMode: "center",
+                autofillTarget: "",
+                hideLayers: false,
+                fullscreenMargin: 0,
+                speed: 20,
+                dir: "h",
+                view: "basic"
+            });
+
+            window.masterslider_instances = window.masterslider_instances || [];
+            window.masterslider_instances.push(masterslider_8b8a);
+        });
+    </script>
+
+    <!-- News load more script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        var contents = document.getElementsByClassName("content");
+        var loadMore = document.getElementById("loadMore");
+
+        var startIndex = 0;
+        var itemsToShow = 2;
+
+        function showNextItems() {
+            for (var i = startIndex; i < startIndex + itemsToShow; i++) {
+            if (contents[i]) {
+                contents[i].classList.add('d-block')
+            }
+            }
+            startIndex += itemsToShow;
+            
+            if (startIndex >= contents.length) {
+            loadMore.textContent = "No Content";
+            loadMore.classList.add("noContent");
+            loadMore.removeEventListener("click", showNextItems);
+            }
+        }
+
+        loadMore.addEventListener("click", showNextItems);
+
+        showNextItems();
+        });
+
+    </script>
+
+
+</body>
+
+</html>

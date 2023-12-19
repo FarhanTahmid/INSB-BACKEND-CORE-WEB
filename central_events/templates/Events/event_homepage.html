@@ -127,7 +127,7 @@
 
             <!--Events Table-->
             <br>
-            <div style="text-align:center; margin-top=30px;">  
+            <div style="text-align:center; margin-top:30px;">  
                 <div class="container" style="justify-content:center;">
                   <div class="header_wrap">
                     <div class="num_rows">
@@ -179,7 +179,6 @@
                               {% endfor %}
                             </td>
                             <td>{{ key.event_date }}</td>
-                            
                         </tr>
                         {% endfor %}
                         
@@ -215,7 +214,7 @@
 
     <div class="modal fade" id="EventTypeModal" tabindex="-1" role="dialog" aria-labelledby="EventTypeModalLabel" aria-hidden="true">
         
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
               <div class="modal-header">
                   <h5 class="modal-title" id="addModalLabel">Add Event Type</h5>
@@ -238,7 +237,7 @@
             </form>
           </div>
       </div>
-  </div>
+    </div>
     <!-- app end-->
 
     {% block common_js %}
