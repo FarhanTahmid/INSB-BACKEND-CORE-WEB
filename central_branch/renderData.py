@@ -228,10 +228,8 @@ class Branch:
             TAKES INTER BRANCH COLLABORATION LIST, INTRA BRANCH COLLABORATION STRING AND EVENT ID AS PARAMETER'''
 
         #checking who organised the event
-            event_organiser = Events.objects.get(pk = event_id).event_organiser
+            event_organiser = Events.objects.get(pk = event_id).event_organiser.primary
             group_primary = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser)).primary
-            print(group_primary)
-            print(inter_branch_collaboration_list)
             if group_primary != 1:
                 if inter_branch_collaboration_list[0]=="null":
                     inter_branch_collaboration_list[0]='1'
