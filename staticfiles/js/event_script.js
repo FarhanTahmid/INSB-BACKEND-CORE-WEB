@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dayElement.classList.add('day');
         dayElement.textContent = date.getDate();
         dayElement.date = date;
-        dayElement.addEventListener('click', () => showEventsForDate((date));
+        dayElement.addEventListener('click', () => showEventsForDate((date)));
         return dayElement;
     }
 

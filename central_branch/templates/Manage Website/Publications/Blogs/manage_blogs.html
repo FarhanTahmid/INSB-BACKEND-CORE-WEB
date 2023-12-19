@@ -5,7 +5,7 @@
 {% load static %}
 <body>
     <div class="app" id="app">
-        <div ui-view class="app-body" style="justify-content:center; margin-left:25%; margin-right:15%;" id="view">
+        <div ui-view class="app-body" style="justify-content:center; margin-left:27%; margin-right:15%;" id="view">
 
             <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>Blogs Section</b></h2>
             
@@ -41,6 +41,7 @@
                         <th style="text-align:center;">Blog Title</th>
                         <th style="text-align:center;">Blog Writer Name</th>
                         <th style="text-align:center;">Blog Publishing Date</th>
+                        <th style="text-align:center;">Blog Publish Status</th>
                         <th style="text-align:center;">Action</th>
                     </tr>
                     </thead>
@@ -48,16 +49,21 @@
                     
                         {% for i in all_blogs %}
                         <tr>
-                            <td><a style="text-decoration:none;color:#00629B;" href="#">{{i.title}}</a></td>
+                            <td><a style="text-decoration:none;color:#00629B;" href="{% url 'central_branch:update_blogs' i.pk %}">{{i.title}}</a></td>
                             <td>{{ i.writer_name  }}</td>
                             <td>{{ i.date }}</td>
+                            {% if i.publish_blog %}
+                              <td><img src="/static/admin/img/icon-yes.svg" alt="True"></td>
+                              {% else %}
+                              <td><img src="/static/admin/img/icon-no.svg" alt="True"></td>
+                            {% endif %}
                             <td>
                             <form method="POST">
                                 {% csrf_token %}
                                     <div style="justify-content:center;text-align:center;">  
                                         <div class="btn-container">
                                             <input class="btn btn-outline b-danger text-danger" name="remove_blog" type="submit" value="Remove">
-                                            <a class="btn btn-outline b-warn text-warn" href="">Update</a>
+                                            <a class="btn btn-outline b-warn text-warn" href="{% url 'central_branch:update_blogs' i.pk %}">Update</a>
         
                                         </div>
                                       </div>
