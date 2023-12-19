@@ -88,17 +88,51 @@
         <!-- ############ PAGE START-->
         <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
             
-            
+        <div class="container">
             <br>
             <br>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span
                 style="color:#00629B;">{{event_name}}</b></span></h2><br>
+            
+        
             <h6>Note:</h6>
             <ol style="justify-content:center;margin-bottom:15px;"><b>
                 <li>If you want to add new venues, <span><b>update</b></span> any changes made first or <b>add</b> the venues first to prevent data loss</li>
                     <li>If you don't want to submit form link, then just erase the value <b>None</b> from the text field, if it appears</li>
             </ol></b>
+
+            <br>
+        </div>
             
+        <div class="btn-container">
+            <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal" sty>Delete Event</button>
+        </div>
+
+        <!-- Confirm Delete Modal -->
+        <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="post">
+                      {% csrf_token %}
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this event?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-outline-danger buttons"  value="Delete" name="delete_event">
+                        <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                  </form>
+                </div>
+            </div>
+          </div>
+
+        
             
 
             <br><br>  
