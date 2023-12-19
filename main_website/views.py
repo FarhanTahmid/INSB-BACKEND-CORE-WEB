@@ -212,15 +212,16 @@ def rasPage(request):
 ######################## BLOG WORKS ################################
 
 
-def Blogs(request):
+def blogs(request):
 
     '''Loads the blog page where all blog is shown'''
 
-    get_all_blog= Blog.objects.all()
+    get_all_blog= Blog.objects.filter(publish_blog=True)
     context={
+        'page_title':"Blogs",
         'blogs':get_all_blog,
     }
-    return render(request,"blogs.html",context=context)
+    return render(request,"Publications/Blog/blog.html",context=context)
 
 def blog_Description(request,blog_id):
     load_specific_blog = Blog.objects.get(id=blog_id)

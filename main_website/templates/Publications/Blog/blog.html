@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <title>Blogs - IEEE NSU SB</title>
+    <link rel="icon" href="{% static 'upload/logo.gif'%}"/>
+    
+    <!--Common CSS-->
+    {% block common_css %}
+        {% include "common_css_includes.html" %}
+    {% endblock common_css %}
+
+    <!--Extra CSS-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    
+
+</head>
+
+<body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+    
+    <div class="body-wrapper  float-menu">
+        
+        <!--Header-->
+        {% block header %}
+            {% include 'header.html' %}
+        {% endblock header %}
+        <!--Header End-->
+
+        <!--Wave-->
+        {% block wave_design %}
+            {% include 'wave.html' %}
+        {% endblock %}
+        <!-- end of wAVE PART  -->
+
+
+        <!-- Achievement card -->
+
+        {% block blog_card_container %}
+            {% include "Publications/Blog/blog_card_container.html" %}
+        {% endblock blog_card_container %}
+        
+        <!-- Achievement Card End-->
+     
+
+
+        <!--Footer-->
+
+        {% block footer %}
+            {% include "footer_block.html" %}
+        {% endblock footer %}
+
+        <!--Footer End-->
+
+    </div>
+    <!-- body-wrapper -->
+    {% block common_js %}
+        {% include "common_js_includes.html" %}
+    {% endblock %}    
+    
+</body>
+
+</html>
