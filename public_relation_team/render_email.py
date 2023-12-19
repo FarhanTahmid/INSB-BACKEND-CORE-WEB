@@ -6,9 +6,15 @@ import json,os
 from datetime import datetime
 from insb_port import settings
 from .models import Email_Attachements
+import traceback
+import logging
 from django_celery_beat.models import ClockedSchedule,PeriodicTask
+from system_administration.system_error_handling import ErrorHandling
+from django.contrib import messages
 
 class PRT_Email_System:
+
+    logger=logging.getLogger(__name__)
     
     def get_all_selected_emails_from_backend(single_emails,to_email_list,cc_email_list,bcc_email_list):
         
@@ -230,6 +236,8 @@ class PRT_Email_System:
                             os.remove(path)
                             i.delete()
                         return True
+                    
+                    
                     else:
                         #Create a ContentFile from the uploaded file
                         # content_file = ContentFile(attachment.read())
@@ -254,33 +262,39 @@ class PRT_Email_System:
     def send_scheduled_email(to_email_list_final,cc_email_list_final,bcc_email_list_final,subject,mail_body,email_schedule_date_time,attachment=None):
         
         '''This funciton sends the schedules email on time '''
+        try:
 
-        #formatting the time and date and assigning unique name to it to store it in database of celery beat
-        scheduled_email_date_time = datetime.strptime(email_schedule_date_time, '%Y-%m-%dT%H:%M')
-        unique_task_name = f"{subject}_{scheduled_email_date_time.timestamp()}"
-        
-        
-        to_email_list_json = json.dumps(to_email_list_final)
-        cc_email_list_json = json.dumps(cc_email_list_final)
-        bcc_email_list_json = json.dumps(bcc_email_list_final)
-        unique_task_name_json = json.dumps(unique_task_name)
-        email_attachments = None
-        if attachment != None:
-            for i in attachment:
-                email_attachments = Email_Attachements.objects.create(email_name=unique_task_name,email_content = i)
-                email_attachments.save()
+            #formatting the time and date and assigning unique name to it to store it in database of celery beat
+            scheduled_email_date_time = datetime.strptime(email_schedule_date_time, '%Y-%m-%dT%H:%M')
+            unique_task_name = f"{subject}_{scheduled_email_date_time.timestamp()}"
             
-        
-        #Creating a periodic schedule for the email, where clockedschedules returns a tuple with clocked instance on 0 index
-        #and clocked argument is foregined key with ClockedScheudle
-        
-        PeriodicTask.objects.create(
-                            clocked = ClockedSchedule.objects.get_or_create(clocked_time=scheduled_email_date_time)[0],
-                            name=unique_task_name ,
-                            task = "public_relation_team.tasks.send_scheduled_email",
-                            args =json.dumps([to_email_list_json,cc_email_list_json,bcc_email_list_json,subject,mail_body,unique_task_name_json]),
-                            one_off = True,
-                            enabled = True,
-                        )
-        return True
+            
+            to_email_list_json = json.dumps(to_email_list_final)
+            cc_email_list_json = json.dumps()
+            bcc_email_list_json = json.dumps(bcc_email_list_final)
+            unique_task_name_json = json.dumps(unique_task_name)
+            email_attachments = None
+            if attachment != None:
+                for i in attachment:
+                    email_attachments = Email_Attachements.objects.create(email_name=unique_task_name,email_content = i)
+                    email_attachments.save()
+                
+            
+            #Creating a periodic schedule for the email, where clockedschedules returns a tuple with clocked instance on 0 index
+            #and clocked argument is foregined key with ClockedScheudle
+            
+            PeriodicTask.objects.create(
+                                clocked = ClockedSchedule.objects.get_or_create(clocked_time=scheduled_email_date_time)[0],
+                                name=unique_task_name ,
+                                task = "public_relation_team.tasks.send_scheduled_email",
+                                args =json.dumps([to_email_list_json,cc_email_list_json,bcc_email_list_json,subject,mail_body,unique_task_name_json]),
+                                one_off = True,
+                                enabled = True,
+                            )
+            return True
+        except Exception as e:
+            PRT_Email_System.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error("Could not scheduled the email!")
+            return False
         
