@@ -37,7 +37,14 @@ urlpatterns = [
     
     #WEBSITE Management URL Path
     path('manage_website/homepage',views.manage_website_homepage,name="manage_website_home"),
+    path('manage_website/achievements',views.manage_achievements,name="manage_achievements"),
+    path('manage_website/achievements/update/<int:pk>',views.update_achievements,name="achievements_update"),
+    path('manage_website/news',views.manage_news,name="manage_news"),
+    path('manage_website/news/update/<int:pk>',views.update_news,name="update_news"),
+    path('manage_website/blogs',views.manage_blogs,name="manage_blogs"),
+    path('manage_website/blogs/update/<int:pk>',views.update_blogs,name="update_blogs"),
 
+    
     path('manage_access',views.manage_view_access,name="manage_access"),
 
     #Events urls

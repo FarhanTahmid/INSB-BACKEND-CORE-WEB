@@ -60,8 +60,11 @@ def manage_team(request):
         for i in position:
             if(i.is_eb_member or i.is_faculty or i.is_sc_ag_eb_member):
                 position=position.exclude(pk=i.pk)
+
         #load all insb members
         all_insb_members=Members.objects.all()
+        #load all current panel members
+        current_panel_members = Branch.load_current_panel_members()
 
         if request.method == "POST":
             if (request.POST.get('add_member_to_team')):
@@ -126,6 +129,7 @@ def manage_team(request):
             'data_access':data_access,
             'members':team_members,
             'insb_members':all_insb_members,
+            'current_panel_members':current_panel_members,
             'positions':position,
             
         } 
@@ -158,12 +162,10 @@ def event_form(request,event_id):
 
             try:
                 media_links = Media_Link.objects.get(event_id = Events.objects.get(pk=event_id))
-                media_images = Media_Images.objects.filter(event_id = Events.objects.get(pk=event_id))
-                number_of_uploaded_images = len(media_images)
             except:
                 media_links = None
-                media_images = None
-                number_of_uploaded_images = 0
+            media_images = Media_Images.objects.filter(event_id = Events.objects.get(pk=event_id))
+            number_of_uploaded_images = len(media_images)
             
 
             if request.method == "POST":
@@ -202,7 +204,7 @@ def event_form(request,event_id):
                 'all_sc_ag':sc_ag,
 
             }
-            return render(request,"media_team/media_event_form.html",context)
+            return render(request,"Events/media_event_form.html",context)
         else:
             return redirect('main_website:event_details', event_id)
         

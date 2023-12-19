@@ -21,6 +21,7 @@ from django.db.models import Q
 
 
 
+
 # Create your views here.
 def login(request):
     
@@ -103,7 +104,7 @@ def dashboard(request):
     '''This function loads all the dashboard activities for the program'''
     
     #### LOOK into registerUser.py for manual input of data from csv. Templates are created there.
-
+   
     is_eb_or_admin = renderData.is_eb_or_admin(request.user)
     #getting year list for the last 5 years event chart
     years = renderData.getEventNumberStatYear()
@@ -125,7 +126,7 @@ def dashboard(request):
     
     # Get the SC & AGS
     sc_ag=PortData.get_all_sc_ag(request=request)
-
+    #scheduler.start()
     #Loading current user data from renderData.py
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file

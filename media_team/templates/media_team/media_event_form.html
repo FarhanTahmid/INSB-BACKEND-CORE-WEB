@@ -8,7 +8,6 @@
   <link rel="icon" href="{% static 'logos/logo.gif' %}" />
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
   {% block common_css %}
   {% include "common_css.html" %}
@@ -222,121 +221,59 @@
       }
     }
 
+    #selectedImages {
+      margin-top: 10px;
+    }
 
+    .selected-image {
+      display: inline-block;
+      margin: 5px;
+    }
 
     .remove-image {
       cursor: pointer;
       color: red;
       font-weight: bold;
     }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-    @media only screen and (max-width: 768px) {
-      .form-group.row {
-          flex-direction: column;
-      }
-
-      .custom-file {
-          margin-bottom: 10px;
-      }
-    }
-
-    .selected-image-container {
-      max-width: 100%; /* Set the maximum width for the image container */
-    }
-    
-    .selected-image {
-      width: auto; /* Set the width to 100% */
-      height: 100px; /* Set the height to 150px */
-      object-fit: cover; /* Maintain aspect ratio and cover the container */
-      margin-top:10px;
-    }
-
-    .image-container-item{
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-      transition: box-shadow 0.3s ease;
-    }
-
-    .image-container-item:hover {
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
-    }
-
-    .image-container {
-      position: relative;
-      display: inline-block;
-    }
-
-    .cross-button {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      cursor: pointer;
-      background-color: white; /* Set the background color to white */
-      border: none;
-      padding: 0;
-      width: 25px; /* Set the width and height to create a circle */
-      height: 25px;
-      border-radius: 50%; /* Make it a circle */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 2rem; /* Adjust font size */
-      color: black; /* Set the initial color */
-      z-index: 2;
-      transition: background-color 0.3s ease, color 0.3s ease; /* Add transitions for color and background-color changes */
-      line-height: 1; /* Ensure line height does not affect vertical alignment */
-  }
-  
-  
-    .cross-button:hover {
-        color: gray; /* Change color on hover */
-    }
-    
   </style>
 </head>
 
 <body>
-    <!-- ############ LAYOUT START-->
-    <div class="app" id="app">
+  <!-- ############ LAYOUT START-->
+  <div class="app" id="app">
 
-      <!-- aside -->
-      <div id="aside" class="app-aside modal nav-dropdown">
-    
-        {% block sidebar %}
-          {% include 'users/sidebar.html' %}
-        {% endblock %}
+    <!-- aside -->
+    <div id="aside" class="app-aside modal nav-dropdown">
+
+      {% block sidebar %}
+      {% include 'users/sidebar.html' %}
+      {% endblock %}
 
     </div>
     <!-- aside end -->
-
     <!-- navbar content -->
     <div id="content" class="app-content box-shadow-z0" role="main">
-        {% block navbar %}
-            {% include 'media_navbar.html' %}
-        {% endblock navbar %}
+      {% block navbar %}
+      {% include 'media_navbar.html' %}
+      {% endblock navbar %}
 
     </div>
     <!--navbar content-->
-
     <!-- ############ PAGE START-->
     <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
 
 
       <br>
       <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span
-          style="color:#00629B;">{{event_name}}</b></span></h2><br>
-      <h6>Note:</h6>
+          style="color:#00629B;">{{event_name}}</b></span></h2>
+
       <ol style="justify-content:center;margin-bottom:15px;"><b>
           <li>Provide the Links of the folder for both Event Pictures and Pictures with Logo</li>
-          <li>Maximum 6 pictures can be uploaded. You can delete pictures and add new ones</li>
-          <li>To change any picture, delete it and add new one</li>
-          <li>Before saving images, if you wish to change the selected images just click 'upload' again and re-select all again</li>
-          <li>Don't forget to save the changes made by clicking save button</li>
+          <li>If Pictures are already added you can change the particular picture by clicking on it.
+            Select the desired picture and hit <span style="color:blue;">'Change'</span> to confirm.</li>
+          <li>Maximum 6 pictures can be uploaded.</li>
+          <li>If there are less than 6 images uploaded, you can upload more and hit 'Update' to make changes</li>
+          <li>To change links and media use the 'Update' button. Use the 'Change' button for updating pictures</li>
       </ol></b>
 
 
@@ -351,15 +288,6 @@
             <h1 style="text-align:center;font-size:30px;">Add Details</h1>
           </div>
 
-          <div class="py-3 text-center">
-            {% for message in messages %}
-                <p style="color: red;" class="message">
-                    {{ message }}
-                    <button class="close-message" onclick="closeMessage(this)" style="border: none; background: none;">✖</button>
-                </p>
-            {% endfor %}
-          </div>
-
           <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="box-body">
@@ -368,7 +296,7 @@
                 <label class="col-sm-2 form-control-label">Folder Drive Link for Event Pictures</label>
                 <div class="col-sm-10">
                   <input placeholder="Provide Drive Link for The Event" class="form-control" type="url"
-                    autocomplete="off" required id="field1" value="{{media_links.media_link}}" name="drive_link_of_event" />
+                    autocomplete="off" required id="field1" value="{{media_link}}" name="drive_link_of_event" />
 
                 </div>
               </div>
@@ -376,109 +304,50 @@
                 <label class="col-sm-2 form-control-label">Folder Drive Link for Pictures with Logos</label>
                 <div class="col-sm-10">
                   <input placeholder="Provide Link for the Logo's" class="form-control" type="url" autocomplete="off"
-                    required value="{{media_links.logo_link}}" name="logo_drive_link_of_event" />
+                    required value="{{logo_link}}" name="logo_link_of_event" />
 
                 </div>
               </div>
 
-              <div class="form-group row">
-                <label for="images" class="col-sm-2 form-control-label">Upload Images:</label>
-                <div class="col-sm-8">
-                    <div class="custom-file" style="margin-top: 5px;">
-                        <input type="file" class="custom-file-input" id="image-input" name="image" accept="image/*" multiple>
-                        <label class="custom-file-label bg-light" for="image-input">Choose files</label>
-                    </div>
+              <div id="imageForm">
+                <label for="imageUpload">Select up to 6 images:</label>
+                <input type="file" id="imageUpload" name="images[]" accept="image/*" multiple>
+                <div id="selectedImages"></div>
+                <input type="hidden" id="selectedImagesInput" name="selectedImages">
+                {% comment %} <button type="button" onclick="uploadImages()">Upload</button> {% endcomment %}
+                <div id="imageCount">0 selected</div>
+              </div>
+
+              {% comment %} {% if not all_image_exists %}
+              <div class="container" style="justify-content:center;">
+                <label class="form-group row"><b>Upload Maximum {{required}} images<b></label>
+
+                <div class="upload__box">
+                  <div class="upload__btn-box">
+                    <label class="upload__btn">
+                      <p>Upload Image</p>
+                      <input type="file" multiple="" id="fileInput" name="images" data-max_length="20"
+                        class="upload__inputfile">
+                    </label>
+                  </div>
+                  <div class="upload__img-wrap"></div>
                 </div>
-                <button type="submit" name="save" class="btn btn-outline-success p-x-md col-sm-2"
-                  value="Add">Save</button>
-                <br>
 
-                <div id="selected-images-container"></div>
-                <input type="hidden" name="selected_images" id="selected-images">
               </div>
-              <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple images.</small>
+              {% endif %} {% endcomment %}
 
-              <hr>
-              <div id="image-container" class="row">
-                {% for image_url in media_images %}
-                  <div class="col-lg-4 col-md-6 my-3">
-                    <div class="image-container">
-                      <img
-                        src="{{ media_url }}{{ image_url.selected_images }}"
-                        alt="Image"
-                        class="img-fluid image-container-item"
-                        data-toggle="modal"
-                        data-target="#fullViewModal{{ forloop.counter }}"
-                      />
-
-                      <!-- Full View Modal -->
-                      <div
-                      id="fullViewModal{{ forloop.counter }}"
-                      class="modal fade"
-                      tabindex="-1"
-                      role="dialog"
-                      aria-labelledby="fullViewModalLabel"
-                      aria-hidden="true"
-                      >
-                        <div class="modal-dialog modal-lg" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="fullViewModalLabel">Image Full View</h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-
-                            <div class="modal-body">
-                              <img
-                                src="{{ media_url }}{{ image_url.selected_images }}"
-                                alt="Image"
-                                class="img-fluid"
-                                style="width: 100%; margin: 0 auto; display: block;"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <!-- Cross button to trigger modal -->
-                      <button type="button" class="cross-button" data-toggle="modal" data-target="#deleteModal" onclick="openModal('{{image_url.selected_images}}')">
-                        &times; <!-- Use the "times" symbol (X) as a close icon -->
-                      </button>
-
-                    </div>
-                  </div>
-
-                    <!-- Confirm Delete Modal -->
-                  <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-
-                        <form method="post">
-                            {% csrf_token %}
-                            <div class="modal-body">
-                                <p><input id="image_id" name= "remove_image" type="hidden"></p>
-                                <p>Are you sure you want to delete this image?</p>
-                            </div>
-                            <div class="modal-footer">
-                                <input type="submit" class="btn btn-outline-danger buttons" value="Delete" name="delete_image">
-                                <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                {% endfor %}
-              </div>
-      
               <br>
               <div class="footer" style="position:right;">
+                {% comment %} {% if all_image_exists %}
+                <button type="submit" name="add_event_pic_and_others" class="btn btn-success p-x-md"
+                  value="Update">Update</button>
+                {% elif not all_image_exists and image_exists %}
+                <button type="submit" name="add_more_pic_and_update_link" class="btn btn-success p-x-md"
+                  value="Add">Update</button>
+                {% else %} {% endcomment %}
+                <button type="submit" name="add_event_pic_and_others" class="btn btn-success p-x-md"
+                  value="Add">Add</button>
+                {% comment %} {% endif %} {% endcomment %}
               </div>
             </div>
           </form>
@@ -490,7 +359,15 @@
     </div>
   </div>
 
+
+
+
+
+
+
+
   </div>
+
 
   <div style="text-align:center; margin-top=30px;">
 
@@ -515,105 +392,198 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{% static 'table_search.js'%}"></script>
   <script src="{% static 'table_search.js'%}"></script>
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  
-
+  <!--Script for image previewing on modal-->
+  {% comment %}
   <script>
-    function closeMessage(button) {
-        // Find the parent element (the <p> tag) and remove it
-        var messageElement = button.parentNode;
-        messageElement.parentNode.removeChild(messageElement);
-    }
-  </script>
-  
-  <script>
-    $(document).ready(function () {
-      $('#image-input').on('change', function () {
-          var container = $('#selected-images-container');
-          container.empty();
-  
-          var input = $(this)[0];
-          var files = input.files;
-  
-          var rowContainer;
-  
-          for (var i = 0; i < files.length; i++) {
-              var file = files[i];
-              var reader = new FileReader();
-  
-              (function (index) {
-                  reader.onload = function (e) {
-                      if (index % 3 === 0) {
-                          rowContainer = $('<div class="row"></div>'); // Start a new row for every three images
-                      }
-  
-                      var imageContainer = $('<div class="selected-image-container col-md-4"></div>');
-                      var image = $('<img class="selected-image" src="' + e.target.result + '">');
-  
-                      imageContainer.append(image);
-                      rowContainer.append(imageContainer);
-  
-                      if ((index + 1) % 3 === 0 || index === files.length - 1) {
-                          container.append(rowContainer); // Append the row when it's full or it's the last image
-                      }
-                  };
-              })(i);
-  
-              reader.readAsDataURL(file);
-          }
-      });
-  });
-  
 
-  document.addEventListener("DOMContentLoaded", function () {
-    const fileInput = document.getElementById("image-input");
 
-    fileInput.addEventListener("change", function () {
-      const selectedFiles = this.files;
-      const maxAllowedFiles = {{allowed_image_upload}};
 
-      if (selectedFiles.length > maxAllowedFiles) {
-        alert("You can upload a maximum of "+maxAllowedFiles+" images.");
-        // Clear the file input or handle it based on your requirements
-        this.value = null;
-      }
+    // full screen code ends here
 
-      // Update the selected images container or perform other actions as needed
-      updateSelectedImagesContainer(selectedFiles);
+    jQuery(document).ready(function () {
+      ImgUpload();
     });
 
-    function updateSelectedImagesContainer(files) {
-      const container = document.getElementById("selected-images-container");
-      container.innerHTML = ""; // Clear existing content
+    function ImgUpload() {
+      var imgWrap = "";
+      var imgArray = [];
 
-      for (const file of files) {
-        const fileName = file.name;
-        const listItem = document.createElement("div");
-        listItem.textContent = fileName;
-        container.appendChild(listItem);
+      $('.upload__inputfile').each(function () {
+        $(this).on('change', function (e) {
+          imgWrap = $(this).closest('.upload__box').find('.upload__img-wrap');
+          var maxLength = $(this).attr('data-max_length');
+
+          var files = e.target.files;
+          var filesArr = Array.prototype.slice.call(files);
+          var iterator = 0;
+          filesArr.forEach(function (f, index) {
+
+            if (!f.type.match('image.*')) {
+              return;
+            }
+
+            if (imgArray.length > maxLength) {
+              return false
+            } else {
+              var len = 0;
+              for (var i = 0; i < imgArray.length; i++) {
+                if (imgArray[i] !== undefined) {
+                  len++;
+                }
+              }
+              if (len > maxLength) {
+                return false;
+              } else {
+                imgArray.push(f);
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                  var html = "<div class='upload__img-box'><div style='background-image: url(" + e.target.result + ")' data-number='" + $(".upload__img-close").length + "' data-file='" + f.name + "' class='img-bg'><div class='upload__img-close'></div></div></div>";
+                  imgWrap.append(html);
+                  iterator++;
+                }
+                reader.readAsDataURL(f);
+              }
+            }
+          });
+        });
+      });
+
+      $('body').on('click', ".upload__img-close", function (e) {
+        var file = $(this).parent().data("file");
+        for (var i = 0; i < imgArray.length; i++) {
+          if (imgArray[i].name === file) {
+            imgArray.splice(i, 1);
+            break;
+          }
+        }
+        $(this).parent().parent().remove();
+
+        updateInputField(imgArray);
+      });
+    }
+
+    function updateInputField(files) {
+      // Assuming your input field has an ID like "fileInput"
+      var inputField = $('#fileInput')[0];  // Adjust the ID accordingly
+
+      // Create a new FileList object
+      var newFileList = new DataTransfer();
+
+      // Add files to the FileList
+      for (var i = 0; i < files.length; i++) {
+        newFileList.items.add(files[i]);
       }
 
-      // Update the hidden input with selected images' information
-      updateHiddenInput(files);
+      // Set the input field's files to the new FileList
+      inputField.files = newFileList.files;
+    }
+    function triggerFileInput(element) {
+      element.nextElementSibling.click();
     }
 
-    function updateHiddenInput(files) {
-      const hiddenInput = document.getElementById("selected-images");
-      const fileNames = Array.from(files).map((file) => file.name);
-      hiddenInput.value = fileNames.join(", ");
+    function displayNewImage(input) {
+      var preview = input.previousElementSibling;
+      var file = input.files[0];
+
+      if (file) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          preview.src = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+      }
     }
-  });
 
-  function openModal(image_id) {
-    // Set data in the modal
-    var inputElement = document.getElementById('image_id');
-    inputElement.value=image_id;
+  </script> {% endcomment %}
 
-  }
-   
-  </script>
+  <script>
+    // Global variable to store selected images
+    var selectedImages = [];
+
+    
+
+    function uploadImages() {
+        // Process the selected images (use 'selectedImages' array)
+        for (var i = 0; i < selectedImages.length; i++) {
+            var file = selectedImages[i].file;
+
+            // Add your logic to handle each file (e.g., upload to server)
+            console.log('Uploading:', file.name);
+        }
+    }
+
+    function removeImage(identifier) {
+        // Find the index of the image with the specified identifier
+        var index = selectedImages.findIndex(img => img.identifier === identifier);
+
+        // Remove the image from the global variable
+        selectedImages.splice(index, 1);
+
+        var selectedImagesContainer = document.getElementById('selectedImages');
+        var elementToRemove = document.getElementById(identifier);
+        selectedImagesContainer.removeChild(elementToRemove);
+        updateImageCount();
+
+        // Update the hidden input value
+        updateHiddenInput();
+    }
+
+    function updateImageCount() {
+        var countElement = document.getElementById('imageCount');
+        var count = selectedImages.length;
+        countElement.textContent = count + ' selected';
+    }
+
+    function updateHiddenInput() {
+        var hiddenInput = document.getElementById('selectedImagesInput');
+        hiddenInput.value = JSON.stringify(selectedImages.map(img => img.file.name));
+    }
+
+    document.getElementById('imageUpload').addEventListener('change', function () {
+        var input = this;
+        var files = input.files;
+        var selectedImagesContainer = document.getElementById('selectedImages');
+
+        // Check if the number of selected files is within the limit (6)
+        if (files.length + selectedImages.length > 6) {
+            alert('Please select up to 6 images.');
+            input.value = ''; // Clear the input to allow reselection of the same file
+            return;
+        }
+
+        // Store selected images in the global variable
+        selectedImages = selectedImages.concat(Array.from(files).map(function (file) {
+            return {
+                file: file,
+                identifier: 'image_' + Date.now() + Math.random() // Generate a unique identifier
+            };
+        }));
+
+        // Process the selected images
+        for (var i = 0; i < files.length; i++) {
+            var image = selectedImages[selectedImages.length - files.length + i];
+
+            // Display the selected image
+            var imgElement = document.createElement('div');
+            imgElement.id = image.identifier;
+            imgElement.className = 'selected-image';
+            imgElement.innerHTML = `
+                <img src="${URL.createObjectURL(image.file)}" alt="${image.file.name}" style="max-width: 100px; max-height: 100px;">
+                <span class="remove-image" onclick="removeImage('${image.identifier}')">Remove</span>
+            `;
+
+            selectedImagesContainer.appendChild(imgElement);
+        }
+
+        updateImageCount();
+
+        // Update the hidden input value
+        updateHiddenInput();
+    });
+</script>
 
 </body>
 

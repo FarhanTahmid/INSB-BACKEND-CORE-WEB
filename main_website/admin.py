@@ -17,7 +17,7 @@ class Blog_Category(admin.ModelAdmin):
     list_display=['id','blog_category']
 @admin.register(Blog)
 class Blog(admin.ModelAdmin):
-    list_display=['id','title','date','blog_banner_picture','category','publisher','description','chapter_society_affinity']
+    list_display=['id','writer_name','title','date']
     
 
 #Homepage Models
@@ -31,3 +31,9 @@ from . models import BannerPictureWithStat
 @admin.register(BannerPictureWithStat)
 class RibbonPicture(admin.ModelAdmin):
     list_display=['id']
+    
+# Achievements
+from .models import Achievements
+@admin.register(Achievements)
+class Achievements(admin.ModelAdmin):
+    list_display=['id','award_name','award_of']

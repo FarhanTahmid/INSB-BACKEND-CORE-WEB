@@ -52,8 +52,16 @@ def manage_team(request):
         team_members = GraphicsTeam.load_team_members()
         #load all position for insb members
         position=Branch.load_roles_and_positions()
+
+        # Excluding position of EB, Faculty and SC-AG members
+        for i in position:
+            if(i.is_eb_member or i.is_faculty or i.is_sc_ag_eb_member):
+                position=position.exclude(pk=i.pk)
+                
         #load all insb members
         all_insb_members=Members.objects.all()
+        #load all current panel members
+        current_panel_members = Branch.load_current_panel_members()
 
         if request.method == "POST":
             if (request.POST.get('add_member_to_team')):
@@ -119,6 +127,7 @@ def manage_team(request):
             'data_access':data_access,
             'members':team_members,
             'insb_members':all_insb_members,
+            'current_panel_members':current_panel_members,
             'positions':position,
             
         }  
@@ -158,8 +167,10 @@ def event_form(request,event_id):
                 graphics_link = None
             try:
                 graphic_banner_image = Graphics_Banner_Image.objects.get(event_id = Events.objects.get(pk=event_id))
+                image_number = 1
             except:
                 graphic_banner_image = None
+                image_number = 0
 
             
             if request.method == "POST":
@@ -191,9 +202,10 @@ def event_form(request,event_id):
                 'graphic_links' : graphics_link,
                 'graphics_banner_image':graphic_banner_image,
                 'media_url':settings.MEDIA_URL,
+                'allowed_image_upload':1-image_number,
 
             }
-            return render(request,"graphics_team/graphics_event_form.html",context)
+            return render(request,"Events/graphics_event_form.html",context)
         else:
             return redirect('main_website:event_details', event_id)
     except Exception as e:

@@ -157,7 +157,7 @@ class MediaTeam:
         
         '''This function loads all the team members for the Media team'''
 
-        load_team_members=Members.objects.filter(team=MediaTeam.get_team_id()).order_by('position')
+        load_team_members=Branch.load_team_members(team_primary=MediaTeam.get_team().primary)
         team_members=[]
         for i in range(len(load_team_members)):
             team_members.append(load_team_members[i])

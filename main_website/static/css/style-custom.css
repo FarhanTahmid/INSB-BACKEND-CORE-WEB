@@ -57,7 +57,7 @@ h4,
 h5,
 h6,
 .gdlr-title-font {
-	font-family: "Raleway";
+	font-family: 'Poppins', sans-serif;
 }
 
 body,
@@ -65,22 +65,22 @@ input,
 textarea,
 select,
 .gdlr-content-font {
-	font-family: "Lato";
+	font-family: 'Poppins', sans-serif;
 }
 
 .gdlr-info-font,
 .gdlr-modern-portfolio .portfolio-info,
 .gdlr-plain .about-us-caption,
 .gdlr-normal .about-us-caption {
-	font-family: "Crete Round";
+	font-family: 'Poppins', sans-serif;
 }
 
 .gdlr-navigation {
-	font-family: "Lato";
+	font-family: 'Poppins', sans-serif;
 }
 
 .gdlr-slider-item {
-	font-family: "Raleway";
+	font-family: 'Poppins', sans-serif;
 }
 
 body {
