@@ -4,7 +4,17 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
 
+<style>
+  .event-mark {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: red;
+    margin: 2px 1px;
 
+    
+}
+</style>
 <section style="padding: 50px 0px;" class="">
     <div>
         <div class="event_container">
@@ -56,8 +66,9 @@
                 <span class="day-of-week">Fri</span>
                 <span class="day-of-week">Sat</span>
                 </div>
-                <div class="days " style="padding: 15px 0px; font-weight: bold;">
+                <div class="days " style="padding: 15px 0px; font-weight: bold;  >
                     <span style="color:red; height:20px"></span>
+                    
                 </div>
                 </div>
                 <div class="event-box" style="padding: 20px;">
@@ -78,13 +89,14 @@
 <script> 
     // Dummy events data for demonstration, this is the calendar event load function
 
-console.log("hello")
+
 const eventsData = {
-    '2023-07-27': ['Event 1', 'Event 2'],
+    '2023-07-27': ['Event 1', 'Event 2', 'text'],
     '2023-07-23': ['Event 3'],
     '2023-07-15': ['hello event'],
-    '2023-12-18' : ['test'],
-    '2023-12-19' : ['Event 1', 'Event 2']
+    '2023-12-18' : ['test', 'spacx'],
+    '2023-12-19' : ['Event 1', 'Event 2', 'test', 'test1'],
+    '2023-12-20' : ['x1']
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -128,16 +140,32 @@ document.addEventListener('DOMContentLoaded', () => {
             const dayElement = createDayElement(new Date(Date.UTC(date.getFullYear(), date.getMonth(), i)));
             
             const formattedDate = getFormattedDate(dayElement.date);
-
+            const event_marks = document.createElement('div');
+            event_marks.style.display = 'flex';
+            event_marks.style.textAlign = 'center';
+            
             if (eventsData.hasOwnProperty(formattedDate)) {
               eventsData[formattedDate].forEach(() => {
                   const eventMark = document.createElement('div');
                   eventMark.classList.add('event-mark');
-                  dayElement.appendChild(eventMark);
+                  event_marks.appendChild(eventMark);
+                  eventMark.style.width = '6px';
+                    eventMark.style.height = '6px';
+                    eventMark.style.borderRadius = '50%';
+                    eventMark.style.backgroundColor = 'red';
+                    eventMark.style.margin = '2px 1px';
+                    eventMark.style.position = 'static';
+                    eventMark.style.bottom = '1px';
+                    eventMark.style.left = '0';
+                    eventMark.style.transform = 'translateX(50%)';
+                    eventMark.style.transform = 'translateY(0%)';
+                    eventMark.style.top = '2px';
+                  dayElement.appendChild(event_marks);
               });
           }
             
             daysContainer.appendChild(dayElement);
+            
         }
         
         // Display next month days
@@ -153,7 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function createDayElement(date) {
         const dayElement = document.createElement('div');
         dayElement.classList.add('day');
-     
+        dayElement.style.display = 'flex';
+        dayElement.style.flexDirection = 'column';
         dayElement.textContent = date.getDate();
         {% comment %} dayElement.date = date; {% endcomment %}
         dayElement.date = new Date(date.toISOString().split('T')[0]);

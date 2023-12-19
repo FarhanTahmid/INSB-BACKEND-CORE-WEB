@@ -52,7 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 eventsData[getFormattedDate(dayElement.date)].forEach(()=> {
                     const eventMark = document.createElement('div');
                     eventMark.classList.add('event-mark');
+                    eventMark.style.width = '6px';
+                    eventMark.style.height = '6px';
+                    eventMark.style.borderRadius = '50%';
+                    eventMark.style.backgroundColor = 'red';
+                    eventMark.style.margin = '2px 1px';
+                    eventMark.style.position = 'static';
                     dayElement.appendChild(eventMark);
+                    
                 })
                
                 
