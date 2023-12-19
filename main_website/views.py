@@ -151,7 +151,7 @@ def news(request):
     all_online_news=[]
     # extracting article results
     for i in json_datas:
-        articles=i.get('results',[])
+        articles=i.get('results',[])        
         for article in articles:
             # extracting article values
             title=article.get('title',[])
@@ -159,8 +159,12 @@ def news(request):
             article_description=article.get('description',[])
             article_picture=article.get('image_url',[])
             article_creator=article.get('creator',[])
+            article_id=article.get('article_id',[])
+            article_publish_date=article.get('pubDate',[])
             # storing all articles as dictionary key value items
             news_item={
+                'article_id':article_id,
+                'pubDate':article_publish_date,
                 'title':title,
                 'article_link':article_link,
                 'article_description':article_description,
@@ -208,15 +212,16 @@ def rasPage(request):
 ######################## BLOG WORKS ################################
 
 
-def Blogs(request):
+def blogs(request):
 
     '''Loads the blog page where all blog is shown'''
 
-    get_all_blog= Blog.objects.all()
+    get_all_blog= Blog.objects.filter(publish_blog=True)
     context={
+        'page_title':"Blogs",
         'blogs':get_all_blog,
     }
-    return render(request,"blogs.html",context=context)
+    return render(request,"Publications/Blog/blog.html",context=context)
 
 def blog_Description(request,blog_id):
     load_specific_blog = Blog.objects.get(id=blog_id)

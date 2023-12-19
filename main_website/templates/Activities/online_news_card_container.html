@@ -1,93 +1,79 @@
 {% block online_news %}
 {% load static %}
 <h3 style="color:#00629B;text-align:center;">Online News</h3>
-<style>
-
-    {% comment %} .achievement_card{
-        height: 425px;
-    } {% endcomment %}
-
-    .card-img-top {
-        object-fit: cover;
-        height: 250px; /* Set a fixed height for the image */
-    }
-
-    .card-title {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 2; /* Show 2 lines of text */
-        -webkit-box-orient: vertical;
-    }
-
-    .description-container {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-    }
-
-    .description-container.collapsed,
-    .card-title.collapsed {
-        -webkit-line-clamp: unset;
-    }
-</style>
-
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $(".read-more-link").click(function (event) {
-            event.preventDefault();
-
-            var cardBody = $(this).closest(".card-body");
-            var cardText = cardBody.find(".description-container");
-            var cardTitle = cardBody.find(".card-title");
-            var card = cardBody.closest(".card");
-
-            cardText.toggleClass("collapsed");
-            cardTitle.toggleClass("collapsed");
-
-            // Check if any card text is collapsed
-            var isCollapsed = card.find(".description-container.collapsed").length > 0;
-
-            // Set card height based on collapsed state
-            card.css("height", isCollapsed ? "auto" : "425px");
-
-            // Change the link text based on collapsed state
-            var linkText = isCollapsed ? "Read Less" : "Read More";
-            $(this).text(linkText);
-        });
-    });
-</script>
-
-<div class="container">
-    <div class="row m-0">
-
-        <!-- Repeat the card -->
-        {% for i in achievements %}
-        <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
-            <div class="card shadow achievement_card">
-                <img class="card-img-top" src="/media_files/{{i.award_picture}}" alt="">
-
-                <div class="position-absolute">
-                    <span style="background-color: #00629B;" class=" text-white px-3 py-2 rounded h6">{{i.award_winning_year}}</span>
-                </div>
-
-                <div class="card-body">
-                    <h5 class="card-title fw-bold mt-2">{{i.award_name}} - <span style="color:{{i.award_of.primary_color_code}};">{{i.award_of.group_name}}</span></h5>
-                    <div class="description-container">
-                        <p class="card-text">{{i.award_description|safe}}</p>
+<section id="content-section-10">
+    <div class="gdlr-color-wrapper  gdlr-show-all no-skin"
+        style="background-color: #f7f7f7; padding-top: 70px; padding-bottom: 10px; ">
+        <div class="container">
+            <div
+                class="gdlr-item-title-wrapper gdlr-item  gdlr-nav-container gdlr-left gdlr-medium ">
+                <div class="gdlr-item-title-container container">
+                    <div class="gdlr-item-title-head">
+                        <span class="gdlr-nav-title">
+                            <i class="icon-angle-left gdlr-flex-prev"></i>
+                            <i class="icon-angle-right gdlr-flex-next"></i>
+                        </span>
                     </div>
-                    <a href="#" class="read-more-link" >Read More</a>
-
-                    
                 </div>
             </div>
+            <div class="blog-item-wrapper">
+                <div class="blog-item-holder">
+                    <div class="gdlr-blog-carousel-item gdlr-item">
+                        <div class="flexslider" data-type="carousel"
+                            data-nav-container="blog-item-wrapper" data-columns="3">
+                            <ul class="slides">
+                                {% comment %} Dynamic News Starts {% endcomment %}
+                                {% for i in all_online_news %}
+                                <li class="gdlr-item gdlr-blog-grid gdlr-skin-box">
+                                    <article id="{{i.article_id}}"
+                                        class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                                        <div class="gdlr-standard-style">
+                                            <div class="gdlr-blog-thumbnail">
+                                                <a href="{{i.article_link}}"> <img
+                                                        src="{{i.article_picture}}"
+                                                        alt="" width="400" height="300" /></a>
+                                            </div>
+
+                                            <div class="gdlr-blog-grid-content">
+                                                <header class="post-header">
+                                                    <div class="gdlr-blog-info">
+                                                        <div
+                                                            class="blog-info blog-date gdlr-skin-info">
+                                                            <span class="gdlr-sep">/</span><a
+                                                                href="#">{{i.pubDate}}</a></div>
+                                                        <div
+                                                            class="blog-info blog-author gdlr-skin-info">
+                                                            <span class="gdlr-sep">/</span>By <a
+                                                                href="#" title="Posts by John Doe"
+                                                                rel="author">{{i.article_creator}}</a></div>
+                                                        <div class="clear"></div>
+                                                    </div>
+
+                                                    <h3 class="gdlr-blog-title"><a href="{{i.article_link}}">{{i.title}}</a></h3>
+                                                    <div class="clear"></div>
+                                                </header>
+                                                <!-- entry-header -->
+
+                                                <div class="gdlr-blog-content">{{i.article_description}}
+                                                    <div class="clear"></div><a href="{{i.article_link}}"
+                                                        class="excerpt-read-more">Read More</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </article>
+                                    <!-- #post -->
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="clear"></div>
         </div>
-        {% endfor %}
     </div>
-</div>
-<br>
-<br>
+    <div class="clear"></div>
+</section>
 {% endblock online_news %}
