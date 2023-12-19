@@ -1,9 +1,8 @@
 {% block online_news %}
 {% load static %}
-<h3 style="color:#00629B;text-align:center;">Online News</h3>
 <style>
 
-    {% comment %} .achievement_card{
+    {% comment %} .news_card{
         height: 425px;
     } {% endcomment %}
 
@@ -37,7 +36,7 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $(document).ready(function () {
-        $(".read-more-link").click(function (event) {
+        $(".see-more-link").click(function (event) {
             event.preventDefault();
 
             var cardBody = $(this).closest(".card-body");
@@ -55,39 +54,74 @@
             card.css("height", isCollapsed ? "auto" : "425px");
 
             // Change the link text based on collapsed state
-            var linkText = isCollapsed ? "Read Less" : "Read More";
+            var linkText = isCollapsed ? "See Less" : "See More";
             $(this).text(linkText);
         });
     });
 </script>
 
-<div class="container">
-    <div class="row m-0">
 
-        <!-- Repeat the card -->
-        {% for i in achievements %}
-        <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
-            <div class="card shadow achievement_card">
-                <img class="card-img-top" src="/media_files/{{i.award_picture}}" alt="">
 
-                <div class="position-absolute">
-                    <span style="background-color: #00629B;" class=" text-white px-3 py-2 rounded h6">{{i.award_winning_year}}</span>
-                </div>
 
-                <div class="card-body">
-                    <h5 class="card-title fw-bold mt-2">{{i.award_name}} - <span style="color:{{i.award_of.primary_color_code}};">{{i.award_of.group_name}}</span></h5>
-                    <div class="description-container">
-                        <p class="card-text">{{i.award_description|safe}}</p>
+
+
+
+<section id="content-section-10">
+    <div class="gdlr-color-wrapper  gdlr-show-all no-skin"
+        style="background-color: #f7f7f7; padding-top: 70px; padding-bottom: 10px; ">
+        <div class="container">
+            <div
+                class="gdlr-item-title-wrapper gdlr-item  gdlr-nav-container gdlr-left gdlr-medium ">
+                <div class="gdlr-item-title-container container">
+                    <div class="gdlr-item-title-head">
+                        <h3 class="gdlr-item-title gdlr-skin-title gdlr-skin-border">Recent News
+                        </h3><a class="gdlr-item-title-link" href="#">Read All News</a><span
+                            class="gdlr-nav-title"><i class="icon-angle-left gdlr-flex-prev"></i><i
+                                class="icon-angle-right gdlr-flex-next"></i></span>
                     </div>
-                    <a href="#" class="read-more-link" >Read More</a>
-
-                    
                 </div>
             </div>
+            <div class="blog-item-wrapper">
+                <div class="blog-item-holder">
+                    <div class="gdlr-blog-carousel-item gdlr-item">
+                        <div class="flexslider" data-type="carousel"
+                            data-nav-container="blog-item-wrapper" data-columns="3">
+                            <ul class="slides">
+                                {% comment %} Dynamic News Starts {% endcomment %}
+                                <!-- Repeat the card -->
+                                {% for i in newss %}
+                                <li class="gdlr-item gdlr-blog-grid gdlr-skin-box">
+                                    <div class="card shadow news_card">
+                                        <img class="card-img-top" src="/media_files/{{i.award_picture}}" alt="">
+                        
+                                        <div class="position-absolute">
+                                            <span style="background-color: #00629B;" class=" text-white px-3 py-2 rounded h6">{{i.award_winning_year}}</span>
+                                        </div>
+                        
+                                        <div class="card-body">
+                                            <h5 class="card-title fw-bold mt-2">{{i.award_name}} - <span style="color:{{i.award_of.primary_color_code}};">{{i.award_of.group_name}}</span></h5>
+                                            <div class="description-container">
+                                                <p class="card-text">{{i.award_description|safe}}</p>
+                                            </div>
+                                            <a href="#" class="see-more-link" >See More</a>
+                                            <a href="#" style="margin-left:5px;">Read More</a>
+                        
+                                            
+                                        </div>
+                                    </div>
+                                    <!-- #post -->
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="clear"></div>
         </div>
-        {% endfor %}
     </div>
-</div>
-<br>
-<br>
+    <div class="clear"></div>
+</section>
 {% endblock online_news %}
