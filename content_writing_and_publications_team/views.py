@@ -185,3 +185,5 @@ def event_form_add_notes(request,event_id):
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
 
+
+
