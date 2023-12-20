@@ -13,7 +13,7 @@ class system(models.Model):
     system_under_maintenance=models.BooleanField(null=False,blank=False,default=False)
     main_website_under_maintenance=models.BooleanField(null=False,blank=False,default=False)
     portal_under_maintenance=models.BooleanField(null=False,blank=False,default=False)
-    email_access = models.BooleanField(null=False,blank=False,default=False)
+    scheduling_under_maintenance = models.BooleanField(null=False,blank=False,default=False)
     
     class Meta:
         verbose_name="System Handling"
