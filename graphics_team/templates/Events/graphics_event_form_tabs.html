@@ -34,8 +34,8 @@
 
 <div class="tabs-container" style="display: flex; flex-direction: column;">
     <ul class="tabs" style="display: flex; margin-right: 0px; justify-content: center;">
-        <li class="tab"><a href="#">Content</a></li>
-        <li class="tab" style="border-right: 1px solid #00629B;"><a href="#">Add Links</a></li>
+        <li class="tab"><a href="{% url 'graphics_team:event_form' event.id %}">Content</a></li>
+        <li class="tab" style="border-right: 1px solid #00629B;"><a href="{% url 'graphics_team:add_link_event_form' event.id %}">Add Links</a></li>
     </ul>
     <br>
 </div>
