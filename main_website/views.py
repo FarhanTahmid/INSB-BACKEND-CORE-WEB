@@ -104,16 +104,22 @@ def event_homepage(request):
 def event_details(request,event_id):
  
     '''Loads details for the corresponding event page on site'''
-    get_event = Events.objects.get(id = event_id)
-    event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
-    event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
+    try:
+        get_event = Events.objects.get(id = event_id)
+        if(get_event.publish_in_main_web):
+            event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
+            event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
-    return render(request,"Events/event_description_main.html",{
-        "event":get_event,
-        'media_url':settings.MEDIA_URL,
-        'event_banner_image' : event_banner_image,
-        'event_gallery_images' : event_gallery_images
-    })
+            return render(request,"Events/event_description_main.html",{
+                "event":get_event,
+                'media_url':settings.MEDIA_URL,
+                'event_banner_image' : event_banner_image,
+                'event_gallery_images' : event_gallery_images
+            })
+        else:
+            return redirect('main_website:event_homepage')
+    except:
+        return redirect('main_website:event_homepage')
 
 
 # ###################### ACHIEVEMENTS ##############################

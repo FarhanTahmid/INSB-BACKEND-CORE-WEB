@@ -1,11 +1,12 @@
-from system_administration.models import Graphics_Data_Access
-from system_administration.render_access import Access_Render
+from system_administration.models import CWP_Data_Access
 from system_administration.system_error_handling import ErrorHandling
-from datetime import datetime
 import logging
+from datetime import datetime
 import traceback
 
-class GraphicsTeam_Render_Access:
+from system_administration.render_access import Access_Render
+
+class CWPTeam_Render_Access:
 
     logger=logging.getLogger(__name__)
 
@@ -42,7 +43,7 @@ class GraphicsTeam_Render_Access:
             else:
                 return False
         except Exception as e:
-            GraphicsTeam_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            CWPTeam_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
@@ -54,11 +55,11 @@ class GraphicsTeam_Render_Access:
             username=user.username
 
             #Get member from graphics data access table
-            get_member = Graphics_Data_Access.objects.filter(ieee_id=username)
+            get_member = CWP_Data_Access.objects.filter(ieee_id=username)
             #Check if the member exits
             if(get_member.exists()):
                 #The member exists. Now check if it has events access
-                if(get_member[0].event_access or GraphicsTeam_Render_Access.get_common_access(request)):
+                if(get_member[0].event_access or CWPTeam_Render_Access.get_common_access(request)):
                     return True
                 else:
                     return False
@@ -66,9 +67,9 @@ class GraphicsTeam_Render_Access:
                 #The member does not exist in the permissions table
                 return False
         except Exception as e:
-            if(GraphicsTeam_Render_Access.get_common_access(request)):
+            if(CWPTeam_Render_Access.get_common_access(request)):
                 return True
             else:
-                GraphicsTeam_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+                CWPTeam_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
                 ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
                 return False

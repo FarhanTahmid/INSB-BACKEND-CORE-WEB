@@ -1,8 +1,13 @@
+from central_branch.renderData import Branch
 from users.models import Members
 from port.models import Teams,Roles_and_Position
 from system_administration.models import CWP_Data_Access
 
 class ContentWritingTeam:
+
+    def get_team():
+        team = Teams.objects.get(primary=2)
+        return team
 
     def get_team_id():
         
@@ -17,7 +22,7 @@ class ContentWritingTeam:
         
         '''This function loads all the team members for the content wrtiting and publications team'''
 
-        load_team_members=Members.objects.filter(team=ContentWritingTeam.get_team_id()).order_by('position')
+        load_team_members=Branch.load_team_members(team_primary=ContentWritingTeam.get_team().primary)
         team_members=[]
         for i in range(len(load_team_members)):
             team_members.append(load_team_members[i])
@@ -27,9 +32,9 @@ class ContentWritingTeam:
         team_id=ContentWritingTeam.get_team_id()
         Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
 
-    def cwp_manage_team_access_modifications(manage_team_access,ieee_id):
+    def cwp_manage_team_access_modifications(manage_team_access, event_access, ieee_id):
         try:
-            CWP_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access)
+            CWP_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access, event_access=event_access)
             return True
         except CWP_Data_Access.DoesNotExist:
             return False

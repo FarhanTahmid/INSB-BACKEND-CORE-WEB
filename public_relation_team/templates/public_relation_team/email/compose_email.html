@@ -268,7 +268,7 @@
                       <div class="form-group row">
                         <label class="col-sm-2 form-control-label">Attachment</label>
                         <div class="col-sm-10">
-                          <input type="file" id="myFile" name="attachment">
+                          <input type="file" id="myFile" name="attachment" multiple>
 
                         </div>
                       </div>
@@ -317,7 +317,7 @@
                             </div>
                             <div class="modal-body text-left p-lg">
                               <p>Pick the Date and Time you want to Schedule the mail for:</p>
-                              
+                              <input type="datetime-local" id="date_time" name="date_time">
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
@@ -325,7 +325,7 @@
                               type="submit"
                               class="btn btn-success"
                               data-bs-dismiss="modal"
-                              name="save_edit"
+                              name="send_email"
                               value="Yes, Send"
                               >                        
                             </div>
