@@ -61,6 +61,8 @@ urlpatterns = [
     path('event_details/<int:event_id>/edit/media',views.event_edit_media_form_tab,name='event_edit_media_form_tab'),
     #Event graphics tab page
     path('event_details/<int:event_id>/edit/graphics',views.event_edit_graphics_form_tab,name='event_edit_graphics_form_tab'),
+    #Event content tab page
+    path('event_details/<int:event_id>/edit/content',views.event_edit_content_form_tab,name='event_edit_content_form_tab'),
     #Super Event Creation Form
     path('events/create_super_event/',views.super_event_creation,name="super_event_creation"),   
 
