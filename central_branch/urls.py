@@ -30,10 +30,7 @@ urlpatterns = [
     # path('get_updated_options/', views.get_updated_options_for_event_dashboard, name='get_updated_options'),
     #others page
     path('others/',views.others,name="others"),
-    #addresearch page
-    path('add_research/',views.add_research,name="add_research"),
-    #addblogs page
-    path('add_blogs/',views.add_blogs,name="add_blogs"),
+    
     
     #WEBSITE Management URL Path
     path('manage_website/homepage',views.manage_website_homepage,name="manage_website_home"),
@@ -43,7 +40,10 @@ urlpatterns = [
     path('manage_website/news/update/<int:pk>',views.update_news,name="update_news"),
     path('manage_website/blogs',views.manage_blogs,name="manage_blogs"),
     path('manage_website/blogs/update/<int:pk>',views.update_blogs,name="update_blogs"),
-
+    path('manage_website/research',views.manage_research,name="manage_research"),
+    path('manage_website/research/update/<int:pk>',views.update_researches,name="update_researches"),
+    
+    
     
     path('manage_access',views.manage_view_access,name="manage_access"),
 

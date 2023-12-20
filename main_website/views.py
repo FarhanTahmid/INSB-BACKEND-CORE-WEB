@@ -26,12 +26,19 @@ logger=logging.getLogger(__name__)
 def homepage(request):
     bannerItems=HomepageItems.getHomepageBannerItems()
     bannerWithStat=HomepageItems.getBannerPictureWithStat()
+    
+    # get recent 6 news
+    get_recent_news=News.objects.filter().order_by('-news_date')[:6]
+    # get recent 6 Blogs
+    get_recent_blogs=Blog.objects.filter(publish_blog=True).order_by('-date')[:6]
     context={
         'banner_item':bannerItems,
         'banner_pic_with_stat':bannerWithStat,
         'media_url':settings.MEDIA_URL,
         'all_member_count':HomepageItems.getAllIEEEMemberCount(),
         'event_count':HomepageItems.getEventCount(),
+        'recent_news':get_recent_news,
+        'recent_blogs':get_recent_blogs,
     }
     return render(request,"LandingPage/homepage.html",context)
 
