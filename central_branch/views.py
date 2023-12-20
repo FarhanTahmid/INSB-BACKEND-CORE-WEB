@@ -458,6 +458,9 @@ def manage_research(request):
                 add_research_category_form.save()
                 messages.success(request,"A new Research Category was added!")
                 return redirect('central_branch:manage_research')
+        if(request.POST.get('remove_research')):
+            MainWebsiteRenderData.delete_research_paper(request=request)
+            return redirect('central_branch:manage_research')
     else:
         form=ResearchPaperForm
         form2=ResearchCategoryForm
@@ -466,6 +469,26 @@ def manage_research(request):
         'form2':form2,'all_researches':researches,
     }
     return render(request,"Manage Website/Publications/Research Paper/manage_research_paper.html",context=context)
+
+@login_required
+def update_researches(request,pk):
+    # get the research and Form
+    research_to_update=get_object_or_404(Research_Papers,pk=pk)
+    if(request.method=="POST"):
+        if(request.POST.get('update_research_paper')):
+            form=ResearchPaperForm(request.POST,request.FILES,instance=research_to_update)
+            if(form.is_valid()):
+                form.save()
+                messages.info(request,"Research Paper Informations were updated")
+                return redirect('central_branch:manage_research')
+    else:
+        form=ResearchPaperForm(instance=research_to_update)
+    
+    context={
+        'form':form,
+        'research_paper':research_to_update,
+    }
+    return render(request,"Manage Website/Publications/Research Paper/update_research_papers.html",context=context)
 
 @login_required
 def manage_blogs(request):
@@ -508,7 +531,7 @@ def manage_blogs(request):
 
 @login_required
 def update_blogs(request,pk):
-    # get the achievement and form
+    # get the blog and form
     blog_to_update=get_object_or_404(Blog,pk=pk)
     if(request.method=="POST"):
         if(request.POST.get('update_blog')):

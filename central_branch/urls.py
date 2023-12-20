@@ -41,7 +41,7 @@ urlpatterns = [
     path('manage_website/blogs',views.manage_blogs,name="manage_blogs"),
     path('manage_website/blogs/update/<int:pk>',views.update_blogs,name="update_blogs"),
     path('manage_website/research',views.manage_research,name="manage_research"),
-    
+    path('manage_website/research/update/<int:pk>',views.update_researches,name="update_researches"),
     
     
     
