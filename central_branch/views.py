@@ -513,6 +513,27 @@ def manage_blogs(request):
     
     return render(request,"Manage Website/Publications/Blogs/manage_blogs.html",context=context)
 
+@login_required
+def update_blogs(request,pk):
+    # get the achievement and form
+    blog_to_update=get_object_or_404(Blog,pk=pk)
+    if(request.method=="POST"):
+        if(request.POST.get('update_blog')):
+            form=BlogsForm(request.POST,request.FILES,instance=blog_to_update)
+            if(form.is_valid()):
+                form.save()
+                messages.info(request,"Blog Informations were updated")
+                return redirect('central_branch:manage_blogs')
+    else:
+        form=BlogsForm(instance=blog_to_update)
+    
+    context={
+        'form':form,
+        'blog':blog_to_update,
+    }
+
+    return render(request,"Manage Website/Publications/Blogs/update_blogs.html",context=context)
+
 
 @login_required
 def add_blogs(request):

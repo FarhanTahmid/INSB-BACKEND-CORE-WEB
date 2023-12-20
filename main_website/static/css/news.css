@@ -19,7 +19,7 @@
   margin-bottom: 1.6%;
   background: #fff;
   line-height: 1.4;
-  font-family: sans-serif;
+  font-family: 'Poppins', sans-serif;
   border-radius: 5px;
   overflow: hidden;
   z-index: 0;
@@ -84,19 +84,19 @@
 }
 
 .news-card .details .author:before {
-  font-family: FontAwesome;
+  font-family: 'FontAwesome';
   margin-right: 10px;
   content: "\f007";
 }
 
 .news-card .details .date:before {
-  font-family: FontAwesome;
+  font-family: 'FontAwesome';
   margin-right: 10px;
   content: "\f133";
 }
 
 .news-card .details .tags ul:before {
-  font-family: FontAwesome;
+  font-family: 'FontAwesome';
   content: "\f02b";
   margin-right: 10px;
 }
@@ -118,7 +118,7 @@
 
 .news-card .description h1,
 .news-card .description h2 {
-  font-family: Poppins, sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .news-card .description h1 {
@@ -148,7 +148,7 @@
 
 .news-card .description .read-more a:after {
   content: "\f061";
-  font-family: FontAwesome;
+  font-family: 'FontAwesome';
   margin-left: -10px;
   opacity: 0;
   vertical-align: middle;

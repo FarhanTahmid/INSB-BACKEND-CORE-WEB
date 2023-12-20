@@ -156,58 +156,86 @@ def event_form(request,event_id):
     #Initially loading the events whose  links and images were previously uploaded
     #and can be editible
 
+    # try:
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    has_access = GraphicsTeam_Render_Access.access_for_events(request)
+    if(has_access):
+        #Getting media links and images from database. If does not exist then they are set to none
+        try:
+            graphics_link = Graphics_Link.objects.get(event_id = Events.objects.get(pk=event_id))
+        except:
+            graphics_link = None
+        try:
+            graphic_banner_image = Graphics_Banner_Image.objects.get(event_id = Events.objects.get(pk=event_id))
+            image_number = 1
+        except:
+            graphic_banner_image = None
+            image_number = 0
+
+        
+        if request.method == "POST":
+
+            if request.POST.get('save'):
+
+                #getting all data from page
+                drive_link_folder = request.POST.get('drive_link_of_graphics')
+                selected_images = request.FILES.get('image')
+                if(GraphicsTeam.add_links_and_images(drive_link_folder,selected_images,event_id)):
+                    messages.success(request,'Saved Changes!')
+                else:
+                    messages.error(request,'Please Fill All Fields Properly!')
+                return redirect("graphics_team:event_form",event_id)
+            
+            if request.POST.get('remove_image'):
+
+                #When a particular picture is deleted, it gets the image url from the modal
+
+                image_url = request.POST.get('remove_image')
+                if(GraphicsTeam.remove_image(image_url,event_id)):
+                    messages.success(request,'Saved Changes!')
+                else:
+                    messages.error(request,'Something went wrong')
+                return redirect("graphics_team:event_form",event_id)
+
+        context={
+            'all_sc_ag':sc_ag,
+            'graphic_links' : graphics_link,
+            'graphics_banner_image':graphic_banner_image,
+            'media_url':settings.MEDIA_URL,
+            'allowed_image_upload':1-image_number,
+            'event_id' : event_id
+        }
+        return render(request,"Events/graphics_event_form.html",context)
+    else:
+        return redirect('main_website:event_details', event_id)
+    # except Exception as e:
+    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+    #     # TODO: Make a good error code showing page and show it upon errror
+    #     return HttpResponseBadRequest("Bad Request")
+    
+
+@login_required
+def event_form_add_links(request,event_id):
+
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
-        has_access = GraphicsTeam_Render_Access.access_for_events(request)
-        if(has_access):
-            #Getting media links and images from database. If does not exist then they are set to none
-            try:
-                graphics_link = Graphics_Link.objects.get(event_id = Events.objects.get(pk=event_id))
-            except:
-                graphics_link = None
-            try:
-                graphic_banner_image = Graphics_Banner_Image.objects.get(event_id = Events.objects.get(pk=event_id))
-                image_number = 1
-            except:
-                graphic_banner_image = None
-                image_number = 0
+        #has_access = CWPTeam_Render_Access.access_for_events(request)
 
+        if (True):
+            if(request.method == "POST"):
+                # print(request.POST.get('caption'))
+                print(request.POST.get('LOL'))
             
-            if request.method == "POST":
-
-                if request.POST.get('save'):
-
-                    #getting all data from page
-                    drive_link_folder = request.POST.get('drive_link_of_graphics')
-                    selected_images = request.FILES.get('image')
-                    if(GraphicsTeam.add_links_and_images(drive_link_folder,selected_images,event_id)):
-                        messages.success(request,'Saved Changes!')
-                    else:
-                        messages.error(request,'Please Fill All Fields Properly!')
-                    return redirect("graphics_team:event_form",event_id)
-                
-                if request.POST.get('remove_image'):
-
-                    #When a particular picture is deleted, it gets the image url from the modal
-
-                    image_url = request.POST.get('remove_image')
-                    if(GraphicsTeam.remove_image(image_url,event_id)):
-                        messages.success(request,'Saved Changes!')
-                    else:
-                        messages.error(request,'Something went wrong')
-                    return redirect("graphics_team:event_form",event_id)
-
-            context={
+            context = {
                 'all_sc_ag':sc_ag,
-                'graphic_links' : graphics_link,
-                'graphics_banner_image':graphic_banner_image,
-                'media_url':settings.MEDIA_URL,
-                'allowed_image_upload':1-image_number,
-
+                'event_id':event_id,
             }
-            return render(request,"Events/graphics_event_form.html",context)
+
+            return render(request,"Events/graphics_team_event_form_add_links.html", context)
         else:
             return redirect('main_website:event_details', event_id)
+        
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
