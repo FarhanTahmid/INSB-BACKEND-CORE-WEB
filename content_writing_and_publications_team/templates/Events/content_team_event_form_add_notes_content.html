@@ -63,7 +63,7 @@
                     {% for note,value in all_notes_content.items %}
                     <div class="row container-fluid bg-light">
                         <div class="col-sm-11">
-                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal_{{note.title}}">{{note.title}}</a>
+                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal_{{note.pk}}" onclick="openModal('{{note.pk}}')">{{note.title}}</a>
                         </div>
                         <div class="col-sm-1 d-flex align-items-center justify-content-center">
                             <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{note.pk}}')">✖</button>
@@ -126,7 +126,7 @@
 
 <!-- New modal for editing captions -->
 {% for note,value  in all_notes_content.items %}
-<div class="modal fade" id="EditCaptionModal_{{note.title}}" tabindex="-1" role="dialog" aria-labelledby="EditCaptionModalLabel" aria-hidden="true">
+<div class="modal fade" id="EditCaptionModal_{{note.pk}}" tabindex="-1" role="dialog" aria-labelledby="EditCaptionModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -139,6 +139,7 @@
                 <!-- Display existing caption in a textarea for editing -->
                 <form method="POST">
                     {% csrf_token %}
+                    <input id="update_note_{{note.pk}}" name= "update_note" type="hidden">
                     <div class="form-group">
                         <label>Title: </label> 
                             <input
@@ -157,7 +158,7 @@
                     </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-outline-primary txt-primary buttons">Update</button>
+                <input type="submit" name="update" class="btn btn-outline-primary txt-primary" value="Update"></button>
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
             </div>
             </form>
@@ -187,7 +188,7 @@
             <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
         </div>
-    </form>
+        </form>
     </div>
 </div>
 </div>

@@ -4,7 +4,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>Events | Media Team</title>
+  <title>Events | Content Writing & Publications Team</title>
   <link rel="icon" href="{% static 'logos/logo.gif' %}" />
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
@@ -155,11 +155,13 @@
   <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
 
   <script>
-    function openModal(remove_note) {
+    function openModal(note) {
         // Set data in the modal
-        var inputElement = document.getElementById('remove_note');
-        inputElement.value=remove_note;
-    
+        var inputElement = document.getElementById('update_note_' + note);
+        var inputElement2 = document.getElementById('remove_note');    
+        inputElement.value=note;
+        inputElement2.value=note
+        console.log(note)
     }
 </script>
   
