@@ -1,0 +1,78 @@
+{% load static %}
+{% block content_team_event_details_form %}
+<div class="container">
+
+
+    <div class="box">
+        <br>
+
+        <div class="box-header">
+            <h1 style="text-align:center;font-size:30px;">Add Details</h1>
+        </div>
+
+        
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="box-body">
+
+                <div class="form-group">
+                    <label>Event Description: <span style="color:red">*</span></label>
+                    <textarea
+                        placeholder="Event Description"
+                        class="form-control"
+                        rows="4" 
+                        required
+                        name="event_description"
+                    >{{event_details.event_description}}</textarea>
+                </div>
+
+                <br>
+
+                <div class="form-group">
+                    <label>Folder Drive Link for Documents</label>
+                    <input
+                        placeholder="Provide Drive Link for Documents"
+                        class="form-control"
+                        type="url"
+                        autocomplete="off"
+                        id="field1"
+                        value="{{document_links.document_link}}"
+                        name="drive_link_of_documents"
+                    />
+                </div>
+
+                <br>
+
+                <div class="form-group">
+                    <label for="documents">Upload Documents:</label>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="content-doc-input" name="document" accept=".doc, .docx, .pdf" multiple>
+                        <label class="custom-file-label bg-light" for="content-doc-input">Choose files</label>
+                    </div>
+                    
+                    <br>
+                
+                    <div id="content-selected-docs-container"></div>
+                    <input type="hidden" name="selected_documents" id="content-selected-documents">
+                    <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
+                </div>
+
+                <br>
+                    
+                <div class="form-group text-center">
+                    <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
+                </div>
+
+                <hr>
+                
+
+                <br>
+                <div class="footer" style="position:right;">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock content_team_event_details_form  %}

@@ -48,6 +48,9 @@
     }
    
 
+
+
+
     
   </style>
 </head>
@@ -100,7 +103,6 @@
                     </div>
                 </p>
             {% endfor %}
-  
             <br>
         </div>
 
@@ -113,14 +115,16 @@
             <!--Tab view end-->
             <br>
         
+        {% block content_team_edit_form_add_notes %}
+            {% include "Events/content_team_event_form_add_notes_content.html" %}
+        {% endblock content_team_edit_form_add_notes %}
             
-        {% block content_team_edit_form %}
-            {% include "Events/content_team_event_form_content.html" %}
-        {% endblock content_team_edit_form %}
         
     </div>
 
     
+
+
 
 
 
@@ -149,7 +153,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   
-
 
   
   

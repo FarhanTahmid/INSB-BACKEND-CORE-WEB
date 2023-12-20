@@ -1,5 +1,5 @@
 {% load static %}
-{% block event_edit_tab %}
+{% block content_team_event_form_tabs %}
 <style>
     .tab a.active{
         color:green;
@@ -34,19 +34,10 @@
 
 <div class="tabs-container" style="display: flex; flex-direction: column;">
     <ul class="tabs" style="display: flex; margin-right: 0px; justify-content: center;">
-        {% if is_branch %}
-        <li class="tab"><a href="{% url 'central_branch:event_edit_form' event_id %}">Edit</a></li>
-        <li class="tab"><a href="{% url 'central_branch:event_edit_media_form_tab' event_id%}">Media</a></li>
-        <li class="tab" style="border-right: 1px solid #00629B;"><a href="{% url 'central_branch:event_edit_graphics_form_tab' event_id%}">Graphics</a></li>
-        <li class="tab" style="border-right: 1px solid #00629B;"><a href="#">Content Notes</a></li>
-        {% else %}
-        <li class="tab"><a href="{% url 'chapters_and_affinity_group:event_edit_form' primary event_id %}">Edit</a></li>
-        <li class="tab"><a href="{% url 'chapters_and_affinity_group:event_edit_media_form_tab' primary event_id%}">Media</a></li>
-        <li class="tab" style="border-right: 1px solid #00629B;"><a href="{% url 'chapters_and_affinity_group:event_edit_graphics_form_tab' primary event_id%}">Graphics</a></li>
-        <li class="tab" style="border-right: 1px solid #00629B;"><a href="#">Content Notes</a></li>
-        {% endif %}
+        <li class="tab"><a href="#">Content</a></li>
+        <li class="tab" style="border-right: 1px solid #00629B;"><a href="#">Add Notes</a></li>
     </ul>
     <br>
 </div>
 
-{% endblock event_edit_tab %}
+{% endblock content_team_event_form_tabs %}
