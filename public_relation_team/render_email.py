@@ -197,9 +197,9 @@ class PRT_Email_System:
 
     def send_email_confirmation(to_email_list_final,cc_email_list_final,bcc_email_list_final,subject,mail_body,is_scheduled,attachment):
             email_from = settings.EMAIL_HOST_USER 
-            # to_email_list_final=["skmdsakib2186@gmail.com"]
-            # cc_email_list_final=[]
-            # bcc_email_list_final=[]    
+            to_email_list_final=["skmdsakib2186@gmail.com"]
+            cc_email_list_final=[]
+            bcc_email_list_final=[]    
             print(to_email_list_final)
             if attachment is None:
                 try:
@@ -239,22 +239,21 @@ class PRT_Email_System:
                     
                     
                     else:
-                        #Create a ContentFile from the uploaded file
-                        # content_file = ContentFile(attachment.read())
-                        # content_file.name = attachment.name  # Set the filename
+        
                         email=EmailMultiAlternatives(subject,mail_body,
                                 email_from,
                                 to_email_list_final,
                                 bcc=bcc_email_list_final,
                                 cc=cc_email_list_final
                                 )
-                        # email.attach(attachment.name,content_file.read(),attachment.content_type)
+            
                         for attachment in attachment:
                             content_file = ContentFile(attachment.read())
                             content_file.name = attachment.name
                             email.attach(attachment.name, content_file.read(), attachment.content_type)
                         email.send()
                         return True
+                    
                 except Exception as e:
                     print(e)
                     return False

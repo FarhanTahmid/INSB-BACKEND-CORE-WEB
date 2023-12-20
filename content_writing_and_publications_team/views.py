@@ -144,6 +144,7 @@ def event_form(request,event_id):
             
             context = {
                 'all_sc_ag':sc_ag,
+                'event_id':event_id,
             }
 
             return render(request,"Events/content_team_event_form.html", context)
@@ -171,6 +172,7 @@ def event_form_add_notes(request,event_id):
             
             context = {
                 'all_sc_ag':sc_ag,
+                'event_id':event_id,
             }
 
             return render(request,"Events/content_team_event_form_add_notes.html", context)
