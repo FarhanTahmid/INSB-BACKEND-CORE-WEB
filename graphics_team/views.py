@@ -216,7 +216,7 @@ def event_form(request,event_id):
     
 
 @login_required
-def event_form_add_notes(request,event_id):
+def event_form_add_links(request,event_id):
 
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -232,7 +232,7 @@ def event_form_add_notes(request,event_id):
                 'event_id':event_id,
             }
 
-            return render(request,"Events/content_team_event_form_add_notes.html", context)
+            return render(request,"Events/graphics_team_event_form_add_links.html", context)
         else:
             return redirect('main_website:event_details', event_id)
         
