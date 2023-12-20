@@ -214,6 +214,7 @@ def event_form(request,event_id):
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
     
+<<<<<<< HEAD
 @login_required
 def graphics_form_add_notes(request,event_id):
 
@@ -222,15 +223,33 @@ def graphics_form_add_notes(request,event_id):
         has_access = CWPTeam_Render_Access.access_for_events(request)
 
         if has_access:
+=======
+
+@login_required
+def event_form_add_notes(request,event_id):
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        #has_access = CWPTeam_Render_Access.access_for_events(request)
+
+        if (True):
+>>>>>>> 47f8c109133e1f8c98ee0995de78018e1cae2e37
             if(request.method == "POST"):
                 # print(request.POST.get('caption'))
                 print(request.POST.get('LOL'))
             
             context = {
                 'all_sc_ag':sc_ag,
+<<<<<<< HEAD
             }
 
             return render(request,"Events/graphics_team_event_form_add_notes.html", context)
+=======
+                'event_id':event_id,
+            }
+
+            return render(request,"Events/content_team_event_form_add_notes.html", context)
+>>>>>>> 47f8c109133e1f8c98ee0995de78018e1cae2e37
         else:
             return redirect('main_website:event_details', event_id)
         
@@ -238,4 +257,8 @@ def graphics_form_add_notes(request,event_id):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
+<<<<<<< HEAD
         return HttpResponseBadRequest("Bad Request")
+=======
+        return HttpResponseBadRequest("Bad Request")
+>>>>>>> 47f8c109133e1f8c98ee0995de78018e1cae2e37

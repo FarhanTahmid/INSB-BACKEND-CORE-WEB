@@ -4887,7 +4887,7 @@ body.single .gdlr-blog-full {
 .widget_nav_menu ul li:before,
 .widget_meta ul li:before {
 	content: "\f105";
-	font-family: 'Poppins', sans-serif;
+	font-family: 'FontAwesome';
 	text-align: center;
 	position: absolute;
 	left: 0px;
@@ -5077,7 +5077,7 @@ ul.gdlr-twitter-widget li:before {
 	float: left;
 	margin-right: 20px;
 	margin-top: 2px;
-	font-family: 'Poppins', sans-serif;
+	font-family: 'FontAwesome';
 	content: '\f099';
 	*zoom: expression(this.runtimeStyle['zoom']='1', this.innerHTML='&#xf099;');
 }

@@ -42,6 +42,7 @@ urlpatterns = [
     path('manage_website/news',views.manage_news,name="manage_news"),
     path('manage_website/news/update/<int:pk>',views.update_news,name="update_news"),
     path('manage_website/blogs',views.manage_blogs,name="manage_blogs"),
+    path('manage_website/blogs/update/<int:pk>',views.update_blogs,name="update_blogs"),
 
     
     path('manage_access',views.manage_view_access,name="manage_access"),
