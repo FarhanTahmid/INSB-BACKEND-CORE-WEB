@@ -84,26 +84,24 @@
           {% endif %}
         </div>
       <!--navbar content-->
+      
+      <!-- ############ PAGE START-->
+      <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
 
-    <!-- ############ PAGE START-->
-    <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
 
+        <div class="container">
+          <br>
+          <br>
+          <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
+          <h6>Note:</h6>
+          <ol style="justify-content:center;margin-bottom:15px;"><b>
+          <li>Provide the Link of the folder for the Banner Images </li>
+          <li>If the banner picture is already uploaded, you can change it by deleting existing one.
+              Select the desired picture and hit <span style="color:blue;">'Save'</span>.</li>
+          <li>Make sure to save any changes made before leaving</li>
+          </ol></b>
 
-    <div class="container">
-      <br>
-      <br>
-      <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span
-          style="color:#00629B;">{{event_name}}</b></span></h2><br>
-      <h6>Note:</h6>
-      <ol style="justify-content:center;margin-bottom:15px;"><b>
-          <li>Provide the Links of the folder for both Event Pictures and Pictures with Logo</li>
-          <li>Maximum 6 pictures can be uploaded. You can delete pictures and add new ones</li>
-          <li>To change any picture, delete it and add new one</li>
-          <li>Before saving images, if you wish to change the selected images just click 'upload' again and re-select all again</li>
-          <li>Don't forget to save the changes made by clicking save button</li>
-      </ol></b>
-
-      <br>
+          <br>
 
             {% for message in messages  %}
                   <p>
@@ -117,21 +115,19 @@
             {% endfor %}
 
             <br>
-    </div>
+        </div>
+          
+        <!--Tab view for Events-->
+        <!--Tab view Start-->
+        {% block event_edit_tab %}
+            {% include "Events/event_edit_tabs.html" %}
+        {% endblock event_edit_tab %}
+        <!--Tab view end-->
+        <br>
 
-
-      <!--Tab view for Events-->
-      <!--Tab view Start-->
-      {% block event_edit_tab %}
-          {% include "Events/event_edit_tabs.html" %}
-      {% endblock event_edit_tab %}
-      <!--Tab view end-->
-      <br>
-
-      
-      {% block media_form %}
-          {% include "Events/media_event_form_content.html" %}
-      {% endblock media_form %}
+        {% block content_form %}
+            {% include "Events/content_team_event_form_add_notes_content.html" %}
+        {% endblock content_form %}
                             
                             
 

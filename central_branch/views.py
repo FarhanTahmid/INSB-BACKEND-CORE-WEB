@@ -473,6 +473,46 @@ def add_research(request):
     return render(request,"research_papers.html")
 
 @login_required
+def manage_blogs(request):
+    
+    # Load all blogs
+    all_blogs=Blog.objects.all()
+    
+    if(request.method=="POST"):
+        form=BlogsForm(request.POST,request.FILES)
+        if(request.POST.get('add_blog')):
+            if(form.is_valid()):
+                form.save()
+                messages.success(request,"A new Blog was added!")
+                return redirect('central_branch:manage_blogs')
+        
+        if(request.POST.get('add_blog_category')):
+            form2=BlogCategoryForm(request.POST)
+            if(form2.is_valid()):
+                form2.save()
+                messages.success(request,"A new Blog Category was added!")
+                return redirect('central_branch:manage_blogs')
+        if(request.POST.get('remove_blog')):
+            MainWebsiteRenderData.delete_blog(request=request)
+            return redirect('central_branch:manage_blogs')
+
+
+    else:
+        form=BlogsForm
+        form2=BlogCategoryForm
+
+    context={
+        # get form
+        'form':form,
+        'form2':form2,
+        'all_blogs':all_blogs,
+        
+    }
+    
+    return render(request,"Manage Website/Publications/Blogs/manage_blogs.html",context=context)
+
+
+@login_required
 def add_blogs(request):
 
     '''function to add new blog to the page'''
@@ -994,68 +1034,6 @@ def event_creation_form_page3(request,event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
-
-@login_required
-def event_description(request,event_id):
-    '''Checking to see whether the user has access to view events on portal and edit them'''
-    try:
-        sc_ag=PortData.get_all_sc_ag(request=request) 
-        # has_access = Branch.event_page_access(request)
-        is_branch=True
-        if True:
-
-            '''Details page for registered events'''
-
-            # Get collaboration details
-            interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
-            intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
-           
-            # Checking if event has collaborations
-            hasCollaboration=False
-            if(len(interBranchCollaborations)>0 or intraBranchCollaborations):
-                hasCollaboration=True
-            
-            
-            get_all_team_name = Branch.load_teams()
-            get_event_details = Events.objects.get(id = event_id)
-
-            get_event_venue = Event_Venue.objects.filter(event_id = get_event_details)  
-            
-            if request.method == "POST":
-                ''' To delete event from databse '''
-                if request.POST.get('delete_event'):
-                    if(Branch.delete_event(event_id=event_id)):
-                        messages.success(request,f"Event with EVENT ID {event_id} was Removed successfully")
-                        return redirect('central_branch:event_control')
-                    else:
-                        messages.error(request,"Something went wrong while removing the event!")
-                        return redirect('central_branch:event_control')
-
-
-            #FOR TASK ASSIGNING
-            # team_under = request.POST.get('team')
-            # team_member = request.POST.get('team_member')
-            # probable_date = request.POST.get('probable_date')
-            # progress = request.POST.get('progression')    
-            context={
-                'event_details':get_event_details,
-                'event_venue':get_event_venue,
-                'team_names':get_all_team_name,
-                'interBranchCollaborations':interBranchCollaborations,
-                'intraBranchCollaborations':intraBranchCollaborations,
-                'hasCollaboration':hasCollaboration,
-                'all_sc_ag':sc_ag,
-                'is_branch':is_branch,
-            }
-            return render(request,"Events/event_description.html",context)
-        else:
-            return redirect('main_website:event_details', event_id)
-        
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
     
 @login_required
 def get_updated_options_for_event_dashboard(request):
@@ -1136,6 +1114,15 @@ def event_edit_form(request, event_id):
                     else:
                         messages.error(request,"Something went wrong while updating the event!")
                         return redirect('central_branch:event_edit_form', event_id)
+                    
+                if request.POST.get('delete_event'):
+                    ''' To delete event from databse '''
+                    if(Branch.delete_event(event_id=event_id)):
+                        messages.success(request,f"Event with EVENT ID {event_id} was Removed successfully")
+                        return redirect('central_branch:event_control')
+                    else:
+                        messages.error(request,"Something went wrong while removing the event!")
+                        return redirect('central_branch:event_control')
 
             form = EventForm({'event_description' : event_details.event_description})
 
@@ -1182,7 +1169,8 @@ def event_edit_form(request, event_id):
 
             return render(request, 'Events/event_edit_form.html', context)
         else:
-            return render(request, 'access_denied2.html')
+            return redirect('main_website:event_details', event_id)
+        
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1320,6 +1308,36 @@ def event_edit_graphics_form_tab(request, event_id):
 
             }
             return render(request,"Events/event_edit_graphics_form_tab.html",context)
+        else:
+            return render(request, 'access_denied2.html')
+        
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+@login_required
+def event_edit_content_form_tab(request,event_id):
+    ''' This function loads the content tab page of events '''
+
+     #Initially loading the events whose  links and images were previously uploaded
+    #and can be editible
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        #Get event details from databse
+        # event_details = Events.objects.get(pk=event_id)
+        # has_access = Branch.event_page_access(request)
+        if(True):
+
+            context={
+                'is_branch' : True,
+                'event_id' : event_id,
+                'all_sc_ag':sc_ag,
+
+            }
+            return render(request,"Events/event_edit_content_and_publications_form_tab.html",context)
         else:
             return render(request, 'access_denied2.html')
         

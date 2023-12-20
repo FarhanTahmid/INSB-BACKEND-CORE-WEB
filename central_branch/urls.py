@@ -41,6 +41,7 @@ urlpatterns = [
     path('manage_website/achievements/update/<int:pk>',views.update_achievements,name="achievements_update"),
     path('manage_website/news',views.manage_news,name="manage_news"),
     path('manage_website/news/update/<int:pk>',views.update_news,name="update_news"),
+    path('manage_website/blogs',views.manage_blogs,name="manage_blogs"),
 
     
     path('manage_access',views.manage_view_access,name="manage_access"),
@@ -60,10 +61,9 @@ urlpatterns = [
     path('event_details/<int:event_id>/edit/media',views.event_edit_media_form_tab,name='event_edit_media_form_tab'),
     #Event graphics tab page
     path('event_details/<int:event_id>/edit/graphics',views.event_edit_graphics_form_tab,name='event_edit_graphics_form_tab'),
+    #Event content tab page
+    path('event_details/<int:event_id>/edit/content',views.event_edit_content_form_tab,name='event_edit_content_form_tab'),
     #Super Event Creation Form
-    path('events/create_super_event/',views.super_event_creation,name="super_event_creation"),
-    #event dashboard team
-    path('event_details/<int:event_id>',views.event_description,name='event_dashboard'),
-   
+    path('events/create_super_event/',views.super_event_creation,name="super_event_creation"),   
 
 ]

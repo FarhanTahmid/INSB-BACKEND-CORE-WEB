@@ -48,12 +48,6 @@
         <div class="box-header" style="text-align:center;">
             <h1>Update Event Details</h1>
         </div>
-        <!--Error Message-->
-        <div class="py-3 text-center">
-            {% for message in messages %}
-                <p style="color:red" class="message">{{message}}</p>
-            {% endfor %}
-        </div>
         
         <form id="myForm" method = "POST">
         {% csrf_token %}
@@ -234,12 +228,13 @@
                 
                 <br>
                 <div style="text-align: center;">
+                    
+                    <input type="submit" name="update_event" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
                     {% if is_branch %}
-                    <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger">Cancel</a>
+                    <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
                     {% else %}
-                    <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger">Cancel</a>
+                    <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
                     {% endif %}
-                    <input type="submit" name="update_event" class="btn btn-outline b-success text-success" value="Update Changes">
                 </div>
                 <br> 
 
@@ -252,28 +247,28 @@
     
     <div class="modal fade" id="addVenueModal" tabindex="-1" role="dialog" aria-labelledby="addVenueModalLabel" aria-hidden="true">
         
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addVenueModalLabel">Add Venue</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="POST">
-                                {% csrf_token %}
-                                
-                                <label for="venue">Venue:</label>
-                                <input type="text" id="venue" name="venue">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-outline-success txt-success buttons" name="add_venues" value="Add">Add</button>
-                            <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        </div>
-                        </form>
-                    </div>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addVenueModalLabel">Add Venue</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <label for="venue">Venue:</label>
+                        <input type="text" id="venue" name="venue">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-success txt-success buttons" name="add_venues" value="Add">Add</button>
+                    <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+                </form>
+            </div>
+        </div>
     </div>
 
 
@@ -281,27 +276,26 @@
         document.addEventListener('DOMContentLoaded', function () {
           var form = document.getElementById('myForm');
           var isFormDirty = false;
-    
+        
           // Listen for changes in the form fields
           form.addEventListener('input', function () {
             isFormDirty = true;
           });
-    
+        
+          // Handle form submission
+          form.addEventListener('submit', function () {
+            // Set isFormDirty to false when the form is submitted
+            isFormDirty = false;
+          });
+        
           // Warn the user before leaving the page if the form is dirty
           window.addEventListener('beforeunload', function (event) {
             if (isFormDirty) {
               event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
             }
           });
-    
-          // Optionally, you can also prevent navigation using the 'unload' event
-          // window.addEventListener('unload', function (event) {
-          //   if (isFormDirty) {
-          //     alert('You have unsaved changes. Please save before leaving.');
-          //     event.preventDefault();
-          //   }
-          // });
         });
+        
       </script>
       
 

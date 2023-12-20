@@ -82,17 +82,32 @@
         <!-- ############ PAGE START-->
         <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
 
+            <div class="container">
+              <br>
+              <br>
+              <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
+              <h6>Note:</h6>
+              <ol style="justify-content:center;margin-bottom:15px;"><b>
+              <li>Provide the Link of the folder for the Banner Images </li>
+              <li>If the banner picture is already uploaded, you can change it by deleting existing one.
+                  Select the desired picture and hit <span style="color:blue;">'Save'</span>.</li>
+              <li>Make sure to save any changes made before leaving</li>
+              </ol></b>
 
-            <br>
-            <br>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
-            <h6>Note:</h6>
-            <ol style="justify-content:center;margin-bottom:15px;"><b>
-            <li>Provide the Link of the folder for the Banner Images </li>
-            <li>If the banner picture is already uploaded, you can change it by deleting existing one.
-                Select the desired picture and hit <span style="color:blue;">'Save'</span>.</li>
-            <li>Make sure to save any changes made before leaving</li>
-            </ol></b>
+              <br>
+
+              {% for message in messages  %}
+                <p>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </p>
+              {% endfor %}
+              <br>
+            </div>
             
             
 

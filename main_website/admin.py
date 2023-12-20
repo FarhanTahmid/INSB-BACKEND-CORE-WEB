@@ -17,7 +17,7 @@ class Blog_Category(admin.ModelAdmin):
     list_display=['id','blog_category']
 @admin.register(Blog)
 class Blog(admin.ModelAdmin):
-    list_display=['id','title','date','blog_banner_picture','category','publisher','description','chapter_society_affinity']
+    list_display=['id','writer_name','title','date']
     
 
 #Homepage Models

@@ -634,62 +634,6 @@ def event_control_homepage(request,primary):
         return HttpResponseBadRequest("Bad Request")
     
 @login_required
-def event_description(request,primary,event_id):
-    
-    try:
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-        is_branch= False
-        has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
-        if has_access:
-
-            '''Details page for registered events'''
-
-            # Get collaboration details
-            interBranchCollaborations=Branch.event_interBranch_Collaborations(event_id=event_id)
-            intraBranchCollaborations=Branch.event_IntraBranch_Collaborations(event_id=event_id)
-            # Checking if event has collaborations
-            hasCollaboration=False
-            if(len(interBranchCollaborations)>0 or intraBranchCollaborations):
-                hasCollaboration=True
-            
-            #get_all_team_name = Branch.load_teams()
-            get_event_details = Events.objects.get(id = event_id)
-            #print(get_event_details.super_event_name.id)
-            #get_event_venue = Event_Venue.objects.filter(event_id = get_event_details)  
-            
-            if request.method == "POST":
-                ''' To delete event from databse '''
-                if request.POST.get('delete_event'):
-                    if(Branch.delete_event(event_id=event_id)):
-                        messages.info(request,f"Event with EVENT ID {event_id} was Removed successfully")
-                        return redirect('chapters_and_affinity_group:event_control_homepage',primary)
-                    else:
-                        messages.error(request,"Something went wrong while removing the event!")
-                        return redirect('chapters_and_affinity_group:event_control_homepage',primary)
-                
-            context={
-                'all_sc_ag':sc_ag,
-                'sc_ag_info':get_sc_ag_info,
-                'is_branch':is_branch,
-                'event_details':get_event_details,
-                'interBranchCollaborations':interBranchCollaborations,
-                'intraBranchCollaborations':intraBranchCollaborations,
-                'hasCollaboration':hasCollaboration,
-                
-            }
-            return render(request,"Events/event_description.html",context)
-        else:
-            return redirect('main_website:event_details', event_id)
-    
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
-    
-
-@login_required
 def super_event_creation(request, primary):
 
     '''function for creating super event'''
@@ -953,6 +897,15 @@ def event_edit_form(request, primary, event_id):
                     else:
                         messages.error(request,"Something went wrong while updating the event!")
                         return redirect('chapters_and_affinity_group:event_edit_form',primary, event_id)
+                
+                if('delete_event' in request.POST):
+                    ''' To delete event from databse '''
+                    if(Branch.delete_event(event_id=event_id)):
+                        messages.info(request,f"Event with EVENT ID {event_id} was Removed successfully")
+                        return redirect('chapters_and_affinity_group:event_control_homepage',primary)
+                    else:
+                        messages.error(request,"Something went wrong while removing the event!")
+                        return redirect('chapters_and_affinity_group:event_control_homepage',primary)
 
             form = EventForm({'event_description' : event_details.event_description})
 
@@ -1001,7 +954,7 @@ def event_edit_form(request, primary, event_id):
 
             return render(request, 'Events/event_edit_form.html', context)
         else:
-            return render(request, 'access_denied.html')
+            return redirect('main_website:event_details', event_id)
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -1142,6 +1095,38 @@ def event_edit_graphics_form_tab(request, primary, event_id):
 
             }
             return render(request,"Events/event_edit_graphics_form_tab.html",context)
+        else:
+            return render(request, 'access_denied.html')
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+def event_edit_content_form_tab(request,primary,event_id):
+
+    ''' This function loads the content tab page of events '''
+
+     #Initially loading the events whose  links and images were previously uploaded
+    #and can be editible
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        #Get event details from databse
+        # event_details = Events.objects.get(pk=event_id)
+        has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
+        if(has_access):
+            
+            context={
+                'is_branch' : False,
+                'primary' : primary,
+                'event_id' : event_id,
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+
+            }
+            return render(request,"Events/event_edit_content_and_publications_form_tab.html",context)
         else:
             return render(request, 'access_denied.html')
     except Exception as e:
