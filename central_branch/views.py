@@ -439,34 +439,33 @@ def others(request):
     return render(request,"others.html")
 
 @login_required
-def add_research(request):
+def manage_research(request):
 
-
+    # load all research papers
+    researches = Research_Papers.objects.all().order_by('-publish_date')
     '''function for adding new Research paper'''
-
-
     if request.method == "POST":
+        add_research_form=ResearchPaperForm(request.POST,request.FILES)
+        add_research_category_form=ResearchCategoryForm(request.POST)
 
-        '''Checking to see if all the mandatory fields have been entered by user or not once
-        the submit button has been clicked. If not then sending error message to the page else
-        render data to the page'''
-        
-        if request.POST.get('title') == "" or request.POST.get('author_name') == "" or request.POST.get('url')=="":
-            return render(request,"research_papers.html",{
-                "error":True
-            })
-        else:
-            title = request.POST.get('title')
-            author_names = request.POST.get('author_name')
-            research_banner_pic = request.POST.get('research_banner_picture')
-            url = request.POST.get('url')
-            save_research_paper = Research_Papers(title=title,research_banner_picture=research_banner_pic,author_names=author_names,publication_link=url)
-            save_research_paper.save()
-            return render(request,"research_papers.html",{
-                "saved":True
-            })
-
-    return render(request,"research_papers.html")
+        if(request.POST.get('add_research')):
+            if(add_research_form.is_valid()):
+                add_research_form.save()
+                messages.success(request,"A new Research Paper was added!")
+                return redirect('central_branch:manage_research')
+        if(request.POST.get('add_research_category')):
+            if(add_research_category_form.is_valid()):
+                add_research_category_form.save()
+                messages.success(request,"A new Research Category was added!")
+                return redirect('central_branch:manage_research')
+    else:
+        form=ResearchPaperForm
+        form2=ResearchCategoryForm
+    context={
+        'form':form,
+        'form2':form2,'all_researches':researches,
+    }
+    return render(request,"Manage Website/Publications/Research Paper/manage_research_paper.html",context=context)
 
 @login_required
 def manage_blogs(request):
