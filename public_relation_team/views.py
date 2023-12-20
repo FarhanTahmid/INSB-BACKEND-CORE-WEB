@@ -333,7 +333,7 @@ def send_email(request):
         user_data=current_user.getUserData() #getting user data as dictionary file
         recruitment_sessions=PRT_Data.getAllRecruitmentSessions()
     # under_maintainance = system.objects.all()
-    # if under_maintainance[0].email_access:
+    # if under_maintainance[0].scheduling_under_maintenance.:
         if(request.method=="POST"):
             if(request.POST.get('send_email')):
                 
