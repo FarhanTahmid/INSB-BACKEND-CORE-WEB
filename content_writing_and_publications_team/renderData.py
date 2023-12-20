@@ -1,9 +1,18 @@
 from central_branch.renderData import Branch
+from django.shortcuts import get_object_or_404
 from users.models import Members
 from port.models import Teams,Roles_and_Position
 from system_administration.models import CWP_Data_Access
-
+from .models import Content_Notes
+import logging
+import traceback
+from system_administration.system_error_handling import ErrorHandling
+from datetime import datetime
+from central_events.models import Events
+from .forms import Content_Form
 class ContentWritingTeam:
+
+    logger=logging.getLogger(__name__)
 
     def get_team():
         team = Teams.objects.get(primary=2)
@@ -69,3 +78,36 @@ class ContentWritingTeam:
                 return False
         except:
             return False
+        
+    def creating_note(title,note,event_id):
+
+        '''This function creates notes for the specific event'''
+
+        try:
+            new_note = Content_Notes.objects.create(event_id = Events.objects.get(pk = event_id),title = title,notes = note)
+            new_note.save()
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def load_note_content(event_id):
+    
+        all_notes_for_particular_event = Content_Notes.objects.filter(event_id = Events.objects.get(pk=event_id))
+        notes_and_content = {}
+        for note in all_notes_for_particular_event:
+            form = Content_Form(instance=note)
+            notes_and_content.update({note:form})
+        return notes_and_content
+
+    def remove_note(id):
+        try:
+            note = Content_Notes.objects.get(id=id)
+            note.delete()
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+

@@ -1,5 +1,5 @@
 from django.http import HttpResponseBadRequest
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from content_writing_and_publications_team.manage_access import CWPTeam_Render_Access
 from port.renderData import PortData
@@ -13,7 +13,8 @@ from system_administration.system_error_handling import ErrorHandling
 import logging
 from datetime import datetime
 import traceback
-
+from .forms import Content_Form
+from .models import Content_Notes
 
 logger=logging.getLogger(__name__)
 # Create your views here.
@@ -163,16 +164,41 @@ def event_form_add_notes(request,event_id):
 
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
+        form = Content_Form()
         has_access = CWPTeam_Render_Access.access_for_events(request)
-
+        all_notes_content = ContentWritingTeam.load_note_content(event_id)
         if has_access:
             if(request.method == "POST"):
-                # print(request.POST.get('caption'))
-                print(request.POST.get('LOL'))
+                
+                if request.POST.get('add_note'):
+                    
+                    #when the add button for submitting new note is clicked
+                    title = request.POST['title']
+                    note = request.POST['notes']
+
+                    if ContentWritingTeam.creating_note(title,note,event_id):
+                        messages.success(request,"Note created successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+
+                    return redirect("content_writing_and_publications_team:event_form_add_notes",event_id)
+
+                if request.POST.get('remove'):
+                    id = request.POST.get('remove_note')
+                    print("sakib sakib")
+                    print(id)
+                    if ContentWritingTeam.remove_note(id):
+                        messages.success(request,"Note deleted successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+                    return redirect("content_writing_and_publications_team:event_form_add_notes",event_id)   
+
             
             context = {
                 'all_sc_ag':sc_ag,
                 'event_id':event_id,
+                'form_adding_note':form,
+                'all_notes_content':all_notes_content,
             }
 
             return render(request,"Events/content_team_event_form_add_notes.html", context)
