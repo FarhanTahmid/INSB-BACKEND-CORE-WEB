@@ -2,11 +2,12 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from central_events.models import Events
 from central_branch.renderData import Branch
-from main_website.models import Research_Papers,Blog
+from main_website.models import Research_Papers,Blog,Achievements,News
 from port.renderData import PortData
 from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
 from .renderData import HomepageItems
 from django.conf import settings
+from users.models import User,Members
 from users.models import User
 import logging
 from datetime import datetime
@@ -16,6 +17,7 @@ import traceback
 from .renderData import HomepageItems
 from users.renderData import PanelMembersData
 from users import renderData as userData
+import json,requests
 
 
 logger=logging.getLogger(__name__)
@@ -102,22 +104,88 @@ def event_homepage(request):
 def event_details(request,event_id):
  
     '''Loads details for the corresponding event page on site'''
-    get_event = Events.objects.get(id = event_id)
-    event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
-    event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
+    try:
+        get_event = Events.objects.get(id = event_id)
+        if(get_event.publish_in_main_web):
+            event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
+            event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
-    return render(request,"Events/event_description_main.html",{
-        "event":get_event,
-        'media_url':settings.MEDIA_URL,
-        'event_banner_image' : event_banner_image,
-        'event_gallery_images' : event_gallery_images
-    })
+            return render(request,"Events/event_description_main.html",{
+                "event":get_event,
+                'media_url':settings.MEDIA_URL,
+                'event_banner_image' : event_banner_image,
+                'event_gallery_images' : event_gallery_images
+            })
+        else:
+            return redirect('main_website:event_homepage')
+    except:
+        return redirect('main_website:event_homepage')
 
 
 # ###################### ACHIEVEMENTS ##############################
 
 def achievements(request):
-    return render(request,"Activities/achievements.html")
+    # load achievement of INSB
+    load_all_achievements=Achievements.objects.all().order_by('-award_winning_year')
+    context={
+        'page_title':"Achievements",
+        'achievements':load_all_achievements,
+    }
+    
+    return render(request,"Activities/achievements.html",context=context)
+
+def news(request):
+    # load news of insb
+    load_all_news=News.objects.all().order_by('-news_date')
+    
+    # apis to get online news
+    url_robotics=f'https://newsdata.io/api/1/news?apikey={settings.NEWS_API_KEY}&q=robotics&language=en&category=education,science,technology'
+    url_wie_news=f'https://newsdata.io/api/1/news?apikey={settings.NEWS_API_KEY}&q="women%20in%20STEM"&category=technology'
+    url_ai_machine_learning=f'https://newsdata.io/api/1/news?apikey={settings.NEWS_API_KEY}&q="artificial%20neural%20network"%20OR%20"deep%20learning"&language=en&category=technology,top '
+
+    # keeping urls as list
+    url_list=[url_robotics,url_ai_machine_learning,url_wie_news]
+    
+    json_datas=[]
+    # extracting response from the apis and keeping all the three datas of the api in a list
+    for url in url_list:
+        response=requests.get(url)
+        if(response.status_code==200):
+            # if response is okay then load data
+            json_datas.append(json.loads(response.text))
+    
+    all_online_news=[]
+    # extracting article results
+    for i in json_datas:
+        articles=i.get('results',[])
+        for article in articles:
+            # extracting article values
+            title=article.get('title',[])
+            article_link=article.get('link',[])
+            article_description=article.get('description',[])
+            article_picture=article.get('image_url',[])
+            article_creator=article.get('creator',[])
+            # storing all articles as dictionary key value items
+            news_item={
+                'title':title,
+                'article_link':article_link,
+                'article_description':article_description,
+                'article_picture':article_picture,
+                'article_creator':article_creator
+            }
+            # storing all articles in a list
+            all_online_news.append(news_item)
+    has_online_news=False
+    if(len(all_online_news)>0):
+        has_online_news=True
+    context={
+        'page_title':"News",
+        'all_news':load_all_news,
+        'all_online_news':all_online_news,
+        'has_online_news':has_online_news,
+        
+    }
+    return render(request,'Activities/news.html',context=context)
 
     
 
@@ -412,10 +480,15 @@ def volunteers_page(request):
 def all_members(request):
     # get all registered members of INSB
     get_all_members = userData.get_all_registered_members(request=request)
+    recruitment_stat=userData.getRecruitmentStats()
+    
     
     context={
-        'page_title':"All Registered Members of IEEE NSU SB",
+        'page_title':"All Registered Members & Member Statistics of IEEE NSU SB",
         'members':get_all_members,
-        
+        'male_count':Members.objects.filter(gender="Male").count(),
+        'female_count':Members.objects.filter(gender="Female").count(),
+        'session_name':recruitment_stat[0],
+        'session_recruitee':recruitment_stat[1],
     }
     return render(request,'Members/All Members/all_members.html',context=context)

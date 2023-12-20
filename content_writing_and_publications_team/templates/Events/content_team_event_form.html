@@ -7,7 +7,7 @@
   <title>Events | Media Team</title>
   <link rel="icon" href="{% static 'logos/logo.gif' %}" />
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
   {% block common_css %}
@@ -48,46 +48,6 @@
     }
    
 
-
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-    @media only screen and (max-width: 768px) {
-      .form-group.row {
-          flex-direction: column;
-      }
-
-      .custom-file {
-          margin-bottom: 10px;
-      }
-    }
-
-
-    .circle-btn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-width: 50px; /* Set minimum width */
-        min-height: 50px; /* Set minimum height */
-        background-color: transparent; /* Set to transparent or any other color for the inside */
-        border: 2px solid #28a745; /* Border color is green */
-        border-radius: 50%;
-        color: #28a745; /* Text color is green */
-        font-size: 24px; /* Adjust the font size as needed */
-        cursor: pointer;
-        transition: background-color 0.3s, color 0.3s; /* Add smooth transition effect */
-      }
-  
-      .circle-btn:hover {
-        background-color: #28a745; /* Hover background color is green */
-        color: #fff; /* Hover text color is white */
-      }
-  
-      .plus-sign::before {
-        content: '+';
-      }
-    
     
   </style>
 </head>
@@ -109,7 +69,7 @@
     <!-- navbar content -->
     <div id="content" class="app-content box-shadow-z0" role="main">
         {% block navbar %}
-            {% include 'media_navbar.html' %}
+            {% include 'content_navbar.html' %}
         {% endblock navbar %}
 
     </div>
@@ -119,10 +79,17 @@
     <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
 
     
-        <br><br>
-        <div style="background-color: white;">
-            <div class="container">
+        <div class="container">
+            <br>
+            <br>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span
+                style="color:#00629B;">{{event_name}}</b></span></h2><br>
+            <h6>Note:</h6>
+            <ol style="justify-content:center;margin-bottom:15px;"><b>
+                <li>Lorem Ipsum</li>
+            </ol></b>
 
+<<<<<<< HEAD
                 <br><br>
 
                 <div class="box-header">
@@ -213,103 +180,40 @@
                         <br>
                         <div class="footer" style="position:right;">
                         </div>
+=======
+            <br>
+            {% for message in messages  %}
+                <p>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+>>>>>>> 480d4b3466276abb85b4200095b2a75c4a9a9bf7
                     </div>
-                </form>
-            </div>
+                </p>
+            {% endfor %}
+  
+            <br>
         </div>
+
+        <br><br>  
+            <!--Tab view for Events-->
+            <!--Tab view Start-->
+            {% block content_team_event_form_tab %}
+                {% include "Events/content_team_event_form_tabs.html" %}
+            {% endblock content_team_event_form_tab %}
+            <!--Tab view end-->
+            <br>
+        
+            
+        {% block content_team_edit_form %}
+            {% include "Events/content_team_event_form_content.html" %}
+        {% endblock content_team_edit_form %}
+        
     </div>
 
-    <!-- Updated Modal for adding captions -->
-    <div class="modal fade" id="AddCaptionModal" tabindex="-1" role="dialog" aria-labelledby="AddCaptionModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addCaptionModalLabel">Add Caption</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST">
-                        {% csrf_token %}
-                        
-                        <div class="form-group">
-                            <label>Title: </label> 
-                                <input
-                                    placeholder="Title"
-                                    class="form-control w-75"
-                                    type="text"
-                                    autocomplete="off"
-                                    required
-                                    name="title"
-                                    value="" 
-                                />
-                            <!-- Use form-control class for full-width textarea -->
-                            <textarea class="form-control" id="caption" name="caption" rows="4"></textarea>
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <!-- Change the button label and name attribute -->
-                    <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_caption" value="Add">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- New modal for editing captions -->
-    <div class="modal fade" id="EditCaptionModal" tabindex="-1" role="dialog" aria-labelledby="EditCaptionModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editCaptionModalLabel">Edit Caption</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Display existing caption in a textarea for editing -->
-                    <form method="POST">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="editedCaption">Caption:</label>
-                            <textarea class="form-control" id="editedCaption" name="editedCaption" rows="4">Sample Caption</textarea>
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-primary txt-primary buttons">Update</button>
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Confirmation modal for delete -->
-<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-top" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to delete the caption?
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-outline-danger" >Confirm</button>
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
+    
 
 
 
@@ -329,24 +233,17 @@
   {% block common_js %}
   {% include "common_js.html" %}
   {% endblock common_js %}
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <script src="{% static 'tab_view.js'%}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="{% static 'table_search.js'%}"></script>
-  <script src="{% static 'table_search.js'%}"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   
 
-  <script>
 
-    function closeMessage(button) {
-        // Find the parent element (the <p> tag) and remove it
-        var messageElement = button.parentNode;
-        messageElement.parentNode.removeChild(messageElement);
-    }
-  </script>
   
   
 

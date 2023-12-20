@@ -204,7 +204,7 @@ def event_form(request,event_id):
                 'all_sc_ag':sc_ag,
 
             }
-            return render(request,"media_team/media_event_form.html",context)
+            return render(request,"Events/media_event_form.html",context)
         else:
             return redirect('main_website:event_details', event_id)
         
