@@ -193,4 +193,15 @@
 </div>
 </div>
 
+<script>
+    function openModal(note) {
+        // Set data in the modal
+        var inputElement = document.getElementById('update_note_' + note);
+        var inputElement2 = document.getElementById('remove_note');    
+        inputElement.value=note;
+        inputElement2.value=note
+        console.log(note)
+    }
+</script>
+
 {% endblock content_team_event_details_form_add_notes_content  %}

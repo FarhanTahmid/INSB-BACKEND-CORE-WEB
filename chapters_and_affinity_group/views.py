@@ -1,5 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
+from content_writing_and_publications_team.forms import Content_Form
+from content_writing_and_publications_team.renderData import ContentWritingTeam
 from graphics_team.models import Graphics_Banner_Image, Graphics_Link
 from graphics_team.renderData import GraphicsTeam
 from insb_port import settings
@@ -1107,9 +1109,6 @@ def event_edit_content_form_tab(request,primary,event_id):
 
     ''' This function loads the content tab page of events '''
 
-     #Initially loading the events whose  links and images were previously uploaded
-    #and can be editible
-
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
@@ -1117,11 +1116,47 @@ def event_edit_content_form_tab(request,primary,event_id):
         # event_details = Events.objects.get(pk=event_id)
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
         if(has_access):
-            
+            all_notes_content = ContentWritingTeam.load_note_content(event_id)
+            form = Content_Form()
+            if(request.method == "POST"):               
+                if 'add_note' in request.POST:
+                    
+                    #when the add button for submitting new note is clicked
+                    title = request.POST['title']
+                    note = request.POST['notes']
+
+                    if ContentWritingTeam.creating_note(title,note,event_id):
+                        messages.success(request,"Note created successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+
+                    return redirect("chapters_and_affinity_group:event_edit_content_form_tab", primary, event_id)
+
+                if 'remove' in request.POST:
+                    id = request.POST.get('remove_note')
+                    if ContentWritingTeam.remove_note(id):
+                        messages.success(request,"Note deleted successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+                    return redirect("chapters_and_affinity_group:event_edit_content_form_tab", primary, event_id)  
+
+                if 'update_note' in request.POST:
+                    print(request.POST)
+                    id = request.POST['update_note']
+                    title = request.POST['title']
+                    note = request.POST['notes']
+                    if(ContentWritingTeam.update_note(id, title, note)):
+                        messages.success(request,"Note updated successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+                    return redirect("chapters_and_affinity_group:event_edit_content_form_tab", primary, event_id)
+                
             context={
                 'is_branch' : False,
                 'primary' : primary,
                 'event_id' : event_id,
+                'form_adding_note':form,
+                'all_notes_content':all_notes_content,
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
 
