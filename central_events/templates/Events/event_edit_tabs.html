@@ -1,11 +1,12 @@
 {% load static %}
 {% block event_edit_tab %}
 <style>
-    .tab a.active{
-        color:green;
-        background-color:yellow;
+    .tab a.active {
+        color: green;
+        background-color: yellow;
     }
-    .tabs li:hover{
+
+    .tabs li:hover {
         transition: all 0.3s ease-in-out;
     }
 </style>
@@ -13,21 +14,28 @@
     document.addEventListener("DOMContentLoaded", function () {
         // Get the current page's URL
         const currentPageUrl = window.location.href;
-      
+
         // Find the links in the navigation bar
         const tabs = document.querySelectorAll(".tabs li");
-      
+
         // Loop through the tabs and add a "active" class to the matching tab
         tabs.forEach(function (tab) {
-          const link = tab.querySelector("a");
-          if (link.href === currentPageUrl) {
-            link.classList.add("active");
-          }
-          
-          // Add click event listener to the entire tab
-          tab.addEventListener("click", function() {
-            window.location.href = link.href;
-          });
+            const link = tab.querySelector("a");
+
+            // Check if the URL contains "/graphics" or "/graphics/links"
+            if (currentPageUrl.includes("/graphics") || currentPageUrl.includes("/graphics/links")) {
+                // If it does, set the "Graphics" tab as active
+                tabs[2].querySelector("a").classList.add("active");
+            }
+
+            if (link.href === currentPageUrl) {
+                link.classList.add("active");
+            }
+
+            // Add click event listener to the entire tab
+            tab.addEventListener("click", function () {
+                window.location.href = link.href;
+            });
         });
     });
 </script>

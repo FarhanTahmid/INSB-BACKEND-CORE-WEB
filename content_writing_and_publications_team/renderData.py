@@ -110,4 +110,15 @@ class ContentWritingTeam:
             ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
-
+        
+    def update_note(id, title, note_content):
+        try:
+            note = Content_Notes.objects.get(id=id)
+            note.title = title
+            note.notes = note_content
+            note.save()
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False

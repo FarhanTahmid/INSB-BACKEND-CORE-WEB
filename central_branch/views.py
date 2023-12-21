@@ -7,6 +7,8 @@ from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from central_events.models import Event_Category, Event_Venue, Events, SuperEvents
+from content_writing_and_publications_team.forms import Content_Form
+from content_writing_and_publications_team.renderData import ContentWritingTeam
 from events_and_management_team.renderData import Events_And_Management_Team
 from graphics_team.models import Graphics_Banner_Image, Graphics_Link
 from graphics_team.renderData import GraphicsTeam
@@ -510,6 +512,27 @@ def manage_blogs(request):
     }
     
     return render(request,"Manage Website/Publications/Blogs/manage_blogs.html",context=context)
+
+@login_required
+def update_blogs(request,pk):
+    # get the achievement and form
+    blog_to_update=get_object_or_404(Blog,pk=pk)
+    if(request.method=="POST"):
+        if(request.POST.get('update_blog')):
+            form=BlogsForm(request.POST,request.FILES,instance=blog_to_update)
+            if(form.is_valid()):
+                form.save()
+                messages.info(request,"Blog Informations were updated")
+                return redirect('central_branch:manage_blogs')
+    else:
+        form=BlogsForm(instance=blog_to_update)
+    
+    context={
+        'form':form,
+        'blog':blog_to_update,
+    }
+
+    return render(request,"Manage Website/Publications/Blogs/update_blogs.html",context=context)
 
 
 @login_required
@@ -1316,24 +1339,119 @@ def event_edit_graphics_form_tab(request, event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
-
+    
 @login_required
-def event_edit_content_form_tab(request,event_id):
-    ''' This function loads the content tab page of events '''
+def event_edit_graphics_form_links_sub_tab(request,event_id):
+    ''' This function loads the graphics form link page of events '''
 
      #Initially loading the events whose  links and images were previously uploaded
     #and can be editible
 
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
+        all_graphics_link = GraphicsTeam.get_all_graphics_form_link(event_id)
         #Get event details from databse
         # event_details = Events.objects.get(pk=event_id)
         # has_access = Branch.event_page_access(request)
         if(True):
 
+            if request.POST.get('add_link'):
+
+                    form_link = request.POST.get('graphics_form_link')
+                    title =request.POST.get('title')
+                    if GraphicsTeam.add_graphics_form_link(event_id,form_link,title):
+                        messages.success(request,'Saved Changes!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("central_branch:event_edit_graphics_form_links_sub_tab",event_id)
+            
+            if request.POST.get('update_link'):
+
+                    form_link = request.POST.get('form_link')
+                    title =request.POST.get('title')
+                    pk = request.POST.get('link_pk')
+                    if GraphicsTeam.update_graphics_form_link(form_link,title,pk):
+                        messages.success(request,'Updated Successfully!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("central_branch:event_edit_graphics_form_links_sub_tab",event_id)
+
+            if request.POST.get('remove_form_link'):
+
+                    id = request.POST.get('remove_link')
+                    if GraphicsTeam.remove_graphics_form_link(id):
+                        messages.success(request,'Deleted Successfully!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("central_branch:event_edit_graphics_form_links_sub_tab",event_id)
+
+
             context={
                 'is_branch' : True,
                 'event_id' : event_id,
+                'all_sc_ag':sc_ag,
+                'all_graphics_link':all_graphics_link,
+
+            }
+            return render(request,"Events/event_edit_graphics_form_links_sub_tab.html",context)
+        else:
+            return render(request, 'access_denied2.html')
+        
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+
+@login_required
+def event_edit_content_form_tab(request,event_id):
+    ''' This function loads the content tab page of events '''
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # has_access = Branch.event_page_access(request)
+        if(True):
+            all_notes_content = ContentWritingTeam.load_note_content(event_id)
+            form = Content_Form()
+            if(request.method == "POST"):               
+                if 'add_note' in request.POST:
+                    
+                    #when the add button for submitting new note is clicked
+                    title = request.POST['title']
+                    note = request.POST['notes']
+
+                    if ContentWritingTeam.creating_note(title,note,event_id):
+                        messages.success(request,"Note created successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+
+                    return redirect("central_branch:event_edit_content_form_tab",event_id)
+
+                if 'remove' in request.POST:
+                    id = request.POST.get('remove_note')
+                    if ContentWritingTeam.remove_note(id):
+                        messages.success(request,"Note deleted successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+                    return redirect("central_branch:event_edit_content_form_tab",event_id)  
+
+                if 'update_note' in request.POST:
+                    print(request.POST)
+                    id = request.POST['update_note']
+                    title = request.POST['title']
+                    note = request.POST['notes']
+                    if(ContentWritingTeam.update_note(id, title, note)):
+                        messages.success(request,"Note updated successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+                    return redirect("central_branch:event_edit_content_form_tab",event_id)
+
+            context={
+                'is_branch' : True,
+                'event_id' : event_id,
+                'form_adding_note':form,
+                'all_notes_content':all_notes_content,
                 'all_sc_ag':sc_ag,
 
             }

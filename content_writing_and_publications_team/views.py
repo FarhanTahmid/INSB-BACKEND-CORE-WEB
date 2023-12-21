@@ -164,13 +164,12 @@ def event_form_add_notes(request,event_id):
 
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
-        form = Content_Form()
         has_access = CWPTeam_Render_Access.access_for_events(request)
-        all_notes_content = ContentWritingTeam.load_note_content(event_id)
         if has_access:
-            if(request.method == "POST"):
-                
-                if request.POST.get('add_note'):
+            all_notes_content = ContentWritingTeam.load_note_content(event_id)
+            form = Content_Form()
+            if(request.method == "POST"):               
+                if 'add_note' in request.POST:
                     
                     #when the add button for submitting new note is clicked
                     title = request.POST['title']
@@ -183,16 +182,24 @@ def event_form_add_notes(request,event_id):
 
                     return redirect("content_writing_and_publications_team:event_form_add_notes",event_id)
 
-                if request.POST.get('remove'):
+                if 'remove' in request.POST:
                     id = request.POST.get('remove_note')
-                    print("sakib sakib")
-                    print(id)
                     if ContentWritingTeam.remove_note(id):
                         messages.success(request,"Note deleted successfully!")
                     else:
                         messages.error(request,"Error occured! Please try again later.")
-                    return redirect("content_writing_and_publications_team:event_form_add_notes",event_id)   
+                    return redirect("content_writing_and_publications_team:event_form_add_notes",event_id)  
 
+                if 'update_note' in request.POST:
+                    print(request.POST)
+                    id = request.POST['update_note']
+                    title = request.POST['title']
+                    note = request.POST['notes']
+                    if(ContentWritingTeam.update_note(id, title, note)):
+                        messages.success(request,"Note updated successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+                    return redirect("content_writing_and_publications_team:event_form_add_notes",event_id)
             
             context = {
                 'all_sc_ag':sc_ag,

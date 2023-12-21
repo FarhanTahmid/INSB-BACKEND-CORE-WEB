@@ -109,7 +109,7 @@
               <br>
             </div>
               
-            <!--Tab view for Events-->
+            <!--Tab view for Graphics-->
             <!--Tab view Start-->
             {% block graphics_team_event_form_tab %}
                 {% include "Events/graphics_team_event_form_tabs.html" %}
@@ -118,9 +118,9 @@
             
             
 
-            {% block graphics_form %}
-                {% include "Events/graphics_event_form_content.html" %}
-            {% endblock graphics_form %}
+            {% block graphics_team_edit_form_add_links %}
+              {% include "Events/graphics_team_event_form_add_links_content.html" %}
+            {% endblock graphics_team_edit_form_add_links %}
 
                         
 
@@ -143,8 +143,7 @@
     <script src="{% static 'table_search.js'%}"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>   
     <script src="{% static 'tab_view.js'%}"></script>
 
     
