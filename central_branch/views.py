@@ -1339,6 +1339,37 @@ def event_edit_graphics_form_tab(request, event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
+    
+@login_required
+def event_edit_graphics_form_links_sub_tab(request,event_id):
+    ''' This function loads the content tab page of events '''
+
+     #Initially loading the events whose  links and images were previously uploaded
+    #and can be editible
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        #Get event details from databse
+        # event_details = Events.objects.get(pk=event_id)
+        # has_access = Branch.event_page_access(request)
+        if(True):
+
+            context={
+                'is_branch' : True,
+                'event_id' : event_id,
+                'all_sc_ag':sc_ag,
+
+            }
+            return render(request,"Events/event_edit_graphics_form_links_sub_tab.html",context)
+        else:
+            return render(request, 'access_denied2.html')
+        
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
 
 @login_required
 def event_edit_content_form_tab(request,event_id):

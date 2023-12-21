@@ -8,8 +8,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        min-width: 50px; /* Set minimum width */
-        min-height: 50px; /* Set minimum height */
+        width: 45px; /* Set minimum width */
+        height: 45px; /* Set minimum height */
         background-color: transparent; /* Set to transparent or any other color for the inside */
         border: 2px solid #78BE20; /* Border color is green */
         border-radius: 50%;
@@ -47,7 +47,7 @@
             {% csrf_token %}
             <div class="box-body">
                 
-                <div class="form-group row">
+                <div class="form-group row align-items-center">
                     <label for="captions" class="col-sm-3 form-control-label">Add Notes:</label>
                     <div class="col-sm-7">
                         <!-- Add input field for captions here if needed -->
@@ -85,7 +85,7 @@
 
 <!-- Updated Modal for adding captions -->
 <div class="modal fade" id="AddCaptionModal" tabindex="-1" role="dialog" aria-labelledby="AddCaptionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addCaptionModalLabel">Add Note</h5>
@@ -101,7 +101,7 @@
                         <label>Title: </label> 
                             <input
                                 placeholder="Title"
-                                class="form-control w-75"
+                                class="form-control"
                                 type="text"
                                 autocomplete="off"
                                 required
