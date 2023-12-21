@@ -63,7 +63,7 @@
                     {% for note,value in all_notes_content.items %}
                     <div class="row container-fluid bg-light">
                         <div class="col-sm-11">
-                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal_{{note.pk}}" onclick="openModal('{{note.pk}}')">{{note.title}}</a>
+                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal_{{note.pk}}">{{note.title}}</a>
                         </div>
                         <div class="col-sm-1 d-flex align-items-center justify-content-center">
                             <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{note.pk}}')">✖</button>
@@ -139,7 +139,7 @@
                 <!-- Display existing caption in a textarea for editing -->
                 <form method="POST">
                     {% csrf_token %}
-                    <input id="update_note_{{note.pk}}" name= "update_note" type="hidden">
+                    <input id="update_note_{{note.pk}}" name="update_note" value="{{note.pk}}" type="hidden">
                     <div class="form-group">
                         <label>Title: </label> 
                             <input
@@ -194,13 +194,11 @@
 </div>
 
 <script>
-    function openModal(note) {
+    function openModal(remove_note) {
         // Set data in the modal
-        var inputElement = document.getElementById('update_note_' + note);
-        var inputElement2 = document.getElementById('remove_note');    
-        inputElement.value=note;
-        inputElement2.value=note
-        console.log(note)
+        var inputElement = document.getElementById('remove_note');    
+        inputElement.value=remove_note;
+        console.log(remove_note)
     }
 </script>
 
