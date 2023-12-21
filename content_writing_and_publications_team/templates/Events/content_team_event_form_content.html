@@ -17,14 +17,8 @@
             <div class="box-body">
 
                 <div class="form-group">
-                    <label>Event Description: <span style="color:red">*</span></label>
-                    <textarea
-                        placeholder="Event Description"
-                        class="form-control"
-                        rows="4" 
-                        required
-                        name="event_description"
-                    >{{event_details.event_description}}</textarea>
+                    {{description_form.media}}
+                    {{description_form.as_p}}
                 </div>
 
                 <br>
@@ -37,7 +31,7 @@
                         type="url"
                         autocomplete="off"
                         id="field1"
-                        value="{{document_links.document_link}}"
+                        value="{{drive_link_of_documents.documents_link}}"
                         name="drive_link_of_documents"
                     />
                 </div>
@@ -57,7 +51,13 @@
                     <input type="hidden" name="selected_documents" id="content-selected-documents">
                     <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
                 </div>
-
+                <div align="center" flex-direction="column" justify-content="flex-end">
+                    {% for document in documents %}
+                    <li>
+                    <a href="{{media_url}}{{document.document}}" target="_blank" rel="noopener noreferrer" style="color:blue">{{document.document}}</a>
+                    </li>
+                    {% endfor %}
+                </div>
                 <br>
                     
                 <div class="form-group text-center">
