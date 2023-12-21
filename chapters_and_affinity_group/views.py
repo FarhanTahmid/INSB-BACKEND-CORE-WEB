@@ -1116,17 +1116,49 @@ def event_edit_graphics_form_links_sub_tab(request,primary,event_id):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        all_graphics_link = GraphicsTeam.get_all_graphics_form_link(event_id)
         #Get event details from databse
         # event_details = Events.objects.get(pk=event_id)
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
         if(has_access):
+
+            if request.POST.get('add_link'):
+
+                    form_link = request.POST.get('graphics_form_link')
+                    title =request.POST.get('title')
+                    if GraphicsTeam.add_graphics_form_link(event_id,form_link,title):
+                        messages.success(request,'Saved Changes!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("chapters_and_affinity_group:event_edit_graphics_form_links_sub_tab",primary,event_id)
             
+            if request.POST.get('update_link'):
+
+                    form_link = request.POST.get('form_link')
+                    title =request.POST.get('title')
+                    pk = request.POST.get('link_pk')
+                    if GraphicsTeam.update_graphics_form_link(form_link,title,pk):
+                        messages.success(request,'Updated Successfully!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("chapters_and_affinity_group:event_edit_graphics_form_links_sub_tab",primary,event_id)
+
+            if request.POST.get('remove_form_link'):
+
+                    id = request.POST.get('remove_link')
+                    if GraphicsTeam.remove_graphics_form_link(id):
+                        messages.success(request,'Deleted Successfully!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("chapters_and_affinity_group:event_edit_graphics_form_links_sub_tab",primary,event_id)
+
             context={
                 'is_branch' : False,
                 'primary' : primary,
                 'event_id' : event_id,
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
+                'all_graphics_link':all_graphics_link,
 
             }
             return render(request,"Events/event_edit_graphics_form_links_sub_tab.html",context)
