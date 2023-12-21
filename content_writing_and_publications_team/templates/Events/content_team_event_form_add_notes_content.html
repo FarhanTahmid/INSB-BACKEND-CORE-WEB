@@ -8,8 +8,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        min-width: 50px; /* Set minimum width */
-        min-height: 50px; /* Set minimum height */
+        width: 45px; /* Set minimum width */
+        height: 45px; /* Set minimum height */
         background-color: transparent; /* Set to transparent or any other color for the inside */
         border: 2px solid #78BE20; /* Border color is green */
         border-radius: 50%;
@@ -47,7 +47,7 @@
             {% csrf_token %}
             <div class="box-body">
                 
-                <div class="form-group row">
+                <div class="form-group row align-items-center">
                     <label for="captions" class="col-sm-3 form-control-label">Add Notes:</label>
                     <div class="col-sm-7">
                         <!-- Add input field for captions here if needed -->
@@ -59,8 +59,8 @@
                 
                 <hr>
                 <div id="captions-container" class="mt-3">
-                    <label>Captions:</label> 
-                    <div class="row container-fluid bg-light">
+                    <label class="mb-0">Notes:</label> 
+                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                         <div class="col-sm-11">
                             <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal">Sample Note</a>
                         </div>
@@ -83,7 +83,7 @@
 
 <!-- Updated Modal for adding captions -->
 <div class="modal fade" id="AddCaptionModal" tabindex="-1" role="dialog" aria-labelledby="AddCaptionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addCaptionModalLabel">Add Note</h5>
@@ -99,7 +99,7 @@
                         <label>Title: </label> 
                             <input
                                 placeholder="Title"
-                                class="form-control w-75"
+                                class="form-control"
                                 type="text"
                                 autocomplete="off"
                                 required
@@ -107,6 +107,8 @@
                                 value="" 
                             />
                         <!-- Use form-control class for full-width textarea -->
+                        <br>
+                        <label>Note: </label> 
                         <textarea class="form-control" id="caption" name="caption" rows="4"></textarea>
                     </div>
             </div>
@@ -123,7 +125,7 @@
 
 <!-- New modal for editing captions -->
 <div class="modal fade" id="EditCaptionModal" tabindex="-1" role="dialog" aria-labelledby="EditCaptionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editCaptionModalLabel">Edit Note</h5>
@@ -136,8 +138,20 @@
                 <form method="POST">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="editedCaption">Note:</label>
-                        <textarea class="form-control" id="editedCaption" name="editedCaption" rows="4">Sample Note</textarea>
+                        <label>Title: </label> 
+                            <input
+                                placeholder="Title"
+                                class="form-control"
+                                type="text"
+                                autocomplete="off"
+                                required
+                                name="title"
+                                value="Sample Text" 
+                            />
+                        <!-- Use form-control class for full-width textarea -->
+                        <br>
+                        <label>Note: </label> 
+                        <textarea class="form-control" id="caption" name="caption" rows="4"></textarea>
                     </div>
             </div>
             <div class="modal-footer">
