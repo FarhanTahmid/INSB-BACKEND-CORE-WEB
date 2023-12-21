@@ -22,6 +22,15 @@ class Content_Team_Document(models.Model):
     def __str__(self) -> str:
         return str(self.pk)
     
+class Content_Team_Documents_Link(models.Model):
+    event_id = models.ForeignKey(Events,on_delete=models.CASCADE)
+    documents_link=models.URLField(null=True,blank=True,max_length=300)
+
+    class Meta:
+        verbose_name='Content Team Documents Link'
+    def __str__(self) -> str:
+        return str(self.pk)
+    
 
 class Content_Notes(models.Model):
     event_id = models.ForeignKey(Events,on_delete=models.CASCADE)

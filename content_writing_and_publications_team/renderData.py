@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from users.models import Members
 from port.models import Teams,Roles_and_Position
 from system_administration.models import CWP_Data_Access
-from .models import Content_Notes
+from .models import Content_Notes, Content_Team_Documents_Link
 import logging
 import traceback
 from system_administration.system_error_handling import ErrorHandling
@@ -122,3 +122,26 @@ class ContentWritingTeam:
             ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
+        
+    def update_event_details(event_id, event_description, drive_link):
+        try:
+            event = Events.objects.get(id=event_id)
+            event.event_description = event_description
+            event.save()
+
+            if(drive_link != ''):
+                if(Content_Team_Documents_Link.objects.filter(event_id=event_id).exists()):
+                    Content_Team_Documents_Link.objects.update(event_id=event_id, documents_link=drive_link)
+                else:
+                    documents_link = Content_Team_Documents_Link.objects.create(event_id=event, documents_link=drive_link)
+                    documents_link.save()
+            else:
+                if(Content_Team_Documents_Link.objects.filter(event_id=event_id).exists()):
+                    Content_Team_Documents_Link.objects.get(event_id=event_id).delete()
+
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
