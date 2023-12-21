@@ -10,3 +10,8 @@ class Graphics_Link(models.Model):
 class Graphics_Banner_Image(models.Model):
     event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
     selected_image=ResizedImageField(null=True,blank=True,default=None,upload_to='Event Banner Image/')
+
+class Graphics_Form_Link(models.Model):
+    event_id = models.ForeignKey(Events,on_delete=models.CASCADE)
+    graphics_form_link_name = models.CharField(null=True,blank=True,max_length = 200)
+    graphics_form_link = models.URLField(null=True,blank=True,max_length=300)

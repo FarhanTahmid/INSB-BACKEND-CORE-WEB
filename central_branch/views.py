@@ -1342,22 +1342,55 @@ def event_edit_graphics_form_tab(request, event_id):
     
 @login_required
 def event_edit_graphics_form_links_sub_tab(request,event_id):
-    ''' This function loads the content tab page of events '''
+    ''' This function loads the graphics form link page of events '''
 
      #Initially loading the events whose  links and images were previously uploaded
     #and can be editible
 
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
+        all_graphics_link = GraphicsTeam.get_all_graphics_form_link(event_id)
         #Get event details from databse
         # event_details = Events.objects.get(pk=event_id)
         # has_access = Branch.event_page_access(request)
         if(True):
 
+            if request.POST.get('add_link'):
+
+                    form_link = request.POST.get('graphics_form_link')
+                    title =request.POST.get('title')
+                    if GraphicsTeam.add_graphics_form_link(event_id,form_link,title):
+                        messages.success(request,'Saved Changes!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("central_branch:event_edit_graphics_form_links_sub_tab",event_id)
+            
+            if request.POST.get('update_link'):
+
+                    form_link = request.POST.get('form_link')
+                    title =request.POST.get('title')
+                    pk = request.POST.get('link_pk')
+                    if GraphicsTeam.update_graphics_form_link(form_link,title,pk):
+                        messages.success(request,'Updated Successfully!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("central_branch:event_edit_graphics_form_links_sub_tab",event_id)
+
+            if request.POST.get('remove_form_link'):
+
+                    id = request.POST.get('remove_link')
+                    if GraphicsTeam.remove_graphics_form_link(id):
+                        messages.success(request,'Deleted Successfully!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("central_branch:event_edit_graphics_form_links_sub_tab",event_id)
+
+
             context={
                 'is_branch' : True,
                 'event_id' : event_id,
                 'all_sc_ag':sc_ag,
+                'all_graphics_link':all_graphics_link,
 
             }
             return render(request,"Events/event_edit_graphics_form_links_sub_tab.html",context)

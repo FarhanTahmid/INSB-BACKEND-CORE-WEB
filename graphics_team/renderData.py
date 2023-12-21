@@ -7,7 +7,7 @@ import logging
 from datetime import datetime
 from system_administration.system_error_handling import ErrorHandling
 import traceback
-from .models import Graphics_Link,Graphics_Banner_Image
+from .models import Graphics_Link,Graphics_Banner_Image,Graphics_Form_Link
 from central_events.models import Events
 from django.conf import settings
 class GraphicsTeam:
@@ -135,6 +135,47 @@ class GraphicsTeam:
             path = settings.MEDIA_ROOT+str(image.selected_image)
             os.remove(path)
             image.delete()
+            return True
+        except Exception as e:
+            GraphicsTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def add_graphics_form_link(event_id,form_link,title):
+
+        '''This function adds the graphics form links to the respective event'''
+
+        try:
+            event = Graphics_Form_Link.objects.create(event_id = Events.objects.get(pk = event_id),graphics_form_link_name = title,graphics_form_link = form_link)
+            event.save()
+            return True
+        except Exception as e:
+            GraphicsTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def get_all_graphics_form_link(event_id):
+
+        return Graphics_Form_Link.objects.filter(event_id = Events.objects.get(pk = event_id))
+    
+    def update_graphics_form_link(form_link,title,pk):
+
+        '''This function updates the graphics form links to the respective event'''
+        try:
+            event = Graphics_Form_Link.objects.get(pk = pk)
+            event.graphics_form_link_name = title
+            event.graphics_form_link = form_link
+            event.save()
+            return True
+        except Exception as e:
+            GraphicsTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+
+    def remove_graphics_form_link(id):
+        try:
+
+            Graphics_Form_Link.objects.get(pk = id).delete()
             return True
         except Exception as e:
             GraphicsTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
