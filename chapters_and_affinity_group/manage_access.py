@@ -23,23 +23,18 @@ class SC_Ag_Render_Access:
             if(Access_Render.system_administrator_superuser_access(username=username) or Access_Render.system_administrator_staffuser_access(username=username)):
                 system_manager_access=True
             
-            #generate branch eb access
-            branch_eb_access=False
-            if(Access_Render.eb_access(username=username)):
-                branch_eb_access=True
+            #generate sc_ag eb access
+            sc_ag_eb_access=False
+            if(Access_Render.sc_ag_eb_access(username=username, sc_ag_primary=sc_ag_primary)):
+                sc_ag_eb_access=True
             
             # generate Faculty Advisor Access
             faculty_advisor_access=False
             if(Access_Render.faculty_advisor_access(username=username)):
                 faculty_advisor_access=True
             
-            # generate sc_ag_eb member access
-            sc_ag_eb_member_access=False
-            if(Access_Render.sc_ag_eb_access(username=username,sc_ag_primary=sc_ag_primary)):
-                sc_ag_eb_member_access=True
-            
             # if any of this is true, grant access
-            if(system_manager_access or branch_eb_access or faculty_advisor_access or sc_ag_eb_member_access):
+            if(system_manager_access or sc_ag_eb_access or faculty_advisor_access):
                 return True
             else:
                 return False
