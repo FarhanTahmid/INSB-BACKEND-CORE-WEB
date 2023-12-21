@@ -14,6 +14,12 @@
 
     
 }
+
+.event_container {
+  width: 90%;
+  max-width: 1140px;
+}
+
 </style>
 <section style="padding: 50px 0px;" class="">
     <div>
@@ -24,23 +30,48 @@
                 {% comment %} <img style="border: 1px solid rgb(205, 193, 193); padding: 5px; border-radius: 6px;" src="https://ieeensusb.org/wp-content/uploads/2021/03/157705762_257718782652594_8108325620051204445_n.jpg" width="100%" height="100%" alt=""> {% endcomment %}
                 <!-- SLIDER EVENT FR -->
                 <div> 
-                  <div id="carouselExampleFade" class="carousel slide carousel-fade">
+                  <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-interval="2000" data-bs-touch="true" data-bs-ride="carousel">
                     <div class="carousel-inner">
                       <div class="carousel-item active">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2021/03/150919934_1841727679327731_1755838250239808540_o.jpg" class="d-block w-100" alt="...">
+                        
+                        <div class="card mb-3">
+                          <img src="https://ieeensusb.org/wp-content/uploads/2021/03/150919934_1841727679327731_1755838250239808540_o.jpg" class="d-block w-100" alt="...">
+                          <div class="card-body">
+                            <h3 class="card-title"><b>21st Feb</b></h3>
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                          </div>
+                        </div>
                       </div>
                       <div class="carousel-item">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2023/12/405058251_641187728221994_8276667076881992039_n.jpg" class="d-block w-100" alt="...">
+                        
+                        <div class="card mb-3">
+                          <img src="https://ieeensusb.org/wp-content/uploads/2023/12/405058251_641187728221994_8276667076881992039_n.jpg" class="d-block w-100" alt="...">
+                          <div class="card-body">
+                            <h3 class="card-title">Card title</h3>
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                          </div>
+                        </div>
                       </div>
                       <div class="carousel-item">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2021/03/150919934_1841727679327731_1755838250239808540_o.jpg" class="d-block w-100" alt="...">
+                        
+                        <div class="card mb-3">
+                          <img src="https://ieeensusb.org/wp-content/uploads/2021/03/150919934_1841727679327731_1755838250239808540_o.jpg" class="d-block w-100" alt="...">
+                          <div class="card-body">
+                            <h3 class="card-title">Card title</h3>
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                          </div>
+                        </div>
+                        
                       </div>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade"  data-bs-slide="prev">
                       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                       <span class="visually-hidden">Previous</span>
                     </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+                    <button class="carousel-control-next" type="button"  data-bs-target="#carouselExampleFade"$ data-bs-slide="next">
                       <span class="carousel-control-next-icon" aria-hidden="true"></span>
                       <span class="visually-hidden">Next</span>
                     </button>
@@ -86,10 +117,17 @@
         </div>
     </div>
 </section>
+
+
+<script>
+  var myCarousel = document.querySelector('#carouselExampleFade')
+  var carousel = new bootstrap.Carousel(myCarousel)
+</script>
+
 <script> 
     // Dummy events data for demonstration, this is the calendar event load function
 
-
+    
 const eventsData = {
     '2023-07-27': ['Event 1', 'Event 2', 'text'],
     '2023-07-23': ['Event 3'],
@@ -250,8 +288,9 @@ function eventFilterFunction() {
 
 
 </script>
-{% comment %} <script src="{% static './js/event_script.js'%}"></script> {% endcomment %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+{% comment %} <script src="{% static './js/event_script.js'%}"></script> {% endcomment %}
 {% endblock event_with_calendar %}
 
 

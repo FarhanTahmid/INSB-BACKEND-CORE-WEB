@@ -125,6 +125,7 @@
                   
                       <thead>
                         <tr>
+                            <th>SL</th>
                             <th>Event Name</th>
                             <th>Event Organiser</th>
                             <th>Date of Event</th>
@@ -134,6 +135,7 @@
                       <tbody>
                         {% for event in events %}
                         <tr>
+                            <td>{{ forloop.counter }}</td>
                             <td><a style="color:blue;" href="{% url 'central_events:event_dashboard' event.id %}">{{event.event_name }}</a></td>
                             <td>{{ event.event_organiser.group_name }}</td>
                             <td>{{ event.event_date }}</td>
