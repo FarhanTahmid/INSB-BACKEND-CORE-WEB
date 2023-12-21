@@ -51,7 +51,13 @@
                     <input type="hidden" name="selected_documents" id="content-selected-documents">
                     <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
                 </div>
-
+                <div align="center" flex-direction="column" justify-content="flex-end">
+                    {% for document in documents %}
+                    <li>
+                    <a href="{{media_url}}{{document.document}}" target="_blank" rel="noopener noreferrer" style="color:blue">{{document.document}}</a>
+                    </li>
+                    {% endfor %}
+                </div>
                 <br>
                     
                 <div class="form-group text-center">

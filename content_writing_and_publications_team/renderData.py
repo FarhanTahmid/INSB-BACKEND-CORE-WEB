@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from users.models import Members
 from port.models import Teams,Roles_and_Position
 from system_administration.models import CWP_Data_Access
-from .models import Content_Notes, Content_Team_Documents_Link
+from .models import Content_Notes, Content_Team_Document, Content_Team_Documents_Link
 import logging
 import traceback
 from system_administration.system_error_handling import ErrorHandling
@@ -140,6 +140,24 @@ class ContentWritingTeam:
                     Content_Team_Documents_Link.objects.get(event_id=event_id).delete()
 
             return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def create_or_update_files(event_id, file_list):
+        try:
+            current_file_list = Content_Team_Document.objects.filter(event_id=event_id)
+            if(current_file_list.count != 0):
+                for document in current_file_list:
+                    document.document.delete()
+                    document.delete()
+            for document in file_list:
+                doc = Content_Team_Document.objects.create(event_id=Events.objects.get(id=event_id), document=document)
+                doc.save()
+                
+            return True
+            
         except Exception as e:
             ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

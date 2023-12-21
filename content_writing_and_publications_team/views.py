@@ -4,7 +4,8 @@ from django.contrib.auth.decorators import login_required
 from central_events.forms import EventForm
 from central_events.models import Events
 from content_writing_and_publications_team.manage_access import CWPTeam_Render_Access
-from content_writing_and_publications_team.models import Content_Team_Documents_Link
+from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
+from insb_port import settings
 from port.renderData import PortData
 from users.models import Members
 from central_branch.renderData import Branch
@@ -154,6 +155,15 @@ def event_form(request,event_id):
                 else:
                     messages.error(request,"Error occured! Please try again later.")
 
+                if(len(request.FILES.getlist('document')) > 0):
+                    file_list = request.FILES.getlist('document')
+                    success2 = ContentWritingTeam.create_or_update_files(event_id=event_id, file_list=file_list)
+                    if(success2):
+                        messages.success(request,"Files uploaded successfully!")
+                    else:
+                        messages.error(request,"Error occured while uploading files! Please try again later.")
+                        
+
                 return redirect("content_writing_and_publications_team:event_form",event_id)
                 
             event_details = Events.objects.get(id=event_id)
@@ -162,13 +172,17 @@ def event_form(request,event_id):
                 documents_link = Content_Team_Documents_Link.objects.get(event_id = Events.objects.get(pk=event_id))
             except:
                 documents_link = None
+
+            documents = Content_Team_Document.objects.filter(event_id=event_id)
             
             context = {
                 'all_sc_ag' : sc_ag,
                 'event_id' : event_id,
                 'event_details' : event_details,
                 'description_form' : form,
-                'drive_link_of_documents' : documents_link
+                'drive_link_of_documents' : documents_link,
+                'media_url' : settings.MEDIA_URL,
+                'documents' : documents
             }
 
             return render(request,"Events/content_team_event_form.html", context)
