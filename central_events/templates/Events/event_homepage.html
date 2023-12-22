@@ -162,7 +162,6 @@
                   
                       <thead>
                         <tr>
-                            <th>SL</th>
                             <th>Event Name</th>
                             <th>Event Organiser</th>
                             <th>Collaboration With</th>
@@ -173,11 +172,21 @@
                       <tbody>
                         {% for key, value in events.items %}
                         <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td><a style="color:blue;" href="{% url 'central_events:event_dashboard' event.id %}">{{event.event_name }}</a></td>
-                            <td>{{ event.event_organiser.group_name }}</td>
-                            <td>{{ event.event_date }}</td>
+                            {% if is_branch %}
+                            <td><a style="color:blue;" href="{% url 'central_branch:event_edit_form' key.id %}">{{key.event_name }}</a></td>
+                            {% else %}
+                            <td><a style="color:blue;" href="{% url 'chapters_and_affinity_group:event_edit_form' sc_ag_info.primary key.id %}">{{key.event_name }}</a></td>
+                            {% endif %}
+                            <td>{{ key.event_organiser.group_name }}</td>
+                            <td>
+                              {% for collabs in value %}
+                              <ul style="list-style-type: none; text-align:left;">
+                                    <li>{{ collabs }}</li>
+                              </ul>
                             
+                              {% endfor %}
+                            </td>
+                            <td>{{ key.event_date }}</td>
                         </tr>
                         {% endfor %}
                         

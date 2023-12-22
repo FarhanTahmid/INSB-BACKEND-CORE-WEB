@@ -838,9 +838,9 @@ def manage_view_access(request):
 def event_control_homepage(request):
     # This function loads all events and super events in the event homepage table
     
-    has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
+        has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
 
-    try:
+    # try:
         is_branch = True
         sc_ag=PortData.get_all_sc_ag(request=request)
         all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(1)
@@ -870,11 +870,11 @@ def event_control_homepage(request):
                 return redirect('central_branch:event_control')
             
         return render(request,'Events/event_homepage.html',context)
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+    # except Exception as e:
+    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+    #     # TODO: Make a good error code showing page and show it upon errror
+    #     return HttpResponseBadRequest("Bad Request")
     
 
 @login_required
