@@ -6,16 +6,87 @@
         max-width: 1140px;
     }
 </style>
+<!-- boostrap and other links-->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+
+<style>
+  .event-mark {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: red;
+    margin: 2px 1px;
+
+    
+}
+
+.event_container {
+  width: 90%;
+  max-width: 1140px;
+}
+
+</style>
 <section style="padding: 50px 0px;" class="">
     <div>
         <div class="event_container">
             
             <div class="upnext">
                 <h4 style="margin-bottom: 30px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">UP N</span>EXT</h4>
-                <img style="border: 1px solid rgb(205, 193, 193); padding: 5px; border-radius: 6px;" src="https://ieeensusb.org/wp-content/uploads/2021/03/157705762_257718782652594_8108325620051204445_n.jpg" width="100%" height="100%" alt="">
+                {% comment %} <img style="border: 1px solid rgb(205, 193, 193); padding: 5px; border-radius: 6px;" src="https://ieeensusb.org/wp-content/uploads/2021/03/157705762_257718782652594_8108325620051204445_n.jpg" width="100%" height="100%" alt=""> {% endcomment %}
+                <!-- SLIDER EVENT FR -->
+                <div> 
+                  <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-interval="2000" data-bs-touch="true" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        
+                        <div class="card mb-3">
+                          <img src="https://ieeensusb.org/wp-content/uploads/2021/03/150919934_1841727679327731_1755838250239808540_o.jpg" class="d-block w-100" alt="...">
+                          <div class="card-body">
+                            <h3 class="card-title"><b>21st Feb</b></h3>
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        
+                        <div class="card mb-3">
+                          <img src="https://ieeensusb.org/wp-content/uploads/2023/12/405058251_641187728221994_8276667076881992039_n.jpg" class="d-block w-100" alt="...">
+                          <div class="card-body">
+                            <h3 class="card-title">Card title</h3>
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        
+                        <div class="card mb-3">
+                          <img src="https://ieeensusb.org/wp-content/uploads/2021/03/150919934_1841727679327731_1755838250239808540_o.jpg" class="d-block w-100" alt="...">
+                          <div class="card-body">
+                            <h3 class="card-title">Card title</h3>
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade"  data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button"  data-bs-target="#carouselExampleFade"$ data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                  </div>
+                </div>
             </div>
-            <div class="event_calender">
-                <!-- Calender start -->
+            <!-- Calender start -->
+             <div class="event_calender">
+                
                 <h4 style="margin-bottom: 30px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">EVENT C</span>ALENDER</h4>
                 <div class="calendar">
                 <div class="header" style="padding: 20px;">
@@ -32,17 +103,202 @@
                 <span class="day-of-week">Fri</span>
                 <span class="day-of-week">Sat</span>
                 </div>
-                <div class="days" style="padding: 15px 0px; font-weight: bold;"></div>
+                <div class="days " style="padding: 15px 0px; font-weight: bold;  >
+                    <span style="color:red; height:20px"></span>
+                    
+                </div>
                 </div>
                 <div class="event-box" style="padding: 20px;">
                     <h5>Events for <span class="selected-date"></span></h3>
                     <ul style="list-style-type: disc; margin-top: 15px;" class="events-list"></ul>
                 </div>
+                {% comment %} <div id="calendar"></div> {% endcomment %}
+                 
+
+                 <!--my calender-->
+               
+            
+            </div> 
             <!-- calender end -->
-            </div>
         </div>
     </div>
 </section>
 
+
+<script>
+  var myCarousel = document.querySelector('#carouselExampleFade')
+  var carousel = new bootstrap.Carousel(myCarousel)
+</script>
+
+<script> 
+    // Dummy events data for demonstration, this is the calendar event load function
+
+    
+const eventsData = {
+    '2023-07-27': ['Event 1', 'Event 2', 'text'],
+    '2023-07-23': ['Event 3'],
+    '2023-07-15': ['hello event'],
+    '2023-12-18' : ['test', 'spacx'],
+    '2023-12-19' : ['Event 1', 'Event 2', 'test', 'test1'],
+    '2023-12-20' : ['x1']
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    const calendarContainer = document.querySelector('.calendar');
+    const daysContainer = document.querySelector('.days');
+    const monthYear = document.querySelector('.month-year');
+    const eventBox = document.querySelector('.event-box');
+    const selectedDateText = document.querySelector('.selected-date');
+    const eventsList = document.querySelector('.events-list');
+
+    let currentDate = new Date();
+    renderCalendar(currentDate);
+
+    function renderCalendar(date) {
+        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; // Day abbreviations
+        const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        const prevMonthLastDay = new Date(date.getFullYear(), date.getMonth(), 0);
+        const daysInMonth = lastDay.getDate();
+        const daysInPrevMonth = prevMonthLastDay.getDate();
+        const startDay = firstDay.getDay();
+        const endDay = lastDay.getDay();
+        const prevMonthDays = startDay === 0 ? 6 : startDay - 1;
+        const nextMonthDays = endDay === 0 ? 0 : 7 - endDay;
+
+        daysContainer.innerHTML = '';
+
+        // Display previous month days
+        for (let i = prevMonthDays; i > 0; i--) {
+            const day = daysInPrevMonth - i + 1;
+            const dayElement = createDayElement(new Date(date.getFullYear(), date.getMonth() - 1, day));
+            dayElement.classList.add('prev-month');
+            
+            daysContainer.appendChild(dayElement);
+            
+
+        }
+
+        // Display current month days
+        for (let i = 1; i <= daysInMonth; i++) {
+            const dayElement = createDayElement(new Date(Date.UTC(date.getFullYear(), date.getMonth(), i)));
+            
+            const formattedDate = getFormattedDate(dayElement.date);
+            const event_marks = document.createElement('div');
+            event_marks.style.display = 'flex';
+            event_marks.style.textAlign = 'center';
+            
+            if (eventsData.hasOwnProperty(formattedDate)) {
+              eventsData[formattedDate].forEach(() => {
+                  const eventMark = document.createElement('div');
+                  eventMark.classList.add('event-mark');
+                  event_marks.appendChild(eventMark);
+                  eventMark.style.width = '6px';
+                    eventMark.style.height = '6px';
+                    eventMark.style.borderRadius = '50%';
+                    eventMark.style.backgroundColor = 'red';
+                    eventMark.style.margin = '2px 1px';
+                    eventMark.style.position = 'static';
+                    eventMark.style.bottom = '1px';
+                    eventMark.style.left = '0';
+                    eventMark.style.transform = 'translateX(50%)';
+                    eventMark.style.transform = 'translateY(0%)';
+                    eventMark.style.top = '2px';
+                  dayElement.appendChild(event_marks);
+              });
+          }
+            
+            daysContainer.appendChild(dayElement);
+            
+        }
+        
+        // Display next month days
+        for (let i = 1; i <= nextMonthDays; i++) {
+            const dayElement = createDayElement(new Date(date.getFullYear(), date.getMonth() + 1, i));
+            dayElement.classList.add('next-month');
+            daysContainer.appendChild(dayElement);
+        }
+
+        monthYear.textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    }
+
+    function createDayElement(date) {
+        const dayElement = document.createElement('div');
+        dayElement.classList.add('day');
+        dayElement.style.display = 'flex';
+        dayElement.style.flexDirection = 'column';
+        dayElement.textContent = date.getDate();
+        {% comment %} dayElement.date = date; {% endcomment %}
+        dayElement.date = new Date(date.toISOString().split('T')[0]);
+        dayElement.addEventListener('click', () => showEventsForDate(date));
+        return dayElement;
+    }
+
+    function showEventsForDate(date) {
+        const formattedDate = getFormattedDate(date);
+        console.log(formattedDate)
+        selectedDateText.textContent = formattedDate;
+        const eventsForDate = eventsData[formattedDate] || [];
+        eventsList.innerHTML = '';
+        if (eventsForDate.length > 0) {
+            eventBox.style.display = 'block';
+            eventBox.classList.add('show');
+            eventsForDate.forEach((event) => {
+                const eventItem = document.createElement('li');
+                eventItem.textContent = event;
+                eventsList.appendChild(eventItem);
+            });
+        } else {
+            eventBox.style.display = 'none';
+            eventBox.classList.remove('show');
+        }
+    }
+
+    function getFormattedDate(date) {
+      return date.toISOString('en-US').split('T')[0];
+        
+    }
+
+    document.querySelector('.prev-btn').addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar(currentDate);
+    });
+
+    document.querySelector('.next-btn').addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar(currentDate);
+    });
+});
+
+
+function eventFilterFunction() {
+    var input, filter, box, eventName, i, txtValue;
+    input = document.getElementById("eventFilter");
+    filter = input.value.toUpperCase();
+    box = document.getElementsByClassName("event_box");
+    for (i = 0; i < box.length; i++) {
+        eventName = box[i].getElementsByClassName("event_name")[0];
+        if (eventName) {
+            txtValue = eventName.textContent || eventName.innerText;
+            console.log('Name: ', txtValue)
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+
+                box[i].style.display = "block";
+            } else {
+                box[i].style.display = "none";
+            }
+        }
+    }
+}
+
+
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+{% comment %} <script src="{% static './js/event_script.js'%}"></script> {% endcomment %}
 {% endblock event_with_calendar %}
+
+
+
 
