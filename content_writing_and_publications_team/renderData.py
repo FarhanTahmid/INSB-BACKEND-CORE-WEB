@@ -81,7 +81,7 @@ class ContentWritingTeam:
         
     def creating_note(title,note,event_id):
 
-        '''This function creates notes for the specific event. It takes the note title, note description and event_id'''
+        '''This function creates notes for the specific event. It takes the note title, note description and event id'''
 
         try:
             new_note = Content_Notes.objects.create(event_id = Events.objects.get(pk = event_id),title = title,notes = note)
@@ -93,7 +93,7 @@ class ContentWritingTeam:
             return False
         
     def load_note_content(event_id):
-        ''' This function is used to load all the notes added by CWP Team for a specific event. It takes event_id as parameter and returns a dictionary with note and its associated form object '''
+        ''' This function is used to load all the notes added by CWP Team for a specific event. It takes event id as parameter and returns a dictionary with note and its associated form object '''
     
         all_notes_for_particular_event = Content_Notes.objects.filter(event_id = Events.objects.get(pk=event_id))
         notes_and_content = {}
@@ -102,10 +102,10 @@ class ContentWritingTeam:
             notes_and_content.update({note:form})
         return notes_and_content
 
-    def remove_note(id):
+    def remove_note(note_id):
         ''' This function is used to delete a note. It takes a note id '''
         try:
-            note = Content_Notes.objects.get(id=id)
+            note = Content_Notes.objects.get(id=note_id)
             note.delete()
             return True
         except Exception as e:
@@ -113,9 +113,10 @@ class ContentWritingTeam:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
-    def update_note(id, title, note_content):
+    def update_note(note_id, title, note_content):
+        ''' This function is used to update a note of CWP Team. It takes note id, note title and note content as parameters. '''
         try:
-            note = Content_Notes.objects.get(id=id)
+            note = Content_Notes.objects.get(id=note_id)
             note.title = title
             note.notes = note_content
             note.save()
@@ -126,18 +127,24 @@ class ContentWritingTeam:
             return False
         
     def update_event_details(event_id, event_description, drive_link):
+        ''' This function is used for CWP Team to update event details [Event Descrition & Drive link]. It takes event id, event description and drive link as parameters '''
         try:
             event = Events.objects.get(id=event_id)
             event.event_description = event_description
             event.save()
 
+            #If drive link is given
             if(drive_link != ''):
+                #If a drive link existed previously then update it
                 if(Content_Team_Documents_Link.objects.filter(event_id=event_id).exists()):
                     Content_Team_Documents_Link.objects.update(event_id=event_id, documents_link=drive_link)
                 else:
+                #Else create a new link
                     documents_link = Content_Team_Documents_Link.objects.create(event_id=event, documents_link=drive_link)
                     documents_link.save()
             else:
+            #Drive link is not given
+                #If a drive link exists then delete it from database
                 if(Content_Team_Documents_Link.objects.filter(event_id=event_id).exists()):
                     Content_Team_Documents_Link.objects.get(event_id=event_id).delete()
 
@@ -148,6 +155,7 @@ class ContentWritingTeam:
             return False
         
     def upload_files(event_id, file_list):
+        ''' This function is used to upload files (single or multiple) for CWP Team. It takes event id and file list as parameters '''
         try:
             for document in file_list:
                 doc = Content_Team_Document.objects.create(event_id=Events.objects.get(id=event_id), document=document)
@@ -160,9 +168,10 @@ class ContentWritingTeam:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
     
-    def delete_file(id):
+    def delete_file(file_id):
+        ''' This function is used to delete a file of CWP Team. It takes a file id as parameter '''
         try:
-            doc = Content_Team_Document.objects.get(id=id)
+            doc = Content_Team_Document.objects.get(id=file_id)
             doc.document.delete()
             doc.delete()
             return True
