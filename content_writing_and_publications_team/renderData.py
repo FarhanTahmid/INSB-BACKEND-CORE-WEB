@@ -81,7 +81,7 @@ class ContentWritingTeam:
         
     def creating_note(title,note,event_id):
 
-        '''This function creates notes for the specific event'''
+        '''This function creates notes for the specific event. It takes the note title, note description and event_id'''
 
         try:
             new_note = Content_Notes.objects.create(event_id = Events.objects.get(pk = event_id),title = title,notes = note)
@@ -93,6 +93,7 @@ class ContentWritingTeam:
             return False
         
     def load_note_content(event_id):
+        ''' This function is used to load all the notes added by CWP Team for a specific event. It takes event_id as parameter and returns a dictionary with note and its associated form object '''
     
         all_notes_for_particular_event = Content_Notes.objects.filter(event_id = Events.objects.get(pk=event_id))
         notes_and_content = {}
@@ -102,6 +103,7 @@ class ContentWritingTeam:
         return notes_and_content
 
     def remove_note(id):
+        ''' This function is used to delete a note. It takes a note id '''
         try:
             note = Content_Notes.objects.get(id=id)
             note.delete()
@@ -145,13 +147,8 @@ class ContentWritingTeam:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
-    def create_or_update_files(event_id, file_list):
+    def upload_files(event_id, file_list):
         try:
-            current_file_list = Content_Team_Document.objects.filter(event_id=event_id)
-            if(current_file_list.count != 0):
-                for document in current_file_list:
-                    document.document.delete()
-                    document.delete()
             for document in file_list:
                 doc = Content_Team_Document.objects.create(event_id=Events.objects.get(id=event_id), document=document)
                 doc.save()
@@ -162,4 +159,15 @@ class ContentWritingTeam:
             ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
+    
+    def delete_file(id):
+        try:
+            doc = Content_Team_Document.objects.get(id=id)
+            doc.document.delete()
+            doc.delete()
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False       
         

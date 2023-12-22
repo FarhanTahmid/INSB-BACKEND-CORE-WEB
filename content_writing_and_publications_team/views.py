@@ -143,28 +143,36 @@ def event_form(request,event_id):
 
         if has_access:
             if(request.method == "POST"):
-                event_description = request.POST['event_description']
-                if('drive_link_of_documents' in request.POST):
-                    drive_link = request.POST['drive_link_of_documents']
-                    success = ContentWritingTeam.update_event_details(event_id=event_id, event_description=event_description, drive_link=drive_link)
-                else:
-                    success = ContentWritingTeam.update_event_details(event_id=event_id, event_description=event_description)
-
-                if(success):
-                    messages.success(request,"Event details updated successfully!")
-                else:
-                    messages.error(request,"Error occured! Please try again later.")
-
-                if(len(request.FILES.getlist('document')) > 0):
-                    file_list = request.FILES.getlist('document')
-                    success2 = ContentWritingTeam.create_or_update_files(event_id=event_id, file_list=file_list)
-                    if(success2):
-                        messages.success(request,"Files uploaded successfully!")
+                if('save' in request.POST):
+                    event_description = request.POST['event_description']
+                    if('drive_link_of_documents' in request.POST):
+                        drive_link = request.POST['drive_link_of_documents']
+                        success = ContentWritingTeam.update_event_details(event_id=event_id, event_description=event_description, drive_link=drive_link)
                     else:
-                        messages.error(request,"Error occured while uploading files! Please try again later.")
-                        
+                        success = ContentWritingTeam.update_event_details(event_id=event_id, event_description=event_description)
 
-                return redirect("content_writing_and_publications_team:event_form",event_id)
+                    if(success):
+                        messages.success(request,"Event details updated successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+
+                    if(len(request.FILES.getlist('document')) > 0):
+                        file_list = request.FILES.getlist('document')
+                        success2 = ContentWritingTeam.upload_files(event_id=event_id, file_list=file_list)
+                        if(success2):
+                            messages.success(request,"Files uploaded successfully!")
+                        else:
+                            messages.error(request,"Error occured while uploading files! Please try again later.")
+                            
+                    return redirect("content_writing_and_publications_team:event_form",event_id)
+                
+                if('remove' in request.POST):
+                    id = request.POST.get('remove_doc')
+                    if ContentWritingTeam.delete_file(id):
+                        messages.success(request,"File deleted successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+                    return redirect("content_writing_and_publications_team:event_form",event_id)
                 
             event_details = Events.objects.get(id=event_id)
             form = EventForm({'event_description' : event_details.event_description})
@@ -198,6 +206,7 @@ def event_form(request,event_id):
 
 @login_required
 def event_form_add_notes(request,event_id):
+    ''' This function is used to generate view for add notes of content team. '''
 
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
