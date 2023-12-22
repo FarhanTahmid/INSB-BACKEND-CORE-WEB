@@ -277,82 +277,133 @@
       </ol></b>
 
 
-      <div style="text-align:center; margin-top=30px; background-color: white;">
-        <div class="container" style="justify-content:center;">
-
-          </ul>
-
-          <br><br>
-
-          <div class="box-header">
-            <h1 style="text-align:center;font-size:30px;">Add Details</h1>
-          </div>
-
-          <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="box-body">
-
-              <div class="form-group row">
-                <label class="col-sm-2 form-control-label">Folder Drive Link for Event Pictures</label>
-                <div class="col-sm-10">
-                  <input placeholder="Provide Drive Link for The Event" class="form-control" type="url"
-                    autocomplete="off" required id="field1" value="{{media_link}}" name="drive_link_of_event" />
-
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-2 form-control-label">Folder Drive Link for Pictures with Logos</label>
-                <div class="col-sm-10">
-                  <input placeholder="Provide Link for the Logo's" class="form-control" type="url" autocomplete="off"
-                    required value="{{logo_link}}" name="logo_link_of_event" />
-
-                </div>
-              </div>
-
-              <div id="imageForm">
-                <label for="imageUpload">Select up to 6 images:</label>
-                <input type="file" id="imageUpload" name="images[]" accept="image/*" multiple>
-                <div id="selectedImages"></div>
-                <input type="hidden" id="selectedImagesInput" name="selectedImages">
-                {% comment %} <button type="button" onclick="uploadImages()">Upload</button> {% endcomment %}
-                <div id="imageCount">0 selected</div>
-              </div>
-
-              {% comment %} {% if not all_image_exists %}
-              <div class="container" style="justify-content:center;">
-                <label class="form-group row"><b>Upload Maximum {{required}} images<b></label>
-
-                <div class="upload__box">
-                  <div class="upload__btn-box">
-                    <label class="upload__btn">
-                      <p>Upload Image</p>
-                      <input type="file" multiple="" id="fileInput" name="images" data-max_length="20"
-                        class="upload__inputfile">
-                    </label>
-                  </div>
-                  <div class="upload__img-wrap"></div>
-                </div>
-
-              </div>
-              {% endif %} {% endcomment %}
-
-              <br>
-              <div class="footer" style="position:right;">
-                {% comment %} {% if all_image_exists %}
-                <button type="submit" name="add_event_pic_and_others" class="btn btn-success p-x-md"
-                  value="Update">Update</button>
-                {% elif not all_image_exists and image_exists %}
-                <button type="submit" name="add_more_pic_and_update_link" class="btn btn-success p-x-md"
-                  value="Add">Update</button>
-                {% else %} {% endcomment %}
-                <button type="submit" name="add_event_pic_and_others" class="btn btn-success p-x-md"
-                  value="Add">Add</button>
-                {% comment %} {% endif %} {% endcomment %}
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
+        <div style="text-align:center; margin-top=30px; background-color: white;">  
+            <div class="container" style="justify-content:center;">
+              
+              </ul>
+              
+                <br><br>
+                   
+                                        <div class="box-header">
+                                            <h1 style="text-align:center;font-size:30px;">Add Details</h1>
+                                        </div>
+                                        
+                                        <form method="POST" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <div class="box-body">
+                                              
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-2 form-control-label">Folder Drive Link for Event Pictures</label>
+                                                        <div class="col-sm-10">
+                                                            <input
+                                                            placeholder="Provide Drive Link for The Event"
+                                                            class="form-control"
+                                                            type="url"
+                                                            autocomplete="off"
+                                                            required
+                                                            id="#field1"
+                                                            value="{{media_link}}"
+                                                            name="drive_link_of_event"/>
+                                
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-2 form-control-label">Folder Drive Link for Pictures with Logos</label>
+                                                        <div class="col-sm-10">
+                                                            <input
+                                                            placeholder="Provide Link for the Logo's"
+                                                            class="form-control"
+                                                            type="url"
+                                                            autocomplete="off"
+                                                            required
+                                                            value="{{logo_link}}"
+                                                            name="logo_link_of_event"/>
+                                
+                                                        </div>
+                                                    </div>
+                                                    {% if not all_image_exists %}
+                                                    <div class="container" style="justify-content:center;">
+                                                        <label class="form-group row"><b>Upload Maximum {{required}} images<b></label>
+                                                                       
+                                                                        <div class="upload__box">
+                                                                            <div class="upload__btn-box">
+                                                                              <label class="upload__btn">
+                                                                                <p>Upload Image</p> 
+                                                                                <input type="file" multiple="" id="fileInput" name="images" data-max_length="20" class="upload__inputfile">
+                                                                              </label>
+                                                                            </div>
+                                                                            <div class="upload__img-wrap"></div>
+                                                                          </div>
+                                                         
+                                                    </div>
+                                                    {% endif %}
+                                          
+                                                    <br>
+                                                    <div class="footer" style="position:right;">
+                                                      {% if all_image_exists %}
+                                                         <button type="submit" name="add_event_pic_and_others" class="btn btn-success p-x-md" value="Update">Update</button> 
+                                                      {% elif not all_image_exists and image_exists %}
+                                                         <button type="submit" name="add_more_pic_and_update_link" class="btn btn-success p-x-md" value="Add">Update</button>
+                                                      {% else %}
+                                                        <button type="submit" name="add_event_pic_and_others" class="btn btn-success p-x-md" value="Add">Add</button>
+                                                      {% endif %}              
+                                                    </div>  
+                                                </div>
+                                                
+                                                
+                                            </div>
+                                        </form>
+                                        <div class="container">
+                                          <div class="box-body" style="justify-content:center;">
+                                          {% if image_exists %}
+                                                                                
+                                                                                  <div class="form-group">
+                                                                                      
+                                                                                      <div class="container row container-card" style="justify-content:center;">
+                                                                                      
+                                                                                      {% for i in Img %}
+                                                                                      <form method="POST" enctype="multipart/form-data">
+                                                                                        {% csrf_token %}
+                                                                                      {% comment %} <div class="container">
+                                                                                          <img id="image-preview" src="{{media_url}}{{ i.selected_images}}" alt="Image {{ forloop.counter }}"  width=100% height=auto style="border: 2px solid black;on-hover: opacity;"  onclick="triggerFileInput(this)">
+                                                                                          <input class="d-none" type="file"  id="file-input"   onchange="displayNewImage(this)" name="new_image">
+                                                                                          <input type="hidden" value={{i.id}} name="ImageID">
+                                                                                          
+                                                                                      </div> {% endcomment %}
+                                                                                      <!-- my card FR -->
+                                                                                      <div class="container"> 
+                                                                                        <div class="card" style="width: 18rem;">
+                                                                                          <img id="image-preview" src="{{media_url}}{{ i.selected_images}}" alt="Image {{ forloop.counter }}"  style="border: 2px solid black;on-hover: opacity;"  onclick="triggerFileInput(this)" class="card-img-top img-fluid clickable">
+                                                                                          <div class="card-body my-3">
+                                                                                           
+                                                                                            <input class="d-none" type="file"  id="file-input"   onchange="displayNewImage(this)" name="new_image">
+                                                                                            <input type="hidden" value={{i.id}} name="ImageID">
+                                                                                            <input type="submit" class="btn btn-primary p-x-md" name="submitted_changed_picture" value="Change">
+                              
+                                                                                            <!--delete button added here -->
+                                                                                            {% comment %} <input type="submit" class="btn btn-danger p-x-md" name="submitted_deleted_picture" value="Delete"> {% endcomment %}
+                                                                                          </div>
+                                                                                        </div>
+                                                                                      </div>
+                                                                                      <br>
+                                                                                      {% comment %} <input type="submit" class="btn btn-primary p-x-md" name="submitted_changed_picture" value="Change"> {% endcomment %}
+                              
+                                                                                       <!--delete button added here -->
+                                                                                      {% comment %} <input type="submit" class="btn btn-danger p-x-md" name="submitted_changed_picture" value="Delete"> {% endcomment %}
+                                                                                      
+                                                                                      
+                                                                                      <br>
+                                                                                    </form>  
+                                                                                      {% endfor %}
+                                                                                   
+                                                                                  
+                                                                                      </div>
+                                                              
+                                                                                      </div>
+                                                                                  </div>
+                                                                                  {% endif %}
+                                                                                </div>
+                                        </div> 
 
 
 
@@ -396,9 +447,24 @@
   {% comment %}
   <script>
 
+      // full screens
+      $(document).ready(function() {
+        $(".clickable").click(function() {
+          var element = this;
+    
+          if (element.requestFullscreen) {
+            element.requestFullscreen();
+          } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+          } else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+          } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+          }
+        });
+      });
 
-
-    // full screen code ends here
+      // full screen code ends here
 
     jQuery(document).ready(function () {
       ImgUpload();

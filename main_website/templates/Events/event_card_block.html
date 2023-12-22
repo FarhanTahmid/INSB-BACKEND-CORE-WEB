@@ -30,7 +30,7 @@
             {% for key, value in all_events.items %}
             <div style="border-radius: 7px;" class="gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
                 <article id="post-2255"
-                    class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                    class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
                     <div class="gdlr-standard-style">
                         <div class="gdlr-blog-thumbnail">
                             <a href="{% url 'main_website:event_details' key.id %}"> <img
@@ -58,7 +58,11 @@
                             </header>
                             <!-- entry-header -->
 
-                            <div class="description-container">
+                            <div class="description-container" style="display: -webkit-box;
+                            overflow: hidden;
+                            -webkit-box-orient: vertical;
+                            text-overflow: ellipsis;
+                            -webkit-line-clamp: 5;">
                                 <p class="card-text">{{key.event_description | safe }}</p>
                             </div>
                             <a href="{% url 'main_website:event_details' key.id %}" class="excerpt-read-more">Read More</a>
