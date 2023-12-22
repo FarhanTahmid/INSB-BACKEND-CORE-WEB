@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     {% block common_css %}
         {% include "common_css.html" %}
@@ -51,24 +52,6 @@
             }
         }
 
-        .tab a.active {
-            color: green;
-            background-color: yellow;
-        }
-
-        .tabs li:hover {
-            transition: all 0.3s ease-in-out;
-        }
-
-        .tab-content {
-            display: none;
-            border:none;
-            padding: 0px;
-        }
-
-        .tab-content:target {
-            display: block;
-        }
 
 
         
@@ -105,94 +88,81 @@
         <!-- ############ PAGE START-->
         <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
             
-            
+        <div class="container">
             <br>
             <br>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span
                 style="color:#00629B;">{{event_name}}</b></span></h2><br>
+            
+        
             <h6>Note:</h6>
             <ol style="justify-content:center;margin-bottom:15px;"><b>
                 <li>If you want to add new venues, <span><b>update</b></span> any changes made first or <b>add</b> the venues first to prevent data loss</li>
                     <li>If you don't want to submit form link, then just erase the value <b>None</b> from the text field, if it appears</li>
             </ol></b>
+
+            <br>
+
+            {% for message in messages  %}
+                  <p>
+                      <div class="alert alert-success alert-dismissible fade show" role="alert">
+                          {{message}}
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                  </p>
+            {% endfor %}
+
+            <br>
+        </div>
             
-            <div class="container">
-                <div class="box">
-                    
-                    <br>
-                    <div class="box-header" style="text-align:center;">
-                        <h1>Update Event Details</h1>
+        <div class="btn-container">
+            <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal" sty>Delete Event</button>
+        </div>
+
+        <!-- Confirm Delete Modal -->
+        <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="publish-switch">
-                        <label class="form-control-label">Publish Event:</label>
-                        <span>                                            
-                            <label class="ui-switch m-t-xs m-r">
-                                <input name="publish_event" type="checkbox" {% if is_event_published %} checked {% endif %}>
-                                    <i></i>
-                            </label>                
-                        </span>
+                    <form method="post">
+                      {% csrf_token %}
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this event?</p>
                     </div>
-                    <!--Error Message-->
-                    <div class="py-3 text-center">
-                        {% for message in messages %}
-                            <p style="color:red" class="message">{{message}}</p>
-                        {% endfor %}
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-outline-danger buttons"  value="Delete" name="delete_event">
+                        <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     </div>
-                    
-                    <form method = "POST">
-                    {% csrf_token %}
-                        <div class="box-body">
-
-                            
-
-                            <div class="tabs-container" style="display: flex; flex-direction: column;">
-                                <ul class="tabs" style="display: flex; margin-right: 0px; justify-content: center;">
-                                    <li class="tab"><a href="#tab1">Edit</a></li>
-                                    <li class="tab"><a href="#tab2">Media</a></li>
-                                    <li class="tab" style="border-right: 1px solid #00629B;"><a href="#tab3">Graphics</a></li>
-                                </ul>
-                                <br>
-                            </div>
-                        
-                            <!-- Content for the tabs -->
-                            <div id="tab1" class="tab-content">
-                                {% block event_edit_form %}
-                                    {% include "Events/event_edit_details_form_content.html" %}
-                                {% endblock event_edit_form %}
-                            </div>
-                        
-                            <div id="tab2" class="tab-content">
-                                {% block media_form %}
-                                    {% include "Events/media_event_form_content.html" %}
-                                {% endblock media_form %}
-                            </div>
-                        
-                            <div id="tab3" class="tab-content">
-                                {% block graphics_form %}
-                                    {% include "Events/graphics_event_form_content.html" %}
-                                {% endblock graphics_form %}
-                            </div>
-                            
-
-                            <br>
-                            <div style="text-align: center;">
-                                {% if is_branch %}
-                                <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger">Cancel</a>
-                                {% else %}
-                                <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger">Cancel</a>
-                                {% endif %}
-                                <input type="submit" name="update_event" class="btn btn-outline b-success text-success" value="Update Changes">
-                            </div>
-                            <br> 
-
-                        </div>
-                    </form>
+                  </form>
                 </div>
             </div>
+          </div>
 
+        
+            
 
+            <br><br>  
+            <!--Tab view for Events-->
+            <!--Tab view Start-->
+            {% block event_edit_tab %}
+                {% include "Events/event_edit_tabs.html" %}
+            {% endblock event_edit_tab %}
+            <!--Tab view end-->
+            <br>
+            
+            {% block event_edit_form %}
+                {% include "Events/event_edit_details_form_content.html" %}
+            {% endblock event_edit_form %}
+                            
+                            
 
-            <!--End of TabView-->
 
         </div>
         <!--PAGE END-->
@@ -226,45 +196,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- Add this script at the end of your HTML file, before the closing </body> tag -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Get all tabs and tab content elements
-        var tabs = document.querySelectorAll('.tabs li');
-        var tabLinks = document.querySelectorAll('.tabs li a');
-        var tabContents = document.querySelectorAll('.tab-content');
 
-        // Show tab1 content by default
-        tabContents[0].style.display = 'block';
-        tabLinks[0].classList.add('active');
-
-        // Add click event listener to each tab list item
-        tabs.forEach(function (tab, index) {
-            tab.addEventListener('click', function (event) {
-                event.preventDefault(); // Prevent the default behavior
-
-                // Hide all tab content elements
-                tabContents.forEach(function (content) {
-                    content.style.display = 'none';
-                });
-
-                // Show the clicked tab content
-                tabContents[index].style.display = 'block';
-
-                // Remove 'active' class from all tabs and tab links
-                tabs.forEach(function (t) {
-                    t.classList.remove('active');
-                });
-                tabLinks.forEach(function (link) {
-                    link.classList.remove('active');
-                });
-
-                // Add 'active' class to the clicked tab link
-                tabLinks[index].classList.add('active');
-            });
-        });
-    });
-</script>
 
 
     

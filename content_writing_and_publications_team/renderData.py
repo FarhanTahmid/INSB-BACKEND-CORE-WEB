@@ -1,8 +1,22 @@
+from central_branch.renderData import Branch
+from django.shortcuts import get_object_or_404
 from users.models import Members
 from port.models import Teams,Roles_and_Position
 from system_administration.models import CWP_Data_Access
-
+from .models import Content_Notes, Content_Team_Document, Content_Team_Documents_Link
+import logging
+import traceback
+from system_administration.system_error_handling import ErrorHandling
+from datetime import datetime
+from central_events.models import Events
+from .forms import Content_Form
 class ContentWritingTeam:
+
+    logger=logging.getLogger(__name__)
+
+    def get_team():
+        team = Teams.objects.get(primary=2)
+        return team
 
     def get_team_id():
         
@@ -17,7 +31,7 @@ class ContentWritingTeam:
         
         '''This function loads all the team members for the content wrtiting and publications team'''
 
-        load_team_members=Members.objects.filter(team=ContentWritingTeam.get_team_id()).order_by('position')
+        load_team_members=Branch.load_team_members(team_primary=ContentWritingTeam.get_team().primary)
         team_members=[]
         for i in range(len(load_team_members)):
             team_members.append(load_team_members[i])
@@ -27,9 +41,9 @@ class ContentWritingTeam:
         team_id=ContentWritingTeam.get_team_id()
         Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
 
-    def cwp_manage_team_access_modifications(manage_team_access,ieee_id):
+    def cwp_manage_team_access_modifications(manage_team_access, event_access, ieee_id):
         try:
-            CWP_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access)
+            CWP_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access, event_access=event_access)
             return True
         except CWP_Data_Access.DoesNotExist:
             return False
@@ -64,3 +78,88 @@ class ContentWritingTeam:
                 return False
         except:
             return False
+        
+    def creating_note(title,note,event_id):
+
+        '''This function creates notes for the specific event'''
+
+        try:
+            new_note = Content_Notes.objects.create(event_id = Events.objects.get(pk = event_id),title = title,notes = note)
+            new_note.save()
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def load_note_content(event_id):
+    
+        all_notes_for_particular_event = Content_Notes.objects.filter(event_id = Events.objects.get(pk=event_id))
+        notes_and_content = {}
+        for note in all_notes_for_particular_event:
+            form = Content_Form(instance=note)
+            notes_and_content.update({note:form})
+        return notes_and_content
+
+    def remove_note(id):
+        try:
+            note = Content_Notes.objects.get(id=id)
+            note.delete()
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def update_note(id, title, note_content):
+        try:
+            note = Content_Notes.objects.get(id=id)
+            note.title = title
+            note.notes = note_content
+            note.save()
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def update_event_details(event_id, event_description, drive_link):
+        try:
+            event = Events.objects.get(id=event_id)
+            event.event_description = event_description
+            event.save()
+
+            if(drive_link != ''):
+                if(Content_Team_Documents_Link.objects.filter(event_id=event_id).exists()):
+                    Content_Team_Documents_Link.objects.update(event_id=event_id, documents_link=drive_link)
+                else:
+                    documents_link = Content_Team_Documents_Link.objects.create(event_id=event, documents_link=drive_link)
+                    documents_link.save()
+            else:
+                if(Content_Team_Documents_Link.objects.filter(event_id=event_id).exists()):
+                    Content_Team_Documents_Link.objects.get(event_id=event_id).delete()
+
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def create_or_update_files(event_id, file_list):
+        try:
+            current_file_list = Content_Team_Document.objects.filter(event_id=event_id)
+            if(current_file_list.count != 0):
+                for document in current_file_list:
+                    document.document.delete()
+                    document.delete()
+            for document in file_list:
+                doc = Content_Team_Document.objects.create(event_id=Events.objects.get(id=event_id), document=document)
+                doc.save()
+                
+            return True
+            
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        

@@ -13,6 +13,7 @@ class system(models.Model):
     system_under_maintenance=models.BooleanField(null=False,blank=False,default=False)
     main_website_under_maintenance=models.BooleanField(null=False,blank=False,default=False)
     portal_under_maintenance=models.BooleanField(null=False,blank=False,default=False)
+    scheduling_under_maintenance = models.BooleanField(null=False,blank=False,default=False)
     
     class Meta:
         verbose_name="System Handling"
@@ -81,6 +82,7 @@ class CWP_Data_Access(models.Model):
 
     ieee_id = models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE,verbose_name="IEEE ID")
     manage_team_access = models.BooleanField(default=False,null=False,blank=False,verbose_name="Access")
+    event_access = models.BooleanField(default=False,null=False,blank=False, verbose_name="Event Access")
 
     class Meta:
 

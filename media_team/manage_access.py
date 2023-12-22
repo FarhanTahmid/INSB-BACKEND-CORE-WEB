@@ -43,6 +43,7 @@ class MediaTeam_Render_Access:
                 return False
         except Exception as e:
             MediaTeam_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
 
     def access_for_events(request):

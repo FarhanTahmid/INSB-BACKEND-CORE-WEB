@@ -8,7 +8,7 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
+    <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
 
     {% block common_css %}
         {% include "common_css.html" %}
@@ -82,62 +82,47 @@
         <!-- ############ PAGE START-->
         <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
 
-
-            <br>
-            <br>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
-            <h6>Note:</h6>
-            <ol style="justify-content:center;margin-bottom:15px;"><b>
-            <li>Provide the Link of the folder for the Banner Images </li>
-            <li>If the banner picture is already uploaded, you can change it by deleting existing one.
-                Select the desired picture and hit <span style="color:blue;">'Save'</span>.</li>
-            <li>Make sure to save any changes made before leaving</li>
-            </ol></b>
-            
             <div class="container">
-          
-                <div class="box">
+              <br>
+              <br>
+              <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
+              <h6>Note:</h6>
+              <ol style="justify-content:center;margin-bottom:15px;"><b>
+              <li>Provide the Link of the folder for the Banner Images </li>
+              <li>If the banner picture is already uploaded, you can change it by deleting existing one.
+                  Select the desired picture and hit <span style="color:blue;">'Save'</span>.</li>
+              <li>Make sure to save any changes made before leaving</li>
+              </ol></b>
 
-            
-                  <br>
-                  <div class="box-header">
-                      <h1 style="text-align:center;font-size:30px;">Add Details</h1>
-                  </div>
-                  
-                  <div class="py-3 text-center">
-                    {% for message in messages %}
-                        <p style="color: red;" class="message">
-                            {{ message }}
-                            <button class="close-message" onclick="closeMessage(this)" style="border: none; background: none;">✖</button>
-                        </p>
-                    {% endfor %}
-                  </div>
+              <br>
 
-                  <form method="POST" enctype="multipart/form-data">
-                  {% csrf_token %}
-                    <div class="box-body">
-
-                        {% block graphics_form %}
-                            {% include "Events/graphics_event_form_content.html" %}
-                        {% endblock graphics_form %}
-
-                        <br><br>
-                        <hr>
-                        <br>
-                        <div class="form-group text-center">
-                          <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
-                      </div>
-                      <br><br>
-                    
-                    </div> 
-
-                    
-                  </form>  
-        
-                <div>
+              {% for message in messages  %}
+                <p>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </p>
+              {% endfor %}
+              <br>
             </div>
+              
+            <!--Tab view for Events-->
+            <!--Tab view Start-->
+            {% block graphics_team_event_form_tab %}
+                {% include "Events/graphics_team_event_form_tabs.html" %}
+            {% endblock graphics_team_event_form_tab %}
+            <!--Tab view end-->
+            
+            
 
-            <br><br>
+            {% block graphics_form %}
+                {% include "Events/graphics_event_form_content.html" %}
+            {% endblock graphics_form %}
+
+                        
 
             <!--Theme Switcher-->
 
@@ -160,7 +145,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     
-
+    <script src="{% static 'tab_view.js'%}"></script>
 
     
 </body>

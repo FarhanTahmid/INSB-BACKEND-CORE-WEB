@@ -1,55 +1,64 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <link rel='stylesheet' href='css/jquery.fancybox.css' type='text/css' media='all' />
 
+    {% block common_css%}
+        {% include "common_css_includes.html" %}
+    {% endblock common_css %}
+    
     <title>Events | {{event.event_name}}</title>
     <style>
         body{
             padding: 0%;
-            margin: 0%;
-            font-family: 'Poppins', sans-serif;
+            margin: 0%;          
+            background-color: white;   
         }
         .banner_image{
-            height: 80%;
-            width: 80%;
-            margin-top: 1%;
-            margin-bottom: -2%;
-            border-radius: 4px;
+            height: 460px;
+            width: 768px;
+            object-fit: fill;
+            margin-bottom: 20px;
+            border-radius: 8px;
         }
         .banner_gradient{
-            background-image: linear-gradient(#35a2c7,white);
             text-align: center;
-        }
-        h1{
-            font-size: 24px;
+            object-fit: cover;
         }
         .box{
-            border:1px solid#ebebeb;
-            background: white;
+            border:1px solid #ebebeb;
             margin-bottom: 6%;
+            margin-top: 5px;
         }
         .inner_box{
-            margin: 5% 6%;
-            padding-left: 4%;
             display: flex;
             flex-direction: column;
+            margin: 5% 6%;
+            padding-left: 4%;
             background: #f7f7f7; 
         }
         .below_banner{
             display: grid;
             grid-template-columns: 2.5fr 1fr;
             gap: 2%;
-            margin: 0% 10%;
+            margin: 0% 4%;
         }
         .below_banner h5{
             color: #9d9d9d;
             margin-left: 30px;
+            margin-top: -5px;
+            font-size: 15px;
+        } 
+        .below_banner p{
             margin-top: -20px;
+            color: #000;
+        }
+        .below_banner h4{
+            margin-top: 15px;
+            font-size: 15px;
         }
         .read_more_btn{
             text-decoration: none;
@@ -64,7 +73,6 @@
             background: #007ccd;
             text-align: center;
             color: white;
-            font-size: smaller;
         }
         .socialmedia_icon{
             display: flex;
@@ -74,29 +82,28 @@
         }
         .icon{
             font-size: 34px;
-        }
-        img{
-            width: 100%;
-            height: 100%;
+        /*leave a reply section all css*/
         }
         .leave_reply_section{
             gap: 2%;
-            margin: 0% 10%;   
+            margin: 100px 4%;   
         }
         .leave_reply_section p{
-            font-size: larger; 
-            font-weight: bold;  
+            font-size: 25px; 
+            color: black;
         }
         .leave_reply_box{
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            grid-template-rows: auto auto auto;
+            grid-template-rows: auto auto auto auto;
             grid-template-areas: 
-            "name email website"
-            "comment comment comment"
-                "null null submit_btn";
-                grid-column-gap: 2%;
-                grid-row-gap: 4%;
+                "name name name"
+                "email email email" 
+                "website website website"
+                "comment comment comment"
+                " null null submit_btn";
+            grid-column-gap: 2%;
+            grid-row-gap: 4%;
             }
         #name{
             grid-area: name;
@@ -110,26 +117,34 @@
         #comment{
             grid-area: comment;
         }
-        .placement{
-            padding: 1% 2%;
-            font: inherit;
-            font-size: smaller;
-        }
-        .submit_btn{
+        #submit_btn{
             text-decoration: none;
-            margin: 5% 25%;
+            margin: 5% 0%;
+            margin-left: 50%;
             padding: 10px 5px;
             background: #007ccd;
             color: white;
             text-align: center;
             grid-area: submit_btn;
         }
+        /*placeholder adjustments in leave a reply box*/
+        .placement{
+            padding: 5px 10px;
+            font: inherit;
+            font-size: smaller;
+        }
+        /*gallery css*/
+        .gallery img{
+            width: 90%;
+            height: 200px;
+            object-fit: cover;
+        }
         .gallery{
+            margin: 2% 4%;
+            width: 95%;
             display: grid;
             grid-template-columns: auto auto auto;
-            justify-content:center;
-            gap: 1%; 
-            margin: 0% 2%; 
+            row-gap: 2%;
         }
         /*hover effects*/
         .read_more_btn:hover{
@@ -138,27 +153,38 @@
         .register_btn:hover{
             background: #000;
             transition: .5s;
+            color: white;
         }
-        .submit_btn:hover{
-            background: #ffc938;
+        #submit_btn:hover{
+            background: #000;
             transition: .5s;
+            color: white;
+        }
+        ::placeholder {
+            color: rgb(0, 0, 0);
         }
         /*media queries*/
-        @media only screen and (max-width: 768px){
+        /*changed layout of below banner section*/
+        @media only screen and (max-width: 619px){
             .below_banner{
                 display: grid;
                 grid-template-columns: auto;
                 grid-template-rows: auto auto;
+            }
+            #submit_btn{
+                font-size: smaller;
+                margin-left: 0%;
+            }
+        }
+        /*changed layout of leave a reply section*/
+        @media only screen and (max-width: 939px){      
+            .submit_btn{
+                font-size: smaller;
+            }
+            .below_banner{
                 gap: 2%;
-                margin: 0% 10%;
                 font-size: small;
                 margin-bottom: 40px;
-            }
-            .gallery{
-                display: grid;
-                grid-template-columns: auto auto;
-                justify-content:center;
-                gap: 1%;
             }
             .leave_reply_box{
             display: grid;
@@ -172,41 +198,154 @@
             "submit_btn";
                 grid-column-gap: 2%;
                 grid-row-gap: 4%;
-            }
+            }         
             .leave_reply_section{
                 gap: 2%;
-                margin: 60px 10%;   
+                margin: 100px 4%;   
             }
         }
-        @media only screen and (min-width: 1160px) and (max-width:4000px){
-            .banner_image{
-                height: 100%;
-                width: 65%;
-                margin-bottom: -1%;
-            }
-            
+        @media only screen and (min-width: 1160px) and (max-width:4000px){           
             .below_banner{
                 display: grid;
                 grid-template-columns: 2fr 1fr;
                 gap: 2%;
-                margin: 0% 10%;
             }
+        }
+        /*minor alignmenet adjustment in inner box*/
+        @media only screen and (min-width: 940px){
+            .below_banner h5{
+                margin-left: 30px;
+            } 
+        } 
+        @media (min-width: 1440px) and (max-width: 2040px){
             .inner_box{
-                font-size: larger;
+                padding-top: 10px;
+                height:100px;
             }
             .register_btn{
-                font-size: 20px;
+                font-size: larger;
+            } 
+            .inner_box h4{
+                margin-bottom: 25px;
+                font-size: larger;
             }
-            .banner_gradient h4{
-                margin-bottom: 2%;
+            .inner_box h5{
+                font-size: larger;
+                margin-left: 33px;
+            }
+        } 
+        /*gallery*/
+        @media only screen and (max-width: 425px){
+            .gallery{
+                grid-template-columns: auto;
+            }
+            .gallery img{
+                width: 97%;
+                height: 30vh;
+            }
+        }
+        @media (min-width: 426px) and (max-width: 510px){
+            .gallery img{
+                width: 90%;
+                height: 15vh;
+            }
+        }
+        @media (min-width: 510px) and (max-width: 740px){
+            .gallery img{
+                width: 90%;
+                height: 17vh;
+            }
+        }
+        @media (min-width: 740px) and (max-width: 900px){
+            .gallery img{
+                width: 90%;
+                height: 25vh;
+            }
+        }
+        @media (min-width: 900px) and (max-width: 1024px){
+            .gallery img{
+                width: 90%;
+                height: 30vh;
+            }
+        }
+        @media (min-width: 1024px) and (max-width: 1224px){
+            .gallery img{
+                width: 90%;
+                height: 30vh;
+            }
+        }
+        @media (min-width: 1224px) and (max-width: 1800px){
+            .gallery img{
+                width: 90%;
+                height: 40vh;
+            }
+        } 
+        @media (min-width: 1800px) and (max-width: 2000px){
+            .gallery img{
+                width: 90%;
+                height: 50vh;
+            }
+            .gallery{
+                row-gap: 6%;
+            }
+        }   
+        @media (min-width: 2000px) and (max-width: 2800px){
+            .gallery img{
+                width: 90%;
+                height: 45vh;
+            }
+            .gallery{
+                row-gap: 8%;
+            }
+        }   
+        /*responsive banner*/
+        @media only screen and (max-width: 801px){        
+            .banner_image{
+                margin-top: 0%;
+                border-radius: 0%;
+                height: 40%;
+                width: 100%;
             }
             .banner_gradient h1{
-                margin-bottom: 2%;
+                margin-bottom: 0px;
+                font-size: 25px;
+            }
+            .banner_gradient h4{
+                margin-top: 3px;
+                margin-bottom: -5px;
+                font-size: 20px;
+            }
+            .event_header{
+                text-align: left; 
+                margin-left: 10%; 
+            }
+        }
+        @media (min-width: 802px) and (max-width: 4000px){  
+            .banner_gradient h1{
+                margin-bottom: -2px;
+                font-size: 25px;
+            }
+            .banner_gradient h4{
+                margin-top: -2px;
+                margin-bottom: -5px;
+                font-size: 20px;
+            }
+            .event_header{
+                text-align: left; 
+                margin-left: 5%;
             }
         }
     </style>
 </head>
-<body>
+<body> 
+    <div class="body-wrapper  float-menu">
+        {% block header %}
+            {% include "header.html" %}
+        {% endblock %}
+        {% block wave %}
+            {% include "wave.html" %}
+        {% endblock %}
+    </div> 
     <section class="banner_gradient">
         <!--Event Banner Image-->
         {% if event_banner_image %}
@@ -214,19 +353,19 @@
         {% else %}
         <div style="height:30px"></div>
         {% endif %}
-        <div class="event_header" style="text-align: left; margin-left: 10%;">
+        <div class="event_header" style="text-transform: uppercase;">
             <!--Event Date and Time-->
             {% comment %} <h4>Friday,October 12 2023 at 12:00 pm - 12:45 pm UTC +06</h4> {% endcomment %}
-            <h4>{{event.event_date | date:"l, F d Y"}}</h4>
+            <h4 style="color: #BA0C2F;">{{event.event_date | date:"l, F d Y"}}</h4>
             <!--Event Header-->
-            <h1 style="margin-top: -2%;">{{event.event_name}}</h1>
+            <h1>{{event.event_name}}</h1>
         </div>
-        <hr style="width:80%;margin-left:10% ;margin-top: -1%; border: solid .5px black;">
+        <hr style="width:92%;margin-left:4% ;margin-top: 0%; border: solid .5px black; background: #000; height: .1mm;">
     </section>
     <section class="below_banner">
         <!--Event Description-->
         <div>
-            <p>{{event.event_description | safe}}</p>
+            <p style="  text-align: justify;">{{event.event_description | safe}}</p>
         </div>
         <div>
             <!--Register Box-->
@@ -253,7 +392,7 @@
             </div>
             <div class="box">
                     <!--Share event box-->
-                    <h6 style="text-align: center; font-size: small; font-weight: bold;">SHARE THIS EVENT</h6>
+                    <h6 style="text-align: center; font-size: small; font-weight: bold; margin-top: 15px;">SHARE THIS EVENT</h6>
                     <hr style="width:80%;margin-left:10% ;margin-top: -1%; border: solid .5px #ebebeb;">
                 <div class="socialmedia_icon">
                     <a href=""><i class="fa-brands fa-square-facebook icon" style="color: #3b5996;"></i></a>
@@ -266,12 +405,10 @@
     </section>
 
     <!--Gallery-->
-    <section class="gallery" style="margin-bottom: 40px;">
-        {% for imageFile in event_gallery_images %}
-        <div>
-            <a href="{{media_url}}{{imageFile.selected_images}}" data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img src="{{media_url}}{{imageFile.selected_images}}" alt="" width="400" height="300" /></a>
-        </div>
-        {% endfor %}
+    <section class="gallery">
+            {% for imageFile in event_gallery_images %}
+                <a href="{{media_url}}{{imageFile.selected_images}}" data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img src="{{media_url}}{{imageFile.selected_images}}" alt=""/></a>
+            {% endfor %}
     </section>
 
     <!--Leave a reply section-->
@@ -285,27 +422,17 @@
                 <!--website-->
                 <input id="website" class="placement" type="text" placeholder="Website">
                 <!--comment-->
-                <textarea rows="6" id="comment" class="placement" placeholder="Your comment here..."></textarea>
+                <textarea rows="8" style="max-height: 100%; max-width: 100%; min-height: 100%;" id="comment" class="placement" placeholder="Your comment here..."></textarea>
                 <!--submit button-->
-                <a href="" class="submit_btn" name="">SUBMIT</a>
+                <a href="" id="submit_btn" name="">SUBMIT</a>
             </form>
     </section>
-
-    <script type='text/javascript' src='js/jquery.js'></script>
-    <script type='text/javascript' src='js/jquery-migrate.min.js'></script>
-    <script type='text/javascript' src='js/scripts.js'></script>
-    <script type='text/javascript' src='js/superfish.js'></script>
-    <script type='text/javascript' src='js/hoverIntent.min.js'></script>
-    <script type='text/javascript' src='js/modernizr.custom.js'></script>
-    <script type='text/javascript' src='js/jquery.dlmenu.js'></script>
-    <script type='text/javascript' src='js/jquery.easing.js'></script>
-    <script type='text/javascript' src='js/jquery.fancybox.pack.js'></script>
-    <script type='text/javascript' src='js/helpers/jquery.fancybox-media.js'></script>
-    <script type='text/javascript' src='js/helpers/jquery.fancybox-thumbs.js'></script>
-    <script type='text/javascript' src='js/jquery.flexslider.js'></script>
-    <script type='text/javascript' src='js/jquery.isotope.min.js'></script>
-    <script type='text/javascript' src='js/gdlr-script.js'></script>
-    <script type='text/javascript' src='js/jquery.transit.min.js'></script>
-    <script type='text/javascript' src='js/gdlr-portfolio-script.js'></script>
+    {% block footer %}
+        {% include "footer_block.html" %}
+    {% endblock %}
+    {% block common_js %}
+        {% include "common_js_includes.html" %}
+    {% endblock %}
+    <script src="{% static './js/event_script.js'%}"></script>
 </body>
 </html>
