@@ -62,9 +62,22 @@ class MainWebsiteRenderData:
             if(os.path.isfile(get_the_blog.blog_banner_picture.path)):
                 os.remove(get_the_blog.blog_banner_picture.path)
             get_the_blog.delete()
-            return messages.info(request,'A blog was deleted!')
+            messages.info(request,'A blog was deleted!')
         except Exception as e:
             MainWebsiteRenderData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"Can not delete Blogs. Something went wrong!")
-            
+    
+    def delete_research_paper(request):
+        try:
+            get_the_paper=Research_Papers.objects.get(pk=request.POST['research_pk'])
+            if(os.path.isfile(get_the_paper.research_banner_picture.path)):
+                os.remove(get_the_paper.research_banner_picture.path)
+            get_the_paper.delete()
+            messages.info(request,"A Research Paper was deleted!")
+        except Exception as e:
+            MainWebsiteRenderData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Can not delete Research Paper. Something went wrong!")
+
+                     

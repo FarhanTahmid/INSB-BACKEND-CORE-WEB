@@ -1,3 +1,4 @@
+from content_writing_and_publications_team.renderData import ContentWritingTeam
 from system_administration.models import CWP_Data_Access
 from system_administration.system_error_handling import ErrorHandling
 import logging
@@ -32,13 +33,13 @@ class CWPTeam_Render_Access:
             if(Access_Render.faculty_advisor_access(username=username)):
                 faculty_advisor_access=True
             
-            # generate branch coordinator access
-            branch_co_ordinator_access=False
-            if(Access_Render.co_ordinator_access(username=username)):
-                branch_co_ordinator_access=True
+            # generate branch team coordinator access
+            branch_team_co_ordinator_access=False
+            if(Access_Render.team_co_ordinator_access(team_id=ContentWritingTeam.get_team().id, username=username)):
+                branch_team_co_ordinator_access=True
             
             # if any of this is true, grant access
-            if(system_manager_access or branch_eb_access or faculty_advisor_access or branch_co_ordinator_access):
+            if(system_manager_access or branch_eb_access or faculty_advisor_access or branch_team_co_ordinator_access):
                 return True
             else:
                 return False
