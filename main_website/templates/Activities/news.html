@@ -144,9 +144,12 @@
 
 
         <!--Online News Section-->
-        {% block online_news %}
-        {% include "Activities/online_news_card_container.html" %}
-        {% endblock online_news %}
+        {% if has_online_news %}
+            {% block online_news %}
+                {% include "Activities/online_news_card_container.html" %}
+            {% endblock online_news %}
+        {% endif %}
+        
         <!--Online news section Ends-->
 
 

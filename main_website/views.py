@@ -26,12 +26,19 @@ logger=logging.getLogger(__name__)
 def homepage(request):
     bannerItems=HomepageItems.getHomepageBannerItems()
     bannerWithStat=HomepageItems.getBannerPictureWithStat()
+    
+    # get recent 6 news
+    get_recent_news=News.objects.filter().order_by('-news_date')[:6]
+    # get recent 6 Blogs
+    get_recent_blogs=Blog.objects.filter(publish_blog=True).order_by('-date')[:6]
     context={
         'banner_item':bannerItems,
         'banner_pic_with_stat':bannerWithStat,
         'media_url':settings.MEDIA_URL,
         'all_member_count':HomepageItems.getAllIEEEMemberCount(),
         'event_count':HomepageItems.getEventCount(),
+        'recent_news':get_recent_news,
+        'recent_blogs':get_recent_blogs,
     }
     return render(request,"LandingPage/homepage.html",context)
 
@@ -85,12 +92,16 @@ def event_homepage(request):
     '''This view function loads all the events for the events homepage'''
     
     try:
-        all_events = HomepageItems.load_all_events()
+        all_events = HomepageItems.load_all_events(True)
+        latest_five_events = HomepageItems.load_all_events(False)
+        date_and_event = HomepageItems.get_event_for_calender()
 
 
         context = {
             'all_events':all_events,
             'media_url':settings.MEDIA_URL,
+            'latest_five_event':latest_five_events,
+            'date_and_event':date_and_event,
         }
 
         return render(request,'Events/events_homepage.html',context)
@@ -157,7 +168,7 @@ def news(request):
     all_online_news=[]
     # extracting article results
     for i in json_datas:
-        articles=i.get('results',[])
+        articles=i.get('results',[])        
         for article in articles:
             # extracting article values
             title=article.get('title',[])
@@ -165,8 +176,12 @@ def news(request):
             article_description=article.get('description',[])
             article_picture=article.get('image_url',[])
             article_creator=article.get('creator',[])
+            article_id=article.get('article_id',[])
+            article_publish_date=article.get('pubDate',[])
             # storing all articles as dictionary key value items
             news_item={
+                'article_id':article_id,
+                'pubDate':article_publish_date,
                 'title':title,
                 'article_link':article_link,
                 'article_description':article_description,
@@ -214,15 +229,16 @@ def rasPage(request):
 ######################## BLOG WORKS ################################
 
 
-def Blogs(request):
+def blogs(request):
 
     '''Loads the blog page where all blog is shown'''
 
-    get_all_blog= Blog.objects.all()
+    get_all_blog= Blog.objects.filter(publish_blog=True)
     context={
+        'page_title':"Blogs",
         'blogs':get_all_blog,
     }
-    return render(request,"blogs.html",context=context)
+    return render(request,"Publications/Blog/blog.html",context=context)
 
 def blog_Description(request,blog_id):
     load_specific_blog = Blog.objects.get(id=blog_id)
