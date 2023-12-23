@@ -89,7 +89,7 @@
                                     alt="" width="100%" /></a>
                         </div>
 
-                        <div class="gdlr-blog-grid-content">
+                        <div class="gdlr-blog-grid-content" style="overflow: hidden;">
                             <header class="post-header">
                                 <div class="gdlr-blog-info">
                                     <div
@@ -130,7 +130,14 @@
     </div>
 </section>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
+<script>
+    var element = document.getElementById('gdlr-blog-title');
+    var maxLength = 40; // Set your desired maximum length
+  
+    if (element.textContent.length > maxLength) {
+        element.textContent = element.textContent.substring(0, maxLength) + '...';
+    }
+  </script>
 
 <!-- event load more button -->
 <script>
