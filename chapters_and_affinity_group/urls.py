@@ -40,6 +40,6 @@ urlpatterns = [
     path('<str:primary>/event_details/<int:event_id>/edit/graphics/links',views.event_edit_graphics_form_links_sub_tab,name='event_edit_graphics_form_links_sub_tab'),
     #Event content tab page
     path('<str:primary>/event_details/<int:event_id>/edit/content',views.event_edit_content_form_tab,name='event_edit_content_form_tab'),
-    
-
+    #Event preview
+    path('<str:primary>/event_details/<int:event_id>/preview/',views.event_preview,name='event_preview'), 
 ]

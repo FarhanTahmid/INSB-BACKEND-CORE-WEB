@@ -158,7 +158,11 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <iframe src="https://ieeensusb.org/all-events/" style="width: 100%; height: 100%;"></iframe>
+                                {% if is_branch %}
+                                <iframe src="{% url 'central_branch:event_preview' event_id %}" style="width: 100%; height: 100%;"></iframe>
+                                {% else %}
+                                <iframe src="{% url 'chapters_and_affinity_group:event_preview' primary event_id %}" style="width: 100%; height: 100%;"></iframe>
+                                {% endif %}
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-secondary" data-dismiss="modal">Close</button>

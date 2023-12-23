@@ -38,6 +38,7 @@ from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from central_events.forms import EventForm
 from .forms import *
 from .website_render_data import MainWebsiteRenderData
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -1481,6 +1482,21 @@ def event_edit_content_form_tab(request,event_id):
         else:
             return render(request, 'access_denied2.html')
         
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+@login_required
+@xframe_options_exempt
+def event_preview(request, event_id):
+    ''' This function displays a preview of an event regardless of it's published status '''
+
+    try:
+        event = Events.objects.get(id=event_id)
+        return render(request, 'Events/event_description_main.html', {'event' : event, 'is_branch' : True})
+    
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

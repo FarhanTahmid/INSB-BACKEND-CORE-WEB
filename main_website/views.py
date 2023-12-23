@@ -18,7 +18,6 @@ from .renderData import HomepageItems
 from users.renderData import PanelMembersData
 from users import renderData as userData
 import json,requests
-from django.views.decorators.clickjacking import xframe_options_exempt
 
 
 logger=logging.getLogger(__name__)
@@ -111,8 +110,7 @@ def event_homepage(request):
             response = HttpResponseServerError("Oops! Something went wrong.")
             return response
     
-
-@xframe_options_exempt
+    
 def event_details(request,event_id):
  
     '''Loads details for the corresponding event page on site'''

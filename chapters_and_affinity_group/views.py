@@ -28,6 +28,7 @@ from central_events.models import Events
 from central_events.forms import EventForm
 from events_and_management_team.renderData import Events_And_Management_Team
 from port.models import Chapters_Society_and_Affinity_Groups
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 
 # Create your views here.
@@ -1230,6 +1231,21 @@ def event_edit_content_form_tab(request,primary,event_id):
             return render(request,"Events/event_edit_content_and_publications_form_tab.html",context)
         else:
             return render(request, 'access_denied.html')
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+    
+@login_required
+@xframe_options_exempt
+def event_preview(request, primary, event_id):
+    ''' This function displays a preview of an event regardless of it's published status '''
+
+    try:
+        event = Events.objects.get(id=event_id)
+        return render(request, 'Events/event_description_main.html', {'event' : event, 'is_branch' : False})
+    
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
