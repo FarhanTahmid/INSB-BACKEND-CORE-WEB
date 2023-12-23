@@ -29,4 +29,7 @@ urlpatterns = [
     path('volunteers',views.volunteers_page,name="volunteers_page"),
     path('all_members',views.all_members,name="all_members"),
     
+    # Publications
+    path('blogs',views.blogs,name="blogs"),
+    
 ]

@@ -231,3 +231,5 @@ CELERY_TASK_SERIALIZER = 'json'
 #     #     "schedule":60,
 #     # },
 # }
+
+# NEWS_API_KEY=os.environ.get('news_api_key')

@@ -1,42 +1,449 @@
 {% load static %}
 {% block event_with_calendar %}
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+
+
+<style>
+    .event_container {
+        width: 90%;
+        max-width: 1140px;
+    }
+</style>
+<!-- boostrap and other links-->
+{% comment %} <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"> {% endcomment %}
+
+
+<style>
+  .event-mark {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: red;
+    margin: 2px 1px;
+
+    
+  }
+
+  .event_container {
+    width: 90%;
+    max-width: 1140px;
+  }
+
+  .upnext {
+    position: relative; /* Add this line to make sure the buttons are positioned relative to this container */
+  }
+
+  .slide-show{
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .slideshow-container {
+      display: flex;
+      overflow: hidden;
+      position: relative; /* Add this line to make sure the buttons are positioned relative to this container */
+      height:500px;
+      border-radius: 10px;
+      
+  }
+
+  .mySlides {
+    flex: 0 0 100%; /* Set the card size to a fixed width of 500px */
+    box-sizing: border-box;
+    transition: transform 0.6s ease;
+    
+  }
+  .card{
+    height:500px;
+    border-radius: 10px;
+  }
+
+  .card img {
+    width: 100%; /* Make the image fill the container */
+    height: 300px; /* Fix the image height to 250px */
+    object-fit: cover; /* Maintain aspect ratio and cover the container */
+  }
+
+  /* Next & previous buttons */
+  .prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    margin-top: -22px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+  }
+
+  /* Position the "next button" to the right */
+  .next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+  }
+
+  /* On hover, add a grey background color */
+  .prev:hover, .next:hover {
+    background-color: white;
+    color: black;
+  }
+  .card img {
+    /* width: 100%; */
+    max-height: 260px;
+    object-fit: cover;
+}
+@media screen and (max-width: 966px){
+.event_container {
+    grid-template-columns: auto;
+    width: 95%;
+}
+.event_calender h4 {
+  margin: 35px 0px 20px 0px;
+}
+.slide-show{
+  width: 95vw;
+}
+}
+
+</style>
+
+</style>
 <section style="padding: 50px 0px;" class="">
-    <div>
-        <div class="event_container">
-            
-            <div class="upnext">
-                <h4 style="margin-bottom: 30px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">UP N</span>EXT</h4>
-                <img style="border: 1px solid rgb(205, 193, 193); padding: 5px; border-radius: 6px;" src="https://ieeensusb.org/wp-content/uploads/2021/03/157705762_257718782652594_8108325620051204445_n.jpg" width="100%" height="100%" alt="">
-            </div>
-            <div class="event_calender">
-                <!-- Calender start -->
-                <h4 style="margin-bottom: 30px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">EVENT C</span>ALENDER</h4>
-                <div class="calendar">
-                <div class="header" style="padding: 20px;">
-                <div style="cursor: pointer;" class="prev-btn"><i class="fa-solid fa-chevron-left"></i></div>
-                <span class="month-year"></span>
-                <div style="cursor: pointer;" class="next-btn"><i class="fa-solid fa-chevron-right"></i></div>
+  <div>
+      <div class="event_container">
+          
+          <div class="upnext">
+              <h4 style="margin-bottom: 30px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">UP N</span>EXT</h4>
+              {% comment %} <img style="border: 1px solid rgb(205, 193, 193); padding: 5px; border-radius: 6px;" src="https://ieeensusb.org/wp-content/uploads/2021/03/157705762_257718782652594_8108325620051204445_n.jpg" width="100%" height="100%" alt=""> {% endcomment %}
+              <!-- SLIDER EVENT FR -->
+              <div class="slide-show">
+                <div class="slideshow-container">
+                  {% for event, banner_image in latest_five_event.items %}
+                  <div class="mySlides" style="width:100px">
+                    <div class="card mb-3">
+                      <img src="{{media_url}}{{banner_image}}" alt="Event banner picture">
+                      <div class="card-body" style="
+                      height: 150px;
+                      overflow: hidden;">
+                        <h3 class="card-title"><b>
+                          {{event.event_date.day}}
+                          {% if event.event_date.day == 1 %}st{% elif event.event_date.day == 2 %}nd 
+                          {% elif event.event_date.day == 3 %}rd{% else %}th{% endif %}
+                          {{event.event_date | date:"b" | capfirst}}
+                        </b></h3>
+                        <div class="card-text" id="limitedText" style="       
+                        display: -webkit-box;
+                        overflow: hidden;
+                        -webkit-box-orient: vertical;
+                        text-overflow: ellipsis;
+                        -webkit-line-clamp: 2;">{{event.event_description | safe}}</div>
+                        <div class="card-text"><small class="text-body-secondary" style="color:		#00B5E2">{{event.event_organiser}}</small></div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                
+                  <a class="prev" onclick="plusSlides(-1, 1)">&#10094;</a>
+                  <a class="next" onclick="plusSlides(1, 1)">&#10095;</a>
                 </div>
-                <div class="days-of-week" style="display: flex; justify-content: space-around; padding: 10px 0px; font-weight: bold;">
-                <span class="day-of-week">Sun</span>
-                <span class="day-of-week">Mon</span>
-                <span class="day-of-week">Tue</span>
-                <span class="day-of-week">Wed</span>
-                <span class="day-of-week">Thu</span>
-                <span class="day-of-week">Fri</span>
-                <span class="day-of-week">Sat</span>
-                </div>
-                <div class="days" style="padding: 15px 0px; font-weight: bold;"></div>
-                </div>
-                <div class="event-box" style="padding: 20px;">
-                    <h5>Events for <span class="selected-date"></span></h3>
-                    <ul style="list-style-type: disc; margin-top: 15px;" class="events-list"></ul>
-                </div>
-            <!-- calender end -->
-            </div>
-        </div>
-    </div>
+              </div>
+          </div>
+          <!-- Calender start -->
+           <div class="event_calender">
+              
+              <h4 style="margin-bottom: 30px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">EVENT C</span>ALENDER</h4>
+              <div class="calendar">
+              <div class="header" style="padding: 20px;">
+              <div style="cursor: pointer;" class="prev-btn"><i class="fa-solid fa-chevron-left"></i></div>
+              <span class="month-year"></span>
+              <div style="cursor: pointer;" class="next-btn"><i class="fa-solid fa-chevron-right"></i></div>
+              </div>
+              <div class="days-of-week" style="display: flex; justify-content: space-around; padding: 10px 0px; font-weight: bold;">
+              <span class="day-of-week">Sun</span>
+              <span class="day-of-week">Mon</span>
+              <span class="day-of-week">Tue</span>
+              <span class="day-of-week">Wed</span>
+              <span class="day-of-week">Thu</span>
+              <span class="day-of-week">Fri</span>
+              <span class="day-of-week">Sat</span>
+              </div>
+              <div class="days " style="padding: 15px 0px; font-weight: bold;"  >
+                  <span style="color:red; height:20px"></span>
+                  
+              </div>
+              </div>
+              <div class="event-box" style="padding: 20px;">
+                  <h5>Events for <span class="selected-date"></span></h3>
+                  <ul style="list-style-type: disc; margin-top: 15px;" class="events-list"></ul>
+              </div>
+              {% comment %} <div id="calendar"></div> {% endcomment %}
+               
+
+               <!--my calender-->
+             
+          
+          </div> 
+          <!-- calender end -->
+      </div>
+  </div>
 </section>
+<script>
+  var element = document.getElementById('limitedText');
+  var maxLength = 40; // Set your desired maximum length
 
+  if (element.textContent.length > maxLength) {
+      element.textContent = element.textContent.substring(0, maxLength) + '...';
+  }
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    let slideIndex = 1;
+    let autoSlideInterval;
+
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("mySlides");
+
+        if (n > slides.length) {
+            slideIndex = 1;
+        }
+
+        if (n < 1) {
+            slideIndex = slides.length;
+        }
+
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.transform = "translateX(" + -100 * (slideIndex - 1) + "%)";
+        }
+    }
+
+    // Event listeners for slideshow navigation
+    document.querySelector('.prev').addEventListener('click', function () {
+        clearInterval(autoSlideInterval);
+        plusSlides(-1);
+    });
+
+    document.querySelector('.next').addEventListener('click', function () {
+        clearInterval(autoSlideInterval);
+        plusSlides(1);
+    });
+
+    // Add swipe functionality using Hammer.js
+    const slideshowContainer = document.querySelector('.slideshow-container');
+    const hammer = new Hammer(slideshowContainer);
+
+    hammer.on('swipeleft', function () {
+        clearInterval(autoSlideInterval);
+        plusSlides(1);
+    });
+
+    hammer.on('swiperight', function () {
+        clearInterval(autoSlideInterval);
+        plusSlides(-1);
+    });
+
+    // Auto slide feature
+    function startAutoSlide() {
+        autoSlideInterval = setInterval(function () {
+            plusSlides(1);
+        }, 5000); // Adjust the interval time (in milliseconds) as needed
+    }
+
+    // Start auto slide when the page loads
+    startAutoSlide();
+
+    // Restart auto slide after manual navigation
+    slideshowContainer.addEventListener('mouseenter', function () {
+        clearInterval(autoSlideInterval);
+    });
+
+    slideshowContainer.addEventListener('mouseleave', function () {
+        startAutoSlide();
+    });
+});
+</script>
+
+
+
+<script> 
+  // Dummy events data for demonstration, this is the calendar event load function
+
+  
+const eventsData = {
+  '2023-07-27': ['Event 1', 'Event 2', 'text'],
+  '2023-07-23': ['Event 3'],
+  '2023-07-15': ['hello event'],
+  '2023-12-18' : ['test', 'spacx'],
+  '2023-12-19' : ['Event 1', 'Event 2', 'test', 'test1'],
+  '2023-12-20' : ['x1']
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  const calendarContainer = document.querySelector('.calendar');
+  const daysContainer = document.querySelector('.days');
+  const monthYear = document.querySelector('.month-year');
+  const eventBox = document.querySelector('.event-box');
+  const selectedDateText = document.querySelector('.selected-date');
+  const eventsList = document.querySelector('.events-list');
+
+  let currentDate = new Date();
+  renderCalendar(currentDate);
+
+  function renderCalendar(date) {
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; // Day abbreviations
+      const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+      const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      const prevMonthLastDay = new Date(date.getFullYear(), date.getMonth(), 0);
+      const daysInMonth = lastDay.getDate();
+      const daysInPrevMonth = prevMonthLastDay.getDate();
+      const startDay = firstDay.getDay();
+      const endDay = lastDay.getDay();
+      const prevMonthDays = startDay === 0 ? 6 : startDay - 1;
+      const nextMonthDays = endDay === 0 ? 0 : 7 - endDay;
+
+      daysContainer.innerHTML = '';
+
+      // Display previous month days
+      for (let i = prevMonthDays; i > 0; i--) {
+          const day = daysInPrevMonth - i + 1;
+          const dayElement = createDayElement(new Date(date.getFullYear(), date.getMonth() - 1, day));
+          dayElement.classList.add('prev-month');
+          
+          daysContainer.appendChild(dayElement);
+          
+
+      }
+
+      // Display current month days
+      for (let i = 1; i <= daysInMonth; i++) {
+          const dayElement = createDayElement(new Date(Date.UTC(date.getFullYear(), date.getMonth(), i)));
+          
+          const formattedDate = getFormattedDate(dayElement.date);
+          const event_marks = document.createElement('div');
+          event_marks.style.display = 'flex';
+          event_marks.style.textAlign = 'center';
+          
+          if (eventsData.hasOwnProperty(formattedDate)) {
+            eventsData[formattedDate].forEach(() => {
+                const eventMark = document.createElement('div');
+                eventMark.classList.add('event-mark');
+                event_marks.appendChild(eventMark);
+                eventMark.style.width = '6px';
+                  eventMark.style.height = '6px';
+                  eventMark.style.borderRadius = '50%';
+                  eventMark.style.backgroundColor = 'red';
+                  eventMark.style.margin = '2px 1px';
+                  eventMark.style.position = 'static';
+                  eventMark.style.bottom = '1px';
+                  eventMark.style.left = '0';
+                  eventMark.style.transform = 'translateX(50%)';
+                  eventMark.style.transform = 'translateY(0%)';
+                  eventMark.style.top = '2px';
+                dayElement.appendChild(event_marks);
+            });
+        }
+          
+          daysContainer.appendChild(dayElement);
+          
+      }
+      
+      // Display next month days
+      for (let i = 1; i <= nextMonthDays; i++) {
+          const dayElement = createDayElement(new Date(date.getFullYear(), date.getMonth() + 1, i));
+          dayElement.classList.add('next-month');
+          daysContainer.appendChild(dayElement);
+      }
+
+      monthYear.textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  }
+
+  function createDayElement(date) {
+      const dayElement = document.createElement('div');
+      dayElement.classList.add('day');
+      dayElement.style.display = 'flex';
+      dayElement.style.flexDirection = 'column';
+      dayElement.textContent = date.getDate();
+      {% comment %} dayElement.date = date; {% endcomment %}
+      dayElement.date = new Date(date.toISOString().split('T')[0]);
+      dayElement.addEventListener('click', () => showEventsForDate(date));
+      return dayElement;
+  }
+
+  function showEventsForDate(date) {
+      const formattedDate = getFormattedDate(date);
+      console.log(formattedDate)
+      selectedDateText.textContent = formattedDate;
+      const eventsForDate = eventsData[formattedDate] || [];
+      eventsList.innerHTML = '';
+      if (eventsForDate.length > 0) {
+          eventBox.style.display = 'block';
+          eventBox.classList.add('show');
+          eventsForDate.forEach((event) => {
+              const eventItem = document.createElement('li');
+              eventItem.textContent = event;
+              eventsList.appendChild(eventItem);
+          });
+      } else {
+          eventBox.style.display = 'none';
+          eventBox.classList.remove('show');
+      }
+  }
+
+  function getFormattedDate(date) {
+    return date.toISOString('en-US').split('T')[0];
+      
+  }
+
+  document.querySelector('.prev-btn').addEventListener('click', () => {
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      renderCalendar(currentDate);
+  });
+
+  document.querySelector('.next-btn').addEventListener('click', () => {
+      currentDate.setMonth(currentDate.getMonth() + 1);
+      renderCalendar(currentDate);
+  });
+});
+
+
+function eventFilterFunction() {
+  var input, filter, box, eventName, i, txtValue;
+  input = document.getElementById("eventFilter");
+  filter = input.value.toUpperCase();
+  box = document.getElementsByClassName("event_box");
+  for (i = 0; i < box.length; i++) {
+      eventName = box[i].getElementsByClassName("event_name")[0];
+      if (eventName) {
+          txtValue = eventName.textContent || eventName.innerText;
+          console.log('Name: ', txtValue)
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+
+              box[i].style.display = "block";
+          } else {
+              box[i].style.display = "none";
+          }
+      }
+  }
+}
+
+
+
+</script>
+{% comment %} <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script> {% endcomment %}
+
+{% comment %} <script src="{% static './js/event_script.js'%}"></script> {% endcomment %}
 {% endblock event_with_calendar %}
-

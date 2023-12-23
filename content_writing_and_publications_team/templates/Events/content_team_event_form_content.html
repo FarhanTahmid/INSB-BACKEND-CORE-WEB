@@ -17,14 +17,8 @@
             <div class="box-body">
 
                 <div class="form-group">
-                    <label>Event Description: <span style="color:red">*</span></label>
-                    <textarea
-                        placeholder="Event Description"
-                        class="form-control"
-                        rows="4" 
-                        required
-                        name="event_description"
-                    >{{event_details.event_description}}</textarea>
+                    {{description_form.media}}
+                    {{description_form.as_p}}
                 </div>
 
                 <br>
@@ -37,7 +31,7 @@
                         type="url"
                         autocomplete="off"
                         id="field1"
-                        value="{{document_links.document_link}}"
+                        value="{{drive_link_of_documents.documents_link}}"
                         name="drive_link_of_documents"
                     />
                 </div>
@@ -57,14 +51,29 @@
                     <input type="hidden" name="selected_documents" id="content-selected-documents">
                     <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
                 </div>
-
-                <br>
+                
                     
                 <div class="form-group text-center">
                     <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
                 </div>
 
                 <hr>
+
+                
+
+                <div flex-direction="column" justify-content="flex-end">
+                    <label>Files:</label>
+                    {% for document in documents %}
+                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                        <div class="col-sm-11 text-left">
+                            <a href="{{media_url}}{{document.document}}" class="btn btn-link btn-block" target="_blank" rel="noopener noreferrer">{{document.document}}</a>
+                        </div>
+                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{document.pk}}')">✖</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
                 
 
                 <br>
@@ -74,5 +83,68 @@
         </form>
     </div>
 </div>
+
+<!-- Confirmation modal for delete -->
+<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-top" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST">
+                    {% csrf_token %}
+                <p><input id="remove_doc" name= "remove_doc" type="hidden"></p>
+                Are you sure you want to delete the Doc?
+            </div>
+            <div class="modal-footer">
+                <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to update the selected documents container
+    function updateSelectedDocuments() {
+        var selectedDocumentsContainer = document.getElementById('content-selected-docs-container');
+        var selectedDocumentsInput = document.getElementById('content-selected-documents');
+        var inputFiles = document.getElementById('content-doc-input').files;
+
+        // Clear the container
+        selectedDocumentsContainer.innerHTML = '';
+
+        // Update the container with selected document links
+        for (var i = 0; i < inputFiles.length; i++) {
+            var documentLink = document.createElement('a');
+            documentLink.href = '#'; // Set the link href accordingly
+            documentLink.className = 'btn btn-link btn-block';
+            documentLink.textContent = inputFiles[i].name;
+            selectedDocumentsContainer.appendChild(documentLink);
+
+            // Add a line break after each link
+            selectedDocumentsContainer.appendChild(document.createElement('br'));
+
+            // Update the hidden input with selected document names
+            selectedDocumentsInput.value += inputFiles[i].name + ',';
+        }
+    }
+
+    // Attach the updateSelectedDocuments function to the file input change event
+    document.getElementById('content-doc-input').addEventListener('change', updateSelectedDocuments);
+</script>
+
+<script>
+    function openModal(remove_doc) {
+        // Set data in the modal
+        var inputElement = document.getElementById('remove_doc');    
+        inputElement.value=remove_doc;
+    }
+</script>
 
 {% endblock content_team_event_details_form  %}

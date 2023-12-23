@@ -8,9 +8,12 @@ from graphics_team.models import Graphics_Banner_Image
 from media_team.models import Media_Images
 class HomepageItems:
 
-    def load_all_events():
+    def load_all_events(flag):
         dic = {}
-        events =  Events.objects.filter(publish_in_main_web= True).order_by('-event_date')
+        if flag:
+            events =  Events.objects.filter(publish_in_main_web= True).order_by('-event_date')
+        else:
+            events = Events.objects.filter(publish_in_main_web= True).order_by('-event_date')[:5]
         for i in events:
             try:
                 event = Graphics_Banner_Image.objects.get(event_id = i.pk)
@@ -68,3 +71,5 @@ class HomepageItems:
     def getEventCount():
         '''Gets all the event Count'''
         return Events.objects.all().count()
+    
+        
