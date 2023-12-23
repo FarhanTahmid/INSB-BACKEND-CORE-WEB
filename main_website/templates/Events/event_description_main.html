@@ -23,6 +23,8 @@
             object-fit: fill;
             margin-bottom: 20px;
             border-radius: 8px;
+            box-shadow: 5px 5px 10px #5e5e5e;
+            margin-top: 10px;
         }
         .banner_gradient{
             text-align: center;
@@ -44,7 +46,8 @@
             display: grid;
             grid-template-columns: 2.5fr 1fr;
             gap: 2%;
-            margin: 0% 4%;
+            margin: 0% 10%;
+            line-height: 2;
         }
         .below_banner h5{
             color: #9d9d9d;
@@ -86,7 +89,7 @@
         }
         .leave_reply_section{
             gap: 2%;
-            margin: 100px 4%;   
+            margin: 100px 10%;   
         }
         .leave_reply_section p{
             font-size: 25px; 
@@ -135,16 +138,16 @@
         }
         /*gallery css*/
         .gallery img{
-            width: 90%;
+            width: 300px;
             height: 200px;
             object-fit: cover;
+            box-shadow: 5px 5px 10px rgb(148, 148, 148);
         }
         .gallery{
-            margin: 2% 4%;
-            width: 95%;
-            display: grid;
-            grid-template-columns: auto auto auto;
-            row-gap: 2%;
+            margin: 2% 7%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
         }
         /*hover effects*/
         .read_more_btn:hover{
@@ -201,7 +204,7 @@
             }         
             .leave_reply_section{
                 gap: 2%;
-                margin: 100px 4%;   
+                margin: 100px 7%;   
             }
         }
         @media only screen and (min-width: 1160px) and (max-width:4000px){           
@@ -235,74 +238,14 @@
             }
         } 
         /*gallery*/
-        @media only screen and (max-width: 425px){
-            .gallery{
-                grid-template-columns: auto;
-            }
-            .gallery img{
-                width: 97%;
-                height: 30vh;
-            }
-        }
-        @media (min-width: 426px) and (max-width: 510px){
-            .gallery img{
-                width: 90%;
-                height: 15vh;
-            }
-        }
-        @media (min-width: 510px) and (max-width: 740px){
-            .gallery img{
-                width: 90%;
-                height: 17vh;
-            }
-        }
-        @media (min-width: 740px) and (max-width: 900px){
-            .gallery img{
-                width: 90%;
-                height: 25vh;
-            }
-        }
-        @media (min-width: 900px) and (max-width: 1024px){
-            .gallery img{
-                width: 90%;
-                height: 30vh;
-            }
-        }
-        @media (min-width: 1024px) and (max-width: 1224px){
-            .gallery img{
-                width: 90%;
-                height: 30vh;
-            }
-        }
-        @media (min-width: 1224px) and (max-width: 1800px){
-            .gallery img{
-                width: 90%;
-                height: 40vh;
-            }
-        } 
-        @media (min-width: 1800px) and (max-width: 2000px){
-            .gallery img{
-                width: 90%;
-                height: 50vh;
-            }
-            .gallery{
-                row-gap: 6%;
-            }
-        }   
-        @media (min-width: 2000px) and (max-width: 2800px){
-            .gallery img{
-                width: 90%;
-                height: 45vh;
-            }
-            .gallery{
-                row-gap: 8%;
-            }
-        }   
+           
         /*responsive banner*/
-        @media only screen and (max-width: 801px){        
+        @media only screen and (max-width: 801px){  
+            .banner_gradient{
+                padding-right: 15px;
+                padding-left: 15px;
+            }      
             .banner_image{
-                margin-top: 0%;
-                border-radius: 0%;
                 height: 40%;
                 width: 100%;
             }
@@ -317,7 +260,7 @@
             }
             .event_header{
                 text-align: left; 
-                margin-left: 10%; 
+                margin-left: 13px; 
             }
         }
         @media (min-width: 802px) and (max-width: 4000px){  
@@ -332,7 +275,7 @@
             }
             .event_header{
                 text-align: left; 
-                margin-left: 5%;
+                margin-left: 10%;
             }
         }
     </style>
@@ -359,7 +302,7 @@
                 <!--Event Header-->
                 <h1>{{event.event_name}}</h1>
             </div>
-            <hr style="width:92%;margin-left:4% ;margin-top: 0%; border: solid .5px black; background: #000; height: .1mm;">
+            <hr style="width:80%;margin-left:10% ;margin-top: 0%; border: solid .5px black; background: #000; height: .1mm;">
         </section>
         <section class="below_banner">
             <!--Event Description-->
