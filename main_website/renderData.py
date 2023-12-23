@@ -76,10 +76,13 @@ class HomepageItems:
 
     def get_event_for_calender():
 
-        all_events = Events.objects.filter(event_date__year = datetime.now().year)
+        all_events = Events.objects.all()
         date_and_events = {}
         for event in all_events:
-            date = event.event_date.strftime("%Y-%m-%d")
+            try:
+                date = event.event_date.strftime("%Y-%m-%d")
+            except:
+                date = ""
 
             if date in date_and_events:
                 date_and_events[date].append(event)
