@@ -1,6 +1,7 @@
 {% load static %}
 {% block event_with_calendar %}
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 
 
@@ -105,50 +106,22 @@
                 <!-- SLIDER EVENT FR -->
                 <div class="slide-show">
                   <div class="slideshow-container">
+                    {% for event, banner_image in latest_five_event.items %}
                     <div class="mySlides">
                       <div class="card mb-3">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2023/12/405058251_641187728221994_8276667076881992039_n-1024x576.jpg" alt="...">
+                        <img src="{{media_url}}{{banner_image}}" alt="Event banner picture">
                         <div class="card-body">
-                          <h3 class="card-title"><b>21st Feb</b></h3>
-                          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                          <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                          {% if event.event_date %}
+                          <h3 class="card-title"><b>{{event.event_date.day}}{% if event.event_date.day == 1 %}st{% elif event.event_date.day == 2 %}nd 
+                            {% elif event.event_date.day == 3 %}rd{% else %}th{% endif %} ,{{event.event_date | date:"b" | capfirst}}</b></h3>
+                          {% endif %}
+                          <p class="card-text">{{event.event_description | safe}}</p>
+                          <p class="card-text"><small class="text-body-secondary">{{event.event_organiser}}</small></p>
                         </div>
                       </div>
                     </div>
-                  
-                    <div class="mySlides">
-                      <div class="card mb-3">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2023/11/395632417_670601851832445_4575150680900766580_n-300x200.jpg" alt="...">
-                        <div class="card-body">
-                          <h3 class="card-title">Card title</h3>
-                          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                          <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                        </div>
-                      </div>
-                    </div>
-                  
-                    <div class="mySlides">
-                      <div class="card mb-3">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2023/11/393684056_666124762280154_2905739173405476016_n-300x225.jpg"  alt="...">
-                        <div class="card-body">
-                          <h3 class="card-title">Card title</h3>
-                          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                          <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                        </div>
-                      </div>
-                    </div>
+                    {% endfor %}
 
-                    <div class="mySlides">
-                      <div class="card mb-3">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2023/11/393135996_619931460347621_1451075371402156688_n-300x225.jpg" alt="...">
-                        <div class="card-body">
-                          <h3 class="card-title">hello</h3>
-                          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                          <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                        </div>
-                      </div>
-                    </div>
-                  
                     <a class="prev" onclick="plusSlides(-1, 1)">&#10094;</a>
                     <a class="next" onclick="plusSlides(1, 1)">&#10095;</a>
                   </div>

@@ -92,12 +92,15 @@ def event_homepage(request):
     '''This view function loads all the events for the events homepage'''
     
     try:
-        all_events = HomepageItems.load_all_events()
+        all_events = HomepageItems.load_all_events(True)
+        latest_five_events = HomepageItems.load_all_events(False)
+        print(latest_five_events)
 
 
         context = {
             'all_events':all_events,
             'media_url':settings.MEDIA_URL,
+            'latest_five_event':latest_five_events,
         }
 
         return render(request,'Events/events_homepage.html',context)
