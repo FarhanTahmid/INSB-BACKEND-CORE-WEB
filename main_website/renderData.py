@@ -6,6 +6,8 @@ from central_events.models import Events
 from port.models import Chapters_Society_and_Affinity_Groups
 from graphics_team.models import Graphics_Banner_Image
 from media_team.models import Media_Images
+from datetime import datetime
+
 class HomepageItems:
 
     def load_all_events(flag):
@@ -17,9 +19,9 @@ class HomepageItems:
         for i in events:
             try:
                 event = Graphics_Banner_Image.objects.get(event_id = i.pk)
-                dic.update({i:event.selected_image})
+                dic[i]=event.selected_image
             except:
-                dic.update({i:"#"})
+                dic[i] = "#"
         return dic
     
     def load_event_banner_image(event_id):
@@ -71,5 +73,20 @@ class HomepageItems:
     def getEventCount():
         '''Gets all the event Count'''
         return Events.objects.all().count()
-    
+
+    def get_event_for_calender():
+
+        all_events = Events.objects.filter(event_date__year = datetime.now().year)
+        date_and_events = {}
+        for event in all_events:
+            date = event.event_date.strftime("%Y-%m-%d")
+
+            if date in date_and_events:
+                date_and_events[date].append(event)
+            else:
+                date_and_events[date] = [event]
+
+        
+        print(date_and_events)
+        return date_and_events
         

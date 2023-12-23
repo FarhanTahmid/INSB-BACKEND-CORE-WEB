@@ -251,12 +251,14 @@
 
     
 const eventsData = {
-    '2023-07-27': ['Event 1', 'Event 2', 'text'],
-    '2023-07-23': ['Event 3'],
-    '2023-07-15': ['hello event'],
-    '2023-12-18' : ['test', 'spacx'],
-    '2023-12-19' : ['Event 1', 'Event 2', 'test', 'test1'],
-    '2023-12-20' : ['x1']
+  {% for date, events in date_and_event.items %}
+  '{{ date }}': [
+      {% for event in events %}
+      '<a href="{% url 'main_website:event_details' event.pk %}">{{ event.event_name|safe }}</a>',
+      {% endfor %}
+  ],
+{% endfor %}
+
 };
 
 document.addEventListener('DOMContentLoaded', () => {
