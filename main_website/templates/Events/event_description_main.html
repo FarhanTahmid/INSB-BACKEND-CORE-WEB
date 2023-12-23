@@ -337,102 +337,102 @@
         }
     </style>
 </head>
-<body> 
+<body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7"> 
     <div class="body-wrapper  float-menu">
-        {% block header %}
-            {% include "header.html" %}
+            {% block header %}
+                {% include "header.html" %}
+            {% endblock %}
+            {% block wave %}
+                {% include "wave.html" %}
+            {% endblock %}
+            <section class="banner_gradient">
+                <!--Event Banner Image-->
+                {% if event_banner_image %}
+            <img src="{{media_url}}{{event_banner_image}}" alt="" class="banner_image">
+            {% else %}
+            <div style="height:30px"></div>
+            {% endif %}
+            <div class="event_header" style="text-transform: uppercase;">
+                <!--Event Date and Time-->
+                {% comment %} <h4>Friday,October 12 2023 at 12:00 pm - 12:45 pm UTC +06</h4> {% endcomment %}
+                <h4 style="color: #BA0C2F;">{{event.event_date | date:"l, F d Y"}}</h4>
+                <!--Event Header-->
+                <h1>{{event.event_name}}</h1>
+            </div>
+            <hr style="width:92%;margin-left:4% ;margin-top: 0%; border: solid .5px black; background: #000; height: .1mm;">
+        </section>
+        <section class="below_banner">
+            <!--Event Description-->
+            <div>
+                <p style="  text-align: justify;">{{event.event_description | safe}}</p>
+            </div>
+            <div>
+                <!--Register Box-->
+                <div class="box">
+                    <div>
+                        <div class="inner_box">
+                            <h4><i class="fa-solid fa-wallet" style="color: #007cfa;"></i><span style="margin-left: 10px;">COST</span></h4>
+                            {% if event.registration_fee %}
+                                <h5>{{event.registration_fee_amount}}</h5>
+                            {% else %}
+                                <h5>Free</h5>
+                            {% endif %}
+                        </div>
+                        <div class="inner_box">
+                            <h4><i class="fa-solid fa-circle-info" style="color: #007cfa;"></i><span style="margin-left: 10px;">MORE INFO</span></h4>
+                            <!--READ MORE LINK-->
+                            <h5><a href="" class="read_more_btn" >Read More</a></h5>
+                        </div>
+                        <div class="register">
+                            <!--Registration button-->
+                            <a href="{{event.form_link}}" class="register_btn">REGISTER</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="box">
+                        <!--Share event box-->
+                        <h6 style="text-align: center; font-size: small; font-weight: bold; margin-top: 15px;">SHARE THIS EVENT</h6>
+                        <hr style="width:80%;margin-left:10% ;margin-top: -1%; border: solid .5px #ebebeb;">
+                    <div class="socialmedia_icon">
+                        <a href=""><i class="fa-brands fa-square-facebook icon" style="color: #3b5996;"></i></a>
+                        <a href=""><i class="fa-brands fa-square-twitter icon" style="color: #00b2ee;"></i></a>
+                        <a href=""><i class="fa-brands fa-linkedin icon" style="color: #457399;"></i></a>
+                        <a href=""><i class="fa-solid fa-square-envelope icon" style="color: #ff5d5e;"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--Gallery-->
+        <section class="gallery">
+                {% for imageFile in event_gallery_images %}
+                    <a href="{{media_url}}{{imageFile.selected_images}}" data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img src="{{media_url}}{{imageFile.selected_images}}" alt=""/></a>
+                {% endfor %}
+        </section>
+
+        <!--Leave a reply section-->
+        <section class="leave_reply_section">      
+                <p>Leave a Reply</p>
+                <form class="leave_reply_box">
+                    <!--Name-->
+                    <input id="name" class="placement" type="text" placeholder="Name (required)">
+                    <!--Email-->
+                    <input id="email" class="placement" type="text" placeholder="Email (required)" >
+                    <!--website-->
+                    <input id="website" class="placement" type="text" placeholder="Website">
+                    <!--comment-->
+                    <textarea rows="8" style="max-height: 100%; max-width: 100%; min-height: 100%;" id="comment" class="placement" placeholder="Your comment here..."></textarea>
+                    <!--submit button-->
+                    <a href="" id="submit_btn" name="">SUBMIT</a>
+                </form>
+        </section>
+        {% block footer %}
+            {% include "footer_block.html" %}
         {% endblock %}
-        {% block wave %}
-            {% include "wave.html" %}
+        {% block common_js %}
+            {% include "common_js_includes.html" %}
         {% endblock %}
+        <script src="{% static './js/event_script.js'%}"></script>
     </div> 
-    <section class="banner_gradient">
-        <!--Event Banner Image-->
-        {% if event_banner_image %}
-        <img src="{{media_url}}{{event_banner_image}}" alt="" class="banner_image">
-        {% else %}
-        <div style="height:30px"></div>
-        {% endif %}
-        <div class="event_header" style="text-transform: uppercase;">
-            <!--Event Date and Time-->
-            {% comment %} <h4>Friday,October 12 2023 at 12:00 pm - 12:45 pm UTC +06</h4> {% endcomment %}
-            <h4 style="color: #BA0C2F;">{{event.event_date | date:"l, F d Y"}}</h4>
-            <!--Event Header-->
-            <h1>{{event.event_name}}</h1>
-        </div>
-        <hr style="width:92%;margin-left:4% ;margin-top: 0%; border: solid .5px black; background: #000; height: .1mm;">
-    </section>
-    <section class="below_banner">
-        <!--Event Description-->
-        <div>
-            <p style="  text-align: justify;">{{event.event_description | safe}}</p>
-        </div>
-        <div>
-            <!--Register Box-->
-            <div class="box">
-                <div>
-                    <div class="inner_box">
-                        <h4><i class="fa-solid fa-wallet" style="color: #007cfa;"></i><span style="margin-left: 10px;">COST</span></h4>
-                        {% if event.registration_fee %}
-                            <h5>{{event.registration_fee_amount}}</h5>
-                        {% else %}
-                            <h5>Free</h5>
-                        {% endif %}
-                    </div>
-                    <div class="inner_box">
-                        <h4><i class="fa-solid fa-circle-info" style="color: #007cfa;"></i><span style="margin-left: 10px;">MORE INFO</span></h4>
-                        <!--READ MORE LINK-->
-                        <h5><a href="" class="read_more_btn" >Read More</a></h5>
-                    </div>
-                    <div class="register">
-                        <!--Registration button-->
-                        <a href="{{event.form_link}}" class="register_btn">REGISTER</a>
-                    </div>
-                </div>
-            </div>
-            <div class="box">
-                    <!--Share event box-->
-                    <h6 style="text-align: center; font-size: small; font-weight: bold; margin-top: 15px;">SHARE THIS EVENT</h6>
-                    <hr style="width:80%;margin-left:10% ;margin-top: -1%; border: solid .5px #ebebeb;">
-                <div class="socialmedia_icon">
-                    <a href=""><i class="fa-brands fa-square-facebook icon" style="color: #3b5996;"></i></a>
-                    <a href=""><i class="fa-brands fa-square-twitter icon" style="color: #00b2ee;"></i></a>
-                    <a href=""><i class="fa-brands fa-linkedin icon" style="color: #457399;"></i></a>
-                    <a href=""><i class="fa-solid fa-square-envelope icon" style="color: #ff5d5e;"></i></a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!--Gallery-->
-    <section class="gallery">
-            {% for imageFile in event_gallery_images %}
-                <a href="{{media_url}}{{imageFile.selected_images}}" data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img src="{{media_url}}{{imageFile.selected_images}}" alt=""/></a>
-            {% endfor %}
-    </section>
-
-    <!--Leave a reply section-->
-    <section class="leave_reply_section">      
-            <p>Leave a Reply</p>
-            <form class="leave_reply_box">
-                <!--Name-->
-                <input id="name" class="placement" type="text" placeholder="Name (required)">
-                <!--Email-->
-                <input id="email" class="placement" type="text" placeholder="Email (required)" >
-                <!--website-->
-                <input id="website" class="placement" type="text" placeholder="Website">
-                <!--comment-->
-                <textarea rows="8" style="max-height: 100%; max-width: 100%; min-height: 100%;" id="comment" class="placement" placeholder="Your comment here..."></textarea>
-                <!--submit button-->
-                <a href="" id="submit_btn" name="">SUBMIT</a>
-            </form>
-    </section>
-    {% block footer %}
-        {% include "footer_block.html" %}
-    {% endblock %}
-    {% block common_js %}
-        {% include "common_js_includes.html" %}
-    {% endblock %}
-    <script src="{% static './js/event_script.js'%}"></script>
 </body>
 </html>
