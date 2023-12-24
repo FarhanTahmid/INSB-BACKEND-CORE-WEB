@@ -28,7 +28,12 @@
         }
         .banner_gradient{
             text-align: center;
-            object-fit: cover;
+            padding-right: 19px;
+            padding-left: 19px;
+        }   
+        .event_header{
+                text-align: left; 
+                margin-left: 6px; 
         }
         .box{
             border:1px solid #ebebeb;
@@ -42,12 +47,21 @@
             padding-left: 4%;
             background: #f7f7f7; 
         }
+        hr{
+            width:100%;
+            margin-top: 0%;
+            border: solid .5px black; 
+            background: #000; 
+            height: .1mm;
+        }
         .below_banner{
             display: grid;
             grid-template-columns: 2.5fr 1fr;
             gap: 2%;
-            margin: 0% 10%;
+            margin: 0% 0%;
             line-height: 2;
+            padding-right: 19px;
+            padding-left: 19px;
         }
         .below_banner h5{
             color: #9d9d9d;
@@ -89,7 +103,8 @@
         }
         .leave_reply_section{
             gap: 2%;
-            margin: 100px 10%;   
+            padding-right: 19px;
+            padding-left: 19px;   
         }
         .leave_reply_section p{
             font-size: 25px; 
@@ -123,6 +138,7 @@
         #submit_btn{
             text-decoration: none;
             margin: 5% 0%;
+            font-size: smaller;
             margin-left: 50%;
             padding: 10px 5px;
             background: #007ccd;
@@ -138,16 +154,19 @@
         }
         /*gallery css*/
         .gallery img{
-            width: 300px;
-            height: 200px;
-            object-fit: cover;
             box-shadow: 5px 5px 10px rgb(148, 148, 148);
+            object-fit: cover;
+            width: 1240px;
+            height: 150px;
+            margin: 4% 0%;
+
         }
         .gallery{
-            margin: 2% 7%;
+            margin: 2% 4%;
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-around;
+            justify-content: space-evenly;
+            row-gap: 15px;
         }
         /*hover effects*/
         .read_more_btn:hover{
@@ -167,6 +186,69 @@
             color: rgb(0, 0, 0);
         }
         /*media queries*/
+        @media (min-width: 768px) and (max-width: 1023px){
+            .banner_image{
+                height: 420px;
+                width: 658px;
+            }
+            .below_banner{
+                margin: 0% 5%;
+            }
+            .gallery{
+                margin: 0% 5%;
+
+            }
+            .leave_reply_section{
+                margin: 50px 5%;
+            }
+            .event_header{
+                text-align: left; 
+                margin-left: 5%;
+            }
+            hr{
+                margin-left: 5%;
+                width: 90%;
+            }
+        }
+        @media (min-width: 1024px){
+            .below_banner{
+                margin: 0% 7%;
+            }
+            .gallery{
+                margin: 0% 7%;
+
+            }
+            .leave_reply_section{
+                margin: 50px 7%;
+            }
+            .event_header{
+                text-align: left; 
+                margin-left: 7%;
+            }
+            hr{
+                margin-left: 7%;
+                width: 86%;
+            }
+        }
+        @media (min-width: 1440px){
+            .below_banner{
+                margin: 0% 11%;
+            }
+            .gallery{
+                margin: 0% 11%;
+            }
+            .leave_reply_section{
+                margin: 50px 11%;   
+            }
+            .event_header{
+                text-align: left; 
+                margin-left: 11%;
+            }
+            hr{
+                margin-left: 11%;
+                width: 78%;
+            }
+        }
         /*changed layout of below banner section*/
         @media only screen and (max-width: 619px){
             .below_banner{
@@ -175,38 +257,17 @@
                 grid-template-rows: auto auto;
             }
             #submit_btn{
-                font-size: smaller;
                 margin-left: 0%;
             }
         }
-        /*changed layout of leave a reply section*/
-        @media only screen and (max-width: 939px){      
-            .submit_btn{
-                font-size: smaller;
-            }
+        @media only screen and (max-width: 939px){             
             .below_banner{
                 gap: 2%;
                 font-size: small;
                 margin-bottom: 40px;
             }
-            .leave_reply_box{
-            display: grid;
-            grid-template-columns: 1fr;
-            grid-template-rows: auto auto auto auto;
-            grid-template-areas: 
-            "name"
-            "email" 
-            "website"
-            "comment"
-            "submit_btn";
-                grid-column-gap: 2%;
-                grid-row-gap: 4%;
-            }         
-            .leave_reply_section{
-                gap: 2%;
-                margin: 100px 7%;   
-            }
         }
+        /*changed layout of below banner section for large screen*/
         @media only screen and (min-width: 1160px) and (max-width:4000px){           
             .below_banner{
                 display: grid;
@@ -214,12 +275,12 @@
                 gap: 2%;
             }
         }
-        /*minor alignmenet adjustment in inner box*/
         @media only screen and (min-width: 940px){
             .below_banner h5{
                 margin-left: 30px;
             } 
         } 
+        /*minor adjustment in inner box*/
         @media (min-width: 1440px) and (max-width: 2040px){
             .inner_box{
                 padding-top: 10px;
@@ -238,13 +299,60 @@
             }
         } 
         /*gallery*/
-           
+        @media only screen and (max-width: 320px){        
+            .gallery img{           
+                height: 150px;
+            }
+        }
+        @media (min-width: 320px) and (max-width: 375px){         
+            .gallery img{           
+                height: 180px;
+            }
+        }
+        @media (min-width: 375px) and (max-width: 425px){         
+            .gallery img{           
+                height: 210px;
+            }
+        }
+        @media (min-width: 425px) and (max-width: 540px){         
+            .gallery img{  
+                height: 240px;
+            }
+        }
+        @media (min-width: 540px) and (max-width: 620px){         
+            .gallery img{ 
+                height: 270px;
+            }
+        }
+        @media (min-width: 620px) and (max-width: 768px){         
+            .gallery img{  
+                width: 300px; 
+                height: 180px;
+            }
+        }
+        @media (min-width: 768px) and (max-width: 1025px){         
+            .gallery img{  
+                width: 250px; 
+                height: 150px;
+                row-gap: 0%;
+            }
+        }
+        @media (min-width: 1025px) and (max-width: 1440px){         
+            .gallery img{  
+                width: 320px; 
+                height: 200px;
+            }
+        }
+        @media (min-width: 1441px) and (max-width: 2560px){         
+            .gallery img{  
+                width: 600px; 
+                height: 280px;
+                margin: 8% 0%;
+            }
+        }
+
         /*responsive banner*/
-        @media only screen and (max-width: 801px){  
-            .banner_gradient{
-                padding-right: 15px;
-                padding-left: 15px;
-            }      
+        @media only screen and (max-width: 575px){        
             .banner_image{
                 height: 40%;
                 width: 100%;
@@ -258,12 +366,8 @@
                 margin-bottom: -5px;
                 font-size: 20px;
             }
-            .event_header{
-                text-align: left; 
-                margin-left: 13px; 
-            }
         }
-        @media (min-width: 802px) and (max-width: 4000px){  
+        @media (min-width: 575px) and (max-width: 4000px){  
             .banner_gradient h1{
                 margin-bottom: -2px;
                 font-size: 25px;
@@ -272,10 +376,6 @@
                 margin-top: -2px;
                 margin-bottom: -5px;
                 font-size: 20px;
-            }
-            .event_header{
-                text-align: left; 
-                margin-left: 10%;
             }
         }
     </style>
@@ -302,7 +402,7 @@
                 <!--Event Header-->
                 <h1>{{event.event_name}}</h1>
             </div>
-            <hr style="width:80%;margin-left:10% ;margin-top: 0%; border: solid .5px black; background: #000; height: .1mm;">
+            <hr>
         </section>
         <section class="below_banner">
             <!--Event Description-->
@@ -348,9 +448,9 @@
 
         <!--Gallery-->
         <section class="gallery">
-                {% for imageFile in event_gallery_images %}
-                    <a href="{{media_url}}{{imageFile.selected_images}}" data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img src="{{media_url}}{{imageFile.selected_images}}" alt=""/></a>
-                {% endfor %}
+            {% for imageFile in event_gallery_images %}
+                <a href="{{media_url}}{{imageFile.selected_images}}" data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img src="{{media_url}}{{imageFile.selected_images}}" alt=""/></a>
+            {% endfor %}
         </section>
 
         <!--Leave a reply section-->
