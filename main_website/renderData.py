@@ -76,7 +76,7 @@ class HomepageItems:
 
     def get_event_for_calender():
 
-        all_events = Events.objects.all()
+        all_events = HomepageItems.load_all_events(True)
         date_and_events = {}
         for event in all_events:
             try:
