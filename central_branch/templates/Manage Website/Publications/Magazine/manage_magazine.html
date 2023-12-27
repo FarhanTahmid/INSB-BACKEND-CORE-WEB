@@ -1,0 +1,207 @@
+{% block manage_publication_base %}
+{% include "Manage Website/Publications/manage_publications_base.html" %}
+{% endblock manage_publication_base %}
+{% block manage_research_papers %}
+{% load static %}
+<body>
+    <div class="app" id="app">
+        <div ui-view class="app-body" style="justify-content:center; margin-left:27%; margin-right:15%;" id="view">
+
+            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>Magazine Section</b></h2>
+            
+            <!--Messages-->
+            <div style="justify-content:center; text-align:center;">
+                {% if messages %}
+                    {% for message in messages %}
+                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <!--Messages End-->
+            
+            <!--Achievements Table-->
+            <div class="box">
+                <div class="box-header">
+                    
+                    <div style="text-align:right;">
+                    <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add New Magazine</button>
+                    </div>
+                    <small>This table holds the data of Magazines in the main website of IEEE NSU SB</small>
+                    <small style="color:green;"><span style="color:red;">* </span>Adding Magazines here will update them in the Main Website.</small>
+                    <br>
+                    <label style="margin-left:5px;">Search:</label>
+                    <input class="form-control w-75" type="text" id="searchInput" placeholder="Search..." onkeyup="searchTable()">
+                </div>
+                <div class="table-responsive" style="max-height:300px; overflow-y:auto;">
+                <table class="table table-bordered m-0" style="text-align:center;">
+                    <thead>
+                    <tr>
+                        <th style="text-align:center;">Magazine Title</th>
+                        <th style="text-align:center;">Published By</th>
+                        <th style="text-align:center;">Publish Date</th>
+                        <th style="text-align:center;">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    
+                        {% for i in all_magazines %}
+                        <tr>
+                            <td><a style="text-decoration:none;color:#00629B;" href="#">{{i.magazine_title}}</a></td>
+                            <td>{{ i.published_by}}</td>
+                            <td>{{i.publish_date}}</td>
+                            
+                            <td>
+                            <form method="POST">
+                                {% csrf_token %}
+                                    <div style="justify-content:center;text-align:center;">  
+                                        <div class="btn-container">
+                                            <input class="btn btn-outline b-danger text-danger" name="remove_magazine" type="submit" value="Remove">
+                                            <a class="btn btn-outline b-warn text-warn" href="#">Update</a>
+                                        </div>
+                                      </div>
+                                    <input type="hidden" name="magazine_pk" value={{i.pk}}>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            <!--Table Ends-->
+            <br>
+            <br>
+            <!--Modal form-->
+            <div id="m-s-a" class="modal fade animate" data-backdrop="true">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-dialog modal-lg" id="animate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Add a New Research</h5>
+                            </div>
+                            
+                            <div class="modal-body text-left p-lg">
+        
+                                <!--Form start-->
+        
+                                <div class="container">
+                                    <div class="padding">
+                                        <div class="row" >
+                                            <div class="col-sm-10">
+                                                <div class="box">
+                                                    <div class="box-header">
+                                                        <h1 style="text-align:center;">Provide Research Details</h1>
+                                                    </div>
+                                                    
+                                                    <div class="box-body">
+                                                        <div class="form-control">
+                                                            {{form.media}}
+                                                            {{form.as_p}}
+                                                        </div>
+                                                        <br>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                    
+                            </div>
+        
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <input type="submit" name="add_research" class="btn btn-success p-x-md" value="Add"></input>               
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </form>
+                
+            </div>
+            <br>
+
+            <!--Modal form-->
+            <div id="m-s-c" class="modal fade animate" data-backdrop="true">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-dialog modal-md" id="animate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Add a New Research Category</h5>
+                            </div>
+                            
+                            <div class="modal-body text-left">
+                                <!--Form start-->
+        
+                                <div class="container">
+                                    <div class="padding">
+                                        <div class="row" >
+                                            <div class="col-sm-10">
+                                                <div class="box">
+                                                    <div class="box-body">
+                                                        <div class="form-control">
+                                                            {{form2.media}}
+                                                            {{form2.as_p}}
+                                                        </div>
+                                                        <br>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                    
+                            </div>
+        
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <input type="submit" name="add_research_category" class="btn btn-success p-x-md" value="Add"></input>               
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </form>
+            
+            </div>
+
+
+        </div>
+    </div>
+    
+</body>
+
+    <script>
+        function searchTable() {
+            // Declare variables
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.querySelector("table");
+            tr = table.getElementsByTagName("tr");
+        
+            // Loop through all table rows
+            for (i = 0; i < tr.length; i++) {
+                var rowVisible = false; // Flag to track if any column matches the search query in the current row
+        
+                // Loop through all columns in the current row
+                for (j = 0; j < tr[i].getElementsByTagName("td").length; j++) {
+                    td = tr[i].getElementsByTagName("td")[j];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            rowVisible = true; // If a match is found in any column, set the flag to true
+                        }
+                    }
+                }
+        
+                // Set the display style for the row based on the flag
+                if (rowVisible) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+{% endblock manage_research_papers %}
