@@ -12,4 +12,4 @@ class Content_Team_Documents_Link(admin.ModelAdmin):
 
 @admin.register(Content_Notes)
 class Content_Notes(admin.ModelAdmin):
-    list_display = ['id','event_id','title','notes']
+    list_display = ['id','event_id','title','caption']

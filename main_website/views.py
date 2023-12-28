@@ -110,8 +110,7 @@ def event_homepage(request):
             response = HttpResponseServerError("Oops! Something went wrong.")
             return response
     
-
-
+    
 def event_details(request,event_id):
  
     '''Loads details for the corresponding event page on site'''

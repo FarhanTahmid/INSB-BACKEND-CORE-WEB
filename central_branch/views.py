@@ -12,6 +12,7 @@ from content_writing_and_publications_team.renderData import ContentWritingTeam
 from events_and_management_team.renderData import Events_And_Management_Team
 from graphics_team.models import Graphics_Banner_Image, Graphics_Link
 from graphics_team.renderData import GraphicsTeam
+from main_website.renderData import HomepageItems
 from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
 from system_administration.system_error_handling import ErrorHandling
@@ -38,6 +39,7 @@ from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from central_events.forms import EventForm
 from .forms import *
 from .website_render_data import MainWebsiteRenderData
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -1481,6 +1483,32 @@ def event_edit_content_form_tab(request,event_id):
         else:
             return render(request, 'access_denied2.html')
         
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+@login_required
+@xframe_options_exempt
+def event_preview(request, event_id):
+    ''' This function displays a preview of an event regardless of it's published status '''
+
+    try:
+        event = Events.objects.get(id=event_id)
+        event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
+        event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
+
+        context = {
+            'is_branch' : True,
+            'event' : event,
+            'media_url':settings.MEDIA_URL,
+            'event_banner_image' : event_banner_image,
+            'event_gallery_images' : event_gallery_images
+        }
+
+        return render(request, 'Events/event_description_main.html', context)
+    
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

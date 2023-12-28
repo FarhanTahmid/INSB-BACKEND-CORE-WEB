@@ -84,7 +84,7 @@ class ContentWritingTeam:
         '''This function creates notes for the specific event. It takes the note title, note description and event id'''
 
         try:
-            new_note = Content_Notes.objects.create(event_id = Events.objects.get(pk = event_id),title = title,notes = note)
+            new_note = Content_Notes.objects.create(event_id = Events.objects.get(pk = event_id),title = title,captions = note)
             new_note.save()
             return True
         except Exception as e:
