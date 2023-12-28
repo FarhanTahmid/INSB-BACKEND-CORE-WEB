@@ -162,6 +162,7 @@
                   
                       <thead>
                         <tr>
+                            <th>SL</th>
                             <th>Event Name</th>
                             <th>Event Organiser</th>
                             <th>Collaboration With</th>
@@ -172,6 +173,7 @@
                       <tbody>
                         {% for key, value in events.items %}
                         <tr>
+                          <td>{{ forloop.counter }}</td>
                             {% if is_branch %}
                             <td><a style="color:blue;" href="{% url 'central_branch:event_edit_form' key.id %}">{{key.event_name }}</a></td>
                             {% else %}

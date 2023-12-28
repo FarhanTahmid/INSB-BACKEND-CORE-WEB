@@ -289,7 +289,7 @@ const eventsData = {
   {% for date, events in date_and_event.items %}
   '{{ date }}': [
       {% for event in events %}
-      '{{event.event_name|safe }}',
+      ["{% url 'main_website:event_details' event %}", "{{ event.event_name }}"],
       {% endfor %}
   ],
 {% endfor %}
@@ -389,16 +389,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showEventsForDate(date) {
       const formattedDate = getFormattedDate(date);
-      console.log(formattedDate)
+
       selectedDateText.textContent = formattedDate;
       const eventsForDate = eventsData[formattedDate] || [];
+      console.log(eventsData)
+      console.log(eventsForDate)
+
       eventsList.innerHTML = '';
       if (eventsForDate.length > 0) {
           eventBox.style.display = 'block';
           eventBox.classList.add('show');
           eventsForDate.forEach((event) => {
+
               const eventItem = document.createElement('li');
-              eventItem.textContent = event;
+              eventItem.innerHTML = "<a href='"+ event[0] +"'>" + event[1] + "</a>";
               eventsList.appendChild(eventItem);
           });
       } else {

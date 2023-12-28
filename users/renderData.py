@@ -301,8 +301,8 @@ def getHitCountMonthly():
             daily.append(number_of_people_per_day)
             days_of_month.append(i+1)
 
-    monthly_visitor=getMonthName(datetime.datetime.now().month)
-    return monthly_visitor,days_of_month,daily
+    month_name=datetime.datetime.now().strftime("%B")
+    return month_name,days_of_month,daily
 
 def getHitCountYearly():
 
