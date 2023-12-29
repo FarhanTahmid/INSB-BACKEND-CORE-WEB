@@ -48,7 +48,7 @@
             <div class="box-body">
                 
                 <div class="form-group row align-items-center">
-                    <label for="captions" class="col-sm-3 form-control-label">Add Notes:</label>
+                    <label for="captions" class="col-sm-3 form-control-label">Add Captions:</label>
                     <div class="col-sm-7">
                         <!-- Add input field for captions here if needed -->
                     </div>
@@ -88,7 +88,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addCaptionModalLabel">Add Note</h5>
+                <h5 class="modal-title" id="addCaptionModalLabel">Add Caption</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -98,7 +98,7 @@
                     {% csrf_token %}
                     
                     <div class="form-group">
-                        <label>Title: </label> 
+                        <label>Title:</label> 
                             <input
                                 placeholder="Title"
                                 class="form-control"
@@ -108,6 +108,7 @@
                                 name="title"
                                 value="" 
                             />
+                            <br>
                         <!-- Use form-control class for full-width textarea -->
                         {{form_adding_note.media}}
                         {{form_adding_note.as_p}}
@@ -130,7 +131,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editCaptionModalLabel">Edit Note</h5>
+                <h5 class="modal-title" id="editCaptionModalLabel">Edit Caption</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -144,13 +145,14 @@
                         <label>Title: </label> 
                             <input
                                 placeholder="Title"
-                                class="form-control w-75"
+                                class="form-control"
                                 type="text"
                                 autocomplete="off"
                                 required
                                 name="title"
                                 value="{{note.title}}" 
                             />
+                        <br>
                            
                         {{value.media}}
                         {{value.as_p}}

@@ -94,13 +94,14 @@ def event_homepage(request):
     try:
         all_events = HomepageItems.load_all_events(True)
         latest_five_events = HomepageItems.load_all_events(False)
-        print(latest_five_events)
+        date_and_event = HomepageItems.get_event_for_calender()
 
 
         context = {
             'all_events':all_events,
             'media_url':settings.MEDIA_URL,
             'latest_five_event':latest_five_events,
+            'date_and_event':date_and_event,
         }
 
         return render(request,'Events/events_homepage.html',context)
@@ -109,8 +110,7 @@ def event_homepage(request):
             response = HttpResponseServerError("Oops! Something went wrong.")
             return response
     
-
-
+    
 def event_details(request,event_id):
  
     '''Loads details for the corresponding event page on site'''
