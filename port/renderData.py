@@ -125,6 +125,18 @@ class PortData:
             messages.error(request,"An internal Database error occured loading the Positions for Executive Members!")
             return False
     
+    def get_team_details(request,team_primary):
+        '''Returns the object of team'''
+        
+        try:
+            team_details=Teams.objects.get(primary=team_primary)
+            return team_details
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"An internal Database error occured loading the Team Details!")
+            return False
+    
     def get_current_panel():
         '''Returns the id of the current panel of IEEE NSU SB'''
         try:            

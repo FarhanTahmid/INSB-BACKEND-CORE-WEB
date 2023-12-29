@@ -1,4 +1,5 @@
 from django.db import models
+from ckeditor.fields import RichTextField
 # Create your models here.
 class Chapters_Society_and_Affinity_Groups(models.Model):
     '''This model Includes Branch and all the Society'''
@@ -21,6 +22,7 @@ class Teams(models.Model):
 
     '''
     team_name=models.CharField(max_length=40,null=False,blank=False)
+    team_short_description=RichTextField(null=True,blank=True,max_length=200)
     primary=models.IntegerField(null=False,blank=False,default=0)
     # team_of attribute means to which SC_AG or Branch The Team is registered to
     team_of=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)

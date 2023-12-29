@@ -28,6 +28,7 @@ urlpatterns = [
     path('officers/<str:team_primary>',views.team_based_officers_page,name="team_officer"),
     path('volunteers',views.volunteers_page,name="volunteers_page"),
     path('all_members',views.all_members,name="all_members"),
+    path('team/<int:team_primary>',views.team_intros,name="team_intro"),
     
     # Publications
     path('blogs',views.blogs,name="blogs"),
