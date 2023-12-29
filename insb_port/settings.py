@@ -121,7 +121,7 @@ DATABASES = {
         #     'init_command':"SET sql_mode='STRICT_TRANS_TABLES'"
         # }
         
-        
+        # PostgreSQL
         
         #DB.SQLITE3
         'ENGINE': 'django.db.backends.sqlite3',
