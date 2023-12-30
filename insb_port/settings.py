@@ -124,7 +124,7 @@ if(os.environ.get('SETTINGS')=='dev'):
 
         }
     }
-if(os.environ.get('settings')=='prod'):
+if(os.environ.get('SETTINGS')=='prod'):
     DATABASES = {
         'default': {
                     
@@ -174,7 +174,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+
+if(os.environ.get('SETTINGS')=='dev'):
+    STATIC_URL = 'static/'
+    #static directory
+    STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
+    STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static/'))
+    
+if(os.environ.get('SETTINGS')=='prod'):
+    STATIC_URL = 'static/'
+    #static directory
+    STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static/'))
+    STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles_build','static')
+
 
 #TEMPLATE_DIRS=(os.path.join(os.path.dirname(__file__) ,'../Templates').replace('\\','/'))
 
@@ -187,9 +199,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DATE_INPUT_FORMATS = ['%d-%m-%Y']
 
 
-#static directory
-STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
-STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static/'))
+
 #Media Files
 MEDIA_ROOT= os.path.join(BASE_DIR, 'User Files/')
 MEDIA_URL= "/media_files/" 
