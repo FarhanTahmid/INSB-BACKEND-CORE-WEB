@@ -42,7 +42,7 @@ urlpatterns = [
     path('manage_website/blogs/update/<int:pk>',views.update_blogs,name="update_blogs"),
     path('manage_website/research',views.manage_research,name="manage_research"),
     path('manage_website/research/update/<int:pk>',views.update_researches,name="update_researches"),
-    
+    path('manage_website/magazine',views.manage_magazines,name="manage_magazines"),
     
     
     path('manage_access',views.manage_view_access,name="manage_access"),
