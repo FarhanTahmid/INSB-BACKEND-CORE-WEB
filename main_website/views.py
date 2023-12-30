@@ -18,7 +18,7 @@ from .renderData import HomepageItems
 from users.renderData import PanelMembersData
 from users import renderData as userData
 import json,requests
-
+from insb_port import settings
 
 logger=logging.getLogger(__name__)
 
@@ -96,6 +96,8 @@ def event_homepage(request):
         all_events = HomepageItems.load_all_events(True)
         latest_five_events = HomepageItems.load_all_events(False)
         date_and_event = HomepageItems.get_event_for_calender()
+        upcoming_event = HomepageItems.get_upcoming_event()
+        upcoming_event_banner_picture = HomepageItems.get_upcoming_event_banner_picture(upcoming_event)
 
 
         context = {
@@ -104,6 +106,8 @@ def event_homepage(request):
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'latest_five_event':latest_five_events,
             'date_and_event':date_and_event,
+            'upcoming_event':upcoming_event,
+            'upcoming_event_banner_picture':upcoming_event_banner_picture,
         }
 
         return render(request,'Events/events_homepage.html',context)
