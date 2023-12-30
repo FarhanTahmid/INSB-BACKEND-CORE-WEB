@@ -2,7 +2,7 @@ name: Django CI
 
 on:
   push:
-    branches: [ "master", "farhan", "farhan2" ]
+    branches: [ "master", "System_V1.0" ]
   pull_request:
     branches: [ "master" ]
 
@@ -29,4 +29,17 @@ jobs:
       run: |
         python manage.py test port
         python manage.py test users
+      env:
+        SETTINGS:${{ secrets.SETTINGS }}
+
+        EMAIL_USER:${{ secrets.EMAIL_USER }}
+        EMAIL_PASSWORD:${{ secrets.EMAIL_PASSWORD }}
+
+        NEWS_API_KEY=${{ secrets.NEWS_API_KEY }}
+
+        PROD_DATABASE_NAME:${{ secrets.PROD_DATABASE_NAME }}
+        PROD_DATABASE_USER:${{ secrets.PROD_DATABASE_USER }}
+        PROD_DATABASE_PASSWORD:${{ secrets.PROD_DATABASE_PASSWORD }}
+        PROD_DATABASE_HOST:${{ secrets.PROD_DATABASE_HOST }}
+
 
