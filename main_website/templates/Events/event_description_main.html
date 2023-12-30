@@ -407,17 +407,37 @@
             }
         }
 
-        @media (min-width: 1025px) and (max-width: 1440px) {
+        @media (min-width: 1025px) and (max-width: 1300px) {
+            .gallery img {
+                width: 280px;
+                height: 200px;
+            }
+        }
+        @media (min-width: 1300px) and (max-width: 1390px) {
+            .gallery img {
+                width: 300px;
+                height: 200px;
+            }
+        }
+        @media (min-width: 1390px) and (max-width: 1441px) {
             .gallery img {
                 width: 320px;
                 height: 200px;
             }
         }
 
-        @media (min-width: 1441px) and (max-width: 2560px) {
+        @media (min-width: 1441px) and (max-width: 1760px) {
             .gallery img {
-                width: 600px;
-                height: 280px;
+                width: 320px;
+                height: 200px;
+                margin: 8% 0%;
+            }
+        }
+
+        @media (min-width: 1760px) and (max-width: 2560px) {
+            .gallery img {
+                width: 350px;
+                height: 200px;
                 margin: 8% 0%;
             }
         }
@@ -540,8 +560,10 @@
                 <!--Gallery-->
                 <section class="gallery">
                     {% for imageFile in event_gallery_images %}
-                    <a href="{{media_url}}{{imageFile.selected_images}}" data-fancybox-group="gdlr-gal-1"
+                    <div>
+                        <a href="{{media_url}}{{imageFile.selected_images}}" data-fancybox-group="gdlr-gal-1"
                         data-rel="fancybox"><img src="{{media_url}}{{imageFile.selected_images}}" alt="" /></a>
+                    </div>
                     {% endfor %}
                 </section>
         
