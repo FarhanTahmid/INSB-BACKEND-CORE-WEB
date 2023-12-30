@@ -108,28 +108,35 @@ WSGI_APPLICATION = 'insb_port.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        
-        # #********MYSQL SERVER ON LOCALHOST*********
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'insb_portal',
-        # 'USER': 'root',
-        # 'PASSWORD': '',
-        # 'HOST':'localhost',
-        # 'PORT':'3306',
-        # 'OPTIONS':{
-        #     'init_command':"SET sql_mode='STRICT_TRANS_TABLES'"
-        # }
-        
-        # PostgreSQL
-        
-        #DB.SQLITE3
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
+if(os.environ.get('SETTINGS')=='dev'):
+    DATABASES = {
+        'default': {
+                    
+            #Postgres in localhost
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DEV_DATABASE_NAME'),
+            'USER': os.environ.get('DEV_DATABASE_USER'),
+            'PASSWORD': os.environ.get('DEV_DATABASE_PASSWORD'),
+            'HOST': os.environ.get('DEV_DATABASE_HOST'),
+            'PORT':'', 
+            
+
+        }
+    }
+if(os.environ.get('settings')=='prod'):
+    DATABASES = {
+        'default': {
+                    
+            # Postgres in Vascel-dev
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('PROD_DATABASE_NAME'),
+            'USER': os.environ.get('PROD_DATABASE_USER'),
+            'PASSWORD': os.environ.get('PROD_DATABASE_PASSWORD'),
+            'HOST':os.environ.get('PROD_DATABASE_HOST'),
+            'PORT':'',
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -204,8 +211,8 @@ REST_FRAMEWORK={
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST='smtp.gmail.com'
 EMAIL_PORT=587
-EMAIL_HOST_USER=os.environ.get('email_user')
-EMAIL_HOST_PASSWORD=os.environ.get('email_password')
+EMAIL_HOST_USER=os.environ.get('EMAIL_USER')
+EMAIL_HOST_PASSWORD=os.environ.get('EMAIL_PASSWORD')
 EMAIL_USE_TLS=True
 
 # RESIZING IMAGE
@@ -232,4 +239,4 @@ CELERY_TASK_SERIALIZER = 'json'
 #     # },
 # }
 
-# NEWS_API_KEY=os.environ.get('news_api_key')
+NEWS_API_KEY=os.environ.get('NEWS_API_KEY')
