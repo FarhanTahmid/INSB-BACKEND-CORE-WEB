@@ -10,9 +10,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='events',
-            name='flagship_event',
-            field=models.BooleanField(default=False),
-        ),
+        # migrations.AddField(
+        #     model_name='events',
+        #     name='flagship_event',
+        #     field=models.BooleanField(default=False),
+        # ),
     ]

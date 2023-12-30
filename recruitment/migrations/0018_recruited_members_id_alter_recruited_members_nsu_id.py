@@ -10,12 +10,12 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='recruited_members',
-            name='id',
-            field=models.BigAutoField(auto_created=True, default=1, primary_key=True, serialize=False, verbose_name='ID'),
-            preserve_default=False,
-        ),
+        # migrations.AddField(
+        #     model_name='recruited_members',
+        #     name='id',
+        #     field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+        #     preserve_default=False,
+        # ),
         migrations.AlterField(
             model_name='recruited_members',
             name='nsu_id',

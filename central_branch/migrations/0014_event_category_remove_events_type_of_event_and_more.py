@@ -10,21 +10,21 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='Event_Category',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('event_category', models.CharField(max_length=60)),
-            ],
-            options={
-                'verbose_name': 'Event Category',
-            },
-        ),
-        migrations.RemoveField(
-            model_name='events',
-            name='type_of_event',
-        ),
-        migrations.DeleteModel(
-            name='Type_of_Event',
-        ),
+        # migrations.CreateModel(
+        #     name='Event_Category',
+        #     fields=[
+        #         ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+        #         ('event_category', models.CharField(max_length=60)),
+        #     ],
+        #     options={
+        #         'verbose_name': 'Event Category',
+        #     },
+        # ),
+        # migrations.RemoveField(
+        #     model_name='events',
+        #     name='type_of_event',
+        # ),
+        # migrations.DeleteModel(
+        #     name='Type_of_Event',
+        # ),
     ]

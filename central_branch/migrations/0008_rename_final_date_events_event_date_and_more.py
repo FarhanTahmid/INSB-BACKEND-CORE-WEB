@@ -10,13 +10,13 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RenameField(
-            model_name='events',
-            old_name='final_date',
-            new_name='event_date',
-        ),
-        migrations.RemoveField(
-            model_name='events',
-            name='probable_date',
-        ),
+        # migrations.RenameField(
+        #     model_name='events',
+        #     old_name='final_date',
+        #     new_name='event_date',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='events',
+        #     name='probable_date',
+        # ),
     ]

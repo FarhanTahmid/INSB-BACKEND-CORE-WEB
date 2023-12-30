@@ -123,10 +123,16 @@ DATABASES = {
         # }
         
         # PostgreSQL
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'insb_portal_dev',
+        'USER': 'farhan',
+        'PASSWORD': '724275177',
+        'HOST':'localhost',
+        'PORT':'5432',
         
         #DB.SQLITE3
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 

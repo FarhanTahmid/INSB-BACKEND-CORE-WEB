@@ -11,19 +11,19 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='Type_of_Event',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('type_of_event', models.CharField(max_length=60)),
-            ],
-            options={
-                'verbose_name': 'Type of Event',
-            },
-        ),
-        migrations.AddField(
-            model_name='events',
-            name='type_of_event',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='central_branch.type_of_event'),
-        ),
+        # migrations.CreateModel(
+        #     name='Type_of_Event',
+        #     fields=[
+        #         ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+        #         ('type_of_event', models.CharField(max_length=60)),
+        #     ],
+        #     options={
+        #         'verbose_name': 'Type of Event',
+        #     },
+        # ),
+        # migrations.AddField(
+        #     model_name='events',
+        #     name='type_of_event',
+        #     field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='central_branch.type_of_event'),
+        # ),
     ]
