@@ -96,7 +96,7 @@ class ResetPasswordTokenTable(models.Model):
         return str(self.pk)
     
 '''This class is for the number of daily hits on the page'''
-class User(models.Model):
+class User_IP_Address(models.Model):
     ip_address = models.TextField(default=None)
     created_at = models.DateField(auto_now_add=True)
 

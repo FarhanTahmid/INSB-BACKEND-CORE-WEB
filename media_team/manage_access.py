@@ -1,3 +1,4 @@
+from media_team.renderData import MediaTeam
 from system_administration.models import Media_Data_Access
 from system_administration.render_access import Access_Render
 from system_administration.system_error_handling import ErrorHandling
@@ -31,18 +32,19 @@ class MediaTeam_Render_Access:
             if(Access_Render.faculty_advisor_access(username=username)):
                 faculty_advisor_access=True
             
-            # generate branch coordinator access
-            branch_co_ordinator_access=False
-            if(Access_Render.co_ordinator_access(username=username)):
-                branch_co_ordinator_access=True
+            # generate branch team coordinator access
+            branch_team_co_ordinator_access=False
+            if(Access_Render.team_co_ordinator_access(team_id=MediaTeam.get_team().id, username=username)):
+                branch_team_co_ordinator_access=True
             
             # if any of this is true, grant access
-            if(system_manager_access or branch_eb_access or faculty_advisor_access or branch_co_ordinator_access):
+            if(system_manager_access or branch_eb_access or faculty_advisor_access or branch_team_co_ordinator_access):
                 return True
             else:
                 return False
         except Exception as e:
             MediaTeam_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
 
     def access_for_events(request):

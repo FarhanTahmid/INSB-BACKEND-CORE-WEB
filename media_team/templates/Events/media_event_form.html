@@ -92,55 +92,42 @@
     <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
 
 
-      <br>
-      <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span
-          style="color:#00629B;">{{event_name}}</b></span></h2><br>
-      <h6>Note:</h6>
-      <ol style="justify-content:center;margin-bottom:15px;"><b>
-          <li>Provide the Links of the folder for both Event Pictures and Pictures with Logo</li>
-          <li>Maximum 6 pictures can be uploaded. You can delete pictures and add new ones</li>
-          <li>To change any picture, delete it and add new one</li>
-          <li>Before saving images, if you wish to change the selected images just click 'upload' again and re-select all again</li>
-          <li>Don't forget to save the changes made by clicking save button</li>
-      </ol></b>
-
-
       <div class="container">
-
-        <div class="box">
-    
           <br>
-          <div class="box-header">
-            <h1 style="text-align:center;font-size:30px;">Add Details</h1>
-          </div>
-    
-          <div class="py-3 text-center">
-            {% for message in messages %}
-                <p style="color: red;" class="message">
-                    {{ message }}
-                    <button class="close-message" onclick="closeMessage(this)" style="border: none; background: none;">✖</button>
+          <br>
+          <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span
+              style="color:#00629B;">{{event_name}}</b></span></h2><br>
+          <h6>Note:</h6>
+          <ol style="justify-content:center;margin-bottom:15px;"><b>
+              <li>Provide the Links of the folder for both Event Pictures and Pictures with Logo</li>
+              <li>Maximum 6 pictures can be uploaded. You can delete pictures and add new ones</li>
+              <li>To change any picture, delete it and add new one</li>
+              <li>Before saving images, if you wish to change the selected images just click 'upload' again and re-select all again</li>
+              <li>Don't forget to save the changes made by clicking save button</li>
+          </ol></b>
+
+          <br>
+
+          {% for message in messages  %}
+                <p>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 </p>
-            {% endfor %}
-          </div>
+          {% endfor %}
 
-          <form method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
-            <div class="box-body">
-              {% block media_form %}
-                  {% include "Events/media_event_form_content.html" %}
-              {% endblock media_form %}
-
-              
-              <hr>
-              <br>
-              <div class="form-group text-center">
-                <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
-              </div>
-            </div>
-          </form>
-
-        </div>
+          <br>
       </div>
+
+
+      
+      {% block media_form %}
+          {% include "Events/media_event_form_content.html" %}
+      {% endblock media_form %}
+
      
 
 
