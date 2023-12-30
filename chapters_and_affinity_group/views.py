@@ -30,6 +30,7 @@ from central_events.forms import EventForm
 from events_and_management_team.renderData import Events_And_Management_Team
 from port.models import Chapters_Society_and_Affinity_Groups
 from django.views.decorators.clickjacking import xframe_options_exempt
+from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
 
 
 # Create your views here.
@@ -1191,7 +1192,7 @@ def event_edit_content_form_tab(request,primary,event_id):
                     
                     #when the add button for submitting new note is clicked
                     title = request.POST['title']
-                    note = request.POST['notes']
+                    note = request.POST['caption']
 
                     if ContentWritingTeam.creating_note(title,note,event_id):
                         messages.success(request,"Note created successfully!")
@@ -1212,13 +1213,54 @@ def event_edit_content_form_tab(request,primary,event_id):
                     print(request.POST)
                     id = request.POST['update_note']
                     title = request.POST['title']
-                    note = request.POST['notes']
+                    note = request.POST['caption']
                     if(ContentWritingTeam.update_note(id, title, note)):
                         messages.success(request,"Note updated successfully!")
                     else:
                         messages.error(request,"Error occured! Please try again later.")
                     return redirect("chapters_and_affinity_group:event_edit_content_form_tab", primary, event_id)
                 
+                if('save' in request.POST):
+                    event_description = request.POST['event_description']
+                    if('drive_link_of_documents' in request.POST):
+                        drive_link = request.POST['drive_link_of_documents']
+                        success = ContentWritingTeam.update_event_details(event_id=event_id, event_description=event_description, drive_link=drive_link)
+                    else:
+                        success = ContentWritingTeam.update_event_details(event_id=event_id, event_description=event_description)
+
+                    if(success):
+                        messages.success(request,"Event details updated successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+
+                    if(len(request.FILES.getlist('document')) > 0):
+                        file_list = request.FILES.getlist('document')
+                        success2 = ContentWritingTeam.upload_files(event_id=event_id, file_list=file_list)
+                        if(success2):
+                            messages.success(request,"Files uploaded successfully!")
+                        else:
+                            messages.error(request,"Error occured while uploading files! Please try again later.")
+                            
+                    return redirect("chapters_and_affinity_group:event_edit_content_form_tab", primary, event_id)
+                
+                if('remove2' in request.POST):
+                    id = request.POST.get('remove_doc')
+                    print(id)
+                    if ContentWritingTeam.delete_file(id):
+                        messages.success(request,"File deleted successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+                    return redirect("chapters_and_affinity_group:event_edit_content_form_tab", primary, event_id)
+                
+            event_details = Events.objects.get(id=event_id)
+            form2 = EventForm({'event_description' : event_details.event_description})
+            try:
+                documents_link = Content_Team_Documents_Link.objects.get(event_id = Events.objects.get(pk=event_id))
+            except:
+                documents_link = None
+
+            documents = Content_Team_Document.objects.filter(event_id=event_id)   
+
             context={
                 'is_branch' : False,
                 'primary' : primary,
@@ -1227,9 +1269,14 @@ def event_edit_content_form_tab(request,primary,event_id):
                 'all_notes_content':all_notes_content,
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
+                'documents' : documents,
+                'media_url' : settings.MEDIA_URL,
+                'event_details' : event_details,
+                'description_form' : form2,
+                'drive_link_of_documents' : documents_link,
 
             }
-            return render(request,"Events/event_edit_content_and_publications_form_tab.html",context)
+            return render(request,"Events/event_edit_content_and_publications_form_tab_sc_ag.html",context)
         else:
             return render(request, 'access_denied.html')
     except Exception as e:
