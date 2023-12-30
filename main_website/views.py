@@ -93,14 +93,17 @@ def event_homepage(request):
     '''This view function loads all the events for the events homepage'''
     
     try:
-        all_events = HomepageItems.load_all_events()
+        all_events = HomepageItems.load_all_events(True)
+        latest_five_events = HomepageItems.load_all_events(False)
+        date_and_event = HomepageItems.get_event_for_calender()
 
 
         context = {
             'all_events':all_events,
             'media_url':settings.MEDIA_URL,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
-
+            'latest_five_event':latest_five_events,
+            'date_and_event':date_and_event,
         }
 
         return render(request,'Events/events_homepage.html',context)
@@ -109,23 +112,27 @@ def event_homepage(request):
             response = HttpResponseServerError("Oops! Something went wrong.")
             return response
     
-
-
+    
 def event_details(request,event_id):
  
     '''Loads details for the corresponding event page on site'''
-    get_event = Events.objects.get(id = event_id)
-    event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
-    event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
+    try:
+        get_event = Events.objects.get(id = event_id)
+        if(get_event.publish_in_main_web):
+            event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
+            event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
-    return render(request,"Events/event_description_main.html",{
-        "event":get_event,
-        'media_url':settings.MEDIA_URL,
-        'event_banner_image' : event_banner_image,
-        'event_gallery_images' : event_gallery_images,
-        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+            return render(request,"Events/event_description_main.html",{
+                "event":get_event,
+                'media_url':settings.MEDIA_URL,
+                'event_banner_image' : event_banner_image,
+                'event_gallery_images' : event_gallery_images
+            })
+        else:
+            return redirect('main_website:event_homepage')
+    except:
+        return redirect('main_website:event_homepage')
 
-    })
 
 
 # ###################### ACHIEVEMENTS ##############################

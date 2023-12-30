@@ -203,11 +203,69 @@ def event_form(request,event_id):
                 'graphics_banner_image':graphic_banner_image,
                 'media_url':settings.MEDIA_URL,
                 'allowed_image_upload':1-image_number,
-
+                'event_id' : event_id
             }
             return render(request,"Events/graphics_event_form.html",context)
         else:
             return redirect('main_website:event_details', event_id)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+    
+
+@login_required
+def event_form_add_links(request,event_id):
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        all_graphics_link = GraphicsTeam.get_all_graphics_form_link(event_id)
+        #has_access = CWPTeam_Render_Access.access_for_events(request)
+
+        if (True):
+            if(request.method == "POST"):
+                
+                if request.POST.get('add_link'):
+
+                    form_link = request.POST.get('graphics_form_link')
+                    title =request.POST.get('title')
+                    if GraphicsTeam.add_graphics_form_link(event_id,form_link,title):
+                        messages.success(request,'Saved Changes!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("graphics_team:add_link_event_form",event_id)
+                
+                if request.POST.get('update_link'):
+
+                    form_link = request.POST.get('form_link')
+                    title =request.POST.get('title')
+                    pk = request.POST.get('link_pk')
+                    if GraphicsTeam.update_graphics_form_link(form_link,title,pk):
+                        messages.success(request,'Updated Successfully!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("graphics_team:add_link_event_form",event_id)
+                
+                if request.POST.get('remove_form_link'):
+
+                    id = request.POST.get('remove_link')
+                    if GraphicsTeam.remove_graphics_form_link(id):
+                        messages.success(request,'Deleted Successfully!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("graphics_team:add_link_event_form",event_id)
+                  
+            context = {
+                'all_sc_ag':sc_ag,
+                'event_id':event_id,
+                'all_graphics_link':all_graphics_link,
+            }
+
+            return render(request,"Events/graphics_team_event_form_add_links.html", context)
+        else:
+            return redirect('main_website:event_details', event_id)
+        
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
