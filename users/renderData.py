@@ -10,7 +10,7 @@ from central_events.models import Events,Event_Category
 from system_administration.render_access import Access_Render
 from datetime import datetime
 from django.db.models import Q
-from users.models import User
+from users.models import User_IP_Address
 from recruitment.models import recruited_members
 import math
 from membership_development_team.renderData import MDT_DATA
@@ -296,7 +296,7 @@ def getHitCountMonthly():
     daily = []
     days_of_month=[]
     for i in range(31):
-        number_of_people_per_day = User.objects.filter(Q(created_at__day=(i+1)), Q(created_at__month=datetime.datetime.now().month), Q(created_at__year=datetime.datetime.now().year)).count()   
+        number_of_people_per_day = User_IP_Address.objects.filter(Q(created_at__day=(i+1)), Q(created_at__month=datetime.datetime.now().month), Q(created_at__year=datetime.datetime.now().year)).count()   
         if number_of_people_per_day>0:
             daily.append(number_of_people_per_day)
             days_of_month.append(i+1)
@@ -310,7 +310,7 @@ def getHitCountYearly():
     monthly=[]
     month_names = []
     for i in range(12):
-        number_of_people_per_month = User.objects.filter(Q(created_at__month = (i+1)), Q(created_at__year=datetime.datetime.now().year)).count()
+        number_of_people_per_month = User_IP_Address.objects.filter(Q(created_at__month = (i+1)), Q(created_at__year=datetime.datetime.now().year)).count()
         if number_of_people_per_month>0:
             monthly.append(number_of_people_per_month)
             month_names.append(getMonthName(i+1)[0:3])
@@ -322,7 +322,7 @@ def getHitCountOver5Years():
     yearly=[]
     current_year = datetime.datetime.now().year
     for i in range(5):
-        number_of_people_over_5_years = User.objects.filter(created_at__year=(current_year-i)).count()
+        number_of_people_over_5_years = User_IP_Address.objects.filter(created_at__year=(current_year-i)).count()
         yearly.append(number_of_people_over_5_years)
     yearly.reverse()
     return yearly
