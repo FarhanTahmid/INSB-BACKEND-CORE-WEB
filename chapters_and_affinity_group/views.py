@@ -1191,7 +1191,7 @@ def event_edit_content_form_tab(request,primary,event_id):
                     
                     #when the add button for submitting new note is clicked
                     title = request.POST['title']
-                    note = request.POST['notes']
+                    note = request.POST['caption']
 
                     if ContentWritingTeam.creating_note(title,note,event_id):
                         messages.success(request,"Note created successfully!")
@@ -1212,7 +1212,7 @@ def event_edit_content_form_tab(request,primary,event_id):
                     print(request.POST)
                     id = request.POST['update_note']
                     title = request.POST['title']
-                    note = request.POST['notes']
+                    note = request.POST['caption']
                     if(ContentWritingTeam.update_note(id, title, note)):
                         messages.success(request,"Note updated successfully!")
                     else:
