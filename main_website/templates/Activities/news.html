@@ -66,7 +66,7 @@
             position: absolute;
             top: 0;
             line-height: 50px;
-            font-family: FontAwesome;
+            font-family: 'FontAwesome';
             speak: none;
             -webkit-font-smoothing: antialiased;
             content: "\f105";
@@ -144,9 +144,12 @@
 
 
         <!--Online News Section-->
-        {% block online_news %}
-        {% include "Activities/online_news_card_container.html" %}
-        {% endblock online_news %}
+        {% if has_online_news %}
+            {% block online_news %}
+                {% include "Activities/online_news_card_container.html" %}
+            {% endblock online_news %}
+        {% endif %}
+        
         <!--Online news section Ends-->
 
 

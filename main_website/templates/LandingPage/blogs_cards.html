@@ -1,5 +1,13 @@
 {% load static %}
 {% block blogs_cards %}
+<style>
+    a{
+        color: 	#FFC72C;
+    }
+    a:hover{
+        color: 	#002855;
+    }
+</style>
 <section id="content-section-10">
     <div class="gdlr-color-wrapper  gdlr-show-all no-skin"
         style="background-color: #f7f7f7; padding-top: 70px; padding-bottom: 10px; ">
@@ -9,7 +17,7 @@
                 <div class="gdlr-item-title-container container">
                     <div class="gdlr-item-title-head">
                         <h3 class="gdlr-item-title gdlr-skin-title gdlr-skin-border">Recent Blogs
-                        </h3><a class="gdlr-item-title-link" href="#">Read All Blogs</a><span
+                        </h3><a class="gdlr-item-title-link" href="{% url 'main_website:blogs' %}">Read All Blogs</a><span
                             class="gdlr-nav-title"><i class="icon-angle-left gdlr-flex-prev"></i><i
                                 class="icon-angle-right gdlr-flex-next"></i></span>
                     </div>
@@ -22,14 +30,14 @@
                             data-nav-container="blog-item-wrapper" data-columns="3">
                             <ul class="slides">
                                 {% comment %} Dynamic Blog Starts here {% endcomment %}
+                                {% for i in recent_blogs %}
                                 <li class="gdlr-item gdlr-blog-grid gdlr-skin-box">
+                                    
                                     <article id="post-2255"
                                         class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
                                         <div class="gdlr-standard-style">
                                             <div class="gdlr-blog-thumbnail">
-                                                <a href="#"> <img
-                                                        src="upload/shutterstock_261065933-400x300.jpg"
-                                                        alt="" width="400" height="300" /></a>
+                                                <img src="/media_files/{{i.blog_banner_picture}}" alt="" width="400" height="300" />
                                             </div>
 
                                             <div class="gdlr-blog-grid-content">
@@ -38,26 +46,21 @@
                                                         <div
                                                             class="blog-info blog-date gdlr-skin-info">
                                                             <span class="gdlr-sep">/</span><a
-                                                                href="#">21 Mar 2014</a></div>
+                                                                href="#">{{i.date}}</a></div>
                                                         <div
                                                             class="blog-info blog-author gdlr-skin-info">
                                                             <span class="gdlr-sep">/</span>By <a
                                                                 href="#" title="Posts by John Doe"
-                                                                rel="author">John Doe</a></div>
+                                                                rel="author">{{i.writer_name}}</a></div>
                                                         <div class="clear"></div>
                                                     </div>
 
-                                                    <h3 class="gdlr-blog-title"><a href="#">Sem
-                                                            Porta Mollis Parturi</a></h3>
+                                                    <h3 class="gdlr-blog-title">{{i.title}}</h3>
                                                     <div class="clear"></div>
                                                 </header>
                                                 <!-- entry-header -->
 
-                                                <div class="gdlr-blog-content">Lorem ipsum dolor sit
-                                                    amet, consectetur adipisici elit, sed eiusmod
-                                                    tempor incidunt ut labore et dolore magna
-                                                    aliqua. Idque Caesaris facere voluntate liceret:
-                                                    sese habere....
+                                                <div class="gdlr-blog-content">
                                                     <div class="clear"></div><a href="#"
                                                         class="excerpt-read-more">Read More</a>
                                                 </div>
@@ -66,6 +69,7 @@
                                     </article>
                                     <!-- #post -->
                                 </li>
+                                {% endfor %}
                             </ul>
                             <div class="clear"></div>
                         </div>

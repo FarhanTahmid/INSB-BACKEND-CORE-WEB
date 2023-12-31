@@ -30,8 +30,8 @@
 <div class="tabs-container" style="display: flex; flex-direction: column;">
     <ul class="tabs" style="display: flex; margin-right: 0px; justify-content: center;">
         <li class="tab"><a href="{% url 'central_branch:manage_blogs' %}">Manage Blogs</a></li>
-        <li class="tab"><a href="#">Manage Research Papers</a></li>
-        <li class="tab" style="border-right: 1px solid #00629B;"><a href="#">Manage Magazines</a></li>
+        <li class="tab"><a href="{% url 'central_branch:manage_research' %}">Manage Research Papers</a></li>
+        <li class="tab" style="border-right: 1px solid #00629B;"><a href="{% url 'central_branch:manage_magazines' %}">Manage Magazines</a></li>
         <li class="tab" style="border-right: 1px solid #00629B;"><a href="#">Manage Gallary</a></li>
         <li class="tab" style="border-right: 1px solid #00629B;"><a href="#">Manage Toolkit</a></li>
     </ul>

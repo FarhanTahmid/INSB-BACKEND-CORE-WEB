@@ -17,7 +17,7 @@ class recruitment_session(models.Model):
         return reverse("session", kwargs={"session":self.session})
 
 class recruited_members(models.Model):
-    nsu_id=models.IntegerField(blank=False,null=False)
+    nsu_id=models.BigIntegerField(blank=False,null=False,primary_key=True)
     first_name=models.CharField(null=True,blank=True,max_length=50)
     middle_name=models.CharField(null=True,blank=True,max_length=50)
     last_name=models.CharField(null=True,blank=True,max_length=50)
@@ -27,7 +27,7 @@ class recruited_members(models.Model):
     email_personal=models.EmailField(null=True,blank=True,max_length=50)
     email_nsu=models.EmailField(null=True,blank=True,max_length=50)
     gender=models.CharField(null=True,blank=True,max_length=8)
-    facebook_url=models.CharField(null=True,blank=True,max_length=100)
+    facebook_url=models.CharField(null=True,blank=True,max_length=500)
     facebook_username=models.CharField(null=True,blank=True,max_length=50)
     home_address=models.CharField(null=True,blank=True,max_length=300)
     major=models.CharField(null=True,blank=True,max_length=30)

@@ -27,11 +27,19 @@ urlpatterns = [
     
     # for SC AG Events
     path('<str:primary>/events/',views.event_control_homepage,name="event_control_homepage"),
-    path('<str:primary>/event_details/<int:event_id>',views.event_description,name='event_dashboard'),
     path('<str:primary>/events/create_event/',views.event_creation_form_page,name='event_creation_form1'),
-    path('<str:primary>/events/create_event/<int:event_id>/page-p2', views.event_creation_form_page2, name="event_creation_form2"),
-    path('<str:primary>/events/create_event/<int:event_id>/page-p3', views.event_creation_form_page3, name="event_creation_form3"),
-    path('<str:primary>/event_details/<int:event_id>/edit/',views.event_edit_form,name='event_edit_form'),
+    path('<str:primary>/events/create_event/<int:event_id>/page-2', views.event_creation_form_page2, name="event_creation_form2"),
+    path('<str:primary>/events/create_event/<int:event_id>/page-3', views.event_creation_form_page3, name="event_creation_form3"),
     path('<str:primary>/events/create_super_event/',views.super_event_creation,name="super_event_creation"),    
-
+    path('<str:primary>/event_details/<int:event_id>/edit/',views.event_edit_form,name='event_edit_form'),
+    #Event media tab page
+    path('<str:primary>/event_details/<int:event_id>/edit/media',views.event_edit_media_form_tab,name='event_edit_media_form_tab'),
+    #Event graphics tab page
+    path('<str:primary>/event_details/<int:event_id>/edit/graphics',views.event_edit_graphics_form_tab,name='event_edit_graphics_form_tab'),
+    #Event graphics links sub tab page
+    path('<str:primary>/event_details/<int:event_id>/edit/graphics/links',views.event_edit_graphics_form_links_sub_tab,name='event_edit_graphics_form_links_sub_tab'),
+    #Event content tab page
+    path('<str:primary>/event_details/<int:event_id>/edit/content',views.event_edit_content_form_tab,name='event_edit_content_form_tab'),
+    #Event preview
+    path('<str:primary>/event_details/<int:event_id>/preview/',views.event_preview,name='event_preview'), 
 ]

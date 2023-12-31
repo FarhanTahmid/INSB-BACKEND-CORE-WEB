@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'chapters_and_affinity_group',
     'central_events',
     'django_celery_beat',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -107,28 +108,35 @@ WSGI_APPLICATION = 'insb_port.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        
-        # #********MYSQL SERVER ON LOCALHOST*********
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'insb_portal',
-        # 'USER': 'root',
-        # 'PASSWORD': '',
-        # 'HOST':'localhost',
-        # 'PORT':'3306',
-        # 'OPTIONS':{
-        #     'init_command':"SET sql_mode='STRICT_TRANS_TABLES'"
-        # }
-        
-        
-        
-        #DB.SQLITE3
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
+if(os.environ.get('SETTINGS')=='dev'):
+    DATABASES = {
+        'default': {
+                    
+            #Postgres in localhost
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DEV_DATABASE_NAME'),
+            'USER': os.environ.get('DEV_DATABASE_USER'),
+            'PASSWORD': os.environ.get('DEV_DATABASE_PASSWORD'),
+            'HOST': os.environ.get('DEV_DATABASE_HOST'),
+            'PORT':'', 
+            
+
+        }
+    }
+if(os.environ.get('SETTINGS')=='prod'):
+    DATABASES = {
+        'default': {
+                    
+            # Postgres in Vascel-dev
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('PROD_DATABASE_NAME'),
+            'USER': os.environ.get('PROD_DATABASE_USER'),
+            'PASSWORD': os.environ.get('PROD_DATABASE_PASSWORD'),
+            'HOST':os.environ.get('PROD_DATABASE_HOST'),
+            'PORT':'',
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -166,7 +174,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+
+if(os.environ.get('SETTINGS')=='dev'):
+    STATIC_URL = 'static/'
+    #static directory
+    STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
+    STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static/'))
+    
+if(os.environ.get('SETTINGS')=='prod'):
+    STATIC_URL = 'static/'
+    #static directory
+    STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static/'))
+    STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles_build','static')
+
 
 #TEMPLATE_DIRS=(os.path.join(os.path.dirname(__file__) ,'../Templates').replace('\\','/'))
 
@@ -179,9 +199,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DATE_INPUT_FORMATS = ['%d-%m-%Y']
 
 
-#static directory
-STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
-STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static/'))
+
 #Media Files
 MEDIA_ROOT= os.path.join(BASE_DIR, 'User Files/')
 MEDIA_URL= "/media_files/" 
@@ -203,8 +221,8 @@ REST_FRAMEWORK={
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST='smtp.gmail.com'
 EMAIL_PORT=587
-EMAIL_HOST_USER=os.environ.get('email_user')
-EMAIL_HOST_PASSWORD=os.environ.get('email_password')
+EMAIL_HOST_USER=os.environ.get('EMAIL_USER')
+EMAIL_HOST_PASSWORD=os.environ.get('EMAIL_PASSWORD')
 EMAIL_USE_TLS=True
 
 # RESIZING IMAGE
@@ -216,17 +234,19 @@ DJANGORESIZED_DEFAULT_FORCE_FORMAT = 'JPEG'
 DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {'JPEG': ".jpg"}
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
 
-CELERY_BROKER_URL = "amqps://fhfqmapx:YUA5So69ozn0PUIB8eJHSrwz6dhCA07W@rattlesnake.rmq.cloudamqp.com/fhfqmapx"
+#CELERY_BROKER_URL = "amqps://fhfqmapx:YUA5So69ozn0PUIB8eJHSrwz6dhCA07W@rattlesnake.rmq.cloudamqp.com/fhfqmapx"
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_RESULT_EXTENDED = True
+CELERY_TASK_SERIALIZER = 'json'
+# CELERY_BEAT_SCHEDULE = {
+#     # "active_inactive_member_status_task":{
+#     #     "task":"users.tasks.running_task",
+#     #     "schedule":crontab(minute=0,hour=0),
+#     # },
+#     # "sending_email_task":{
+#     #     "task":"users.tasks.sending_email",
+#     #     "schedule":60,
+#     # },
+# }
 
-CELERY_BEAT_SCHEDULE = {
-    "active_inactive_member_status_task":{
-        "task":"users.tasks.running_task",
-        "schedule":crontab(minute=0,hour=0),
-    },
-    "sending_email_task":{
-        "task":"users.tasks.sending_email",
-        "schedule":crontab(minute=0,hour='*/2'),
-    },
-}
-
-NEWS_API_KEY=os.environ.get('news_api_key')
+NEWS_API_KEY=os.environ.get('NEWS_API_KEY')

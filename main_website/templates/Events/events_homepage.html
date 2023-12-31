@@ -63,7 +63,7 @@
             position: absolute;
             top: 0;
             line-height: 50px;
-            font-family: FontAwesome;
+            font-family: 'FontAwesome';
             speak: none;
             -webkit-font-smoothing: antialiased;
             content: "\f105";
@@ -90,6 +90,12 @@
         {% block event_with_calendar %}
             {% include "Events/next_event_with_calendar.html" %}
         {% endblock event_with_calendar %}
+
+
+        <!--Upcoming Event-->
+        {% block upcoming_event %}
+            {% include "Events/upcoming_event.html" %}
+        {% endblock upcoming_event %}
 
 
         <!--Event card with search function and load more option-->

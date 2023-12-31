@@ -8,13 +8,13 @@
         }
       }
   
-      .selected-image-container {
+      #media-selected-images-container {
         max-width: 100%; /* Set the maximum width for the image container */
       }
       
-      .selected-image {
-        width: auto; /* Set the width to 100% */
-        height: 100px; /* Set the height to 150px */
+      #media-selected-images {
+        width: 200px; /* Set the width to 100% */
+        height: auto; /* Set the height to 150px */
         object-fit: cover; /* Maintain aspect ratio and cover the container */
         margin-top:10px;
       }
@@ -65,131 +65,175 @@
 
 
 
-    
-    
+<div class="container">
 
-    <div class="form-group">
-    <label>Folder Drive Link for Event Pictures</label>
-    <input placeholder="Provide Drive Link for The Event" class="form-control" type="url"
-    autocomplete="off" id="field1" value="{{media_links.media_link}}" name="drive_link_of_event" />
-    </div>
+  <div class="box">
 
-    <div class="form-group">
-    <label>Folder Drive Link for Pictures with Logos</label>
-    <input placeholder="Provide Link for the Logo's" class="form-control" type="url" autocomplete="off"
-    value="{{media_links.logo_link}}" name="logo_drive_link_of_event" />
-    </div>
-
-    <div class="form-group">
-    <label for="images">Upload Images:</label>
-    <div class="custom-file">
-        <input type="file" class="custom-file-input" id="media-image-input" name="image" accept="image/*" multiple>
-        <label class="custom-file-label bg-light" for="media-image-input">Choose files</label>
-    </div>
-    
     <br>
-
-    <div id="media-selected-images-container"></div>
-    <input type="hidden" name="selected_images" id="media-selected-images">
-    <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple images.</small>
+    <div class="box-header">
+      <h1 style="text-align:center;font-size:30px;">Add Details</h1>
     </div>
-    
 
     
+    
 
-    <hr>
-    <div id="image-container" class="row text-center">
-    {% for image_url in media_images %}
-        <div class="col-lg-4 col-md-6 my-3">
-        <div class="image-container">
-            <img
-            src="{{ media_url }}{{ image_url.selected_images }}"
-            alt="Image"
-            class="img-fluid image-container-item"
-            data-toggle="modal"
-            data-target="#fullViewModal{{ forloop.counter }}"
-            />
+    <form id="myForm" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+      <div class="box-body">  
+    
 
-            <!-- Full View Modal -->
-            <div
-            id="fullViewModal{{ forloop.counter }}"
-            class="modal fade"
-            tabindex="-1"
-            role="dialog"
-            aria-labelledby="fullViewModalLabel"
-            aria-hidden="true"
-            >
-            <div class="modal-dialog modal-lg modal-dialog-centered" role="document" >
-            <div class="modal-content">
-                <div class="modal-header">
-                <h5 class="modal-title" id="fullViewModalLabel">Image Full View</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                </div>
-                <div class="modal-body">
+        <div class="form-group">
+        <label>Folder Drive Link for Event Pictures</label>
+        <input placeholder="Provide Drive Link for The Event" class="form-control" type="url"
+        autocomplete="off" id="field1" value="{{media_links.media_link}}" name="drive_link_of_event" />
+        </div>
+
+        <div class="form-group">
+        <label>Folder Drive Link for Pictures with Logos</label>
+        <input placeholder="Provide Link for the Logo's" class="form-control" type="url" autocomplete="off"
+        value="{{media_links.logo_link}}" name="logo_drive_link_of_event" />
+        </div>
+
+        <div class="form-group">
+        <label for="images">Upload Images:</label>
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" id="media-image-input" name="image" accept="image/*" multiple>
+            <label class="custom-file-label bg-light" for="media-image-input">Choose files</label>
+        </div>
+        
+        <br>
+
+        <div id="media-selected-images-container"></div>
+        <input type="hidden" name="selected_images" id="media-selected-images">
+        <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple images.</small>
+        </div>
+        
+        <div class="form-group text-center">
+          <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
+        </div>
+        
+
+        <hr>
+        <div id="image-container" class="row text-center">
+        {% for image_url in media_images %}
+            <div class="col-lg-4 col-md-6 my-3">
+            <div class="image-container">
                 <img
-                    src="{{ media_url }}{{ image_url.selected_images }}"
-                    alt="Image"
-                    class="img-fluid"
-                    style="width: 100%; height: auto; margin: 0 auto; display: block;"
+                src="{{ media_url }}{{ image_url.selected_images }}"
+                alt="Image"
+                class="img-fluid image-container-item"
+                data-toggle="modal"
+                data-target="#fullViewModal{{ forloop.counter }}"
                 />
+
+                <!-- Full View Modal -->
+                <div
+                id="fullViewModal{{ forloop.counter }}"
+                class="modal fade"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="fullViewModalLabel"
+                aria-hidden="true"
+                >
+                <div class="modal-dialog modal-lg modal-dialog-centered" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="fullViewModalLabel">Image Full View</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                    <img
+                        src="{{ media_url }}{{ image_url.selected_images }}"
+                        alt="Image"
+                        class="img-fluid"
+                        style="width: 100%; height: auto; margin: 0 auto; display: block;"
+                    />
+                    </div>
                 </div>
-            </div>
-            </div>
-            </div>
+                </div>
+                </div>
 
-            
-            <!-- Cross button to trigger modal -->
-            <button type="button" class="cross-button" data-toggle="modal" data-target="#deleteModal" onclick="openModal('{{image_url.selected_images}}')">
-            &times; <!-- Use the "times" symbol (X) as a close icon -->
-            </button>
-
-        </div>
-        </div>
-
-        <!-- Confirm Delete Modal -->
-        <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                
+                <!-- Cross button to trigger modal -->
+                <button type="button" class="cross-button" data-toggle="modal" data-target="#deleteModal" onclick="openModal('{{image_url.selected_images}}')">
+                &times; <!-- Use the "times" symbol (X) as a close icon -->
                 </button>
+
+            </div>
             </div>
 
-            <form method="post">
-                {% csrf_token %}
-                <div class="modal-body">
-                    <p><input id="media_image_id" name= "remove_image" type="hidden"></p>
-                    <p>Are you sure you want to delete this image?</p>
+            <!-- Confirm Delete Modal -->
+            <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="modal-footer">
-                    <input type="submit" class="btn btn-outline-danger buttons" value="Delete" name="delete_image">
-                    <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                </div>
-            </form>
-            </div>
-        </div>
-        </div>
-    {% endfor %}
-    </div>
 
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <p><input id="media_image_id" name= "remove_image" type="hidden"></p>
+                        <p>Are you sure you want to delete this image?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-outline-danger buttons" value="Delete" name="delete_image">
+                        <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+                </div>
+              </div>
+              </div>
+          {% endfor %}
+          </div>
+
+          
+
+      </div>
+    </form>
+
+  </div>
+</div>       
         
-        
-    
-    
-    
-    
+
+
 
   <script>
-    function closeMessage(button) {
-        // Find the parent element (the <p> tag) and remove it
-        var messageElement = button.parentNode;
-        messageElement.parentNode.removeChild(messageElement);
-    }
+    document.addEventListener('DOMContentLoaded', function () {
+      var form = document.getElementById('myForm');
+      var isFormDirty = false;
+    
+      // Listen for changes in the form fields
+      form.addEventListener('input', function (event) {
+        var target = event.target;
+    
+        // Check if the input is not the file input
+        if (target !== document.getElementById('media-image-input')) {
+            isFormDirty = true;
+        }
+      });
+    
+      // Handle form submission
+      form.addEventListener('submit', function () {
+        // Set isFormDirty to false when the form is submitted
+        isFormDirty = false;
+      });
+    
+      // Warn the user before leaving the page if the form is dirty
+      window.addEventListener('beforeunload', function (event) {
+        if (isFormDirty) {
+          event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+        }
+      });
+    });
+    
   </script>
+  
   
   <script>
     $(document).ready(function () {
@@ -212,8 +256,8 @@
                           rowContainer = $('<div class="row"></div>'); // Start a new row for every three images
                       }
   
-                      var imageContainer = $('<div class="media-selected-image-container col-md-4"></div>');
-                      var image = $('<img class="media-selected-image" src="' + e.target.result + '">');
+                      var imageContainer = $('<div class="media-selected-image-container"></div>');
+                      var image = $('<img class="media-selected-image" src="' + e.target.result + '"  style="width: auto; height: 100px; margin: 5px 10px;">');
   
                       imageContainer.append(image);
                       rowContainer.append(imageContainer);
@@ -238,6 +282,7 @@
         const maxAllowedFiles = {{allowed_image_upload}};
 
         if (selectedFiles.length > maxAllowedFiles) {
+          
           alert("You can upload a maximum of "+maxAllowedFiles+" images.");
           // Clear the file input or handle it based on your requirements
           this.value = null;

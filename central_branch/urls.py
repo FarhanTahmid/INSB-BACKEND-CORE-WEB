@@ -30,10 +30,7 @@ urlpatterns = [
     # path('get_updated_options/', views.get_updated_options_for_event_dashboard, name='get_updated_options'),
     #others page
     path('others/',views.others,name="others"),
-    #addresearch page
-    path('add_research/',views.add_research,name="add_research"),
-    #addblogs page
-    path('add_blogs/',views.add_blogs,name="add_blogs"),
+    
     
     #WEBSITE Management URL Path
     path('manage_website/homepage',views.manage_website_homepage,name="manage_website_home"),
@@ -43,7 +40,10 @@ urlpatterns = [
     path('manage_website/news/update/<int:pk>',views.update_news,name="update_news"),
     path('manage_website/blogs',views.manage_blogs,name="manage_blogs"),
     path('manage_website/blogs/update/<int:pk>',views.update_blogs,name="update_blogs"),
-
+    path('manage_website/research',views.manage_research,name="manage_research"),
+    path('manage_website/research/update/<int:pk>',views.update_researches,name="update_researches"),
+    path('manage_website/magazine',views.manage_magazines,name="manage_magazines"),
+    
     
     path('manage_access',views.manage_view_access,name="manage_access"),
 
@@ -58,10 +58,17 @@ urlpatterns = [
     path("events/create_event/<int:event_id>/page-3", views.event_creation_form_page3, name="event_creation_form3"),
     #Event edit page
     path('event_details/<int:event_id>/edit/',views.event_edit_form,name='event_edit_form'),
+    #Event media tab page
+    path('event_details/<int:event_id>/edit/media',views.event_edit_media_form_tab,name='event_edit_media_form_tab'),
+    #Event graphics tab page
+    path('event_details/<int:event_id>/edit/graphics',views.event_edit_graphics_form_tab,name='event_edit_graphics_form_tab'),
+    #Event graphics links sub tab page
+    path('event_details/<int:event_id>/edit/graphics/links',views.event_edit_graphics_form_links_sub_tab,name='event_edit_graphics_form_links_sub_tab'),
+    #Event content tab page
+    path('event_details/<int:event_id>/edit/content',views.event_edit_content_form_tab,name='event_edit_content_form_tab'),
     #Super Event Creation Form
-    path('events/create_super_event/',views.super_event_creation,name="super_event_creation"),
-    #event dashboard team
-    path('event_details/<int:event_id>',views.event_description,name='event_dashboard'),
-   
+    path('events/create_super_event/',views.super_event_creation,name="super_event_creation"), 
+    #Event preview
+    path('event_details/<int:event_id>/preview/',views.event_preview,name='event_preview'),  
 
 ]

@@ -22,9 +22,9 @@ class Members(models.Model):
     
     '''This is the main registered members database for IEEE NSU SB'''
     
-    ieee_id=models.IntegerField(primary_key=True,blank=False,null=False)
+    ieee_id=models.BigIntegerField(primary_key=True,blank=False,null=False)
     name=models.CharField(null=False,blank=False,max_length=100)
-    nsu_id=models.IntegerField(null=False, blank=False)
+    nsu_id=models.BigIntegerField(null=False, blank=False)
     email_ieee=models.EmailField(null=True,blank=True)
     email_personal=models.EmailField(null=True,blank=True)
     email_nsu=models.EmailField(null=True,blank=True)
@@ -33,8 +33,8 @@ class Members(models.Model):
     home_address=models.CharField(null=True,blank=True,max_length=200)
     date_of_birth=models.DateField(null=True,blank=True)
     gender=models.CharField(null=True,blank=True,max_length=7)
-    facebook_url=models.URLField(null=True,blank=True,max_length=200)
-    linkedin_url=models.URLField(null=True,blank=True,max_length=200)
+    facebook_url=models.URLField(null=True,blank=True,max_length=500)
+    linkedin_url=models.URLField(null=True,blank=True,max_length=500)
     user_profile_picture=ResizedImageField(null=False,blank=False,default='user_profile_pictures/default_profile_picture.png',upload_to='user_profile_pictures/')
     team=models.ForeignKey(Teams,null=True,blank=True,on_delete=models.CASCADE)
     position=models.ForeignKey(Roles_and_Position,default=13,on_delete=models.CASCADE) #Default=13 means the position of a general member, check roles and positions table
@@ -96,7 +96,7 @@ class ResetPasswordTokenTable(models.Model):
         return str(self.pk)
     
 '''This class is for the number of daily hits on the page'''
-class User(models.Model):
+class User_IP_Address(models.Model):
     ip_address = models.TextField(default=None)
     created_at = models.DateField(auto_now_add=True)
 

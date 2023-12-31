@@ -6,17 +6,22 @@ from central_events.models import Events
 from port.models import Chapters_Society_and_Affinity_Groups
 from graphics_team.models import Graphics_Banner_Image
 from media_team.models import Media_Images
+from datetime import datetime
+
 class HomepageItems:
 
-    def load_all_events():
+    def load_all_events(flag):
         dic = {}
-        events =  Events.objects.filter(publish_in_main_web= True).order_by('-event_date')
+        if flag:
+            events =  Events.objects.filter(publish_in_main_web= True).order_by('-event_date')
+        else:
+            events = Events.objects.filter(publish_in_main_web= True).order_by('-event_date')[:5]
         for i in events:
             try:
                 event = Graphics_Banner_Image.objects.get(event_id = i.pk)
-                dic.update({i:event.selected_image})
+                dic[i]=event.selected_image
             except:
-                dic.update({i:"#"})
+                dic[i] = "#"
         return dic
     
     def load_event_banner_image(event_id):
@@ -68,3 +73,33 @@ class HomepageItems:
     def getEventCount():
         '''Gets all the event Count'''
         return Events.objects.all().count()
+
+    def get_event_for_calender():
+
+        all_events = HomepageItems.load_all_events(True)
+        date_and_events = {}
+        for event in all_events:
+            try:
+                date = event.event_date.strftime("%Y-%m-%d")
+            except:
+                date = ""
+
+            if date in date_and_events:
+                date_and_events[date].append(event)
+            else:
+                date_and_events[date] = [event]
+
+        return date_and_events
+    
+    def get_upcoming_event():
+
+        return Events.objects.filter(publish_in_main_web = True).latest('event_date')
+    
+    def get_upcoming_event_banner_picture(event):
+
+        try:
+            return Graphics_Banner_Image.objects.get(event_id = event)
+        except:
+            return None
+
+        
