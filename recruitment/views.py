@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.db import DatabaseError, IntegrityError, InternalError
 from django.http import HttpResponseServerError, HttpResponseBadRequest, HttpResponse,JsonResponse
+from port.renderData import PortData
 from recruitment.models import recruitment_session, recruited_members
 from users.models import Members
 from . import renderData
@@ -26,15 +27,12 @@ def recruitment_home(request):
         this can also register a recruitment session upon data entry
         this passes all the datas into the template file    
     '''
-    
+    sc_ag=PortData.get_all_sc_ag(request=request)
     numberOfSessions = renderData.Recruitment.loadSession()
     
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    context={
-        'sessions':numberOfSessions,
-        "user_data":user_data
-    }
+    
     if request.method == "POST":
         session_name = request.POST["recruitment_session"]
         session_time=datetime.datetime.now()
@@ -43,6 +41,13 @@ def recruitment_home(request):
             add_session.save()
         except DatabaseError:
             return DatabaseError
+    
+    context={
+        'all_sc_ag':sc_ag,
+        'sessions':numberOfSessions,
+        "user_data":user_data
+    }
+
     return render(request, 'recruitment_homepage.html', context)
 
 
@@ -51,6 +56,8 @@ def recruitee(request, pk):
     '''This function is responsible for getting all the members registered in a particular
     recruitment session. Loads all the datas and show them
     '''
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     #check the users view access
     user=request.user
     has_access=(MDT_DATA.recruitment_session_view_access_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
@@ -72,6 +79,7 @@ def recruitee(request, pk):
         'ieee_payment_complete':get_total_count_of_ieee_payment_completed,
         'ieee_payment_incomplete':get_total_count_of_ieee_payment_incomplete,
         'user_data':user_data,
+        'all_sc_ag':sc_ag,
     }
     if(has_access):
         return render(request, 'session_recruitees.html', context=context)
@@ -92,10 +100,11 @@ def getPaymentStats(request):
 
 
 @login_required
-def recruitee_details(request,session_id,nsu_id):
-    
-    
+def recruitee_details(request,session_id,nsu_id):  
     """Preloads all the data of the recruitees who are registered in the particular session, here we can edit and save the data of the recruitee"""
+    
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     #Checking user access
     user=request.user
     has_access=(MDT_DATA.recruited_member_details_view_access(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
@@ -110,8 +119,6 @@ def recruitee_details(request,session_id,nsu_id):
         
         checkIfMemberIsRegistered=Members.objects.filter(nsu_id=nsu_id).exists()
 
-        
-        
 
     except ObjectDoesNotExist:
         # if object doesnot exist...
@@ -140,6 +147,7 @@ def recruitee_details(request,session_id,nsu_id):
         'memberExists':checkIfMemberIsRegistered,
         'has_next_member':has_next_member,
         'next_member_nsu_id':next_member_nsu_id,
+        'all_sc_ag':sc_ag,
     }
 
     if request.method == "POST":
@@ -290,10 +298,13 @@ def recruitee_details(request,session_id,nsu_id):
 
 @login_required
 def recruit_member(request, session_name):
+    sc_ag=PortData.get_all_sc_ag(request=request)
     getSessionId = renderData.Recruitment.getSessionid(
         session_name=session_name)
     form = StudentForm
+
     context = {
+        'all_sc_ag':sc_ag,
         'form': form,
         'session_name': session_name,
         'session_id': getSessionId['session'][0]['id']
