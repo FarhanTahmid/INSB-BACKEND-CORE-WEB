@@ -92,24 +92,36 @@
             bottom: 231px;
         }
 
-
-
-        .members-volunteers h2 , .gallery h2 , .contact-us h2 , .creative-team h2 , .chapters h2 , .mission-vision{
-            font-weight: bolder;
-            color: #000;
-            padding-bottom: 25px;
+        .mission-vision{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: #002855;
         }
-        .members-volunteers{
+        .mission-vision img{
+            object-fit: cover;
+            height: 100%;
+        }
+        .mission-vision h2 , .mission-vision p{
+            color: #f9f9f9;
+        }
+        .events{
             display: flex;
             column-gap: 50px;
         }
-        .mem-vol-pic{
+        .event_calender{
             width: 2300px;
             margin-top: 20px;
             display: flex;
             align-items: center;
         }
-        .ieee-bd-btn button{
+        .events h2 , .creative-team h2 , .chapters h2 , .achievements h2{
+            font-weight: bold;
+            color: #000;
+            padding-bottom: 25px;
+        }
+
+
+        .events-btn button{
             background-color: #002855;
             border: none;
             color: white;
@@ -124,34 +136,8 @@
             transition:all .3s ease-in-out;
             font-weight:bold; 
         }
-        .ieee-bd-btn button:hover{
+        .events-btn button:hover{
             background-color: #FFC72C;
-        }
-        .mission-vision{
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            background: #002855;
-        }
-        .mission-vision img{
-            object-fit: cover;
-            height: 100%;
-        }
-        .mission-vision h2 , .mission-vision p{
-            color: #f9f9f9;
-        }
-        .link{
-            text-decoration: none;
-            color: #002855;
-        }
-        .link:hover{
-            text-decoration: none;
-            color: #FFD100;
-        }
-        .contact-us {
-            width: 100%;            
-        }
-        .contact-us p{
-            font-weight: bolder;       
         }
         
         
@@ -160,8 +146,6 @@
             .max-width{
                 max-width : 850px;
             }
-
-
             .achievement-card{
                 width: 220px;
                 height: 270px;      
@@ -177,26 +161,28 @@
             .achievement-card a{
                 top: -215px;
             }
+
+
         }
         @media screen and (max-width: 991px)
         {
             .max-width{
                 max-width : 650px;
             }
-
-
-
-            .members-volunteers{
-                display: grid;
-                grid-template-columns: 100%;
-            }
-            .mem-vol-pic{
-                width: 100%;
-            }
             .achievement-card{
                 width: 199px;
                 height: 244px;      
             }
+            .events{
+                display: grid;
+                grid-template-columns: 100%;
+            }
+            .event_calender{
+                width: 100%;
+            }
+
+
+
         }
         @media screen and (max-width: 544px){
             .IEEE-INSB-logo{
@@ -223,18 +209,19 @@
             .centering{
                 padding-top: 50px;
             }
-
-
-            .mem-vol-pic{
+            .chapter-card{
                 width: 100%;
+                height: 244px;      
             }
+
+
             .mission-vision{
                 display: grid;
                 grid-template-columns: 1fr;
             }
-            .achievement-card{
+
+            .event_calender{
                 width: 100%;
-                height: 244px;      
             }
         }
         @media screen and (max-width: 425px){
@@ -257,7 +244,7 @@
             {% include 'wave.html' %}
         {% endblock %}
 
-        <section class="centering">
+        <section class="centering" style="background-color:white;">
             <section class="about-INSB max-width">
                 <div class="IEEE-INSB-logo">
                     <img src="https://ieeensusb.org/wp-content/uploads/2021/03/INSB-main-logo-300x300.png" alt="">
@@ -329,7 +316,7 @@
         </section>
 
         <section class="centering" style="background-color: #f9f9f9;">         
-            <section class="mission-vision max-width" style="padding: 0%;">
+            <section class="mission-vision max-width" style="padding: 0%; margin: 0%;">
                     <div style="padding: 20px;">
                         <div style="margin-bottom: -10px;"><h2>Mission</h2></div>
                         <div><hr style="width: 125px; border: 2px solid white;"></div>
@@ -357,55 +344,38 @@
  
 
 
-        <section class="centering" style="background-color:#f9f9f9;">
-                <section class="members-volunteers max-width">
+        <section class="centering" style="background-color:white;">
+                <section class="events max-width">
                     <div>
-                        <div style="margin-bottom: -38px;"><h2>Members and volunteers</h2></div>
+                        <div style="margin-bottom: -38px;"><h2>Events</h2></div>
                         <div>
-                            <hr style="width: 125px; border: 2px solid #002855;">
+                            <hr style="width: 125px; border: 2px solid #FFD100;">
                         </div>
-                        <div><p>Members of the Institute of Electrical and Electronics Engineers (IEEE) Bangladesh Section are very involved, and they are perfecting their initiative work and forming connections with electrical engineering sides all over the world. Prof. Celia Shahnaz , Chair of the Institute of Electrical and Electronics Engineers (IEEE) Bangladesh Section, organizes year-round productive student events and congratulates all student participants.Institute of Electrical and Electronics Engineers (IEEE) Bangladesh Section is receiving overwhelming response from Institute of Electrical and Electronics Engineers (IEEE)  members and volunteers all over the world
-                            Please go through this links:</p>
+                        <div><p>IEEE NSU Student Branch arranges different superlative events such as workshops, industrial tours, seminars and competitions that aid members to amplify their knowledge, acquire lots of skills and experiences. International and local events provide an insight into the technological and scientific advancements in the relative fields and the members gain extensive knowledge and profound experiences that benefit them in the long run. Out of the numerous events arranged by INSB, one example is the  Student Competition IEEE Xtreme which boosts expertise and allows the participants to earn accolades. INSB offers free webinars for its members.
+
+                            To view the list of past and upcoming events, click on the link:</p>
                         </div>
-                        <div>
-                            <div><a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square "></i> WEB Team</a></div>                                        
-                            <div><a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square "></i> Vice Chair Technical</a></div>                                        
-                            <div><a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square "></i> Secretary Candidates</a></div>                                        
+                        <div class="events-btn">
+                            <button>All Events</button>
                         </div>
                     </div>
-                    <div class="mem-vol-pic">
+                    <div class="event_calender">
                         <img src="https://ieeensusb.org/wp-content/uploads/2021/03/celia.jpg" alt="">
                     </div>
                 </section>
         </section>
 
-
-        <section class="centering" style="background-color: #f9f9f9;">         
-            <section class="contact-us max-width">
-                <div>
-                    <div style="margin-bottom: -38px;"><h2>Contact Bangladesh Section</h2></div>
-                    <div>                        
-                        <div><hr style="width: 275px; border: 2px solid #002855;"></div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 5fr;">
-                        <p>Chair</p><p>: Prof. Dr. Celia Shahnaz</p>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 5fr;">
-                        <p>Email</p><p>: celia.shahnaz@ieee.org |  celia.shahnaz@gmail.com</p>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 5fr;">
-                        <p>Secretary </p><p>: Raihan Razeen</p>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 5fr;">
-                        <p>Email</p><p>: raihan.razeen@gmail.comMs. Salma [Office Secretary]</p>
-                    </div>
-                    <div>
-                        <div><a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE Bangladesh Section</a></div>                                        
-                        <div><a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE Headquarter contact center</a></div>                                        
-                    </div>
+        <section class="centering" style="background-color:#f9f9f9;">         
+            <section class="achievements max-width">
+                <div style="margin-bottom: -38px;"><h2>Achievements</h2></div>
+                <div>                            
+                    <div><hr style="width: 125px; border: 2px solid #FFD100;"></div>
                 </div>
+                <div><p>Out of the many incredible achievements of INSB, being awarded the “Best Exemplary Student Branch” in Region 10 for two consecutive years is laudable. In 2009, INSB was honored by its well deserved accolade of “The Best Student Branch” in the IEEE Bangladesh Section. First Positions in the IEEE R10 Web Contest in 2018, in the global IEEE Day Contests in 2017, in the Long Video Contest and the second position in the Photo Contest (Technical Category) are other praiseworthy accomplishments. INSB has earned international recognition, succeeded in providing its members with professional satisfaction and prestige in the form of awards, certificates and other prizes. These achievements serve as meritorious additions to one’s resume, further heightening the chances of turning work potential into employment in the future.</p></div>
             </section>
         </section>
+
+
 
         <!--Footer-->
         {% block footer %}
