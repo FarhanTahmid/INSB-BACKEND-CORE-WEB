@@ -544,4 +544,7 @@ def all_members(request):
     return render(request,'Members/All Members/all_members.html',context=context)
 
 def ieee_bd_section(request):
-    return render(request, 'IEEE_bangladesh_section.html')
+    return render(request, 'About/IEEE_bangladesh_section.html')
+
+def ieee_student(request):
+    return render(request, 'About/IEEE_NSU_student_branch.html')
