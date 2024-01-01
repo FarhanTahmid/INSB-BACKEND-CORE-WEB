@@ -83,7 +83,7 @@
                     class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
                     <div class="gdlr-standard-style" style="height:500px;">
                         <div class="gdlr-blog-thumbnail">
-                            <a href="{% url 'main_website:event_details' key.id %}"> <img
+                            <a href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}"> <img
                                     class="article-image"
                                     src="{{media_url}}{{value}}"
                                     alt="" width="100%" /></a>
@@ -95,16 +95,16 @@
                                     <div
                                         class="blog-info blog-date gdlr-skin-info">
                                         <span class="gdlr-sep">/</span><a
-                                            href="{% url 'main_website:event_details' key.id %}">{{key.event_date}}</a></div>
+                                            href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}">{{key.event_date}}</a></div>
                                     <div
                                         class="blog-info blog-author gdlr-skin-info">
                                         <span class="gdlr-sep">/</span>By <a
-                                            href="{% url 'main_website:event_details' key.id %}" title="{{key.event_organiser.group_name}}"
+                                            href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}" title="{{key.event_organiser.group_name}}"
                                             rel="author">{{key.event_organiser.short_form}}</a></div>
                                     <div class="clear"></div>
                                 </div>
 
-                                <h3 class="gdlr-blog-title event_name"><a href="{% url 'main_website:event_details' key.id %}">{{key.event_name}}</a></h3>
+                                <h3 class="gdlr-blog-title event_name"><a href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}">{{key.event_name}}</a></h3>
                                 <div class="clear"></div>
                             </header>
                             <!-- entry-header -->
@@ -116,7 +116,7 @@
                             -webkit-line-clamp: 2;">
                                 <p class="card-text">{{key.event_description | safe }}</p>
                             </div>
-                            <a href="{% url 'main_website:event_details' key.id %}" class="excerpt-read-more">Read More</a>
+                            <a href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}" class="excerpt-read-more">Read More</a>
                         </div>
                     </div>
                 </article>
