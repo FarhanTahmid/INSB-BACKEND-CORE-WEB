@@ -45,7 +45,8 @@ def team_homepage(request):
 def manage_team(request):
     '''This function loads the manage team page for graphics team and is accessable
     by the co-ordinatiors and other admin users only, unless the co-ordinators gives access to others as well'''
-
+    
+    sc_ag=PortData.get_all_sc_ag(request=request)
     has_access = GraphicsTeam_Render_Access.get_common_access(request)
     if has_access:
         data_access = GraphicsTeam.load_data_access()
@@ -129,11 +130,12 @@ def manage_team(request):
             'insb_members':all_insb_members,
             'current_panel_members':current_panel_members,
             'positions':position,
+            'all_sc_ag':sc_ag,
             
         }  
         return render(request,"graphics_team/manage_team.html",context=context)
     else:
-        return render(request,"access_denied2.html")
+        return render(request,"access_denied2.html", { 'all_sc_ag' : sc_ag })
 
 @login_required
 def event_page(request):
@@ -141,9 +143,10 @@ def event_page(request):
     '''Only events organised by INSB would be shown on the event page of Graphics Team
        So, only those events are being retrieved from database'''
     insb_organised_events = Branch.load_insb_organised_events()
-   
+    sc_ag=PortData.get_all_sc_ag(request=request)
    
     context = {
+        'all_sc_ag':sc_ag,
         'events_of_insb_only':insb_organised_events,
     }
 
@@ -221,9 +224,9 @@ def event_form_add_links(request,event_id):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         all_graphics_link = GraphicsTeam.get_all_graphics_form_link(event_id)
-        #has_access = CWPTeam_Render_Access.access_for_events(request)
+        has_access = GraphicsTeam_Render_Access.access_for_events(request)
 
-        if (True):
+        if (has_access):
             if(request.method == "POST"):
                 
                 if request.POST.get('add_link'):
