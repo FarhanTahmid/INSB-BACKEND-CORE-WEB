@@ -224,8 +224,8 @@ def rasPage(request):
     
     getRasAbout=society_ag.Ras.get_ras_about()
     
-    if getRasAbout is False:
-        return HttpResponse("GG")
+    # if getRasAbout is False:
+    #     return HttpResponse("GG")
     
     context={
         'page_title':page_title,
