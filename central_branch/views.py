@@ -558,69 +558,6 @@ def update_blogs(request,pk):
 
     return render(request,"Manage Website/Publications/Blogs/update_blogs.html",context=context)
 
-
-@login_required
-def add_blogs(request):
-
-    '''function to add new blog to the page'''
-
-    load_blog_category = Blog_Category.objects.all()
-    load_Chapters_Society_And_Affinity_Groups = Chapters_Society_and_Affinity_Groups.objects.all()
-
-    '''When the submit button is clicked'''
-
-    if request.method=="POST":
-
-        '''Checking for essential fields to be filled. If incomplete, error will be loaded
-        on the form page'''
-
-        if request.POST.get('title') == "" or request.POST.get('date') == ""  or request.POST.get('Pname') == "" or request.POST.get('description')== "":
-            return render(request,"add_blogs.html",{
-                "error":True,
-                "category":load_blog_category,
-                "chapterSocietyAndAffinityGroups":load_Chapters_Society_And_Affinity_Groups
-            }) 
-        else:
-            title =  request.POST.get('title')
-            date = request.POST.get('date')
-            blog_pic = request.FILES['filename']
-            category = request.POST.get('category')
-            publisherName = request.POST.get('Pname')
-            chapterSocietyAndAffinityGroups = request.POST.get('chapterSocietyAndAffinityGroups')
-            description = request.POST.get('description')
-
-            '''Checking conditions regarding when either of the two fields is empty or full
-            and saving the data to the database on the basis of the conditions, where other fields
-            apart from category and chapterSocietyAndAffinityGroups is mandatorys'''
-
-            if category=="" and chapterSocietyAndAffinityGroups!="":
-                chapterSocietyAndAffinityGroups = Chapters_Society_and_Affinity_Groups.objects.get(id=chapterSocietyAndAffinityGroups)
-                save_blog = Blog(title=title,date=date,blog_banner_picture=blog_pic,publisher = publisherName,chapter_society_affinity=chapterSocietyAndAffinityGroups,description=description)
-                save_blog.save()
-            elif category!="" and chapterSocietyAndAffinityGroups=="":
-                category = Blog_Category.objects.get(id=category)
-                save_blog = Blog(title=title,date=date,blog_banner_picture=blog_pic,publisher = publisherName,category=category,description=description)
-                save_blog.save()
-            elif category=="" and chapterSocietyAndAffinityGroups=="":
-                    save_blog = Blog(title=title,date=date,blog_banner_picture=blog_pic,publisher = publisherName,description=description)
-                    save_blog.save()
-            else:
-                category = Blog_Category.objects.get(id=category)
-                chapterSocietyAndAffinityGroups = Chapters_Society_and_Affinity_Groups.objects.get(id=chapterSocietyAndAffinityGroups)
-                save_blog = Blog(title=title,date=date,blog_banner_picture=blog_pic,publisher = publisherName,category=category,chapter_society_affinity=chapterSocietyAndAffinityGroups,description=description)
-                save_blog.save()
-            
-            return render(request,"add_blogs.html",{
-                "saved":True,
-                "category":load_blog_category,
-                "chapterSocietyAndAffinityGroups":load_Chapters_Society_And_Affinity_Groups
-            })
-    return render(request,"add_blogs.html",{
-        "category":load_blog_category,
-        "chapterSocietyAndAffinityGroups":load_Chapters_Society_And_Affinity_Groups
-    })
-
-
 from main_website.models import HomePageTopBanner
 @login_required
 def manage_website_homepage(request):
@@ -791,6 +728,13 @@ def update_news(request,pk):
         'news':news_to_update,
     }
     return render(request,'Manage Website/Activities/news_update_section.html',context=context)
+
+
+@login_required
+def manage_magazines(request):
+    return render(request,'Manage Website/Publications/Magazine/manage_magazine.html')
+
+
 
 
 @login_required
@@ -1443,7 +1387,7 @@ def event_edit_content_form_tab(request,event_id):
                     
                     #when the add button for submitting new note is clicked
                     title = request.POST['title']
-                    note = request.POST['notes']
+                    note = request.POST['caption']
 
                     if ContentWritingTeam.creating_note(title,note,event_id):
                         messages.success(request,"Note created successfully!")
@@ -1464,7 +1408,7 @@ def event_edit_content_form_tab(request,event_id):
                     print(request.POST)
                     id = request.POST['update_note']
                     title = request.POST['title']
-                    note = request.POST['notes']
+                    note = request.POST['caption']
                     if(ContentWritingTeam.update_note(id, title, note)):
                         messages.success(request,"Note updated successfully!")
                     else:

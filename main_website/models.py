@@ -106,3 +106,17 @@ class News(models.Model):
     def __str__(self) -> str:
         return str(self.pk)
 
+# Table for Magazine
+class Magazines(models.Model):
+    magazine_title=models.CharField(null=False,blank=False,max_length=100)
+    published_by=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE)
+    publish_date=models.DateField(null=False,blank=False,help_text = "<br>Please use the following format: <em>YYYY-MM-DD</em>.")
+    magazine_short_description=RichTextField(null=False,blank=False,max_length=400)
+    magazine_picture=ResizedImageField(null=False,blank=False,upload_to="main_website_files/magazine_pictures/")
+    magazine_file=models.FileField(null=False,blank=False,upload_to="main_website_files/Magazine/")
+    
+    class Meta:
+        verbose_name="Magazine"
+    def __str__(self) -> str:
+        return self.magazine_title
+

@@ -89,7 +89,17 @@ class HomepageItems:
             else:
                 date_and_events[date] = [event]
 
-        
-        print(date_and_events)
         return date_and_events
+    
+    def get_upcoming_event():
+
+        return Events.objects.filter(publish_in_main_web = True).latest('event_date')
+    
+    def get_upcoming_event_banner_picture(event):
+
+        try:
+            return Graphics_Banner_Image.objects.get(event_id = event)
+        except:
+            return None
+
         
