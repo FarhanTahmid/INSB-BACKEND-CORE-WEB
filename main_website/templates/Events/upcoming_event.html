@@ -283,10 +283,10 @@
                         <div style="display: flex;">
                             <div class="upcoming_event_event_date">
                                 <div class="upcoming_event_block">
-                                    <div class="upcoming_event_date">26</div>
+                                    <div class="upcoming_event_date">{{upcoming_event.event_date.day}}</div>
                                     <div class="upcoming_event_month_year">
-                                        <div class="month">December</div>
-                                        <div class="year">2023</div>
+                                        <div class="month">{{upcoming_event.event_date | date:"F"}}</div>
+                                        <div class="year">{{upcoming_event.event_date.year}}</div>
                                     </div>
                                 </div>
                                 <div class="extra_block"></div>
@@ -295,11 +295,11 @@
                         </div>
                         <!-- Upcoming Event Title -->
                         <div class="upcoming_event_details">
-                            <div class="upcoming_event_details_title">SPAC 2023</div>
+                            <div class="upcoming_event_details_title">{{upcoming_event.event_name | upper}}</div>
                             <div class="upcoming_event_link">
                                 <div class="line"></div>
                                 <!-- Upcoming Event Link -->
-                                <a href="#">EVENT DETAIL</a>
+                                <a href="{% url 'main_website:event_details' upcoming_event.pk %}">EVENT DETAIL</a>
                             </div>
                         </div>
                     </div>
@@ -307,7 +307,7 @@
                 <!-- Upcoming Event Banner -->
                 <div class="upcoming_event_image_banner">
                     <div class="upcoming_event_image">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2023/12/410548066_694919026067394_6332074071812161888_n-474x324.jpg"
+                        <img src="{{media_url}}{{upcoming_event_banner_picture.selected_image}}"
                             alt="upcoming_event_banner">
                     </div>
                 </div>
@@ -325,7 +325,7 @@
     const currentYear = new Date().getFullYear();
 
     // Upcoming Event Date
-    const upcomingEventDate = new Date(`December 26 2023 00:00:00`);
+    const upcomingEventDate = new Date(`{{ upcoming_event.event_date|date:"F j, Y" }} 00:00:00`);
 
     function updateCountdown() {
         const currentTime = new Date();
