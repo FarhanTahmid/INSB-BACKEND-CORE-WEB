@@ -2,7 +2,7 @@
 {% block event_with_calendar %}
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+{% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script> {% endcomment %}
 
 
 <style>
@@ -132,19 +132,19 @@
                       height: 150px;
                       overflow: hidden;">
                         {% if event.event_date%}
-                        <h3 class="card-title" style="color:		#00B5E2"><b>
+                        <h3 class="card-title" style="color:#00B5E2">
                           {{event.event_date.day}}{% if event.event_date.day == 1 %}st{% elif event.event_date.day == 2 %}nd {% elif event.event_date.day == 3 %}rd{% else %}th{% endif %}
                           {{event.event_date | date:"b" | capfirst}}
-                        </b></h3>
+                        </h3>
                         {% endif %}
-                        <div>
-                        <h5 class="card-title"><a href = "{% url 'main_website:event_details' event.pk %}" >{{event.event_name | safe}}</a></h5></div>
+                      <div>
+                        <h5 class="card-title" style="color: #000;"><a href = "{% if event.pk %}{% url 'main_website:event_details' event.pk %}{% endif %}" style="color: #000;">{{event.event_name | safe}}</a></h5></div>
                         <div class="card-text" id="limitedText" style="       
                         display: -webkit-box;
                         overflow: hidden;
                         -webkit-box-orient: vertical;
                         text-overflow: ellipsis;
-                        -webkit-line-clamp: 2;">{{event.event_description | safe}}</div><br><br>
+                        -webkit-line-clamp: 1;">{{event.event_description | safe}}</div><br><br>
                         <div class="card-text"><small class="text-body-secondary" style="color:		#00B5E2">{{event.event_organiser}}</small></div>
                       </div>
                     </div>

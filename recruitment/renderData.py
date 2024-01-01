@@ -35,7 +35,7 @@ class Recruitment:
     def getRecruitedMembers(session_id):
         '''This function returns all the recruited members on that particular session'''
         return{
-            'member': recruited_members.objects.filter(session_id=session_id).order_by('id').values()
+            'member': recruited_members.objects.filter(session_id=session_id).order_by('recruitment_time').values()
         }
  
  
