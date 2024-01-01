@@ -1,0 +1,351 @@
+{% load static %}
+{% block upcoming_event %}
+
+<style>
+    .upcoming_event {
+        display: grid;
+        justify-items: center;
+    }
+
+    .upcoming_event_container {
+        width: 100%;
+        max-width: 1140px;
+    }
+
+    .upcoming_event_content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .upcoming_event_title .title h3 {
+        color: #000000;
+        font-family: "Poppins", sans-serif;
+        font-size: 26px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .upcoming_event_title .bar {
+        background-color: #FFC72C;
+        height: 5px;
+        border-radius: 5px;
+        width: 80px;
+    }
+
+    .upcoming_event_content .clear {
+        height: 30px;
+    }
+
+    .upcoming_event_banner {
+        background-color: #002855;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        position: relative;
+        z-index: 5;
+    }
+
+    .upcoming_event_event_article {
+        width: 68%;
+        color: #fff;
+        font-family: "Poppins", sans-serif;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 40px;
+    }
+
+    .upcoming_event_image_banner {
+        width: 32%;
+        display: flex;
+        align-items: center;
+    }
+
+    .upcoming_event_top {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        padding: 30px;
+    }
+
+    .upcoming_event_time {
+        display: flex;
+        flex-direction: row;
+        column-gap: 10px;
+    }
+
+    .upcoming_event_countdown {
+        display: grid;
+        justify-items: center;
+    }
+
+    .upcoming_event_days,
+    .upcoming_event_hours,
+    .upcoming_event_minute,
+    .upcoming_event_seconds {
+        font-size: 30px;
+    }
+
+    .upcoming_event_count {
+        font-size: 11px;
+        color: #75787B;
+        margin: 8px 0 0;
+        line-height: 1;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        position: relative;
+    }
+
+    .upcoming_event_subtitle {
+        font-weight: 300;
+        display: block;
+        font-size: 25px;
+    }
+
+    .upcoming_event_main_title {
+        font-weight: 700;
+        display: block;
+        font-size: 25px;
+    }
+
+    .upcoming_event_block {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background: #00B5E2;
+        position: relative;
+        z-index: 4;
+    }
+
+    .upcoming_event_bottom {
+        display: flex;
+        flex-direction: row;
+        column-gap: 40px;
+    }
+
+    .upcoming_event_event_date {
+        margin-left: -28px;
+        width: 150px;
+        height: 96px;
+        display: grid;
+    }
+
+    .upcoming_event_date {
+        font-size: 30px;
+    }
+
+    .upcoming_event_details_title {
+        font-size: 17px;
+    }
+
+    .upcoming_event_link {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        column-gap: 10px;
+    }
+
+    .upcoming_event_link .line {
+        width: 25px;
+        height: 2px;
+        background: white;
+    }
+
+    .upcoming_event_link a {
+        color: #fff;
+        font-size: 13px;
+        transition: all 0.3s ease;
+    }
+
+    .upcoming_event_link a:hover {
+        color: #FFC72C;
+        text-decoration: none;
+    }
+
+    .upcoming_event_details {
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+    }
+
+    .extra_block {
+        background: #00629B;
+        width: 50px;
+        transform: rotate(45deg);
+        z-index: 1;
+        display: block;
+        height: 20px;
+    }
+
+    .another_extra_block {
+        background: #002855;
+        position: relative;
+        z-index: 1;
+        margin-left: 28px;
+        margin-top: -52px;
+    }
+
+    @media screen and (max-width: 1200px) {
+        .upcoming_event_container {
+            width: 90%;
+            max-width: 960px;
+        }
+    }
+
+    @media screen and (max-width: 960px) {
+        .upcoming_event_banner {
+            flex-direction: column;
+        }
+
+        .upcoming_event_event_article {
+            width: 100%;
+        }
+
+        .upcoming_event_image_banner {
+            width: 100%;
+        }
+
+        .upcoming_event_image {
+            width: 100%;
+        }
+
+        .upcoming_event_image img {
+            width: 100%;
+        }
+    }
+
+    @media screen and (max-width:600px) {
+        .upcoming_event_top {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .upcoming_event_event_date {
+            margin-left: 0;
+        }
+
+        .extra_block {
+            display: none;
+        }
+    }
+
+    @media screen and (max-width:600px) {
+        .upcoming_event_bottom {
+            flex-direction: column;
+        }
+
+        .upcoming_event_details {
+            margin-left: 10px;
+        }
+    }
+</style>
+
+<!-- Upcoming Event -->
+<section class="upcoming_event">
+    <div class="upcoming_event_container">
+        <div class="upcoming_event_content">
+            <div class="upcoming_event_title">
+                <div class="title">
+                    <h3>Upcoming</h3>
+                </div>
+                <div class="bar"></div>
+            </div>
+            <div class="clear"></div>
+            <div class="upcoming_event_banner">
+                <div class="upcoming_event_event_article">
+                    <div class="upcoming_event_top">
+                        <div class="upcoming_event_title">
+                            <div class="upcoming_event_subtitle">Next</div>
+                            <div class="upcoming_event_main_title">Upcoming Event</div>
+                        </div>
+                        <!-- Upcoming Event Countdown -->
+                        <div class="upcoming_event_time">
+                            <div class="upcoming_event_countdown">
+                                <div class="upcoming_event_days" id="days">00</div>
+                                <div class="upcoming_event_count">DAYS</div>
+                            </div>
+                            <div class="upcoming_event_countdown">
+                                <div class="upcoming_event_hours" id="hours">00</div>
+                                <div class="upcoming_event_count">HOURS</div>
+                            </div>
+                            <div class="upcoming_event_countdown">
+                                <div class="upcoming_event_minute" id="minutes">00</div>
+                                <div class="upcoming_event_count">MINUTE</div>
+                            </div>
+                            <div class="upcoming_event_countdown">
+                                <div class="upcoming_event_seconds" id="seconds">00</div>
+                                <div class="upcoming_event_count">SECONDS</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Upcoming Event Date -->
+                    <div class="upcoming_event_bottom">
+                        <div style="display: flex;">
+                            <div class="upcoming_event_event_date">
+                                <div class="upcoming_event_block">
+                                    <div class="upcoming_event_date">{{upcoming_event.event_date.day}}</div>
+                                    <div class="upcoming_event_month_year">
+                                        <div class="month">{{upcoming_event.event_date | date:"F"}}</div>
+                                        <div class="year">{{upcoming_event.event_date.year}}</div>
+                                    </div>
+                                </div>
+                                <div class="extra_block"></div>
+                                <div class="another_extra_block"></div>
+                            </div>
+                        </div>
+                        <!-- Upcoming Event Title -->
+                        <div class="upcoming_event_details">
+                            <div class="upcoming_event_details_title">{{upcoming_event.event_name | upper}}</div>
+                            <div class="upcoming_event_link">
+                                <div class="line"></div>
+                                <!-- Upcoming Event Link -->
+                                <a href="{% url 'main_website:event_details' upcoming_event.pk %}">EVENT DETAIL</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Upcoming Event Banner -->
+                <div class="upcoming_event_image_banner">
+                    <div class="upcoming_event_image">
+                        <img src="{{media_url}}{{upcoming_event_banner_picture.selected_image}}"
+                            alt="upcoming_event_banner">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    const days = document.getElementById('days');
+    const hours = document.getElementById('hours');
+    const minutes = document.getElementById('minutes');
+    const seconds = document.getElementById('seconds');
+
+    const currentYear = new Date().getFullYear();
+
+    // Upcoming Event Date
+    const upcomingEventDate = new Date(`{{ upcoming_event.event_date|date:"F j, Y" }} 00:00:00`);
+
+    function updateCountdown() {
+        const currentTime = new Date();
+        const diff = upcomingEventDate - currentTime;
+
+        if (diff > 0) {
+            const d = Math.floor(diff / 1000 / 60 / 60 / 24);
+            const h = Math.floor(diff / 1000 / 60 / 60) % 24;
+            const m = Math.floor(diff / 1000 / 60) % 60;
+            const s = Math.floor(diff / 1000) % 60;
+
+            days.innerHTML = d;
+            hours.innerHTML = h < 10 ? '0' + h : h;
+            minutes.innerHTML = m < 10 ? '0' + m : m;
+            seconds.innerHTML = s < 10 ? '0' + s : s;
+        }
+    }
+
+    setInterval(updateCountdown, 1000);
+
+</script>
+
+{% endblock upcoming_event %}

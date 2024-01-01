@@ -125,6 +125,14 @@
           <!--Tab view end-->
           <br>
 
+          <!--Tab view for Events Graphics Sub Tab-->
+          <!--Tab view Start-->
+          {% block event_edit_graphics_sub_tab %}
+              {% include "Events/event_edit_graphics_sub_tabs.html" %}
+          {% endblock event_edit_graphics_sub_tab %}
+          <!--Tab view end-->
+          <br>
+
           {% block graphics_form %}
               {% include "Events/graphics_event_form_content.html" %}
           {% endblock graphics_form %}

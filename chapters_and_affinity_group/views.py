@@ -1,8 +1,11 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
+from content_writing_and_publications_team.forms import Content_Form
+from content_writing_and_publications_team.renderData import ContentWritingTeam
 from graphics_team.models import Graphics_Banner_Image, Graphics_Link
 from graphics_team.renderData import GraphicsTeam
 from insb_port import settings
+from main_website.renderData import HomepageItems
 from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
 from port.renderData import PortData
@@ -26,6 +29,8 @@ from central_events.models import Events
 from central_events.forms import EventForm
 from events_and_management_team.renderData import Events_And_Management_Team
 from port.models import Chapters_Society_and_Affinity_Groups
+from django.views.decorators.clickjacking import xframe_options_exempt
+from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
 
 
 # Create your views here.
@@ -1102,8 +1107,9 @@ def event_edit_graphics_form_tab(request, primary, event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
+    
 
-def event_edit_content_form_tab(request,primary,event_id):
+def event_edit_graphics_form_links_sub_tab(request,primary,event_id):
 
     ''' This function loads the content tab page of events '''
 
@@ -1113,22 +1119,196 @@ def event_edit_content_form_tab(request,primary,event_id):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        all_graphics_link = GraphicsTeam.get_all_graphics_form_link(event_id)
         #Get event details from databse
         # event_details = Events.objects.get(pk=event_id)
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
         if(has_access):
+
+            if request.POST.get('add_link'):
+
+                    form_link = request.POST.get('graphics_form_link')
+                    title =request.POST.get('title')
+                    if GraphicsTeam.add_graphics_form_link(event_id,form_link,title):
+                        messages.success(request,'Saved Changes!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("chapters_and_affinity_group:event_edit_graphics_form_links_sub_tab",primary,event_id)
             
+            if request.POST.get('update_link'):
+
+                    form_link = request.POST.get('form_link')
+                    title =request.POST.get('title')
+                    pk = request.POST.get('link_pk')
+                    if GraphicsTeam.update_graphics_form_link(form_link,title,pk):
+                        messages.success(request,'Updated Successfully!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("chapters_and_affinity_group:event_edit_graphics_form_links_sub_tab",primary,event_id)
+
+            if request.POST.get('remove_form_link'):
+
+                    id = request.POST.get('remove_link')
+                    if GraphicsTeam.remove_graphics_form_link(id):
+                        messages.success(request,'Deleted Successfully!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("chapters_and_affinity_group:event_edit_graphics_form_links_sub_tab",primary,event_id)
+
             context={
                 'is_branch' : False,
                 'primary' : primary,
                 'event_id' : event_id,
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
+                'all_graphics_link':all_graphics_link,
 
             }
-            return render(request,"Events/event_edit_content_and_publications_form_tab.html",context)
+            return render(request,"Events/event_edit_graphics_form_links_sub_tab.html",context)
         else:
             return render(request, 'access_denied.html')
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+
+def event_edit_content_form_tab(request,primary,event_id):
+
+    ''' This function loads the content tab page of events '''
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        #Get event details from databse
+        # event_details = Events.objects.get(pk=event_id)
+        has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
+        if(has_access):
+            all_notes_content = ContentWritingTeam.load_note_content(event_id)
+            form = Content_Form()
+            if(request.method == "POST"):               
+                if 'add_note' in request.POST:
+                    
+                    #when the add button for submitting new note is clicked
+                    title = request.POST['title']
+                    note = request.POST['caption']
+
+                    if ContentWritingTeam.creating_note(title,note,event_id):
+                        messages.success(request,"Note created successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+
+                    return redirect("chapters_and_affinity_group:event_edit_content_form_tab", primary, event_id)
+
+                if 'remove' in request.POST:
+                    id = request.POST.get('remove_note')
+                    if ContentWritingTeam.remove_note(id):
+                        messages.success(request,"Note deleted successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+                    return redirect("chapters_and_affinity_group:event_edit_content_form_tab", primary, event_id)  
+
+                if 'update_note' in request.POST:
+                    print(request.POST)
+                    id = request.POST['update_note']
+                    title = request.POST['title']
+                    note = request.POST['caption']
+                    if(ContentWritingTeam.update_note(id, title, note)):
+                        messages.success(request,"Note updated successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+                    return redirect("chapters_and_affinity_group:event_edit_content_form_tab", primary, event_id)
+                
+                if('save' in request.POST):
+                    event_description = request.POST['event_description']
+                    if('drive_link_of_documents' in request.POST):
+                        drive_link = request.POST['drive_link_of_documents']
+                        success = ContentWritingTeam.update_event_details(event_id=event_id, event_description=event_description, drive_link=drive_link)
+                    else:
+                        success = ContentWritingTeam.update_event_details(event_id=event_id, event_description=event_description)
+
+                    if(success):
+                        messages.success(request,"Event details updated successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+
+                    if(len(request.FILES.getlist('document')) > 0):
+                        file_list = request.FILES.getlist('document')
+                        success2 = ContentWritingTeam.upload_files(event_id=event_id, file_list=file_list)
+                        if(success2):
+                            messages.success(request,"Files uploaded successfully!")
+                        else:
+                            messages.error(request,"Error occured while uploading files! Please try again later.")
+                            
+                    return redirect("chapters_and_affinity_group:event_edit_content_form_tab", primary, event_id)
+                
+                if('remove2' in request.POST):
+                    id = request.POST.get('remove_doc')
+                    print(id)
+                    if ContentWritingTeam.delete_file(id):
+                        messages.success(request,"File deleted successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+                    return redirect("chapters_and_affinity_group:event_edit_content_form_tab", primary, event_id)
+                
+            event_details = Events.objects.get(id=event_id)
+            form2 = EventForm({'event_description' : event_details.event_description})
+            try:
+                documents_link = Content_Team_Documents_Link.objects.get(event_id = Events.objects.get(pk=event_id))
+            except:
+                documents_link = None
+
+            documents = Content_Team_Document.objects.filter(event_id=event_id)   
+
+            context={
+                'is_branch' : False,
+                'primary' : primary,
+                'event_id' : event_id,
+                'form_adding_note':form,
+                'all_notes_content':all_notes_content,
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'documents' : documents,
+                'media_url' : settings.MEDIA_URL,
+                'event_details' : event_details,
+                'description_form' : form2,
+                'drive_link_of_documents' : documents_link,
+
+            }
+            return render(request,"Events/event_edit_content_and_publications_form_tab_sc_ag.html",context)
+        else:
+            return render(request, 'access_denied.html')
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+    
+@login_required
+@xframe_options_exempt
+def event_preview(request, primary, event_id):
+    ''' This function displays a preview of an event regardless of it's published status '''
+
+    try:
+        has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
+        if(has_access):
+            event = Events.objects.get(id=event_id)
+            event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
+            event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
+
+            context = {
+                'is_branch' : False,
+                'event' : event,
+                'media_url':settings.MEDIA_URL,
+                'event_banner_image' : event_banner_image,
+                'event_gallery_images' : event_gallery_images
+            }
+
+            return render(request, 'Events/event_description_main.html', context)
+        else:
+            return render(request, 'access_denied.html')
+    
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

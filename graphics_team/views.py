@@ -156,46 +156,46 @@ def event_form(request,event_id):
     #Initially loading the events whose  links and images were previously uploaded
     #and can be editible
 
-    # try:
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    has_access = GraphicsTeam_Render_Access.access_for_events(request)
-    if(has_access):
-        #Getting media links and images from database. If does not exist then they are set to none
-        try:
-            graphics_link = Graphics_Link.objects.get(event_id = Events.objects.get(pk=event_id))
-        except:
-            graphics_link = None
-        try:
-            graphic_banner_image = Graphics_Banner_Image.objects.get(event_id = Events.objects.get(pk=event_id))
-            image_number = 1
-        except:
-            graphic_banner_image = None
-            image_number = 0
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        has_access = GraphicsTeam_Render_Access.access_for_events(request)
+        if(has_access):
+            #Getting media links and images from database. If does not exist then they are set to none
+            try:
+                graphics_link = Graphics_Link.objects.get(event_id = Events.objects.get(pk=event_id))
+            except:
+                graphics_link = None
+            try:
+                graphic_banner_image = Graphics_Banner_Image.objects.get(event_id = Events.objects.get(pk=event_id))
+                image_number = 1
+            except:
+                graphic_banner_image = None
+                image_number = 0
 
-        
-        if request.method == "POST":
-
-            if request.POST.get('save'):
-
-                #getting all data from page
-                drive_link_folder = request.POST.get('drive_link_of_graphics')
-                selected_images = request.FILES.get('image')
-                if(GraphicsTeam.add_links_and_images(drive_link_folder,selected_images,event_id)):
-                    messages.success(request,'Saved Changes!')
-                else:
-                    messages.error(request,'Please Fill All Fields Properly!')
-                return redirect("graphics_team:event_form",event_id)
             
-            if request.POST.get('remove_image'):
+            if request.method == "POST":
 
-                #When a particular picture is deleted, it gets the image url from the modal
+                if request.POST.get('save'):
 
-                image_url = request.POST.get('remove_image')
-                if(GraphicsTeam.remove_image(image_url,event_id)):
-                    messages.success(request,'Saved Changes!')
-                else:
-                    messages.error(request,'Something went wrong')
-                return redirect("graphics_team:event_form",event_id)
+                    #getting all data from page
+                    drive_link_folder = request.POST.get('drive_link_of_graphics')
+                    selected_images = request.FILES.get('image')
+                    if(GraphicsTeam.add_links_and_images(drive_link_folder,selected_images,event_id)):
+                        messages.success(request,'Saved Changes!')
+                    else:
+                        messages.error(request,'Please Fill All Fields Properly!')
+                    return redirect("graphics_team:event_form",event_id)
+                
+                if request.POST.get('remove_image'):
+
+                    #When a particular picture is deleted, it gets the image url from the modal
+
+                    image_url = request.POST.get('remove_image')
+                    if(GraphicsTeam.remove_image(image_url,event_id)):
+                        messages.success(request,'Saved Changes!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("graphics_team:event_form",event_id)
 
         context={
             'all_sc_ag':sc_ag,
@@ -214,21 +214,51 @@ def event_form(request,event_id):
     #     # TODO: Make a good error code showing page and show it upon errror
     #     return HttpResponseBadRequest("Bad Request")
     
+
 @login_required
 def graphics_form_add_notes(request,event_id):
 
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
-        has_access = CWPTeam_Render_Access.access_for_events(request)
+        #has_access = CWPTeam_Render_Access.access_for_events(request)
 
         if has_access:
             if(request.method == "POST"):
-                # print(request.POST.get('caption'))
-                print(request.POST.get('LOL'))
-            
+                
+                if request.POST.get('add_link'):
+
+                    form_link = request.POST.get('graphics_form_link')
+                    title =request.POST.get('title')
+                    if GraphicsTeam.add_graphics_form_link(event_id,form_link,title):
+                        messages.success(request,'Saved Changes!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("graphics_team:add_link_event_form",event_id)
+                
+                if request.POST.get('update_link'):
+
+                    form_link = request.POST.get('form_link')
+                    title =request.POST.get('title')
+                    pk = request.POST.get('link_pk')
+                    if GraphicsTeam.update_graphics_form_link(form_link,title,pk):
+                        messages.success(request,'Updated Successfully!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("graphics_team:add_link_event_form",event_id)
+                
+                if request.POST.get('remove_form_link'):
+
+                    id = request.POST.get('remove_link')
+                    if GraphicsTeam.remove_graphics_form_link(id):
+                        messages.success(request,'Deleted Successfully!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("graphics_team:add_link_event_form",event_id)
+                  
             context = {
                 'all_sc_ag':sc_ag,
                 'event_id':event_id,
+                'all_graphics_link':all_graphics_link,
             }
 
             return render(request,"Events/graphics_team_event_form_add_notes.html", context)

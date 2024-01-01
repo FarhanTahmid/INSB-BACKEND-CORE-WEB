@@ -1,7 +1,11 @@
 from django.http import HttpResponseBadRequest
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from central_events.forms import EventForm
+from central_events.models import Events
 from content_writing_and_publications_team.manage_access import CWPTeam_Render_Access
+from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
+from insb_port import settings
 from port.renderData import PortData
 from users.models import Members
 from central_branch.renderData import Branch
@@ -13,7 +17,7 @@ from system_administration.system_error_handling import ErrorHandling
 import logging
 from datetime import datetime
 import traceback
-
+from .forms import Content_Form
 
 logger=logging.getLogger(__name__)
 # Create your views here.
@@ -139,12 +143,54 @@ def event_form(request,event_id):
 
         if has_access:
             if(request.method == "POST"):
-                # print(request.POST.get('caption'))
-                print(request.POST.get('LOL'))
+                if('save' in request.POST):
+                    event_description = request.POST['event_description']
+                    if('drive_link_of_documents' in request.POST):
+                        drive_link = request.POST['drive_link_of_documents']
+                        success = ContentWritingTeam.update_event_details(event_id=event_id, event_description=event_description, drive_link=drive_link)
+                    else:
+                        success = ContentWritingTeam.update_event_details(event_id=event_id, event_description=event_description)
+
+                    if(success):
+                        messages.success(request,"Event details updated successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+
+                    if(len(request.FILES.getlist('document')) > 0):
+                        file_list = request.FILES.getlist('document')
+                        success2 = ContentWritingTeam.upload_files(event_id=event_id, file_list=file_list)
+                        if(success2):
+                            messages.success(request,"Files uploaded successfully!")
+                        else:
+                            messages.error(request,"Error occured while uploading files! Please try again later.")
+                            
+                    return redirect("content_writing_and_publications_team:event_form",event_id)
+                
+                if('remove' in request.POST):
+                    id = request.POST.get('remove_doc')
+                    if ContentWritingTeam.delete_file(id):
+                        messages.success(request,"File deleted successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+                    return redirect("content_writing_and_publications_team:event_form",event_id)
+                
+            event_details = Events.objects.get(id=event_id)
+            form = EventForm({'event_description' : event_details.event_description})
+            try:
+                documents_link = Content_Team_Documents_Link.objects.get(event_id = Events.objects.get(pk=event_id))
+            except:
+                documents_link = None
+
+            documents = Content_Team_Document.objects.filter(event_id=event_id)
             
             context = {
-                'all_sc_ag':sc_ag,
-                'event_id':event_id,
+                'all_sc_ag' : sc_ag,
+                'event_id' : event_id,
+                'event_details' : event_details,
+                'description_form' : form,
+                'drive_link_of_documents' : documents_link,
+                'media_url' : settings.MEDIA_URL,
+                'documents' : documents
             }
 
             return render(request,"Events/content_team_event_form.html", context)
@@ -160,19 +206,51 @@ def event_form(request,event_id):
 
 @login_required
 def event_form_add_notes(request,event_id):
+    ''' This function is used to generate view for add notes of content team. '''
 
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = CWPTeam_Render_Access.access_for_events(request)
-
         if has_access:
-            if(request.method == "POST"):
-                # print(request.POST.get('caption'))
-                print(request.POST.get('LOL'))
+            all_notes_content = ContentWritingTeam.load_note_content(event_id)
+            form = Content_Form()
+            if(request.method == "POST"):               
+                if 'add_note' in request.POST:
+                    
+                    #when the add button for submitting new note is clicked
+                    title = request.POST['title']
+                    note = request.POST['caption']
+
+                    if ContentWritingTeam.creating_note(title,note,event_id):
+                        messages.success(request,"Note created successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+
+                    return redirect("content_writing_and_publications_team:event_form_add_notes",event_id)
+
+                if 'remove' in request.POST:
+                    id = request.POST.get('remove_note')
+                    if ContentWritingTeam.remove_note(id):
+                        messages.success(request,"Note deleted successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+                    return redirect("content_writing_and_publications_team:event_form_add_notes",event_id)  
+
+                if 'update_note' in request.POST:
+                    id = request.POST['update_note']
+                    title = request.POST['title']
+                    note = request.POST['caption']
+                    if(ContentWritingTeam.update_note(id, title, note)):
+                        messages.success(request,"Note updated successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+                    return redirect("content_writing_and_publications_team:event_form_add_notes",event_id)
             
             context = {
                 'all_sc_ag':sc_ag,
                 'event_id':event_id,
+                'form_adding_note':form,
+                'all_notes_content':all_notes_content,
             }
 
             return render(request,"Events/content_team_event_form_add_notes.html", context)

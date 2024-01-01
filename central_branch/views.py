@@ -7,9 +7,12 @@ from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from central_events.models import Event_Category, Event_Venue, Events, SuperEvents
+from content_writing_and_publications_team.forms import Content_Form
+from content_writing_and_publications_team.renderData import ContentWritingTeam
 from events_and_management_team.renderData import Events_And_Management_Team
 from graphics_team.models import Graphics_Banner_Image, Graphics_Link
 from graphics_team.renderData import GraphicsTeam
+from main_website.renderData import HomepageItems
 from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
 from system_administration.system_error_handling import ErrorHandling
@@ -36,6 +39,7 @@ from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from central_events.forms import EventForm
 from .forms import *
 from .website_render_data import MainWebsiteRenderData
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -443,34 +447,56 @@ def others(request):
     return render(request,"others.html")
 
 @login_required
-def add_research(request):
+def manage_research(request):
 
-
+    # load all research papers
+    researches = Research_Papers.objects.all().order_by('-publish_date')
     '''function for adding new Research paper'''
-
-
     if request.method == "POST":
+        add_research_form=ResearchPaperForm(request.POST,request.FILES)
+        add_research_category_form=ResearchCategoryForm(request.POST)
 
-        '''Checking to see if all the mandatory fields have been entered by user or not once
-        the submit button has been clicked. If not then sending error message to the page else
-        render data to the page'''
-        
-        if request.POST.get('title') == "" or request.POST.get('author_name') == "" or request.POST.get('url')=="":
-            return render(request,"research_papers.html",{
-                "error":True
-            })
-        else:
-            title = request.POST.get('title')
-            author_names = request.POST.get('author_name')
-            research_banner_pic = request.POST.get('research_banner_picture')
-            url = request.POST.get('url')
-            save_research_paper = Research_Papers(title=title,research_banner_picture=research_banner_pic,author_names=author_names,publication_link=url)
-            save_research_paper.save()
-            return render(request,"research_papers.html",{
-                "saved":True
-            })
+        if(request.POST.get('add_research')):
+            if(add_research_form.is_valid()):
+                add_research_form.save()
+                messages.success(request,"A new Research Paper was added!")
+                return redirect('central_branch:manage_research')
+        if(request.POST.get('add_research_category')):
+            if(add_research_category_form.is_valid()):
+                add_research_category_form.save()
+                messages.success(request,"A new Research Category was added!")
+                return redirect('central_branch:manage_research')
+        if(request.POST.get('remove_research')):
+            MainWebsiteRenderData.delete_research_paper(request=request)
+            return redirect('central_branch:manage_research')
+    else:
+        form=ResearchPaperForm
+        form2=ResearchCategoryForm
+    context={
+        'form':form,
+        'form2':form2,'all_researches':researches,
+    }
+    return render(request,"Manage Website/Publications/Research Paper/manage_research_paper.html",context=context)
 
-    return render(request,"research_papers.html")
+@login_required
+def update_researches(request,pk):
+    # get the research and Form
+    research_to_update=get_object_or_404(Research_Papers,pk=pk)
+    if(request.method=="POST"):
+        if(request.POST.get('update_research_paper')):
+            form=ResearchPaperForm(request.POST,request.FILES,instance=research_to_update)
+            if(form.is_valid()):
+                form.save()
+                messages.info(request,"Research Paper Informations were updated")
+                return redirect('central_branch:manage_research')
+    else:
+        form=ResearchPaperForm(instance=research_to_update)
+    
+    context={
+        'form':form,
+        'research_paper':research_to_update,
+    }
+    return render(request,"Manage Website/Publications/Research Paper/update_research_papers.html",context=context)
 
 @login_required
 def manage_blogs(request):
@@ -513,7 +539,7 @@ def manage_blogs(request):
 
 @login_required
 def update_blogs(request,pk):
-    # get the achievement and form
+    # get the blog and form
     blog_to_update=get_object_or_404(Blog,pk=pk)
     if(request.method=="POST"):
         if(request.POST.get('update_blog')):
@@ -531,69 +557,6 @@ def update_blogs(request,pk):
     }
 
     return render(request,"Manage Website/Publications/Blogs/update_blogs.html",context=context)
-
-
-@login_required
-def add_blogs(request):
-
-    '''function to add new blog to the page'''
-
-    load_blog_category = Blog_Category.objects.all()
-    load_Chapters_Society_And_Affinity_Groups = Chapters_Society_and_Affinity_Groups.objects.all()
-
-    '''When the submit button is clicked'''
-
-    if request.method=="POST":
-
-        '''Checking for essential fields to be filled. If incomplete, error will be loaded
-        on the form page'''
-
-        if request.POST.get('title') == "" or request.POST.get('date') == ""  or request.POST.get('Pname') == "" or request.POST.get('description')== "":
-            return render(request,"add_blogs.html",{
-                "error":True,
-                "category":load_blog_category,
-                "chapterSocietyAndAffinityGroups":load_Chapters_Society_And_Affinity_Groups
-            }) 
-        else:
-            title =  request.POST.get('title')
-            date = request.POST.get('date')
-            blog_pic = request.FILES['filename']
-            category = request.POST.get('category')
-            publisherName = request.POST.get('Pname')
-            chapterSocietyAndAffinityGroups = request.POST.get('chapterSocietyAndAffinityGroups')
-            description = request.POST.get('description')
-
-            '''Checking conditions regarding when either of the two fields is empty or full
-            and saving the data to the database on the basis of the conditions, where other fields
-            apart from category and chapterSocietyAndAffinityGroups is mandatorys'''
-
-            if category=="" and chapterSocietyAndAffinityGroups!="":
-                chapterSocietyAndAffinityGroups = Chapters_Society_and_Affinity_Groups.objects.get(id=chapterSocietyAndAffinityGroups)
-                save_blog = Blog(title=title,date=date,blog_banner_picture=blog_pic,publisher = publisherName,chapter_society_affinity=chapterSocietyAndAffinityGroups,description=description)
-                save_blog.save()
-            elif category!="" and chapterSocietyAndAffinityGroups=="":
-                category = Blog_Category.objects.get(id=category)
-                save_blog = Blog(title=title,date=date,blog_banner_picture=blog_pic,publisher = publisherName,category=category,description=description)
-                save_blog.save()
-            elif category=="" and chapterSocietyAndAffinityGroups=="":
-                    save_blog = Blog(title=title,date=date,blog_banner_picture=blog_pic,publisher = publisherName,description=description)
-                    save_blog.save()
-            else:
-                category = Blog_Category.objects.get(id=category)
-                chapterSocietyAndAffinityGroups = Chapters_Society_and_Affinity_Groups.objects.get(id=chapterSocietyAndAffinityGroups)
-                save_blog = Blog(title=title,date=date,blog_banner_picture=blog_pic,publisher = publisherName,category=category,chapter_society_affinity=chapterSocietyAndAffinityGroups,description=description)
-                save_blog.save()
-            
-            return render(request,"add_blogs.html",{
-                "saved":True,
-                "category":load_blog_category,
-                "chapterSocietyAndAffinityGroups":load_Chapters_Society_And_Affinity_Groups
-            })
-    return render(request,"add_blogs.html",{
-        "category":load_blog_category,
-        "chapterSocietyAndAffinityGroups":load_Chapters_Society_And_Affinity_Groups
-    })
-
 
 from main_website.models import HomePageTopBanner
 @login_required
@@ -768,6 +731,13 @@ def update_news(request,pk):
 
 
 @login_required
+def manage_magazines(request):
+    return render(request,'Manage Website/Publications/Magazine/manage_magazine.html')
+
+
+
+
+@login_required
 def manage_view_access(request):
     # get access of the page first
 
@@ -836,9 +806,9 @@ def manage_view_access(request):
 def event_control_homepage(request):
     # This function loads all events and super events in the event homepage table
     
-    has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
+        has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
 
-    try:
+    # try:
         is_branch = True
         sc_ag=PortData.get_all_sc_ag(request=request)
         all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(1)
@@ -868,11 +838,11 @@ def event_control_homepage(request):
                 return redirect('central_branch:event_control')
             
         return render(request,'Events/event_homepage.html',context)
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+    # except Exception as e:
+    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+    #     # TODO: Make a good error code showing page and show it upon errror
+    #     return HttpResponseBadRequest("Bad Request")
     
 
 @login_required
@@ -1337,24 +1307,119 @@ def event_edit_graphics_form_tab(request, event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
-
+    
 @login_required
-def event_edit_content_form_tab(request,event_id):
-    ''' This function loads the content tab page of events '''
+def event_edit_graphics_form_links_sub_tab(request,event_id):
+    ''' This function loads the graphics form link page of events '''
 
      #Initially loading the events whose  links and images were previously uploaded
     #and can be editible
 
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
+        all_graphics_link = GraphicsTeam.get_all_graphics_form_link(event_id)
         #Get event details from databse
         # event_details = Events.objects.get(pk=event_id)
         # has_access = Branch.event_page_access(request)
         if(True):
 
+            if request.POST.get('add_link'):
+
+                    form_link = request.POST.get('graphics_form_link')
+                    title =request.POST.get('title')
+                    if GraphicsTeam.add_graphics_form_link(event_id,form_link,title):
+                        messages.success(request,'Saved Changes!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("central_branch:event_edit_graphics_form_links_sub_tab",event_id)
+            
+            if request.POST.get('update_link'):
+
+                    form_link = request.POST.get('form_link')
+                    title =request.POST.get('title')
+                    pk = request.POST.get('link_pk')
+                    if GraphicsTeam.update_graphics_form_link(form_link,title,pk):
+                        messages.success(request,'Updated Successfully!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("central_branch:event_edit_graphics_form_links_sub_tab",event_id)
+
+            if request.POST.get('remove_form_link'):
+
+                    id = request.POST.get('remove_link')
+                    if GraphicsTeam.remove_graphics_form_link(id):
+                        messages.success(request,'Deleted Successfully!')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect("central_branch:event_edit_graphics_form_links_sub_tab",event_id)
+
+
             context={
                 'is_branch' : True,
                 'event_id' : event_id,
+                'all_sc_ag':sc_ag,
+                'all_graphics_link':all_graphics_link,
+
+            }
+            return render(request,"Events/event_edit_graphics_form_links_sub_tab.html",context)
+        else:
+            return render(request, 'access_denied2.html')
+        
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+
+@login_required
+def event_edit_content_form_tab(request,event_id):
+    ''' This function loads the content tab page of events '''
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # has_access = Branch.event_page_access(request)
+        if(True):
+            all_notes_content = ContentWritingTeam.load_note_content(event_id)
+            form = Content_Form()
+            if(request.method == "POST"):               
+                if 'add_note' in request.POST:
+                    
+                    #when the add button for submitting new note is clicked
+                    title = request.POST['title']
+                    note = request.POST['caption']
+
+                    if ContentWritingTeam.creating_note(title,note,event_id):
+                        messages.success(request,"Note created successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+
+                    return redirect("central_branch:event_edit_content_form_tab",event_id)
+
+                if 'remove' in request.POST:
+                    id = request.POST.get('remove_note')
+                    if ContentWritingTeam.remove_note(id):
+                        messages.success(request,"Note deleted successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+                    return redirect("central_branch:event_edit_content_form_tab",event_id)  
+
+                if 'update_note' in request.POST:
+                    print(request.POST)
+                    id = request.POST['update_note']
+                    title = request.POST['title']
+                    note = request.POST['caption']
+                    if(ContentWritingTeam.update_note(id, title, note)):
+                        messages.success(request,"Note updated successfully!")
+                    else:
+                        messages.error(request,"Error occured! Please try again later.")
+                    return redirect("central_branch:event_edit_content_form_tab",event_id)
+
+            context={
+                'is_branch' : True,
+                'event_id' : event_id,
+                'form_adding_note':form,
+                'all_notes_content':all_notes_content,
                 'all_sc_ag':sc_ag,
 
             }
@@ -1362,6 +1427,32 @@ def event_edit_content_form_tab(request,event_id):
         else:
             return render(request, 'access_denied2.html')
         
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+@login_required
+@xframe_options_exempt
+def event_preview(request, event_id):
+    ''' This function displays a preview of an event regardless of it's published status '''
+
+    try:
+        event = Events.objects.get(id=event_id)
+        event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
+        event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
+
+        context = {
+            'is_branch' : True,
+            'event' : event,
+            'media_url':settings.MEDIA_URL,
+            'event_banner_image' : event_banner_image,
+            'event_gallery_images' : event_gallery_images
+        }
+
+        return render(request, 'Events/event_description_main.html', context)
+    
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

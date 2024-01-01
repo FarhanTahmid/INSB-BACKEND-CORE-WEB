@@ -31,17 +31,31 @@ class BannerPictureWithStat(models.Model):
     def __str__(self) -> str:
         return str(self.pk)
 
+class ResearchCategory(models.Model):
+    category=models.CharField(null=False,blank=False,max_length=100)
+
+    class Meta:
+        verbose_name='Research Category'
+    def __str__(self) -> str:
+        return str(self.category)
+
 #Table for Research Papers
 class Research_Papers(models.Model):
-    title = models.CharField(null=False,blank=False,max_length=500)
-    research_banner_picture = models.ImageField(null=False,blank=False,default='main_website/Research_pictures/default_research_banner_picture.png',upload_to='main_website/Research_pictures/')
-    author_names = models.CharField(null=False,blank=False,max_length=1000)
+    title = models.CharField(null=False,blank=False,max_length=200)
+    category=models.ForeignKey(ResearchCategory,null=True,blank=True,on_delete=models.CASCADE)
+    research_banner_picture = models.ImageField(null=False,blank=False,default='main_website_files/Research_pictures/default_research_banner_picture.png',upload_to='main_website_files/Research_pictures/')
+    author_names = RichTextField(null=False,blank=False,max_length=300)
+    short_description=RichTextField(null=False,blank=False,max_length=500)
+    publish_date=models.DateField(null=False,blank=False,help_text = "<br>Please use the following format: <em>YYYY-MM-DD</em>.")
     publication_link = models.URLField(null=False)
+    publish_research=models.BooleanField(null=False,blank=False,default=False)
 
     class Meta:
         verbose_name = "Research Paper"
     def __str__(self):
         return f"{self.title} {self.author_names}"
+
+
     
 #Table fot blog category
 class Blog_Category(models.Model):
@@ -91,3 +105,18 @@ class News(models.Model):
         verbose_name="News"
     def __str__(self) -> str:
         return str(self.pk)
+
+# Table for Magazine
+class Magazines(models.Model):
+    magazine_title=models.CharField(null=False,blank=False,max_length=100)
+    published_by=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE)
+    publish_date=models.DateField(null=False,blank=False,help_text = "<br>Please use the following format: <em>YYYY-MM-DD</em>.")
+    magazine_short_description=RichTextField(null=False,blank=False,max_length=400)
+    magazine_picture=ResizedImageField(null=False,blank=False,upload_to="main_website_files/magazine_pictures/")
+    magazine_file=models.FileField(null=False,blank=False,upload_to="main_website_files/Magazine/")
+    
+    class Meta:
+        verbose_name="Magazine"
+    def __str__(self) -> str:
+        return self.magazine_title
+

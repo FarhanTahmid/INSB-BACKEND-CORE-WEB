@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import Members,Alumni_Members,ResetPasswordTokenTable,User
+from . models import Members,Alumni_Members,ResetPasswordTokenTable,User_IP_Address
 
 # Register your models here.
 @admin.register(Members)
@@ -25,6 +25,6 @@ class ResetPasswordTokenTable(admin.ModelAdmin):
     list_display=[
         'user','token'
     ]
-@admin.register(User)
+@admin.register(User_IP_Address)
 class User(admin.ModelAdmin):
     list_display = ['ip_address','created_at']
