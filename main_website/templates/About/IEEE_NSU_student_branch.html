@@ -62,27 +62,26 @@
 
         .chapter-card {
             width: 249px;
-            height: 298px;
+            height: 312px;
             border-radius: 6px;
             text-align: center;
             font-weight: 600;
             overflow: hidden;
+            background: #002855;
+            border: 3px solid #002855;
+            cursor: pointer;
+            transition: all .3s ;
         }
 
         .chapter-card img {
-            width: 320px;
-            height: 370px;
-            object-fit: cover;
-            object-position: left;
-        }
-
-        .chapter-card div {
+            width: 100%;
+            height: 216px;
+            object-fit: contain;
+            background-color: #fff;
             transition: all 1s;
+
         }
 
-        .chapter-card div:hover {
-            scale: 1.1;
-        }
 
         .chapter-card:hover {
             box-shadow: 0px 0px 15px #002855;
@@ -90,9 +89,7 @@
 
         .chapter-card a {
             text-decoration: none;
-            color: #f9f9f9;
-            position: relative;
-            top: -134px;
+            color: white;
         }
 
         .chapter-card a:hover {
@@ -100,11 +97,10 @@
         }
 
         .chapter-card h4 {
-            margin: 0px 20px;
-            color: #f9f9f9;
-            font-weight: bold;
-            position: relative;
-            bottom: 231px;
+            margin: 16px 0px;
+            color: white;
+            font-weight: ;
+            
         }
 
         .mission,
@@ -185,7 +181,7 @@
             border: none;
             color: white;
             padding: 14px 40px;
-            margin: 50px -147px;
+            margin: 47px -147px;
             cursor: pointer;
             border-radius: 70px;
             transition: all .3s ease-in-out;
@@ -432,35 +428,40 @@
                 </div>
                 <div class="chapter-container">
                     <div class="chapter-card">
+                        <div><img src="https://ieeensusb.org/wp-content/uploads/2021/04/admin-ajax-1-300x300.png"
+                                alt=""></div>
                         <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                            <h4>IEEE NSU IAS SBC</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
-                    <div class="chapter-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                            <h4>IEEE NSU PES SBC</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
-                    <div class="chapter-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
                             <h4>IEEE NSU RAS SBC</h4>
-                            <a href="#">Read More</a>
+                        </div>
+                        <div> <a href="#">Read More</a>
                         </div>
                     </div>
                     <div class="chapter-card">
+                        <div> <img src="https://ieeensusb.org/wp-content/uploads/2021/04/PES-1.png" alt="">
+                        </div>
                         <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
+                            <h4>IEEE NSU PES SBC</h4>
+                        </div>
+                        <div> <a href="#">Read More</a>
+                        </div>
+                    </div>
+                    <div class="chapter-card">
+                        <div> <img src="https://ieeensusb.org/wp-content/uploads/2021/04/IAS.png" alt="">
+                        </div>
+                        <div>
+                            <h4>IEEE NSU IAS SBC</h4>
+                        </div>
+                        <div> <a href="#">Read More</a>
+                        </div>
+                    </div>
+                    <div class="chapter-card">
+                        <div> <img src="https://ieeensusb.org/wp-content/uploads/2021/04/admin-ajax-2-300x300.png"
                                 alt="">
+                        </div>
+                        <div>
                             <h4>IEEE NSU WIE SBC</h4>
-                            <a href="#">Read More</a>
+                        </div>
+                        <div> <a href="#">Read More</a>
                         </div>
                     </div>
                 </div>
@@ -623,7 +624,7 @@
         </section>
 
         <section class="centering" style="background-color:#002855;">
-            <section class="join-us max-width">
+            <section class="join-us max-width" style="margin-bottom: -3px;">
                 <div>
                     <div style="margin-bottom: -38px;">
                         <h2>Join us for new <span style="color: #FFC72C;">Adventure</span></h2>
@@ -632,7 +633,6 @@
                         <p>Do you want to unleash your true potential? Join us and become a part of a distinguished
                             society that builds and boosts brilliance.</p>
                     </div>
-
                 </div>
                 <div class="join-btn">
                     <button>Join Now</button>
