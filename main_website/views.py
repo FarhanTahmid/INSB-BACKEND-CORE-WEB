@@ -18,7 +18,7 @@ from .renderData import HomepageItems
 from users.renderData import PanelMembersData
 from users import renderData as userData
 import json,requests
-
+from insb_port import settings
 
 logger=logging.getLogger(__name__)
 
@@ -39,6 +39,7 @@ def homepage(request):
         'event_count':HomepageItems.getEventCount(),
         'recent_news':get_recent_news,
         'recent_blogs':get_recent_blogs,
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
     }
     return render(request,"LandingPage/homepage.html",context)
 
@@ -95,13 +96,18 @@ def event_homepage(request):
         all_events = HomepageItems.load_all_events(True)
         latest_five_events = HomepageItems.load_all_events(False)
         date_and_event = HomepageItems.get_event_for_calender()
+        upcoming_event = HomepageItems.get_upcoming_event()
+        upcoming_event_banner_picture = HomepageItems.get_upcoming_event_banner_picture(upcoming_event)
 
 
         context = {
             'all_events':all_events,
             'media_url':settings.MEDIA_URL,
+            'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'latest_five_event':latest_five_events,
             'date_and_event':date_and_event,
+            'upcoming_event':upcoming_event,
+            'upcoming_event_banner_picture':upcoming_event_banner_picture,
         }
 
         return render(request,'Events/events_homepage.html',context)
@@ -132,6 +138,7 @@ def event_details(request,event_id):
         return redirect('main_website:event_homepage')
 
 
+
 # ###################### ACHIEVEMENTS ##############################
 
 def achievements(request):
@@ -140,6 +147,8 @@ def achievements(request):
     context={
         'page_title':"Achievements",
         'achievements':load_all_achievements,
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+
     }
     
     return render(request,"Activities/achievements.html",context=context)
@@ -197,6 +206,8 @@ def news(request):
         'all_news':load_all_news,
         'all_online_news':all_online_news,
         'has_online_news':has_online_news,
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+
         
     }
     return render(request,'Activities/news.html',context=context)
@@ -220,6 +231,8 @@ def rasPage(request):
         'page_title':page_title,
         'secondary_para':secondary_para,
         'about_ras':getRasAbout,
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+
     }
     return render(request,'Society_AG/ras.html',context=context)
 
@@ -236,6 +249,7 @@ def blogs(request):
     context={
         'page_title':"Blogs",
         'blogs':get_all_blog,
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
     }
     return render(request,"Publications/Blog/blog.html",context=context)
 
@@ -327,7 +341,8 @@ def current_panel_members(request):
             'chair':branch_chair,
             'eb':branch_eb,
             'sc_ag_chair':sc_ag_chair,
-            'page_title':"Current Panel of IEEE NSU SB"
+            'page_title':"Current Panel of IEEE NSU SB",
+            'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         }
     else:
         has_current_panel=False
@@ -426,6 +441,7 @@ def officers_page(request):
             'teams':get_teams,
             'co_ordinators':co_ordinators,
             'incharges':incharges,
+            'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         }
     return render(request,'Members/Officers/officer_page.html',context=context)
 
@@ -446,6 +462,7 @@ def team_based_officers_page(request,team_primary):
         context={
             'page_title':f"Officers - {team_name}",
             'teams':get_teams,
+            'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             }
     else:
         # get team members
@@ -464,6 +481,7 @@ def team_based_officers_page(request,team_primary):
             'teams':get_teams,
             'co_ordinators':co_ordinators,
             'incharges':incharges,
+            'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         }
     return render(request,'Members/Officers/officer_page.html',context=context)
 
@@ -489,8 +507,24 @@ def volunteers_page(request):
             'page_title':'Volunteers of IEEE NSU Student Branch',
             'core_volunteers':core_volunteers,
             'team_volunteers':team_volunteers,
+            'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         }
     return render(request,'Members/Volunteers/volunteers_page.html',context=context)
+
+
+def team_intros(request,team_primary):
+    
+    # get team details
+    team = PortData.get_team_details(team_primary=team_primary,request=request)
+    
+    
+    context={
+        'page_title':team.team_name +' Team',
+        'team':team,
+    }
+    return render(request,"Members/Teams/team.html",context=context)
+
+
 
 def all_members(request):
     # get all registered members of INSB
@@ -505,5 +539,6 @@ def all_members(request):
         'female_count':Members.objects.filter(gender="Female").count(),
         'session_name':recruitment_stat[0],
         'session_recruitee':recruitment_stat[1],
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
     }
     return render(request,'Members/All Members/all_members.html',context=context)
