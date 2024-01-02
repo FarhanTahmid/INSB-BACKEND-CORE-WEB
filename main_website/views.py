@@ -548,3 +548,6 @@ def ieee_bd_section(request):
 
 def ieee_student(request):
     return render(request, 'About/IEEE_NSU_student_branch.html')
+
+def about_student(request):
+    return render(request, 'About_IEEE.html')
