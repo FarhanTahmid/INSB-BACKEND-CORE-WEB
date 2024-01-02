@@ -40,6 +40,8 @@ from central_events.forms import EventForm
 from .forms import *
 from .website_render_data import MainWebsiteRenderData
 from django.views.decorators.clickjacking import xframe_options_exempt
+import port.forms as PortForms
+
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -123,6 +125,9 @@ def team_details(request,primary,name):
     insb_members=renderData.Branch.load_all_insb_members()
     members_to_add=[]
     position=12 #assigning default to volunteer
+
+    team_to_update=get_object_or_404(Teams,primary=primary)
+
     if request.method=='POST':
         if(request.POST.get('add_to_team')):
             #Checking if a button is clicked
@@ -171,7 +176,18 @@ def team_details(request,primary,name):
             all_memebers_in_team.update(team=None,position = Roles_and_Position.objects.get(id=13))
             messages.info(request,"The whole team was reset. Previous Members are preserved in their respective Panel.")
             return redirect('central_branch:team_details',primary,name)
-        
+
+        if(request.POST.get('update_team_details')):
+            '''Update Team Details'''
+            team_update_form=PortForms.TeamForm(request.POST,request.FILES,instance=team_to_update)
+            if(team_update_form.is_valid()):
+                team_update_form.save()
+                messages.success(request,"Team information was updated!")
+                return redirect('central_branch:team_details',primary,name)
+    
+    else:
+        team_update_form=PortForms.TeamForm(instance=team_to_update)
+
     context={
         'team_id':primary,
         'team_name':name,
@@ -179,6 +195,7 @@ def team_details(request,primary,name):
         'positions':positions,
         'insb_members':insb_members,
         'current_panel':current_panel,
+        'team_form':team_update_form
         
     }
     if(has_access):

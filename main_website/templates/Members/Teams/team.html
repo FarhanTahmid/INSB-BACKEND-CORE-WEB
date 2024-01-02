@@ -98,268 +98,28 @@
             <div class="col-md-6 my-2">
                 <h4 class="p-3 bg-light mb-5 text-center border rounded fw-bold">{{team.team_name}} Team</h4>
                 <div class="w-75 m-auto">
+                    {% block team_coordinators %}
+                        {% include "Members/Teams/team_coordinators.html" %}
+                    {% endblock team_coordinators %}
                     
-                    <div>
-                        <div class="p-2 h5 border fw-bold text-center mb-4 rounded">
-                            <span class="">Sub-Executive</span>
-                        </div>
-                        <div id="subebCarousel" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner ">
-                                <div class="carousel-item active" data-bs-interval="3000">
-                                    <div class="card shadow my-3">
-                                            
-                                        <img height="310px" width="470px" src="https://thumbs.dreamstime.com/blog/2023/03/ai-generated-art-real-art-my-two-cents-87048-image271553088.jpg" class="img-fluid">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Md. Fazlul Karim</h5>
-                                            <div class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis, a...</div>
-                                            <div class="my-4">
-                                                <a class="h4 me-2" href=""><i class="fa-brands fa-linkedin-in"></i></a>
-                                                <a class="h4 me-2" href=""><i class="fa-brands fa-facebook"></i></a>
-                                                <a class="h4 me-2" href=""><i class="fa-brands fa-twitter"></i></a>
-                                                <a class="h4 me-2" href=""><i class="fa-solid fa-envelope"></i></a>
-                                            </div>
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-                                <div class="carousel-item" data-bs-interval="3000">
-
-                                    <div class="card shadow my-3">
-                                        <img height="310px" width="470px" src="https://thumbs.dreamstime.com/blog/2023/03/ai-generated-art-real-art-my-two-cents-87048-image271553088.jpg" class="img-fluid">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Md. Fazlul Karim</h5>
-                                            <div class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis, a...</div>
-                                            <div class="my-4">
-                                                <a class="h4 me-2" href=""><i class="fa-brands fa-linkedin-in"></i></a>
-                                                <a class="h4 me-2" href=""><i class="fa-brands fa-facebook"></i></a>
-                                                <a class="h4 me-2" href=""><i class="fa-brands fa-twitter"></i></a>
-                                                <a class="h4 me-2" href=""><i class="fa-solid fa-envelope"></i></a>
-                                            </div>
-                            
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <!-- Rest class="carousel-item" div -->
-
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#subebCarousel" data-bs-slide="prev">
-                                <span style="border-radius: 50%;" class="carousel-control-prev-icon bg-dark p-3" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button" data-bs-target="#subebCarousel" data-bs-slide="next">
-                                <span style="border-radius: 50%;"  class="carousel-control-next-icon bg-dark p-3" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </div>
-            <div class="col-md-6 my-2">
-                <div class="border rounded">
-                    <img class="img-fluid" src="{% static 'Screenshot (2118).png'%} " alt="">
-                </div>
-                <div class="p-3 my-2 border rounded">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non rem harum illum dicta quis fugit quam nihil nobis voluptatem iusto?
-                </div>
-            </div>
+            {% block team_pic %}
+                {% include "Members/Teams/team_picture.html" %}
+            {% endblock team_pic %}
+
         </div>
 
         <div class="inchargeDiv">
-            <div class="p-5 my-5 h5">
-                <div class=" p-2  border fw-bold text-center mb-4 rounded">
-                    <span class="">Incharges</span>
-                </div>
-                
-
-
-
-            <div class="col-md-6 mx-auto">
-                <div id="inchargeCarousel" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active" data-bs-interval="3000">
-                            <div class="card shadow my-3">
-                                    
-                                <img height="310px" width="470px" src="https://thumbs.dreamstime.com/blog/2023/03/ai-generated-art-real-art-my-two-cents-87048-image271553088.jpg" class="img-fluid">
-                                <div class="card-body">
-                                    <h4 class="card-title">Md. Fazlul Karim</h5>
-                                    <div class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis, a...</div>
-                                    <div class="my-4">
-                                        <a class="h4 me-2" href=""><i class="fa-brands fa-linkedin-in"></i></a>
-                                        <a class="h4 me-2" href=""><i class="fa-brands fa-facebook"></i></a>
-                                        <a class="h4 me-2" href=""><i class="fa-brands fa-twitter"></i></a>
-                                        <a class="h4 me-2" href=""><i class="fa-solid fa-envelope"></i></a>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <div class="carousel-item" data-bs-interval="3000">
-
-                            <div class="card shadow my-3">
-                                <img height="310px" width="470px" src="https://thumbs.dreamstime.com/blog/2023/03/ai-generated-art-real-art-my-two-cents-87048-image271553088.jpg" class="img-fluid">
-                                <div class="card-body">
-                                    <h4 class="card-title">Md. Fazlul Karim</h5>
-                                    <div class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis, a...</div>
-                                    <div class="my-4">
-                                        <a class="h4 me-2" href=""><i class="fa-brands fa-linkedin-in"></i></a>
-                                        <a class="h4 me-2" href=""><i class="fa-brands fa-facebook"></i></a>
-                                        <a class="h4 me-2" href=""><i class="fa-brands fa-twitter"></i></a>
-                                        <a class="h4 me-2" href=""><i class="fa-solid fa-envelope"></i></a>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <!-- Rest class="carousel-item" div -->
-
-                    </div>
-
-                    <button class="carousel-control-prev" type="button" data-bs-target="#inchargeCarousel" data-bs-slide="prev">
-                        <span style="border-radius: 50%;" class="carousel-control-prev-icon bg-dark p-3" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-
-                    <button class="carousel-control-next" type="button" data-bs-target="#inchargeCarousel" data-bs-slide="next">
-                        <span style="border-radius: 50%;"  class="carousel-control-next-icon bg-dark p-3" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            </div>
-
-
-
-
-            </div>
+            {% block team_incharges %}
+                {% include "Members/Teams/team_incharges.html" %}
+            {% endblock team_incharges %}
         </div>
 
         <div>
-            <div class="w-50 m-auto p-4 mt-5">
-                <div class="p-2 h5 border fw-bold text-center mb-4 rounded">
-                    <span class="">Volunteers</span>
-                </div>
-            </div>
-
-
-            <div class="row">
-                <div class="col-md-4">
-                    
-                    <div class="card shadow my-3">
-                        <img height="310px" width="470px" src="https://thumbs.dreamstime.com/blog/2023/03/ai-generated-art-real-art-my-two-cents-87048-image271553088.jpg" class="img-fluid">
-                        <div class="card-body">
-                            <h4 class="card-title">Md. Fazlul Karim</h5>
-                            <div class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis, a...</div>
-                            <div class="my-4">
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-linkedin-in"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-facebook"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-twitter"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-solid fa-envelope"></i></a>
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-md-4">
-                    <div class="card shadow my-3">
-                        <img height="310px" width="470px" src="https://thumbs.dreamstime.com/blog/2023/03/ai-generated-art-real-art-my-two-cents-87048-image271553088.jpg" class="img-fluid">
-                        <div class="card-body">
-                            <h4 class="card-title">Md. Fazlul Karim</h5>
-                            <div class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis, a...</div>
-                            <div class="my-4">
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-linkedin-in"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-facebook"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-twitter"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-solid fa-envelope"></i></a>
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="card shadow my-3">
-                        <img height="310px" width="470px" src="https://thumbs.dreamstime.com/blog/2023/03/ai-generated-art-real-art-my-two-cents-87048-image271553088.jpg" class="img-fluid">
-                        <div class="card-body">
-                            <h4 class="card-title">Md. Fazlul Karim</h5>
-                            <div class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis, a...</div>
-                            <div class="my-4">
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-linkedin-in"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-facebook"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-twitter"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-solid fa-envelope"></i></a>
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-md-4">
-                    <div class="card shadow my-3">
-                        <img height="310px" width="470px" src="https://thumbs.dreamstime.com/blog/2023/03/ai-generated-art-real-art-my-two-cents-87048-image271553088.jpg" class="img-fluid">
-                        <div class="card-body">
-                            <h4 class="card-title">Md. Fazlul Karim</h5>
-                            <div class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis, a...</div>
-                            <div class="my-4">
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-linkedin-in"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-facebook"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-twitter"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-solid fa-envelope"></i></a>
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-md-4">
-                    <div class="card shadow my-3">
-                        <img height="310px" width="470px" src="https://thumbs.dreamstime.com/blog/2023/03/ai-generated-art-real-art-my-two-cents-87048-image271553088.jpg" class="img-fluid">
-                        <div class="card-body">
-                            <h4 class="card-title">Md. Fazlul Karim</h5>
-                            <div class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis, a...</div>
-                            <div class="my-4">
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-linkedin-in"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-facebook"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-twitter"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-solid fa-envelope"></i></a>
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-md-4">
-                    <div class="card shadow my-3">
-                        <img height="310px" width="470px" src="https://thumbs.dreamstime.com/blog/2023/03/ai-generated-art-real-art-my-two-cents-87048-image271553088.jpg" class="img-fluid">
-                        <div class="card-body">
-                            <h4 class="card-title">Md. Fazlul Karim</h5>
-                            <div class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis, a...</div>
-                            <div class="my-4">
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-linkedin-in"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-facebook"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-brands fa-twitter"></i></a>
-                                <a class="h4 me-2" href=""><i class="fa-solid fa-envelope"></i></a>
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% block team_volunteers %}
+                {% include "Members/Teams/team_volunteers.html" %}
+            {% endblock team_volunteers %}
         </div>
 
 

@@ -1,0 +1,12 @@
+{% load static %}
+
+{% block team_pic %}
+<div class="col-md-6 my-2">
+    <div class="border rounded">
+        <img class="img-fluid" src="/media_files/{{team.team_picture}}" alt="">
+    </div>
+    <div class="p-3 my-2 border rounded">
+        {{team.team_short_description |safe}}
+    </div>
+</div>
+{% endblock team_pic %}

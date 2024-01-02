@@ -101,6 +101,7 @@ def event_homepage(request):
 
 
         context = {
+            'page_title':"Events - IEEE NSU Student Branch",
             'all_events':all_events,
             'media_url':settings.MEDIA_URL,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
@@ -517,10 +518,28 @@ def team_intros(request,team_primary):
     # get team details
     team = PortData.get_team_details(team_primary=team_primary,request=request)
     
+    team_co_ordinators=[]
+    team_incharges=[]
+    team_volunteers=[]
+
+    get_team_members=PortData.get_specific_team_members_of_current_panel(request=request,team_primary=team.primary)
+    if(get_team_members):
+        for i in get_team_members:
+            if(i.position.is_officer):
+                if(i.position.is_co_ordinator):
+                    team_co_ordinators.append(i)
+                else:
+                    team_incharges.append(i)
+            elif(i.position.is_volunteer):
+                team_volunteers.append(i)    
     
     context={
         'page_title':team.team_name +' Team',
+        'page_subtitle':"IEEE NSU Student Branch",
         'team':team,
+        'co_ordinators':team_co_ordinators,
+        'incharges':team_incharges,
+        'volunteers':team_volunteers,
     }
     return render(request,"Members/Teams/team.html",context=context)
 
