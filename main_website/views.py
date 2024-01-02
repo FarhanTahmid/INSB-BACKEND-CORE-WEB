@@ -545,3 +545,6 @@ def all_members(request):
 
 def ieee_bd_section(request):
     return render(request, 'About/IEEE_bangladesh_section.html')
+
+def member_profile(request):
+    return render(request, 'Members/Profile/member_profile.html')
