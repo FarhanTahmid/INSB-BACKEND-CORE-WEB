@@ -4,6 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href=" {% static 'css/event.css' %}" />
     <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -17,11 +18,6 @@
 
     <title>IEEE NSU Student Branch</title>
     <style>
-        body {
-            margin: 0%;
-            padding: 0%;
-            font-family: 'Poppins', sans-serif;
-        }
 
         .centering {
             display: flex;
@@ -31,12 +27,12 @@
 
         .max-width {
             max-width: 1080px;
-            margin: 30px 35px;
+            font-family: 'Poppins', sans-serif;
         }
 
         .max-width p {
+            font-size: 15px;
             text-align: justify;
-            line-height: 2;
         }
 
         .about-INSB {
@@ -48,7 +44,7 @@
         .IEEE-INSB-logo {
             width: 3000px;
             display: flex;
-            align-items: center;
+            justify-content: center;
         }
 
         .chapter-container {
@@ -117,6 +113,7 @@
         .chapter-card a {
             text-decoration: none;
             color: white;
+            font-size: 12px;
         }
 
         .chapter-card a:hover {
@@ -159,7 +156,6 @@
         }
 
         .event_calender {
-            margin-top: -10px;
             position: relative;
             margin-left: 18px;
             width: 377px;
@@ -232,33 +228,31 @@
 
         .creative-container {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
         }
 
         .creative-box {
             width: 100%;
             height: 154px;
-            background: #ffffff;
+            color: 	#75787B;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            padding: 0px 25%;
+            transition: all 0.5s;
+        }
+        .creative-box:hover{
+            color: #000;
         }
 
         .creative-box i {
             font-size: 40px;
-            padding-bottom: 5px;
+            margin-bottom: -10px;
             transition: all .1s;
         }
 
-        .creative-container :hover {
-            color: #FFC72C;
-        }
-
         .creative-box p {
-            padding-top: 25px;
-            font-weight: bold;
+            padding-top: 20px;
+            font-weight: 600;
             text-align: center;
         }
 
@@ -268,7 +262,7 @@
 
         @media screen and (max-width: 1199px) {
             .max-width {
-                max-width: 850px;
+                width: 90%;
             }
 
             .chapter-card {
@@ -305,10 +299,16 @@
         }
 
         @media screen and (max-width: 991px) {
-            .max-width {
-                max-width: 650px;
-            }
 
+
+            .mission{
+                display: flex;
+                flex-direction: column-reverse;
+            }
+            .vision{
+                display: flex;
+                flex-direction: column;
+            }
             .chapter-card {
                 width: 155px;
                 height: 177px;
@@ -353,24 +353,12 @@
             }
 
             .IEEE-INSB-logo {
-                position: relative;
-                left: 40%;
-                width: 152px;
+                width: auto;
             }
 
         }
 
         @media screen and (max-width: 544px) {
-
-            .max-width {
-                max-width: 370px;
-                margin: auto;
-            }
-
-            .IEEE-INSB-logo {
-                left: 30%;
-                margin-bottom: 15px;
-            }
 
             .centering {
                 padding-top: 50px;
@@ -383,16 +371,6 @@
 
             .chapter-card img {
                 height: 147px;
-            }
-
-            .mission {
-                display: grid;
-                grid-template-columns: 1fr;
-            }
-
-            .vision {
-                display: flex;
-                flex-direction: column-reverse;
             }
 
             .event_calender {
@@ -409,10 +387,6 @@
         }
 
         @media screen and (max-width: 424px) {
-            .max-width {
-                max-width: 80%;
-                margin: 0% 5%;
-            }
 
             .chapter-container {
                 display: grid;
@@ -448,14 +422,14 @@
         {% include 'wave.html' %}
         {% endblock %}
 
-        <section class="centering" style="background-color:white;">
+        <section class="centering" style="background-color:white; margin: 20px 0;">
             <section class="about-INSB max-width">
                 <div class="IEEE-INSB-logo">
                     <img src="https://ieeensusb.org/wp-content/uploads/2021/03/INSB-main-logo-300x300.png" alt="">
                 </div>
                 <div>
                     <div style="margin-bottom: -18px;">
-                        <h3 style="color: #000; font-weight: 600;">ABOUT</h3>
+                        <h2 style="color: #000; font-weight: bolder;">ABOUT</h2>
                     </div>
                     <div class="bar"></div>
                     <div>
@@ -476,7 +450,7 @@
             </section>
         </section>
 
-        <section class="centering" style="background-color:#f9f9f9;">
+        <section class="centering" style="background-color:#f9f9f9; padding: 20px 0;">
             <section class="chapters max-width">
                 <div style="margin-bottom: -38px;">
                     <h2>Chapters</h2>
@@ -534,7 +508,7 @@
             </section>
         </section>
 
-        <section class="centering" style="background-color:white;">
+        <section class="centering" style="background-color:white; margin-top: 20px;">
             <section class="creative-team max-width">
                 <div style="margin-bottom: -38px;">
                     <h2>Creative Team</h2>
@@ -554,64 +528,46 @@
                 </div>
                 <div class="creative-container">
                     <div class="creative-box">
-                        <div><i class="fa-solid fa-video"></i></div>
-                        <div>
-                            <p>Content Writing and Publications</p>
-                        </div>
+                        <i class="far fa-newspaper"></i>
+                        <p>Content Writing and Publications</p>
                     </div>
                     <div class="creative-box">
-                        <div><i class="fa-solid fa-video"></i></div>
-                        <div>
-                            <p>Content Writing and Publications</p>
-                        </div>
+                        <i class="fa-solid fa-laptop-code"></i>
+                        <p>Website Development</p>
                     </div>
                     <div class="creative-box">
-                        <div><i class="fa-solid fa-video"></i></div>
-                        <div>
-                            <p>Content Writing and Publications</p>
-                        </div>
+                        <i class="fa-solid fa-film"></i>
+                        <p>Media</p>
                     </div>
                     <div class="creative-box">
-                        <div><i class="fa-solid fa-video"></i></div>
-                        <div>
-                            <p>Content Writing and Publications</p>
-                        </div>
+                        <i class="fas fa-pencil-alt"></i>
+                        <p>Graphics</p>
                     </div>
                     <div class="creative-box">
-                        <div><i class="fa-solid fa-video"></i></div>
-                        <div>
-                            <p>Content Writing and Publications</p>
-                        </div>
+                        <i class="fa-solid fa-users"></i>
+                        <p>Membership Development</p>
                     </div>
                     <div class="creative-box">
-                        <div><i class="fa-solid fa-video"></i></div>
-                        <div>
-                            <p>Content Writing and Publications</p>
-                        </div>
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                        <p>Finance and Corporate</p>
                     </div>
                     <div class="creative-box">
-                        <div><i class="fa-solid fa-video"></i></div>
-                        <div>
-                            <p>Content Writing and Publications</p>
-                        </div>
+                        <i class="fa-solid fa-bullhorn"></i>
+                        <p>Public Relations and Promotions</p>
                     </div>
                     <div class="creative-box">
-                        <div><i class="fa-solid fa-video"></i></div>
-                        <div>
-                            <p>Content Writing and Publications</p>
-                        </div>
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <p>Events and Management</p>
                     </div>
                     <div class="creative-box">
-                        <div><i class="fa-solid fa-video"></i></div>
-                        <div>
-                            <p>Content Writing and Publications</p>
-                        </div>
+                        <i class="fa-solid fa-user-tie"></i>
+                        <p>Logistics and Operations</p>
                     </div>
                 </div>
             </section>
         </section>
 
-        <section class="centering" style="background-color: #f9f9f9;">
+        <section class="centering" style="background-color: #f9f9f9; margin-bottom: 20px;">
             <section class="mission max-width">
                 <div style="padding: 20px;">
                     <div style="margin-bottom: -10px;">
@@ -636,7 +592,7 @@
             </section>
         </section>
 
-        <section class="centering" style="background-color: #f9f9f9;">
+        <section class="centering" style="background-color: #f9f9f9; margin: 10px 0;">
             <section class="vision max-width">
                 <div>
                     <img src="https://ieeensusb.org/wp-content/uploads/2021/03/mission-and-vision-2-768x500.jpg" alt="">
@@ -661,7 +617,7 @@
             </section>
         </section>
 
-        <section class="centering" style="background-color:white;">
+        <section class="centering" style="background-color:white; margin: 10px 0;">
             <section class="events max-width">
                 <div>
                     <div style="margin-bottom: -38px;">
@@ -687,7 +643,7 @@
                 <!-- Calender start -->
                 <div class="event_calender">
 
-                    <h4 style="margin-bottom: 30px; font-weight: bold;"><span
+                    <h4 style="margin-bottom: 30px; font-weight: bolder; color: #000;"><span
                             style="border-bottom: 4px solid #fecd13;">EVENT C</span>ALENDER</h4>
                     <div class="calendar">
                         <div class="header" style="padding: 20px;">
@@ -707,7 +663,7 @@
                             <span class="day-of-week">Fri</span>
                             <span class="day-of-week">Sat</span>
                         </div>
-                        <div class="days " style="padding: 15px 0px; font-weight: bold;">
+                        <div class="days" style="padding: 15px 0px; font-weight: bold;">
                             <span style="color:red; height:20px"></span>
 
                         </div>
@@ -727,7 +683,7 @@
             </section>
         </section>
 
-        <section class="centering" style="background-color:#002855;">
+        <section class="centering" style="background-color:#002855; padding-top: 20px;">
             <section class="join-us max-width" style="margin-bottom: -3px;">
                 <div>
                     <div style="margin-bottom: -38px;">
@@ -744,7 +700,7 @@
             </section>
         </section>
 
-        <section class="centering" style="background-color:#f9f9f9;">
+        <section class="centering" style="background-color:#f9f9f9; margin: 20px 0;">
             <section class="achievements max-width">
                 <div style="margin-bottom: -38px;">
                     <h2>Achievements</h2>
