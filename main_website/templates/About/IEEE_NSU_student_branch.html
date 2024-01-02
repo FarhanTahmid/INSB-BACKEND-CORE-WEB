@@ -39,6 +39,7 @@
 
         .max-width p {
             text-align: justify;
+            line-height: 2;
         }
 
         .about-INSB {
@@ -70,12 +71,12 @@
             background: #002855;
             border: 3px solid #002855;
             cursor: pointer;
-            transition: all .3s ;
+            transition: all .3s;
         }
 
         .chapter-card img {
             width: 100%;
-            height: 216px;
+            height: 218px;
             object-fit: contain;
             background-color: #fff;
             transition: all 1s;
@@ -99,8 +100,6 @@
         .chapter-card h4 {
             margin: 16px 0px;
             color: white;
-            font-weight: ;
-            
         }
 
         .mission,
@@ -124,16 +123,20 @@
             color: #f9f9f9;
         }
 
-        .events,
+        .events {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+        }
+
         .join-us {
             display: flex;
         }
 
         .event_calender {
-            width: 2300px;
-            margin-top: 20px;
-            display: flex;
-            align-items: center;
+            margin-top: -20px;
+            position: relative;
+            margin-left: 18px;
+            width: 377px;
         }
 
         .events h2,
@@ -233,6 +236,10 @@
             text-align: center;
         }
 
+        .upnext {
+            display: none;
+        }
+
         @media screen and (max-width: 1199px) {
             .max-width {
                 max-width: 850px;
@@ -257,6 +264,17 @@
                 top: -215px;
             }
 
+            .chapter-card img {
+                height: auto;
+            }
+
+            .events {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .event_calender {
+                margin-left: 15px;
+            }
 
         }
 
@@ -270,6 +288,14 @@
                 height: 177px;
             }
 
+            .chapter-card img {
+                height: 128px;
+            }
+
+            .chapter-card h4 {
+                margin: 0;
+            }
+
             .events,
             .join-us {
                 display: grid;
@@ -278,7 +304,9 @@
 
             .event_calender {
                 width: 100%;
+                margin-left: 0px;
             }
+
 
             .creative-box {
                 padding: 0%;
@@ -332,6 +360,9 @@
                 height: 200px;
             }
 
+            .chapter-card img {
+                height: 147px;
+            }
 
             .mission {
                 display: grid;
@@ -356,7 +387,7 @@
             }
         }
 
-        @media screen and (max-width: 425px) {
+        @media screen and (max-width: 424px) {
             .max-width {
                 max-width: 80%;
                 margin: 0% 5%;
@@ -370,6 +401,16 @@
             .chapter-card {
                 width: 100%;
                 height: 150px;
+                font-size: 15px;
+            }
+
+            .chapter-card img {
+                height: 87px;
+            }
+
+            .chapter-card h4 {
+                font-size: 15px;
+                padding-top: 5px;
             }
         }
     </style>
@@ -615,11 +656,15 @@
                             To view the list of past and upcoming events, click on the link:</p>
                     </div>
                     <div class="events-btn">
-                        <button>All Events</button>
+                        <button><i class="fa-solid fa-angles-right" style="color: #f9f9f9;"></i> All Events</button>
                     </div>
                 </div>
                 <div class="event_calender">
-                </div>
+                    <!--Upcoming Event with Calendar-->
+
+                    {% block event_with_calendar %}
+                    {% include "Events/next_event_with_calendar.html" %}
+                    {% endblock event_with_calendar %}
             </section>
         </section>
 
@@ -660,7 +705,6 @@
             </section>
         </section>
 
-
         <!--Footer-->
         {% block footer %}
         {% include "footer_block.html" %}
@@ -671,7 +715,12 @@
         {% endblock %}
 
     </div>
-
 </body>
+<style>
+    /*for the heading of event calender only*/
+    .event_calender h4 {
+        color: #000;
+    }
+</style>
 
 </html>
