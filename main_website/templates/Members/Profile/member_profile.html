@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+
+    <title>Profile - IEEE NSU SB</title>
+    <link rel="icon" href="{% static 'upload/logo.gif' %}" />
+
+    <!--Common CSS-->
+    {% block common_css %}
+    {% include "common_css_includes.html" %}
+    {% endblock common_css %}
+
+    <!--Extra CSS-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        .profile_container {
+            display: flex;
+            justify-content: center;
+            margin: 200px 0 30px;
+        }
+
+        .profile_container .card_container {
+            max-width: 1140px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile_container .card_container .card_content {
+            width: 95%;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px;
+            align-items: center;
+            height: auto;
+            box-shadow: 1px 1px 5px black;
+            padding-bottom: 25px;
+        }
+
+        .profile_container .card_container .card_content .profile_image {
+            width: 200px;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 50%;
+            margin-top: -120px;
+            border: 2px solid black;
+        }
+
+        .profile_container .card_container .card_content .profile_image img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            transition: all 0.5s;
+        }
+
+        .profile_container .card_container .card_content .profile_image img:hover {
+            scale: 1.2;
+        }
+        .profile_container .card_container .card_content .profile_details{
+            width: 100%;
+        }
+        .icons {
+            height: 45px;
+            margin-top: -70px;
+            width: 98%;
+            text-align: right;
+        }
+        .icons a{
+            color: 	#E87722;
+            padding-left: 10px;
+            transition: all 0.3s;
+        }
+        .icons a:hover{
+            color: 	#FFC72C;
+        }
+        .another_icons{
+            display: none;
+            padding: 10px;
+        }
+        .another_icons a{
+            color: 	#E87722;
+            padding-left: 10px;
+            transition: all 0.3s;
+        }
+        .another_icons a:hover{
+            color: 	#FFC72C;
+        }
+        .information {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .information .information_1 {
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .information .information_1 .name {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .information .information_1 .ieee_id {
+            font-size: 15px;
+            font-style: italic;
+        }
+
+        .light_bar {
+            height: 1px;
+            width: 90%;
+            background-color: 	#00B5E2;
+        }
+
+        .information .information_2 {
+            width: 700px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .information .information_2 .info {
+            margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .information .information_2 .designation {
+            padding-top: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px;
+        }
+
+        .des-r1 {
+            display: flex;
+            flex-direction: row;
+            height: 125px;
+        }
+
+        .des-r2 {
+            width: 25px;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .circle {
+            border: 2px solid 	#00B5E2;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+        }
+
+        .line {
+            height: 70%;
+            border: 1px solid 	#00B5E2;
+            width: 1px;
+        }
+
+        .des-r3 {
+            font-family: 'Poppins', sans-serif;
+            padding: 0 10px;
+        }
+
+        .des-r3 .title {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        @media screen and (max-width:850px) {
+            .information .information_2{
+                width: 90%;
+            }
+        }
+        @media screen and (max-width:580px) {
+            .information .information_2 .designation{
+                display: flex;
+                flex-direction: column;
+            }
+        }
+        @media screen and (max-width:450px) {
+            .icons{
+                display: none;
+            }
+            .another_icons{
+                display: block;
+            }
+            .information{
+                margin-top: 18px;
+            }
+        }
+    
+    </style>
+</head>
+
+<body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+    <div class="body-wrapper  float-menu">
+
+        {% block header %}
+        {% include 'header.html' %}
+        {% endblock header %}
+
+        {% block wave_design %}
+        {% include 'wave.html' %}
+        {% endblock %}
+
+        <!-- Profile card -->
+        <section class="profile_container">
+            <div class="card_container">
+                <div class="card_content">
+                    <div class="profile_image">
+                        <img src="{% static 'upload/logo.gif' %}" alt="">
+                    </div>
+                    <div class="profile_details">
+                        <div class="social_links">
+                            <div class="icons">
+                                <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-facebook" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                </a>
+                                <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-linkedin" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                </a>
+                                <a class="elementor-icon elementor-social-icon elementor-social-icon-twitter elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-twitter" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="information">
+                            <div class="information_1">
+                                <div class="name">Md. Shakib Shahariar Junayed</div>
+                                <div class="ieee_id">99131140</div>
+                                <div class="another_icons">
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
+                                        href="#" target="_blank">
+                                        <i class="fa fa-facebook" aria-hidden="true"
+                                            style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
+                                        href="#" target="_blank">
+                                        <i class="fa fa-linkedin" aria-hidden="true"
+                                            style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-twitter elementor-animation-grow elementor-repeater-item-a3eee86"
+                                        href="#" target="_blank">
+                                        <i class="fa fa-twitter" aria-hidden="true"
+                                            style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="light_bar"></div>
+                            <div class="information_2">
+                                <div class="info">
+                                    <div class="ieee_email">IEEE Email: junayed@ieee.org</div>
+                                    <div class="nsu_email">NSU Email: shakib.junayed@northsouth.edu</div>
+                                    <div class="birthday">Birthdate: February 15, 2002</div>
+                                </div>
+                                <div class="designation">
+                                    <div class="des-r1">
+                                        <div class="des-r2">
+                                            <div class="circle"></div>
+                                            <div class="line"></div>
+                                        </div>
+                                        <div class="des-r3">
+                                            <div class="title">Main Branch</div>
+                                            <div class="position">Position: Core Volunteer</div>
+                                            <div class="team">Team: Web Development</div>
+                                        </div>
+                                    </div>
+                                    <div class="des-r1">
+                                        <div class="des-r2">
+                                            <div class="circle"></div>
+                                            <div class="line"></div>
+                                        </div>
+                                        <div class="des-r3">
+                                            <div class="title">Main Branch</div>
+                                            <div class="position">Position: Core Volunteer</div>
+                                            <div class="team">Team: Web Development</div>
+                                        </div>
+                                    </div>
+                                    <div class="des-r1">
+                                        <div class="des-r2">
+                                            <div class="circle"></div>
+                                            <div class="line"></div>
+                                        </div>
+                                        <div class="des-r3">
+                                            <div class="title">Main Branch</div>
+                                            <div class="position">Position: Core Volunteer</div>
+                                            <div class="team">Team: Web Development</div>
+                                        </div>
+                                    </div>
+                                    <div class="des-r1">
+                                        <div class="des-r2">
+                                            <div class="circle"></div>
+                                            <div class="line"></div>
+                                        </div>
+                                        <div class="des-r3">
+                                            <div class="title">Main Branch</div>
+                                            <div class="position">Position: Core Volunteer</div>
+                                            <div class="team">Team: Web Development</div>
+                                        </div>
+                                    </div>
+                                    <div class="des-r1">
+                                        <div class="des-r2">
+                                            <div class="circle"></div>
+                                            <div class="line"></div>
+                                        </div>
+                                        <div class="des-r3">
+                                            <div class="title">Main Branch</div>
+                                            <div class="position">Position: Core Volunteer</div>
+                                            <div class="team">Team: Public Relation & Promotion Team</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Profile Card End-->
+
+        <!--Footer-->
+        {% block footer %}
+        {% include "footer_block.html" %}
+        {% endblock footer %}
+
+
+    </div>
+    {% block common_js %}
+    {% include "common_js_includes.html" %}
+    {% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href=" {% static 'css/event.css' %}" />
+    <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!--Common CSS-->
+    {% block common_css %}
+    {% include "common_css_includes.html" %}
+    {% endblock common_css %}
+
+    <title>IEEE NSU Student Branch</title>
+    <style>
+        body {
+            margin: 0%;
+            padding: 0%;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .centering {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .max-width {
+            max-width: 1080px;
+            margin: 30px 35px;
+        }
+
+        .max-width p {
+            text-align: justify;
+            line-height: 2;
+        }
+
+        .about-INSB {
+            display: flex;
+            column-gap: 44px;
+            background: white;
+        }
+
+        .IEEE-INSB-logo {
+            width: 3000px;
+            display: flex;
+            align-items: center;
+        }
+
+        .chapter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 28px;
+            justify-content: space-around;
+        }
+
+        .chapter-card {
+            width: 249px;
+            height: 312px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all .3s;
+        }
+
+        .chapter-container .RAS {
+            background: #602568;
+            border: 3px solid #602568;
+        }
+
+        .chapter-container .PES {
+            background: #679B41;
+            border: 3px solid #679B41;
+        }
+
+        .chapter-container .IAS {
+            background: #14924D;
+            border: 3px solid #14924D;
+        }
+
+        .chapter-container .WIE {
+            background: #11689B;
+            border: 3px solid #11689B;
+        }
+
+        .chapter-container .RAS:hover {
+            box-shadow: 0px 0px 15px #602568;
+        }
+
+        .chapter-container .PES:hover {
+            box-shadow: 0px 0px 15px #679B41;
+        }
+
+        .chapter-container .IAS:hover {
+            box-shadow: 0px 0px 15px #14924D;
+        }
+
+        .chapter-container .WIE:hover {
+            box-shadow: 0px 0px 15px #11689B;
+        }
+
+        .chapter-card img {
+            width: 100%;
+            height: 218px;
+            object-fit: contain;
+            background-color: #fff;
+            transition: all 1s;
+
+        }
+
+        .chapter-card a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .chapter-card a:hover {
+            color: #FFC72C;
+        }
+
+        .chapter-card h4 {
+            margin: 16px 0px;
+            color: white;
+        }
+
+        .mission,
+        .vision {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: #002855;
+        }
+
+        .mission img,
+        .vision img {
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+        }
+
+        .mission h2,
+        .vision h2,
+        .mission p,
+        .vision p {
+            color: #f9f9f9;
+        }
+
+        .events {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+        }
+
+        .join-us {
+            display: flex;
+        }
+
+        .event_calender {
+            margin-top: -10px;
+            position: relative;
+            margin-left: 18px;
+            width: 377px;
+        }
+
+        .events h2,
+        .creative-team h2,
+        .chapters h2,
+        .achievements h2 {
+            font-weight: bold;
+            color: #000;
+            padding-bottom: 25px;
+        }
+
+        .join-us h2 {
+            color: white;
+            padding-bottom: 55px;
+            font-weight: bold;
+        }
+
+        .join-us p {
+            color: white;
+            padding-right: 300px;
+        }
+
+
+        .events-btn button {
+            background-color: #002855;
+            border: none;
+            color: white;
+            padding: 10px 32px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all .3s ease-in-out;
+            font-weight: bold;
+        }
+
+        .events-btn button:hover {
+            background-color: #FFC72C;
+        }
+
+        .join-btn button {
+            background-color: #FFC72C;
+            border: none;
+            color: white;
+            padding: 14px 40px;
+            margin: 47px -147px;
+            cursor: pointer;
+            border-radius: 70px;
+            transition: all .3s ease-in-out;
+            font-weight: bold;
+        }
+
+        .join-btn button:hover {
+            background-color: white;
+            color: #FFC72C;
+        }
+
+        .bar {
+            width: 90px;
+            height: 5px;
+            background-color: #FFC72C;
+            margin: 18px 0 20px;
+            border-radius: 5px;
+        }
+
+        .creative-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .creative-box {
+            width: 100%;
+            height: 154px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0px 25%;
+        }
+
+        .creative-box i {
+            font-size: 40px;
+            padding-bottom: 5px;
+            transition: all .1s;
+        }
+
+        .creative-container :hover {
+            color: #FFC72C;
+        }
+
+        .creative-box p {
+            padding-top: 25px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .upnext {
+            display: none;
+        }
+
+        @media screen and (max-width: 1199px) {
+            .max-width {
+                max-width: 850px;
+            }
+
+            .chapter-card {
+                width: 191px;
+                height: 232px;
+            }
+
+            .chapter-container {
+                gap: 10px;
+            }
+
+            .chapter-card h4 {
+                margin: 0px 10px;
+                bottom: 285px;
+                font-size: 17px;
+            }
+
+            .chapter-card a {
+                top: -215px;
+            }
+
+            .chapter-card img {
+                height: auto;
+            }
+
+            .events {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .event_calender {
+                margin-left: 15px;
+            }
+
+        }
+
+        @media screen and (max-width: 991px) {
+            .max-width {
+                max-width: 650px;
+            }
+
+            .chapter-card {
+                width: 155px;
+                height: 177px;
+            }
+
+            .chapter-card img {
+                height: 128px;
+            }
+
+            .chapter-card h4 {
+                margin: 0;
+            }
+
+            .events,
+            .join-us {
+                display: grid;
+                grid-template-columns: 100%;
+            }
+
+            .event_calender {
+                width: 100%;
+                margin-left: 0px;
+            }
+
+
+            .creative-box {
+                padding: 0%;
+            }
+
+            .join-btn button {
+                padding: 14px 40px;
+                margin: 20px -10px;
+            }
+
+            .join-us p {
+                padding: 0;
+            }
+
+            .about-INSB {
+                display: grid;
+                grid-template-columns: 100%;
+            }
+
+            .IEEE-INSB-logo {
+                position: relative;
+                left: 40%;
+                width: 152px;
+            }
+
+        }
+
+        @media screen and (max-width: 544px) {
+
+            .max-width {
+                max-width: 370px;
+                margin: auto;
+            }
+
+            .IEEE-INSB-logo {
+                left: 30%;
+                margin-bottom: 15px;
+            }
+
+            .centering {
+                padding-top: 50px;
+            }
+
+            .chapter-card {
+                width: 180px;
+                height: 200px;
+            }
+
+            .chapter-card img {
+                height: 147px;
+            }
+
+            .mission {
+                display: grid;
+                grid-template-columns: 1fr;
+            }
+
+            .vision {
+                display: flex;
+                flex-direction: column-reverse;
+            }
+
+            .event_calender {
+                width: 100%;
+            }
+
+            .creative-container {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .creative-box p {
+                font-size: small;
+            }
+        }
+
+        @media screen and (max-width: 424px) {
+            .max-width {
+                max-width: 80%;
+                margin: 0% 5%;
+            }
+
+            .chapter-container {
+                display: grid;
+                grid-template-columns: 1fr;
+            }
+
+            .chapter-card {
+                width: 100%;
+                height: 150px;
+                font-size: 15px;
+            }
+
+            .chapter-card img {
+                height: 87px;
+            }
+
+            .chapter-card h4 {
+                font-size: 15px;
+                padding-top: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+    <div class="body-wrapper  float-menu">
+
+        {% block header %}
+        {% include 'header.html' %}
+        {% endblock header %}
+
+        {% block wave_design %}
+        {% include 'wave.html' %}
+        {% endblock %}
+
+        <section class="centering" style="background-color:white;">
+            <section class="about-INSB max-width">
+                <div class="IEEE-INSB-logo">
+                    <img src="https://ieeensusb.org/wp-content/uploads/2021/03/INSB-main-logo-300x300.png" alt="">
+                </div>
+                <div>
+                    <div style="margin-bottom: -18px;">
+                        <h3 style="color: #000; font-weight: 600;">ABOUT</h3>
+                    </div>
+                    <div class="bar"></div>
+                    <div>
+                        <p>INSB (IEEE NSU Student Branch) is an esteemed subunit of IEEE, the largest technical
+                            professional association, that strives to build camaraderie and a sense of higher purpose
+                            amongst the students in all aspects of engineering and science fields. INSB serves its
+                            members with knowledge and skills besides making all resources, benefits and facilities
+                            available from IEEE, accessible. Established in 2007, INSB is North South University’s first
+                            internationally recognized student organization for engineers and enthusiasts. Paving the
+                            way for a successful career, promoting technological reformations and providing the correct
+                            exposure for the growth of one’s professional network, it has not only benefited its members
+                            academically but has also done so socially. Communication, management and leadership skills
+                            are enhanced .barough participation in the volunteering activities at this student branch.
+                            Earn skills like content writing, social media management, graphic design, user interface
+                            design and web development here, at INSB!</p>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <section class="centering" style="background-color:#f9f9f9;">
+            <section class="chapters max-width">
+                <div style="margin-bottom: -38px;">
+                    <h2>Chapters</h2>
+                </div>
+                <div class="bar"></div>
+                <div>
+                    <p>IEEE NSU Student Branch has .baree societies and one Affinity Group. They are- IEEE Power and
+                        Energy Society (PES), IEEE Industry Applications Society (IAS), IEEE Robotics and Automation
+                        Society (RAS), and Women in Engineering Affinity Group (WIE). These branches provide the members
+                        a range of options and a better understanding of their fields of interest.</p>
+                </div>
+                <div class="chapter-container">
+                    <div class="chapter-card RAS">
+                        <div><img src="https://ieeensusb.org/wp-content/uploads/2021/04/admin-ajax-1-300x300.png"
+                                alt=""></div>
+                        <div>
+                            <h4>IEEE NSU RAS SBC</h4>
+                        </div>
+                        <div>
+                            <a href="#">Read More</a>
+                        </div>
+                    </div>
+                    <div class="chapter-card PES">
+                        <div> <img src="https://ieeensusb.org/wp-content/uploads/2021/04/PES-1.png" alt="">
+                        </div>
+                        <div>
+                            <h4>IEEE NSU PES SBC</h4>
+                        </div>
+                        <div>
+                            <a href="#">Read More</a>
+                        </div>
+                    </div>
+                    <div class="chapter-card IAS">
+                        <div> <img src="https://ieeensusb.org/wp-content/uploads/2021/04/IAS.png" alt="">
+                        </div>
+                        <div>
+                            <h4>IEEE NSU IAS SBC</h4>
+                        </div>
+                        <div>
+                            <a href="#">Read More</a>
+                        </div>
+                    </div>
+                    <div class="chapter-card WIE">
+                        <div> <img src="https://ieeensusb.org/wp-content/uploads/2021/04/admin-ajax-2-300x300.png"
+                                alt="">
+                        </div>
+                        <div>
+                            <h4>IEEE NSU WIE SBC</h4>
+                        </div>
+                        <div>
+                            <a href="#">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <section class="centering" style="background-color:white;">
+            <section class="creative-team max-width">
+                <div style="margin-bottom: -38px;">
+                    <h2>Creative Team</h2>
+                </div>
+                <div class="bar"></div>
+                <div>
+                    <p>The governing body that leads this booming student branch with triumphant experts includes the
+                        Branch Counselor, Branch Mentor, Chair, Vice Chair, Secretary, Treasurer, the Chairs of the
+                        student chapters and the affinity group. They assist and conduct all the activities of INSB
+                        along with the in-charges and core volunteers. Immaculate hard work and proficiency is endowed
+                        by the leaders who direct and organize the events, carry out the administrative duties related
+                        to the Student Branch, communicate with IEEE, hold recruitment events and ensure that members
+                        reap the benefits. They ensure that the missions of INSB are accomplished as the members
+                        actively participate in national and global competitions, and proudly represent NSU. Not only do
+                        the seniors help the students in matters related to IEEE, but they also do so for other aspects
+                        of their university lives, which only adds to the benefits of joining INSB.</p>
+                </div>
+                <div class="creative-container">
+                    <div class="creative-box">
+                        <div><i class="fa-solid fa-video"></i></div>
+                        <div>
+                            <p>Content Writing and Publications</p>
+                        </div>
+                    </div>
+                    <div class="creative-box">
+                        <div><i class="fa-solid fa-video"></i></div>
+                        <div>
+                            <p>Content Writing and Publications</p>
+                        </div>
+                    </div>
+                    <div class="creative-box">
+                        <div><i class="fa-solid fa-video"></i></div>
+                        <div>
+                            <p>Content Writing and Publications</p>
+                        </div>
+                    </div>
+                    <div class="creative-box">
+                        <div><i class="fa-solid fa-video"></i></div>
+                        <div>
+                            <p>Content Writing and Publications</p>
+                        </div>
+                    </div>
+                    <div class="creative-box">
+                        <div><i class="fa-solid fa-video"></i></div>
+                        <div>
+                            <p>Content Writing and Publications</p>
+                        </div>
+                    </div>
+                    <div class="creative-box">
+                        <div><i class="fa-solid fa-video"></i></div>
+                        <div>
+                            <p>Content Writing and Publications</p>
+                        </div>
+                    </div>
+                    <div class="creative-box">
+                        <div><i class="fa-solid fa-video"></i></div>
+                        <div>
+                            <p>Content Writing and Publications</p>
+                        </div>
+                    </div>
+                    <div class="creative-box">
+                        <div><i class="fa-solid fa-video"></i></div>
+                        <div>
+                            <p>Content Writing and Publications</p>
+                        </div>
+                    </div>
+                    <div class="creative-box">
+                        <div><i class="fa-solid fa-video"></i></div>
+                        <div>
+                            <p>Content Writing and Publications</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <section class="centering" style="background-color: #f9f9f9;">
+            <section class="mission max-width">
+                <div style="padding: 20px;">
+                    <div style="margin-bottom: -10px;">
+                        <h2>Mission</h2>
+                    </div>
+                    <div class="bar" style="background: white;"></div>
+                    <div>
+                        <p>A powerhouse of innovation, INSB’s main goal is to ensure that its members, the engineers of
+                            tomorrow, achieve all the skills that it offers .barough various competitions, technical
+                            visits and workshops of IEEE. The aim is to better the understanding of the technological
+                            progress the world is making in the respective field of engineering of the members, to
+                            challenge and push minds to the next level, and drive to make a better tomorrow. Its purpose
+                            is also to be a platform for Brainiac’s to showcase their flair and gain the deserved
+                            recognition. It allows one to get an idea about how to tackle real life engineering problems
+                            and focuses on the growth of social media management, graphic design and web development
+                            skills of its members.</p>
+                    </div>
+                </div>
+                <div>
+                    <img src="https://ieeensusb.org/wp-content/uploads/2021/03/mission-and-vision-2-768x500.jpg" alt="">
+                </div>
+            </section>
+        </section>
+
+        <section class="centering" style="background-color: #f9f9f9;">
+            <section class="vision max-width">
+                <div>
+                    <img src="https://ieeensusb.org/wp-content/uploads/2021/03/mission-and-vision-2-768x500.jpg" alt="">
+                </div>
+                <div style="padding: 20px;">
+                    <div style="margin-bottom: -10px;">
+                        <h2>Vision</h2>
+                    </div>
+                    <div class="bar" style="background: white;"></div>
+                    <div>
+                        <p>A powerhouse of innovation, INSB’s main goal is to ensure that its members, the engineers of
+                            tomorrow, achieve all the skills that it offers .barough various competitions, technical
+                            visits and workshops of IEEE. The aim is to better the understanding of the technological
+                            progress the world is making in the respective field of engineering of the members, to
+                            challenge and push minds to the next level, and drive to make a better tomorrow. Its purpose
+                            is also to be a platform for Brainiac’s to showcase their flair and gain the deserved
+                            recognition. It allows one to get an idea about how to tackle real life engineering problems
+                            and focuses on the growth of social media management, graphic design and web development
+                            skills of its members.</p>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <section class="centering" style="background-color:white;">
+            <section class="events max-width">
+                <div>
+                    <div style="margin-bottom: -38px;">
+                        <h2>Events</h2>
+                    </div>
+                    <div class="bar"></div>
+                    <div>
+                        <p>IEEE NSU Student Branch arranges different superlative events such as workshops, industrial
+                            tours, seminars and competitions that aid members to amplify their knowledge, acquire lots
+                            of skills and experiences. International and local events provide an insight into the
+                            technological and scientific advancements in the relative fields and the members gain
+                            extensive knowledge and profound experiences that benefit them in the long run. Out of the
+                            numerous events arranged by INSB, one example is the Student Competition IEEE Xtreme which
+                            boosts expertise and allows the participants to earn accolades. INSB offers free webinars
+                            for its members.
+
+                            To view the list of past and upcoming events, click on the link:</p>
+                    </div>
+                    <div class="events-btn">
+                        <button><i class="fa-solid fa-angles-right" style="color: #f9f9f9;"></i> All Events</button>
+                    </div>
+                </div>
+                <!-- Calender start -->
+                <div class="event_calender">
+
+                    <h4 style="margin-bottom: 30px; font-weight: bold;"><span
+                            style="border-bottom: 4px solid #fecd13;">EVENT C</span>ALENDER</h4>
+                    <div class="calendar">
+                        <div class="header" style="padding: 20px;">
+                            <div style="cursor: pointer;" class="prev-btn"><i class="fa-solid fa-chevron-left"></i>
+                            </div>
+                            <span class="month-year"></span>
+                            <div style="cursor: pointer;" class="next-btn"><i class="fa-solid fa-chevron-right"></i>
+                            </div>
+                        </div>
+                        <div class="days-of-week"
+                            style="display: flex; justify-content: space-around; padding: 10px 0px; font-weight: bold;">
+                            <span class="day-of-week">Sun</span>
+                            <span class="day-of-week">Mon</span>
+                            <span class="day-of-week">Tue</span>
+                            <span class="day-of-week">Wed</span>
+                            <span class="day-of-week">Thu</span>
+                            <span class="day-of-week">Fri</span>
+                            <span class="day-of-week">Sat</span>
+                        </div>
+                        <div class="days " style="padding: 15px 0px; font-weight: bold;">
+                            <span style="color:red; height:20px"></span>
+
+                        </div>
+                    </div>
+                    <div class="event-box" style="padding: 20px;">
+                        <h5>Events for <span class="selected-date"></span></h3>
+                            <ul style="list-style-type: disc; margin-top: 15px;" class="events-list"></ul>
+                    </div>
+                    {% comment %} <div id="calendar"></div> {% endcomment %}
+
+
+                    <!--my calender-->
+
+
+                </div>
+                <!-- calender end -->
+            </section>
+        </section>
+
+        <section class="centering" style="background-color:#002855;">
+            <section class="join-us max-width" style="margin-bottom: -3px;">
+                <div>
+                    <div style="margin-bottom: -38px;">
+                        <h2>Join us for new <span style="color: #FFC72C;">Adventure</span></h2>
+                    </div>
+                    <div>
+                        <p>Do you want to unleash your true potential? Join us and become a part of a distinguished
+                            society that builds and boosts brilliance.</p>
+                    </div>
+                </div>
+                <div class="join-btn">
+                    <button>Join Now</button>
+                </div>
+            </section>
+        </section>
+
+        <section class="centering" style="background-color:#f9f9f9;">
+            <section class="achievements max-width">
+                <div style="margin-bottom: -38px;">
+                    <h2>Achievements</h2>
+                </div>
+                <div class="bar"></div>
+                <div>
+                    <p>Out of the many incredible achievements of INSB, being awarded the “Best Exemplary Student
+                        Branch” in Region 10 for two consecutive years is laudable. In 2009, INSB was honored by its
+                        well deserved accolade of “The Best Student Branch” in the IEEE Bangladesh Section. First
+                        Positions in the IEEE R10 Web Contest in 2018, in the global IEEE Day Contests in 2017, in the
+                        Long Video Contest and the second position in the Photo Contest (Technical Category) are other
+                        praiseworthy accomplishments. INSB has earned international recognition, succeeded in providing
+                        its members with professional satisfaction and prestige in the form of awards, certificates and
+                        other prizes. These achievements serve as meritorious additions to one’s resume, further
+                        heightening the chances of turning work potential into employment in the future.</p>
+                </div>
+            </section>
+        </section>
+
+        <!--Footer-->
+        {% block footer %}
+        {% include "footer_block.html" %}
+        {% endblock footer %}
+
+        {% block common_js %}
+        {% include "common_js_includes.html" %}
+        {% endblock %}
+
+    </div>
+    <script>
+        // Dummy events data for demonstration, this is the calendar event load function
+
+
+        const eventsData = {
+        {% for date, events in date_and_event.items %}
+        '{{ date }}': [
+            {% for event in events %}
+        ["{% url 'main_website:event_details' event %}", "{{ event.event_name }}"],
+            {% endfor %}
+        ],
+        {% endfor %}
+      
+      };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const calendarContainer = document.querySelector('.calendar');
+            const daysContainer = document.querySelector('.days');
+            const monthYear = document.querySelector('.month-year');
+            const eventBox = document.querySelector('.event-box');
+            const selectedDateText = document.querySelector('.selected-date');
+            const eventsList = document.querySelector('.events-list');
+
+            let currentDate = new Date();
+            renderCalendar(currentDate);
+
+            function renderCalendar(date) {
+                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; // Day abbreviations
+                const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+                const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+                const prevMonthLastDay = new Date(date.getFullYear(), date.getMonth(), 0);
+                const daysInMonth = lastDay.getDate();
+                const daysInPrevMonth = prevMonthLastDay.getDate();
+                const startDay = firstDay.getDay();
+                const endDay = lastDay.getDay();
+                const prevMonthDays = startDay === 0 ? 6 : startDay - 1;
+                const nextMonthDays = endDay === 0 ? 0 : 7 - endDay;
+
+                daysContainer.innerHTML = '';
+
+                // Display previous month days
+                for (let i = prevMonthDays; i > 0; i--) {
+                    const day = daysInPrevMonth - i + 1;
+                    const dayElement = createDayElement(new Date(date.getFullYear(), date.getMonth() - 1, day));
+                    dayElement.classList.add('prev-month');
+
+                    daysContainer.appendChild(dayElement);
+
+
+                }
+
+                // Display current month days
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const dayElement = createDayElement(new Date(Date.UTC(date.getFullYear(), date.getMonth(), i)));
+
+                    const formattedDate = getFormattedDate(dayElement.date);
+                    const event_marks = document.createElement('div');
+                    event_marks.style.display = 'flex';
+                    event_marks.style.textAlign = 'center';
+
+                    if (eventsData.hasOwnProperty(formattedDate)) {
+                        eventsData[formattedDate].forEach(() => {
+                            const eventMark = document.createElement('div');
+                            eventMark.classList.add('event-mark');
+                            event_marks.appendChild(eventMark);
+                            eventMark.style.width = '6px';
+                            eventMark.style.height = '6px';
+                            eventMark.style.borderRadius = '50%';
+                            eventMark.style.backgroundColor = 'red';
+                            eventMark.style.margin = '2px 1px';
+                            eventMark.style.position = 'static';
+                            eventMark.style.bottom = '1px';
+                            eventMark.style.left = '0';
+                            eventMark.style.transform = 'translateX(50%)';
+                            eventMark.style.transform = 'translateY(0%)';
+                            eventMark.style.top = '2px';
+                            dayElement.appendChild(event_marks);
+                        });
+                    }
+
+                    daysContainer.appendChild(dayElement);
+
+                }
+
+                // Display next month days
+                for (let i = 1; i <= nextMonthDays; i++) {
+                    const dayElement = createDayElement(new Date(date.getFullYear(), date.getMonth() + 1, i));
+                    dayElement.classList.add('next-month');
+                    daysContainer.appendChild(dayElement);
+                }
+
+                monthYear.textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            }
+
+            function createDayElement(date) {
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('day');
+                dayElement.style.display = 'flex';
+                dayElement.style.flexDirection = 'column';
+                dayElement.textContent = date.getDate();
+                {% comment %} dayElement.date = date; {% endcomment %}
+                dayElement.date = new Date(date.toISOString().split('T')[0]);
+                dayElement.addEventListener('click', () => showEventsForDate(date));
+                return dayElement;
+            }
+
+            function showEventsForDate(date) {
+                const formattedDate = getFormattedDate(date);
+
+                selectedDateText.textContent = formattedDate;
+                const eventsForDate = eventsData[formattedDate] || [];
+                console.log(eventsData)
+                console.log(eventsForDate)
+
+                eventsList.innerHTML = '';
+                if (eventsForDate.length > 0) {
+                    eventBox.style.display = 'block';
+                    eventBox.classList.add('show');
+                    eventsForDate.forEach((event) => {
+
+                        const eventItem = document.createElement('li');
+                        eventItem.innerHTML = "<a href='" + event[0] + "'>" + event[1] + "</a>";
+                        eventsList.appendChild(eventItem);
+                    });
+                } else {
+                    eventBox.style.display = 'none';
+                    eventBox.classList.remove('show');
+                }
+            }
+
+            function getFormattedDate(date) {
+                return date.toISOString('en-US').split('T')[0];
+
+            }
+
+            document.querySelector('.prev-btn').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar(currentDate);
+            });
+
+            document.querySelector('.next-btn').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                renderCalendar(currentDate);
+            });
+        });
+
+
+        function eventFilterFunction() {
+            var input, filter, box, eventName, i, txtValue;
+            input = document.getElementById("eventFilter");
+            filter = input.value.toUpperCase();
+            box = document.getElementsByClassName("event_box");
+            for (i = 0; i < box.length; i++) {
+                eventName = box[i].getElementsByClassName("event_name")[0];
+                if (eventName) {
+                    txtValue = eventName.textContent || eventName.innerText;
+                    console.log('Name: ', txtValue)
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+
+                        box[i].style.display = "block";
+                    } else {
+                        box[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+
+
+    </script>
+</body>
+
+
+</html>

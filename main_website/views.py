@@ -542,3 +542,15 @@ def all_members(request):
         'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
     }
     return render(request,'Members/All Members/all_members.html',context=context)
+
+def ieee_bd_section(request):
+    return render(request, 'About/IEEE_bangladesh_section.html')
+
+def member_profile(request):
+    return render(request, 'Members/Profile/member_profile.html')
+
+def ieee_student(request):
+    return render(request, 'About/IEEE_NSU_student_branch.html')
+
+def ieee_region_10(request):
+    return render(request, 'About/IEEE_region_10.html')
