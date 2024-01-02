@@ -548,3 +548,9 @@ def ieee_bd_section(request):
 
 def member_profile(request):
     return render(request, 'Members/Profile/member_profile.html')
+
+def ieee_student(request):
+    return render(request, 'About/IEEE_NSU_student_branch.html')
+
+def ieee_region_10(request):
+    return render(request, 'About/IEEE_region_10.html')
