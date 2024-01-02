@@ -21,26 +21,14 @@
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
     <div class="body-wrapper  float-menu">
         
-        {% block header %}
-            {% include 'header.html' %}
-        {% endblock header %}
         
-        {% block wave_design %}
-            {% include 'wave.html' %}
-        {% endblock %}
 
         <!-- Gallery card -->
         {% block gallery_content %}
-        {% include "gallery_content.html" %}
+            {% include "gallery_content.html" %}
         {% endblock gallery_content %}
         <!-- Galler Card End-->
 
-        <!--Footer-->
-        {% block footer %}
-            {% include "footer_block.html" %}
-        {% endblock footer %}
-
-       
     </div>
     {% block common_js %}
         {% include "common_js_includes.html" %}

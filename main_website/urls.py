@@ -32,5 +32,7 @@ urlpatterns = [
     
     # Publications
     path('blogs',views.blogs,name="blogs"),
-    
+
+    path('ieee_bangladesh_section',views.ieee_bd_section, name="ieee_bangladesh_section"),
+    path('ieee_student',views.ieee_student, name="ieee_student"),
 ]
