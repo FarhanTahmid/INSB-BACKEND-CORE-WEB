@@ -11,18 +11,20 @@ import traceback
 from system_administration.system_error_handling import ErrorHandling
 import logging
 from django.contrib import messages
-
+from django.utils import timezone
 class HomepageItems:
 
     logger=logging.getLogger(__name__)
 
     def load_all_events(flag):
         try:
+            current_datetime = timezone.now()
             dic = {}
             if flag:
                 events =  Events.objects.filter(publish_in_main_web= True).order_by('-event_date')
             else:
-                events = Events.objects.filter(publish_in_main_web= True).order_by('-event_date')[:5]
+                events = Events.objects.filter(publish_in_main_web= True,event_date__gt=current_datetime).order_by('event_date')[:5]
+                print(events)
             for i in events:
                 try:
                     event = Graphics_Banner_Image.objects.get(event_id = i.pk)
@@ -116,7 +118,9 @@ class HomepageItems:
     def get_upcoming_event():
         
         try:
-            return Events.objects.filter(publish_in_main_web = True).latest('event_date')
+            current_datetime = timezone.now()
+            upcoming_event = Events.objects.filter(publish_in_main_web = True,event_date__gt=current_datetime).order_by('event_date')[:1]
+            return upcoming_event[0]
         except:
             return None 
     
