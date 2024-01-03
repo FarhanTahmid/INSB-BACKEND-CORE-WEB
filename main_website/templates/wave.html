@@ -1,6 +1,6 @@
 {% load static %}
 
-<!DOCTYPE html>
+{% block wave_design %}
 <style>
     *{
         box-sizing: border-box;
@@ -97,31 +97,32 @@
             background-position-x: -1000px;
         }
     }
-</style>
-
-{% block wave_design %}
-<style>
     .wavy{
-        margin-top: 117px;
+        margin-top: 120px;
     }
-    @media screen and (max-width: 1100px){
+    @media screen and (max-width: 1199px){
         .wavy{
-            margin-top: 223px;
+            margin-top: 238px;
+        }
+    }
+    @media screen and (max-width: 1194px){
+        .wavy{
+            margin-top: 188px;
         }
     }
     @media screen and (max-width: 1053px){
         .wavy{
-            margin-top: 117px;
-        }
-    }
-    @media screen and (max-width: 995px){
-        .wavy{
-            margin-top: 218px;
+            margin-top: 187px;
         }
     }
     @media screen and (max-width: 960px){
         .wavy{
-            margin-top: 186px;
+            margin-top: 140px;
+        }
+    }
+    @media screen and (max-width: 899px){
+        .wavy{
+            margin-top: 182px;
         }
     }
     @media screen and (max-width: 767px){
@@ -141,6 +142,3 @@
     <div class="wave wave4"></div>
 </section>
 {% endblock wave_design %}
-
-
-</html>

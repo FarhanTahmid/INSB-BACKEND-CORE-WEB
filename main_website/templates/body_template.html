@@ -90,17 +90,15 @@
         
         {% block wave_design %}
             {% include 'wave.html' %}
-        {% endblock %}
+        {% endblock wave_design %}
 
         <!--Start adding from here-->
-       
+
+
+        {% block footer %}
+            {% include "footer_block.html" %}
+        {% endblock footer %}
     </div>
-    
-    <br>
-    <br>
-    {% block footer %}
-        {% include "footer_block.html" %}
-    {% endblock footer %}
     
     {% block common_js %}
         {% include "common_js_includes.html" %}

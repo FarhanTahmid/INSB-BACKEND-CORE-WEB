@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IEEE</title>
+  <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+  <!--Common CSS-->
+  {% block common_css %}
+  {% include "common_css_includes.html" %}
+  {% endblock common_css %}
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+
+    .join-us {
+      display: flex;
+    }
+
+    .event_calender {
+      margin-top: -20px;
+      position: relative;
+      margin-left: 18px;
+      width: 377px;
+    }
+
+    .events h2,
+    .creative-team h2,
+    .chapters h2,
+    .achievements h2 {
+      font-weight: bold;
+      color: #000;
+      padding-bottom: 25px;
+    }
+
+    .join-us h2 {
+      color: white;
+      padding-bottom: 55px;
+      font-weight: bold;
+    }
+
+    .join-us p {
+      color: white;
+      padding-right: 300px;
+    }
+
+
+    .events-btn button {
+      background-color: #002855;
+      border: none;
+      color: white;
+      padding: 10px 32px;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all .3s ease-in-out;
+      font-weight: bold;
+    }
+
+    .events-btn button:hover {
+      background-color: #FFC72C;
+    }
+
+    .join-btn button {
+      background-color: #FFC72C;
+      border: none;
+      color: white;
+      padding: 14px 40px;
+      margin: 47px -147px;
+      cursor: pointer;
+      border-radius: 70px;
+      transition: all .3s ease-in-out;
+      font-weight: bold;
+    }
+
+    .join-btn button:hover {
+      background-color: white;
+      color: #FFC72C;
+    }
+
+    .centering {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .first_buttons {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .about-IEEE {
+      display: flex;
+      column-gap: 14px;
+      background: #fff;
+    }
+
+    .IEEE-bd-section-logo {
+      width: 2000px;
+      display: flex;
+      align-items: center;
+    }
+
+    .members-volunteers {
+      /* display: flex;
+        {% comment %} grid-template-columns: 60px 60px; {% endcomment %}
+        column-gap: 50px; */
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-column-gap: 30px;
+    }
+
+    .mem-vol-pic {
+      width: 430px;
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .ieee-bd-btn a {
+      background-color: #002855;
+      border: 3px solid #002855;
+      color: white;
+      padding: 10px 30px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.3s ease-in-out;
+      font-weight: bold;
+    }
+
+    .ieee-bd-btn a:hover {
+      background-color: transparent;
+      color: #002855;
+    }
+
+    .mission-btn a {
+      border: 3px solid #ffc72c;
+      color: #002855;
+      background-color: transparent;
+      padding: 10px 30px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.3s;
+      font-weight: bold;
+    }
+    .mission-btn a:hover {
+      background-color: #ffc72c;
+      color: #fff;
+    }
+
+    .members-volunteers h2,
+    .achievements h2,
+    .gallery h2,
+    .contact-us h2 {
+      font-weight: bolder;
+      color: #002855;
+      padding-bottom: 25px;
+    }
+
+    .benefits-student_branches-affinity_grp-community_society {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      padding-top: 30px;
+      padding-bottom: 30px;
+      grid-gap: 50px;
+    }
+
+    .benefits-student_branches-affinity_grp-community_society h2,
+    .benefits-student_branches-affinity_grp-community_society p {
+      color: #f9f9f9;
+    }
+
+    .max-width {
+      max-width: 1080px;
+      margin: 30px 35px;
+    }
+
+    .max-width p {
+      text-align: justify;
+    }
+
+
+    .link {
+      text-decoration: none;
+      color: #002855;
+    }
+
+    .link:hover {
+      text-decoration: none;
+      color: #ffd100;
+    }
+
+    .benefits-student_branches-affinity_grp-community_society .link {
+      text-decoration: none;
+      color: #ffd100;
+      transition: all 0.6 ease-in-out;
+    }
+
+    .benefits-student_branches-affinity_grp-community_society .link:hover {
+      color: white;
+    }
+
+    .contact-us {
+      width: 100%;
+      color: #000;
+    }
+
+    .contact-us p,.contact-us a {
+      font-weight: 500;
+      text-align: left;
+      color: #000;
+    }
+
+
+    .achievement-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 28px;
+      justify-content: space-around;
+    }
+
+    .achievement-card {
+      width: 320px;
+      height: 370px;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: 600;
+      overflow: hidden;
+      transition: all 1s;
+    }
+
+    .achievement-card img {
+      width: 320px;
+      height: 370px;
+      object-fit: cover;
+      object-position: left;
+    }
+
+    .achievement-card div {
+      transition: all 1s;
+    }
+
+    .achievement-card div:hover {
+      scale: 1.1;
+    }
+
+    .achievement-card:hover {
+      box-shadow: 0px 0px 15px #002855;
+    }
+
+    .achievement-card a {
+      text-decoration: none;
+      color: #f9f9f9;
+      position: relative;
+      top: -134px;
+    }
+
+    .achievement-card a:hover {
+      color: #ffc72c;
+    }
+
+    .achievement-card h4 {
+      margin: 0px 20px;
+      color: #f9f9f9;
+      font-weight: bold;
+      position: relative;
+      font-size: 17px;
+      bottom: 231px;
+    }
+
+    @media screen and (max-width: 1199px) {
+      .max-width {
+        max-width: 850px;
+      }
+
+      .achievement-card {
+        width: 220px;
+        height: 270px;
+      }
+
+      .achievement-container {
+        gap: 25px;
+      }
+
+      .achievement-card h4 {
+        margin: 0px 10px;
+        bottom: 285px;
+        font-size: 15px;
+      }
+
+      .achievement-card a {
+        top: -215px;
+      }
+    }
+
+    @media screen and (max-width: 991px) {
+      .max-width {
+        max-width: 650px;
+      }
+
+      .about-IEEE {
+        display: grid;
+        grid-gap: 40px;
+        grid-template-columns: 100%;
+      }
+
+      .members-volunteers {
+        display: grid;
+        grid-template-columns: 100%;
+      }
+
+      .mem-vol-pic {
+        width: 100%;
+      }
+
+      .IEEE-bd-section-logo {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .achievement-card {
+        width: 199px;
+        height: 244px;
+      }
+
+      .join-us {
+        display: grid;
+        grid-template-columns: 100%;
+      }
+
+
+
+
+
+
+      .join-btn button {
+        padding: 14px 40px;
+        margin: 20px -10px;
+      }
+
+      .join-us p {
+        padding: 0;
+      }
+
+
+
+
+    }
+    @media screen and (max-width: 600px){
+      .benefits-student_branches-affinity_grp-community_society {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+      .line {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 544px) {
+      .max-width {
+        max-width: 370px;
+        margin: auto;
+      }
+
+      .mem-vol-pic {
+        width: 100%;
+      }
+
+
+
+
+
+      .achievement-card {
+        height: 244px;
+      }
+
+      .centering {
+        padding: 30px 0;
+      }
+    }
+
+    @media screen and (max-width: 425px) {
+      .max-width {
+        max-width: 80%;
+        margin: 0% 5%;
+      }
+      .first_buttons{
+        flex-direction: column;
+      }
+    }
+    .bar {
+            width: 90px;
+            height: 5px;
+            background-color: #FFC72C;
+            margin: 18px 0 20px;
+            border-radius: 5px;
+        }
+  </style>
+</head>
+
+<body data-rsssl="1" class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+  <div class="body-wrapper float-menu">
+    {% block header %} 
+      {% include 'header.html' %} 
+    {% endblock header %} 
+
+    {% block wave_design %}
+      {% include 'wave.html' %}
+    {% endblock wave_design %}
+
+    <section class="centering">
+      <section class="about-IEEE max-width">
+        <div class="IEEE-bd-section-logo">
+          <img src="https://ieeensusb.org/wp-content/uploads/2021/03/e4c81f5dd1d43164425630c4ab971bd5.jpg" alt="" />
+        </div>
+        <div>
+          <div style="margin-bottom: -18px">
+            <h3 style="color: #002855; font-weight: bolder">ABOUT</h3>
+          </div>
+          <div class="bar"></div>
+          <div>
+            <p>
+              Since 1963, IEEE(Institute of Electrical and Electronics
+              Engineers) is a large professional association for engineers.
+              Its corporate office is in New York City at United States and
+              its headquarter is located at Piscataway, New Jersey, United
+              States. This association focuses to develop Electrical
+              Electronic and Technical sites, Computer Science and Engineering
+              sites and finally the Telecommunications sites. This is the
+              world wide association for all engineers now a days.
+            </p>
+          </div>
+          <div class="first_buttons">
+            <div class="ieee-bd-btn">
+              <a href="#">Learn More</a>
+            </div>
+            <div class="mission-btn">
+              <a href="#">Mission and Vision</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="centering" style="background-color: #f9f9f9">
+      <section class="members-volunteers max-width">
+        <div>
+          <div style="margin-bottom: -38px">
+            <h2>Largest Community</h2>
+          </div>
+          <div class="bar"></div>
+          <div>
+            <p>
+              Institute of Electrical and Electronics Engineers (IEEE) is the
+              largest world wide professional association for engineering
+              sites. IEEE starts with 150,000 members(93% from US) group which
+              is now extended with over 400,000 members from 160 countries,
+              with the U.S. based membership no longer constituting a
+              majority. It has the biggest community with a huge number of
+              members and workers. There are huge numbers of Technical
+              Societies , Technical councils and Technical Committees under
+              IEEE. The IEEE community is like a family with so many heartiest
+              peoples. To know more about this links:
+            </p>
+          </div>
+          <div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
+                Technical Society</a>
+            </div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
+                Technical councils</a>
+            </div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
+                Technical Committees</a>
+            </div>
+          </div>
+        </div>
+        <div class="mem-vol-pic">
+          <img src="https://ieeensusb.org/wp-content/uploads/2021/03/branches.jpg" alt="" />
+        </div>
+      </section>
+    </section>
+
+    <section class="centering" style="background-color: #002855">
+      <section class="benefits-student_branches-affinity_grp-community_society max-width">
+        <div>
+          <div style="margin-bottom: -10px">
+            <h2>Start with IEEE</h2>
+          </div>
+          <div class="bar" style="background-color: #fff;"></div>
+          <div>
+            <p>
+              Who doesn’t wanna gain knowledge by experiencing something new
+              and exciting!! If you wanna explore your life in a whole new way
+              then IEEE is the best association for you. It will give you
+              thousands of platforms and growing activities by which you can
+              prepare yourself with a presentable way of thinking. If you are
+              interested to experience and to gain knowledge about the unknown
+              mysterious techniques and inventions of science and Technology,
+              then start with IEEE. Here is some extra ordinary communities
+              and activities where you can involve easily and explore
+              yourself.
+            </p>
+          </div>
+          <div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
+                Xplore</a>
+            </div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
+                Spectrum</a>
+            </div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
+                Standards</a>
+            </div>
+          </div>
+        </div>
+        <div style="border-left: 1px solid rgb(255, 255, 255)"></div>
+        <div>
+          <div style="margin-bottom: -10px">
+            <h2>Collaboration</h2>
+          </div>
+          <div class="bar" style="background-color: #fff;"></div>
+          <div>
+            <p>
+              In the Institute of Electrical and Electronics Engineers (IEEE),
+              there are endless opportunities to grow but you must have to
+              find your own field to stand high. Collaborating with many
+              international technology professionals and verified IEEE members
+              from different countries, anyone can establish their
+              professional identity. IEEE is always in the first position for
+              expanding professional network with current contact, finding
+              easy communication or conversation with technical experts,
+              shorting out any kind of queries about any technical, geographic
+              locations, IEEE membership grades etc by creating a lot of
+              international and internal communities, meetings and seminars
+            </p>
+          </div>
+
+        </div>
+      </section>
+    </section>
+
+    <hr class="line" style="width: 100%; border: #ffffff solid 1px; margin-bottom: -15px" />
+
+    <section class="centering" style="background-color: #002855">
+      <section class="benefits-student_branches-affinity_grp-community_society max-width">
+        <div>
+          <div style="margin-bottom: -10px">
+            <h2>Publications</h2>
+          </div>
+          <div class="bar" style="background-color: #fff;"></div>
+          <div>
+            <p>
+              IEEE Publications are highly cited in US and European patents
+              and IEEE journals continue to maintain rankings at the top of
+              their fields. It provides a wide range of quality publications
+              that make the exchange of technical knowledge and information
+              possible among technology professionals.
+            </p>
+          </div>
+          <div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
+                IEEE Publications </a>
+            </div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
+                List of IEEE publications</a>
+            </div>
+          </div>
+        </div>
+        <div style="border-left: 1px solid rgb(255, 255, 255)"></div>
+        <div>
+          <div style="margin-bottom: -10px">
+            <h2>Events and Conference</h2>
+          </div>
+          <div class="bar" style="background-color: #fff;"></div>
+          <div>
+            <p>
+              Institute of Electrical and Electronics Engineers (IEEE)
+              Meetings, events and Conferences is a dedicated partner made up
+              of event industry experts driven to shape innovative and high
+              quality events. These are organized by the professionals and
+              very well designed with full of information
+            </p>
+          </div>
+          <div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
+                IEEE Conferences and events</a>
+            </div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
+                Conferences and Events search</a>
+            </div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
+                Events and Conferences Calender</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="centering" style="background-color: #f9f9f9">
+      <section class="achievements max-width">
+        <div style="margin-bottom: -38px">
+          <h2>Achievements</h2>
+        </div>
+        <div class="bar"></div>
+        <div>
+          <p>
+            Institute of Electrical and Electronics Engineers (IEEE) is the
+            biggest platform of success and achievements. IEEE and its members
+            inspire a global community through its highly cited publications,
+            conferences, technology standards, and professional and
+            educational activities. There are a huge number of achievement
+            awards in the Institute of Electrical and Electronics Engineers
+            (IEEE) from different sides. To know more about it please visit-
+          </p>
+        </div>
+        <div class="achievement-container">
+          <div class="achievement-card">
+            <div>
+              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
+                alt="" />
+              <h4>List of Achievements Suitable for Milestones</h4>
+              <a href="#">Read More</a>
+            </div>
+          </div>
+          <div class="achievement-card">
+            <div>
+              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
+                alt="" />
+              <h4>IEEE MGA Achievement Awards </h4>
+              <a href="#">Read More</a>
+            </div>
+          </div>
+          <div class="achievement-card">
+            <div>
+              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
+                alt="" />
+              <h4>IEEE Recognition and Awards</h4>
+              <a href="#">Read More</a>
+            </div>
+          </div>
+          <div class="achievement-card">
+            <div>
+              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
+                alt="" />
+              <h4>Engineering Achievement Award</h4>
+              <a href="#">Read More</a>
+            </div>
+          </div>
+          <div class="achievement-card">
+            <div>
+              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
+                alt="" />
+              <h4>View the 2020 IEEE Medal and Recognition Recipients</h4>
+              <a href="#">Read More</a>
+            </div>
+          </div>
+          <div class="achievement-card">
+            <div>
+              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
+                alt="" />
+              <h4>IEEE Members Affinity Group Achievements and Award</h4>
+              <a href="#">Read More</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+
+
+    <section class="centering" style="background-color: #f9f9f9">
+      <section class="members-volunteers max-width ">
+        <div>
+          <div style="margin-bottom: -38px">
+            <h2>Innovations and Developments</h2>
+          </div>
+          <div class="bar"></div>
+          <div>
+            <p>
+              Institute of Electrical and Electronics Engineers (IEEE)
+              development is not a quick process and this focuses on
+              consensus, due process, openness, right to appeal and balance.
+              It takes time to develop from all sides. Now there is a mobile
+              app(IEEE) of IEEE which is great. Here is some important
+              innovations and developments link
+            </p>
+          </div>
+          <div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
+                Development and Innovations</a>
+            </div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
+                Technical councils</a>
+            </div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
+                Technical Committees</a>
+            </div>
+          </div>
+        </div>
+        <div class="mem-vol-pic">
+          <img
+            src="https://ieeensusb.org/wp-content/uploads/2021/03/112942791_646944699242400_5651045497133643740_o.jpg"
+            alt="" />
+        </div>
+      </section>
+    </section>
+
+    <section class="centering" style="background-color: #f9f9f9">
+      <section class="members-volunteers max-width">
+        <div class="mem-vol-pic">
+          <img src="https://ieeensusb.org/wp-content/uploads/2021/03/illustrated-character-4.png" alt="" />
+        </div>
+        <div>
+          <div style="margin-bottom: -38px">
+            <h2>Students and Member Activities</h2>
+          </div>
+          <div class="bar"></div>
+          <div>
+            <p>
+              Student Activities Committee (SAC) is the Institute of
+              Electrical and Electronics Engineers (IEEE) committee
+              responsible for student programs and benefits, and making
+              recommendations to the Member and Geographic Activities (MGA)
+              board. There are over 100,000 IEEE Student and Graduate Student
+              members worldwide. The volunteer members provide important
+              viewpoints and information, and represent the voice of the world
+              wide communication.
+            </p>
+          </div>
+          <div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
+                Development and Innovations</a>
+            </div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
+                Technical councils</a>
+            </div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
+                Technical Committees</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+    <section class="centering" style="background-color: #f9f9f9">
+      <section class="members-volunteers max-width">
+        <div>
+          <div style="margin-bottom: -38px">
+            <h2>Quality</h2>
+          </div>
+          <div class="bar"></div>
+          <div>
+            <p>
+              Institute of Electrical and Electronics Engineers (IEEE) is a
+              world wide professional association for engineers and this
+              association is surrounded by the professional people of
+              Electrical, Communications, Computer and Technology. Also the
+              students or members from different countries are here to share
+              their multiple talents and knowledge. So there is no doubt that
+              it is a high profile organization created for increasing the
+              development of Science and technology sites in the whole world.
+            </p>
+          </div>
+          <div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
+                Development and Innovations</a>
+            </div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
+                Technical councils</a>
+            </div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
+                Technical Committees</a>
+            </div>
+          </div>
+        </div>
+        <div class="mem-vol-pic">
+          <img src="https://ieeensusb.org/wp-content/uploads/2021/03/image3.png" alt="" />
+        </div>
+      </section>
+    </section>
+
+    <section class="centering" style="background-color:#002855;">
+      <section class="join-us max-width" style="margin-bottom: -3px;">
+        <div>
+          <div style="margin-bottom: -38px;">
+            <h2>Join us for new <span style="color: #FFC72C;">Adventure</span></h2>
+          </div>
+          <div>
+            <p>Do you want to unleash your true potential? Join us and become a part of a distinguished
+              society that builds and boosts brilliance.</p>
+          </div>
+        </div>
+        <div class="join-btn">
+          <button>Join Now</button>
+        </div>
+      </section>
+    </section>
+
+    <section class="centering" style="background-color: #f9f9f9">
+      <section class="contact-us max-width">
+        <div>
+          <div style="margin-bottom: -38px">
+            <h2>Contact Section</h2>
+          </div>
+          <div class="bar"></div>
+          <div style="display: grid; grid-template-columns: 2fr 5fr">
+            <p>Asia Pacific:</p>
+            <a href="https://site.ieee.org/ieeeap/contact-us/location/">https://site.ieee.org/ieeeap/contact-us/location/
+            </a>
+          </div>
+          <div style="display: grid; grid-template-columns: 2fr 5fr">
+            <p>IEEE computer organization:</p>
+            <a href="https://www.computer.org/about/contact"> https://www.computer.org/about/contact </a>
+          </div>
+          <div style="display: grid; grid-template-columns: 2fr 5fr">
+            <p>Customer Service:</p>
+            <p>00 1 732-981-0060</p>
+          </div>
+          <div style="display: grid; grid-template-columns: 2fr 5fr">
+            <p>Presidents:</p>
+            <p>Karen Bartleson (2017-2018), James A. Jefferies (Incumbent)</p>
+          </div>
+          <div style="display: grid; grid-template-columns: 2fr 5fr">
+            <p>Founders:</p>
+            <p>American Institute of Electrical Engineers, Institute of Radio Engineers</p>
+          </div>
+          <div>
+
+
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!--Footer-->
+    {% block footer %} 
+      {% include "footer_block.html" %} 
+    {% endblock footer %}
+
+  </div>
+  {% block common_js %} 
+    {% include "common_js_includes.html" %} 
+  {%endblock%}
+</body>
+
+</html>

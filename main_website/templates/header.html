@@ -1,26 +1,92 @@
 {% load static %}
 {% block header %}
 <style>
-    a.active{
-        color:yellow;
+    a.active {
+        color: yellow;
     }
-    
+
+    /* @media screen and (max-width: 1199px) {
+        .gdlr-header-wrapper .gdlr-header-inner.header-inner-header-style-5 .gdlr-header-container.container{
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+        .gdlr-navigation-wrapper{
+            margin-top: 0;
+        }
+        .container{
+            max-width: 960px;
+        }
+        .gdlr-navigation-wrapper .gdlr-main-menu>li{
+            padding-left: 0;
+        }
+        .gdlr-navigation-wrapper .gdlr-main-menu>li>a.sf-with-ul-pre, .gdlr-navigation-wrapper .gdlr-main-menu>li>a.sf-with-ul{
+            padding-right: 0;
+        }
+        body .gdlr-navigation-wrapper .gdlr-main-menu>li>a{
+            padding-left: 20px;
+        }
+    } */
+    @media screen and (max-width:1199px) {
+        .gdlr-header-container.container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+
+    @media screen and (max-width:1194px) {
+        .gdlr-navigation-wrapper {
+            margin-top: 0;
+        }
+    }
+
+    @media screen and (max-width:1100px) {
+        .gdlr-navigation-wrapper {
+            margin-top: 0;
+        }
+    }
+
+    @media only screen and (max-width: 1050px) {
+        body .gdlr-navigation-wrapper .gdlr-main-menu>li>a {
+            padding-left: 17px;
+        }
+    }
+
+    @media screen and (max-width:767px) {
+        .gdlr-header-container.container {
+            display: block;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .gdlr-header-container.container {
+            max-width: 1140px;
+            width: 100%;
+        }
+    }
+
+    @media (min-width: 576px) {
+        .gdlr-header-container.container {
+            max-width: 1140px;
+        }
+    }
 </style>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         // Get the current page's URL
         const currentPageUrl = window.location.href;
-      
+
         // Find the links in the navigation bar
         const navLinks = document.querySelectorAll("a");
-      
+
         // Loop through the links and add a "active" class to the matching link
         navLinks.forEach(function (link) {
-          if (link.href === currentPageUrl) {
-            link.classList.add("current-menu-item");
-          }
+            if (link.href === currentPageUrl) {
+                link.classList.add("current-menu-item");
+            }
         });
-      });
+    });
 </script>
 <header class="gdlr-header-wrapper header-style-5-wrapper gdlr-header-with-top-bar">
     <!-- top navigation -->
@@ -43,15 +109,14 @@
                         </li>
                         <li class="menu-item menu-item-has-children menu-item-30"><a href="#">Activities</a>
                             <ul class="dl-submenu">
-                                <li class="menu-item"><a
-                                        href="{% url 'main_website:event_homepage' %}">Events</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:event_homepage' %}">Events</a></li>
                                 <li class="menu-item"><a href="{% url 'main_website:news' %}">News</a></li>
-                                <li class="menu-item"><a
-                                        href="{% url 'main_website:achievements' %}">Achievements</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:achievements' %}">Achievements</a>
+                                </li>
                             </ul>
                         </li>
                         <li class="menu-item menu-item-has-children menu-item-30"><a href="#">Societies & AG</a>
-                            <!-- This is new comment -->r
+                            <!-- This is new comment -->
                             <ul class="dl-submenu">
                                 <li class="menu-item"><a href="{% url 'main_website:ras_home' %}">IEEE NSU RAS
                                         SBC</a></li>
@@ -62,30 +127,35 @@
                         </li>
                         <li class="menu-item menu-item-has-children menu-item-30"><a href="#">Members</a>
                             <ul class="dl-submenu">
-                                <li class="menu-item"><a
-                                        href="{% url 'main_website:panel_members' %}">Panels</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:panel_members' %}">Panels</a></li>
                                 <li class="menu-item"><a href="{% url 'main_website:officer_page' %}">Officers</a></li>
-                                <li class="menu-item"><a href="{% url 'main_website:volunteers_page' %}">Core Volunteers</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:volunteers_page' %}">Core
+                                        Volunteers</a></li>
                                 <li class="menu-item"><a href="#">Exemplary Members</a></li>
-                                <li class="menu-item"><a href="{% url 'main_website:all_members' %}">All Members & Statistics</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:all_members' %}">All Members &
+                                        Statistics</a></li>
                             </ul>
                         </li>
                         <li class="menu-item menu-item-has-children menu-item-30"><a href="#">Teams</a>
                             <ul class="dl-submenu">
-                                <li class="menu-item"><a
-                                        href="{% url 'main_website:panel_members' %}">Panels</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:panel_members' %}">Panels</a></li>
                                 <li class="menu-item"><a href="{% url 'main_website:officer_page' %}">Officers</a></li>
-                                <li class="menu-item"><a href="{% url 'main_website:volunteers_page' %}">Core Volunteers</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:volunteers_page' %}">Core
+                                        Volunteers</a></li>
                                 <li class="menu-item"><a href="#">Exemplary Members</a></li>
-                                <li class="menu-item"><a href="{% url 'main_website:all_members' %}">All Members & Statistics</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:all_members' %}">All Members &
+                                        Statistics</a></li>
                             </ul>
                         </li>
                         <li class="menu-item menu-item-has-children menu-item-30"><a href="#">About</a>
                             <ul class="dl-submenu">
-                                <li class="menu-item"><a href="#">IEEE</a></li>
-                                <li class="menu-item"><a href="#">IEEE Region 10</a></li>
-                                <li class="menu-item"><a href="#">IEEE Bangladesh Section</a></li>
-                                <li class="menu-item"><a href="#">IEEE NSU Student Branch</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:ieee' %}">IEEE</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:ieee_region_10' %}">IEEE Region
+                                        10</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:ieee_bangladesh_section' %}">IEEE
+                                        Bangladesh Section</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:ieee_nsu_student_branch' %}">IEEE
+                                        NSU Student Branch</a></li>
                                 <li class="menu-item"><a href="#">FAQ</a></li>
                             </ul>
                         </li>
@@ -122,11 +192,10 @@
                         <li class="menu-item menu-item-has-children gdlr-normal-menu"><a href="#"
                                 class="sf-with-ul-pre">Activities</a>
                             <ul class="sub-menu">
-                                <li class="menu-item"><a
-                                        href="{% url 'main_website:event_homepage'%}">Events</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:event_homepage'%}">Events</a></li>
                                 <li class="menu-item"><a href="{% url 'main_website:news' %}">News</a></li>
-                                <li class="menu-item"><a
-                                        href="{% url 'main_website:achievements' %}">Achievements</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:achievements' %}">Achievements</a>
+                                </li>
                             </ul>
                         </li>
                         <li class="menu-item menu-item-has-children gdlr-normal-menu"><a href="#"
@@ -139,29 +208,37 @@
                                 <li class="menu-item"><a href="#">IEEE NSU WIE AG</a></li>
                             </ul>
                         </li>
-                        <li class="menu-item menu-item-has-children gdlr-normal-menu"><a href="#" class="sf-with-ul-pre">Members</a>
+                        <li class="menu-item menu-item-has-children gdlr-normal-menu"><a href="#"
+                                class="sf-with-ul-pre">Members</a>
                             <ul class="sub-menu">
                                 <li class="menu-item"><a href="{% url 'main_website:panel_members' %}">Panels</a></li>
                                 <li class="menu-item"><a href="{% url 'main_website:officer_page' %}">Officers</a></li>
-                                <li class="menu-item"><a href="{% url 'main_website:volunteers_page' %}">Core Volunteers</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:volunteers_page' %}">Core
+                                        Volunteers</a></li>
                                 <li class="menu-item menu-item-has-children"><a href="#">Teams</a>
                                     <ul class="sub-menu sub-menu-level-2">
                                         {% for i in branch_teams %}
-                                        <li class="menu-item"><a href="{% url 'main_website:team_intro' i.primary %}">{{i.team_name }}</a></li>
+                                        <li class="menu-item"><a
+                                                href="{% url 'main_website:team_intro' i.primary %}">{{i.team_name
+                                                }}</a></li>
                                         {% endfor %}
                                     </ul>
                                 </li>
                                 <li class="menu-item"><a href="#">Exemplary Members</a></li>
-                                <li class="menu-item"><a href="{% url 'main_website:all_members' %}">All Members & Statistics</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:all_members' %}">All Members &
+                                        Statistics</a></li>
                             </ul>
                         </li>
                         <li class="menu-item menu-item-has-children gdlr-normal-menu"><a href="#"
                                 class="sf-with-ul-pre">About</a>
                             <ul class="sub-menu">
-                                <li class="menu-item"><a href="#">IEEE</a></li>
-                                <li class="menu-item"><a href="#">IEEE Region 10</a></li>
-                                <li class="menu-item"><a href="#">IEEE Bangladesh Section</a></li>
-                                <li class="menu-item"><a href="#">IEEE NSU Student Branch</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:ieee' %}">IEEE</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:ieee_region_10' %}">IEEE Region
+                                        10</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:ieee_bangladesh_section' %}">IEEE
+                                        Bangladesh Section</a></li>
+                                <li class="menu-item"><a href="{% url 'main_website:ieee_nsu_student_branch' %}">IEEE
+                                        NSU Student Branch</a></li>
                                 <li class="menu-item"><a href="#">FAQ</a></li>
                             </ul>
                         </li>

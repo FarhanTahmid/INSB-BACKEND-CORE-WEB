@@ -224,15 +224,15 @@ def rasPage(request):
     # Second para after the title
     secondary_para="Focusing on the research, study, and exchange of knowledge regarding Robotics & Automation."
     
-    getRasAbout=society_ag.Ras.get_ras_about()
+    # getRasAbout=society_ag.Ras.get_ras_about()
     
-    if getRasAbout is False:
-        return HttpResponse("GG")
+    # if getRasAbout is False:
+    #     return HttpResponse("GG")
     
     context={
         'page_title':page_title,
         'secondary_para':secondary_para,
-        'about_ras':getRasAbout,
+        # 'about_ras':getRasAbout,
         'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
 
     }
@@ -287,7 +287,10 @@ def magazines(request):
 
 ######################### GALLERY WORKS ###########################
 def gallery(request):
-    return render(request, 'gallery.html')
+    context={
+        'page_title':"Gallery"
+    }
+    return render(request, 'Publications/Gallery/gallery.html',context=context)
 
 
 # Memeber works
@@ -571,3 +574,19 @@ def all_members(request):
         'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
     }
     return render(request,'Members/All Members/all_members.html',context=context)
+
+def member_profile(request):
+    return render(request, 'Members/Profile/member_profile.html')
+
+def ieee_bd_section(request):
+    return render(request, 'About/IEEE_bangladesh_section.html')
+
+def ieee_nsu_student_branch(request):
+    return render(request, 'About/IEEE_NSU_student_branch.html')
+
+def ieee_region_10(request):
+    # template not done yet
+    return render(request, 'About/IEEE_region_10.html')
+
+def ieee(request):
+    return render(request, 'About/About_IEEE.html')
