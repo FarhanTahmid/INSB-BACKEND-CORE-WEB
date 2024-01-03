@@ -49,6 +49,7 @@
             color: #00629B;
             margin-bottom: -20px;
         }
+
         .link {
             text-decoration: none;
             cursor: pointer;
@@ -62,6 +63,26 @@
         }
 
         /*common CSS used throughout the page*/
+
+        .parallax {
+            /* The image used */
+            background-image: url("https://ieeensusb.org/wp-content/uploads/2021/03/region-10-events-1-1024x270.jpg");
+
+            /* Set a specific height */
+            min-height: 250px;
+
+            /* Create the parallax scrolling effect */
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+
+            /* Dull the image */
+            filter: brightness(0.6);
+            /* Adjust the value as needed (0.6 is just an example) */
+
+        }
+
         /*IEEE Region 10*/
         .IEEE-Region-10 {
             display: flex;
@@ -92,7 +113,9 @@
             color: white;
             background: #002855;
         }
+
         /*IEEE Region 10*/
+
         /*Young Professionals*/
         .young-professionals {
             display: flex;
@@ -108,6 +131,7 @@
         .young-professionals p {
             margin-bottom: 30px;
         }
+
         /*young professionals*/
 
         /* women-student-educational-indstry relations*/
@@ -137,7 +161,9 @@
         .women-student .link:hover {
             color: white;
         }
+
         /* women-student-educational-indstry relations*/
+
         /*contact us*/
         .contact-us {
             width: 1080px;
@@ -152,7 +178,8 @@
             display: grid;
             grid-template-columns: 1fr 2fr;
         }
-                /*contact us*/
+
+        /*contact us*/
 
         /*media queries*/
         @media screen and (max-width: 1199px) {
@@ -370,6 +397,10 @@
                     </div>
             </section>
         </section>
+
+        <!--parallax-->
+        <div class="parallax"></div>
+
         <!--Events and Conference-->
         <section class="centering" style="background-color:	#75787b17;">
             <section class="max-width">
