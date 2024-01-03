@@ -37,3 +37,8 @@ from .models import Achievements
 @admin.register(Achievements)
 class Achievements(admin.ModelAdmin):
     list_display=['id','award_name','award_of']
+
+from .models import Magazines
+@admin.register(Magazines)
+class Magazines(admin.ModelAdmin):
+    list_display=['id','magazine_title']

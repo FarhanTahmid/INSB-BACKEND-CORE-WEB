@@ -43,7 +43,7 @@ urlpatterns = [
     path('manage_website/research',views.manage_research,name="manage_research"),
     path('manage_website/research/update/<int:pk>',views.update_researches,name="update_researches"),
     path('manage_website/magazine',views.manage_magazines,name="manage_magazines"),
-    
+    path('manage_website/magazine/update/<int:pk>',views.update_magazine,name="update_magazine"),
     
     path('manage_access',views.manage_view_access,name="manage_access"),
 

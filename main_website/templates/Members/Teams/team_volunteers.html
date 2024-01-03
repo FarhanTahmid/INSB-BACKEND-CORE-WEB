@@ -1,0 +1,30 @@
+{% load static %}
+{% block team_volunteers %}
+<div class="w-50 m-auto p-4 mt-5">
+    <div class="p-2 h5 border fw-bold text-center mb-4 rounded">
+        <span class="">Volunteers</span>
+    </div>
+</div>
+
+
+<div class="row">
+    {% for i in volunteers %}
+    <div class="col-md-4">
+        <div class="card shadow my-3">
+            <img height="310px" width="470px" src="/media_files/{{i.member.user_profile_picture}}" class="img-fluid" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+            <div class="card-body">
+                <h4 class="card-title">{{i.member.name}}</h5>
+                    <div class="card-text">{{i.member.position.role}}, {{i.member.team.team_name}}</div>
+                    <div class="my-4">
+                        <a class="h4 me-2" href="{{i.member.linkedin_url}}"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a class="h4 me-2" href="{{i.member.facebook_url}}"><i class="fa-brands fa-facebook"></i></a>
+                        <a class="h4 me-2" href="mailto:{{i.member.email_ieee}}"><i class="fa-solid fa-envelope"></i></a>
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    
+</div>
+{% endblock team_volunteers %}
