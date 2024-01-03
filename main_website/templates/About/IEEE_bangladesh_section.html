@@ -12,11 +12,10 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!--Common CSS-->
     {% block common_css %}
-    {% include "common_css_includes.html" %}
+        {% include "common_css_includes.html" %}
     {% endblock common_css %}
     
     <link rel="icon" href="{% static 'upload/logo.gif' %}" />
-    <link rel="stylesheet" href="{% static 'css/event.css' %}" />
 
 
 
@@ -31,7 +30,7 @@
         .about-IEEE {
             display: flex;
             column-gap: 14px;
-            background: white;
+            background: #fff;
         }
 
         .IEEE-bd-section-logo {
@@ -52,7 +51,7 @@
             align-items: center;
         }
 
-        .ieee-bd-btn button {
+        .ieee-bd-btn a {
             background-color: #002855;
             border: none;
             color: white;
@@ -68,7 +67,7 @@
             font-weight: bold;
         }
 
-        .ieee-bd-btn button:hover {
+        .ieee-bd-btn a:hover {
             background-color: #FFC72C;
         }
 
@@ -209,6 +208,7 @@
             margin: 0px 20px;
             color: #f9f9f9;
             font-weight: bold;
+            font-size: 15px;
             position: relative;
             bottom: 231px;
         }
@@ -230,7 +230,7 @@
             .achievement-card h4 {
                 margin: 0px 10px;
                 bottom: 285px;
-                font-size: 17px;
+                font-size: 15px;
             }
 
             .achievement-card a {
@@ -388,7 +388,7 @@
                             sections all over 160 countries in the world</p>
                     </div>
                     <div class="ieee-bd-btn">
-                        <button>IEEEBD.net</button>
+                        <a href="#">IEEEBD.net</a>
                     </div>
                 </div>
             </section>
@@ -553,7 +553,7 @@
                         <div>
                             <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
                                 alt="">
-                            <h4>IEEE BUET Achievements</h4>
+                            <h4>Achievements of DUET</h4>
                             <a href="#">Read More</a>
                         </div>
                     </div>
@@ -561,7 +561,7 @@
                         <div>
                             <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
                                 alt="">
-                            <h4>IEEE AIUB Achievements</h4>
+                            <h4>Achievements of Milestone</h4>
                             <a href="#">Read More</a>
                         </div>
                     </div>

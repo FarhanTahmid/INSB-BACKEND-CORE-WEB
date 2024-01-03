@@ -543,14 +543,18 @@ def all_members(request):
     }
     return render(request,'Members/All Members/all_members.html',context=context)
 
-def ieee_bd_section(request):
-    return render(request, 'About/IEEE_bangladesh_section.html')
-
 def member_profile(request):
     return render(request, 'Members/Profile/member_profile.html')
+
+def ieee_bd_section(request):
+    return render(request, 'About/IEEE_bangladesh_section.html')
 
 def ieee_nsu_student_branch(request):
     return render(request, 'About/IEEE_NSU_student_branch.html')
 
 def ieee_region_10(request):
+    # template not done yet
     return render(request, 'About/IEEE_region_10.html')
+
+def ieee(request):
+    return render(request, 'About/About_IEEE.html')
