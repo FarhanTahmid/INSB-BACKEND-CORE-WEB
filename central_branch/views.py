@@ -521,6 +521,9 @@ def manage_blogs(request):
     # Load all blogs
     all_blogs=Blog.objects.all()
     
+    form=BlogsForm
+    form2=BlogCategoryForm
+    
     if(request.method=="POST"):
         form=BlogsForm(request.POST,request.FILES)
         if(request.POST.get('add_blog')):
@@ -538,11 +541,6 @@ def manage_blogs(request):
         if(request.POST.get('remove_blog')):
             MainWebsiteRenderData.delete_blog(request=request)
             return redirect('central_branch:manage_blogs')
-
-
-    else:
-        form=BlogsForm
-        form2=BlogCategoryForm
 
     context={
         # get form
@@ -764,6 +762,10 @@ def manage_magazines(request):
         if(request.POST.get('remove_magazine')):
             magazine_to_delete=request.POST['magazine_pk']
             get_magazine=Magazines.objects.get(pk=magazine_to_delete)
+            if(os.path.isfile(get_magazine.magazine_picture.path)):
+                os.remove(get_magazine.magazine_picture.path)
+            if(os.path.isfile(get_magazine.magazine_file.path)):
+                os.remove(get_magazine.magazine_file.path)
             get_magazine.delete()
             messages.warning(request,"One Item Deleted from Magazines")
             return redirect('central_branch:manage_magazines')
@@ -776,6 +778,25 @@ def manage_magazines(request):
     return render(request,'Manage Website/Publications/Magazine/manage_magazine.html',context=context)
 
 
+@login_required
+def update_magazine(request,pk):
+    # get the magazine to update
+    magazine_to_update=get_object_or_404(Magazines,pk=pk)
+    
+    if request.method == "POST":
+        update_form = MagazineForm(request.POST, request.FILES, instance=magazine_to_update)
+        if update_form.is_valid():
+            update_form.save()
+            messages.info(request,"Magazine Informations were updates")
+            return redirect('central_branch:manage_magazines')
+    else:
+        update_form = MagazineForm(instance=magazine_to_update)
+    context={
+        'update_form':update_form,
+        'magazine':magazine_to_update,
+    }
+    
+    return render(request,'Manage Website/Publications/Magazine/update_magazine.html',context=context)
 
 
 @login_required

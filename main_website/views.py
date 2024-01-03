@@ -19,6 +19,7 @@ from users.renderData import PanelMembersData
 from users import renderData as userData
 import json,requests
 from insb_port import settings
+from .models import *
 
 logger=logging.getLogger(__name__)
 
@@ -273,7 +274,16 @@ def Research_Paper(request):
         "research_paper":get_all_research_papers
     })
 
+######################### Magazine WORKS ###########################
 
+def magazines(request):
+    '''Loads all the magazines for the corresponding page'''
+    get_all_magazines=Magazines.objects.all().order_by('-publish_date')
+    context={
+        'page_title':"Magazines",
+        'all_magazines':get_all_magazines,
+    }
+    return render(request,"Publications/Magazines/magazine.html",context=context)
 
 ######################### GALLERY WORKS ###########################
 def gallery(request):

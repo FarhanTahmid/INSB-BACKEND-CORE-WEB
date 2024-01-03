@@ -46,7 +46,7 @@
                     
                         {% for i in all_magazines %}
                         <tr>
-                            <td><a style="text-decoration:none;color:#00629B;" href="#">{{i.magazine_title}}</a></td>
+                            <td><a style="text-decoration:none;color:#00629B;" href="{% url 'central_branch:update_magazine' i.pk %}">{{i.magazine_title}}</a></td>
                             <td>{{ i.published_by}}</td>
                             <td>{{i.publish_date}}</td>
                             
@@ -56,7 +56,7 @@
                                     <div style="justify-content:center;text-align:center;">  
                                         <div class="btn-container">
                                             <input class="btn btn-outline b-danger text-danger" name="remove_magazine" type="submit" value="Remove">
-                                            <a class="btn btn-outline b-warn text-warn" href="#">Update</a>
+                                            <a class="btn btn-outline b-warn text-warn" href="{% url 'central_branch:update_magazine' i.pk %}">Update</a>
                                         </div>
                                       </div>
                                     <input type="hidden" name="magazine_pk" value={{i.pk}}>
