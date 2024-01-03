@@ -141,8 +141,9 @@ class HomepageItems:
             ip = request.META.get('REMOTE_ADDR')
         
         user =User_IP_Address(ip_address = ip)
+        print(datetime.today())
         print(f"Current user ip address {user}")
-        result = User_IP_Address.objects.filter(ip_address = ip)
+        result = User_IP_Address.objects.filter(ip_address = ip,created_at = datetime.today())
         print(f"User exists in database {result}")
         if len(result)>=1:
             pass

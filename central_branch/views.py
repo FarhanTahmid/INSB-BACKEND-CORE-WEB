@@ -664,6 +664,26 @@ def manage_website_homepage(request):
     }
     return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
 
+
+@login_required
+def manage_about(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
+    context={
+        'all_sc_ag':sc_ag,
+    }
+    return render(request,'Manage Website/About/About IEEE/manage_ieee.html',context=context)
+
+@login_required
+def ieee_bangladesh_section(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
+    context={
+        'all_sc_ag':sc_ag,
+    }
+    return render(request,'Manage Website/About/IEEE Bangladesh Section/ieee_bangladesh_section.html',context=context)
+
+
 @login_required
 def manage_achievements(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
