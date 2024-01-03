@@ -40,10 +40,8 @@ class Achievements(admin.ModelAdmin):
 
 @admin.register(IEEE_Bangladesh_Section)
 class IEEE_Bangladesh_Section_Admin(admin.ModelAdmin):
-
     list_display = ['about_ieee_bangladesh','ieee_bangladesh_logo','member_and_volunteer_description','member_and_volunteer_picture','benefits_description','student_branches_description','affinity_groups_description','community_and_society_description',]
     
 @admin.register(IEEE_Bangladesh_Section_Gallery)
 class IEEE_Bangldesh_Section_Gallery(admin.ModelAdmin):
-
     list_display=['picture']
