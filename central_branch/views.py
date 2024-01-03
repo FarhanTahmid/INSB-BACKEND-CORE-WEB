@@ -749,7 +749,31 @@ def update_news(request,pk):
 
 @login_required
 def manage_magazines(request):
-    return render(request,'Manage Website/Publications/Magazine/manage_magazine.html')
+    # get form
+    magazine_form = MagazineForm
+    
+    # get all magazines
+    all_magazines=Magazines.objects.all().order_by('-publish_date')
+    if(request.method=="POST"):
+        magazine_form=MagazineForm(request.POST,request.FILES)
+        if(request.POST.get('add_magazine')):
+            if (magazine_form.is_valid()):
+                magazine_form.save()
+                messages.success(request,"New Magazine Added Successfully")
+                return redirect('central_branch:manage_magazines')
+        if(request.POST.get('remove_magazine')):
+            magazine_to_delete=request.POST['magazine_pk']
+            get_magazine=Magazines.objects.get(pk=magazine_to_delete)
+            get_magazine.delete()
+            messages.warning(request,"One Item Deleted from Magazines")
+            return redirect('central_branch:manage_magazines')
+            
+                    
+    context={
+        'magazine_form':magazine_form,
+        'all_magazines':all_magazines,
+    }
+    return render(request,'Manage Website/Publications/Magazine/manage_magazine.html',context=context)
 
 
 
