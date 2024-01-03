@@ -87,66 +87,45 @@
             
         }
 
-        .executive-body-profile{
-            height: 350px;
-            width: auto;
-        }
-
-        
 
 
         .executive-body-profile {
             position: relative;
-            overflow: hidden; /* Add this line to hide overflow */
+            border-radius: 20px;
+            margin-top: 125px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            
+
         }
 
-        .executive-body-profile-content {
+        
+        .executive-body-profile-img-container {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 50%;
-            background: rgba(0, 0, 0, 0.4); /* Change the background color and opacity as needed */
-            display: flex;
-            flex-direction: column;
-            align-items: start;
-            justify-content: end;
-            padding:25px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .executive-body-profile:hover .executive-body-profile-content {
-            opacity: 1;
-        }
-
-        .executive-body-profile-content p, .executive-body-profile-content .executive-body-profile-icons-container i {
-            color: white;
-        }
-
-        .executive-body-profile-icons-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .executive-body-profile-icons-container i {
-            margin: 5px; /* Adjust the margin as needed */
-        }
-
-        .executive-body-profile-images {
-            min-height: 100%;
-            object-fit: cover;
-            width: 100%;
-            height: auto;
-            transition: filter 0.3s ease, transform 0.3s ease; /* Add transform transition */
+            top: -50%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
+            width: 150px; /* Adjust the size of the circle as needed */
+            height: 150px; /* Adjust the size of the circle as needed */
         }
         
-        .executive-body-profile:hover .executive-body-profile-images {
-            filter: blur(2px); /* Adjust the blur effect as needed */
-            transform: scale(1.3); /* Adjust the scale factor as needed */
+        .executive-body-profile-images {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
         }
-
+        
+        .executive-body-profile-content {
+            margin-top: 50px;
+            padding: 20px;
+        }
+        
+        .executive-body-profile-icons-container {
+            margin-top: 10px;
+        }
+        
+        
+        
         .what-why-who-section {
             color:white;
             background-color: black;
@@ -288,113 +267,6 @@
                             </div>
                         </article>
                     </div>
-                    
-                    <div style="border-radius: 7px;" class="col-lg-3 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
-                        <article id="post-2255" class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
-                            <div class="gdlr-standard-style">
-                                <div class="gdlr-blog-thumbnail">
-                                    <a href="#">
-                                        <img class="article-image" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="Event Image" width="100%" />
-                                    </a>
-                                </div>
-                    
-                                <div class="gdlr-blog-grid-content" style="overflow: hidden;">
-                                    <header class="post-header">
-                                        <div class="gdlr-blog-info">
-                                            <div class="blog-info blog-date gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span><a href="#">January 1, 2024</a>
-                                            </div>
-                                            <div class="blog-info blog-author gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span>By <a href="#" title="Event Organizer" rel="author">Org. Name</a>
-                                            </div>
-                                            <div class="clear"></div>
-                                        </div>
-                    
-                                        <h3 class="gdlr-blog-title event_name">
-                                            <a href="#">Sample Event Title</a>
-                                        </h3>
-                                        <div class="clear"></div>
-                                    </header>
-                    
-                                    <div class="description-container" style="display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; text-overflow: ellipsis; -webkit-line-clamp: 2;">
-                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget eros sed libero consequat interdum.</p>
-                                    </div>
-                                    <a href="#" class="excerpt-read-more">Read More</a>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                    <div style="border-radius: 7px;" class="col-lg-3 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
-                        <article id="post-2255" class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
-                            <div class="gdlr-standard-style">
-                                <div class="gdlr-blog-thumbnail">
-                                    <a href="#">
-                                        <img class="article-image" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="Event Image" width="100%" />
-                                    </a>
-                                </div>
-                    
-                                <div class="gdlr-blog-grid-content" style="overflow: hidden;">
-                                    <header class="post-header">
-                                        <div class="gdlr-blog-info">
-                                            <div class="blog-info blog-date gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span><a href="#">January 1, 2024</a>
-                                            </div>
-                                            <div class="blog-info blog-author gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span>By <a href="#" title="Event Organizer" rel="author">Org. Name</a>
-                                            </div>
-                                            <div class="clear"></div>
-                                        </div>
-                    
-                                        <h3 class="gdlr-blog-title event_name">
-                                            <a href="#">Sample Event Title</a>
-                                        </h3>
-                                        <div class="clear"></div>
-                                    </header>
-                    
-                                    <div class="description-container" style="display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; text-overflow: ellipsis; -webkit-line-clamp: 2;">
-                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget eros sed libero consequat interdum.</p>
-                                    </div>
-                                    <a href="#" class="excerpt-read-more">Read More</a>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                    <div style="border-radius: 7px;" class="col-lg-3 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
-                        <article id="post-2255" class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
-                            <div class="gdlr-standard-style">
-                                <div class="gdlr-blog-thumbnail">
-                                    <a href="#">
-                                        <img class="article-image" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="Event Image" width="100%" />
-                                    </a>
-                                </div>
-                    
-                                <div class="gdlr-blog-grid-content" style="overflow: hidden;">
-                                    <header class="post-header">
-                                        <div class="gdlr-blog-info">
-                                            <div class="blog-info blog-date gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span><a href="#">January 1, 2024</a>
-                                            </div>
-                                            <div class="blog-info blog-author gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span>By <a href="#" title="Event Organizer" rel="author">Org. Name</a>
-                                            </div>
-                                            <div class="clear"></div>
-                                        </div>
-                    
-                                        <h3 class="gdlr-blog-title event_name">
-                                            <a href="#">Sample Event Title</a>
-                                        </h3>
-                                        <div class="clear"></div>
-                                    </header>
-                    
-                                    <div class="description-container" style="display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; text-overflow: ellipsis; -webkit-line-clamp: 2;">
-                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget eros sed libero consequat interdum.</p>
-                                    </div>
-                                    <a href="#" class="excerpt-read-more">Read More</a>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                    
 
                     
                 </div>
@@ -470,7 +342,9 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-3 col-md-6 col-sm-12 my-2">
                         <div class="card executive-body-profile text-center">
-                            <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
+                            <div class="executive-body-profile-img-container">
+                                <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
+                            </div>
                             <div class="executive-body-profile-content">
                                 <p><b>Saif Ahmed</b></p>
                                 <p><small>Faculty Advisor, PES</small></p>
@@ -483,106 +357,121 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="row justify-content-center">
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                        <div class="card executive-body-profile text-center">
-                            <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
-                            <div class="executive-body-profile-content">
-                                <p><b>Saif Ahmed</b></p>
-                                <p><small>Faculty Advisor, PES</small></p>
-                                <div class="executive-body-profile-icons-container">
-                                    <i class="fa-solid fa-envelope"></i>
-                                    <i class="fa-brands fa-facebook-f"></i>
-                                    <i class="fa-brands fa-linkedin-in"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                        <div class="card executive-body-profile text-center">
-                            <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
-                            <div class="executive-body-profile-content">
-                                <p><b>Saif Ahmed</b></p>
-                                <p><small>Faculty Advisor, PES</small></p>
-                                <div class="executive-body-profile-icons-container">
-                                    <i class="fa-solid fa-envelope"></i>
-                                    <i class="fa-brands fa-facebook-f"></i>
-                                    <i class="fa-brands fa-linkedin-in"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                        <div class="card executive-body-profile text-center">
-                            <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
-                            <div class="executive-body-profile-content">
-                                <p><b>Saif Ahmed</b></p>
-                                <p><small>Faculty Advisor, PES</small></p>
-                                <div class="executive-body-profile-icons-container">
-                                    <i class="fa-solid fa-envelope"></i>
-                                    <i class="fa-brands fa-facebook-f"></i>
-                                    <i class="fa-brands fa-linkedin-in"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                        <div class="card executive-body-profile text-center">
-                            <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
-                            <div class="executive-body-profile-content">
-                                <p><b>Saif Ahmed</b></p>
-                                <p><small>Faculty Advisor, PES</small></p>
-                                <div class="executive-body-profile-icons-container">
-                                    <i class="fa-solid fa-envelope"></i>
-                                    <i class="fa-brands fa-facebook-f"></i>
-                                    <i class="fa-brands fa-linkedin-in"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                        <div class="card executive-body-profile text-center">
-                            <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
-                            <div class="executive-body-profile-content">
-                                <p><b>Saif Ahmed</b></p>
-                                <p><small>Faculty Advisor, PES</small></p>
-                                <div class="executive-body-profile-icons-container">
-                                    <i class="fa-solid fa-envelope"></i>
-                                    <i class="fa-brands fa-facebook-f"></i>
-                                    <i class="fa-brands fa-linkedin-in"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                        <div class="card executive-body-profile text-center">
-                            <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
-                            <div class="executive-body-profile-content">
-                                <p><b>Saif Ahmed</b></p>
-                                <p><small>Faculty Advisor, PES</small></p>
-                                <div class="executive-body-profile-icons-container">
-                                    <i class="fa-solid fa-envelope"></i>
-                                    <i class="fa-brands fa-facebook-f"></i>
-                                    <i class="fa-brands fa-linkedin-in"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                        <div class="card executive-body-profile text-center">
-                            <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
-                            <div class="executive-body-profile-content">
-                                <p><b>Saif Ahmed</b></p>
-                                <p><small>Faculty Advisor, PES</small></p>
-                                <div class="executive-body-profile-icons-container">
-                                    <i class="fa-solid fa-envelope"></i>
-                                    <i class="fa-brands fa-facebook-f"></i>
-                                    <i class="fa-brands fa-linkedin-in"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     
+                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                        <div class="card executive-body-profile text-center">
+                            <div class="executive-body-profile-img-container">
+                                <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
+                            </div>
+                            <div class="executive-body-profile-content">
+                                <p><b>Saif Ahmed</b></p>
+                                <p><small>Faculty Advisor, PES</small></p>
+                                <div class="executive-body-profile-icons-container">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <i class="fa-brands fa-facebook-f"></i>
+                                    <i class="fa-brands fa-linkedin-in"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                        <div class="card executive-body-profile text-center">
+                            <div class="executive-body-profile-img-container">
+                                <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
+                            </div>
+                            <div class="executive-body-profile-content">
+                                <p><b>Saif Ahmed</b></p>
+                                <p><small>Faculty Advisor, PES</small></p>
+                                <div class="executive-body-profile-icons-container">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <i class="fa-brands fa-facebook-f"></i>
+                                    <i class="fa-brands fa-linkedin-in"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                        <div class="card executive-body-profile text-center">
+                            <div class="executive-body-profile-img-container">
+                                <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
+                            </div>
+                            <div class="executive-body-profile-content">
+                                <p><b>Saif Ahmed</b></p>
+                                <p><small>Faculty Advisor, PES</small></p>
+                                <div class="executive-body-profile-icons-container">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <i class="fa-brands fa-facebook-f"></i>
+                                    <i class="fa-brands fa-linkedin-in"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                        <div class="card executive-body-profile text-center">
+                            <div class="executive-body-profile-img-container">
+                                <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
+                            </div>
+                            <div class="executive-body-profile-content">
+                                <p><b>Saif Ahmed</b></p>
+                                <p><small>Faculty Advisor, PES</small></p>
+                                <div class="executive-body-profile-icons-container">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <i class="fa-brands fa-facebook-f"></i>
+                                    <i class="fa-brands fa-linkedin-in"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                        <div class="card executive-body-profile text-center">
+                            <div class="executive-body-profile-img-container">
+                                <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
+                            </div>
+                            <div class="executive-body-profile-content">
+                                <p><b>Saif Ahmed</b></p>
+                                <p><small>Faculty Advisor, PES</small></p>
+                                <div class="executive-body-profile-icons-container">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <i class="fa-brands fa-facebook-f"></i>
+                                    <i class="fa-brands fa-linkedin-in"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                        <div class="card executive-body-profile text-center">
+                            <div class="executive-body-profile-img-container">
+                                <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
+                            </div>
+                            <div class="executive-body-profile-content">
+                                <p><b>Saif Ahmed</b></p>
+                                <p><small>Faculty Advisor, PES</small></p>
+                                <div class="executive-body-profile-icons-container">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <i class="fa-brands fa-facebook-f"></i>
+                                    <i class="fa-brands fa-linkedin-in"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                        <div class="card executive-body-profile text-center">
+                            <div class="executive-body-profile-img-container">
+                                <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
+                            </div>
+                            <div class="executive-body-profile-content">
+                                <p><b>Saif Ahmed</b></p>
+                                <p><small>Faculty Advisor, PES</small></p>
+                                <div class="executive-body-profile-icons-container">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <i class="fa-brands fa-facebook-f"></i>
+                                    <i class="fa-brands fa-linkedin-in"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     
                 </div>
             </div>
