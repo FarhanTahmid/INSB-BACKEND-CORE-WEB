@@ -24,7 +24,13 @@ logger=logging.getLogger(__name__)
 
 @login_required
 def homepage(request):
-    return render(request,"Homepage/content_homepage.html")
+
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
+    context = {
+        'all_sc_ag':sc_ag,
+    }
+    return render(request,"Homepage/content_homepage.html", context)
 
 @login_required
 def manage_team(request):
@@ -32,6 +38,7 @@ def manage_team(request):
     '''This function loads the manage team page for content writing and publications team and is accessable
     by the co-ordinatior only, unless the co-ordinators gives access to others as well'''
 
+    sc_ag=PortData.get_all_sc_ag(request=request)
     has_access = CWPTeam_Render_Access.get_common_access(request)
     if has_access:
         data_access = ContentWritingTeam.load_manage_team_access()
@@ -114,7 +121,7 @@ def manage_team(request):
             'insb_members':all_insb_members,
             'current_panel_members':current_panel_members,
             'positions':position,
-            
+            'all_sc_ag':sc_ag,
         }
         return render(request,"content_writing_and_publications_team/manage_team.html",context=context)
     else:
@@ -126,9 +133,13 @@ def event_page(request):
     '''Only events organised by INSB would be shown on the event page of Content and Publications Team
        So, only those events are being retrieved from database'''
     
+    sc_ag=PortData.get_all_sc_ag(request=request)
     insb_organised_events = Branch.load_insb_organised_events()
 
-    context = {'events_of_insb_only':insb_organised_events,}
+    context = {
+        'events_of_insb_only':insb_organised_events,
+        'all_sc_ag':sc_ag,
+    }
     
 
     return render(request,"Events/content_team_events_homepage.html",context)
