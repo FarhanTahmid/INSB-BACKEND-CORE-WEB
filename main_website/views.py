@@ -7,8 +7,8 @@ from port.renderData import PortData
 from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
 from .renderData import HomepageItems
 from django.conf import settings
-from users.models import User,Members
-from users.models import User
+from users.models import User_IP_Address,Members
+from users.models import User_IP_Address
 import logging
 from datetime import datetime
 from django.http import HttpResponseBadRequest,HttpResponseServerError
@@ -26,6 +26,8 @@ logger=logging.getLogger(__name__)
 def homepage(request):
     bannerItems=HomepageItems.getHomepageBannerItems()
     bannerWithStat=HomepageItems.getBannerPictureWithStat()
+    HomepageItems.get_ip_address(request)
+    
     
     # get recent 6 news
     get_recent_news=News.objects.filter().order_by('-news_date')[:6]
@@ -42,27 +44,6 @@ def homepage(request):
         'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
     }
     return render(request,"LandingPage/homepage.html",context)
-
-def index(request):
-
-    def get_ip_address(request):
-        address = request.META.get('HTTP_X_FORWARDED_FOR')
-        if address:
-            ip = address.split(',')[-1].strip()
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        return ip
-    ip = get_ip_address(request)
-    user =User(ip_address = ip)
-    print(f"Current user ip address {user}")
-    result = User.objects.filter(ip_address = ip)
-    print(f"User exists in database {result}")
-    if len(result)>=1:
-        pass
-    else:
-        user.save()
-
-    return HttpResponse("IEEE main Website")
 
 
 ##################### EVENT WORKS ####################

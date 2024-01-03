@@ -1,6 +1,6 @@
 from .models import HomePageTopBanner,BannerPictureWithStat
 from django.http import HttpResponseServerError
-from users.models import Members
+from users.models import Members,User_IP_Address
 from membership_development_team.renderData import MDT_DATA
 from central_events.models import Events
 from port.models import Chapters_Society_and_Affinity_Groups
@@ -130,5 +130,24 @@ class HomepageItems:
             return Graphics_Banner_Image.objects.get(event_id = event)
         except:
             return None
+    
+    def get_ip_address(request):
+        
+        address = request.META.get('HTTP_X_FORWARDED_FOR')
+        print(address)
+        if address:
+            ip = address.split(',')[-1].strip()
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        
+        user =User_IP_Address(ip_address = ip)
+        print(f"Current user ip address {user}")
+        result = User_IP_Address.objects.filter(ip_address = ip)
+        print(f"User exists in database {result}")
+        if len(result)>=1:
+            pass
+        else:
+            user.save()
+    
 
         
