@@ -1,7 +1,6 @@
 from django import forms
-from port.models import Teams,Chapters_Society_and_Affinity_Groups
+from port.models import Teams
 import os
-from ckeditor.widgets import CKEditorWidget
 
 class TeamForm(forms.ModelForm):
     class Meta:
@@ -30,12 +29,3 @@ class TeamForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
-
-class Chapter_Society_Affinity_Groups_Form(forms.ModelForm):
-    
-    class Meta:
-        model=Chapters_Society_and_Affinity_Groups
-        fields=[
-            'about_description','mission_description','vision_description','what_is_this_description',
-            'why_join_it','what_activites_it_has','how_to_join'
-        ]
