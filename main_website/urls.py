@@ -40,4 +40,7 @@ urlpatterns = [
     path('ieee_region_10',views.ieee_region_10, name="ieee_region_10"),
     path('ieee',views.ieee, name="ieee"),
     path('faq',views.faq, name="faq"),
+
+    # Contact
+    path('contact',views.contact, name="contact"),
 ]

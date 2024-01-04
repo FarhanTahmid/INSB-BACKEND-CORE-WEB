@@ -561,3 +561,6 @@ def ieee(request):
 
 def faq(request):
     return render(request, 'About/faq.html')
+
+def contact(request):
+    return render(request, 'Contact/contact.html')
