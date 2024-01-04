@@ -137,7 +137,7 @@
                         </h3>
                         {% endif %}
                       <div>
-                        <h5 class="card-title" style="color: #000;"><a href = "{% url 'main_website:event_details' event.pk %}" style="color: #000;">{{event.event_name | safe}}</a></h5></div>
+                        <h5 class="card-title" style="color: #000;"><a href = "{% if event.pk %}{% url 'main_website:event_details' event.pk %}{% endif %}" style="color: #000;">{{event.event_name | safe}}</a></h5></div>
                         <div class="card-text" id="limitedText" style="       
                         display: -webkit-box;
                         overflow: hidden;

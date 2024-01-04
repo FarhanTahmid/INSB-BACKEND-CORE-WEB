@@ -52,7 +52,8 @@ def md_team_homepage(request):
 
 @login_required
 def insb_members_list(request):
-    
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     '''This function is responsible to display all the member data in the page'''
     if request.method=="POST":
         if request.POST.get("site_register"):
@@ -64,7 +65,14 @@ def insb_members_list(request):
     has_view_permission=True
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    context={'members':members,'totalNumber':totalNumber,'has_view_permission':has_view_permission,'user_data':user_data}
+
+    context={
+        'all_sc_ag':sc_ag,
+        'members':members,
+        'totalNumber':totalNumber,
+        'has_view_permission':has_view_permission,
+        'user_data':user_data
+    }
     
     return render(request,'INSB Members/members_list.html',context=context)
 
@@ -72,6 +80,7 @@ def insb_members_list(request):
 def member_details(request,ieee_id):
     '''This function loads an editable member details view for particular IEEE ID'''
     
+    sc_ag=PortData.get_all_sc_ag(request=request)
     '''This has some views restrictions'''
     #Loading Access Permission
     user=request.user
@@ -91,8 +100,9 @@ def member_details(request,ieee_id):
     renewal_session=Renewal_Sessions.objects.all().order_by('-id')
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
+    
     context={
-        
+        'all_sc_ag':sc_ag,
         'member_data':member_data,
         'dob':dob,
         'sessions':sessions,
@@ -228,6 +238,9 @@ def member_details(request,ieee_id):
 @login_required
 def membership_renewal(request):
     '''This view loads the renewal homepage'''
+
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     '''This function is responsible for the data handling for renewal Process and loads all the sessions'''
     #Load all sessions at first
     sessions=Renewal_Sessions.objects.order_by('-id')
@@ -235,12 +248,6 @@ def membership_renewal(request):
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
 
-
-    context={
-        'sessions':sessions,
-        'user_data':user_data,
-        'is_branch':True,
-    }
     if request.method=="POST":
         #MUST PERFORM TRY CATCH
         #Creating and inserting the data of the session
@@ -259,6 +266,13 @@ def membership_renewal(request):
         except DatabaseError:
             messages.info(request,"Error Creating a new Session!")
             return redirect('membership_development_team:membership_renewal')
+    
+    context={
+        'all_sc_ag':sc_ag,
+        'sessions':sessions,
+        'user_data':user_data,
+        'is_branch':True,
+    }
         
     return render(request,'Renewal/renewal_homepage.html',context)
 
@@ -498,6 +512,7 @@ def renewal_session_data(request,pk):
 def sc_ag_renewal_session_data(request,pk,sc_ag_primary):
     
     get_sc_ag=PortData.get_sc_ag(request=request,primary=sc_ag_primary)
+    sc_ag=PortData.get_all_sc_ag(request=request)
     
     get_renewal_requests=[]
     
@@ -513,6 +528,7 @@ def sc_ag_renewal_session_data(request,pk,sc_ag_primary):
     # get session info
     get_session = Renewal_Sessions.objects.get(pk=pk)
     context={
+        'all_sc_ag':sc_ag,
         'sc_ag_info':get_sc_ag,
         'session_id':pk,
         'requests':get_renewal_requests,
@@ -526,6 +542,7 @@ def renewal_request_details(request,pk,request_id):
     '''This function loads the datas for particular renewal requests'''
     #check if the user has access to view
     print(f"here the pk is{pk}")
+    sc_ag=PortData.get_all_sc_ag(request=request)
 
     user=request.user
     has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
@@ -579,6 +596,7 @@ def renewal_request_details(request,pk,request_id):
         has_next_request=False
 
     context={
+        'all_sc_ag':sc_ag,
         'id':request_id,
         'details':renewal_request_details,
         'has_comment':has_comment,
@@ -789,8 +807,10 @@ def generateExcelSheet_membersList(request):
 
 @login_required
 def data_access(request):
+    '''This function mantains all the data access works'''
     
-    # '''This function mantains all the data access works'''
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     #Only sub eb of that team can access the page
     user=request.user
     has_access=(Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
@@ -898,11 +918,11 @@ def data_access(request):
             return redirect('membership_development_team:data_access')
 
     context={
+        'all_sc_ag':sc_ag,
         'data_access':data_access,
         'members':team_members,
         'insb_members':all_insb_members,
-        'positions':position,
-        
+        'positions':position,      
     }
     if(has_access):
         return render(request,'Manage Team/manage_team.html',context=context)

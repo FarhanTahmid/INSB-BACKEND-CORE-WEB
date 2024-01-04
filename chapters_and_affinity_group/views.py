@@ -425,9 +425,9 @@ def sc_ag_membership_renewal_sessions(request,primary):
 
 def sc_ag_renewal_session_details(request,primary,renewal_session):
     try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
         if(SC_Ag_Render_Access.access_for_membership_renewal_access(request=request,sc_ag_primary=primary)):
             
-            sc_ag=PortData.get_all_sc_ag(request=request)
             get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
             # get the session
             renewal_session=Renewal_Sessions.objects.get(pk=renewal_session)
@@ -451,7 +451,7 @@ def sc_ag_renewal_session_details(request,primary,renewal_session):
             }
             return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context=context)
         else:
-            return render(request,"access_denied.html")
+            return render(request,"access_denied.html", { 'all_sc_ag':sc_ag })
 
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -500,9 +500,9 @@ def get_sc_ag_renewal_stats(request):
 @login_required
 def sc_ag_manage_access(request,primary):
     try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
         if(SC_Ag_Render_Access.access_for_manage_access(request=request,sc_ag_primary=primary)):
             # get sc ag info
-            sc_ag=PortData.get_all_sc_ag(request=request)
             get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
             
             # get SC AG members
@@ -570,7 +570,7 @@ def sc_ag_manage_access(request,primary):
             }
             return render(request,'Manage Access/sc_ag_manage_access.html',context=context)       
         else:
-            return render(request,'access_denied.html')
+            return render(request,'access_denied.html', { 'all_sc_ag':sc_ag })
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -644,9 +644,9 @@ def super_event_creation(request, primary):
     '''function for creating super event'''
 
     try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
         if has_access:
-            sc_ag=PortData.get_all_sc_ag(request=request)
             get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
             is_branch= False
             context={
@@ -673,7 +673,7 @@ def super_event_creation(request, primary):
                 
             return render(request,"Events/Super Event/super_event_creation_form.html", context)
         else:
-            return render(request, 'access_denied.html')
+            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -685,9 +685,9 @@ def super_event_creation(request, primary):
 def event_creation_form_page(request,primary):
     #######load data to show in the form boxes#########
     try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
         if has_access:
-            sc_ag=PortData.get_all_sc_ag(request=request)
             get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
             is_branch=False
             form = EventForm()
@@ -739,7 +739,7 @@ def event_creation_form_page(request,primary):
 
             return render(request,'Events/event_creation_form.html',context)
         else:
-            return render(request, 'access_denied.html')
+            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -752,10 +752,10 @@ def event_creation_form_page2(request,primary,event_id):
 
     try:
         print(request.META.get("HTTP_REFERER"))
+        sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
         # if (request.META.get('HTTP_REFERER') == 
         if has_access:
-            sc_ag=PortData.get_all_sc_ag(request=request)
             get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
             is_branch = False
             sc_ag=PortData.get_all_sc_ag(request=request)
@@ -786,7 +786,7 @@ def event_creation_form_page2(request,primary,event_id):
 
             return render(request,'Events/event_creation_form2.html',context)
         else:
-            return render(request, 'access_denied.html')
+            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -796,9 +796,9 @@ def event_creation_form_page2(request,primary,event_id):
 @login_required
 def event_creation_form_page3(request,primary,event_id):
     try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
         if has_access:
-            sc_ag=PortData.get_all_sc_ag(request=request)
             get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
             is_branch=False
             sc_ag=PortData.get_all_sc_ag(request=request)
@@ -832,7 +832,7 @@ def event_creation_form_page3(request,primary,event_id):
 
             return render(request,'Events/event_creation_form3.html',context)
         else:
-            return render(request, 'access_denied.html')
+            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -975,15 +975,15 @@ def event_edit_media_form_tab(request, primary, event_id):
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         #Get event details from databse
-        # event_details = Events.objects.get(pk=event_id)
+        event_details = Events.objects.get(pk=event_id)
         if(has_access):
             #Getting media links and images from database. If does not exist then they are set to none
 
             try:
-                media_links = Media_Link.objects.get(event_id = Events.objects.get(pk=event_id))
+                media_links = Media_Link.objects.get(event_id = event_details)
             except:
                 media_links = None
-            media_images = Media_Images.objects.filter(event_id = Events.objects.get(pk=event_id))
+            media_images = Media_Images.objects.filter(event_id = event_details)
             number_of_uploaded_images = len(media_images)
             
 
@@ -1028,7 +1028,7 @@ def event_edit_media_form_tab(request, primary, event_id):
             }
             return render(request,"Events/event_edit_media_form_tab.html",context)
         else:
-            return render(request, 'access_denied.html')
+            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -1047,16 +1047,16 @@ def event_edit_graphics_form_tab(request, primary, event_id):
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         #Get event details from databse
-        # event_details = Events.objects.get(pk=event_id)
+        event_details = Events.objects.get(pk=event_id)
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
         if(has_access):
             #Getting media links and images from database. If does not exist then they are set to none
             try:
-                graphics_link = Graphics_Link.objects.get(event_id = Events.objects.get(pk=event_id))
+                graphics_link = Graphics_Link.objects.get(event_id = event_details)
             except:
                 graphics_link = None
             try:
-                graphic_banner_image = Graphics_Banner_Image.objects.get(event_id = Events.objects.get(pk=event_id))
+                graphic_banner_image = Graphics_Banner_Image.objects.get(event_id = event_details)
                 image_number = 1
             except:
                 graphic_banner_image = None
@@ -1101,7 +1101,7 @@ def event_edit_graphics_form_tab(request, primary, event_id):
             }
             return render(request,"Events/event_edit_graphics_form_tab.html",context)
         else:
-            return render(request, 'access_denied.html')
+            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1166,7 +1166,7 @@ def event_edit_graphics_form_links_sub_tab(request,primary,event_id):
             }
             return render(request,"Events/event_edit_graphics_form_links_sub_tab.html",context)
         else:
-            return render(request, 'access_denied.html')
+            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1245,7 +1245,6 @@ def event_edit_content_form_tab(request,primary,event_id):
                 
                 if('remove2' in request.POST):
                     id = request.POST.get('remove_doc')
-                    print(id)
                     if ContentWritingTeam.delete_file(id):
                         messages.success(request,"File deleted successfully!")
                     else:
@@ -1255,7 +1254,7 @@ def event_edit_content_form_tab(request,primary,event_id):
             event_details = Events.objects.get(id=event_id)
             form2 = EventForm({'event_description' : event_details.event_description})
             try:
-                documents_link = Content_Team_Documents_Link.objects.get(event_id = Events.objects.get(pk=event_id))
+                documents_link = Content_Team_Documents_Link.objects.get(event_id = event_details)
             except:
                 documents_link = None
 
@@ -1278,7 +1277,7 @@ def event_edit_content_form_tab(request,primary,event_id):
             }
             return render(request,"Events/event_edit_content_and_publications_form_tab_sc_ag.html",context)
         else:
-            return render(request, 'access_denied.html')
+            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

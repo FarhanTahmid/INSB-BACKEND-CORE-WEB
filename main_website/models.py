@@ -119,4 +119,42 @@ class Magazines(models.Model):
         verbose_name="Magazine"
     def __str__(self) -> str:
         return self.magazine_title
+    
+class IEEE_Bangladesh_Section(models.Model):
+
+    about_ieee_bangladesh = RichTextField(null=True,blank=True)
+    ieee_bangladesh_logo = ResizedImageField(null=False,blank=False,upload_to="main_website_files/About/IEEE Bangladesh Section/logo/")
+    member_and_volunteer_description = RichTextField(null=True,blank=True)
+    member_and_volunteer_picture = ResizedImageField(null=False,blank=False,upload_to="main_website_files/About/IEEE Bangladesh Section/member_volunteer_picture/")
+    benefits_description = RichTextField(null=True,blank=True)
+    student_branches_description = RichTextField(null=True,blank=True)
+    affinity_groups_description = RichTextField(null=True,blank=True)
+    community_and_society_description = RichTextField(null=True,blank=True)
+
+    class Meta:
+        verbose_name="IEEE Bangladesh Section"
+    def __str__(self) -> str:
+        return self.pk
+
+
+
+
+# class IEEE_Bangladesh_Section_Links(models.Model):
+
+#     links = models.URLField(null=True,blank=True,default="www.nolinkgiven.com")
+
+#     class Meta:
+#         verbose_name="IEEE BD Section Link"
+#     def __str__(self) -> str:
+#         return self.pk
+    
+class IEEE_Bangladesh_Section_Gallery(models.Model):
+
+    picture = ResizedImageField(null=False,blank=False,upload_to="main_website_files/About/IEEE Bangladesh Section/Gallery/")
+
+    class Meta:
+        verbose_name="IEEE Bangladesh Section Gallery"
+    def __str__(self) -> str:
+        return self.pk
+
 

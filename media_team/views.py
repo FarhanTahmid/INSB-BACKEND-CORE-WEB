@@ -49,6 +49,7 @@ def manage_team(request):
     '''This function loads the manage team page for media team and is accessable
     by the co-ordinatior only, unless the co-ordinators gives access to others as well'''
     
+    sc_ag=PortData.get_all_sc_ag(request=request)
     has_access=MediaTeam_Render_Access.get_common_access(request)
     if has_access:
         data_access = MediaTeam.load_data_access()
@@ -131,11 +132,11 @@ def manage_team(request):
             'insb_members':all_insb_members,
             'current_panel_members':current_panel_members,
             'positions':position,
-            
+            'all_sc_ag':sc_ag,         
         } 
         return render(request,"media_team/manage_team.html",context=context)
     else:
-        return render(request,"media_team/access_denied.html")
+        return render(request,"media_team/access_denied.html", { 'all_sc_ag' : sc_ag })
 
 @login_required
 def event_page(request):
@@ -143,11 +144,13 @@ def event_page(request):
     '''Only events organised by INSB would be shown on the event page of Media Team
        So, only those events are being retrieved from database'''
     insb_organised_events = Events.objects.filter(event_organiser=5).order_by('-event_date')
+    sc_ag=PortData.get_all_sc_ag(request=request)
     print(insb_organised_events)
-   
-    context = {'events_of_insb_only':insb_organised_events,
-                }
 
+    context = {
+        'all_sc_ag':sc_ag,
+        'events_of_insb_only':insb_organised_events,
+    }
 
     return render(request,"Events/media_event_homepage.html",context)
 
