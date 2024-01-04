@@ -14,8 +14,192 @@
     {% endblock common_css %}
         
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
     <link rel="stylesheet" href="{% static 'css/Rass.css' %}">
     <link rel="stylesheet" href="{% static 'css/event.css' %}">
+
+    <style>
+
+        .justify-pagragraph-content{
+            text-align: justify;
+        }
+
+        .parallax {
+            /* The image used */
+            background-image: url("{% static 'upload/slider-2.jpg'%}");
+          
+            /* Set a specific height */
+            min-height: 250px; 
+          
+            /* Create the parallax scrolling effect */
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+
+            /* Dull the image */
+            filter: brightness(0.7); /* Adjust the value as needed (0.8 is just an example) */
+
+        }
+
+        .gdlr-blog-grid .excerpt-read-more{
+            color: #002855;
+        }
+        .gdlr-blog-grid .excerpt-read-more:hover{
+            color: #FFC72C;
+        }
+
+        .gdlr-item, .post-2255, .gdlr-standard-style{
+            height:400px;
+        }
+        .article-image {
+            width: 100%; /* Make the image fill the container */
+            height: 150px; /* Fix the image height to 250px */
+            object-fit: cover; /* Maintain aspect ratio and cover the container */
+        }
+
+
+        .styled-button {
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            background-color: #008CBA; /* You can change the background color */
+            color: #fff; /* You can change the text color */
+        }
+
+        .mission-vision-content{
+            background-color: #772583; 
+            color: white; 
+            overflow: hidden; 
+            height:100%;
+            border-radius:7px;
+        }
+
+        .mission-vision-image{
+            min-height:100%;
+            object-fit:cover;
+            
+        }
+
+
+
+        .executive-body-profile {
+            position: relative;
+            border-radius: 20px;
+            margin-top: 125px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            
+
+        }
+
+        
+        .executive-body-profile-img-container {
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
+            width: 150px; /* Adjust the size of the circle as needed */
+            height: 150px; /* Adjust the size of the circle as needed */
+        }
+        
+        .executive-body-profile-images {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+        
+        .executive-body-profile-content {
+            margin-top: 50px;
+            padding: 20px;
+        }
+        
+        .executive-body-profile-icons-container {
+            margin-top: 10px;
+        }
+        
+        
+        
+        .what-why-who-section {
+            color:white;
+            background-color: black;
+        }
+
+        .what-why-who-section-container{
+            
+        }
+        
+        .what-why-who-section-partition {
+        }
+
+        @media screen and (max-width: 768px) {
+            .line {
+                display: none; /* Hide the horizontal line */
+            }
+    
+            .what-why-who-section-partition {
+                border-left: none !important; /* Remove the left border */
+            }
+        }
+
+
+        .form-control{
+            background-color:white !important;
+            border: 1px solid #861F41 !important;
+        }
+        .form-control:hover,
+        .form-control:focus {
+            border: 1px solid #772583!important;
+            box-shadow: 0 0 10px rgba(128, 0, 128, 0.5) !important;
+        }
+
+        .see-all-events-button,
+        .submit-button {
+            text-decoration:none;
+            background-color: #861F41;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+      
+        .see-all-events-button:hover,
+        .submit-button:hover {
+            text-decoration:none;
+            color:white;
+            background-color: #772583;
+        }
+        .row{
+            justify-content: center;
+        }
+        @media only screen and (max-width: 767px){
+            .societies_about_section .container .row{
+                flex-direction: column-reverse;
+            }
+        }
+        .executive-body-profile-icons-container a i{
+            color: #772583;
+            transition: all 0.3s;
+        }
+        .executive-body-profile-icons-container a i:hover{
+            color: #772583a1;
+        }
+        .bar {
+            width: 90px;
+            height: 5px;
+            background-color: #772583;
+            margin: -7px 0 22px;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
@@ -28,289 +212,506 @@
         
         {% block wave_design %}
             {% include 'wave.html' %}
-        {% endblock %}
+        {% endblock wave_design %}
 
         <!-- end of wAVE PART  -->
         
-        <div class="bg">
-            <img src="{% static 'upload/slider-2.jpg'%}" alt="">
-        </div> 
+        
         <!-- about Ras and logo starts  -->
 
-        <section class="rass_grid_container ras_about">
-            <div class="rass_grid_item">
-                <h2>
-                    <b>ABOUT RAS</b>
-                </h2>
-                <p style="text-align: justify;">{{about_ras.about_ras|safe}}</p>
-            </div>
-            <div style="display: flex;" class="rass_grid_item">
-                <img style="align-items: center; justify-content: center;" src="https://ieeensusb.org/wp-content/uploads/2021/04/admin-ajax-1.png" alt="">
+        <br><br>
+        <section class="societies_about_section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="m-3">
+                            <h2><b>ABOUT RAS</b></h2>
+                            <div class="bar"></div>
+                            <p class="justify-pagragraph-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Risus commodo viverra maecenas accumsan lacus vel facilisis volutpat est. Ac tortor vitae purus faucibus ornare suspendisse. Ac feugiat sed lectus vestibulum mattis ullamcorper. Arcu non sodales neque sodales ut etiam sit. Purus viverra accumsan in nisl. Ultrices sagittis orci a scelerisque. Sagittis orci a scelerisque purus semper eget duis at tellus. Quam quisque id diam vel quam elementum pulvinar etiam non. Pretium nibh ipsum consequat nisl vel pretium. Eget sit amet tellus cras adipiscing enim eu turpis. Sit amet risus nullam eget felis eget nunc lobortis. Diam vel quam elementum pulvinar etiam non quam lacus suspendisse.</p>
+                    
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <img class="img-fluid w-100" src="https://ieeensusb.org/wp-content/uploads/2021/04/admin-ajax-1.png" alt="">
+                    </div>
+                </div>
             </div>
         </section>
+        <br><br>
+        
+        <div class="bg parallax">
+        </div>
+        <br><br>
 
         <!-- about Ras and logo ends  -->
 
         <!-- featured events starts  -->
+        <section>
+            <div class="container">
+                <h2 style="font-weight: bold;">FEATURED EVENTS</h2>
+                <div class="bar"></div>
 
-            <h2 style="margin: 70px 0px 20px 0px; text-align: center; font-weight: bold;">FEATURED EVENTS</h2>
-
-
-            
-            <!--Featured Events-->
-
-            {% block event_container %}
-                {% include 'Events/event_card_block.html' %}
-            {% endblock  %}
-
-
-            <!-- featured events ends  -->
-
-
-            <!-- mission and vision starts -->
-
-
-
-            <section class="rass_grid_container">
-                <div class="rass_grid_item">
-                    <h1>
-                        <b>Mission and vision</b>
-                    </h1>
-                   <p style="text-align: justify;">
-                    {{about_ras.mission_vision|safe}}
-                   </p>
-                </div>
-                <div class="rass_grid_item"  style="display: flex;">
-                    <img style="align-items: center;; justify-content: center;" src="https://ieeensusb.org/wp-content/uploads/2021/04/Vision.jpg" alt="">
-                </div>
-            </section>
-
-
-            <!-- mission and vision ends  -->
-
-            <!-- EXECUTIVE BODY starts  -->
-
-
-            <h2 style="margin: 70px 0px 20px 0px; text-align: center; font-weight: bold;">MEET OUR EXECUTIVE BODY</h2>
-
-            
-            
-            <div class="ex_row">
-                <div class="column">
-                    <div class="card">
-                    <img src="https://media.istockphoto.com/id/1212782126/photo/smiling-man-outdoors-in-the-city.jpg?s=612x612&w=0&k=20&c=R4PEVKC3kLUycF198ylswBXF8ZKeXRmjED5q5B3H5sc=" alt="Jane" style="width:100%">
-                    <div class="container">
-                        <h4 style="font-weight: bold; margin: 10px 0px;">Jane Doe</h4>
-                        <p class="title" style="font-style: italic;">CEO & Founder</p>
-                        <p>Some text that describes me lorem ipsum ipsum lorem.</p>
-                        <p>example@example.com</p>
-                        <p><button class="button">Contact</button></p>
-                    </div>
-                    </div>
-                </div>
-
-                <div class="column">
-                    <div class="card">
-                    <img src="https://t3.ftcdn.net/jpg/02/00/90/24/360_F_200902415_G4eZ9Ok3Ypd4SZZKjc8nqJyFVp1eOD6V.jpg" alt="Mike" style="width:100%">
-                    <div class="container">
-                        <h4 style="font-weight: bold; margin: 10px 0px;">Mike Ross</h4>
-                        <p class="title" style="font-style: italic;">Art Director</p>
-                        <p>Some text that describes me lorem ipsum ipsum lorem.</p>
-                        <p>example@example.com</p>
-                        <p><button class="button">Contact</button></p>
-                    </div>
-                    </div>
-                </div>
-                
-                <div class="column">
-                    <div class="card">
-                    <img src="https://media.istockphoto.com/id/1171169099/photo/man-with-crossed-arms-isolated-on-gray-background.jpg?s=612x612&w=0&k=20&c=_vETAeGc6ooeOx-WZYFyZdUUL5hyDPrvakBpjytN7lM=" alt="John" style="width:100%">
-                    <div class="container">
-                        <h4 style="font-weight: bold; margin: 10px 0px;">John Doe</h4>
-                        <p class="title" style="font-style: italic;">Designer</p>
-                        <p>Some text that describes me lorem ipsum ipsum lorem.</p>
-                        <p>example@example.com</p>
-                        <p><button class="button">Contact</button></p>
-                    </div>
-                    </div>
-                </div>
-
-                <!---Add here more column class-->
-                
-            </div>
-
-    </div>
-    <!-- content wrapper -->
-
-
-            <!-- EXECUTIVE BODY ends  -->
-
-
-
-            <!-- Q&A ofRAs starts -->
-
-                <section class="ras_qa">
-                    <div  class="qa_partition"><h3 class="colorh3">What is RAS?</h3><p id="pid">The IEEE Robotics and Automation Society is known as RAS. Through striving for the advancement of the theory and practice of robotics and automation engineering, it maintains high professional standards among its members. The mission of RAS is to develop and facilitate the exchange of scientific and technological knowledge and thoughts in Robotics and Automation for the benefit of members as well as humanity. The Society also provides aid for promoting close cooperation and exchanging technical information among its Members and Affiliates.</p></div>
-
-                    <div  class="qa_partition"><h3 class="colorh3">Why join RAS?</h3><p id="pid">When you join RAS, you will be joining a professional society of the IEEE that supports the development and the exchange of scientific knowledge in robotics and automation, including applied and theoretical issues. RAS Membership provides you with the resources and opportunities you need to keep yourself updated about the recent technologies and inventions in the field of Robotics and Automation.  Also, you get to network with other professionals near you who share a similar technical interest as you.</p></div>
-
-                    <div  class="qa_partition"><h3 class="colorh3">What activities do we usually do?</h3><p id="pid">We host many events, seminars, workshops, Tech-talks and weekly meetings throughout the year on various topics in robotics and automation. It helps the members to gather more knowledge about Robotics and Automation. Also, the members get the chance to learn new skills and develop those skills by participating in events.</p></div>
-
-                    <div  class="qa_partition"><h3 class="colorh3">How to join IEEE NSU RAS SBC?</h3><p id="pid">To join IEEE NSU RAS SBC, you will have to go through a simple evaluation process. For that, you will have to write us an email answering some easy questions which will be given to you.</p></div>
-                </section>
-
-             <!-- Q&A ofRAS ends  -->
-
-                <!-- contract us starts  -->
-
-
-                     <!-- Sidebar With Content Section-->
-                <div class="with-sidebar-wrapper" style="margin-top: 100px;">
-                    <div class="with-sidebar-container container">
-                        <div class="with-sidebar-left eight columns">
-                            <div class="with-sidebar-content twelve columns">
-                                <section id="content-section-2">
-                                    <div class="section-container container">
-                                        <div class="gdlr-item gdlr-content-item" style="margin-bottom: 60px;"><span class="clear"></span><span class="gdlr-space" style="margin-top: -22px; display: block;"></span>
-                                            <h4 class="gdlr-heading-shortcode " style="font-weight: bold;">If you have any queries please do fill the form up. </h4>
-                                            <p class="gdlr-heading-shortcode " style="font-weight: bold;">We will get back to you shortly via email.</p>
-                                            <p> <span class="clear"></span><span class="gdlr-space" style="margin-top: 25px; display: block;"></span>
-                                                <div role="form" class="wpcf7" id="wpcf7-f5-o1" lang="en-US" dir="ltr">
-                                                    <div class="screen-reader-response"></div>
-                                                    <form class="quform" action="quform/process.php" method="post" enctype="multipart/form-data" onclick="">
-
-                                                        <div class="quform-elements">
-                                                            <div class="quform-element">
-                                                                <p>Your Name (required)
-                                                                    <br>
-                                                                    <span class="wpcf7-form-control-wrap your-name">
-                                                                        <input id="name" required type="text" name="name" size="40" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required" aria-required="true" aria-invalid="false">
-                                                                    </span> 
-                                                                </p>
-                                                            </div>
-                                                            <div class="quform-element">
-                                                                <p>Your Email (required)
-                                                                    <br>
-                                                                    <span class="wpcf7-form-control-wrap your-email">
-                                                                        <input id="email" required type="email" name="email" size="40" class="wpcf7-form-control wpcf7-text wpcf7-email wpcf7-validates-as-required wpcf7-validates-as-email" aria-required="true" aria-invalid="false">
-                                                                    </span> 
-                                                                </p>
-                                                            </div>
-                                                            <div class="quform-element">
-                                                                <p>Your Message (required)
-                                                                    <br>
-                                                                    <span class="wpcf7-form-control-wrap your-message">
-                                                                        <textarea  id="message" required name="message" cols="40" rows="10" class="wpcf7-form-control wpcf7-textarea" aria-invalid="false"></textarea>
-                                                                    </span>
-                                                                </p>
-                                                            </div>
-                                                            <p>
-                                                                <!-- Begin Submit button -->
-                                                                <div class="quform-submit">
-                                                                    <div class="quform-submit-inner">
-                                                                        <button type="submit" class="submit-button"><span>Send</span></button>
-                                                                    </div>
-                                                                    <div class="quform-loading-wrap"><span class="quform-loading"></span></div>
-                                                                </div>
-                                                            </p>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </p>
+        
+                <!--Featured Events-->
+                <div class="row m-0 box-container" style="transition: .3s ease-in-out; ">
+                    <div style="border-radius: 7px;" class="col-lg-3 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255" class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#">
+                                        <img class="article-image" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="Event Image" width="100%" />
+                                    </a>
+                                </div>
+                    
+                                <div class="gdlr-blog-grid-content" style="overflow: hidden;">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a href="#">January 1, 2024</a>
+                                            </div>
+                                            <div class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a href="#" title="Event Organizer" rel="author">Org. Name</a>
+                                            </div>
+                                            <div class="clear"></div>
                                         </div>
+                    
+                                        <h3 class="gdlr-blog-title event_name">
+                                            <a href="#">Sample Event Title</a>
+                                        </h3>
                                         <div class="clear"></div>
+                                    </header>
+                    
+                                    <div class="description-container" style="display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; text-overflow: ellipsis; -webkit-line-clamp: 2;">
+                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget eros sed libero consequat interdum.</p>
                                     </div>
-                                </section>
-                            </div>
-
-                            <div class="clear"></div>
-                        </div>
-
-                        <div class="gdlr-sidebar gdlr-right-sidebar four columns">
-                            <div class="gdlr-item-start-content sidebar-right-item">
-                                
-                                <div id="text-7" class="widget widget_text gdlr-item gdlr-widget">
-                                    <h3 class="gdlr-widget-title">Contact Information</h3>
-                                    <div class="clear"></div>
-                                    <div class="textwidget">
-                                        <p>184 Main Collins Street West Victoria 8007 Australia</p>
-                                        <p><i class="gdlr-icon fa fa-phone" style="vertical-align: middle; color: #444444; font-size: 16px; "></i> 1800-222-222</p>
-                                        <p><i class="gdlr-icon fa fa-envelope" style="vertical-align: middle; color: #444444; font-size: 16px; "></i> contact@versatilewptheme.com</p>
-                                        <p><i class="gdlr-icon fa fa-clock-o" style="vertical-align: middle; color: #444444; font-size: 16px; "></i> Everyday 9:00-17:00</p>
-                                    </div>
-                                </div>
-                                <div id="text-8" class="widget widget_text gdlr-item gdlr-widget">
-                                    <h3 class="gdlr-widget-title">Social Media</h3>
-                                    <div class="clear"></div>
-                                    <div class="textwidget"><a href="#"><i class="gdlr-icon fa fa-facebook" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a> <a href="#"><i class="gdlr-icon fa fa-twitter" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a> <a href="#"><i class="gdlr-icon fa fa-dribbble" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a> <a href="#"><i class="gdlr-icon fa fa-pinterest" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a> <a href="#"><i class="gdlr-icon fa fa-google-plus" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a> <a href="#"><i class="gdlr-icon fa fa-instagram" style="vertical-align: middle; color: #444444; font-size: 28px; " ></i></a>
-                                    </div>
+                                    <a href="#" class="excerpt-read-more">Read More</a>
                                 </div>
                             </div>
+                        </article>
+                    </div>
+                    <div style="border-radius: 7px;" class="col-lg-3 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255" class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#">
+                                        <img class="article-image" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="Event Image" width="100%" />
+                                    </a>
+                                </div>
+                    
+                                <div class="gdlr-blog-grid-content" style="overflow: hidden;">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a href="#">January 1, 2024</a>
+                                            </div>
+                                            <div class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a href="#" title="Event Organizer" rel="author">Org. Name</a>
+                                            </div>
+                                            <div class="clear"></div>
+                                        </div>
+                    
+                                        <h3 class="gdlr-blog-title event_name">
+                                            <a href="#">Sample Event Title</a>
+                                        </h3>
+                                        <div class="clear"></div>
+                                    </header>
+                    
+                                    <div class="description-container" style="display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; text-overflow: ellipsis; -webkit-line-clamp: 2;">
+                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget eros sed libero consequat interdum.</p>
+                                    </div>
+                                    <a href="#" class="excerpt-read-more">Read More</a>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div style="border-radius: 7px;" class="col-lg-3 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255" class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#">
+                                        <img class="article-image" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="Event Image" width="100%" />
+                                    </a>
+                                </div>
+                    
+                                <div class="gdlr-blog-grid-content" style="overflow: hidden;">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a href="#">January 1, 2024</a>
+                                            </div>
+                                            <div class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a href="#" title="Event Organizer" rel="author">Org. Name</a>
+                                            </div>
+                                            <div class="clear"></div>
+                                        </div>
+                    
+                                        <h3 class="gdlr-blog-title event_name">
+                                            <a href="#">Sample Event Title</a>
+                                        </h3>
+                                        <div class="clear"></div>
+                                    </header>
+                    
+                                    <div class="description-container" style="display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; text-overflow: ellipsis; -webkit-line-clamp: 2;">
+                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget eros sed libero consequat interdum.</p>
+                                    </div>
+                                    <a href="#" class="excerpt-read-more">Read More</a>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div style="border-radius: 7px;" class="col-lg-3 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        <article id="post-2255" class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="#">
+                                        <img class="article-image" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="Event Image" width="100%" />
+                                    </a>
+                                </div>
+                    
+                                <div class="gdlr-blog-grid-content" style="overflow: hidden;">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div class="blog-info blog-date gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span><a href="#">January 1, 2024</a>
+                                            </div>
+                                            <div class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By <a href="#" title="Event Organizer" rel="author">Org. Name</a>
+                                            </div>
+                                            <div class="clear"></div>
+                                        </div>
+                    
+                                        <h3 class="gdlr-blog-title event_name">
+                                            <a href="#">Sample Event Title</a>
+                                        </h3>
+                                        <div class="clear"></div>
+                                    </header>
+                    
+                                    <div class="description-container" style="display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; text-overflow: ellipsis; -webkit-line-clamp: 2;">
+                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget eros sed libero consequat interdum.</p>
+                                    </div>
+                                    <a href="#" class="excerpt-read-more">Read More</a>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    
+                </div>
+
+                <div class="text-center"> <!-- Add 'text-center' class here -->
+                    <a href="#" class="see-all-events-button"><b><i class="fa-regular fa-calendar"></i> See All Events</b></a>
+                </div>
+                
+                
+            </div>
+            
+        </section>
+        <br><br>
+        
+
+
+        <!-- featured events ends  -->
+
+
+        <!-- mission and vision starts -->
+        <section class="mx-2">
+            <div class="container">
+                <!-- First Row - Mission -->
+                <div class="row mission-vision-content">
+                    <!-- Image column (order-md-2 means it will be the second column on medium and larger screens) -->
+                    <div class="col-md-6 order-md-2 p-0">
+                        <img class="mission-vision-image img-fluid" src="https://ieeensusb.org/wp-content/uploads/2021/04/Vision.jpg" alt="Mission Image">
+                    </div>
+                    <!-- Text column (order-md-1 means it will be the first column on medium and larger screens) -->
+                    <div class="col-md-6 order-md-1">
+                        <div class="mx-3 my-4">
+                            <h1 style="color:white;"><b>Mission</b></h1>
+                            <br>
+                            <p class="justify-pagragraph-content">
+                                Ut venenatis tellus in metus. Cras adipiscing enim eu turpis egestas pretium aenean. Diam volutpat commodo sed egestas egestas fringilla phasellus. Vel elit scelerisque mauris pellentesque pulvinar. Elementum integer enim neque volutpat ac tincidunt vitae semper. Amet consectetur adipiscing elit pellentesque. Etiam non quam lacus suspendisse faucibus. Blandit volutpat maecenas volutpat blandit aliquam etiam. Turpis egestas sed tempus urna. Molestie at elementum eu facilisis. Morbi tincidunt ornare massa eget egestas purus viverra accumsan in. Venenatis urna cursus eget nunc scelerisque viverra mauris in aliquam.
+                            </p>
+                            <br>
                         </div>
-                        <div class="clear"></div>
                     </div>
                 </div>
+            </div>
+            <br>
+            <div class="container">
+                <!-- Second Row - Vision -->
+                <div class="row mission-vision-content">
+                    <!-- Image column (order-md-1 means it will be the first column on medium and larger screens) -->
+                    <div class="col-md-6 order-md-1 p-0">
+                        <img class="mission-vision-image img-fluid" src="https://ieeensusb.org/wp-content/uploads/2021/04/Vision.jpg" alt="Vision Image">
+                    </div>
+                    <!-- Text column (order-md-2 means it will be the second column on medium and larger screens) -->
+                    <div class="col-md-6 order-md-2">
+                        <div class="mx-3 my-4">
+                            <h1 style="color:white;"><b>Vision</b></h1>
+                            <br>
+                            <p class="justify-pagragraph-content">
+                                Sit amet est placerat in egestas erat. Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi tristique. Pellentesque sit amet porttitor eget. Ut eu sem integer vitae justo eget magna fermentum. Pulvinar elementum integer enim neque volutpat ac tincidunt vitae. Lorem ipsum dolor sit amet consectetur adipiscing elit duis tristique. Iaculis at erat pellentesque adipiscing commodo elit. A diam maecenas sed enim. In vitae turpis massa sed elementum tempus egestas. Quis commodo odio aenean sed adipiscing diam. Massa tincidunt nunc pulvinar sapien et ligula. Scelerisque felis imperdiet proin fermentum leo vel orci porta non. Interdum velit euismod in pellentesque massa placerat duis. Nisl condimentum id venenatis a condimentum vitae sapien. Semper quis lectus nulla at volutpat. Quisque non tellus orci ac auctor augue mauris augue. In arcu cursus euismod quis viverra nibh cras. Ullamcorper morbi tincidunt ornare massa eget egestas purus viverra accumsan. Est pellentesque elit ullamcorper dignissim cras tincidunt lobortis. Nunc sed blandit libero volutpat sed cras.
+                            </p>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <br><br>
+        <!-- mission and vision ends  -->
 
-                <!-- Below Sidebar Section-->
-                <div class="below-sidebar-wrapper">
-                    <section id="content-section-3">
-                        <div class="gdlr-parallax-wrapper gdlr-background-image gdlr-show-all no-skin" id="gdlr-parallax-wrapper-1" data-bgspeed="0.2" style="background-color: #EEE; padding-top: 100px; padding-bottom: 50px; ">
-                            <div class="container">
-                                <div class="four columns">
-                                    <div class="gdlr-box-with-icon-ux gdlr-ux">
-                                        <div class="gdlr-item gdlr-box-with-icon-item pos-top type-circle">
-                                            <div class="box-with-circle-icon" style="background-color: #36bddb;"><i class="fa fa-envelope" style="color:#ffffff;"></i>
-                                                <br>
-                                            </div>
-                                            <h4 class="box-with-icon-title" style="font-weight: bold;">Contact By Email</h4>
-                                            <div class="clear"></div>
-                                            <div class="box-with-icon-caption">
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.</p>
-                                            </div>
-                                        </div>
-                                    </div>
+        <!-- EXECUTIVE BODY starts  -->
+
+        <section>
+            <div class="container">
+                <h2 style="font-weight: bold;">MEET OUR EXECUTIVE BODY</h2>
+                <div class="bar"></div>
+                <div class="row justify-content-center">
+                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                        <div class="card executive-body-profile text-center">
+                            <div class="executive-body-profile-img-container">
+                                <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
+                            </div>
+                            <div class="executive-body-profile-content">
+                                <p><b>Saif Ahmed</b></p>
+                                <p><small>Faculty Advisor, PES</small></p>
+                                <div class="executive-body-profile-icons-container">
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-envelope" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-facebook" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-linkedin" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
                                 </div>
-                                <div class="four columns">
-                                    <div class="gdlr-box-with-icon-ux gdlr-ux">
-                                        <div class="gdlr-item gdlr-box-with-icon-item pos-top type-circle">
-                                            <div class="box-with-circle-icon" style="background-color: #36bddb"><i class="fa fa-phone" style="color:#ffffff;"></i>
-                                                <br>
-                                            </div>
-                                            <h4 class="box-with-icon-title" style="font-weight: bold;">Contact By Phone</h4>
-                                            <div class="clear"></div>
-                                            <div class="box-with-icon-caption">
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="four columns">
-                                    <div class="gdlr-box-with-icon-ux gdlr-ux">
-                                        <div class="gdlr-item gdlr-box-with-icon-item pos-top type-circle">
-                                            <div class="box-with-circle-icon" style="background-color: #36bddb"><i class="fa fa-home" style="color:#ffffff;"></i>
-                                                <br>
-                                            </div>
-                                            <h4 class="box-with-icon-title" style="font-weight: bold;">Come To See Us</h4>
-                                            <div class="clear"></div>
-                                            <div class="box-with-icon-caption">
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clear"></div>
                             </div>
                         </div>
-                        <div class="clear"></div>
-                    </section>
+                    </div>
                 </div>
-
+                
+                <div class="row justify-content-center">
+                    
+                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                        <div class="card executive-body-profile text-center">
+                            <div class="executive-body-profile-img-container">
+                                <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
+                            </div>
+                            <div class="executive-body-profile-content">
+                                <p><b>Saif Ahmed</b></p>
+                                <p><small>Faculty Advisor, PES</small></p>
+                                <div class="executive-body-profile-icons-container">
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-envelope" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-facebook" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-linkedin" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                        <div class="card executive-body-profile text-center">
+                            <div class="executive-body-profile-img-container">
+                                <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
+                            </div>
+                            <div class="executive-body-profile-content">
+                                <p><b>Saif Ahmed</b></p>
+                                <p><small>Faculty Advisor, PES</small></p>
+                                <div class="executive-body-profile-icons-container">
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-envelope" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-facebook" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-linkedin" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                        <div class="card executive-body-profile text-center">
+                            <div class="executive-body-profile-img-container">
+                                <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
+                            </div>
+                            <div class="executive-body-profile-content">
+                                <p><b>Saif Ahmed</b></p>
+                                <p><small>Faculty Advisor, PES</small></p>
+                                <div class="executive-body-profile-icons-container">
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-envelope" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-facebook" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-linkedin" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                        <div class="card executive-body-profile text-center">
+                            <div class="executive-body-profile-img-container">
+                                <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
+                            </div>
+                            <div class="executive-body-profile-content">
+                                <p><b>Saif Ahmed</b></p>
+                                <p><small>Faculty Advisor, PES</small></p>
+                                <div class="executive-body-profile-icons-container">
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-envelope" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-facebook" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-linkedin" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                        <div class="card executive-body-profile text-center">
+                            <div class="executive-body-profile-img-container">
+                                <img class="executive-body-profile-images img-fluid" src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
+                            </div>
+                            <div class="executive-body-profile-content">
+                                <p><b>Saif Ahmed</b></p>
+                                <p><small>Faculty Advisor, PES</small></p>
+                                <div class="executive-body-profile-icons-container">
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-envelope" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-facebook" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="#" target="_blank">
+                                    <i class="fa fa-linkedin" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
             </div>
-            <!-- gdlr-content -->
-            <div class="clear"></div>
-        </div>
+        </section>
+        <br><br>
         <!-- content wrapper -->
-        <!-- contact us ends  -->
+        <!-- EXECUTIVE BODY ends  -->
+
+        <!-- Q&A ofRAs starts -->
+        <section class="what-why-who-section">
+            <div class="container what-why-who-section-container">
+                <div class="row">
+                    <div  class="col-md-6 p-md-5 pt-5 px-4 what-why-who-section-partition">
+                        <h3 style="color: #009CA6;"><b>What is RAS?</b></h3>
+                        <p class="justify-pagragraph-content" id="pid">The IEEE Robotics and Automation Society is known as RAS. Through striving for the advancement of the theory and practice of robotics and automation engineering, it maintains high professional standards among its members. The mission of RAS is to develop and facilitate the exchange of scientific and technological knowledge and thoughts in Robotics and Automation for the benefit of members as well as humanity. The Society also provides aid for promoting close cooperation and exchanging technical information among its Members and Affiliates.</p>
+                    </div>
+                    <div  class="col-md-6 p-md-5 pt-5 px-4 what-why-who-section-partition" style="border-left: 1px solid rgb(255, 255, 255);">
+                        <h3 style="color: #00629B;"><b>Why join RAS?</b></h3>
+                        <p class="justify-pagragraph-content" id="pid">When you join RAS, you will be joining a professional society of the IEEE that supports the development and the exchange of scientific knowledge in robotics and automation, including applied and theoretical issues. RAS Membership provides you with the resources and opportunities you need to keep yourself updated about the recent technologies and inventions in the field of Robotics and Automation.  Also, you get to network with other professionals near you who share a similar technical interest as you.</p>
+                    </div>
+                </div>
+            </div>
+            <hr class="line" style="width:100%; border: #ffffff solid 1px; margin:0px; padding:0px;">
+            <div class="container what-why-who-section-container">
+                <div class="row">
+                    <div  class="col-md-6 p-md-5 pt-5 px-4 what-why-who-section-partition">
+                        <h3 style="color:#772583;"><b>What activities do we usually do?</b></h3>
+                        <p class="justify-pagragraph-content" id="pid">We host many events, seminars, workshops, Tech-talks and weekly meetings throughout the year on various topics in robotics and automation. It helps the members to gather more knowledge about Robotics and Automation. Also, the members get the chance to learn new skills and develop those skills by participating in events.</p>
+                    </div>
+                    <div  class="col-md-6 p-md-5 py-5 px-4 what-why-who-section-partition" style="border-left: 1px solid rgb(255, 255, 255);">
+                        <h3 style="color:#BA0C2F;"><b>How to join IEEE NSU RAS SBC?</b></h3>
+                        <p class="justify-pagragraph-content" id="pid">To join IEEE NSU RAS SBC, you will have to go through a simple evaluation process. For that, you will have to write us an email answering some easy questions which will be given to you.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <br><br>
+        <!-- Q&A ofRAS ends  -->
+
+        <!-- Contact Section -->
+        <section class="contact-section">
+            <div class="container">
+                <h2 style=" font-weight: bold;">CONTACT</h2>
+                <div class="bar"></div>
+                <form>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Your Message:</label>
+                        <textarea class="form-control" id="message" rows="5" maxlength="3000" style="min-height: 150px; max-height: 300px;" placeholder="Enter your message" required></textarea>
+                    </div>
+                    <br>
+                    <div class="text-center"> <!-- Add 'text-center' class here -->
+                        <button type="submit" class="submit-button"><b>Submit</b></button>
+                    </div>
+                </form>
+                <br>
+                
+                <p class="form-text text-muted">Email Address: ras@ieeensu.org</p>
+                <p class="form-text text-muted">Facebook page: <a href="https://www.facebook.com/ieeensu.ras" target="_blank">https://www.facebook.com/ieeensu.ras</a></p>
+                <p></p>
+            </div>
+        </section>
+        <br><br>
+        <!-- End Contact Section -->
+
+                
 
         <!--Footer-->
         {% block footer %}
