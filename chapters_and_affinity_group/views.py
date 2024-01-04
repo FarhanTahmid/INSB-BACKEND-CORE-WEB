@@ -31,8 +31,6 @@ from events_and_management_team.renderData import Events_And_Management_Team
 from port.models import Chapters_Society_and_Affinity_Groups
 from django.views.decorators.clickjacking import xframe_options_exempt
 from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
-
-
 # Create your views here.
 logger=logging.getLogger(__name__)
 
@@ -1313,3 +1311,54 @@ def event_preview(request, primary, event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
+    
+
+@login_required
+def manage_main_website(request, primary):
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        main_webpage_information = Sc_Ag.get_sc_ag(primary)
+
+    
+        has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
+        if(has_access):
+            
+            if request.method == "POST":
+
+                if request.POST.get('save'):
+
+                    about_description = request.POST.get('about_description')
+                    about_image = request.POST.get('sc_ag_logo')
+                    background_image = request.POST.get('background_image')
+                    mission_description = request.POST.get('mission_description')
+                    mission_image = request.POST.get('mission_picture')
+                    vision_description = request.POST.get('vision_description')
+                    vision_picture = request.POST.get('vision_picture')
+                    what_is_this_description = request.POST.get('what_is_this_description')
+                    why_join_it = request.POST.get('why_join_it')
+                    what_activites_it_has = request.POST.get('what_activites_it_has')
+                    how_to_join = request.POST.get('how_to_join')
+
+
+            context={
+                'is_branch' : False,
+                'primary' : primary,
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'media_url':settings.MEDIA_URL,
+
+            }
+
+            return render(request,"Main Web Form/portal_form.html",context)
+        else:
+            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
+
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+

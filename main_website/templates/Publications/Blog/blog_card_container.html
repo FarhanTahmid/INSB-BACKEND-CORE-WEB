@@ -4,96 +4,223 @@
 
 <style>
 
-    {% comment %} .achievement_card{
-        height: 425px;
-    } {% endcomment %}
+    
 
-    .card-img-top {
-        object-fit: cover;
-        height: 250px; /* Set a fixed height for the image */
-    }
+    .card_container{
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            margin-bottom: 50px;
 
-    .card-title {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 2; /* Show 2 lines of text */
-        -webkit-box-orient: vertical;
-    }
+            vertical-align: baseline;
+            font-family: inherit;
+            font-size: 100%;
+            font-style: inherit;
+            font-weight: inherit;
+        }
+        .card {
+            width: 356.625px;
+            height: 497.719px;
+            background-color: #ffffff;
+            box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+            margin: 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            transition: box-shadow 0.3s ease-in-out;
+        }
 
-    .description-container {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-    }
+        .card:hover {
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.3);
+        }
 
-    .description-container.collapsed,
-    .card-title.collapsed {
-        -webkit-line-clamp: unset;
-    }
+        .card img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .card:hover img {
+            transform: scale(1.1);
+        }
+
+        .card_content {
+            padding: 20px;
+        }
+
+        .card_content h5 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .card_content span {
+            font-size: 14px;
+            color: #302f2f;
+            line-height: 1.5;
+        }
+
+        .card_content i {
+            margin-right: 5px;
+        }
+
+        .card_content a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .card_content a:hover {
+            color: #0056b3;
+        }
+        
+
 </style>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $(".read-more-link").click(function (event) {
-            event.preventDefault();
-
-            var cardBody = $(this).closest(".card-body");
-            var cardText = cardBody.find(".description-container");
-            var cardTitle = cardBody.find(".card-title");
-            var card = cardBody.closest(".card");
-
-            cardText.toggleClass("collapsed");
-            cardTitle.toggleClass("collapsed");
-
-            // Check if any card text is collapsed
-            var isCollapsed = card.find(".description-container.collapsed").length > 0;
-
-            // Set card height based on collapsed state
-            card.css("height", isCollapsed ? "auto" : "425px");
-
-            // Change the link text based on collapsed state
-            var linkText = isCollapsed ? "Read Less" : "Read More";
-            $(this).text(linkText);
-        });
-    });
-</script>
-
-
-
-
-
-<div class="container">
-    <div class="row m-0">
-
-        <!-- Repeat the card -->
-        {% for i in blogs %}
-        <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
-            <div class="card shadow achievement_card">
-                <img class="card-img-top" src="/media_files/{{i.blog_banner_picture}}" alt="">
-
-                <div class="position-absolute">
-                    <span style="background-color: #00629B;" class=" text-white px-3 py-2 rounded h6">{{i.date}}</span>
-                </div>
-
-                <div class="card-body">
-                    <h5 class="card-title fw-bold mt-2">{{i.title}} - <span>{{i.writer_name}}</span></h5>
-                    <div class="description-container">
-                        <p class="card-text">{{i.description|safe}}</p>
-                    </div>
-                    <a href="#" class="read-more-link" >Read More</a>
-
-                    
-                </div>
-            </div>
+<!-- Cards starts here -->
+<div class="card_container">
+    <div class="card">
+        <img src="images/recruitment.jpg" alt="Sample photo">
+        <div class="card_content">
+            <h5>Feelings About IEEE NSU Student Branch</h5>
+            <i class="fa-regular fa-clock"></i>
+            <span>13/10/2021</span>
+            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
+            <i class="fa-regular fa-comments"></i>
+            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
+            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
         </div>
-        {% endfor %}
     </div>
+
+    <div class="card">
+        <img src="images/recruitment.jpg" alt="Sample photo">
+        <div class="card_content">
+            <h5>Feelings About IEEE NSU Student Branch</h5>
+            <i class="fa-regular fa-clock"></i>
+            <span>13/10/2021</span>
+            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
+            <i class="fa-regular fa-comments"></i>
+            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
+            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
+        </div>
+    </div>
+           
+    
+    
+
+    <div class="card">
+        <img src="images/recruitment.jpg" alt="Sample photo">
+        <div class="card_content">
+            <h5>Feelings About IEEE NSU Student Branch</h5>
+            <i class="fa-regular fa-clock"></i>
+            <span>13/10/2021</span>
+            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
+            <i class="fa-regular fa-comments"></i>
+            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
+            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
+        </div>
+    </div>
+
+    
+    
 </div>
-<br><br>
+
+<div class="card_container">
+    <div class="card">
+        <img src="images/recruitment.jpg" alt="Sample photo">
+        <div class="card_content">
+            <h5>Feelings About IEEE NSU Student Branch</h5>
+            <i class="fa-regular fa-clock"></i>
+            <span>13/10/2021</span>
+            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
+            <i class="fa-regular fa-comments"></i>
+            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
+            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="images/recruitment.jpg" alt="Sample photo">
+        <div class="card_content">
+            <h5>Feelings About IEEE NSU Student Branch</h5>
+            <i class="fa-regular fa-clock"></i>
+            <span>13/10/2021</span>
+            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
+            <i class="fa-regular fa-comments"></i>
+            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
+            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
+        </div>
+    </div>
+           
+    
+    
+
+    <div class="card">
+        <img src="images/recruitment.jpg" alt="Sample photo">
+        <div class="card_content">
+            <h5>Feelings About IEEE NSU Student Branch</h5>
+            <i class="fa-regular fa-clock"></i>
+            <span>13/10/2021</span>
+            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
+            <i class="fa-regular fa-comments"></i>
+            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
+            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+<div class="card_container">
+    <div class="card">
+        <img src="images/recruitment.jpg" alt="Sample photo">
+        <div class="card_content">
+            <h5>Feelings About IEEE NSU Student Branch</h5>
+            <i class="fa-regular fa-clock"></i>
+            <span>13/10/2021</span>
+            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
+            <i class="fa-regular fa-comments"></i>
+            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
+            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="images/recruitment.jpg" alt="Sample photo">
+        <div class="card_content">
+            <h5>Feelings About IEEE NSU Student Branch</h5>
+            <i class="fa-regular fa-clock"></i>
+            <span>13/10/2021</span>
+            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
+            <i class="fa-regular fa-comments"></i>
+            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
+            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
+        </div>
+    </div>
+           
+    
+    
+
+    <div class="card">
+        <img src="images/recruitment.jpg" alt="Sample photo">
+        <div class="card_content">
+            <h5>Feelings About IEEE NSU Student Branch</h5>
+            <i class="fa-regular fa-clock"></i>
+            <span>13/10/2021</span>
+            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
+            <i class="fa-regular fa-comments"></i>
+            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
+            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+<!-- Add more cards as needed -->
+
 
 
 {% endblock blog_card_container %}

@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Research_Papers,Blog_Category,Blog,IEEE_Bangladesh_Section,IEEE_Bangladesh_Section_Gallery
+
+from main_website.forms import About_IEEE_Bangladesh_Section_Form
+from .models import Research_Papers,Blog_Category,Blog,IEEE_Bangladesh_Section,IEEE_Bangladesh_Section_Gallery,HomePage_Thoughts
 # Register your models here.
 ###Society AGS###
 # RAS
@@ -40,8 +42,14 @@ class Achievements(admin.ModelAdmin):
 
 @admin.register(IEEE_Bangladesh_Section)
 class IEEE_Bangladesh_Section_Admin(admin.ModelAdmin):
-    list_display = ['about_ieee_bangladesh','ieee_bangladesh_logo','member_and_volunteer_description','member_and_volunteer_picture','benefits_description','student_branches_description','affinity_groups_description','community_and_society_description',]
+    form=About_IEEE_Bangladesh_Section_Form
+    list_display = ['about_ieee_bangladesh','ieee_bangladesh_logo','member_and_volunteer_description','member_and_volunteer_picture','benefits_description','student_branches_description','affinity_groups_description','community_and_society_description']  
     
 @admin.register(IEEE_Bangladesh_Section_Gallery)
 class IEEE_Bangldesh_Section_Gallery(admin.ModelAdmin):
     list_display=['picture']
+
+@admin.register(HomePage_Thoughts)
+class HomePage_Thoughts(admin.ModelAdmin):
+
+    list_display = ['quote','author']
