@@ -162,7 +162,7 @@
                     </div>
                     
             
-                    <form id="myForm" method="POST" enctype="multipart/form-data">
+                    <form method="POST">
                     {% csrf_token %}
                         <div class="box-body">    
                             
@@ -170,270 +170,63 @@
                             <br>
                             
                             <div class="form-group">
-                                <label>About <span style="color:red">*<span></label> 
-                                <input
-                                    placeholder="About"
-                                    class="form-control"
-                                    type="text"
-                                    autocomplete="off"
-                                    required
-                                    name="about_details"/>
+                                {{form.media}}
+                                {{form.as_p}}
                             </div>
                             <br>
 
                             <div class="form-group">
                                 <label for="images">About Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="about-image-input" name="image" accept="image/*">
+                                    <input type="file" class="custom-file-input" id="about-image-input" name="sc_ag_logo" accept="image">
                                     <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
                                 </div>
+                                <a href="{{media_url}}{{about_img}}" target="_blank">{{about_img}}</a>
                                 
                                 <br>
                             </div>
-                            <br>   
+                            <br>
                             
-
                             <div class="form-group">
                                 <label for="images">Background Image For Parallax Effect:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="background-image-input" name="image" accept="image/*">
+                                    <input type="file" class="custom-file-input" id="background-image-input" name="background_image" accept="image">
                                     <label class="custom-file-label bg-light" for="background-image-input">Choose file</label>
                                 </div>
+                                <a href="{{media_url}}{{bg_img}}" target="_blank">{{bg_img}}</a>
                                 
                                 <br>
                                 <div id="selected-file-text"></div>
                             </div>
-
-                            <br> 
-                            <hr>
-                            <br> 
-
-                            <h1 style="text-align:center;font-size:30px;">Mission & Vision</h1>
                             <br>
-
-                            <div class="form-group">
-                                <label>Mission <span style="color:red">*<span></label> 
-                                <textarea 
-                                    placeholder="Mission" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="mission_details"
-                                    required rows="3"></textarea>
-
-                            </div>
-                            <br>
-                            
 
                             <div class="form-group">
                                 <label for="images">Mission Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="mission-image-input" name="image" accept="image/*">
+                                    <input type="file" class="custom-file-input" id="mission-image-input" name="mission_picture" accept="image">
                                     <label class="custom-file-label bg-light" for="mission-image-input">Choose file</label>
                                 </div>
-                                
+                                <a href="{{media_url}}{{mission_img}}" target="_blank">{{mission_img}}</a>
                                 <br>
-                            </div>
-                            <br> 
-
-
-                            <div class="form-group">
-                                <label>Vision <span style="color:red">*<span></label> 
-                                <textarea 
-                                    placeholder="Vision" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="vision_details"
-                                    required rows="3"></textarea>
-
                             </div>
                             <br>
 
                             <div class="form-group">
                                 <label for="images">Vision Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="vision-image-input" name="image" accept="image/*">
+                                    <input type="file" class="custom-file-input" id="vision-image-input" name="vision_picture" accept="image">
                                     <label class="custom-file-label bg-light" for="vision-image-input">Choose file</label>
                                 </div>
-                                
-                                <br>
-                            </div>
-
-                            <br> 
-                            <hr>
-                            <br> 
-
-                            <h1 style="text-align:center;font-size:30px;">Executive Body</h1>
-                            <br>
-
-                            <div class="form-group">
-                                <label for="images">Faculty Image:</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="faculty-image-input" name="image" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="faculty-image-input">Choose file</label>
-                                </div>
-                                
+                                <a href="{{media_url}}{{vision_img}}" target="_blank">{{vision_img}}</a>
                                 <br>
                             </div>
                             <br>
-
-                            <div class="form-group">
-                                <label>Faculty Name <span style="color:red">*<span></label> 
-                                <input
-                                    placeholder="Faculty Name"
-                                    class="form-control"
-                                    type="text"
-                                    autocomplete="off"
-                                    required
-                                    name="faculty_name"/>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Designation <span style="color:red">*<span></label> 
-                                <input
-                                    placeholder="Designation"
-                                    class="form-control"
-                                    type="text"
-                                    autocomplete="off"
-                                    required
-                                    name="faculty_designaation_name"/>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Message Link</label>
-                                <input
-                                placeholder="Message Link"
-                                class="form-control"
-                                type="url"
-                                autocomplete="off"
-                                id="field1"
-                                value=""
-                                name="faculty_message_link"/>
-                            </div>
-                            <br> 
-
-                            <div class="form-group">
-                                <label>Facebook Link</label>
-                                <input
-                                placeholder="Facebook Link"
-                                class="form-control"
-                                type="url"
-                                autocomplete="off"
-                                id="field1"
-                                value=""
-                                name="faculty_facebook_link"/>
-                            </div>
-                            <br> 
-
-                            <div class="form-group">
-                                <label>Linkedin Link</label>
-                                <input
-                                placeholder="Linkedin Link"
-                                class="form-control"
-                                type="url"
-                                autocomplete="off"
-                                id="field1"
-                                value=""
-                                name="faculty_linkedin_link"/>
-                            </div>
-                            <br>   
-                            
-                            
-                            <div class="form-group row align-items-center">
-                                <label for="executives" class="col-sm-3 form-control-label">Add executives:</label>
-                                <div class="col-sm-7">
-                                    <!-- Add input field for executives here if needed -->
-                                </div>
-                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddExecutiveModal"></button>
-                                </div>
-                            </div>
-                            <br>
-                            
-                            <hr>
-                            <div id="executives-container" class="mt-3">
-                                <label>Executives:</label> 
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditExecutiveModal">Sample</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <br> 
-                            <hr>
-                            <br> 
-
-                            <h1 style="text-align:center;font-size:30px;">What Why Who How</h1>
-                            <br>
-
-                            <div class="form-group">
-                                <label>What is RAS?<span style="color:red">*<span></label> 
-                                <textarea 
-                                    placeholder="What is RAS?" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="what_is_ras_details"
-                                    required rows="3"></textarea>
-
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Why join RAS? <span style="color:red">*<span></label> 
-                                <textarea 
-                                    placeholder="Why join RAS?" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="why_join_ras_details"
-                                    required rows="3"></textarea>
-
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>What activities do we usually do? <span style="color:red">*<span></label> 
-                                <textarea 
-                                    placeholder="What activities do we usually do?" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="what_activities_does_ras_do_details"
-                                    required rows="3"></textarea>
-
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>How to join IEEE NSU RAS SBC? <span style="color:red">*<span></label> 
-                                <textarea 
-                                    placeholder="How to join IEEE NSU RAS SBC?" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="how_to_join_ras_details"
-                                    required rows="3"></textarea>
-
-                            </div>
-                            <br>
-                            <hr>
-                            <br> 
 
                             <div class="form-group text-center">
-                                <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
+                                <input type="submit" name="save" class="btn btn-outline-success p-x-md" value="Save">
                             </div>
                             <br>
-
-                            
-                            
+                             
                         </div> 
         
                     

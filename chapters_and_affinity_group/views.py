@@ -31,7 +31,7 @@ from events_and_management_team.renderData import Events_And_Management_Team
 from port.models import Chapters_Society_and_Affinity_Groups
 from django.views.decorators.clickjacking import xframe_options_exempt
 from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
-
+from port.forms import Chapter_Society_Affinity_Groups_Form
 # Create your views here.
 logger=logging.getLogger(__name__)
 
@@ -1320,17 +1320,55 @@ def manage_main_website(request, primary):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        main_webpage_information = Sc_Ag.get_sc_ag(primary)
 
     
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
         if(has_access):
+            form = Sc_Ag.get_form_data(primary)
+            about_img = main_webpage_information.sc_ag_logo
+            bg_img = main_webpage_information.background_image
+            mission_img = main_webpage_information.mission_picture
+            vision_img = main_webpage_information.vision_picture
+            
+            if request.method == "POST":
 
+                if request.POST.get('save'):
+
+                    about_description = request.POST.get('about_description')
+                    about_image = request.POST.get('sc_ag_logo')
+                    background_image = request.POST.get('background_image')
+                    mission_description = request.POST.get('mission_description')
+                    mission_image = request.POST.get('mission_picture')
+                    vision_description = request.POST.get('vision_description')
+                    vision_picture = request.POST.get('vision_picture')
+                    what_is_this_description = request.POST.get('what_is_this_description')
+                    why_join_it = request.POST.get('why_join_it')
+                    what_activites_it_has = request.POST.get('what_activites_it_has')
+                    how_to_join = request.POST.get('how_to_join')
+
+                    if about_image == "":
+                        about_image = about_img
+                        
+                    Sc_Ag.main_website_info(request,primary,about_description,about_image,background_image,
+                                            mission_description,mission_image,vision_description,vision_picture,
+                                            what_is_this_description,why_join_it,what_activites_it_has,how_to_join)
+
+                    
+
+                    
 
             context={
                 'is_branch' : False,
                 'primary' : primary,
                 'all_sc_ag':sc_ag,
-                'sc_ag_info':get_sc_ag_info
+                'sc_ag_info':get_sc_ag_info,
+                'form':form,
+                'media_url':settings.MEDIA_URL,
+                'about_img':about_img,
+                'bg_img':bg_img,
+                'mission_img':mission_img,
+                'vision_img':vision_img
 
             }
 
