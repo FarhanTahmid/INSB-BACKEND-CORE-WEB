@@ -40,6 +40,8 @@ from central_events.forms import EventForm
 from .forms import *
 from .website_render_data import MainWebsiteRenderData
 from django.views.decorators.clickjacking import xframe_options_exempt
+import port.forms as PortForms
+
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -125,6 +127,9 @@ def team_details(request,primary,name):
     insb_members=renderData.Branch.load_all_insb_members()
     members_to_add=[]
     position=12 #assigning default to volunteer
+
+    team_to_update=get_object_or_404(Teams,primary=primary)
+
     if request.method=='POST':
         if(request.POST.get('add_to_team')):
             #Checking if a button is clicked
@@ -173,7 +178,18 @@ def team_details(request,primary,name):
             all_memebers_in_team.update(team=None,position = Roles_and_Position.objects.get(id=13))
             messages.info(request,"The whole team was reset. Previous Members are preserved in their respective Panel.")
             return redirect('central_branch:team_details',primary,name)
-        
+
+        if(request.POST.get('update_team_details')):
+            '''Update Team Details'''
+            team_update_form=PortForms.TeamForm(request.POST,request.FILES,instance=team_to_update)
+            if(team_update_form.is_valid()):
+                team_update_form.save()
+                messages.success(request,"Team information was updated!")
+                return redirect('central_branch:team_details',primary,name)
+    
+    else:
+        team_update_form=PortForms.TeamForm(instance=team_to_update)
+
     context={
         'all_sc_ag':sc_ag,
         'team_id':primary,
@@ -182,6 +198,7 @@ def team_details(request,primary,name):
         'positions':positions,
         'insb_members':insb_members,
         'current_panel':current_panel,
+        'team_form':team_update_form
         
     }
     if(has_access):
@@ -528,6 +545,9 @@ def manage_blogs(request):
     # Load all blogs
     all_blogs=Blog.objects.all()
     
+    form=BlogsForm
+    form2=BlogCategoryForm
+    
     if(request.method=="POST"):
         form=BlogsForm(request.POST,request.FILES)
         if(request.POST.get('add_blog')):
@@ -545,11 +565,6 @@ def manage_blogs(request):
         if(request.POST.get('remove_blog')):
             MainWebsiteRenderData.delete_blog(request=request)
             return redirect('central_branch:manage_blogs')
-
-
-    else:
-        form=BlogsForm
-        form2=BlogCategoryForm
 
     context={
         'all_sc_ag':sc_ag,
@@ -795,9 +810,56 @@ def update_news(request,pk):
 
 @login_required
 def manage_magazines(request):
-    return render(request,'Manage Website/Publications/Magazine/manage_magazine.html')
+    # get form
+    magazine_form = MagazineForm
+    
+    # get all magazines
+    all_magazines=Magazines.objects.all().order_by('-publish_date')
+    if(request.method=="POST"):
+        magazine_form=MagazineForm(request.POST,request.FILES)
+        if(request.POST.get('add_magazine')):
+            if (magazine_form.is_valid()):
+                magazine_form.save()
+                messages.success(request,"New Magazine Added Successfully")
+                return redirect('central_branch:manage_magazines')
+        if(request.POST.get('remove_magazine')):
+            magazine_to_delete=request.POST['magazine_pk']
+            get_magazine=Magazines.objects.get(pk=magazine_to_delete)
+            if(os.path.isfile(get_magazine.magazine_picture.path)):
+                os.remove(get_magazine.magazine_picture.path)
+            if(os.path.isfile(get_magazine.magazine_file.path)):
+                os.remove(get_magazine.magazine_file.path)
+            get_magazine.delete()
+            messages.warning(request,"One Item Deleted from Magazines")
+            return redirect('central_branch:manage_magazines')
+            
+                    
+    context={
+        'magazine_form':magazine_form,
+        'all_magazines':all_magazines,
+    }
+    return render(request,'Manage Website/Publications/Magazine/manage_magazine.html',context=context)
 
 
+@login_required
+def update_magazine(request,pk):
+    # get the magazine to update
+    magazine_to_update=get_object_or_404(Magazines,pk=pk)
+    
+    if request.method == "POST":
+        update_form = MagazineForm(request.POST, request.FILES, instance=magazine_to_update)
+        if update_form.is_valid():
+            update_form.save()
+            messages.info(request,"Magazine Informations were updates")
+            return redirect('central_branch:manage_magazines')
+    else:
+        update_form = MagazineForm(instance=magazine_to_update)
+    context={
+        'update_form':update_form,
+        'magazine':magazine_to_update,
+    }
+    
+    return render(request,'Manage Website/Publications/Magazine/update_magazine.html',context=context)
 
 
 @login_required

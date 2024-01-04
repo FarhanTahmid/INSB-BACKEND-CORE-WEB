@@ -187,6 +187,7 @@
                 <p class="btn-groups">
                     <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-d" ui-toggle-class="bounce" ui-target="#animate">Reset Team</button>
                     <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add Member in Team</button>
+                    <button type="submit" class="btn btn-outline b-info text-info" data-toggle="modal" data-target="#m-s-e" ui-toggle-class="bounce" ui-target="#animate">Edit Team Details</button>
                 </p>
             </div>
             <br>
@@ -368,6 +369,31 @@
                             <div class="modal-footer">
                             <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
                             <input type="submit" name="reset_team" class="btn btn-danger p-x-md" value="Reset"></input>                  
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </form>
+            </div>
+
+            <div id="m-s-e" class="modal fade animate" data-backdrop="true">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-dialog modal-lg" id="animate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Edit Team Details</h5>
+                            </div>
+                            
+                            <div class="modal-body text-left p-lg">
+                              {{team_form.media}}  
+                              {{team_form.as_p}}
+                                
+                            </div>
+
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <input type="submit" name="update_team_details" class="btn btn-success p-x-md" value="Update"></input>
+                        </form>                  
                             </div>
                         </div><!-- /.modal-content -->
                     </div>

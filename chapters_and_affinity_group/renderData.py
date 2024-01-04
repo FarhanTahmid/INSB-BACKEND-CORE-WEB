@@ -12,6 +12,7 @@ from central_events.models import Events
 from django.http import JsonResponse, HttpResponse
 import xlwt
 from membership_development_team import renewal_data
+from port.forms import Chapter_Society_Affinity_Groups_Form
 
 class Sc_Ag:
     logger=logging.getLogger(__name__)
@@ -388,7 +389,47 @@ class Sc_Ag:
             messages.error(request,"Can not remove member from Data Access! Something went wrong!")
             return False
         
+    def main_website_info(request,primary,about_description,about_image,background_image,
+                        mission_description,mission_image,vision_description,vision_picture,
+                        what_is_this_description,why_join_it,what_activites_it_has,how_to_join):
+        try:
+            sc_ag = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
+            sc_ag.about_description =about_description
+            sc_ag.sc_ag_logo = about_image
+            sc_ag.background_image = background_image
+            sc_ag.mission_description = mission_description
+            sc_ag.mission_picture = mission_image
+            sc_ag.vision_description = vision_description
+            sc_ag.vision_picture = vision_picture
+            sc_ag.what_is_this_description = what_is_this_description
+            sc_ag.why_join_it = why_join_it
+            sc_ag.what_activites_it_has = what_activites_it_has
+            sc_ag.how_to_join = how_to_join
+
+            sc_ag.save()
+
+            return True
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,f"Could not update the main page of Sc_Ag group = {primary}!")
+            return False
         
+    def get_sc_ag(primary):
+
+        return Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
+    
+    def get_form_data(primary):
+        main_webpage_information = Sc_Ag.get_sc_ag(primary)
+        form = Chapter_Society_Affinity_Groups_Form({'about_description':main_webpage_information.about_description,
+                                                         'mission_description':main_webpage_information.mission_description,
+                                                         'vision_description':main_webpage_information.vision_description,
+                                                         'what_is_this_description':main_webpage_information.what_is_this_description,
+                                                         'why_join_it':main_webpage_information.why_join_it,
+                                                         'what_activites_it_has':main_webpage_information.what_activites_it_has,
+                                                         'how_to_join':main_webpage_information.how_to_join})
+        
+        return form
 
 
     
