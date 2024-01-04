@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>sc_ag form</title>
+    <title>Manage Main Website</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
@@ -106,10 +106,15 @@
         <!-- aside end -->
         <!-- navbar content -->
         <div id="content" class="app-content box-shadow-z0" role="main">
+            {% if is_branch %}
             {% block navbar %}
-                {% include 'graphics_navbar.html' %}
+                {% include 'navbar.html' %}
             {% endblock navbar %}
-
+            {% else %}
+            {% block sc_ag_navbar %}
+                {% include 'sc_ag_navbar.html' %}
+            {% endblock sc_ag_navbar %}
+            {% endif %}
         </div>
         <!--navbar content-->
         <!-- ############ PAGE START-->

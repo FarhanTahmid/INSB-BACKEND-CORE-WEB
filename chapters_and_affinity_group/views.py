@@ -32,7 +32,6 @@ from port.models import Chapters_Society_and_Affinity_Groups
 from django.views.decorators.clickjacking import xframe_options_exempt
 from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
 
-
 # Create your views here.
 logger=logging.getLogger(__name__)
 
@@ -1313,3 +1312,36 @@ def event_preview(request, primary, event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
+    
+
+@login_required
+def manage_main_website(request, primary):
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+
+    
+        has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
+        if(has_access):
+
+
+            context={
+                'is_branch' : False,
+                'primary' : primary,
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info
+
+            }
+
+            return render(request,"Main Web Form/portal_form.html",context)
+        else:
+            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
+
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+

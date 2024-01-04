@@ -157,4 +157,12 @@ class IEEE_Bangladesh_Section_Gallery(models.Model):
     def __str__(self) -> str:
         return self.pk
 
+class HomePage_Thoughts(models.Model):
 
+    quote = models.CharField(null=False,blank=False,max_length=500)
+    author = models.CharField(null=False,blank=False,max_length=1)#can be a foreign key to a faculty
+    
+    class Meta:
+        verbose_name="HomePage Thoughts"
+    def __str__(self) -> str:
+        return self.author

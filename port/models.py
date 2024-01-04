@@ -10,6 +10,23 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
     primary_color_code=models.CharField(null=True,blank=True,max_length=20)
     logo=models.ImageField(null=True,blank=True,upload_to='sc_ag_logos/')
 
+    '''The next attributes are for the Sc_Ag main page'''
+
+    about_description = RichTextField(null=True,blank=True)
+    sc_ag_logo = ResizedImageField(null=True,blank=True,upload_to="main_website_files/Societies & AG/logos/")
+    background_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies & ag/background image/")
+    mission_description = RichTextField(null=True,blank=True)
+    mission_picture = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies & ag/mission picture/")
+    vision_description = RichTextField(null=True,blank=True)
+    vision_picture = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies & ag/vision picture/")
+    what_is_this_description = RichTextField(null=True,blank=True)
+    why_join_it = RichTextField(null=True,blank=True)
+    what_activites_it_has = RichTextField(null=True,blank=True)
+    how_to_join = RichTextField(null=True,blank=True)
+    contact_name = models.CharField(null=True,blank=True,max_length=100)
+    contact_email = models.EmailField(null=True,blank=True)
+    contact_messages = models.TextField(null=True,blank=True)
+
     class Meta:
         verbose_name="Chapters-Societies-Affinity Group"
     def __str__(self) -> str:
