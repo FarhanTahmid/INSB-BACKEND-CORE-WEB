@@ -203,7 +203,7 @@ def rasPage(request):
     # Second para after the title
     secondary_para="Focusing on the research, study, and exchange of knowledge regarding Robotics & Automation."
     
-    getRasAbout=society_ag.Ras.get_ras_about()
+    # getRasAbout=society_ag.Ras.get_ras_about()
     
     # if getRasAbout is False:
     #     return HttpResponse("GG")
@@ -211,7 +211,7 @@ def rasPage(request):
     context={
         'page_title':page_title,
         'secondary_para':secondary_para,
-        'about_ras':getRasAbout,
+        # 'about_ras':getRasAbout,
         'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
 
     }
