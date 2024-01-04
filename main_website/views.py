@@ -558,3 +558,6 @@ def ieee_region_10(request):
 
 def ieee(request):
     return render(request, 'About/About_IEEE.html')
+
+def faq(request):
+    return render(request, 'About/faq.html')
