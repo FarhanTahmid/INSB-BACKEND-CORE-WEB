@@ -650,7 +650,7 @@
                     <div class="modal-body">
                         <form method="POST">
                             {% csrf_token %}
-                        <p><input id="remove_note" name= "remove_note" type="hidden"></p>
+                        <p><input id="executive_delete" name= "executive_delete" type="hidden"></p>
                         Are you sure you want to delete the note?
                     </div>
                     <div class="modal-footer">
@@ -688,10 +688,10 @@
 
     <!--Delete logic for executive body-->
     <script>
-        function openModal(remove_note) {
+        function openModal(executive_delete) {
             // Set data in the modal
-            var inputElement = document.getElementById('remove_note');    
-            inputElement.value=remove_note;
+            var inputElement = document.getElementById('executive_delete');    
+            inputElement.value=executive_delete;
         }
     </script>
 

@@ -3,6 +3,34 @@
 {% endblock about_base %}
 {% block manage_about_ieee %}
 {% load static %}
+
+<style>
+    .circle-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 45px; /* Set minimum width */
+        height: 45px; /* Set minimum height */
+        background-color: transparent; /* Set to transparent or any other color for the inside */
+        border: 2px solid #78BE20; /* Border color is green */
+        border-radius: 50%;
+        color: #78BE20; /* Text color is green */
+        font-size: 24px; /* Adjust the font size as needed */
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s; /* Add smooth transition effect */
+    }
+
+    .circle-btn:hover {
+        background-color: #78BE20; /* Hover background color is green */
+        color: #fff; /* Hover text color is white */
+    }
+
+    .plus-sign::before {
+        content: '+';
+    }
+
+</style>
+
 <body>
     <div class="app" id="app">
         <div ui-view class="app-body" style="justify-content:center; margin-left:27%; margin-right:15%;" id="view">
@@ -19,16 +47,511 @@
             </div>
             <!--Messages End-->
             
-            <!--Achievements Table-->
-            <div class="box">
-                
+            <div class="container">
+          
+                <div class="box">
+            
+            
+                    <br>
+                    <div class="box-header">
+                        <h1 style="text-align:center;font-size:30px;">Details</h1>
+                        <hr>
+                    </div>
+                    
+            
+                    <form id="myForm" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <div class="box-body">    
+                            
+                            <h1 style="text-align:center;font-size:30px;">About</h1>
+                            <br>
+                            
+                            <div class="form-group">
+                                <label>About <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    placeholder="About" 
+                                    class="form-control" 
+                                    type="text"
+                                    autocomplete="off"
+                                    name="mission_details"
+                                    required rows="3"></textarea>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">About Image:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="about-image-input" name="image" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                            </div>  
+
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Largest Community</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Community Details <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    placeholder="Community Details" 
+                                    class="form-control" 
+                                    type="text"
+                                    autocomplete="off"
+                                    name="mission_details"
+                                    required rows="3"></textarea>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">Community Image:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="community-image-input" name="image" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="community-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                            </div> 
+
+                            <br> 
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Start Collabs Publications Events</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Start with IEEE <span style="color:red">*<span></label> 
+                                <textarea 
+                                    placeholder="Start with IEEE" 
+                                    class="form-control" 
+                                    type="text"
+                                    autocomplete="off"
+                                    name="start_with_ieee_details"
+                                    required rows="3"></textarea>
+
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Collaboration <span style="color:red">*<span></label> 
+                                <textarea 
+                                    placeholder="Collaboration" 
+                                    class="form-control" 
+                                    type="text"
+                                    autocomplete="off"
+                                    name="collaboration_details"
+                                    required rows="3"></textarea>
+
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Publications <span style="color:red">*<span></label> 
+                                <textarea 
+                                    placeholder="Publications" 
+                                    class="form-control" 
+                                    type="text"
+                                    autocomplete="off"
+                                    name="publications_details"
+                                    required rows="3"></textarea>
+
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Events and Conference <span style="color:red">*<span></label> 
+                                <textarea 
+                                    placeholder="Events and Conference" 
+                                    class="form-control" 
+                                    type="text"
+                                    autocomplete="off"
+                                    name="events_and_conferences_details"
+                                    required rows="3"></textarea>
+
+                            </div>
+                            
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Achievements</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Achievements Details <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    placeholder="Achievements Details" 
+                                    class="form-control" 
+                                    type="text"
+                                    autocomplete="off"
+                                    name="achievements_details"
+                                    required rows="3"></textarea>
+                            </div>
+                            <br>
+
+                            <div class="form-group row align-items-center">
+                                <label for="achievements" class="col-sm-3 form-control-label">Add achievements:</label>
+                                <div class="col-sm-7">
+                                    <!-- Add input field for achievements here if needed -->
+                                </div>
+                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddAchievementModal"></button>
+                                </div>
+                            </div>
+                            <br>
+                            
+                            <hr>
+                            <div id="achievements-container" class="mt-3">
+                                <label>Achievements:</label> 
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditAchievementModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br>
+                            <hr>
+                            <br>
+
+                            <h1 style="text-align:center;font-size:30px;">Innovations and Developments</h1>
+                            <br>
+                            
+                            <div class="form-group">
+                                <label>Innovations and Developments Details <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    placeholder="Innovations and Developments Details" 
+                                    class="form-control" 
+                                    type="text"
+                                    autocomplete="off"
+                                    name="innovations_and_developments_details"
+                                    required rows="3"></textarea>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">Innovations and Developments Image </label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="innovations-and-developments-image-input" name="image" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="innovations-and-developments-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                            </div>
+                            
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Students and Member Activities</h1>
+                            <br>
+                            
+                            <div class="form-group">
+                                <label>Students and Member Activities Details <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    placeholder="Students and Member Activities Details" 
+                                    class="form-control" 
+                                    type="text"
+                                    autocomplete="off"
+                                    name="students_and_member_activities_details"
+                                    required rows="3"></textarea>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">Students and Member Activities Image </label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="students-and-member-activities-image-input" name="image" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="students-and-member-activities-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                            </div>
+                            
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Quality</h1>
+                            <br>
+                            
+                            <div class="form-group">
+                                <label>Quality Details <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    placeholder="Quality Details" 
+                                    class="form-control" 
+                                    type="text"
+                                    autocomplete="off"
+                                    name="quality_details"
+                                    required rows="3"></textarea>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">Quality Image </label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="quality-image-input" name="image" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="quality-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                            </div>
+                            
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Contact</h1>
+                            <br>
+                            
+                            <div class="form-group">
+                                <label>Asia Pacific Link <span style="color:red">*<span></label> 
+                                <input
+                                    placeholder="Asia Pacific Link"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="asia_pacific_link"/>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>IEEE computer organization Link <span style="color:red">*<span></label> 
+                                <input
+                                    placeholder="IEEE computer organization Link"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="ieee_computer_organization_link"/>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Customer Service Number <span style="color:red">*<span></label> 
+                                <input
+                                    placeholder="Customer Service Number"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="customer_service_number"/>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Presidents Names <span style="color:red">*<span></label> 
+                                <input
+                                    placeholder="Presidents Names"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="presidents_names"/>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Founders Names <span style="color:red">*<span></label> 
+                                <input
+                                    placeholder="Founders Names"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="founders_names"/>
+                            </div>
+                            <br>
+
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <div class="form-group text-center">
+                                <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
+                            </div>
+                            <br>
+
+                            
+                            
+                        </div> 
+        
+                    
+                    </form>  
+        
+                <div>
             </div>
-            <!--Table Ends-->
+
+
+
+            <!-- Updated Modal for adding achievements -->
+            <div class="modal fade" id="AddAchievementModal" tabindex="-1" role="dialog" aria-labelledby="AddAchievementModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addAchievementModalLabel">Add Achievements</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST">
+                                {% csrf_token %}
+                                
+                                <div class="form-group">
+                                    <label for="images">Achievement Image:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="achievement-image-input" name="image" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="achievement-image-input">Choose file</label>
+                                    </div>
+                                    
+                                    <br>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Achievements Name <span style="color:red">*<span></label> 
+                                    <input
+                                        placeholder="Achievements Name"
+                                        class="form-control"
+                                        type="text"
+                                        autocomplete="off"
+                                        required
+                                        name="achievement_name"/>
+                                </div>
+                                <br>
+                                
+                                <div class="form-group">
+                                    <label>Readmore Link <span style="color:red">*<span></label> 
+                                    <input
+                                        placeholder="Readmore Link"
+                                        class="form-control"
+                                        type="text"
+                                        autocomplete="off"
+                                        required
+                                        name="achievements-readmore_link"/>
+                                </div>  
+                                
+
+                        </div>
+                        <div class="modal-footer">
+                            <!-- Change the button label and name attribute -->
+                            <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_note" value="Add">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- New modal for editing Achievements -->
+            <div class="modal fade" id="EditAchievementModal" tabindex="-1" role="dialog" aria-labelledby="EditAchievementModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editAchievementModalLabel">Edit Achievement</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Display existing achievement in a textarea for editing -->
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input id="update_note" name="update_note" value="" type="hidden">
+                                <div class="form-group">
+                                    <label for="images">Achievement Image:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="achievement-image-input" name="image" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="achievement-image-input">Choose file</label>
+                                    </div>
+                                    
+                                    <br>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Achievement Name <span style="color:red">*<span></label> 
+                                    <input
+                                        placeholder="Achievement Name"
+                                        class="form-control"
+                                        type="text"
+                                        autocomplete="off"
+                                        required
+                                        name="achievement_name"/>
+                                </div> 
+                                <br>
+                                
+                                <div class="form-group">
+                                    <label>Readmore Link <span style="color:red">*<span></label> 
+                                    <input
+                                        placeholder="Readmore Link"
+                                        class="form-control"
+                                        type="text"
+                                        autocomplete="off"
+                                        required
+                                        name="achievements-readmore_link"/>
+                                </div>  
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" name="update" class="btn btn-outline-primary txt-primary" value="Update"></button>
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Confirmation modal for delete -->
+            <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-top" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                        <p><input id="achievement_delete" name= "achievement_delete" type="hidden"></p>
+                        Are you sure you want to delete the note?
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            </div>
             
 
 
         </div>
     </div>
+
+
+    <!--Delete logic for executive body-->
+    <script>
+        function openModal(achievement_delete) {
+            // Set data in the modal
+            var inputElement = document.getElementById('achievement_delete');    
+            inputElement.value=achievement_delete;
+        }
+    </script>
     
 </body>
 {% endblock manage_about_ieee %}
