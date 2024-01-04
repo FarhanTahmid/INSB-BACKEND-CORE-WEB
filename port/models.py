@@ -18,10 +18,10 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
     mission_description = models.TextField(null=True,blank=True,verbose_name="Mission")
     mission_picture = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies & ag/mission picture/",verbose_name="Mission Image")
     vision_description = models.TextField(null=True,blank=True,verbose_name="Vission")
-    vision_picture = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies & ag/vision picture/",verbose_name="Vission Image")
+    vision_picture = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies & ag/vision picture/",verbose_name="Vision Image")
     what_is_this_description = models.TextField(null=True,blank=True,verbose_name=f"What is it about ?")
     why_join_it = models.TextField(null=True,blank=True,verbose_name=f"Why join it ?")
-    what_activites_it_has = models.TextField(null=True,blank=True,verbose_name="What activities we usally do ?")
+    what_activites_it_has = models.TextField(null=True,blank=True,verbose_name="What activities we usually do ?")
     how_to_join = models.TextField(null=True,blank=True,verbose_name=f"How to join it ?")
 
     class Meta:
