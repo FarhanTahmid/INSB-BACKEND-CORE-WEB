@@ -1,0 +1,34 @@
+{% block about_base %}
+{% include "Manage Website/About/about_base.html" %}
+{% endblock about_base %}
+{% block manage_about_ieee %}
+{% load static %}
+<body>
+    <div class="app" id="app">
+        <div ui-view class="app-body" style="justify-content:center; margin-left:27%; margin-right:15%;" id="view">
+
+            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>IEEE Section</b></h2>
+            
+            <!--Messages-->
+            <div style="justify-content:center; text-align:center;">
+                {% if messages %}
+                    {% for message in messages %}
+                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <!--Messages End-->
+            
+            <!--Achievements Table-->
+            <div class="box">
+                
+            </div>
+            <!--Table Ends-->
+            
+
+
+        </div>
+    </div>
+    
+</body>
+{% endblock manage_about_ieee %}
