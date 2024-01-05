@@ -5,7 +5,7 @@
 <head>
 
 
-    <title>IEEE NSU RAS SBC - IEEE NSU SB</title>
+    <title>{{society.short_form}} - IEEE NSU SB</title>
     <link rel="icon" href="{% static 'logos/RAS.png'%}" />
 
 
@@ -21,10 +21,10 @@
 
     <style>
         :root {
-            --main-color: #602568;
+            --main-color: {{society.primary_color_code}};
             --secondary-color: #961A32;
             --text-color: #F7FAFC;
-            --background-image: url("{% static 'upload/slider-2.jpg'%}");
+            --background-image: url("{{media_url}}{{society.background_image}}");
         }
 
         .justify-pagragraph-content {

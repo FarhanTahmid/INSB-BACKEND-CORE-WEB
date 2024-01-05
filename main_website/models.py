@@ -122,14 +122,14 @@ class Magazines(models.Model):
     
 class IEEE_Bangladesh_Section(models.Model):
 
-    about_ieee_bangladesh = RichTextField(null=True,blank=True)
+    about_ieee_bangladesh = models.TextField(null=True,blank=True)
     ieee_bangladesh_logo = ResizedImageField(null=False,blank=False,upload_to="main_website_files/About/IEEE Bangladesh Section/logo/")
-    member_and_volunteer_description = RichTextField(null=True,blank=True)
+    member_and_volunteer_description = models.TextField(null=True,blank=True)
     member_and_volunteer_picture = ResizedImageField(null=False,blank=False,upload_to="main_website_files/About/IEEE Bangladesh Section/member_volunteer_picture/")
-    benefits_description = RichTextField(null=True,blank=True)
-    student_branches_description = RichTextField(null=True,blank=True)
-    affinity_groups_description = RichTextField(null=True,blank=True)
-    community_and_society_description = RichTextField(null=True,blank=True)
+    benefits_description = models.TextField(null=True,blank=True)
+    student_branches_description = models.TextField(null=True,blank=True)
+    affinity_groups_description = models.TextField(null=True,blank=True)
+    community_and_society_description = models.TextField(null=True,blank=True)
 
     class Meta:
         verbose_name="IEEE Bangladesh Section"
@@ -159,8 +159,8 @@ class IEEE_Bangladesh_Section_Gallery(models.Model):
 
 class HomePage_Thoughts(models.Model):
 
-    quote = models.CharField(null=False,blank=False,max_length=500)
-    author = models.CharField(null=False,blank=False,max_length=1)#can be a foreign key to a faculty
+    quote = models.TextField(null=False,blank=False)
+    author = models.CharField(null=False,blank=False,max_length=500)#can be a foreign key to a faculty
     
     class Meta:
         verbose_name="HomePage Thoughts"

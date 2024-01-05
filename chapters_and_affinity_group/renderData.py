@@ -12,7 +12,8 @@ from central_events.models import Events
 from django.http import JsonResponse, HttpResponse
 import xlwt
 from membership_development_team import renewal_data
-from port.forms import Chapter_Society_Affinity_Groups_Form
+from insb_port import settings
+import os
 
 class Sc_Ag:
     logger=logging.getLogger(__name__)
@@ -415,21 +416,39 @@ class Sc_Ag:
             messages.error(request,f"Could not update the main page of Sc_Ag group = {primary}!")
             return False
         
-    def get_sc_ag(primary):
+    def delete_image(request,primary,image_path):
 
-        return Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
-    
-    def get_form_data(primary):
-        main_webpage_information = Sc_Ag.get_sc_ag(primary)
-        form = Chapter_Society_Affinity_Groups_Form({'about_description':main_webpage_information.about_description,
-                                                         'mission_description':main_webpage_information.mission_description,
-                                                         'vision_description':main_webpage_information.vision_description,
-                                                         'what_is_this_description':main_webpage_information.what_is_this_description,
-                                                         'why_join_it':main_webpage_information.why_join_it,
-                                                         'what_activites_it_has':main_webpage_information.what_activites_it_has,
-                                                         'how_to_join':main_webpage_information.how_to_join})
+        try:
+            sc_ag = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
+            path = settings.MEDIA_ROOT+str(image_path)
+            print(path)
+            os.remove(path)
+            sc_ag.sc_ag_logo = None
+            sc_ag.save()
+            return True
+
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,f"Could not update the main page of Sc_Ag group = {primary}!")
+            return False
         
-        return form
+    def checking_length(about_details,mission_description,vision_description,
+                        what_is_this_description,why_join_it,what_activites_it_has,how_to_join):
+        
+        if (len(about_details)> 500 or len(mission_description)>500 or len(vision_description)>500 
+            or len(what_is_this_description)>500 or len(why_join_it) > 500 or len(what_activites_it_has) >500
+            or len(how_to_join)>500 or 
+            len(about_details) == 0 or len(mission_description)==0 or len(vision_description)==0
+            or len(what_is_this_description)==0 or len(why_join_it)==0 or len(what_activites_it_has)==0
+            or len(how_to_join)==0):
+            return True
+        else:
+            return False
+        
+        
+    
+    
 
 
     

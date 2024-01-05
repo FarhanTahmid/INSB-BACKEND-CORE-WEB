@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>sc_ag form</title>
+    <title>Manage Main Website | {{sc_ag_info.short_form}}</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
@@ -114,7 +114,7 @@
         <!-- navbar content -->
         <div id="content" class="app-content box-shadow-z0" role="main">
             {% block navbar %}
-                {% include 'graphics_navbar.html' %}
+                {% include 'sc_ag_navbar.html' %}
             {% endblock navbar %}
 
         </div>
@@ -148,9 +148,11 @@
                 {% endfor %}
                 <br>
             </div>
-
+        
               
-     
+            
+
+
             <div class="container">
           
                 <div class="box">
@@ -175,7 +177,11 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="about_details"></textarea>
+                                name="about_details"
+                                Required
+                                >
+                                {{sc_ag_info.about_description|default:""}}
+                                </textarea>
                                 <p id="aboutCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
@@ -183,18 +189,20 @@
                             <div class="form-group">
                                 <label for="images">About Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="about-image-input" name="image" accept="image/*">
+                                    <input type="file" class="custom-file-input" id="about-image-input" name="sc_ag_logo"  accept="image/*">
                                     <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
                                 </div>
                                 <br>
+                                {% if sc_ag_info.sc_ag_logo %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal1">Logo</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.sc_ag_logo}}')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
                             <br>   
                             
@@ -202,19 +210,21 @@
                             <div class="form-group">
                                 <label for="images">Background Image For Parallax Effect:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="background-image-input" name="image" accept="image/*">
+                                    <input type="file" class="custom-file-input" id="background-image-input" name="background_image" accept="image/*">
                                     <label class="custom-file-label bg-light" for="background-image-input">Choose file</label>
                                 </div>
                                 
                                 <br>
+                                {% if sc_ag_info.background_image %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal2">Background Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.background_image}}')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
 
                             <br> 
@@ -229,7 +239,10 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="mission_details"></textarea>
+                                name="mission_details"
+                                Required>
+                                {{sc_ag_info.mission_description}}
+                                </textarea>
                                 <p id="missionCharacterCount" style="color: red;">Required</p>
 
 
@@ -240,19 +253,21 @@
                             <div class="form-group">
                                 <label for="images">Mission Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="mission-image-input" name="image" accept="image/*">
+                                    <input type="file" class="custom-file-input" id="mission-image-input" name="mission_picture" accept="image/*">
                                     <label class="custom-file-label bg-light" for="mission-image-input">Choose file</label>
                                 </div>
                                 
                                 <br>
+                                {% if sc_ag_info.mission_picture %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal3">Mission Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.mission_picture}}')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
                             <br> 
 
@@ -262,7 +277,10 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="vision_details"></textarea>
+                                name="vision_details"
+                                Required>
+                                {{sc_ag_info.vision_description|default:""}}
+                                </textarea>
                                 <p id="visionCharacterCount" style="color: red;">Required</p>
 
 
@@ -272,19 +290,21 @@
                             <div class="form-group">
                                 <label for="images">Vision Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="vision-image-input" name="image" accept="image/*">
+                                    <input type="file" class="custom-file-input" id="vision-image-input" name="vision_picture" accept="image/*">
                                     <label class="custom-file-label bg-light" for="vision-image-input">Choose file</label>
                                 </div>
                                 
                                 <br>
+                                {% if sc_ag_info.vision_picture %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal4">Vision Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.vision_picture}}')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
 
                             <br> 
@@ -299,8 +319,9 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="what_is_ras_details"></textarea>
-                                <p id="what_is_rasCharacterCount" style="color: red;">Required</p>
+                                name="what_is_this_details"
+                                Required>{{sc_ag_info.what_is_this_description|default:""}}</textarea>
+                                <p id="what_is_thisCharacterCount" style="color: red;">Required</p>
 
 
                             </div>
@@ -311,8 +332,9 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="why_join_ras_details"></textarea>
-                                <p id="why_join_rasCharacterCount" style="color: red;">Required</p>
+                                name="why_join_this_details"
+                                Required>{{sc_ag_info.why_join_it|default:""}}</textarea>
+                                <p id="why_join_thisCharacterCount" style="color: red;">Required</p>
 
 
                             </div>
@@ -323,8 +345,9 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="what_activities_does_ras_do_details"></textarea>
-                                <p id="what_activities_does_ras_doCharacterCount" style="color: red;">Required</p>
+                                name="what_activities_does_this_do_details"
+                                Required>{{sc_ag_info.what_activites_it_has|default:""}}</textarea>
+                                <p id="what_activities_does_this_doCharacterCount" style="color: red;">Required</p>
 
 
                             </div>
@@ -335,8 +358,9 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="how_to_join_ras_details"></textarea>
-                                <p id="how_to_join_rasCharacterCount" style="color: red;">Required</p>
+                                name="how_to_join_this_details"
+                                Required>{{sc_ag_info.how_to_join|default:""}}</textarea>
+                                <p id="how_to_join_thisCharacterCount" style="color: red;">Required</p>
 
 
                             </div>
@@ -345,7 +369,7 @@
                             <br> 
 
                             <div class="form-group text-center">
-                                <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
+                                <input type="submit" name="save" class="btn btn-outline-success p-x-md" value="Save">
                             </div>
                             <br>
 
@@ -363,7 +387,7 @@
 
             
             <!-- for showing image -->
-            <div class="modal fade" id="showImageModal" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
+            <div class="modal fade" id="showImageModal1" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -373,7 +397,70 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <img src="https://images.unsplash.com/photo-1549558549-415fe4c37b60?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8M3x8fGVufDB8fHx8fA%3D%3D" class="img-fluid w-100" alt="Image">
+                            <img src="{{media_url}}{{sc_ag_info.sc_ag_logo}}" class="img-fluid w-100" alt="Image">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- for showing image -->
+            <div class="modal fade" id="showImageModal2" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="showImageModalLabel">Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img src="{{media_url}}{{sc_ag_info.background_image}}" class="img-fluid w-100" alt="Image">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- for showing image -->
+            <div class="modal fade" id="showImageModal3" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="showImageModalLabel">Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img src="{{media_url}}{{sc_ag_info.mission_picture}}" class="img-fluid w-100" alt="Image">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- for showing image -->
+            <div class="modal fade" id="showImageModal4" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="showImageModalLabel">Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img src="{{media_url}}{{sc_ag_info.vision_picture}}" class="img-fluid w-100" alt="Image">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
@@ -397,7 +484,7 @@
                     <div class="modal-body">
                         <form method="POST">
                             {% csrf_token %}
-                        <p><input id="image_delete" name= "image_delete" type="hidden"></p>
+                        <p><input id="image_delete" name= "image_delete" type="hidden" ></p>
                         Are you sure you want to delete the note?
                     </div>
                     <div class="modal-footer">
@@ -408,6 +495,8 @@
                 </div>
             </div>
             </div>
+
+            
     
     
                     
@@ -442,13 +531,13 @@
             CKEDITOR.replace('about_details');
             CKEDITOR.replace('mission_details');
             CKEDITOR.replace('vision_details');
-            CKEDITOR.replace('what_is_ras_details');
-            CKEDITOR.replace('why_join_ras_details');
-            CKEDITOR.replace('what_activities_does_ras_do_details');
-            CKEDITOR.replace('how_to_join_ras_details');
+            CKEDITOR.replace('what_is_this_details');
+            CKEDITOR.replace('why_join_this_details');
+            CKEDITOR.replace('what_activities_does_this_do_details');
+            CKEDITOR.replace('how_to_join_this_details');
 
             // Attach a function to the change event for each CKEditor instance
-            ["about", "mission", "vision", "what_is_ras", "why_join_ras", "what_activities_does_ras_do", "how_to_join_ras"]
+            ["about", "mission", "vision", "what_is_this", "why_join_this", "what_activities_does_this_do", "how_to_join_this"]
                 .forEach(function (editorId) {
                     var editor = CKEDITOR.instances[editorId + '_details'];
 
