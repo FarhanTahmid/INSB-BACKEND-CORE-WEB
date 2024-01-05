@@ -15,7 +15,7 @@ class Chapter_Society(admin.ModelAdmin):
     list_display=['id','group_name','primary','short_form','page_title','secondary_paragraph','about_description',
                   'sc_ag_logo','background_image','mission_description','mission_picture',
                   'vision_description','vision_picture','what_is_this_description','why_join_it',
-                  'what_activites_it_has','how_to_join']
+                  'what_activites_it_has','how_to_join','email','facebook_link']
     
 from .models import Panels  
 @admin.register(Panels)

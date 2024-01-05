@@ -11,7 +11,7 @@ class Super_Events(admin.ModelAdmin):
 
 @admin.register(Events)
 class Events(admin.ModelAdmin):
-    list_display = ['id','event_name','event_types','super_event_id','event_organiser','event_date','registration_fee','registration_fee_amount','flagship_event','publish_in_main_web','form_link']
+    list_display = ['id','event_name','event_types','super_event_id','event_organiser','event_date','registration_fee','registration_fee_amount','flagship_event','publish_in_main_web','form_link','is_featured']
 
     def event_types(self, obj):
         return ", ".join([p.event_category for p in obj.event_type.all()])

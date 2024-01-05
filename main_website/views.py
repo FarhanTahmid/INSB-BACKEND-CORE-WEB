@@ -197,23 +197,71 @@ def news(request):
 
     
 
-######################### SOCIETY & AG WORKS #######################
-from . import society_ag
+######################SC_AG############################################
 def rasPage(request):
 
     society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 3)
-    
-    
+        
+    featured_events = HomepageItems.get_featured_events_for_societies(3)
     # getRasAbout=society_ag.Ras.get_ras_about()
-    
+        
     # if getRasAbout is False:
     #     return HttpResponse("GG")
-    
-    context={
         
+    context={
+            
         'society':society,
         #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
-        'media_url':settings.MEDIA_URL
+        'media_url':settings.MEDIA_URL,
+        'featured_events':featured_events
+
+    }
+    return render(request,'Society_AG/sc_ag.html',context=context)
+def pesPage(request):
+
+    society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 2)
+        
+    featured_events = HomepageItems.get_featured_events_for_societies(2)
+            
+    context={
+            
+        'society':society,
+        #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+        'media_url':settings.MEDIA_URL,
+        'featured_events':featured_events
+
+    }
+    return render(request,'Society_AG/sc_ag.html',context=context)
+def iasPage(request):
+
+    society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 4)
+        
+    featured_events = HomepageItems.get_featured_events_for_societies(4)
+            
+
+        
+    context={
+            
+        'society':society,
+        #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+        'media_url':settings.MEDIA_URL,
+        'featured_events':featured_events
+
+    }
+    return render(request,'Society_AG/sc_ag.html',context=context)
+def wiePage(request):
+
+    society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 5)
+        
+    featured_events = HomepageItems.get_featured_events_for_societies(5)
+            
+        
+    context={
+            
+        'society':society,
+        #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+        'media_url':settings.MEDIA_URL,
+        'featured_events':featured_events
 
     }
     return render(request,'Society_AG/sc_ag.html',context=context)
