@@ -432,39 +432,44 @@ class Sc_Ag:
             messages.error(request,f"Could not update the main page of Sc_Ag group = {primary}!")
             return False
         
-    def checking_length(about_details,mission_description,vision_description,
+    def checking_length(request,about_details,mission_description,vision_description,
                         what_is_this_description,why_join_it,what_activites_it_has,how_to_join):
-        
-        temp_1 = BeautifulSoup(about_details, 'html.parser')
-        about_details = temp_1.get_text()
+        try:
+            temp_1 = BeautifulSoup(about_details, 'html.parser')
+            about_details = temp_1.get_text()
 
-        temp_1 = BeautifulSoup(mission_description, 'html.parser')
-        mission_description = temp_1.get_text()
+            temp_1 = BeautifulSoup(mission_description, 'html.parser')
+            mission_description = temp_1.get_text()
 
-        temp_1 = BeautifulSoup(vision_description, 'html.parser')
-        vision_description = temp_1.get_text()
+            temp_1 = BeautifulSoup(vision_description, 'html.parser')
+            vision_description = temp_1.get_text()
 
-        temp_1 = BeautifulSoup(what_is_this_description, 'html.parser')
-        what_is_this_description = temp_1.get_text()
+            temp_1 = BeautifulSoup(what_is_this_description, 'html.parser')
+            what_is_this_description = temp_1.get_text()
 
-        temp_1 = BeautifulSoup(why_join_it,'html.parser')
-        why_join_it = temp_1.get_text()
+            temp_1 = BeautifulSoup(why_join_it,'html.parser')
+            why_join_it = temp_1.get_text()
 
-        temp_1 = BeautifulSoup(what_activites_it_has,'html.parser')
-        what_activites_it_has = temp_1.get_text()
+            temp_1 = BeautifulSoup(what_activites_it_has,'html.parser')
+            what_activites_it_has = temp_1.get_text()
 
-        temp_1 = BeautifulSoup(how_to_join,'html.parser')
-        how_to_join = temp_1.get_text()
+            temp_1 = BeautifulSoup(how_to_join,'html.parser')
+            how_to_join = temp_1.get_text()
 
-        
-        if (len(about_details)> 500 or len(mission_description)>500 or len(vision_description)>500 
-            or len(what_is_this_description)>500 or len(why_join_it) > 500 or len(what_activites_it_has) >500
-            or len(how_to_join)>500 or 
-            len(about_details) == 0 or len(mission_description)==0 or len(vision_description)==0
-            or len(what_is_this_description)==0 or len(why_join_it)==0 or len(what_activites_it_has)==0
-            or len(how_to_join)==0):
-            return True
-        else:
+            
+            if (len(about_details)> 500 or len(mission_description)>500 or len(vision_description)>500 
+                or len(what_is_this_description)>500 or len(why_join_it) > 500 or len(what_activites_it_has) >500
+                or len(how_to_join)>500 or 
+                len(about_details) == 0 or len(mission_description)==0 or len(vision_description)==0
+                or len(what_is_this_description)==0 or len(why_join_it)==0 or len(what_activites_it_has)==0
+                or len(how_to_join)==0):
+                return True
+            else:
+                return False
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,f"Could not update the main page of Sc_Ag group = {primary}!")
             return False
         
         
