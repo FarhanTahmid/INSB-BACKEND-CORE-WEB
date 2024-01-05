@@ -114,10 +114,10 @@ class PortData:
             return False
         
     def get_teams_of_sc_ag_with_id(request,sc_ag_primary):
-        '''Returns the team of all Branch+Sc AG'''
+        '''Returns the Active teams of all Branch+Sc AG'''
         try:
 
-            teams=Teams.objects.filter(team_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).all().order_by('id')
+            teams=Teams.objects.filter(is_active=True,team_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).all().order_by('id')
             return teams
         except Exception as e:
             PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -143,7 +143,7 @@ class PortData:
             current_panel=Panels.objects.get(current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
             return current_panel.pk
         except Panels.DoesNotExist:
-            pass
+            return False
         except sqlite3.OperationalError:
             return False
         except Exception as e:
@@ -151,6 +151,22 @@ class PortData:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
     
+    def get_specific_team_members_of_current_panel(request,team_primary):
+        try:
+            current_panel=PortData.get_current_panel()
+            if(current_panel):
+                get_current_panel_members=Panel_Members.objects.filter(
+                    tenure=Panels.objects.get(pk=current_panel),
+                    team=Teams.objects.get(primary=team_primary)
+                )
+                return get_current_panel_members
+            else:
+                messages.info("There is no current panel available to load the teams!")
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+
     def create_positions(request,sc_ag_primary,role,is_eb_member,is_sc_ag_eb_member,is_officer,is_co_ordinator,is_faculty,is_mentor):
         '''Creates Positions in the Roles and Positions Table with Different attributes for sc ag and branch as well'''
         try:

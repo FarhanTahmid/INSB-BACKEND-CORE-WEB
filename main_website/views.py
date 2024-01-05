@@ -7,8 +7,8 @@ from port.renderData import PortData
 from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
 from .renderData import HomepageItems
 from django.conf import settings
-from users.models import User,Members
-from users.models import User
+from users.models import User_IP_Address,Members
+from users.models import User_IP_Address
 import logging
 from datetime import datetime
 from django.http import HttpResponseBadRequest,HttpResponseServerError
@@ -19,6 +19,7 @@ from users.renderData import PanelMembersData
 from users import renderData as userData
 import json,requests
 from insb_port import settings
+from .models import *
 
 logger=logging.getLogger(__name__)
 
@@ -26,6 +27,8 @@ logger=logging.getLogger(__name__)
 def homepage(request):
     bannerItems=HomepageItems.getHomepageBannerItems()
     bannerWithStat=HomepageItems.getBannerPictureWithStat()
+    HomepageItems.get_ip_address(request)
+    
     
     # get recent 6 news
     get_recent_news=News.objects.filter().order_by('-news_date')[:6]
@@ -42,27 +45,6 @@ def homepage(request):
         'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
     }
     return render(request,"LandingPage/homepage.html",context)
-
-def index(request):
-
-    def get_ip_address(request):
-        address = request.META.get('HTTP_X_FORWARDED_FOR')
-        if address:
-            ip = address.split(',')[-1].strip()
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        return ip
-    ip = get_ip_address(request)
-    user =User(ip_address = ip)
-    print(f"Current user ip address {user}")
-    result = User.objects.filter(ip_address = ip)
-    print(f"User exists in database {result}")
-    if len(result)>=1:
-        pass
-    else:
-        user.save()
-
-    return HttpResponse("IEEE main Website")
 
 
 ##################### EVENT WORKS ####################
@@ -101,6 +83,7 @@ def event_homepage(request):
 
 
         context = {
+            'page_title':"Events - IEEE NSU Student Branch",
             'all_events':all_events,
             'media_url':settings.MEDIA_URL,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
@@ -217,10 +200,9 @@ def news(request):
 ######################### SOCIETY & AG WORKS #######################
 from . import society_ag
 def rasPage(request):
-    # Title of the page
-    page_title="IEEE NSU RAS Student Branch Chapter"
-    # Second para after the title
-    secondary_para="Focusing on the research, study, and exchange of knowledge regarding Robotics & Automation."
+
+    society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 3)
+    
     
     # getRasAbout=society_ag.Ras.get_ras_about()
     
@@ -228,13 +210,13 @@ def rasPage(request):
     #     return HttpResponse("GG")
     
     context={
-        'page_title':page_title,
-        'secondary_para':secondary_para,
-        # 'about_ras':getRasAbout,
-        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+        
+        'society':society,
+        #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+        'media_url':settings.MEDIA_URL
 
     }
-    return render(request,'Society_AG/ras.html',context=context)
+    return render(request,'Society_AG/sc_ag.html',context=context)
 
 
 
@@ -272,7 +254,16 @@ def Research_Paper(request):
         "research_paper":get_all_research_papers
     })
 
+######################### Magazine WORKS ###########################
 
+def magazines(request):
+    '''Loads all the magazines for the corresponding page'''
+    get_all_magazines=Magazines.objects.all().order_by('-publish_date')
+    context={
+        'page_title':"Magazines",
+        'all_magazines':get_all_magazines,
+    }
+    return render(request,"Publications/Magazines/magazine.html",context=context)
 
 ######################### GALLERY WORKS ###########################
 def gallery(request):
@@ -517,10 +508,28 @@ def team_intros(request,team_primary):
     # get team details
     team = PortData.get_team_details(team_primary=team_primary,request=request)
     
+    team_co_ordinators=[]
+    team_incharges=[]
+    team_volunteers=[]
+
+    get_team_members=PortData.get_specific_team_members_of_current_panel(request=request,team_primary=team.primary)
+    if(get_team_members):
+        for i in get_team_members:
+            if(i.position.is_officer):
+                if(i.position.is_co_ordinator):
+                    team_co_ordinators.append(i)
+                else:
+                    team_incharges.append(i)
+            elif(i.position.is_volunteer):
+                team_volunteers.append(i)    
     
     context={
         'page_title':team.team_name +' Team',
+        'page_subtitle':"IEEE NSU Student Branch",
         'team':team,
+        'co_ordinators':team_co_ordinators,
+        'incharges':team_incharges,
+        'volunteers':team_volunteers,
     }
     return render(request,"Members/Teams/team.html",context=context)
 

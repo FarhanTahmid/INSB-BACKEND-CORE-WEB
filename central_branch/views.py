@@ -40,6 +40,8 @@ from central_events.forms import EventForm
 from .forms import *
 from .website_render_data import MainWebsiteRenderData
 from django.views.decorators.clickjacking import xframe_options_exempt
+import port.forms as PortForms
+
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -83,7 +85,7 @@ def teams(request):
     '''Loads all the existing teams in the branch
         Gives option to add or delete a team
     '''
-    
+    sc_ag=PortData.get_all_sc_ag(request=request)
         
     if request.method == "POST":
         if request.POST.get('recruitment_session'):
@@ -101,6 +103,7 @@ def teams(request):
             
     context={
         'team':team_list,
+        'all_sc_ag':sc_ag,
     }
     return render(request,'Teams/team_homepage.html',context=context)
     
@@ -108,6 +111,7 @@ def teams(request):
 
 def team_details(request,primary,name):
     
+    sc_ag=PortData.get_all_sc_ag(request=request)
     has_access=Branch_View_Access.get_team_details_view_access(request=request)
     '''Detailed panel for the team'''
     current_panel=Branch.load_current_panel()
@@ -123,6 +127,9 @@ def team_details(request,primary,name):
     insb_members=renderData.Branch.load_all_insb_members()
     members_to_add=[]
     position=12 #assigning default to volunteer
+
+    team_to_update=get_object_or_404(Teams,primary=primary)
+
     if request.method=='POST':
         if(request.POST.get('add_to_team')):
             #Checking if a button is clicked
@@ -171,20 +178,33 @@ def team_details(request,primary,name):
             all_memebers_in_team.update(team=None,position = Roles_and_Position.objects.get(id=13))
             messages.info(request,"The whole team was reset. Previous Members are preserved in their respective Panel.")
             return redirect('central_branch:team_details',primary,name)
-        
+
+        if(request.POST.get('update_team_details')):
+            '''Update Team Details'''
+            team_update_form=PortForms.TeamForm(request.POST,request.FILES,instance=team_to_update)
+            if(team_update_form.is_valid()):
+                team_update_form.save()
+                messages.success(request,"Team information was updated!")
+                return redirect('central_branch:team_details',primary,name)
+    
+    else:
+        team_update_form=PortForms.TeamForm(instance=team_to_update)
+
     context={
+        'all_sc_ag':sc_ag,
         'team_id':primary,
         'team_name':name,
         'team_members':team_members,
         'positions':positions,
         'insb_members':insb_members,
         'current_panel':current_panel,
+        'team_form':team_update_form
         
     }
     if(has_access):
         return render(request,'Teams/team_details.html',context=context)
     else:
-        return render(request,"access_denied2.html")
+        return render(request,"access_denied2.html", { 'all_sc_ag':sc_ag })
 
 @login_required
 def manage_team(request,pk,team_name):
@@ -198,6 +218,8 @@ def manage_team(request,pk,team_name):
 @login_required
 def panel_home(request):
     
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     # get all panels from database
     panels = Branch.load_all_panels()
     create_panel_access=Branch_View_Access.get_create_panel_access(request=request)
@@ -211,6 +233,7 @@ def panel_home(request):
             return redirect('central_branch:panels')
         
     context={
+        'all_sc_ag':sc_ag,
         'panels':panels,
         'create_panel_access':create_panel_access,
     }
@@ -220,6 +243,8 @@ def panel_home(request):
 
 @login_required
 def branch_panel_details(request,panel_id):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     # get panel information
     panel_info = Branch.load_panel_by_id(panel_id)
     # get panel tenure time
@@ -275,6 +300,7 @@ def branch_panel_details(request,panel_id):
 
         
     context={
+        'all_sc_ag':sc_ag,
         'panel_id':panel_id,
         'panel_info':panel_info,
         'tenure_time':tenure_time,
@@ -286,6 +312,8 @@ def branch_panel_details(request,panel_id):
 
 @login_required
 def branch_panel_officers_tab(request,panel_id):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     # get panel information
     panel_info = Branch.load_panel_by_id(panel_id)
      # get panel tenure time
@@ -320,6 +348,7 @@ def branch_panel_officers_tab(request,panel_id):
 
     
     context={
+        'all_sc_ag':sc_ag,
         'panel_id':panel_id,
         'panel_info':panel_info,
         'tenure_time':tenure_time,
@@ -332,6 +361,8 @@ def branch_panel_officers_tab(request,panel_id):
 
 @login_required
 def branch_panel_volunteers_tab(request,panel_id):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     # get panel information
     panel_info = Branch.load_panel_by_id(panel_id)
      # get panel tenure time
@@ -367,6 +398,7 @@ def branch_panel_volunteers_tab(request,panel_id):
     
     
     context={
+        'all_sc_ag':sc_ag,
         'panel_id':panel_id,
         'panel_info':panel_info,
         'tenure_time':tenure_time,
@@ -380,6 +412,8 @@ def branch_panel_volunteers_tab(request,panel_id):
 
 @login_required
 def branch_panel_alumni_tab(request,panel_id):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     # get panel information
     panel_info = Branch.load_panel_by_id(panel_id)
      # get panel tenure time
@@ -431,6 +465,7 @@ def branch_panel_alumni_tab(request,panel_id):
                 return redirect('central_branch:panel_details_alumni',panel_id)
     
     context={
+        'all_sc_ag':sc_ag,
         'panel_id':panel_id,
         'panel_info':panel_info,
         'tenure_time':tenure_time,
@@ -448,6 +483,7 @@ def others(request):
 
 @login_required
 def manage_research(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
 
     # load all research papers
     researches = Research_Papers.objects.all().order_by('-publish_date')
@@ -473,6 +509,7 @@ def manage_research(request):
         form=ResearchPaperForm
         form2=ResearchCategoryForm
     context={
+        'all_sc_ag':sc_ag,
         'form':form,
         'form2':form2,'all_researches':researches,
     }
@@ -480,6 +517,8 @@ def manage_research(request):
 
 @login_required
 def update_researches(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     # get the research and Form
     research_to_update=get_object_or_404(Research_Papers,pk=pk)
     if(request.method=="POST"):
@@ -493,6 +532,7 @@ def update_researches(request,pk):
         form=ResearchPaperForm(instance=research_to_update)
     
     context={
+        'all_sc_ag':sc_ag,
         'form':form,
         'research_paper':research_to_update,
     }
@@ -500,9 +540,13 @@ def update_researches(request,pk):
 
 @login_required
 def manage_blogs(request):
-    
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     # Load all blogs
     all_blogs=Blog.objects.all()
+    
+    form=BlogsForm
+    form2=BlogCategoryForm
     
     if(request.method=="POST"):
         form=BlogsForm(request.POST,request.FILES)
@@ -522,12 +566,8 @@ def manage_blogs(request):
             MainWebsiteRenderData.delete_blog(request=request)
             return redirect('central_branch:manage_blogs')
 
-
-    else:
-        form=BlogsForm
-        form2=BlogCategoryForm
-
     context={
+        'all_sc_ag':sc_ag,
         # get form
         'form':form,
         'form2':form2,
@@ -539,6 +579,8 @@ def manage_blogs(request):
 
 @login_required
 def update_blogs(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     # get the blog and form
     blog_to_update=get_object_or_404(Blog,pk=pk)
     if(request.method=="POST"):
@@ -552,6 +594,7 @@ def update_blogs(request,pk):
         form=BlogsForm(instance=blog_to_update)
     
     context={
+        'all_sc_ag':sc_ag,
         'form':form,
         'blog':blog_to_update,
     }
@@ -561,6 +604,8 @@ def update_blogs(request,pk):
 from main_website.models import HomePageTopBanner
 @login_required
 def manage_website_homepage(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     '''For top banner picture with Texts and buttons - Tab 1'''
     topBannerItems=HomePageTopBanner.objects.all()
     # get user data
@@ -626,6 +671,7 @@ def manage_website_homepage(request):
 
     
     context={
+        'all_sc_ag':sc_ag,
         'user_data':user_data,
         'topBannerItems':topBannerItems,
         'bannerPictureWithNumbers':existing_banner_picture_with_numbers,
@@ -633,8 +679,30 @@ def manage_website_homepage(request):
     }
     return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
 
+
+@login_required
+def manage_about(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
+    context={
+        'all_sc_ag':sc_ag,
+    }
+    return render(request,'Manage Website/About/About IEEE/manage_ieee.html',context=context)
+
+@login_required
+def ieee_bangladesh_section(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
+    context={
+        'all_sc_ag':sc_ag,
+    }
+    return render(request,'Manage Website/About/IEEE Bangladesh Section/ieee_bangladesh_section.html',context=context)
+
+
 @login_required
 def manage_achievements(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     # load the achievement form
     form=AchievementForm
     # load all SC AG And Branch
@@ -657,6 +725,7 @@ def manage_achievements(request):
                 return redirect('central_branch:manage_achievements')
 
     context={
+        'all_sc_ag':sc_ag,
         'form':form,
         'load_all_sc_ag':load_award_of,
         'all_achievements':all_achievements,
@@ -665,6 +734,8 @@ def manage_achievements(request):
 
 @login_required
 def update_achievements(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     # get the achievement and form
     achievement_to_update=get_object_or_404(Achievements,pk=pk)
     if(request.method=="POST"):
@@ -678,6 +749,7 @@ def update_achievements(request,pk):
         form=AchievementForm(instance=achievement_to_update)
     
     context={
+        'all_sc_ag':sc_ag,
         'form':form,
         'achievement':achievement_to_update,
     }
@@ -686,6 +758,8 @@ def update_achievements(request,pk):
 
 @login_required
 def manage_news(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     form=NewsForm
     get_all_news=News.objects.all().order_by('-news_date')
     
@@ -706,6 +780,7 @@ def manage_news(request):
             return redirect('central_branch:manage_news')
     
     context={
+        'all_sc_ag':sc_ag,
         'form':form,
         'all_news':get_all_news
     }
@@ -713,6 +788,8 @@ def manage_news(request):
 
 @login_required
 def update_news(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
     # get the news instance to update
     news_to_update = get_object_or_404(News, pk=pk)
     if request.method == "POST":
@@ -724,6 +801,7 @@ def update_news(request,pk):
     else:
         form = NewsForm(instance=news_to_update)
     context={
+        'all_sc_ag':sc_ag,
         'form':form,
         'news':news_to_update,
     }
@@ -732,15 +810,63 @@ def update_news(request,pk):
 
 @login_required
 def manage_magazines(request):
-    return render(request,'Manage Website/Publications/Magazine/manage_magazine.html')
+    # get form
+    magazine_form = MagazineForm
+    
+    # get all magazines
+    all_magazines=Magazines.objects.all().order_by('-publish_date')
+    if(request.method=="POST"):
+        magazine_form=MagazineForm(request.POST,request.FILES)
+        if(request.POST.get('add_magazine')):
+            if (magazine_form.is_valid()):
+                magazine_form.save()
+                messages.success(request,"New Magazine Added Successfully")
+                return redirect('central_branch:manage_magazines')
+        if(request.POST.get('remove_magazine')):
+            magazine_to_delete=request.POST['magazine_pk']
+            get_magazine=Magazines.objects.get(pk=magazine_to_delete)
+            if(os.path.isfile(get_magazine.magazine_picture.path)):
+                os.remove(get_magazine.magazine_picture.path)
+            if(os.path.isfile(get_magazine.magazine_file.path)):
+                os.remove(get_magazine.magazine_file.path)
+            get_magazine.delete()
+            messages.warning(request,"One Item Deleted from Magazines")
+            return redirect('central_branch:manage_magazines')
+            
+                    
+    context={
+        'magazine_form':magazine_form,
+        'all_magazines':all_magazines,
+    }
+    return render(request,'Manage Website/Publications/Magazine/manage_magazine.html',context=context)
 
 
+@login_required
+def update_magazine(request,pk):
+    # get the magazine to update
+    magazine_to_update=get_object_or_404(Magazines,pk=pk)
+    
+    if request.method == "POST":
+        update_form = MagazineForm(request.POST, request.FILES, instance=magazine_to_update)
+        if update_form.is_valid():
+            update_form.save()
+            messages.info(request,"Magazine Informations were updates")
+            return redirect('central_branch:manage_magazines')
+    else:
+        update_form = MagazineForm(instance=magazine_to_update)
+    context={
+        'update_form':update_form,
+        'magazine':magazine_to_update,
+    }
+    
+    return render(request,'Manage Website/Publications/Magazine/update_magazine.html',context=context)
 
 
 @login_required
 def manage_view_access(request):
-    # get access of the page first
+    sc_ag=PortData.get_all_sc_ag(request=request)
 
+    # get access of the page first
     all_insb_members=port_render.get_all_registered_members(request)
     branch_data_access=Branch.get_branch_data_access(request)
 
@@ -791,6 +917,7 @@ def manage_view_access(request):
         
 
     context={
+        'all_sc_ag':sc_ag,
         'insb_members':all_insb_members,
         'branch_data_access':branch_data_access,
     }
@@ -855,11 +982,6 @@ def super_event_creation(request):
         #calling it regardless to run the page
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,5)
         is_branch = True
-        context={
-            'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info,
-            'is_branch' : is_branch
-        }
 
         if request.method == "POST":
 
@@ -876,6 +998,12 @@ def super_event_creation(request):
                 Branch.register_super_events(super_event_name,super_event_description,start_date,end_date)
                 messages.success(request,"New Super Event Added Successfully")
                 return redirect('central_branch:event_control')
+            
+        context={
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'is_branch' : is_branch
+        }
                         
         return render(request,"Events/Super Event/super_event_creation_form.html", context)
     except Exception as e:
@@ -896,14 +1024,6 @@ def event_creation_form_page(request):
         #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
         super_events=Branch.load_all_mother_events()
         event_types=Branch.load_all_event_type_for_groups(1)
-        context={
-            'super_events':super_events,
-            'event_types':event_types,
-            'is_branch' : is_branch,
-            'all_sc_ag':sc_ag,
-            'form':form,
-            'is_branch':is_branch,
-        }
         
         '''function for creating event'''
 
@@ -937,6 +1057,15 @@ def event_creation_form_page(request):
                 else:
                     #if the method returns true, it will redirect to the new page
                     return redirect('central_branch:event_creation_form2',get_event)
+        
+        context={
+            'super_events':super_events,
+            'event_types':event_types,
+            'is_branch' : is_branch,
+            'all_sc_ag':sc_ag,
+            'form':form,
+            'is_branch':is_branch,
+        }
                 
         return render(request,'Events/event_creation_form.html',context)
     except Exception as e:
@@ -956,11 +1085,6 @@ def event_creation_form_page2(request,event_id):
         inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
         is_branch = True
         
-        context={
-            'inter_branch_collaboration_options':inter_branch_collaboration_options,
-            'all_sc_ag':sc_ag,
-            'is_branch' : is_branch,
-        }
         if request.method=="POST":
             if(request.POST.get('next')):
                 inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
@@ -976,7 +1100,12 @@ def event_creation_form_page2(request,event_id):
 
             elif(request.POST.get('cancel')):
                 return redirect('central_branch:event_control')
-
+        
+        context={
+            'inter_branch_collaboration_options':inter_branch_collaboration_options,
+            'all_sc_ag':sc_ag,
+            'is_branch' : is_branch,
+        }
 
         return render(request,'Events/event_creation_form2.html',context)
     except Exception as e:
@@ -997,12 +1126,6 @@ def event_creation_form_page3(request,event_id):
 
         is_branch = True
 
-        context={
-            'venues':venues,
-            'permission_criterias':permission_criterias,
-            'all_sc_ag':sc_ag,
-            'is_branch' : is_branch,
-        }
         if request.method=="POST":
             if request.POST.get('create_event'):
                 #getting the venues for the event
@@ -1018,6 +1141,13 @@ def event_creation_form_page3(request,event_id):
                 else:
                     messages.success(request, "New Event Added Succesfully")
                     return redirect('central_branch:event_control')
+                
+        context={
+            'venues':venues,
+            'permission_criterias':permission_criterias,
+            'all_sc_ag':sc_ag,
+            'is_branch' : is_branch,
+        }
 
         return render(request,'Events/event_creation_form3.html',context)
     except Exception as e:
@@ -1050,9 +1180,9 @@ def event_edit_form(request, event_id):
 
     ''' This function loads the edit page of events '''
     try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
         # has_access = Branch.event_page_access(request)
         if True:
-            sc_ag=PortData.get_all_sc_ag(request=request)
             is_branch = True
             is_event_published = Branch.load_event_published(event_id)
             is_flagship_event = Branch.is_flagship_event(event_id)
@@ -1175,18 +1305,17 @@ def event_edit_media_form_tab(request, event_id):
     ''' This function loads the media tab page of events '''
 
     try:
-        # has_access = Branch.event_page_access(request)
         sc_ag=PortData.get_all_sc_ag(request=request)
-        #Get event details from databse
-        # event_details = Events.objects.get(pk=event_id)
+        # has_access = Branch.event_page_access(request)
         if(True):
             #Getting media links and images from database. If does not exist then they are set to none
 
+            event_details = Events.objects.get(pk=event_id)
             try:
-                media_links = Media_Link.objects.get(event_id = Events.objects.get(pk=event_id))
+                media_links = Media_Link.objects.get(event_id = event_details)
             except:
                 media_links = None
-            media_images = Media_Images.objects.filter(event_id = Events.objects.get(pk=event_id))
+            media_images = Media_Images.objects.filter(event_id = event_details)
             number_of_uploaded_images = len(media_images)
             
 
@@ -1248,16 +1377,16 @@ def event_edit_graphics_form_tab(request, event_id):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         #Get event details from databse
-        # event_details = Events.objects.get(pk=event_id)
         # has_access = Branch.event_page_access(request)
         if(True):
             #Getting media links and images from database. If does not exist then they are set to none
+            event_details = Events.objects.get(pk=event_id)
             try:
-                graphics_link = Graphics_Link.objects.get(event_id = Events.objects.get(pk=event_id))
+                graphics_link = Graphics_Link.objects.get(event_id = event_details)
             except:
                 graphics_link = None
             try:
-                graphic_banner_image = Graphics_Banner_Image.objects.get(event_id = Events.objects.get(pk=event_id))
+                graphic_banner_image = Graphics_Banner_Image.objects.get(event_id = event_details)
                 image_number = 1
             except:
                 graphic_banner_image = None

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Manage Main Website | {{sc_ag_info.short_form}}</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+
+
+    <!-- CKEditor CDN -->
+    <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+    
+
+
+    <style>
+        body, html {
+        
+            margin: 0;
+            
+            align-items: center;
+            justify-content: center;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .btn-container {
+            text-align: center;
+        }
+        
+        .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+        }
+        
+        /* Media query for smaller screens (adjust the breakpoint as needed) */
+        @media (max-width: 768px) {
+            .btn {
+            width: 100%; /* Make the button full width on smaller screens */
+            }
+        }
+
+
+    
+        
+        @media only screen and (max-width: 768px) {
+            
+    
+            .custom-file {
+                margin-bottom: 10px;
+            }
+        }
+  
+
+        .circle-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 45px; /* Set minimum width */
+            height: 45px; /* Set minimum height */
+            background-color: transparent; /* Set to transparent or any other color for the inside */
+            border: 2px solid #78BE20; /* Border color is green */
+            border-radius: 50%;
+            color: #78BE20; /* Text color is green */
+            font-size: 24px; /* Adjust the font size as needed */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s; /* Add smooth transition effect */
+        }
+
+        .circle-btn:hover {
+            background-color: #78BE20; /* Hover background color is green */
+            color: #fff; /* Hover text color is white */
+        }
+
+        .plus-sign::before {
+            content: '+';
+        }
+
+
+
+        
+         
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+
+            {% block sidebar %}
+                {% include 'users/sidebar.html' %}
+            {% endblock %}
+
+        </div>
+        <!-- aside end -->
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+                {% include 'sc_ag_navbar.html' %}
+            {% endblock navbar %}
+
+        </div>
+        <!--navbar content-->
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
+            <div class="container">
+                <br>
+                <br>
+                <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
+                <h6>Note:</h6>
+                <ol style="justify-content:center;margin-bottom:15px;"><b>
+                <li>Provide the Link of the folder for the Banner Images </li>
+                <li>If the banner picture is already uploaded, you can change it by deleting existing one.
+                    Select the desired picture and hit <span style="color:blue;">'Save'</span>.</li>
+                <li>Make sure to save any changes made before leaving</li>
+                </ol></b>
+
+                <br>
+
+                {% for message in messages  %}
+                    <p>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{message}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </p>
+                {% endfor %}
+                <br>
+            </div>
+        
+              
+            
+
+
+            <div class="container">
+          
+                <div class="box">
+            
+            
+                    <br>
+                    <div class="box-header">
+                        <h1 style="text-align:center;font-size:30px;">Details</h1>
+                        <hr>
+                    </div>
+                    
+            
+                    <form id="myForm" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <div class="box-body">    
+                            
+                            <h1 style="text-align:center;font-size:30px;">About</h1>
+                            <br>
+                            
+                            <div class="form-group">
+                                <label>About <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="about_details"
+                                Required
+                                >
+                                {{sc_ag_info.about_description|default:""}}
+                                </textarea>
+                                <p id="aboutCharacterCount" style="color: red;">Required</p>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">About Image:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="about-image-input" name="sc_ag_logo"  accept="image/*">
+                                    <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
+                                </div>
+                                <br>
+                                {% if sc_ag_info.sc_ag_logo %}
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal1">Logo</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.sc_ag_logo}}', 'sc_ag_logo')">✖</button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <br>   
+                            
+
+                            <div class="form-group">
+                                <label for="images">Background Image For Parallax Effect:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="background-image-input" name="background_image" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="background-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                {% if sc_ag_info.background_image %}
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal2">Background Image</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.background_image}}', 'background_image')">✖</button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <br> 
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Mission & Vision</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Mission <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="mission_details"
+                                Required>
+                                {{sc_ag_info.mission_description}}
+                                </textarea>
+                                <p id="missionCharacterCount" style="color: red;">Required</p>
+
+
+                            </div>
+                            <br>
+                            
+
+                            <div class="form-group">
+                                <label for="images">Mission Image:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="mission-image-input" name="mission_picture" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="mission-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                {% if sc_ag_info.mission_picture %}
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal3">Mission Image</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.mission_picture}}', 'mission_picture')">✖</button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <br> 
+
+
+                            <div class="form-group">
+                                <label>Vision <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="vision_details"
+                                Required>
+                                {{sc_ag_info.vision_description|default:""}}
+                                </textarea>
+                                <p id="visionCharacterCount" style="color: red;">Required</p>
+
+
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">Vision Image:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="vision-image-input" name="vision_picture" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="vision-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                {% if sc_ag_info.vision_picture %}
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal4">Vision Image</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.vision_picture}}', 'vision_picture')">✖</button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <br> 
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">What Why Who How</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>What is RAS?<span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="what_is_this_details"
+                                Required>{{sc_ag_info.what_is_this_description|default:""}}</textarea>
+                                <p id="what_is_thisCharacterCount" style="color: red;">Required</p>
+
+
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Why join RAS? <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="why_join_this_details"
+                                Required>{{sc_ag_info.why_join_it|default:""}}</textarea>
+                                <p id="why_join_thisCharacterCount" style="color: red;">Required</p>
+
+
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>What activities do we usually do? <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="what_activities_does_this_do_details"
+                                Required>{{sc_ag_info.what_activites_it_has|default:""}}</textarea>
+                                <p id="what_activities_does_this_doCharacterCount" style="color: red;">Required</p>
+
+
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>How to join IEEE NSU RAS SBC? <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="how_to_join_this_details"
+                                Required>{{sc_ag_info.how_to_join|default:""}}</textarea>
+                                <p id="how_to_join_thisCharacterCount" style="color: red;">Required</p>
+
+
+                            </div>
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <div class="form-group text-center">
+                                <input type="submit" name="save" class="btn btn-outline-success p-x-md" value="Save">
+                            </div>
+                            <br>
+
+                            
+                            
+                        </div> 
+        
+                    
+                    </form>  
+        
+                <div>
+            </div>  
+
+
+
+            
+            <!-- for showing image -->
+            <div class="modal fade" id="showImageModal1" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="showImageModalLabel">Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img src="{{media_url}}{{sc_ag_info.sc_ag_logo}}" class="img-fluid w-100" alt="Image">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- for showing image -->
+            <div class="modal fade" id="showImageModal2" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="showImageModalLabel">Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img src="{{media_url}}{{sc_ag_info.background_image}}" class="img-fluid w-100" alt="Image">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- for showing image -->
+            <div class="modal fade" id="showImageModal3" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="showImageModalLabel">Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img src="{{media_url}}{{sc_ag_info.mission_picture}}" class="img-fluid w-100" alt="Image">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- for showing image -->
+            <div class="modal fade" id="showImageModal4" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="showImageModalLabel">Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img src="{{media_url}}{{sc_ag_info.vision_picture}}" class="img-fluid w-100" alt="Image">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Confirmation modal for delete -->
+            <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-top" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                        <p><input id="image_delete" name= "image_delete" type="hidden" >
+                            <input id="image_id" name= "image_id" type="hidden" ></p>
+                        Are you sure you want to delete the note?
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            </div>
+
+            
+    
+    
+                    
+
+            <!--Theme Switcher-->
+
+            {% block theme_switcher %}
+                {% include "theme_switcher.html" %}
+            {% endblock theme_switcher %}
+        </div>
+    </div>
+
+<!-- app end-->
+{% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+   
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'table_search.js'%}"></script> 
+    <script src="{% static 'table_search.js'%}"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script src="{% static 'tab_view.js'%}"></script>
+
+    <!--Script for CKEditor Control-->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Replace the textareas with CKEditor instances
+            CKEDITOR.replace('about_details');
+            CKEDITOR.replace('mission_details');
+            CKEDITOR.replace('vision_details');
+            CKEDITOR.replace('what_is_this_details');
+            CKEDITOR.replace('why_join_this_details');
+            CKEDITOR.replace('what_activities_does_this_do_details');
+            CKEDITOR.replace('how_to_join_this_details');
+
+            // Attach a function to the change event for each CKEditor instance
+            ["about", "mission", "vision", "what_is_this", "why_join_this", "what_activities_does_this_do", "how_to_join_this"]
+                .forEach(function (editorId) {
+                    var editor = CKEDITOR.instances[editorId + '_details'];
+
+                    editor.on('change', function () {
+                        // Update character count display for each CKEditor instance
+                        updateCharacterCount(editorId);
+                    });
+
+                    // Update character count initially
+                    updateCharacterCount(editorId);
+                });
+        });
+
+        function updateCharacterCount(editorId) {
+            var editorContent = CKEDITOR.instances[editorId + '_details'].getData();
+        
+            // Handle special space representations
+            var cleanedContent = editorContent.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+        
+            // Count each character (including spaces)
+            var characterCount = cleanedContent.length;
+        
+            var characterCountElement = document.getElementById(editorId + 'CharacterCount');
+        
+            // Check conditions and update text color and content
+            if (characterCount === 0) {
+                characterCountElement.style.color = "red";
+                characterCountElement.innerText = "Required";
+            } else if (characterCount > 500) {
+                characterCountElement.style.color = "red";
+                characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
+            } else {
+                characterCountElement.style.color = "black";
+                characterCountElement.innerText = "Character Count: " + characterCount;
+            }
+        }
+        
+        
+        
+    </script>
+
+    <!--Script to handle file name showing when choosing file-->
+    <script type="text/javascript">
+
+        $('.custom-file input').change(function (e) {
+            var files = [];
+            for (var i = 0; i < $(this)[0].files.length; i++) {
+                files.push($(this)[0].files[i].name);
+            }
+            $(this).next('.custom-file-label').html(files.join(', '));
+        });
+    
+    </script>
+
+
+    <!--script to prevent user from selecting image is image already selected-->
+    <script>
+        // Function to check and disable file input if an image is already saved
+        function checkSavedImage(inputId, savedImageUrl) {
+            var fileInput = document.getElementById(inputId);
+
+            if (savedImageUrl) {
+                // If an image is already saved, disable the file input
+                fileInput.disabled = true;
+                fileInput.classList.add("disabled");
+
+                // Change the placeholder text
+                var fileLabel = fileInput.nextElementSibling;
+                fileLabel.innerText = "Delete existing file to Choose image.";
+            }
+        }
+
+        // Call the function for each image section when the page loads
+        window.onload = function () {
+            checkSavedImage("about-image-input", "{{ sc_ag_info.sc_ag_logo }}");
+            checkSavedImage("background-image-input", "{{ sc_ag_info.background_image }}");
+            checkSavedImage("mission-image-input", "{{ sc_ag_info.mission_picture }}");
+            checkSavedImage("vision-image-input", "{{ sc_ag_info.vision_picture }}");
+            // Add more calls for other image sections if needed
+        };
+    </script>
+
+
+    <!--Delete logic for image-->
+    <script>
+        function openModal(image_delete, image_id) {
+            // Set data in the modal
+            var inputElement = document.getElementById('image_delete');    
+            inputElement.value=image_delete;
+            var inputElement2 = document.getElementById('image_id');
+            inputElement2.value=image_id;
+        }
+    </script>
+
+    
+</body>
+</html>

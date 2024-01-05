@@ -150,9 +150,13 @@ class MagazineForm(forms.ModelForm):
             if previous_picture:
                 if os.path.isfile(previous_picture.path):
                     os.remove(previous_picture.path)
+        if(instance.pk and 'magazine_file' in self.changed_data):
+            if(os.path.isfile(previous_instance.magazine_file.path)):
+                os.remove(previous_instance.magazine_file.path)
 
             # Update the instance with the new image
             previous_instance.magazine_picture = instance.magazine_picture
+            previous_instance.magazine_file=instance.magazine_file
             previous_instance.save()
 
         if commit:
