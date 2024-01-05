@@ -1340,6 +1340,15 @@ def manage_main_website(request, primary):
                     what_activites_it_has = request.POST.get('what_activities_does_this_do_details')
                     how_to_join = request.POST.get('how_to_join_this_details')
 
+                    if about_image == None:
+                        about_image = get_sc_ag_info.sc_ag_logo
+                    if background_image == None:
+                        background_image = get_sc_ag_info.background_image
+                    if vision_picture == None:
+                        vision_picture = get_sc_ag_info.vision_picture
+                    if mission_image == None:
+                        mission_image = get_sc_ag_info.mission_picture
+
                     if Sc_Ag.checking_length(about_details,mission_description,vision_description,what_is_this_description,
                                why_join_it,what_activites_it_has,how_to_join):
                         messages.error(request,"Please ensure your word limit is with in 500 and you have filled out all descriptions")
