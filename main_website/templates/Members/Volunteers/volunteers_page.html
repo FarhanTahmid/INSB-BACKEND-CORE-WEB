@@ -200,7 +200,10 @@
     
         </section>
 
-       
+               <!--Footer-->
+            {% block footer %}
+               {% include "footer_block.html" %}
+           {% endblock footer %}
     </div>
     {% block common_js %}
         {% include "common_js_includes.html" %}

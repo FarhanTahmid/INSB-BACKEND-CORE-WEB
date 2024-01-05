@@ -3,92 +3,57 @@
 <html lang="en">
 
 <head>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IEEE Region 10</title>
-    <link rel="icon" href="{% static 'upload/logo.gif' %}"/>
-    
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!--Common CSS-->
     {% block common_css %}
-        {% include "common_css_includes.html" %}
+    {% include "common_css_includes.html" %}
     {% endblock common_css %}
 
-    <!--Extra CSS-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="{% static 'upload/logo.gif' %}" />
+
+
+
     <style>
+        /*common CSS used throughout the page*/
         .centering {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            padding-top: 50px;
         }
-
-        .IEEE_R10 {
-            display: flex;
-            justify-content: flex-start;
-            column-gap: 14px;
-            background: white;
-        }
-
-        .r10_logos {
-            width: 2000px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .young_professionals_logo{
-            justify-content: flex-end;
-            width: 2000px;
-            display: flex;
-            align-items: center;
-            
-        }
-
-        
-
-        .ieee_r10_btn button {
-            background-color: #002855;
-            border: none;
-            color: white;
-            padding: 10px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all .3s ease-in-out;
-            font-weight: bold;
-        }
-
-        .ieee_r10_btn button:hover {
-            background-color: #FFC72C;
-        }
-
-       
-        .contact-us h2 {
-            font-weight: bolder;
-            color: #002855;
-            padding-bottom: 25px;
-        }
-
-
 
         .max-width {
             max-width: 1080px;
-            margin: 30px 35px;
+            margin: 30px 15px;
         }
 
         .max-width p {
             text-align: justify;
         }
-        .contact-us.max-width p{
-            text-align: left;
+
+        .bar {
+            width: 90px;
+            height: 5px;
+            background-color: #FFC72C;
+            margin: 18px 0px;
+            border-radius: 5px;
         }
 
+        .max-width h2 {
+            font-weight: bolder;
+            color: #002855;
+            margin-bottom: -20px;
+        }
 
         .link {
             text-decoration: none;
+            cursor: pointer;
+            font-weight: bold;
             color: #002855;
         }
 
@@ -97,40 +62,130 @@
             color: #FFC72C;
         }
 
-        
+        /*common CSS used throughout the page*/
+
+        .parallax {
+            /* The image used */
+            background-image: url("https://ieeensusb.org/wp-content/uploads/2021/03/region-10-events-1-1024x270.jpg");
+
+            /* Set a specific height */
+            min-height: 250px;
+
+            /* Create the parallax scrolling effect */
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+
+            /* Dull the image */
+            filter: brightness(0.6);
+            /* Adjust the value as needed (0.6 is just an example) */
+
+        }
+
+        /*IEEE Region 10*/
+        .IEEE-Region-10 {
+            display: flex;
+            flex-wrap: nowrap;
+            column-gap: 30px;
+        }
+
+        .IEEE-Region-10 img {
+            width: 1251px;
+            padding-top: 67px;
+        }
+
+        .IEEE-Region-10 p {
+            margin-bottom: 30px;
+        }
+
+        .IEEE-Region-10 div div a {
+            text-decoration: none;
+            color: #fff;
+            background: #002855;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .IEEE-Region-10 div div a:hover {
+            background: #FFC72C;
+        }
+
+        /*IEEE Region 10*/
+
+        /*Young Professionals*/
+        .young-professionals {
+            display: flex;
+            flex-wrap: nowrap;
+            column-gap: 50px;
+        }
+
+        .young-professionals img {
+            width: 1954px;
+            border-radius: 4px;
+        }
+
+        .young-professionals p {
+            margin-bottom: 30px;
+        }
+
+        /*young professionals*/
+
+        /* women-student-educational-indstry relations*/
+        .women-student {
+            display: grid;
+            grid-template-columns: 1fr 1px 1fr;
+            grid-gap: 50px;
+        }
+
+        .women-student h2 {
+            color: #fff;
+            font-size: 23px;
+        }
+
+        .women-student .bar {
+            height: 3px;
+        }
+
+        .women-student p {
+            color: #fff;
+        }
+
+        .women-student .link {
+            color: #FFD100;
+        }
+
+        .women-student .link:hover {
+            color: white;
+        }
+
+        /* women-student-educational-indstry relations*/
+
+        /*contact us*/
         .contact-us {
-            width: 100%;
+            width: 1080px;
         }
-        
+
         .contact-us p {
-            font-weight: bolder;
-        }
-        
-        .event-background {
-            width: 100%;
+            font-weight: 500;
+            text-align: left;
         }
 
-        .event-image {
-            vertical-align: middle;
-            height: 100%;
-            width: 100%;
-            border: none;
+        .contact-details div {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
         }
 
-        
-        .event-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-       
+        /*contact us*/
 
+        /*media queries*/
         @media screen and (max-width: 1199px) {
             .max-width {
                 max-width: 850px;
             }
-
-            
         }
 
         @media screen and (max-width: 991px) {
@@ -138,50 +193,41 @@
                 max-width: 650px;
             }
 
-            .IEEE_R10 {
-                display: grid;
-                grid-gap: 40px;
-                grid-template-columns: 100%;
+            .young-professionals img {
+                margin-top: 65px;
             }
-
-            
         }
 
-        @media screen and (max-width: 544px) {
+        @media screen and (max-width: 630px) {
             .max-width {
-                max-width: 370px;
-                margin: auto;
+                max-width: 90%;
             }
 
-            
-            .line {
+            .IEEE-Region-10 {
+                flex-wrap: wrap;
+            }
+
+            .young-professionals {
+                flex-wrap: wrap;
+                flex-direction: column-reverse;
+                row-gap: 30px;
+            }
+
+            hr {
                 display: none;
             }
 
-            
-            .centering {
-                padding-top: 50px;
+            .women-student {
+                grid-template-columns: 1fr;
             }
         }
-        
 
         @media screen and (max-width: 425px) {
             .max-width {
                 max-width: 80%;
-                margin: 0% 5%;
             }
         }
-
-        .bar {
-            width: 90px;
-            height: 5px;
-            background-color: #FFC72C;
-            margin: 18px 0 20px;
-            border-radius: 5px;
-        }
     </style>
-   
-
 </head>
 
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
@@ -191,243 +237,239 @@
         {% include 'header.html' %}
         {% endblock header %}
 
+
         {% block wave_design %}
-            {% include 'wave.html' %}
+        {% include 'wave.html' %}
         {% endblock wave_design %}
-        
-        
 
-        <section class="centering">
-            <section class="IEEE_R10 max-width">
-                <div class="r10_logos">
-                    <img src="https://ieeensusb.org/wp-content/uploads/2021/03/R10-Logo.png"
-                        alt="">
-                </div>
-                <div>
-                    <div style="margin-bottom: -18px;">
-                        <h3 style="color: #002855; font-weight: 600;">IEEE REGION 10</h3>
-                    </div>
-                    <div class="bar"></div>
+        <!--IEEE Region 10-->
+        <section class="centering" style="background-color: #ffffff;">
+            <section class="max-width">
+                <div class="IEEE-Region-10">
+                    <div><img src="https://ieeensusb.org/wp-content/uploads/2021/03/R10-Logo-768x310.png" alt=""></div>
                     <div>
-                        <p>In the Institute of Electrical and Electronics Engineers (IEEE) there are 422,000 members from 160 countries. The Asia-Pacific region (also known as IEEE Region 10) is the largest, with over 130,000 members. This is the most cohesive community  with everyone tied together like a family. This is most certainly the base for all Asian-Pacific organizational units.</p>
+                        <div>
+                            <h2>IEEE REGION 10</h2>
+                        </div>
+                        <div class="bar"></div>
+                        <div>
+                            <p>In the Institute of Electrical and Electronics Engineers (IEEE) there are 422,000 members
+                                from 160 countries. The Asia-Pacific region (also known as IEEE Region 10) is the
+                                largest, with over 130,000 members. This is the most cohesive community with everyone
+                                tied together like a family. This is most certainly the base for all Asian-Pacific
+                                organizational units.</p>
+                        </div>
+                        <div><a href="#">Region 10 History</a></div>
                     </div>
-                    <div class="ieee_r10_btn">
-                        <button>Region 10 History</button>
+            </section>
+        </section>
+
+
+        <!--young professionals-->
+        <section class="centering" style="background-color: #75787b17;">
+            <section class="max-width">
+                <div class="young-professionals">
+                    <div>
+                        <div>
+                            <h2>Young Professionals</h2>
+                        </div>
+                        <div class="bar"></div>
+                        <div>
+                            <p> Institute of Electrical and Electronics Engineers(IEEE) Region 10 Young
+                                Professionals(YP) is a community of imaginative and creative members and volunteers
+                                across Asia Pacific. The Institute of Electrical and Electronics Engineers (IEEE) was
+                                established to assist young professionals in achieving their career goals, cultivating a
+                                dazzling professional image, and establishing a high profile in a variety of fields</p>
+                        </div>
+                        <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square "></i>IEEE R10
+                                YP</a></div>
                     </div>
+                    <div><img src="https://ieeensusb.org/wp-content/uploads/2021/03/achivement-2.jpg"></div>
                 </div>
             </section>
         </section>
 
 
-
-        <section class="centering">
-            <section class="IEEE_R10 max-width">
+        <!--Women in Engineering & Student and Member Activities-->
+        <section class="centering" style="background-color: #002855;">
+            <section class="women-student max-width">
                 <div>
-                    <div style="margin-bottom: -18px;">
-                        <h3 style="color: #002855; font-weight: 600;">Young Professionals</h3>
-                    </div>
-                    <div class="bar"></div>
                     <div>
-                        <p> Institute of Electrical and Electronics Engineers(IEEE) Region 10 Young Professionals(YP) is a community of imaginative and creative members and volunteers across Asia Pacific. The Institute of Electrical and Electronics Engineers (IEEE) was established to assist young professionals in achieving their career goals, cultivating a dazzling professional image, and establishing a high profile in a variety of fields.</p>
+                        <h2>Women in Engineering</h2>
                     </div>
-                    <div class="ieee_r10_btn">
-                        <button>IEEE R10 YP</button>
-                    </div>
-                </div>
-                <div class="young_professionals_logo">
-                    <img src="https://ieeensusb.org/wp-content/uploads/2021/03/achivement-2.jpg" alt="">
-                </div>
-            </section>
-        </section>
-        
-        <!-- women in engineering -->
-        <section class="centering">
-            <section class="IEEE_R10 max-width">
-                <div>
-                    <div style="margin-bottom: -18px;">
-                        <h3 style="color: #002855; font-weight: 600;">Women in Engineering</h3>
-                    </div>
-                    <div class="bar"></div>
+                    <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>Institute of Electrical and Electronics Engineers(IEEE) Region 10 Women in Engineering (WIE) is  one of the largest international technical organizations dedicated for supporting women engineers and scientists and encouraging girls around the world to pursue a career in engineering. With 20,000 members from various countries, we are here to shine with the power of women.</p>
-                    </div>
-                    <div class="ieee_r10_btn">
-                        <button>IEEE R10 WIE</button>
-                    </div>
-                </div>
-        
-            </section>
-        </section>
+                        <p>Institute of Electrical and Electronics Engineers(IEEE) Region 10 Women in Engineering (WIE)
+                            is one of the largest international technical organizations dedicated for supporting women
+                            engineers and scientists and encouraging girls around the world to pursue a career in
+                            engineering. With 20,000 members from various countries, we are here to shine with the power
+                            of women.
+                            Please go through this link for more information :
 
-        <!-- stdnt & mebr actvtis -->
-        <section class="centering">
-            <section class="IEEE_R10 max-width">
-                <div>
-                    <div style="margin-bottom: -18px;">
-                        <h3 style="color: #002855; font-weight: 600;">Students and Member Activites</h3>
+                        </p>
                     </div>
-                    <div class="bar"></div>
-                    <div>
-                        <p>The Institute of Electrical and Electronics Engineers (IEEE) Region 10 Student Activities Committee is responsible for the needs of students from different student divisions in Asia-Pacific. They are very involved with all of their projects and respond quickly to IEEE-related questions. This group is very welcoming to newcomers and volunteers, and they are quick to inform them of their opportunities.</p>
-                    </div>
-                    <div class="ieee_r10_btn">
-                        <button>IEEE R10 SAC</button>
-                    </div>
+                    <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE R10
+                            WIE</a></div>
                 </div>
-        
-            </section>
-        </section>
-
-        <!-- membership dev -->
-
-        <section class="centering">
-            <section class="IEEE_R10 max-width">
-                <div class="r10_logos">
-                    <img src="https://ieeensusb.org/wp-content/uploads/2021/03/illustrated-character-4.png"
-                        alt="">
-                </div>
+                <div style="border-left: 1px solid rgb(255, 255, 255);"></div>
                 <div>
-                    <div style="margin-bottom: -18px;">
-                        <h3 style="color: #002855; font-weight: 600;">Membership Development</h3>
-                    </div>
-                    <div class="bar"></div>
                     <div>
-                        <p>The Membership Development and Leadership Training (MDLT) Fund of the Institute of Electrical and Electronics Engineers (IEEE) Region 10 Student Activities Committee (SAC) was established to persuade sections/student divisions to arrange events for the training of professionalism and growing up with leadership experience.</p>
+                        <h2>Students and Member Activites</h2>
                     </div>
-                    <div class="ieee_r10_btn">
-                        <button>Membership Development</button>
-                        <button>Membership Activities</button>
+                    <div class="bar" style="background-color: #ffffff;"></div>
+                    <div>
+                        <p>The Institute of Electrical and Electronics Engineers (IEEE) Region 10 Student Activities
+                            Committee is responsible for the needs of students from different student divisions in
+                            Asia-Pacific. They are very involved with all of their projects and respond quickly to
+                            IEEE-related questions. This group is very welcoming to newcomers and volunteers, and they
+                            are quick to inform them of their opportunities.
+                            Further details please go through this link:</p>
+                    </div>
+                    <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE R10
+                            SAC</a>
                     </div>
                 </div>
             </section>
         </section>
-
-        <!-- >Educational Activities and Involvements -->
-        <section class="centering">
-            <section class="IEEE_R10 max-width">
+        <!--horizontal line in between-->
+        <hr class="line" style="width:100%; border: #ffffff solid 1px; margin-bottom: -15px;">
+        <!--Educational Activities and Involvements & Industry Relations-->
+        <!--used class same as Women in Engineering & Student and Member Activities-->
+        <section class="centering" style="background-color:#002855">
+            <section class="women-student max-width">
                 <div>
-                    <div style="margin-bottom: -18px;">
-                        <h3 style="color: #002855; font-weight: 600;">Educational Activities and Involvements</h3>
-                    </div>
-                    <div class="bar"></div>
                     <div>
-                        <p>Institute of Electrical and Electronics Engineers(IEEE) Region 10 is very interested in educational websites. The bulk of the events here are related to education and edification. Every aspect of educational advancement is addressed here in order to make student participants as effective as professionals.</p>
+                        <h2>Educational Activities and Involvements</h2>
                     </div>
-                    <div class="ieee_r10_btn">
-                        <button>Region 10 Educational Involvements</button>
+                    <div class="bar" style="background-color: #ffffff;"></div>
+                    <div>
+                        <p>Institute of Electrical and Electronics Engineers(IEEE) Region 10 is very interested in
+                            educational websites. The bulk of the events here are related to education and edification.
+                            Every aspect of educational advancement is addressed here in order to make student
+                            participants as effective as professionals
+                            Further details please go through this link:</p>
                     </div>
+                    <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>Region 10
+                            Educational Involvements
+                        </a></div>
                 </div>
-        
+                <div style="border-left: 1px solid rgb(255, 255, 255);"></div>
+                <div>
+                    <div>
+                        <h2>Industry Relations</h2>
+                    </div>
+                    <div class="bar" style="background-color: #ffffff;"></div>
+                    <div>
+                        <p>Institute of Electrical and Electronics Engineers(IEEE) Region 10 Industry Relations
+                            Committee (IRC) is very important and effective community for R10. Now a days Students and
+                            Early Researcher Conference fund (SERCF) is willing to offer financial assistance to IEEE
+                            Student members and other members to enrich their exposure and experience. This community is
+                            working hard to incorporate the industry members
+                            Further details please go through this link:</p>
+                    </div>
+                    <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>R10 Industry
+                            Relations</a></div>
+                </div>
+            </section>
+        </section>
+        <!--Membership Development-->
+        <!--used class same as Young Professionals-->
+        <section class="centering" style="background-color: #ffffff;">
+            <section class="max-width">
+                <div class="young-professionals">
+                    <div><img src="https://ieeensusb.org/wp-content/uploads/2021/03/illustrated-character-4.png" alt="">
+                    </div>
+                    <div>
+                        <div>
+                            <h2>Membership Development</h2>
+                        </div>
+                        <div class="bar"></div>
+                        <div>
+                            <p>The Membership Development and Leadership Training (MDLT) Fund of the Institute of
+                                Electrical and Electronics Engineers (IEEE) Region 10 Student Activities Committee (SAC)
+                                was established to persuade sections/student divisions to arrange events for the
+                                training of professionalism and growing up with leadership experience.</p>
+                        </div>
+                        <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>Membership
+                                Development</a></div>
+                        <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>Membership
+                                Activites</a></div>
+                    </div>
             </section>
         </section>
 
-        <!-- Industry Relations -->
-        <section class="centering">
-            <section class="IEEE_R10 max-width">
-                <div>
-                    <div style="margin-bottom: -18px;">
-                        <h3 style="color: #002855; font-weight: 600;">Industry Relations</h3>
-                    </div>
-                    <div class="bar"></div>
-                    <div>
-                        <p>Institute of Electrical and Electronics Engineers(IEEE) Region 10  Industry Relations Committee (IRC)  is very important and effective community for R10. Now a days Students and Early Researcher Conference fund (SERCF) is willing to offer financial assistance to IEEE Student members and other members  to enrich their exposure and experience. This community is working hard to incorporate the industry members.</p>
-                    </div>
-                    <div class="ieee_r10_btn">
-                        <button>R10 Industry Relations</button>
-                    </div>
-                </div>
-        
-            </section>
-        </section>
-        
+        <!--parallax-->
+        <div class="parallax"></div>
 
-        <!-- image section -->
-        <section class="event-background">
-            <div class="event-image">
-                <img src="https://ieeensusb.org/wp-content/uploads/2021/03/region-10-events-1.jpg" alt="">
-            </div>
-        </section>
-
-        <!-- stdnt & mebr actvtis -->
-        <section class="centering">
-            <section class="IEEE_R10 max-width">
+        <!--Events and Conference-->
+        <section class="centering" style="background-color:	#75787b17;">
+            <section class="max-width">
                 <div>
-                    <div style="margin-bottom: -18px;">
-                        <h3 style="color: #002855; font-weight: 600;">Events and Conference</h3>
-                    </div>
-                    <div class="bar"></div>
-                    <div>
-                        <p>TENCON is the flagship premier international technical conference of IEEE Region 10.IEEE sponsors more than 1,900 annual conferences and events worldwide, curating cutting-edge content for all of the technical fields of interest within IEEE.</p>
-                    </div>
-                    <div class="ieee_r10_btn">
-                        <button>Events List</button>
-                    </div>
+                    <h2>Events and Conference</h2>
                 </div>
-        
+                <div class="bar"></div>
+                <div>
+                    <p>TENCON is the flagship premier international technical conference of IEEE Region 10.IEEE sponsors
+                        more than 1,900 annual conferences and events worldwide, curating cutting-edge content for all
+                        of the technical fields of interest within IEEE.</p>
+                </div>
+                <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>Events List</a>
+                </div>
             </section>
         </section>
 
-        
 
-
-
-
-        
-
-
-        <!-- Contact section -->
-
-        <section class="centering" style="background-color: #f9f9f9;">
+        <!--Contact Us-->
+        <section class="centering" style="background-color: #ffffff;">
             <section class="contact-us max-width">
                 <div>
-                    <div style="margin-bottom: -38px;">
+                    <div>
                         <h2>Contact IEEE R10</h2>
                     </div>
                     <div class="bar"></div>
-                    
-                        <p>For getting touched with us please go through this side and join IEEE R10 community as soon as possible.</p>
-                        
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 5fr;">
-                        <p>Home page</p>
-                        <p><a href="http://www.ieeer10.org/" class="link">: http://www.ieeer10.org/</a> </p>
+                    <div style="margin-bottom: 25px;">
+                        <p>For getting touched with us please go through this side and join IEEE R10 community as soon
+                            as possible.</p>
                     </div>
-                    <div style="display: grid; grid-template-columns: 1fr 5fr;">
-                        <p>Website</p>
-                        <p><a href="http://www.ieeer10.org/" class="link">: IEEE Asia Pacific Region 10</a> </p>
+                    <div class="contact-details">
+                        <div>
+                            <p>Home page</p>
+                            <a href="#" class="link">: http://www.ieeer10.org/</a>
+                        </div>
+                        <div>
+                            <p>Website</p>
+                            <a href="#" class="link">: IEEE Asia Pacific Region 10</a>
+                        </div>
+                        <div>
+                            <p>For membership enquiry</p>
+                            <a href="#" class="link">: IEEE Support Center</a>
+                        </div>
+                        <div>
+                            <p>For Volunteers</p>
+                            <a href="#" class="link">: Ewell Tan</a>
+                        </div>
+                        <div>
+                            <p>Contact number</p>
+                            <p>+65 6778 2873 +65 6778 9723</p>
+                        </div>
                     </div>
-                    <div style="display: grid; grid-template-columns: 1fr 5fr;">
-                        <p>For membership enquiry</p>
-                        <p><a href="mailto:contactcenter@ieee.org" class="link">: IEEE Support Center</a> </p>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 5fr;">
-                        <p>For Volunteers</p>
-                        <p><a href="mailto:contactcenter@ieee.org" class="link">: Ewell Tan</a> </p>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 5fr;">
-                        <p>Contact number </p>
-                        <p>:   +65 6778 2873    +65 6778 9723</p>
-                    </div>
-                    
-                </div>
             </section>
         </section>
+
+
 
         <!--Footer-->
         {% block footer %}
         {% include "footer_block.html" %}
         {% endblock footer %}
+
+
+
     </div>
     {% block common_js %}
-        {% include "common_js_includes.html" %}
+    {% include "common_js_includes.html" %}
     {% endblock %}
-    
+
 </body>
 
 </html>
-
-
-
-
-
-

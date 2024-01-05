@@ -31,6 +31,8 @@ urlpatterns = [
     path('team/<int:team_primary>',views.team_intros,name="team_intro"),
     path('member_profile',views.member_profile, name="member_profile"),
 
+    path('member_profile',views.member_profile, name="member_profile"),
+
     # Publications
     path('blogs',views.blogs,name="blogs"),
     path('magazines',views.magazines,name="magazines"),
@@ -41,4 +43,8 @@ urlpatterns = [
     path('ieee_nsu_student_branch',views.ieee_nsu_student_branch, name="ieee_nsu_student_branch"),
     path('ieee_region_10',views.ieee_region_10, name="ieee_region_10"),
     path('ieee',views.ieee, name="ieee"),
+    path('faq',views.faq, name="faq"),
+
+    # Contact
+    path('contact',views.contact, name="contact"),
 ]
