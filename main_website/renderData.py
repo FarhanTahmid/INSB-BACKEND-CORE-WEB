@@ -149,6 +149,7 @@ class HomepageItems:
             pass
         else:
             user.save()
+
     
 
         

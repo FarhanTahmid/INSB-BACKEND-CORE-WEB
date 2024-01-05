@@ -12,7 +12,7 @@ class Roles(admin.ModelAdmin):
 @admin.register(Chapters_Society_and_Affinity_Groups)
 class Chapter_Society(admin.ModelAdmin):
     form = Chapter_Society_Affinity_Groups_Form
-    list_display=['id','group_name','primary','short_form','about_description',
+    list_display=['id','group_name','primary','short_form','page_title','secondary_paragraph','about_description',
                   'sc_ag_logo','background_image','mission_description','mission_picture',
                   'vision_description','vision_picture','what_is_this_description','why_join_it',
                   'what_activites_it_has','how_to_join']

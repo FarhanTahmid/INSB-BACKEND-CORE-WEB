@@ -1319,7 +1319,6 @@ def manage_main_website(request, primary):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-        main_webpage_information = Sc_Ag.get_sc_ag(primary)
 
     
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
@@ -1329,17 +1328,41 @@ def manage_main_website(request, primary):
 
                 if request.POST.get('save'):
 
-                    about_description = request.POST.get('about_description')
-                    about_image = request.POST.get('sc_ag_logo')
-                    background_image = request.POST.get('background_image')
-                    mission_description = request.POST.get('mission_description')
-                    mission_image = request.POST.get('mission_picture')
-                    vision_description = request.POST.get('vision_description')
-                    vision_picture = request.POST.get('vision_picture')
-                    what_is_this_description = request.POST.get('what_is_this_description')
-                    why_join_it = request.POST.get('why_join_it')
-                    what_activites_it_has = request.POST.get('what_activites_it_has')
-                    how_to_join = request.POST.get('how_to_join')
+                    about_details = request.POST.get('about_details')
+                    about_image = request.FILES.get('sc_ag_logo')
+                    background_image =  request.FILES.get('background_image')
+                    mission_description = request.POST.get('mission_details')
+                    mission_image =  request.FILES.get('mission_picture')
+                    vision_description = request.POST.get('vision_details')
+                    vision_picture =  request.FILES.get('vision_picture')
+                    what_is_this_description = request.POST.get('what_is_this_details')
+                    why_join_it = request.POST.get('why_join_this_details')
+                    what_activites_it_has = request.POST.get('what_activities_does_this_do_details')
+                    how_to_join = request.POST.get('how_to_join_this_details')
+
+                    if Sc_Ag.checking_length(about_details,mission_description,vision_description,what_is_this_description,
+                               why_join_it,what_activites_it_has,how_to_join):
+                        messages.error(request,"Please ensure your word limit is with in 500 and you have filled out all descriptions")
+                        return redirect("chapters_and_affinity_group:manage_main_website",primary)
+                    
+                    if Sc_Ag.main_website_info(request,primary,about_details,about_image,background_image,
+                                    mission_description,mission_image,vision_description,vision_picture,
+                                    what_is_this_description,why_join_it,what_activites_it_has,how_to_join):
+                        
+                            messages.success(request,"Saved Changes Successfully!")
+                    else:
+                        messages.error(request,"Error while saving changes.")
+                    return redirect("chapters_and_affinity_group:manage_main_website",primary)
+                
+                if request.POST.get('remove'):
+
+                    image = request.POST.get('image_delete')
+                    print(image)
+                    if Sc_Ag.delete_image(request,primary,image):
+                        messages.success(request,"Deleted Successfully!")
+                    else:
+                        messages.error(request,"Error while deleting picture.")
+                    return redirect("chapters_and_affinity_group:manage_main_website",primary)
 
 
             context={
