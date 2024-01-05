@@ -24,7 +24,7 @@
             --main-color: {{society.primary_color_code}};
             --secondary-color: #961A32;
             --text-color: #F7FAFC;
-            --background-image: url("{{media_url}}{{society.background_image}}");
+            --background-image: url('{{media_url}}{{society.background_image}}');
         }
 
         .justify-pagragraph-content {
@@ -261,7 +261,7 @@
                     </div>
                     <div class="col-md-6">
                         <img class="img-fluid w-100"
-                            src="https://ieeensusb.org/wp-content/uploads/2021/04/admin-ajax-1.png" alt="">
+                            src="{{media_url}}{{society.sc_ag_logo}}" alt="">
                     </div>
                 </div>
             </div>
@@ -483,7 +483,7 @@
                     <!-- Image column (order-md-2 means it will be the second column on medium and larger screens) -->
                     <div class="col-md-6 order-md-2 p-0">
                         <img class="mission-vision-image img-fluid"
-                            src="https://ieeensusb.org/wp-content/uploads/2021/04/Vision.jpg" alt="Mission Image">
+                            src="{{media_url}}{{society.mission_picture}}" alt="Mission Image">
                     </div>
                     <!-- Text column (order-md-1 means it will be the first column on medium and larger screens) -->
                     <div class="col-md-6 order-md-1">
@@ -491,14 +491,7 @@
                             <h1 style="color: var(--text-color);"><b>Mission</b></h1>
                             <br>
                             <p class="justify-pagragraph-content" style="color: #fff;">
-                                Ut venenatis tellus in metus. Cras adipiscing enim eu turpis egestas pretium aenean.
-                                Diam volutpat commodo sed egestas egestas fringilla phasellus. Vel elit scelerisque
-                                mauris pellentesque pulvinar. Elementum integer enim neque volutpat ac tincidunt vitae
-                                semper. Amet consectetur adipiscing elit pellentesque. Etiam non quam lacus suspendisse
-                                faucibus. Blandit volutpat maecenas volutpat blandit aliquam etiam. Turpis egestas sed
-                                tempus urna. Molestie at elementum eu facilisis. Morbi tincidunt ornare massa eget
-                                egestas purus viverra accumsan in. Venenatis urna cursus eget nunc scelerisque viverra
-                                mauris in aliquam.
+                                {{society.mission_description|safe}}
                             </p>
                             <br>
                         </div>
@@ -512,7 +505,7 @@
                     <!-- Image column (order-md-1 means it will be the first column on medium and larger screens) -->
                     <div class="col-md-6 order-md-1 p-0">
                         <img class="mission-vision-image img-fluid"
-                            src="https://ieeensusb.org/wp-content/uploads/2021/04/Vision.jpg" alt="Vision Image">
+                            src="{{media_url}}{{society.vision_picture}}" alt="Vision Image">
                     </div>
                     <!-- Text column (order-md-2 means it will be the second column on medium and larger screens) -->
                     <div class="col-md-6 order-md-2">
@@ -520,19 +513,7 @@
                             <h1 style="color: var(--text-color);"><b>Vision</b></h1>
                             <br>
                             <p class="justify-pagragraph-content" style="color: #fff;">
-                                Sit amet est placerat in egestas erat. Dolor sit amet consectetur adipiscing elit
-                                pellentesque habitant morbi tristique. Pellentesque sit amet porttitor eget. Ut eu sem
-                                integer vitae justo eget magna fermentum. Pulvinar elementum integer enim neque volutpat
-                                ac tincidunt vitae. Lorem ipsum dolor sit amet consectetur adipiscing elit duis
-                                tristique. Iaculis at erat pellentesque adipiscing commodo elit. A diam maecenas sed
-                                enim. In vitae turpis massa sed elementum tempus egestas. Quis commodo odio aenean sed
-                                adipiscing diam. Massa tincidunt nunc pulvinar sapien et ligula. Scelerisque felis
-                                imperdiet proin fermentum leo vel orci porta non. Interdum velit euismod in pellentesque
-                                massa placerat duis. Nisl condimentum id venenatis a condimentum vitae sapien. Semper
-                                quis lectus nulla at volutpat. Quisque non tellus orci ac auctor augue mauris augue. In
-                                arcu cursus euismod quis viverra nibh cras. Ullamcorper morbi tincidunt ornare massa
-                                eget egestas purus viverra accumsan. Est pellentesque elit ullamcorper dignissim cras
-                                tincidunt lobortis. Nunc sed blandit libero volutpat sed cras.
+                                {{society.vision_description|safe}}
                             </p>
                             <br>
                         </div>
