@@ -148,8 +148,9 @@
                 {% endfor %}
                 <br>
             </div>
-              
-     
+                   
+
+
             <div class="container">
           
                 <div class="box">
@@ -550,9 +551,15 @@
 
         function updateCharacterCount(editorId) {
             var editorContent = CKEDITOR.instances[editorId + '_details'].getData();
-            var characterCount = editorContent.replace(/<[^>]*>/g, '').length; // Exclude HTML tags
+        
+            // Handle special space representations
+            var cleanedContent = editorContent.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+        
+            // Count each character (including spaces)
+            var characterCount = cleanedContent.length;
+        
             var characterCountElement = document.getElementById(editorId + 'CharacterCount');
-
+        
             // Check conditions and update text color and content
             if (characterCount === 0) {
                 characterCountElement.style.color = "red";
@@ -565,6 +572,9 @@
                 characterCountElement.innerText = "Character Count: " + characterCount;
             }
         }
+        
+        
+        
     </script>
 
     <!--Script to handle file name showing when choosing file-->
