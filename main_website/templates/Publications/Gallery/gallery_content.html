@@ -91,6 +91,14 @@
         max-width: 1140px;
         padding: 25px;
     }
+    #videoGallery .row{
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      flex-wrap: wrap;
+      max-width: 1140px;
+      padding: 25px;
+      gap: 10px;
+    }
     .column{
         flex: 25%;
         max-width: 25%;
@@ -221,6 +229,9 @@
     border-radius: 5px;
     overflow: hidden;
   }
+    #videoGallery .row .video{
+      width: 100%;
+    }
 
    /*
    These keep the height of each video thumbnail consistent between YouTube and Vimeo.
@@ -256,12 +267,21 @@
     }
   }
 
+  @media (max-width: 900px) {
+    #videoGallery .row{
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
   @media (max-width: 600px) {
     .video {
       width: 48%; /* Thumbnails 2 across */
     }
     .videoTitle{
         width: 150px;
+    }
+    #videoGallery .row{
+      grid-template-columns: 1fr;
     }
   }
 
@@ -401,14 +421,7 @@
     <div class="row">
       <article class="video">
         <figure>
-          <a
-            class="fancybox fancybox.iframe"
-            href="//www.youtube.com/embed/OKiyhOfZksk"
-          >
-            <img
-              class="videoThumb"
-              src="//i1.ytimg.com/vi/paG__3FBLzI/mqdefault.jpg"
-          /></a>
+          <iframe src="https://www.youtube.com/embed/OKiyhOfZksk" frameborder="0" allowfullscreen></iframe>
         </figure>
         <p class="videoTitle">
           MesopotamiaMesopotamiaMesopotamiaMesopotamiaMesopotamia
@@ -416,14 +429,7 @@
       </article>
       <article class="video">
         <figure>
-          <a
-            class="fancybox fancybox.iframe"
-            href="//www.youtube.com/embed/OKiyhOfZksk"
-          >
-            <img
-              class="videoThumb"
-              src="//i1.ytimg.com/vi/paG__3FBLzI/mqdefault.jpg"
-          /></a>
+          <iframe src="https://www.youtube.com/embed/OKiyhOfZksk" frameborder="0" allowfullscreen></iframe>
         </figure>
         <p class="videoTitle">
           MesopotamiaMesopotamiaMesopotamiaMesopotamiaMesopotamia
@@ -431,14 +437,7 @@
       </article>
       <article class="video">
         <figure>
-          <a
-            class="fancybox fancybox.iframe"
-            href="//www.youtube.com/embed/OKiyhOfZksk"
-          >
-            <img
-              class="videoThumb"
-              src="//i1.ytimg.com/vi/paG__3FBLzI/mqdefault.jpg"
-          /></a>
+          <iframe src="https://www.youtube.com/embed/OKiyhOfZksk" frameborder="0" allowfullscreen></iframe>
         </figure>
         <p class="videoTitle">
           MesopotamiaMesopotamiaMesopotamiaMesopotamiaMesopotamia
@@ -446,14 +445,7 @@
       </article>
       <article class="video">
         <figure>
-          <a
-            class="fancybox fancybox.iframe"
-            href="//www.youtube.com/embed/OKiyhOfZksk"
-          >
-            <img
-              class="videoThumb"
-              src="//i1.ytimg.com/vi/paG__3FBLzI/mqdefault.jpg"
-          /></a>
+          <iframe src="https://www.youtube.com/embed/OKiyhOfZksk" frameborder="0" allowfullscreen></iframe>
         </figure>
         <p class="videoTitle">
           MesopotamiaMesopotamiaMesopotamiaMesopotamiaMesopotamia

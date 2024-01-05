@@ -25,6 +25,43 @@
     .pic-container img:hover {
         scale: 1.5;
     }
+    .model {
+        display: none;
+        position: fixed;
+        z-index: 1100;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    .modal-content {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .modal-content img {
+        width: 100%;
+        height: auto;
+    }
+
+    .close {
+        color: #fff;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 30px;
+        font-weight: bold;
+        cursor: pointer;
+    }
 </style>
 <body>
     <div class="app" id="app">
@@ -75,9 +112,8 @@
                             <td><a style="text-decoration:none;color:#00629B;" href="#">{{i.pk}}</a></td>
                             <td>
                                 <div class="pic-container">
-                                    <a href="/media_files/{{i.image}}" data-fancybox-group="gdlr-gal-1"
-                                        data-rel="fancybox"><img src="/media_files/{{i.image}}"
-                                            alt="" /></a>
+                                    <img src="/media_files/{{i.image}}"
+                                            alt="" />
                                 </div>                            
                             </td>                            
                             <td>{{i.publish_date}}</td>
@@ -99,6 +135,10 @@
                     </tbody>
                 </table>
                 </div>
+                <div id="myModal" class="model">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <img class="modal-content" id="modalImage" />
+                  </div>
             </div>
             <!--Table Ends-->
             <br>
@@ -299,6 +339,38 @@
     </div>
     
 </body>
+<script>
+    var modal = document.getElementById("myModal");
+    var modalImage = document.getElementById("modalImage");
+    var closeButton = document.querySelector(".close");
+    var body = document.body;
+  
+    function openModal(imageSrc) {
+      modal.style.display = "block";
+      modalImage.src = imageSrc;
+      body.style.overflow = "hidden"; // Disable scrolling
+    }
+  
+    function closeModal() {
+      modal.style.display = "none";
+      body.style.overflow = "auto"; // Enable scrolling
+    }
+  
+    var images = document.querySelectorAll(".pic-container img");
+    images.forEach(function (image) {
+      image.addEventListener("click", function () {
+        openModal(this.src);
+      });
+    });
+  
+    closeButton.addEventListener("click", closeModal);
+  
+    window.addEventListener("click", function (event) {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+  </script>
     <!--Thumbnail Image Script-->
     <script>
         function openLightbox(imageSrc) {
