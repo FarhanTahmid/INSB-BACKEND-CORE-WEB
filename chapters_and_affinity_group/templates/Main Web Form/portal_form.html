@@ -591,6 +591,33 @@
     </script>
 
 
+    <!--script to prevent user from selecting image is image already selected-->
+    <script>
+        // Function to check and disable file input if an image is already saved
+        function checkSavedImage(inputId, savedImageUrl) {
+            var fileInput = document.getElementById(inputId);
+
+            if (savedImageUrl) {
+                // If an image is already saved, disable the file input
+                fileInput.disabled = true;
+                fileInput.classList.add("disabled");
+
+                // Change the placeholder text
+                var fileLabel = fileInput.nextElementSibling;
+                fileLabel.innerText = "Delete existing file to Choose image.";
+            }
+        }
+
+        // Call the function for each image section when the page loads
+        window.onload = function () {
+            checkSavedImage("about-image-input", "{{ sc_ag_info.sc_ag_logo }}");
+            checkSavedImage("background-image-input", "{{ sc_ag_info.background_image }}");
+            checkSavedImage("mission-image-input", "{{ sc_ag_info.mission_picture }}");
+            checkSavedImage("vision-image-input", "{{ sc_ag_info.vision_picture }}");
+            // Add more calls for other image sections if needed
+        };
+    </script>
+
 
     <!--Delete logic for image-->
     <script>
@@ -600,9 +627,6 @@
             inputElement.value=image_delete;
         }
     </script>
-  
-
-    
 
     
 </body>
