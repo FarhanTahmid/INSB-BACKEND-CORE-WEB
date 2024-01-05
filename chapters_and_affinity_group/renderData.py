@@ -435,16 +435,16 @@ class Sc_Ag:
         
     def checking_length(request,about_details,mission_description,vision_description,
                         what_is_this_description,why_join_it,what_activites_it_has,how_to_join):
-        
-        about_details = Sc_Ag.process_ckeditor_content(about_details)
-        mission_description = Sc_Ag.process_ckeditor_content(mission_description)
-        vision_description = Sc_Ag.process_ckeditor_content(vision_description)
-        what_is_this_description = Sc_Ag.process_ckeditor_content(what_is_this_description)
-        why_join_it = Sc_Ag.process_ckeditor_content(why_join_it)
-        what_activites_it_has = Sc_Ag.process_ckeditor_content(what_activites_it_has)
-        how_to_join = Sc_Ag.process_ckeditor_content(how_to_join)
+        try:
+            about_details = Sc_Ag.process_ckeditor_content(about_details)
+            mission_description = Sc_Ag.process_ckeditor_content(mission_description)
+            vision_description = Sc_Ag.process_ckeditor_content(vision_description)
+            what_is_this_description = Sc_Ag.process_ckeditor_content(what_is_this_description)
+            why_join_it = Sc_Ag.process_ckeditor_content(why_join_it)
+            what_activites_it_has = Sc_Ag.process_ckeditor_content(what_activites_it_has)
+            how_to_join = Sc_Ag.process_ckeditor_content(how_to_join)
 
-            
+                
             if (len(about_details)> 500 or len(mission_description)>500 or len(vision_description)>500 
                 or len(what_is_this_description)>500 or len(why_join_it) > 500 or len(what_activites_it_has) >500
                 or len(how_to_join)>500 or 
@@ -453,7 +453,7 @@ class Sc_Ag:
                 or len(how_to_join)==0):
                 return True
             else:
-                return False
+                    return False
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
