@@ -6,7 +6,7 @@
   }
   
 
-  .header {
+  /* .header {
     text-align: center;
     text-transform: uppercase;
     padding: 32px;
@@ -14,9 +14,9 @@
     color: #fff;
     border-bottom: 4px solid #fdb347;
   }
-  
+   */
 
-  .card {
+  .magazines .card {
     /* Add shadows to create the "card" effect */
     background-color: #ffffff;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
@@ -30,17 +30,17 @@
   }
   
   /* On mouse-over, add a deeper shadow */
-  .card:hover {
+  .magazines .card:hover {
     box-shadow: 8px 8px 16px 8px rgba(0,0,0,0.2);
   }
   
   /* Add some padding inside the card container */
-  .container {
+  .magazines .card .container {
     padding: 10px 5% 10px 0;
   }
 
   /* Some styles added to the card cover image */
-  .card .cover{
+  .magazines .card .cover{
     box-shadow: 0 4px 12px 0 rgba(0,0,0,0.3);
     max-width: 100%;
     margin: 25px;
@@ -50,13 +50,13 @@
 
 
   /* Some styles added to the card title */
-  .container .card-title{
+  .magazines .card .container .card-title{
     font-weight: 900;
     text-shadow: 0px 1px, 1px 0px, 1px 1px;
     margin-bottom: -10px;
   }
 
-  .hr-dots {
+  .magazines .card .container .hr-dots {
     display: inline-block;
     width: 25px;
     border-style: dotted none none;
@@ -66,7 +66,7 @@
   }
   
   /* Thick red border */
-  .hr-dash {
+  .magazines .card .container .hr-dash {
     display: inline-block;
     width: 50px;
     border-radius: 5px;
@@ -75,12 +75,12 @@
   }
 
   /* Font size adjustment of paragraphs n card */
-  .container p{
+  .magazines .card .container p{
     font-size: 14px;
   }
 
   /* Some styles added to button */
-  .button {
+  .magazines .card .container .button {
     background-color: white; 
     color: black; 
     transition: 0.5s;
@@ -93,12 +93,12 @@
   }
   
   /* Button hover effect added */
-  .button:hover {
+  .magazines .card .container .button:hover {
     background-color: #008CBA;
     color: white;
   }
 
-  .slide-up-fade-in{
+  .magazines .slide-up-fade-in{
     animation: slide-up-fade-in ease 1s;
     animation-iteration-count: 1;
     transform-origin: 50% 50%;
@@ -136,7 +136,7 @@
 
   /* For tablets and smaller */
   @media only screen and (max-width: 991px) {
-    .card {
+    .magazines .card {
       box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
       transition: 0.3s;
       width: 95%;
@@ -148,10 +148,10 @@
       align-items: center;
       justify-content: center;
     }
-    .card:hover {
+    .magazines .card:hover {
       box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     }
-    .card .cover {
+    .magazines .card .cover {
       box-shadow: 0 4px 12px 0 rgba(0,0,0,0.3);
       border-radius: 5px;
       width:  400px;
@@ -159,22 +159,22 @@
       justify-content: center;
       border-radius: 5px;
     }
-    .container {
+    .magazines .card .container {
       padding: 2px 16px;
       margin: 25px;
     }
 
-    .container .card-title{
+    .magazines .card .container .card-title{
       font-weight: 900;
       text-shadow: 0px 1px, 1px 0px, 1px 1px;
     }
   
     /* Font size adjustment of paragraphs n card */
-    .container p{
+    .magazines .card .container p{
       font-size: 14px;
     }
 
-    .button {
+    .magazines .card .container .button {
       font-size: 16px;
       margin: auto;
       width: 100%;
@@ -182,7 +182,7 @@
     }
     
     /* Button hover effect added */
-    .button:hover {
+    .magazines .card .container .button:hover {
       background-color: #008CBA;
       color: white;
     }
@@ -192,7 +192,7 @@
 
   /* for medium sized devices */
   @media only screen and (min-width: 991px) and (max-width: 1500px)  {
-    .card{
+    .magazines .card{
       
       margin: 5% 7%;
     }  
