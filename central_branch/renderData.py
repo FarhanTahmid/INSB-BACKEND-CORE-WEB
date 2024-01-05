@@ -1,4 +1,6 @@
+from bs4 import BeautifulSoup
 from django.http import Http404
+from main_website.models import About_IEEE
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
@@ -940,3 +942,40 @@ class Branch:
             return True
         except:
             return False
+        
+    def set_about_ieee_page(about_details, community_details, start_with_ieee_details, collaboration_details,
+                                   publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
+                                   students_and_member_activities_details, quality_details, about_image, community_image,
+                                    innovations_and_developments_image, students_and_member_activities_image, quality_image):
+        try:
+            about_ieee, created = About_IEEE.objects.get_or_create(id=1)
+            about_ieee.about_ieee=about_details
+            about_ieee.community_description=community_details
+            about_ieee.start_with_ieee_description=start_with_ieee_details
+            about_ieee.collaboration_description=collaboration_details
+            about_ieee.publications_description=publications_details
+            about_ieee.events_and_conferences_description=events_and_conferences_details
+            about_ieee.achievements_description = achievements_details
+            about_ieee.innovations_and_developments_description=innovations_and_developments_details
+            about_ieee.students_and_member_activities_description=students_and_member_activities_details
+            about_ieee.quality_description=quality_details
+            about_ieee.about_image=about_image
+            about_ieee.community_image=community_image
+            about_ieee.innovations_and_developments_image=innovations_and_developments_image
+            about_ieee.students_and_member_activities_image=students_and_member_activities_image
+            about_ieee.quality_image=quality_image
+
+            about_ieee.save()
+            return True
+        except:
+            return False
+        
+    def process_ckeditor_content(ckeditor_html):
+        # Parse the HTML content with Beautiful Soup
+        soup = BeautifulSoup(ckeditor_html, 'html.parser')
+
+        # Extract the text content without HTML tags
+        text_content = soup.get_text()
+
+        # Now, 'text_content' contains only the actual content without HTML tags
+        return text_content

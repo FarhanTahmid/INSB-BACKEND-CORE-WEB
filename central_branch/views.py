@@ -1,5 +1,6 @@
 import logging
 import traceback
+from bs4 import BeautifulSoup
 from django.http import JsonResponse
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
@@ -680,14 +681,54 @@ def manage_website_homepage(request):
     return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
 
 
+
 @login_required
 def manage_about(request):
-    sc_ag=PortData.get_all_sc_ag(request=request)
 
-    context={
-        'all_sc_ag':sc_ag,
-    }
-    return render(request,'Manage Website/About/About IEEE/manage_ieee.html',context=context)
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+
+        about_ieee, created = About_IEEE.objects.get_or_create(id=1)
+
+        if request.method == "POST":
+            about_details = request.POST['about_details']
+            community_details = request.POST['community_details']
+            start_with_ieee_details = request.POST['start_with_ieee_details']
+            collaboration_details = request.POST['collaboration_details']
+            publications_details = request.POST['publications_details']
+            events_and_conferences_details = request.POST['events_and_conferences_details']
+            achievements_details = request.POST['achievements_details']
+            innovations_and_developments_details = request.POST['innovations_and_developments_details']
+            students_and_member_activities_details = request.POST['students_and_member_activities_details']
+            quality_details = request.POST['quality_details']
+
+            about_image = request.FILES.get('about_picture')
+            community_image = request.FILES.get('community_picture')
+            innovations_and_developments_image = request.FILES.get('innovations_and_developments_picture')
+            students_and_member_activities_image = request.FILES.get('students_and_member_activities_picture')
+            quality_image = request.FILES.get('quality_picture')
+
+            if(Branch.set_about_ieee_page(about_details, community_details, start_with_ieee_details, collaboration_details,
+                                    publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
+                                    students_and_member_activities_details, quality_details, about_image, community_image,
+                                    innovations_and_developments_image, students_and_member_activities_image, quality_image)):
+                messages.success(request, "Details Updated Successfully!")
+            else:
+                messages.error(request, "Something went wrong while updating the details!")
+            
+            return redirect('central_branch:manage_about')
+
+
+        context={
+            'all_sc_ag':sc_ag,
+            'about_ieee':about_ieee
+        }
+        return render(request,'Manage Website/About/About IEEE/manage_ieee.html',context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 @login_required
 def ieee_bangladesh_section(request):

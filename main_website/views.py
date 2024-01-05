@@ -566,7 +566,14 @@ def ieee_region_10(request):
     return render(request, 'About/IEEE_region_10.html')
 
 def ieee(request):
-    return render(request, 'About/About_IEEE.html')
+    #working
+    about_ieee = About_IEEE.objects.get(id=1)
+    
+    context = {
+        'about_ieee':about_ieee
+    }
+
+    return render(request, 'About/About_IEEE.html', context)
 
 def faq(request):
     return render(request, 'About/faq.html')

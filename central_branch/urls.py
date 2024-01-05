@@ -43,7 +43,7 @@ urlpatterns = [
     path('manage_website/research',views.manage_research,name="manage_research"),
     path('manage_website/research/update/<int:pk>',views.update_researches,name="update_researches"),
     path('manage_website/magazine',views.manage_magazines,name="manage_magazines"),
-    path('manage_webiste/about',views.manage_about,name = "manage_about"),
+    path('manage_website/about',views.manage_about,name = "manage_about"),
     path('manage_website/ieee_bangladesh_section',views.ieee_bangladesh_section,name = "ieee_bangladesh_section"),
     
     

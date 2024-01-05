@@ -1,6 +1,7 @@
 from django.db import models
 from ckeditor.fields import RichTextField
 from django_resized import ResizedImageField
+
 # Create your models here.
 class Chapters_Society_and_Affinity_Groups(models.Model):
     '''This model Includes Branch and all the Society'''
