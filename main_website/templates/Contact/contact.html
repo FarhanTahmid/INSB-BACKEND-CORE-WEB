@@ -1,89 +1,605 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-
-<head>
-
+  <head>
     <title>Contact - IEEE NSU SB</title>
-    <link rel="icon" href="{% static 'upload/logo.gif' %}"/>
-    
+    <link rel="icon" href="{% static 'upload/logo.gif' %}" />
+
     <!--Common CSS-->
-    {% block common_css %}
-        {% include "common_css_includes.html" %}
+    {% block common_css %} 
+    {% include "common_css_includes.html" %} 
     {% endblock common_css %}
 
     <!--Extra CSS-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
     <style>
-        @media screen and (max-width: 1199px){
-            .wavy{
-                margin-top: 300px;
+      /*important?*/
+      @media screen and (max-width: 1199px) {
+        .wavy {
+          margin-top: 300px;
+        }
+      }
+      @media screen and (max-width: 1194px) {
+        .wavy {
+          margin-top: 188px;
+        }
+      }
+      @media screen and (max-width: 1053px) {
+        .wavy {
+          margin-top: 250px;
+        }
+      }
+      @media screen and (max-width: 1049px) {
+        .wavy {
+          margin-top: 187px;
+        }
+      }
+      @media screen and (max-width: 991px) {
+        .wavy {
+          margin-top: 251px;
+        }
+      }
+      @media screen and (max-width: 960px) {
+        .wavy {
+          margin-top: 184px;
+        }
+      }
+      @media screen and (max-width: 767px) {
+        .wavy {
+          margin-top: 0;
+        }
+      }
+      
+      /*common CSS used throughout the page*/
+
+      body {
+        margin: 0%;
+        padding: 0%;
+        font-family: "Poppins", sans-serif;
+      }
+      .centering {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .max-width {
+        max-width: 1080px;
+      }
+      .bar {
+        width: 90px;
+        height: 5px;
+        background-color: #FFC72C;
+        margin: 18px 0px;
+        border-radius: 5px;
+      }
+      /*common CSS used throughout the page*/
+
+      /*cards*/
+      .contact-card-container { 
+        width: 100%;
+        display: flex;
+        column-gap: 20px;
+      }
+      .contact-card {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 30px 10px 30px;
+        border-radius: 4px;
+        margin: 50px 0px;
+      }
+      .contact-card h4 {
+        margin: 20px 0px 20px 0px;
+        color: #000000;
+      }
+      .contact-card p {
+        text-align: center;
+        font-size: small;
+      }
+      .address-icon {
+        color: white;
+        font-size: 50px;
+        background: #ffd100;
+        padding: 30px;
+        border-radius: 500px;
+        height: 114px;
+        transition: all .3s ease-in-out;
+      }
+      .email-icon {
+        color: white;
+        font-size: 50px;
+        background: #ffd100;
+        padding: 32px;
+        border-radius: 500px;
+        height: 114px;
+        transition: all .3s ease-in-out;
+      }
+      .mobile-icon {
+        color: white;
+        font-size: 50px;
+        background: #ffd100;
+        padding:33px 41px;
+        border-radius: 500px;
+        height: 114px;
+        transition: all .3s ease-in-out;
+      }
+      .share-icon {
+        color: white;
+        font-size: 50px;
+        background: #ffd100;
+        padding: 33px 37px;
+        border-radius: 500px;
+        height: 114px;
+        transition: all .3s ease-in-out;
+      }
+      .address-icon:hover , .email-icon:hover , .mobile-icon:hover , .share-icon:hover{
+        scale: 1.2;
+      }
+      .social-media-icons i{
+        font-size: 20px;
+        color: white;
+        background-color: #75787B;
+        padding: 7px;
+        border-radius: 6px;
+        transition: all .3s ease-in-out;
+        margin-top:20px
+      }
+      .social-media-icons i:hover{
+        background-color: #ffd100;
+      }
+      /*cards*/
+
+      /*location and contact*/
+      .even-col h1{
+        margin-bottom: -15px;
+        color: black;
+      }
+      .even-col{
+        margin: 40px 0px;
+        width: 1080px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 40px;
+      }
+      .even-col iframe{
+        text-decoration: none;
+        padding: 10px;
+        border-radius: 4px;
+        height: 480px;
+      }
+    .contact-us{
+          height: 480px;
+          padding: 0px 10px;
+          border-radius: 4px;
+      }
+      .contact-us p{
+        font-weight: 500;
+        margin-top: 15px;
+      }
+      .contact-us-form{
+        display: flex;
+        flex-direction: column;
+      }
+      .contact-us-form input , .contact-us-form textarea{
+    margin-top:-14px ;  
+    }
+    .contact-btn{
+        display: flex;
+        justify-content: flex-end;
+    }
+    .contact-us-form input{
+            background-color: #75787b22;
+            color: #000;
+            border: none;
+            border-radius: 3px;
+            padding: 0 10px;
+            height: 45px;
+        }
+     .contact-btn input[type=submit]{
+            font-size: 14px;
+            background: #002855;
+            color: white;
+            width: 150px;
+            border: 2px solid #002855;
+            transition: all 0.3s;
+            margin: 12px 0px 0px 0px;
+            padding: 6px 0px;
+     } 
+     .contact-btn input[type=submit]:hover{
+        background: #ffffff;
+            color: #002855;
+            border: 2px solid #002855;
+     }
+     textarea{
+      background-color: #75787b22;
+            color: #000;
+            border: none;
+            border-radius: 3px;
+        height: 200px;
+        max-height: 200px;
+
+     }
+           /*location and contact*/
+
+      /*media queries*/
+      @media screen and (max-width: 1199px) {
+            .max-width {
+                max-width: 850px;
+            }
+            .contact-card{
+                padding: 34px 0px 24px 0px;
+            }
+            .social-media-icons i{
+                font-size: 15px;
+            }
+            .even-col{
+              max-width: 850px;
             }
         }
-        @media screen and (max-width: 1194px){
-            .wavy{
-                margin-top: 188px;
+
+        @media screen and (max-width: 991px) {
+            .max-width {
+                max-width: 650px;
+            }
+            .contact-card-container{
+                flex-wrap: wrap;
+            }
+            .contact-card{
+                margin-top: 10px;
+            }
+            .even-col{
+              grid-template-columns: 1fr;
+              max-width: 650px;
+            }
+            .even-col iframe{
+              height: 300px;
             }
         }
-        @media screen and (max-width: 1053px){
-            .wavy{
-                margin-top: 250px;
+
+        @media screen and (max-width: 630px) {
+            .max-width {
+                max-width: 90%;
+            }
+            .even-col{
+              max-width: 100%;
             }
         }
-        @media screen and (max-width: 1049px){
-            .wavy{
-                margin-top: 187px;
+
+        @media screen and (max-width: 425px) {
+            .max-width {
+                max-width: 80%;
             }
         }
-        @media screen and (max-width: 991px){
-            .wavy{
-                margin-top: 251px;
-            }
-        }
-        @media screen and (max-width: 960px){
-            .wavy{
-                margin-top: 184px;
-            }
-        }
-        @media screen and (max-width: 767px){
-            .wavy{
-                margin-top: 0;
-            }
-        }
+
+
+        .section-B {
+    min-height: 150px;
+    height: auto;
+    background-image: linear-gradient(60deg, 	#00B5E2 0%, #00629B 70%);
+    text-align: center;
+    width: 100%;
+}
+
+.section-B .container h2 {
+    color: #FFFFFF;
+    font-family: "Poppins", Sans-serif;
+    font-size: 40px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.section-B .container {
+    padding: 30px;
+}
+
+.section-B .container p {
+    color: #FFFFFF;
+    font-family: "Poppins", Sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+    margin: -20px, 0, 0, 20px;
+}
+
+.section-B .container #a5 {
+    color: #F4CE0A;
+}
+
+.cursor {
+    display: inline-block;
+    background-color: #4d4d4d;
+    margin-left: 0.1rem;
+    width: 2px;
+    animation: blink 1s infinite;
+}
+.cursor.typing {
+    animation: none;
+}
+
+@keyframes blink {
+    0%  { background-color: #000000; }
+    49% { background-color: #000000; }
+    50% { background-color: transparent; }
+    99% { background-color: transparent; }
+    100%  { background-color: #000000; }
+}
+
+.section-C .container{
+    width: 90%;
+    margin: auto auto;
+    display: grid;
+    height: auto;
+    grid-template-columns: 50% 50%;
+}
+
+.section-C .container .inner-container h2{
+    color: #000000;
+    font-family: "Poppins";
+    font-size: 39px;
+    font-weight: 600;
+    margin-top: 0;
+}
+
+.channelBtn{
+    font-family: "Poppins";
+    font-weight: 700;
+    background-color: #BA0C2F;
+    border: 2px solid white;
+    padding: 10px 0px;
+    cursor: pointer;
+    box-sizing: border-box;
+    display: block;
+    border-radius: 5px;
+    transition: all .3s ease-in-out;
+    margin-top: 20px;
+}
+
+.channelBtn:active{
+    background-color: #BA0C2F;
+}
+
+.channelBtn:hover{
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    background-color: white;
+    color: #BA0C2F;
+    border: 2px solid #BA0C2F;
+}
+
+.channelBtn a{
+    color: white;
+    text-decoration: none;
+    padding: 15px 32px;
+}
+.channelBtn a:hover{
+    color: #BA0C2F;
+}
+
+.section-C{
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.video-container{
+    display: flex;
+    height: 100%;
+    padding: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.section-C .container .inner-container{
+    text-align: left;
+    padding: 30px;
+    margin: auto 0px;
+}
+
+.frame{
+    width: 560px;
+    height: 315px;
+    border-radius: 5px;
+}
+
+@media only screen and (max-width: 900px){
+
+    .section-A .container {
+        grid-template-columns: auto;
+        grid-auto-flow: row;
+        row-gap: 20px;
+        margin: 10px;
+    }
+
+    .section-C{
+        margin-top: 5px;
+    }
+
+    .section-C .container{
+        grid-template-columns: auto;
+    }
+
+    .section-C .container .inner-container{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-bottom: 10px;
+    }
+
+    .section-C .container .video-container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .section-C .container .inner-container h2{
+        font-size: 30px;
+        text-align: center;
+    }
+
+    .frame{
+        width: 100%;
+        height: 360px;
+    }
+}
     </style>
-</head>
+  </head>
 
-<body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
-    <div class="body-wrapper  float-menu">
-        
-        {% block header %}
-            {% include 'header.html' %}
-        {% endblock header %}
+  <body
+    data-rsssl="1"
+    class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7"
+  >
+    <div class="body-wrapper float-menu">
+      {% block header %} 
+      {% include 'header.html' %} 
+      {% endblock header %} 
+      {% block wave_design %} 
+      {% include 'wave.html' %} 
+      {% endblock wave_design %}
 
-        {% block wave_design %}
-            {% include 'wave.html' %}
-        {% endblock wave_design %}
+      <!-- Contact start -->
+    <!-- Contact card start -->
+      <section class="centering">
+        <section class="max-width contact-card-container">
+          <div class="contact-card">
+            <div><i class="fa-solid fa-map-location-dot address-icon"></i></div>
+            <div><h4>Address</h4></div>
+            <div>
+              <p>Plot-15, Block-B, Bashundhara, Dhaka – 1229, Bangladesh</p>
+            </div>
+          </div>
+          <div class="contact-card">
+            <div><i class="fa-solid fa-envelope email-icon"></i></div>
+            <div><h4>Email Address</h4></div>
+            <div><p>ieeensusb@ieee.org </p><p>contact@ieeensusb.org</p></div>
+          </div>
+          <div class="contact-card">
+            <div>
+              <i class="fa-solid fa-mobile-screen-button mobile-icon"></i>
+            </div>
+            <div><h4>Mobile Number</h4></div>
+            <div>
+              <p>
+                For Membership Queries : 01791001434 </p><p>For Corporate Engagement :
+                01886503931
+              </p>
+            </div>
+          </div>
+          <div class="contact-card">
+            <div><i class="fa-solid fa-share-nodes share-icon"></i></div>
+            <div><h4>Social Media</h4></div>
+            <div class="social-media-icons" ><a href="#"><i class="fa-brands fa-facebook"></i></a><a href="#"><i class="fa-brands fa-linkedin-in"></i></a><a href="#"><i class="fa-brands fa-instagram"></i></a><a href="#"><i class="fa-brands fa-x-twitter"></i></a><a href="#"><i class="fa-brands fa-youtube"></i></a></div>
+          </div>
+        </section>
+      </section>
+      <!-- Contact card end -->
+    
+      <section class="centering">
+        <section class="max-width">
+            <div class="even-col">
+                <div>
+                    <div><h1>Location</h1></div>
+                    <div class="bar"></div>
+                    <div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d185406.70356881205!2d90.39099458905149!3d23.819829097706254!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c64c103a8093%3A0xd660a4f50365294a!2sNorth%20South%20University!5e0!3m2!1sen!2sit!4v1704468156129!5m2!1sen!2sit" width="100%"  style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+                </div>
+                <div >
+                    <div><h1>Contact Us</h1></div>
+                    <div class="bar"></div>
+                    <div class="contact-us">
+                        <form method="post" class="contact-us-form">
+                            <p>Your Name</p>
+                        <input type="text" name="name" placeholder="Name" required>
+                        <p>Your Email</p>
+                        <input type="email" name="email" placeholder="Email" required>
+                            <p>Your Message</p>
+                        <textarea name="message" placeholder="Your message here...." required></textarea>
+                        <div class="contact-btn">
+                            <input type="submit" value="submit">
+                        </div>
+                    </form>
+                </div>
+                </div>
+            </div>
+        </section>
+      </section>
 
-        <!-- Contact start -->
-        
-        <!-- Contact End-->
 
-        <!--Footer-->
-        {% block footer %}
-        {% include "footer_block.html" %}
-        {% endblock footer %}
+    
+    <!-- Contact last part -->
 
+    <section class="section-B">
+        <div class="container">
+            <h2>Follow Us Now!</h2>
+            <p>our activities on <span id="a5"></span><span class="cursor" id="a6">&nbsp;</span></h3>
+        </div>
+    </section>
 
+    <section class="section-C">
+        <div class="container">
+            <div class="inner-container">
+                <h2>Subscribe to our Youtube Channel</h2>
+                <button class="channelBtn"><a href="https://www.youtube.com/channel/UCR--MNc_lCe9lvgdnSWm6kA">Our Youtube Channel</a></button>               
+            </div>
+            <div class="video-container"> 
+                <iframe class="frame" src="https://www.youtube.com/embed/Z4_zikeiNQ8?si=6j_UflrVqQ_vrnUT" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>          
+        </div>       
+    </section>
+      <!-- Contact End-->
+
+      <!--Footer-->
+      {% block footer %} 
+      {% include "footer_block.html" %} 
+      {% endblock footer %}
     </div>
-    {% block common_js %}
-    {% include "common_js_includes.html" %}
+<script>
+    var i = 0;
+var txt = ['Facebook', 'Instagram', 'Twitter'];
+var newTextSpeed = 2000;
+var typingSpeed = 100;
+var eraseSpeed = 30;
+
+var txtIndex = 0;
+var charIndex = 0;
+
+function typeWriter() {
+    if(charIndex < txt[txtIndex].length){
+        if(!document.getElementById("a6").classList.contains("typing"))
+        document.getElementById("a6").classList.add("typing");
+        document.getElementById("a5").innerHTML += txt[txtIndex].charAt(charIndex);
+        charIndex++;
+        setTimeout(typeWriter, typingSpeed);
+    }
+    else {
+        document.getElementById("a6").classList.remove("typing");
+        setTimeout(erase, newTextSpeed);
+    }
+}
+
+function erase(){
+    if(charIndex > 0){
+        document.getElementById("a5").innerHTML = txt[txtIndex].substring(0, charIndex-1);
+        charIndex--;
+        setTimeout(erase, eraseSpeed);
+    }
+    else{
+        txtIndex++;
+        if(txtIndex >= txt.length){
+            txtIndex = 0;
+        }
+        setTimeout(typeWriter, typingSpeed + 250);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function() { // On DOM Load initiate the effect
+    if(txt.length) setTimeout(typeWriter, typingSpeed + 250);
+  });
+</script>
+
+    {% block common_js %} 
+    {% include "common_js_includes.html" %} 
     {% endblock %}
-</body>
-
+  </body>
 </html>
-
-
-
-
-
-
