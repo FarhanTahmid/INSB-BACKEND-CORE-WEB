@@ -71,7 +71,7 @@ class BlogsForm(forms.ModelForm):
     class Meta:
         model=Blog
         fields=[
-            'title','writer_name','category','date','description','blog_banner_picture',
+            'title','writer_name','category','date','short_description','description','blog_banner_picture',
             'branch_or_society','publish_blog'
         ]
     def save(self, commit=True):

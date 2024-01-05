@@ -70,8 +70,9 @@ class Blog(models.Model):
     title = models.CharField(null=False,blank=False,max_length=150)
     category = models.ForeignKey(Blog_Category,null=True,blank=True,on_delete=models.CASCADE)
     date = models.DateField(null=False,blank=False,help_text = "<br>Please use the following format: <em>YYYY-MM-DD</em>.")
+    short_description=RichTextField(null=False,blank=False,max_length=200,help_text="Write within 50 words!")
     blog_banner_picture = ResizedImageField(null=False,blank=False,default='main_website_files/Blog_banner_pictures/default_blog_banner_picture.png',upload_to='main_website_files/Blog_pictures/')
-    description = RichTextField(null=False,blank=False,max_length=5000)
+    description = RichTextField(null=False,blank=False,max_length=5000,help_text="Write within 500 words!")
     branch_or_society = models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
     publish_blog=models.BooleanField(null=False,blank=False,default=False)
     class Meta:
