@@ -1366,7 +1366,6 @@ def manage_main_website(request, primary):
                 if request.POST.get('remove'):
 
                     image = request.POST.get('image_delete')
-                    print(image)
                     if Sc_Ag.delete_image(request,primary,image):
                         messages.success(request,"Deleted Successfully!")
                     else:
