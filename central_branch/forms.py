@@ -201,4 +201,19 @@ class GalleryImageForm(forms.ModelForm):
 class GalleryVideoForm(forms.ModelForm):
     class Meta:
         model=GalleryVideos
-        fields=['video_link']
+        fields=['video_title','video_link']
+    
+    def save(self, commit=True):
+        # Get the existing instance from the database
+        instance = super().save(commit=False)
+        
+        try:
+            new_video=GalleryVideos.objects.get(pk=instance.pk)
+            pass
+        except GalleryVideos.DoesNotExist:
+            instance.upload_date=date.today()
+        
+        if commit:
+            instance.save()
+        return instance
+    

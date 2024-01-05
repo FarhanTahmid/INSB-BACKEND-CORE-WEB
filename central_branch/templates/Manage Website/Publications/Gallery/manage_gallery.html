@@ -50,7 +50,6 @@
                     
                     <div style="text-align:right;">
                         <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add New Image</button>
-                        <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-c-a" ui-toggle-class="bounce" ui-target="#animate">Add New Video</button>
                     </div>
                     <small>This table holds the data of Gallery Images in the main website of IEEE NSU SB</small>
                     <small style="color:green;"><span style="color:red;">* </span>Adding Gallery Image Items here will update them in the Main Website.</small>
@@ -72,7 +71,7 @@
                     
                         {% for i in all_images %}
                         <tr>
-                            <td><a style="text-decoration:none;color:#00629B;" href="#">{{i.pk}}</a></td>
+                            <td><a style="text-decoration:none;color:#00629B;" href="{% url 'central_branch:update_image' i.pk %}">{{i.pk}}</a></td>
                             <td>
                                 <div class="pic-container">
                                     <a href="/media_files/{{i.image}}" data-fancybox-group="gdlr-gal-1"
@@ -80,7 +79,7 @@
                                             alt="" /></a>
                                 </div>                            
                             </td>                            
-                            <td>{{i.publish_date}}</td>
+                            <td>{{i.upload_date}}</td>
                             
                             <td>
                             <form method="POST">
@@ -88,7 +87,7 @@
                                     <div style="justify-content:center;text-align:center;">  
                                         <div class="btn-container">
                                             <input class="btn btn-outline b-danger text-danger" name="remove_image" type="submit" value="Remove">
-                                            <a class="btn btn-outline b-warn text-warn" href="#">Update</a>
+                                            <a class="btn btn-outline b-warn text-warn" href="{% url 'central_branch:update_image' i.pk %}">Update</a>
                                         </div>
                                       </div>
                                     <input type="hidden" name="image_pk" value={{i.pk}}>
@@ -108,7 +107,9 @@
             <!--Gallery Video Table-->
             <div class="box">
                 <div class="box-header">
-                
+                    <div style="text-align:right;">
+                        <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-c-a" ui-toggle-class="bounce" ui-target="#animate">Add New Video</button>
+                    </div>
                     <small>This table holds the data of Gallery Videos in the main website of IEEE NSU SB</small>
                     <small style="color:green;"><span style="color:red;">* </span>Adding Gallery Video Links here will update them in the Main Website.</small>
                     <br>
@@ -128,11 +129,12 @@
                     </thead>
                     <tbody>
                     
-                        {% for i in all_gallery_videos %}
+                        {% for i in all_videos %}
                         <tr>
-                            <td><a style="text-decoration:none;color:#00629B;" href="{% url 'central_branch:update_magazine' i.pk %}">{{i.magazine_title}}</a></td>
-                            <td>{{ i.published_by}}</td>
-                            <td>{{i.publish_date}}</td>
+                            <td><a style="text-decoration:none;color:#00629B;" href="{% url 'central_branch:update_video' i.pk %}">{{i.pk}}</a></td>
+                            <td>{{ i.video_title }}</td>
+                            <td>{{ i.video_link }}</td>
+                            <td>{{i.upload_date}}</td>
                             
                             <td>
                             <form method="POST">
@@ -140,10 +142,10 @@
                                     <div style="justify-content:center;text-align:center;">  
                                         <div class="btn-container">
                                             <input class="btn btn-outline b-danger text-danger" name="remove_video" type="submit" value="Remove">
-                                            <a class="btn btn-outline b-warn text-warn" href="#">Update</a>
+                                            <a class="btn btn-outline b-warn text-warn" href="{% url 'central_branch:update_video' i.pk %}">Update</a>
                                         </div>
                                       </div>
-                                    <input type="hidden" name="gallery_video_pk" value={{i.pk}}>
+                                    <input type="hidden" name="video_pk" value={{i.pk}}>
                                 </form>
                             </td>
                         </tr>
@@ -249,51 +251,6 @@
                 
             </div>
             
-            <!--Modal form-->
-            <div id="m-s-c" class="modal fade animate" data-backdrop="true">
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="modal-dialog modal-md" id="animate">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h5 class="modal-title">Add a New Research Category</h5>
-                            </div>
-                            
-                            <div class="modal-body text-left">
-                                <!--Form start-->
-        
-                                <div class="container">
-                                    <div class="padding">
-                                        <div class="row" >
-                                            <div class="col-sm-10">
-                                                <div class="box">
-                                                    <div class="box-body">
-                                                        <div class="form-control">
-                                                            {{form2.media}}
-                                                            {{form2.as_p}}
-                                                        </div>
-                                                        <br>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                    
-                            </div>
-        
-                            <div class="modal-footer">
-                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                            <input type="submit" name="add_research_category" class="btn btn-success p-x-md" value="Add"></input>               
-                            </div>
-                        </div><!-- /.modal-content -->
-                    </div>
-                </form>
-            
-            </div>
-
-
         </div>
         
     </div>

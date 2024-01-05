@@ -91,6 +91,14 @@
         max-width: 1140px;
         padding: 25px;
     }
+    #videoGallery .row{
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      flex-wrap: wrap;
+      max-width: 1140px;
+      padding: 25px;
+      gap: 10px;
+    }
     .column{
         flex: 25%;
         max-width: 25%;
@@ -221,6 +229,9 @@
     border-radius: 5px;
     overflow: hidden;
   }
+    #videoGallery .row .video{
+      width: 100%;
+    }
 
    /*
    These keep the height of each video thumbnail consistent between YouTube and Vimeo.
@@ -256,12 +267,21 @@
     }
   }
 
+  @media (max-width: 900px) {
+    #videoGallery .row{
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
   @media (max-width: 600px) {
     .video {
       width: 48%; /* Thumbnails 2 across */
     }
     .videoTitle{
         width: 150px;
+    }
+    #videoGallery .row{
+      grid-template-columns: 1fr;
     }
   }
 
@@ -299,98 +319,18 @@
   </div>
   <div class="gallery-content active" id="photoGallery">
     <div class="row">
+      {% for i in all_images %}
       <div class="column">
+        
         <div class="img-hover-zoom">
           <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/64880737_1310807015753136_1705662526923997184_n.jpg"
+            src="/media_files/{{i.image}}"
             style="width: 100%"
             alt=""
           />
         </div>
       </div>
-      <div class="column">
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2022/11/Untitled-26-01.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-      </div>
-      <div class="column">
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-      </div>
-      <div class="column">
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
   <div id="myModal" class="modal">
@@ -399,66 +339,18 @@
   </div>
   <div class="gallery-content" id="videoGallery">
     <div class="row">
+      {% for i in all_videos %}
       <article class="video">
         <figure>
-          <a
-            class="fancybox fancybox.iframe"
-            href="//www.youtube.com/embed/OKiyhOfZksk"
-          >
-            <img
-              class="videoThumb"
-              src="//i1.ytimg.com/vi/paG__3FBLzI/mqdefault.jpg"
-          /></a>
+          <iframe src="{{i.video_link}}" frameborder="0" allowfullscreen></iframe>
         </figure>
         <p class="videoTitle">
-          MesopotamiaMesopotamiaMesopotamiaMesopotamiaMesopotamia
+          {{i.video_title}}
         </p>
       </article>
-      <article class="video">
-        <figure>
-          <a
-            class="fancybox fancybox.iframe"
-            href="//www.youtube.com/embed/OKiyhOfZksk"
-          >
-            <img
-              class="videoThumb"
-              src="//i1.ytimg.com/vi/paG__3FBLzI/mqdefault.jpg"
-          /></a>
-        </figure>
-        <p class="videoTitle">
-          MesopotamiaMesopotamiaMesopotamiaMesopotamiaMesopotamia
-        </p>
-      </article>
-      <article class="video">
-        <figure>
-          <a
-            class="fancybox fancybox.iframe"
-            href="//www.youtube.com/embed/OKiyhOfZksk"
-          >
-            <img
-              class="videoThumb"
-              src="//i1.ytimg.com/vi/paG__3FBLzI/mqdefault.jpg"
-          /></a>
-        </figure>
-        <p class="videoTitle">
-          MesopotamiaMesopotamiaMesopotamiaMesopotamiaMesopotamia
-        </p>
-      </article>
-      <article class="video">
-        <figure>
-          <a
-            class="fancybox fancybox.iframe"
-            href="//www.youtube.com/embed/OKiyhOfZksk"
-          >
-            <img
-              class="videoThumb"
-              src="//i1.ytimg.com/vi/paG__3FBLzI/mqdefault.jpg"
-          /></a>
-        </figure>
-        <p class="videoTitle">
-          MesopotamiaMesopotamiaMesopotamiaMesopotamiaMesopotamia
-        </p>
-      </article>
+      {% endfor %}
+      
+      
     </div>
 
     <!-- <div class="video_container">

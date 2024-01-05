@@ -287,8 +287,14 @@ def magazines(request):
 
 ######################### GALLERY WORKS ###########################
 def gallery(request):
+    # get all image and videos
+    all_images=GalleryImages.objects.all().order_by('-pk')
+    all_videos=GalleryVideos.objects.all().order_by('-pk')
+
     context={
-        'page_title':"Gallery"
+        'page_title':"Gallery",
+        'all_images':all_images,
+        'all_videos':all_videos,
     }
     return render(request, 'Publications/Gallery/gallery.html',context=context)
 

@@ -787,7 +787,7 @@ def update_magazine(request,pk):
         update_form = MagazineForm(request.POST, request.FILES, instance=magazine_to_update)
         if update_form.is_valid():
             update_form.save()
-            messages.info(request,"Magazine Informations were updates")
+            messages.info(request,"Magazine Informations were updated")
             return redirect('central_branch:manage_magazines')
     else:
         update_form = MagazineForm(instance=magazine_to_update)
@@ -802,22 +802,36 @@ def update_magazine(request,pk):
 def manage_gallery(request):
     
     # get all images of gallery
-    all_images = GalleryImages.objects.all().order_by('-upload_date')
-    all_videos=GalleryVideos.objects.all().order_by('-upload_date')
+    all_images = GalleryImages.objects.all().order_by('-pk')
+    all_videos=GalleryVideos.objects.all().order_by('-pk')
     
     if(request.method=="POST"):
         image_form=GalleryImageForm(request.POST,request.FILES)
-        video_form=GalleryVideos(request.POST)
+        video_form=GalleryVideoForm(request.POST)
         if(request.POST.get('add_image')):
             if(image_form.is_valid()):
                 image_form.save()
                 messages.success(request,"New Image added Successfully!")
                 return redirect('central_branch:manage_gallery')
+        if(request.POST.get('remove_image')):
+            image_to_delete=GalleryImages.objects.get(pk=request.POST['image_pk'])
+            # first delete the image from filesystem
+            if(os.path.isfile(image_to_delete.image.path)):
+                os.remove(image_to_delete.image.path)
+            image_to_delete.delete()
+            messages.warning(request,"An Image from the Gallery was deleted!")
+            return redirect('central_branch:manage_gallery')
+
         if(request.POST.get('add_video')):
             if(video_form.is_valid()):
                 video_form.save()
                 messages.success(request,"New Video added Successfully")
                 return redirect('central_branch:manage_gallery')
+        if(request.POST.get('remove_video')):
+            video_to_delete=GalleryVideos.objects.get(pk=request.POST['video_pk'])
+            video_to_delete.delete()
+            messages.success(request,"A Video from the Gallery was deleted!")
+            return redirect('central_branch:manage_gallery')
         
     context={
         'image_form':GalleryImageForm,
@@ -827,6 +841,47 @@ def manage_gallery(request):
     }
     
     return render(request,'Manage Website/Publications/Gallery/manage_gallery.html',context=context)
+
+@login_required
+def update_images(request,pk):
+     # get the magazine to update
+    image_to_update=get_object_or_404(GalleryImages,pk=pk)
+    
+    if request.method == "POST":
+        if(request.POST.get('update_image')):
+            update_form = GalleryImageForm(request.POST, request.FILES, instance=image_to_update)
+            if update_form.is_valid():
+                update_form.save()
+                messages.info(request,"Image was updated")
+                return redirect('central_branch:manage_gallery')
+    else:
+        update_form = GalleryImageForm(instance=image_to_update)
+    context={
+        'update_form':update_form,
+        'image':image_to_update,
+    }
+    return render(request,"Manage Website/Publications/Gallery/update_images.html",context=context)
+
+
+def update_videos(request,pk):
+     # get the magazine to update
+    video_to_update=get_object_or_404(GalleryVideos,pk=pk)
+    
+    if request.method == "POST":
+        if(request.POST.get('update_video')):
+            update_form = GalleryVideoForm(request.POST, instance=video_to_update)
+            if update_form.is_valid():
+                update_form.save()
+                messages.info(request,"Video was updated")
+                return redirect('central_branch:manage_gallery')
+    else:
+        update_form = GalleryVideoForm(instance=video_to_update)
+    context={
+        'update_form':update_form,
+        'video':video_to_update,
+    }
+    return render(request,"Manage Website/Publications/Gallery/update_videos.html",context=context)
+
 
 
 @login_required

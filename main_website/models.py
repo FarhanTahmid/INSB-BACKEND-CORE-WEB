@@ -130,7 +130,8 @@ class GalleryImages(models.Model):
         return str(self.pk)
 
 class GalleryVideos(models.Model):
-    video_link=models.URLField(null=False,blank=False)
+    video_title=models.CharField(null=False,blank=False,max_length=100)
+    video_link=models.URLField(null=False,blank=False,help_text="Please use embed link if you are pasting a link of Youtube video!")
     upload_date=models.DateField(null=False,blank=False)
 
     class Meta:
