@@ -416,13 +416,25 @@ class Sc_Ag:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
-    def delete_image(request,primary,image_path):
+    def delete_image(request,primary,image_id,image_path):
 
         try:
             sc_ag = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
             path = settings.MEDIA_ROOT+str(image_path)
-            os.remove(path)
-            sc_ag.sc_ag_logo = None
+
+            if(image_id == 'sc_ag_logo'):
+                sc_ag.sc_ag_logo = None
+                os.remove(path)
+            elif(image_id == 'background_image'):
+                sc_ag.background_image = None
+                os.remove(path)
+            elif(image_id == 'mission_picture'):
+                sc_ag.mission_picture = None
+                os.remove(path)
+            elif(image_id == "vision_picture"):
+                sc_ag.vision_picture = None
+                os.remove(path)
+            
             sc_ag.save()
             return True
 
