@@ -244,22 +244,13 @@
                         <div class="m-3">
                             <h2><b>ABOUT RAS</b></h2>
                             <div class="bar"></div>
-                            <p class="justify-pagragraph-content">Lorem ipsum dolor sit amet, consectetur adipiscing
-                                elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Risus commodo
-                                viverra maecenas accumsan lacus vel facilisis volutpat est. Ac tortor vitae purus
-                                faucibus ornare suspendisse. Ac feugiat sed lectus vestibulum mattis ullamcorper. Arcu
-                                non sodales neque sodales ut etiam sit. Purus viverra accumsan in nisl. Ultrices
-                                sagittis orci a scelerisque. Sagittis orci a scelerisque purus semper eget duis at
-                                tellus. Quam quisque id diam vel quam elementum pulvinar etiam non. Pretium nibh ipsum
-                                consequat nisl vel pretium. Eget sit amet tellus cras adipiscing enim eu turpis. Sit
-                                amet risus nullam eget felis eget nunc lobortis. Diam vel quam elementum pulvinar etiam
-                                non quam lacus suspendisse.</p>
+                            <p class="justify-pagragraph-content">{{society.about_description|safe}}</p>
 
                         </div>
                     </div>
                     <div class="col-md-6">
                         <img class="img-fluid w-100"
-                            src="https://ieeensusb.org/wp-content/uploads/2021/04/admin-ajax-1.png" alt="">
+                            src="{{media_url}}{{society.sc_ag_logo}}" alt="">
                     </div>
                 </div>
             </div>
@@ -482,7 +473,7 @@
                     <!-- Image column (order-md-2 means it will be the second column on medium and larger screens) -->
                     <div class="col-md-6 order-md-2 p-0">
                         <img class="mission-vision-image img-fluid"
-                            src="https://ieeensusb.org/wp-content/uploads/2021/04/Vision.jpg" alt="Mission Image">
+                            src="{{media_url}}{{society.mission_picture}}" alt="Mission Image">
                     </div>
                     <!-- Text column (order-md-1 means it will be the first column on medium and larger screens) -->
                     <div class="col-md-6 order-md-1">
@@ -490,14 +481,7 @@
                             <h1 style="color: var(--text-color);"><b>Mission</b></h1>
                             <br>
                             <p class="justify-pagragraph-content" style="color: #fff;">
-                                Ut venenatis tellus in metus. Cras adipiscing enim eu turpis egestas pretium aenean.
-                                Diam volutpat commodo sed egestas egestas fringilla phasellus. Vel elit scelerisque
-                                mauris pellentesque pulvinar. Elementum integer enim neque volutpat ac tincidunt vitae
-                                semper. Amet consectetur adipiscing elit pellentesque. Etiam non quam lacus suspendisse
-                                faucibus. Blandit volutpat maecenas volutpat blandit aliquam etiam. Turpis egestas sed
-                                tempus urna. Molestie at elementum eu facilisis. Morbi tincidunt ornare massa eget
-                                egestas purus viverra accumsan in. Venenatis urna cursus eget nunc scelerisque viverra
-                                mauris in aliquam.
+                                {{society.mission_description|safe}}
                             </p>
                             <br>
                         </div>
@@ -511,7 +495,7 @@
                     <!-- Image column (order-md-1 means it will be the first column on medium and larger screens) -->
                     <div class="col-md-6 order-md-1 p-0">
                         <img class="mission-vision-image img-fluid"
-                            src="https://ieeensusb.org/wp-content/uploads/2021/04/Vision.jpg" alt="Vision Image">
+                            src="{{media_url}}{{society.vision_picture}}" alt="Vision Image">
                     </div>
                     <!-- Text column (order-md-2 means it will be the second column on medium and larger screens) -->
                     <div class="col-md-6 order-md-2">
@@ -519,19 +503,7 @@
                             <h1 style="color: var(--text-color);"><b>Vision</b></h1>
                             <br>
                             <p class="justify-pagragraph-content" style="color: #fff;">
-                                Sit amet est placerat in egestas erat. Dolor sit amet consectetur adipiscing elit
-                                pellentesque habitant morbi tristique. Pellentesque sit amet porttitor eget. Ut eu sem
-                                integer vitae justo eget magna fermentum. Pulvinar elementum integer enim neque volutpat
-                                ac tincidunt vitae. Lorem ipsum dolor sit amet consectetur adipiscing elit duis
-                                tristique. Iaculis at erat pellentesque adipiscing commodo elit. A diam maecenas sed
-                                enim. In vitae turpis massa sed elementum tempus egestas. Quis commodo odio aenean sed
-                                adipiscing diam. Massa tincidunt nunc pulvinar sapien et ligula. Scelerisque felis
-                                imperdiet proin fermentum leo vel orci porta non. Interdum velit euismod in pellentesque
-                                massa placerat duis. Nisl condimentum id venenatis a condimentum vitae sapien. Semper
-                                quis lectus nulla at volutpat. Quisque non tellus orci ac auctor augue mauris augue. In
-                                arcu cursus euismod quis viverra nibh cras. Ullamcorper morbi tincidunt ornare massa
-                                eget egestas purus viverra accumsan. Est pellentesque elit ullamcorper dignissim cras
-                                tincidunt lobortis. Nunc sed blandit libero volutpat sed cras.
+                                {{society.vision_description|safe}}
                             </p>
                             <br>
                         </div>
@@ -741,24 +713,12 @@
                 <div class="row">
                     <div class="col-md-6 p-md-5 pt-5 px-4 what-why-who-section-partition">
                         <h3 style="color: var(--secondary-color);"><b>What is RAS?</b></h3>
-                        <p class="justify-pagragraph-content" id="pid">The IEEE Robotics and Automation Society is known
-                            as RAS. Through striving for the advancement of the theory and practice of robotics and
-                            automation engineering, it maintains high professional standards among its members. The
-                            mission of RAS is to develop and facilitate the exchange of scientific and technological
-                            knowledge and thoughts in Robotics and Automation for the benefit of members as well as
-                            humanity. The Society also provides aid for promoting close cooperation and exchanging
-                            technical information among its Members and Affiliates.</p>
+                        <p class="justify-pagragraph-content" id="pid">{{society.what_is_this_description|safe}}</p>
                     </div>
                     <div class="col-md-6 p-md-5 pt-5 px-4 what-why-who-section-partition"
                         style="border-left: 1px solid rgb(255, 255, 255);">
                         <h3 style="color: var(--secondary-color);"><b>Why join RAS?</b></h3>
-                        <p class="justify-pagragraph-content" id="pid">When you join RAS, you will be joining a
-                            professional society of the IEEE that supports the development and the exchange of
-                            scientific knowledge in robotics and automation, including applied and theoretical issues.
-                            RAS Membership provides you with the resources and opportunities you need to keep yourself
-                            updated about the recent technologies and inventions in the field of Robotics and
-                            Automation. Also, you get to network with other professionals near you who share a similar
-                            technical interest as you.</p>
+                        <p class="justify-pagragraph-content" id="pid">{{society.why_join_it|safe}}</p>
                     </div>
                 </div>
             </div>
@@ -767,18 +727,12 @@
                 <div class="row">
                     <div class="col-md-6 p-md-5 pt-5 px-4 what-why-who-section-partition">
                         <h3 style="color:var(--secondary-color);"><b>What activities do we usually do?</b></h3>
-                        <p class="justify-pagragraph-content" id="pid">We host many events, seminars, workshops,
-                            Tech-talks and weekly meetings throughout the year on various topics in robotics and
-                            automation. It helps the members to gather more knowledge about Robotics and Automation.
-                            Also, the members get the chance to learn new skills and develop those skills by
-                            participating in events.</p>
+                        <p class="justify-pagragraph-content" id="pid">{{society.what_activites_it_has|safe}}</p>
                     </div>
                     <div class="col-md-6 p-md-5 py-5 px-4 what-why-who-section-partition"
                         style="border-left: 1px solid rgb(255, 255, 255);">
                         <h3 style="color:var(--secondary-color);"><b>How to join IEEE NSU RAS SBC?</b></h3>
-                        <p class="justify-pagragraph-content" id="pid">To join IEEE NSU RAS SBC, you will have to go
-                            through a simple evaluation process. For that, you will have to write us an email answering
-                            some easy questions which will be given to you.</p>
+                        <p class="justify-pagragraph-content" id="pid">{{society.how_to_join|safe}}</p>
                     </div>
                 </div>
             </div>
