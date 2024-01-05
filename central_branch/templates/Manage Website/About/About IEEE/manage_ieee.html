@@ -4,30 +4,10 @@
 {% block manage_about_ieee %}
 {% load static %}
 
+
+<!-- CKEditor CDN -->
+<script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
 <style>
-    .circle-btn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 45px; /* Set minimum width */
-        height: 45px; /* Set minimum height */
-        background-color: transparent; /* Set to transparent or any other color for the inside */
-        border: 2px solid #78BE20; /* Border color is green */
-        border-radius: 50%;
-        color: #78BE20; /* Text color is green */
-        font-size: 24px; /* Adjust the font size as needed */
-        cursor: pointer;
-        transition: background-color 0.3s, color 0.3s; /* Add smooth transition effect */
-    }
-
-    .circle-btn:hover {
-        background-color: #78BE20; /* Hover background color is green */
-        color: #fff; /* Hover text color is white */
-    }
-
-    .plus-sign::before {
-        content: '+';
-    }
 
 </style>
 
@@ -68,13 +48,11 @@
                             
                             <div class="form-group">
                                 <label>About <span style="color:red">*<span></label> 
-                                    <textarea 
-                                    placeholder="About" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="about_details"
-                                    required rows="3"></textarea>
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="about_details"></textarea>
+                                <p id="aboutCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
 
@@ -86,6 +64,14 @@
                                 </div>
                                 
                                 <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
                             </div>  
 
                             <br>
@@ -97,13 +83,11 @@
 
                             <div class="form-group">
                                 <label>Community Details <span style="color:red">*<span></label> 
-                                    <textarea 
-                                    placeholder="Community Details" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="community_details"
-                                    required rows="3"></textarea>
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="community_details"></textarea>
+                                <p id="communityCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
 
@@ -115,6 +99,14 @@
                                 </div>
                                 
                                 <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
                             </div> 
 
                             <br> 
@@ -127,38 +119,30 @@
                             <div class="form-group">
                                 <label>Start with IEEE <span style="color:red">*<span></label> 
                                 <textarea 
-                                    placeholder="Start with IEEE" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="start_with_ieee_details"
-                                    required rows="3"></textarea>
-
+                                class="form-control" 
+                                type="text"
+                                name="start_with_ieee_details"></textarea>
+                                <p id="start_with_ieeeCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
 
                             <div class="form-group">
                                 <label>Collaboration <span style="color:red">*<span></label> 
                                 <textarea 
-                                    placeholder="Collaboration" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="collaboration_details"
-                                    required rows="3"></textarea>
-
+                                class="form-control" 
+                                type="text"
+                                name="collaboration_details"></textarea>
+                                <p id="collaborationCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
 
                             <div class="form-group">
                                 <label>Publications <span style="color:red">*<span></label> 
                                 <textarea 
-                                    placeholder="Publications" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="publications_details"
-                                    required rows="3"></textarea>
+                                class="form-control" 
+                                type="text"
+                                name="publications_details"></textarea>
+                                <p id="publicationsCharacterCount" style="color: red;">Required</p>
 
                             </div>
                             <br>
@@ -166,13 +150,10 @@
                             <div class="form-group">
                                 <label>Events and Conference <span style="color:red">*<span></label> 
                                 <textarea 
-                                    placeholder="Events and Conference" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="events_and_conferences_details"
-                                    required rows="3"></textarea>
-
+                                class="form-control" 
+                                type="text"
+                                name="events_and_conferences_details"></textarea>
+                                <p id="events_and_conferencesCharacterCount" style="color: red;">Required</p>
                             </div>
                             
                             <br>
@@ -184,38 +165,11 @@
 
                             <div class="form-group">
                                 <label>Achievements Details <span style="color:red">*<span></label> 
-                                    <textarea 
-                                    placeholder="Achievements Details" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="achievements_details"
-                                    required rows="3"></textarea>
-                            </div>
-                            <br>
-
-                            <div class="form-group row align-items-center">
-                                <label for="achievements" class="col-sm-3 form-control-label">Add achievements:</label>
-                                <div class="col-sm-7">
-                                    <!-- Add input field for achievements here if needed -->
-                                </div>
-                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddAchievementModal"></button>
-                                </div>
-                            </div>
-                            <br>
-                            
-                            <hr>
-                            <div id="achievements-container" class="mt-3">
-                                <label>Achievements:</label> 
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditAchievementModal">Sample</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
-                                    </div>
-                                </div>
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="achievements_details"></textarea>
+                                <p id="achievementsCharacterCount" style="color: red;">Required</p>
                             </div>
 
                             <br>
@@ -227,13 +181,11 @@
                             
                             <div class="form-group">
                                 <label>Innovations and Developments Details <span style="color:red">*<span></label> 
-                                    <textarea 
-                                    placeholder="Innovations and Developments Details" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="innovations_and_developments_details"
-                                    required rows="3"></textarea>
+                                <textarea  
+                                class="form-control" 
+                                type="text"
+                                name="innovations_and_developments_details"></textarea>
+                                <p id="innovations_and_developmentsCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
 
@@ -245,6 +197,14 @@
                                 </div>
                                 
                                 <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
                             </div>
                             
                             <br>
@@ -256,13 +216,11 @@
                             
                             <div class="form-group">
                                 <label>Students and Member Activities Details <span style="color:red">*<span></label> 
-                                    <textarea 
-                                    placeholder="Students and Member Activities Details" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="students_and_member_activities_details"
-                                    required rows="3"></textarea>
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="students_and_member_activities_details"></textarea>
+                                <p id="students_and_member_activitiesCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
 
@@ -274,6 +232,14 @@
                                 </div>
                                 
                                 <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
                             </div>
                             
                             <br>
@@ -286,12 +252,10 @@
                             <div class="form-group">
                                 <label>Quality Details <span style="color:red">*<span></label> 
                                     <textarea 
-                                    placeholder="Quality Details" 
                                     class="form-control" 
                                     type="text"
-                                    autocomplete="off"
-                                    name="quality_details"
-                                    required rows="3"></textarea>
+                                    name="quality_details"></textarea>
+                                    <p id="qualityCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
 
@@ -303,9 +267,17 @@
                                 </div>
                                 
                                 <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
                             </div>
                             
-                            <br>
+                            {% comment %} <br>
                             <hr>
                             <br> 
 
@@ -370,7 +342,7 @@
                                     required
                                     name="founders_names"/>
                             </div>
-                            <br>
+                            <br> {% endcomment %}
 
                             <br>
                             <hr>
@@ -391,121 +363,22 @@
                 <div>
             </div>
 
-
-
-            <!-- Updated Modal for adding achievements -->
-            <div class="modal fade" id="AddAchievementModal" tabindex="-1" role="dialog" aria-labelledby="AddAchievementModalLabel" aria-hidden="true">
+            
+            <!-- for showing image -->
+            <div class="modal fade" id="showImageModal" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="addAchievementModalLabel">Add Achievements</h5>
+                            <h5 class="modal-title" id="showImageModalLabel">Image</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form method="POST">
-                                {% csrf_token %}
-                                
-                                <div class="form-group">
-                                    <label for="images">Achievement Image:</label>
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="achievement-image-input" name="image" accept="image/*">
-                                        <label class="custom-file-label bg-light" for="achievement-image-input">Choose file</label>
-                                    </div>
-                                    
-                                    <br>
-                                </div>
-                                <br>
-
-                                <div class="form-group">
-                                    <label>Achievements Name <span style="color:red">*<span></label> 
-                                    <input
-                                        placeholder="Achievements Name"
-                                        class="form-control"
-                                        type="text"
-                                        autocomplete="off"
-                                        required
-                                        name="achievement_name"/>
-                                </div>
-                                <br>
-                                
-                                <div class="form-group">
-                                    <label>Readmore Link <span style="color:red">*<span></label> 
-                                    <input
-                                        placeholder="Readmore Link"
-                                        class="form-control"
-                                        type="text"
-                                        autocomplete="off"
-                                        required
-                                        name="achievements-readmore_link"/>
-                                </div>  
-                                
-
+                            <img src="https://images.unsplash.com/photo-1549558549-415fe4c37b60?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8M3x8fGVufDB8fHx8fA%3D%3D" class="img-fluid w-100" alt="Image">
                         </div>
                         <div class="modal-footer">
-                            <!-- Change the button label and name attribute -->
-                            <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_note" value="Add">
-                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                        </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- New modal for editing Achievements -->
-            <div class="modal fade" id="EditAchievementModal" tabindex="-1" role="dialog" aria-labelledby="EditAchievementModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editAchievementModalLabel">Edit Achievement</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Display existing achievement in a textarea for editing -->
-                            <form method="POST">
-                                {% csrf_token %}
-                                <input id="update_note" name="update_note" value="" type="hidden">
-                                <div class="form-group">
-                                    <label for="images">Achievement Image:</label>
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="achievement-image-input" name="image" accept="image/*">
-                                        <label class="custom-file-label bg-light" for="achievement-image-input">Choose file</label>
-                                    </div>
-                                    
-                                    <br>
-                                </div>
-                                <br>
-
-                                <div class="form-group">
-                                    <label>Achievement Name <span style="color:red">*<span></label> 
-                                    <input
-                                        placeholder="Achievement Name"
-                                        class="form-control"
-                                        type="text"
-                                        autocomplete="off"
-                                        required
-                                        name="achievement_name"/>
-                                </div> 
-                                <br>
-                                
-                                <div class="form-group">
-                                    <label>Readmore Link <span style="color:red">*<span></label> 
-                                    <input
-                                        placeholder="Readmore Link"
-                                        class="form-control"
-                                        type="text"
-                                        autocomplete="off"
-                                        required
-                                        name="achievements-readmore_link"/>
-                                </div>  
-                        </div>
-                        <div class="modal-footer">
-                            <input type="submit" name="update" class="btn btn-outline-primary txt-primary" value="Update"></button>
-                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
                         </div>
                         </form>
                     </div>
@@ -526,7 +399,7 @@
                     <div class="modal-body">
                         <form method="POST">
                             {% csrf_token %}
-                        <p><input id="achievement_delete" name= "achievement_delete" type="hidden"></p>
+                        <p><input id="image_delete" name= "image_delete" type="hidden"></p>
                         Are you sure you want to delete the note?
                     </div>
                     <div class="modal-footer">
@@ -537,19 +410,87 @@
                 </div>
             </div>
             </div>
-            
 
 
         </div>
     </div>
 
 
-    <!--Delete logic for executive body-->
+    <!--Script for CKEditor Control-->
     <script>
-        function openModal(achievement_delete) {
+        document.addEventListener("DOMContentLoaded", function () {
+            // Replace the textareas with CKEditor instances
+            CKEDITOR.replace('about_details');
+            CKEDITOR.replace('community_details');
+            CKEDITOR.replace('start_with_ieee_details');
+            CKEDITOR.replace('collaboration_details');
+            CKEDITOR.replace('publications_details');
+            CKEDITOR.replace('events_and_conferences_details');
+            CKEDITOR.replace('achievements_details');
+            CKEDITOR.replace('innovations_and_developments_details');
+            CKEDITOR.replace('students_and_member_activities_details');
+            CKEDITOR.replace('quality_details');
+
+            // Attach a function to the change event for each CKEditor instance
+            ["about", "community", "start_with_ieee", "collaboration", "publications", "events_and_conferences", "achievements", "innovations_and_developments", "students_and_member_activities", "quality"]
+                .forEach(function (editorId) {
+                    var editor = CKEDITOR.instances[editorId + '_details'];
+
+                    editor.on('change', function () {
+                        // Update character count display for each CKEditor instance
+                        updateCharacterCount(editorId);
+                    });
+
+                    // Update character count initially
+                    updateCharacterCount(editorId);
+                });
+        });
+
+        function updateCharacterCount(editorId) {
+            var editorContent = CKEDITOR.instances[editorId + '_details'].getData();
+        
+            // Handle special space representations
+            var cleanedContent = editorContent.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+        
+            // Count each character (including spaces)
+            var characterCount = cleanedContent.length;
+        
+            var characterCountElement = document.getElementById(editorId + 'CharacterCount');
+        
+            // Check conditions and update text color and content
+            if (characterCount === 0) {
+                characterCountElement.style.color = "red";
+                characterCountElement.innerText = "Required";
+            } else if (characterCount > 500) {
+                characterCountElement.style.color = "red";
+                characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
+            } else {
+                characterCountElement.style.color = "black";
+                characterCountElement.innerText = "Character Count: " + characterCount;
+            }
+        }
+    </script>
+
+    <!--Script to handle file name showing when choosing file-->
+    <script type="text/javascript">
+
+        $('.custom-file input').change(function (e) {
+            var files = [];
+            for (var i = 0; i < $(this)[0].files.length; i++) {
+                files.push($(this)[0].files[i].name);
+            }
+            $(this).next('.custom-file-label').html(files.join(', '));
+        });
+    
+    </script>
+
+
+    <!--Delete logic for image-->
+    <script>
+        function openModal(image_delete) {
             // Set data in the modal
-            var inputElement = document.getElementById('achievement_delete');    
-            inputElement.value=achievement_delete;
+            var inputElement = document.getElementById('image_delete');    
+            inputElement.value=image_delete;
         }
     </script>
     

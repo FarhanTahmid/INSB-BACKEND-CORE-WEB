@@ -24,7 +24,6 @@
             --main-color: {{society.primary_color_code}};
             --secondary-color: #961A32;
             --text-color: #F7FAFC;
-            --background-image: url('{{media_url}}{{society.background_image}}');
         }
 
         .justify-pagragraph-content {
@@ -32,22 +31,21 @@
         }
 
         .parallax {
-            /* The image used */
-            background-image: var(--background-image);
-
             /* Set a specific height */
             min-height: 250px;
-
-            /* Create the parallax scrolling effect */
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-
-            /* Dull the image */
-            filter: brightness(0.7);
             /* Adjust the value as needed (0.8 is just an example) */
-
+            position: relative;
+            clip-path: inset(0);
+        }
+        
+        .parallax img {
+            object-fit: cover;
+            position: fixed;
+            filter: brightness(0.7);
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
         }
 
         .gdlr-blog-grid .excerpt-read-more {
@@ -261,15 +259,16 @@
                     </div>
                     <div class="col-md-6">
                         <img class="img-fluid w-100"
-                            src="{{media_url}}{{society.sc_ag_logo}}" alt="">
+                            src="https://ieeensusb.org/wp-content/uploads/2021/04/admin-ajax-1.png" alt="">
                     </div>
                 </div>
             </div>
         </section>
         <br><br>
 
-        <div class="bg parallax">
-        </div>
+        <div class="parallax">
+            <img src="{{media_url}}{{society.background_image}}" alt="Your Image Description">
+         </div>
         <br><br>
 
         <!-- about Ras and logo ends  -->
@@ -483,7 +482,7 @@
                     <!-- Image column (order-md-2 means it will be the second column on medium and larger screens) -->
                     <div class="col-md-6 order-md-2 p-0">
                         <img class="mission-vision-image img-fluid"
-                            src="{{media_url}}{{society.mission_picture}}" alt="Mission Image">
+                            src="https://ieeensusb.org/wp-content/uploads/2021/04/Vision.jpg" alt="Mission Image">
                     </div>
                     <!-- Text column (order-md-1 means it will be the first column on medium and larger screens) -->
                     <div class="col-md-6 order-md-1">
@@ -491,7 +490,14 @@
                             <h1 style="color: var(--text-color);"><b>Mission</b></h1>
                             <br>
                             <p class="justify-pagragraph-content" style="color: #fff;">
-                                {{society.mission_description|safe}}
+                                Ut venenatis tellus in metus. Cras adipiscing enim eu turpis egestas pretium aenean.
+                                Diam volutpat commodo sed egestas egestas fringilla phasellus. Vel elit scelerisque
+                                mauris pellentesque pulvinar. Elementum integer enim neque volutpat ac tincidunt vitae
+                                semper. Amet consectetur adipiscing elit pellentesque. Etiam non quam lacus suspendisse
+                                faucibus. Blandit volutpat maecenas volutpat blandit aliquam etiam. Turpis egestas sed
+                                tempus urna. Molestie at elementum eu facilisis. Morbi tincidunt ornare massa eget
+                                egestas purus viverra accumsan in. Venenatis urna cursus eget nunc scelerisque viverra
+                                mauris in aliquam.
                             </p>
                             <br>
                         </div>
@@ -505,7 +511,7 @@
                     <!-- Image column (order-md-1 means it will be the first column on medium and larger screens) -->
                     <div class="col-md-6 order-md-1 p-0">
                         <img class="mission-vision-image img-fluid"
-                            src="{{media_url}}{{society.vision_picture}}" alt="Vision Image">
+                            src="https://ieeensusb.org/wp-content/uploads/2021/04/Vision.jpg" alt="Vision Image">
                     </div>
                     <!-- Text column (order-md-2 means it will be the second column on medium and larger screens) -->
                     <div class="col-md-6 order-md-2">
@@ -513,7 +519,19 @@
                             <h1 style="color: var(--text-color);"><b>Vision</b></h1>
                             <br>
                             <p class="justify-pagragraph-content" style="color: #fff;">
-                                {{society.vision_description|safe}}
+                                Sit amet est placerat in egestas erat. Dolor sit amet consectetur adipiscing elit
+                                pellentesque habitant morbi tristique. Pellentesque sit amet porttitor eget. Ut eu sem
+                                integer vitae justo eget magna fermentum. Pulvinar elementum integer enim neque volutpat
+                                ac tincidunt vitae. Lorem ipsum dolor sit amet consectetur adipiscing elit duis
+                                tristique. Iaculis at erat pellentesque adipiscing commodo elit. A diam maecenas sed
+                                enim. In vitae turpis massa sed elementum tempus egestas. Quis commodo odio aenean sed
+                                adipiscing diam. Massa tincidunt nunc pulvinar sapien et ligula. Scelerisque felis
+                                imperdiet proin fermentum leo vel orci porta non. Interdum velit euismod in pellentesque
+                                massa placerat duis. Nisl condimentum id venenatis a condimentum vitae sapien. Semper
+                                quis lectus nulla at volutpat. Quisque non tellus orci ac auctor augue mauris augue. In
+                                arcu cursus euismod quis viverra nibh cras. Ullamcorper morbi tincidunt ornare massa
+                                eget egestas purus viverra accumsan. Est pellentesque elit ullamcorper dignissim cras
+                                tincidunt lobortis. Nunc sed blandit libero volutpat sed cras.
                             </p>
                             <br>
                         </div>

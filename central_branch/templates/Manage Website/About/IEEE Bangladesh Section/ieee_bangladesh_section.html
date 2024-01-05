@@ -4,6 +4,10 @@
 {% block manage_ieee_bangladesh_section %}
 {% load static %}
 
+
+<!-- CKEditor CDN -->
+<script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+
 <style>
 
 
@@ -14,11 +18,11 @@
         }
       }
   
-      #media-selected-images-container {
+      #gallery-selected-images-container {
         max-width: 100%; /* Set the maximum width for the image container */
       }
       
-      #media-selected-images {
+      #gallery-selected-images {
         width: 200px; /* Set the width to 100% */
         height: auto; /* Set the height to 150px */
         object-fit: cover; /* Maintain aspect ratio and cover the container */
@@ -107,13 +111,11 @@
                             
                             <div class="form-group">
                                 <label>About <span style="color:red">*<span></label> 
-                                    <textarea 
-                                    placeholder="About" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="about_details"
-                                    required rows="3"></textarea>
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="about_details"></textarea>
+                                <p id="aboutCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
 
@@ -125,6 +127,14 @@
                                 </div>
                                 
                                 <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
                             </div>  
 
                             <br>
@@ -136,13 +146,11 @@
 
                             <div class="form-group">
                                 <label>Members and Volunteers Details <span style="color:red">*<span></label> 
-                                    <textarea 
-                                    placeholder="Members and Volunteers Details" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="members_and_volunteers_details"
-                                    required rows="3"></textarea>
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="members_and_volunteers_details"></textarea>
+                                <p id="members_and_volunteersCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
 
@@ -154,6 +162,14 @@
                                 </div>
                                 
                                 <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
                             </div> 
 
                             <br> 
@@ -166,12 +182,10 @@
                             <div class="form-group">
                                 <label>Benefits <span style="color:red">*<span></label> 
                                 <textarea 
-                                    placeholder="Benefits" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="benefits_details"
-                                    required rows="3"></textarea>
+                                class="form-control" 
+                                type="text"
+                                name="benefits_details"></textarea>
+                                <p id="benefitsCharacterCount" style="color: red;">Required</p>
 
                             </div>
                             <br>
@@ -179,12 +193,10 @@
                             <div class="form-group">
                                 <label>Student Branches <span style="color:red">*<span></label> 
                                 <textarea 
-                                    placeholder="Student Branches" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="student_branches_details"
-                                    required rows="3"></textarea>
+                                class="form-control" 
+                                type="text"
+                                name="student_branches_details"></textarea>
+                                <p id="student_branchesCharacterCount" style="color: red;">Required</p>
 
                             </div>
                             <br>
@@ -192,12 +204,10 @@
                             <div class="form-group">
                                 <label>Affinity Groups <span style="color:red">*<span></label> 
                                 <textarea 
-                                    placeholder="Affinity Groups" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="affinity_groups_details"
-                                    required rows="3"></textarea>
+                                class="form-control" 
+                                type="text"
+                                name="affinity_groups_details"></textarea>
+                                <p id="affinity_groupsCharacterCount" style="color: red;">Required</p>
 
                             </div>
                             <br>
@@ -205,12 +215,10 @@
                             <div class="form-group">
                                 <label>Community and society <span style="color:red">*<span></label> 
                                 <textarea 
-                                    placeholder="Community and society" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="communty_and_society_details"
-                                    required rows="3"></textarea>
+                                class="form-control" 
+                                type="text"
+                                name="communty_and_society_details"></textarea>
+                                <p id="communty_and_societyCharacterCount" style="color: red;">Required</p>
 
                             </div>
                             
@@ -223,13 +231,11 @@
 
                             <div class="form-group">
                                 <label>Achievements Details <span style="color:red">*<span></label> 
-                                    <textarea 
-                                    placeholder="Achievements Details" 
-                                    class="form-control" 
-                                    type="text"
-                                    autocomplete="off"
-                                    name="achievements_details"
-                                    required rows="3"></textarea>
+                                <textarea  
+                                class="form-control" 
+                                type="text"
+                                name="achievements_details"></textarea>
+                                <p id="achievementsCharacterCount" style="color: red;">Required</p>
                             </div>
 
                             <br>
@@ -242,51 +248,51 @@
                             <div class="form-group">
                                 <label for="images">Upload Images:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="media-image-input" name="image" accept="image/*" multiple>
-                                    <label class="custom-file-label bg-light" for="media-image-input">Choose files</label>
+                                    <input type="file" class="custom-file-input" id="gallery-image-input" name="image" accept="image/*" multiple>
+                                    <label class="custom-file-label bg-light" for="gallery-image-input">Choose files</label>
                                 </div>
                                 
                                 <br>
                         
-                                <div id="media-selected-images-container"></div>
-                                <input type="hidden" name="selected_images" id="media-selected-images">
+                                <div id="gallery-selected-images-container"></div>
+                                <input type="hidden" name="selected_images" id="gallery-selected-images">
                                 <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple images.</small>
                                 </div>
                                 
                         
                                 <div id="image-container" class="row text-center">
-                                {% for image_url in media_images %}
+                                {% for image_url in gallery_images %}
                                     <hr>
                                     <div class="col-lg-4 col-md-6 my-3">
                                     <div class="image-container">
                                         <img
-                                        src="{{ media_url }}{{ image_url.selected_images }}"
+                                        src="{{ gallery_url }}{{ image_url.selected_images }}"
                                         alt="Image"
                                         class="img-fluid image-container-item"
                                         data-toggle="modal"
-                                        data-target="#fullViewModal{{ forloop.counter }}"
+                                        data-target="#fullViewModalForGallery{{ forloop.counter }}"
                                         />
                         
                                         <!-- Full View Modal -->
                                         <div
-                                        id="fullViewModal{{ forloop.counter }}"
+                                        id="fullViewModalForGallery{{ forloop.counter }}"
                                         class="modal fade"
                                         tabindex="-1"
                                         role="dialog"
-                                        aria-labelledby="fullViewModalLabel"
+                                        aria-labelledby="fullViewModalForGalleryLabel"
                                         aria-hidden="true"
                                         >
                                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document" >
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                            <h5 class="modal-title" id="fullViewModalLabel">Image Full View</h5>
+                                            <h5 class="modal-title" id="fullViewModalForGalleryLabel">Image Full View</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                             </div>
                                             <div class="modal-body">
                                             <img
-                                                src="{{ media_url }}{{ image_url.selected_images }}"
+                                                src="{{ gallery_url }}{{ image_url.selected_images }}"
                                                 alt="Image"
                                                 class="img-fluid"
                                                 style="width: 100%; height: auto; margin: 0 auto; display: block;"
@@ -298,38 +304,14 @@
                         
                                         
                                         <!-- Cross button to trigger modal -->
-                                        <button type="button" class="cross-button" data-toggle="modal" data-target="#deleteModal" onclick="openModal('{{image_url.selected_images}}')">
+                                        <button type="button" class="cross-button" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{image_url.selected_images}}')">
                                         &times; <!-- Use the "times" symbol (X) as a close icon -->
                                         </button>
                         
                                     </div>
                                     </div>
                         
-                                    <!-- Confirm Delete Modal -->
-                                    <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                        
-                                        <form method="post">
-                                            {% csrf_token %}
-                                            <div class="modal-body">
-                                                <p><input id="media_image_id" name= "remove_image" type="hidden"></p>
-                                                <p>Are you sure you want to delete this image?</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <input type="submit" class="btn btn-outline-danger buttons" value="Delete" name="delete_image">
-                                                <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                            </div>
-                                        </form>
-                                        </div>
-                                      </div>
-                                      </div>
+                                    
                                   {% endfor %}
                                   </div>
 
@@ -353,99 +335,228 @@
                 <div>
             </div>
 
+
+
+            <!-- for showing image except for gallery -->
+            <div class="modal fade" id="showImageModal" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="showImageModalLabel">Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img src="https://images.unsplash.com/photo-1549558549-415fe4c37b60?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8M3x8fGVufDB8fHx8fA%3D%3D" class="img-fluid w-100" alt="Image">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Confirmation modal for delete -->
+            <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-top" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                        <p><input id="image_delete" name= "image_delete" type="hidden"></p>
+                        Are you sure you want to delete the note?
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            </div>
+
         </div>
     </div>
 
 
 
-     
-  <script>
-    $(document).ready(function () {
-      $('#media-image-input').on('change', function () {
-          var container = $('#media-selected-images-container');
-          container.empty();
-  
-          var input = $(this)[0];
-          var files = input.files;
-  
-          var rowContainer;
-  
-          for (var i = 0; i < files.length; i++) {
-              var file = files[i];
-              var reader = new FileReader();
-  
-              (function (index) {
-                  reader.onload = function (e) {
-                      if (index % 3 === 0) {
-                          rowContainer = $('<div class="row"></div>'); // Start a new row for every three images
-                      }
-  
-                      var imageContainer = $('<div class="media-selected-image-container"></div>');
-                      var image = $('<img class="media-selected-image" src="' + e.target.result + '"  style="width: auto; height: 100px; margin: 5px 10px;">');
-  
-                      imageContainer.append(image);
-                      rowContainer.append(imageContainer);
-  
-                      if ((index + 1) % 3 === 0 || index === files.length - 1) {
-                          container.append(rowContainer); // Append the row when it's full or it's the last image
-                      }
-                  };
-              })(i);
-  
-              reader.readAsDataURL(file);
-          }
-      });
-    });
+    <!--Scripts for Gallery Start-->
+    <script>
+        $(document).ready(function () {
+        $('#gallery-image-input').on('change', function () {
+            var container = $('#gallery-selected-images-container');
+            container.empty();
     
+            var input = $(this)[0];
+            var files = input.files;
+    
+            var rowContainer;
+    
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var reader = new FileReader();
+    
+                (function (index) {
+                    reader.onload = function (e) {
+                        if (index % 3 === 0) {
+                            rowContainer = $('<div class="row"></div>'); // Start a new row for every three images
+                        }
+    
+                        var imageContainer = $('<div class="gallery-selected-image-container"></div>');
+                        var image = $('<img class="gallery-selected-image" src="' + e.target.result + '"  style="width: auto; height: 100px; margin: 5px 10px;">');
+    
+                        imageContainer.append(image);
+                        rowContainer.append(imageContainer);
+    
+                        if ((index + 1) % 3 === 0 || index === files.length - 1) {
+                            container.append(rowContainer); // Append the row when it's full or it's the last image
+                        }
+                    };
+                })(i);
+    
+                reader.readAsDataURL(file);
+            }
+        });
+        });
+        
 
-    document.addEventListener("DOMContentLoaded", function () {
-      const fileInput = document.getElementById("media-image-input");
+        document.addEventListener("DOMContentLoaded", function () {
+        const fileInput = document.getElementById("gallery-image-input");
 
-      fileInput.addEventListener("change", function () {
-        const selectedFiles = this.files;
-        const maxAllowedFiles = {{allowed_image_upload}};
+        fileInput.addEventListener("change", function () {
+            const selectedFiles = this.files;
+            const maxAllowedFiles = {{allowed_image_upload}};
 
-        if (selectedFiles.length > maxAllowedFiles) {
-          
-          alert("You can upload a maximum of "+maxAllowedFiles+" images.");
-          // Clear the file input or handle it based on your requirements
-          this.value = null;
+            if (selectedFiles.length > maxAllowedFiles) {
+            
+            alert("You can upload a maximum of "+maxAllowedFiles+" images.");
+            // Clear the file input or handle it based on your requirements
+            this.value = null;
+            }
+
+            // Update the selected images container or perform other actions as needed
+            updateSelectedImagesContainer(selectedFiles);
+        });
+
+        function updateSelectedImagesContainer(files) {
+            const container = document.getElementById("gallery-selected-images-container");
+            container.innerHTML = ""; // Clear existing content
+
+            for (const file of files) {
+            const fileName = file.name;
+            const listItem = document.createElement("div");
+            listItem.textContent = fileName;
+            container.appendChild(listItem);
+            }
+
+            // Update the hidden input with selected images' information
+            updateHiddenInput(files);
         }
 
-        // Update the selected images container or perform other actions as needed
-        updateSelectedImagesContainer(selectedFiles);
-      });
-
-      function updateSelectedImagesContainer(files) {
-        const container = document.getElementById("media-selected-images-container");
-        container.innerHTML = ""; // Clear existing content
-
-        for (const file of files) {
-          const fileName = file.name;
-          const listItem = document.createElement("div");
-          listItem.textContent = fileName;
-          container.appendChild(listItem);
+        function updateHiddenInput(files) {
+            const hiddenInput = document.getElementById("gallery-selected-images");
+            const fileNames = Array.from(files).map((file) => file.name);
+            hiddenInput.value = fileNames.join(", ");
         }
+        });
 
-        // Update the hidden input with selected images' information
-        updateHiddenInput(files);
-      }
+        function openModal(gallery_image_id) {
+        // Set data in the modal
+        var inputElement = document.getElementById('gallery_image_id');
+        inputElement.value=gallery_image_id;
 
-      function updateHiddenInput(files) {
-        const hiddenInput = document.getElementById("media-selected-images");
-        const fileNames = Array.from(files).map((file) => file.name);
-        hiddenInput.value = fileNames.join(", ");
-      }
-    });
+        }
+    
+    </script>
+    <!--Scripts for Gallery End-->
 
-    function openModal(media_image_id) {
-      // Set data in the modal
-      var inputElement = document.getElementById('media_image_id');
-      inputElement.value=media_image_id;
 
-    }
-   
-  </script>
+
+
+
+      <!--Script for CKEditor Control-->
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Replace the textareas with CKEditor instances
+            CKEDITOR.replace('about_details');
+            CKEDITOR.replace('members_and_volunteers_details');
+            CKEDITOR.replace('benefits_details');
+            CKEDITOR.replace('student_branches_details');
+            CKEDITOR.replace('affinity_groups_details');
+            CKEDITOR.replace('communty_and_society_details');
+            CKEDITOR.replace('achievements_details');
+
+            // Attach a function to the change event for each CKEditor instance
+            ["about", "members_and_volunteers", "benefits", "student_branches", "affinity_groups", "communty_and_society", "achievements"]
+                .forEach(function (editorId) {
+                    var editor = CKEDITOR.instances[editorId + '_details'];
+
+                    editor.on('change', function () {
+                        // Update character count display for each CKEditor instance
+                        updateCharacterCount(editorId);
+                    });
+
+                    // Update character count initially
+                    updateCharacterCount(editorId);
+                });
+        });
+
+        function updateCharacterCount(editorId) {
+            var editorContent = CKEDITOR.instances[editorId + '_details'].getData();
+        
+            // Handle special space representations
+            var cleanedContent = editorContent.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+        
+            // Count each character (including spaces)
+            var characterCount = cleanedContent.length;
+        
+            var characterCountElement = document.getElementById(editorId + 'CharacterCount');
+        
+            // Check conditions and update text color and content
+            if (characterCount === 0) {
+                characterCountElement.style.color = "red";
+                characterCountElement.innerText = "Required";
+            } else if (characterCount > 500) {
+                characterCountElement.style.color = "red";
+                characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
+            } else {
+                characterCountElement.style.color = "black";
+                characterCountElement.innerText = "Character Count: " + characterCount;
+            }
+        }
+    </script>
+
+    <!--Script to handle file name showing when choosing file-->
+    <script type="text/javascript">
+
+        $('.custom-file input').change(function (e) {
+            var files = [];
+            for (var i = 0; i < $(this)[0].files.length; i++) {
+                files.push($(this)[0].files[i].name);
+            }
+            $(this).next('.custom-file-label').html(files.join(', '));
+        });
+    
+    </script>
+
+
+    <!--Delete logic for image-->
+    <script>
+        function openModal(image_delete) {
+            // Set data in the modal
+            var inputElement = document.getElementById('image_delete');    
+            inputElement.value=image_delete;
+        }
+    </script>
  
 </body>
 
