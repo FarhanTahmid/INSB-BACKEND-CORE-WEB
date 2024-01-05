@@ -218,9 +218,7 @@
                                 <li class="menu-item menu-item-has-children"><a href="#">Teams</a>
                                     <ul class="sub-menu sub-menu-level-2">
                                         {% for i in branch_teams %}
-                                        <li class="menu-item"><a
-                                                href="{% url 'main_website:team_intro' i.primary %}">{{i.team_name
-                                                }}</a></li>
+                                        <li class="menu-item"><a href="{% url 'main_website:team_intro' i.primary %}">{{i.team_name}}</a></li>
                                         {% endfor %}
                                     </ul>
                                 </li>

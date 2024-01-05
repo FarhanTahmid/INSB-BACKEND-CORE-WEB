@@ -42,3 +42,8 @@ from .models import Magazines
 @admin.register(Magazines)
 class Magazines(admin.ModelAdmin):
     list_display=['id','magazine_title']
+
+from .models import GalleryImages
+@admin.register(GalleryImages)
+class GalleryImages(admin.ModelAdmin):
+    list_display=['pk']

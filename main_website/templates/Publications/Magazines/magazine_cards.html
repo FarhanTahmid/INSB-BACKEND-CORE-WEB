@@ -2,7 +2,7 @@
 {% block magazine_card %}
 
 {% for i in all_magazines %}
-<div class="card , slide-up-fade-in">
+<div class="card , slide-up-fade-in" style="width:60%;margin:15px auto;">
     <img class="cover" src="/media_files/{{i.magazine_picture}}" alt="cover" >
     <div class="container">
         <h1 class="card-title">{{i.magazine_title}}</h1>
@@ -13,7 +13,7 @@
         {{i.publish_date}}</p>
         <p class="">{{i.magazine_short_description | safe}}</p>
         <br>
-        <button class="button" type="button">Read The Magazine</button>
+        <a style="text-decoration:none" target="blank" class="button" type="button" href="/media_files/{{i.magazine_file}}">Read The Magazine</a>
     </div>
 </div>
 {% endfor %}
