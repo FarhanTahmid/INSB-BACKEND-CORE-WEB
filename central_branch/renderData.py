@@ -367,7 +367,7 @@ class Branch:
                     pass
 
     def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
-                             flagship_event,registration_fee,registration_fee_amount,form_link):
+                             flagship_event,registration_fee,registration_fee_amount,form_link,is_featured_event):
         ''' Update event details and save to database '''
 
         try:
@@ -412,6 +412,7 @@ class Branch:
             event.registration_fee = registration_fee
             event.registration_fee_amount = registration_fee_amount
             event.form_link = form_link
+            event.is_featured = is_featured_event
             event.save()
             event_venue = Event_Venue.objects.filter(event_id = event_id)
             for venues in event_venue:
@@ -837,6 +838,12 @@ class Branch:
         '''This function will return wheather the event is flagship or not'''
 
         return Events.objects.get(id = event_id).flagship_event
+    
+    def is_featured_event(event_id):
+
+        '''This function will return wheater the event is featured or not'''
+
+        return Events.objects.get(id = event_id).is_featured
     
     def is_registration_fee_required(event_id):
         

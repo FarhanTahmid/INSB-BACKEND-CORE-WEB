@@ -414,7 +414,6 @@ class Sc_Ag:
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error(request,f"Could not update the main page of Sc_Ag group = {primary}!")
             return False
         
     def delete_image(request,primary,image_path):
@@ -430,7 +429,6 @@ class Sc_Ag:
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error(request,f"Could not delete")
             return False
         
     def checking_length(request,about_details,mission_description,vision_description,
@@ -457,7 +455,6 @@ class Sc_Ag:
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error(request,f"Length not same")
             return False
         
     def process_ckeditor_content(ckeditor_html):

@@ -273,6 +273,7 @@
 
                 <!--Featured Events-->
                 <div class="row m-0 box-container" style="transition: .3s ease-in-out; ">
+                    {% for events,banner_image in featured_events.items %}
                     <div style="border-radius: 7px;"
                         class="col-lg-3 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
                         <article id="post-2255"
@@ -280,9 +281,9 @@
                             style="border: 1px solid black;">
                             <div class="gdlr-standard-style">
                                 <div class="gdlr-blog-thumbnail">
-                                    <a href="#">
+                                    <a href="{% url 'main_website:event_details' events.id %}">
                                         <img class="article-image"
-                                            src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp"
+                                            src="{{media_url}}{{banner_image}}"
                                             alt="Event Image" width="100%" />
                                     </a>
                                 </div>
@@ -291,162 +292,31 @@
                                     <header class="post-header">
                                         <div class="gdlr-blog-info">
                                             <div class="blog-info blog-date gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span><a href="#">January 1, 2024</a>
+                                                <span class="gdlr-sep">/</span><a href="{% url 'main_website:event_details' events.id %}">{{events.event_date|date:"M"}}.{{events.event_date.day}}{% if event.event_date.day == 1 %}st{% elif event.event_date.day == 2 %}nd {% elif event.event_date.day == 3 %}rd{% else %}th{% endif %}, {{events.event_date.year}}</a>
                                             </div>
                                             <div class="blog-info blog-author gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span>By <a href="#" title="Event Organizer"
-                                                    rel="author">Org. Name</a>
+                                                <span class="gdlr-sep">/</span>By <a href="{% url 'main_website:event_details' events.id %}" title="Event Organizer"
+                                                    rel="author">Org. {{events.event_organiser.short_form}}</a>
                                             </div>
                                             <div class="clear"></div>
                                         </div>
 
                                         <h3 class="gdlr-blog-title event_name">
-                                            <a href="#">Sample Event Title</a>
+                                            <a href="{% url 'main_website:event_details' events.id %}">{{events.event_name}}</a>
                                         </h3>
                                         <div class="clear"></div>
                                     </header>
 
                                     <div class="description-container"
                                         style="display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; text-overflow: ellipsis; -webkit-line-clamp: 2;">
-                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                            Nulla eget eros sed libero consequat interdum.</p>
+                                        <p class="card-text">{{events.event_description|safe}}</p>
                                     </div>
-                                    <a href="#" class="excerpt-read-more">Read More</a>
+                                    <a href="{% url 'main_website:event_details' events.id %}" class="excerpt-read-more">Read More</a>
                                 </div>
                             </div>
                         </article>
                     </div>
-                    <div style="border-radius: 7px;"
-                        class="col-lg-3 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
-                        <article id="post-2255"
-                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style"
-                            style="border: 1px solid black;">
-                            <div class="gdlr-standard-style">
-                                <div class="gdlr-blog-thumbnail">
-                                    <a href="#">
-                                        <img class="article-image"
-                                            src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp"
-                                            alt="Event Image" width="100%" />
-                                    </a>
-                                </div>
-
-                                <div class="gdlr-blog-grid-content" style="overflow: hidden;">
-                                    <header class="post-header">
-                                        <div class="gdlr-blog-info">
-                                            <div class="blog-info blog-date gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span><a href="#">January 1, 2024</a>
-                                            </div>
-                                            <div class="blog-info blog-author gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span>By <a href="#" title="Event Organizer"
-                                                    rel="author">Org. Name</a>
-                                            </div>
-                                            <div class="clear"></div>
-                                        </div>
-
-                                        <h3 class="gdlr-blog-title event_name">
-                                            <a href="#">Sample Event Title</a>
-                                        </h3>
-                                        <div class="clear"></div>
-                                    </header>
-
-                                    <div class="description-container"
-                                        style="display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; text-overflow: ellipsis; -webkit-line-clamp: 2;">
-                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                            Nulla eget eros sed libero consequat interdum.</p>
-                                    </div>
-                                    <a href="#" class="excerpt-read-more">Read More</a>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                    <div style="border-radius: 7px;"
-                        class="col-lg-3 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
-                        <article id="post-2255"
-                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style"
-                            style="border: 1px solid black;">
-                            <div class="gdlr-standard-style">
-                                <div class="gdlr-blog-thumbnail">
-                                    <a href="#">
-                                        <img class="article-image"
-                                            src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp"
-                                            alt="Event Image" width="100%" />
-                                    </a>
-                                </div>
-
-                                <div class="gdlr-blog-grid-content" style="overflow: hidden;">
-                                    <header class="post-header">
-                                        <div class="gdlr-blog-info">
-                                            <div class="blog-info blog-date gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span><a href="#">January 1, 2024</a>
-                                            </div>
-                                            <div class="blog-info blog-author gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span>By <a href="#" title="Event Organizer"
-                                                    rel="author">Org. Name</a>
-                                            </div>
-                                            <div class="clear"></div>
-                                        </div>
-
-                                        <h3 class="gdlr-blog-title event_name">
-                                            <a href="#">Sample Event Title</a>
-                                        </h3>
-                                        <div class="clear"></div>
-                                    </header>
-
-                                    <div class="description-container"
-                                        style="display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; text-overflow: ellipsis; -webkit-line-clamp: 2;">
-                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                            Nulla eget eros sed libero consequat interdum.</p>
-                                    </div>
-                                    <a href="#" class="excerpt-read-more">Read More</a>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                    <div style="border-radius: 7px;"
-                        class="col-lg-3 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
-                        <article id="post-2255"
-                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style"
-                            style="border: 1px solid black;">
-                            <div class="gdlr-standard-style">
-                                <div class="gdlr-blog-thumbnail">
-                                    <a href="#">
-                                        <img class="article-image"
-                                            src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp"
-                                            alt="Event Image" width="100%" />
-                                    </a>
-                                </div>
-
-                                <div class="gdlr-blog-grid-content" style="overflow: hidden;">
-                                    <header class="post-header">
-                                        <div class="gdlr-blog-info">
-                                            <div class="blog-info blog-date gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span><a href="#">January 1, 2024</a>
-                                            </div>
-                                            <div class="blog-info blog-author gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span>By <a href="#" title="Event Organizer"
-                                                    rel="author">Org. Name</a>
-                                            </div>
-                                            <div class="clear"></div>
-                                        </div>
-
-                                        <h3 class="gdlr-blog-title event_name">
-                                            <a href="#">Sample Event Title</a>
-                                        </h3>
-                                        <div class="clear"></div>
-                                    </header>
-
-                                    <div class="description-container"
-                                        style="display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; text-overflow: ellipsis; -webkit-line-clamp: 2;">
-                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                            Nulla eget eros sed libero consequat interdum.</p>
-                                    </div>
-                                    <a href="#" class="excerpt-read-more">Read More</a>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-
-
+                    {% endfor %}     
                 </div>
 
                 <div class="text-center"> <!-- Add 'text-center' class here -->
@@ -767,9 +637,9 @@
                 </form>
                 <br>
 
-                <p class="form-text text-muted">Email Address: ras@ieeensu.org</p>
-                <p class="form-text text-muted">Facebook page: <a href="https://www.facebook.com/ieeensu.ras"
-                        style="color: var(--secondary-color);" target="_blank">https://www.facebook.com/ieeensu.ras</a>
+                <p class="form-text text-muted">Email Address: {{society.email}}</p>
+                <p class="form-text text-muted">Facebook page: <a href="{{society.facebook_link}}"
+                        style="color: var(--secondary-color);" target="_blank">{{society.facebook_link}}</a>
                 </p>
                 <p></p>
             </div>

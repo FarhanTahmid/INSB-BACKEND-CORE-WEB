@@ -852,6 +852,7 @@ def event_edit_form(request, primary, event_id):
             is_flagship_event = Branch.is_flagship_event(event_id)
             is_event_published = Branch.load_event_published(event_id)
             is_registraion_fee_true = Branch.is_registration_fee_required(event_id)
+            is_featured_event = Branch.is_featured_event(event_id)
             #Get event details from databse
             event_details = Events.objects.get(pk=event_id)
 
@@ -880,11 +881,13 @@ def event_edit_form(request, primary, event_id):
                     inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
                     intra_branch_collaboration=request.POST['intra_branch_collaboration']
                     venue_list_for_event=request.POST.getlist('event_venues')
+                    is_featured = request.POST.get('is_featured_event')
 
                     #Checking to see of toggle button is on/True or off/False
                     publish_event = Branch.button_status(publish_event_status)
                     flagship_event = Branch.button_status(flagship_event_status)
                     registration_fee = Branch.button_status(registration_event_status)
+                    is_featured = Branch.button_status(is_featured)
 
                     #if there is registration fee then taking the amount from field
                     if registration_fee:
@@ -894,7 +897,7 @@ def event_edit_form(request, primary, event_id):
 
                     #Check if the update request is successful
                     if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
-                                                flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,form_link = form_link)):
+                                                flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,form_link = form_link,is_featured_event=is_featured)):
                         messages.success(request,f"EVENT: {event_name} was Updated successfully")
                         return redirect('chapters_and_affinity_group:event_edit_form',primary, event_id) 
                     else:
@@ -953,6 +956,7 @@ def event_edit_form(request, primary, event_id):
                 'is_flagship_event':is_flagship_event,
                 'is_registration_fee_required':is_registraion_fee_true,
                 'selected_venues':selected_venues,
+                'is_featured_event':is_featured_event
             }
 
             return render(request, 'Events/event_edit_form.html', context)

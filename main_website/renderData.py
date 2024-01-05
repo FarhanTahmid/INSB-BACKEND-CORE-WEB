@@ -150,6 +150,22 @@ class HomepageItems:
         else:
             user.save()
 
+    def get_featured_events_for_societies(primary):
+        
+        try:
+            dic={}
+            events = Events.objects.filter(event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary),is_featured = True,publish_in_main_web= True).order_by('-event_date')[:4]
+            for i in events:
+                    try:
+                        event = Graphics_Banner_Image.objects.get(event_id = i.pk)
+                        dic[i]=event.selected_image
+                    except:
+                        dic[i] = "#"
+            return dic
+        except Exception as e:
+            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
     
 
         

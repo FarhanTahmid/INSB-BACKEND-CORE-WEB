@@ -24,6 +24,8 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
     why_join_it = models.TextField(null=True,blank=True,default="",verbose_name=f"Why join it ?")
     what_activites_it_has = models.TextField(null=True,blank=True,default="",verbose_name="What activities we usually do ?")
     how_to_join = models.TextField(null=True,blank=True,default="",verbose_name=f"How to join it ?")
+    email = models.EmailField(null=True,blank=True)
+    facebook_link = models.URLField(blank=True,null=True)
 
     class Meta:
         verbose_name="Chapters-Societies-Affinity Group"

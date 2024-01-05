@@ -48,5 +48,5 @@ class Chapter_Society_Affinity_Groups_Form(forms.ModelForm):
         model=Chapters_Society_and_Affinity_Groups
         fields=[
             'group_name','primary','short_form','primary_color_code','logo','page_title','secondary_paragraph','about_description','sc_ag_logo','background_image','mission_description','mission_picture','vision_description','vision_picture','what_is_this_description',
-            'why_join_it','what_activites_it_has','how_to_join'
+            'why_join_it','what_activites_it_has','how_to_join','email','facebook_link'
         ]
