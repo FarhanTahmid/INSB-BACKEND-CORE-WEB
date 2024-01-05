@@ -15,6 +15,7 @@ from membership_development_team import renewal_data
 from insb_port import settings
 import os
 from bs4 import BeautifulSoup
+
 class Sc_Ag:
     logger=logging.getLogger(__name__)
         
@@ -435,26 +436,13 @@ class Sc_Ag:
     def checking_length(about_details,mission_description,vision_description,
                         what_is_this_description,why_join_it,what_activites_it_has,how_to_join):
         
-        temp_1 = BeautifulSoup(about_details, 'html.parser')
-        about_details = temp_1.get_text()
-
-        temp_1 = BeautifulSoup(mission_description, 'html.parser')
-        mission_description = temp_1.get_text()
-
-        temp_1 = BeautifulSoup(vision_description, 'html.parser')
-        vision_description = temp_1.get_text()
-
-        temp_1 = BeautifulSoup(what_is_this_description, 'html.parser')
-        what_is_this_description = temp_1.get_text()
-
-        temp_1 = BeautifulSoup(why_join_it,'html.parser')
-        why_join_it = temp_1.get_text()
-
-        temp_1 = BeautifulSoup(what_activites_it_has,'html.parser')
-        what_activites_it_has = temp_1.get_text()
-
-        temp_1 = BeautifulSoup(how_to_join,'html.parser')
-        how_to_join = temp_1.get_text()
+        about_details = Sc_Ag.process_ckeditor_content(about_details)
+        mission_description = Sc_Ag.process_ckeditor_content(mission_description)
+        vision_description = Sc_Ag.process_ckeditor_content(vision_description)
+        what_is_this_description = Sc_Ag.process_ckeditor_content(what_is_this_description)
+        why_join_it = Sc_Ag.process_ckeditor_content(why_join_it)
+        what_activites_it_has = Sc_Ag.process_ckeditor_content(what_activites_it_has)
+        how_to_join = Sc_Ag.process_ckeditor_content(how_to_join)
 
         
         if (len(about_details)> 500 or len(mission_description)>500 or len(vision_description)>500 
@@ -466,6 +454,16 @@ class Sc_Ag:
             return True
         else:
             return False
+        
+    def process_ckeditor_content(ckeditor_html):
+        # Parse the HTML content with Beautiful Soup
+        soup = BeautifulSoup(ckeditor_html, 'html.parser')
+
+        # Extract the text content without HTML tags
+        text_content = soup.get_text()
+
+        # Now, 'text_content' contains only the actual content without HTML tags
+        return text_content
         
         
     
