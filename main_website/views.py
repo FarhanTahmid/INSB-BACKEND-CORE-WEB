@@ -711,7 +711,8 @@ def ieee(request):
     about_ieee = About_IEEE.objects.get(id=1)
     
     context = {
-        'about_ieee':about_ieee
+        'about_ieee':about_ieee,
+        'media_url':settings.MEDIA_URL
     }
 
     return render(request, 'About/About_IEEE.html', context)
