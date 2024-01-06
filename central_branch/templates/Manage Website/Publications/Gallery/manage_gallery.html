@@ -87,7 +87,6 @@
                     
                     <div style="text-align:right;">
                         <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add New Image</button>
-                        <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-c-a" ui-toggle-class="bounce" ui-target="#animate">Add New Video</button>
                     </div>
                     <small>This table holds the data of Gallery Images in the main website of IEEE NSU SB</small>
                     <small style="color:green;"><span style="color:red;">* </span>Adding Gallery Image Items here will update them in the Main Website.</small>
@@ -109,14 +108,14 @@
                     
                         {% for i in all_images %}
                         <tr>
-                            <td><a style="text-decoration:none;color:#00629B;" href="#">{{i.pk}}</a></td>
+                            <td><a style="text-decoration:none;color:#00629B;" href="{% url 'central_branch:update_image' i.pk %}">{{i.pk}}</a></td>
                             <td>
                                 <div class="pic-container">
                                     <img src="/media_files/{{i.image}}"
                                             alt="" />
                                 </div>                            
                             </td>                            
-                            <td>{{i.publish_date}}</td>
+                            <td>{{i.upload_date}}</td>
                             
                             <td>
                             <form method="POST">
@@ -124,7 +123,7 @@
                                     <div style="justify-content:center;text-align:center;">  
                                         <div class="btn-container">
                                             <input class="btn btn-outline b-danger text-danger" name="remove_image" type="submit" value="Remove">
-                                            <a class="btn btn-outline b-warn text-warn" href="#">Update</a>
+                                            <a class="btn btn-outline b-warn text-warn" href="{% url 'central_branch:update_image' i.pk %}">Update</a>
                                         </div>
                                       </div>
                                     <input type="hidden" name="image_pk" value={{i.pk}}>
@@ -148,15 +147,17 @@
             <!--Gallery Video Table-->
             <div class="box">
                 <div class="box-header">
-                
+                    <div style="text-align:right;">
+                        <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-c-a" ui-toggle-class="bounce" ui-target="#animate">Add New Video</button>
+                    </div>
                     <small>This table holds the data of Gallery Videos in the main website of IEEE NSU SB</small>
                     <small style="color:green;"><span style="color:red;">* </span>Adding Gallery Video Links here will update them in the Main Website.</small>
                     <br>
                     <label style="margin-left:5px;">Search:</label>
-                    <input class="form-control w-75" type="text" id="searchInput" placeholder="Search..." onkeyup="searchTable()">
+                    <input class="form-control w-75" type="text" id="searchInput2" placeholder="Search..." onkeyup="searchTable2()">
                 </div>
                 <div class="table-responsive" style="max-height:300px; overflow-y:auto;">
-                <table class="table table-bordered m-0" style="text-align:center;">
+                <table class="table table-bordered m-0" id="table2" style="text-align:center;">
                     <thead>
                     <tr>
                         <th style="text-align:center;">Video ID</th>
@@ -168,11 +169,12 @@
                     </thead>
                     <tbody>
                     
-                        {% for i in all_gallery_videos %}
+                        {% for i in all_videos %}
                         <tr>
-                            <td><a style="text-decoration:none;color:#00629B;" href="{% url 'central_branch:update_magazine' i.pk %}">{{i.magazine_title}}</a></td>
-                            <td>{{ i.published_by}}</td>
-                            <td>{{i.publish_date}}</td>
+                            <td><a style="text-decoration:none;color:#00629B;" href="{% url 'central_branch:update_video' i.pk %}">{{i.pk}}</a></td>
+                            <td>{{ i.video_title }}</td>
+                            <td>{{ i.video_link }}</td>
+                            <td>{{i.upload_date}}</td>
                             
                             <td>
                             <form method="POST">
@@ -180,10 +182,10 @@
                                     <div style="justify-content:center;text-align:center;">  
                                         <div class="btn-container">
                                             <input class="btn btn-outline b-danger text-danger" name="remove_video" type="submit" value="Remove">
-                                            <a class="btn btn-outline b-warn text-warn" href="#">Update</a>
+                                            <a class="btn btn-outline b-warn text-warn" href="{% url 'central_branch:update_video' i.pk %}">Update</a>
                                         </div>
                                       </div>
-                                    <input type="hidden" name="gallery_video_pk" value={{i.pk}}>
+                                    <input type="hidden" name="video_pk" value={{i.pk}}>
                                 </form>
                             </td>
                         </tr>
@@ -289,51 +291,6 @@
                 
             </div>
             
-            <!--Modal form-->
-            <div id="m-s-c" class="modal fade animate" data-backdrop="true">
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="modal-dialog modal-md" id="animate">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h5 class="modal-title">Add a New Research Category</h5>
-                            </div>
-                            
-                            <div class="modal-body text-left">
-                                <!--Form start-->
-        
-                                <div class="container">
-                                    <div class="padding">
-                                        <div class="row" >
-                                            <div class="col-sm-10">
-                                                <div class="box">
-                                                    <div class="box-body">
-                                                        <div class="form-control">
-                                                            {{form2.media}}
-                                                            {{form2.as_p}}
-                                                        </div>
-                                                        <br>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                    
-                            </div>
-        
-                            <div class="modal-footer">
-                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                            <input type="submit" name="add_research_category" class="btn btn-success p-x-md" value="Add"></input>               
-                            </div>
-                        </div><!-- /.modal-content -->
-                    </div>
-                </form>
-            
-            </div>
-
-
         </div>
         
     </div>
@@ -393,6 +350,39 @@
             input = document.getElementById("searchInput");
             filter = input.value.toUpperCase();
             table = document.querySelector("table");
+            tr = table.getElementsByTagName("tr");
+        
+            // Loop through all table rows
+            for (i = 0; i < tr.length; i++) {
+                var rowVisible = false; // Flag to track if any column matches the search query in the current row
+        
+                // Loop through all columns in the current row
+                for (j = 0; j < tr[i].getElementsByTagName("td").length; j++) {
+                    td = tr[i].getElementsByTagName("td")[j];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            rowVisible = true; // If a match is found in any column, set the flag to true
+                        }
+                    }
+                }
+        
+                // Set the display style for the row based on the flag
+                if (rowVisible) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+    <script>
+        function searchTable2() {
+            // Declare variables
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput2");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("table2");
             tr = table.getElementsByTagName("tr");
         
             // Loop through all table rows

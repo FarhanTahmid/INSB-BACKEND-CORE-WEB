@@ -390,8 +390,14 @@ def magazines(request):
 
 ######################### GALLERY WORKS ###########################
 def gallery(request):
+    # get all image and videos
+    all_images=GalleryImages.objects.all().order_by('-pk')
+    all_videos=GalleryVideos.objects.all().order_by('-pk')
+
     context={
-        'page_title':"Gallery"
+        'page_title':"Gallery",
+        'all_images':all_images,
+        'all_videos':all_videos,
     }
     return render(request, 'Publications/Gallery/gallery.html',context=context)
 
@@ -628,6 +634,15 @@ def volunteers_page(request):
         }
     return render(request,'Members/Volunteers/volunteers_page.html',context=context)
 
+def exemplary_members(request):
+    # get all exemplary members
+    all_exemplary_members=ExemplaryMembers.objects.all().order_by('-rank')
+        
+    context={
+        'page_title':"Exemplary Members",
+        'exemplary_members':all_exemplary_members,
+    }
+    return render(request,"Members/Exemplary Members/exemplary_members.html",context=context)
 
 def team_intros(request,team_primary):
     

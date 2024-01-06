@@ -79,143 +79,22 @@
 
 <!-- Cards starts here -->
 <div class="card_container">
+    {% for i in blogs %}
     <div class="card">
-        <img src="images/recruitment.jpg" alt="Sample photo">
+        <img src="media_files/{{i.blog_banner_picture}}" alt="Sample photo">
         <div class="card_content">
-            <h5>Feelings About IEEE NSU Student Branch</h5>
+            <h5>{{i.title}}</h5>
             <i class="fa-regular fa-clock"></i>
-            <span>13/10/2021</span>
-            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
-            <i class="fa-regular fa-comments"></i>
-            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
-            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
+            <span>{{i.date}}</span>
+            <i class="fa-solid fa-align-left"></i><span> Category-{{i.category}} •</span><br>
+            <p>{{i.short_description | safe}}</p>
+            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">Read More</a>
+
         </div>
     </div>
-
-    <div class="card">
-        <img src="images/recruitment.jpg" alt="Sample photo">
-        <div class="card_content">
-            <h5>Feelings About IEEE NSU Student Branch</h5>
-            <i class="fa-regular fa-clock"></i>
-            <span>13/10/2021</span>
-            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
-            <i class="fa-regular fa-comments"></i>
-            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
-            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
-        </div>
-    </div>
-           
-    
+    {% endfor %}
     
 
-    <div class="card">
-        <img src="images/recruitment.jpg" alt="Sample photo">
-        <div class="card_content">
-            <h5>Feelings About IEEE NSU Student Branch</h5>
-            <i class="fa-regular fa-clock"></i>
-            <span>13/10/2021</span>
-            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
-            <i class="fa-regular fa-comments"></i>
-            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
-            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
-        </div>
-    </div>
-
-    
-    
-</div>
-
-<div class="card_container">
-    <div class="card">
-        <img src="images/recruitment.jpg" alt="Sample photo">
-        <div class="card_content">
-            <h5>Feelings About IEEE NSU Student Branch</h5>
-            <i class="fa-regular fa-clock"></i>
-            <span>13/10/2021</span>
-            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
-            <i class="fa-regular fa-comments"></i>
-            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
-            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
-        </div>
-    </div>
-
-    <div class="card">
-        <img src="images/recruitment.jpg" alt="Sample photo">
-        <div class="card_content">
-            <h5>Feelings About IEEE NSU Student Branch</h5>
-            <i class="fa-regular fa-clock"></i>
-            <span>13/10/2021</span>
-            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
-            <i class="fa-regular fa-comments"></i>
-            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
-            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
-        </div>
-    </div>
-           
-    
-    
-
-    <div class="card">
-        <img src="images/recruitment.jpg" alt="Sample photo">
-        <div class="card_content">
-            <h5>Feelings About IEEE NSU Student Branch</h5>
-            <i class="fa-regular fa-clock"></i>
-            <span>13/10/2021</span>
-            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
-            <i class="fa-regular fa-comments"></i>
-            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
-            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
-        </div>
-    </div>
-
-    
-    
-</div>
-
-<div class="card_container">
-    <div class="card">
-        <img src="images/recruitment.jpg" alt="Sample photo">
-        <div class="card_content">
-            <h5>Feelings About IEEE NSU Student Branch</h5>
-            <i class="fa-regular fa-clock"></i>
-            <span>13/10/2021</span>
-            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
-            <i class="fa-regular fa-comments"></i>
-            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
-            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
-        </div>
-    </div>
-
-    <div class="card">
-        <img src="images/recruitment.jpg" alt="Sample photo">
-        <div class="card_content">
-            <h5>Feelings About IEEE NSU Student Branch</h5>
-            <i class="fa-regular fa-clock"></i>
-            <span>13/10/2021</span>
-            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
-            <i class="fa-regular fa-comments"></i>
-            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
-            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
-        </div>
-    </div>
-           
-    
-    
-
-    <div class="card">
-        <img src="images/recruitment.jpg" alt="Sample photo">
-        <div class="card_content">
-            <h5>Feelings About IEEE NSU Student Branch</h5>
-            <i class="fa-regular fa-clock"></i>
-            <span>13/10/2021</span>
-            <i class="fa-solid fa-align-left"></i><span> Uncategorized •</span><br>
-            <i class="fa-regular fa-comments"></i>
-            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">No Comments</a>
-            <p>I joined IEEE in 2022 in the summer semester of NSU. I am lucky that I am a member of…</p>
-        </div>
-    </div>
-
-    
     
 </div>
 
