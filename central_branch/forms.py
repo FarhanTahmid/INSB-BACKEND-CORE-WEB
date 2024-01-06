@@ -216,4 +216,33 @@ class GalleryVideoForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+class ExemplaryMembersForm(forms.ModelForm):
+    class Meta:
+        model=ExemplaryMembers
+        fields=[
+            'member_name','member_picture','former_position','activity_year','current_activity','facebook_account_link',
+            'email','achievements','rank']
     
+    def save(self, commit=True):
+        # Get the existing instance from the database
+        instance = super().save(commit=False)
+        
+        
+        # Delete the previous image if it exists
+        if instance.pk and 'member_picture' in self.changed_data:
+            previous_instance = ExemplaryMembers.objects.get(pk=instance.pk)
+            previous_picture = previous_instance.member_picture
+
+            # Delete the associated file from the file system
+            if previous_picture:
+                if os.path.isfile(previous_picture.path):
+                    os.remove(previous_picture.path)
+            # Update the instance with the new image
+            previous_instance.member_picture = instance.member_picture
+            previous_instance.member_picture=instance.member_picture
+            previous_instance.save()
+
+        if commit:
+            instance.save()
+        return instance

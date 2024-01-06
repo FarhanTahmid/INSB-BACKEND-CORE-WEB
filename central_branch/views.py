@@ -862,7 +862,7 @@ def update_images(request,pk):
     }
     return render(request,"Manage Website/Publications/Gallery/update_images.html",context=context)
 
-
+@login_required
 def update_videos(request,pk):
      # get the magazine to update
     video_to_update=get_object_or_404(GalleryVideos,pk=pk)
@@ -882,7 +882,51 @@ def update_videos(request,pk):
     }
     return render(request,"Manage Website/Publications/Gallery/update_videos.html",context=context)
 
+@login_required
+def manage_exemplary_members(request):
+    # get all exemplary members
+    exemplary_members = ExemplaryMembers.objects.all().order_by('rank')
+    
+    if(request.method=="POST"):
+        exemplary_member_form=ExemplaryMembersForm(request.POST,request.FILES)
+        if(request.POST.get('add_member')):
+            if(exemplary_member_form.is_valid()):
+                exemplary_member_form.save()
+                messages.success(request,f"{request.POST['member_name']} was added to Exemplary Members")
+                return redirect('central_branch:manage_exemplary_members')
+        if(request.POST.get('remove_member')):
+            member_to_delete=ExemplaryMembers.objects.get(pk=request.POST['remove_member_pk'])
+            # delete image of the member
+            if(os.path.isfile(member_to_delete.member_picture.path)):
+                os.remove(member_to_delete.member_picture.path)
+            messages.warning(request,f"Member {member_to_delete.member_name} was deleted!")
+            member_to_delete.delete()
+            return redirect('central_branch:manage_exemplary_members')
+        
+    context={
+        'all_exemplary_members':exemplary_members,
+        'exemplary_member_form':ExemplaryMembersForm,
+    }
+    return render(request,"Manage Website/Exemplary Members/exemplary_member.html",context=context)
 
+@login_required
+def update_exemplary_members(request,pk):
+    # get memeber to update
+    member_to_update=ExemplaryMembers.objects.get(pk=pk)
+    if request.method=='POST':
+        if(request.POST.get('update_member')):
+            member_form=ExemplaryMembersForm(request.POST,request.FILES,instance=member_to_update)
+            if(member_form.is_valid()):
+                member_form.save()
+                messages.info(request,f"Information for {member_to_update.member_name} was updated!")
+                return redirect('central_branch:manage_exemplary_members')
+    else:
+        member_form=ExemplaryMembersForm(instance=member_to_update)
+    context={
+        'exemplary_member':member_to_update,
+        'member_form':member_form
+    }
+    return render(request,"Manage Website/Exemplary Members/update_exemplary_member.html",context=context)
 
 @login_required
 def manage_view_access(request):

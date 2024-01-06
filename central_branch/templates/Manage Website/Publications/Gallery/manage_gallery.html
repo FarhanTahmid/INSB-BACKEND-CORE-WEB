@@ -154,10 +154,10 @@
                     <small style="color:green;"><span style="color:red;">* </span>Adding Gallery Video Links here will update them in the Main Website.</small>
                     <br>
                     <label style="margin-left:5px;">Search:</label>
-                    <input class="form-control w-75" type="text" id="searchInput" placeholder="Search..." onkeyup="searchTable()">
+                    <input class="form-control w-75" type="text" id="searchInput2" placeholder="Search..." onkeyup="searchTable2()">
                 </div>
                 <div class="table-responsive" style="max-height:300px; overflow-y:auto;">
-                <table class="table table-bordered m-0" style="text-align:center;">
+                <table class="table table-bordered m-0" id="table2" style="text-align:center;">
                     <thead>
                     <tr>
                         <th style="text-align:center;">Video ID</th>
@@ -350,6 +350,39 @@
             input = document.getElementById("searchInput");
             filter = input.value.toUpperCase();
             table = document.querySelector("table");
+            tr = table.getElementsByTagName("tr");
+        
+            // Loop through all table rows
+            for (i = 0; i < tr.length; i++) {
+                var rowVisible = false; // Flag to track if any column matches the search query in the current row
+        
+                // Loop through all columns in the current row
+                for (j = 0; j < tr[i].getElementsByTagName("td").length; j++) {
+                    td = tr[i].getElementsByTagName("td")[j];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            rowVisible = true; // If a match is found in any column, set the flag to true
+                        }
+                    }
+                }
+        
+                // Set the display style for the row based on the flag
+                if (rowVisible) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+    <script>
+        function searchTable2() {
+            // Declare variables
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput2");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("table2");
             tr = table.getElementsByTagName("tr");
         
             // Loop through all table rows

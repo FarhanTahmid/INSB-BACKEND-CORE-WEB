@@ -47,7 +47,8 @@ urlpatterns = [
     path('manage_website/gallery',views.manage_gallery,name="manage_gallery"),
     path('manage_website/gallery/update/image/<int:pk>',views.update_images,name="update_image"),
     path('manage_website/gallery/update/video/<int:pk>',views.update_videos,name="update_video"),
-
+    path('manage_website/exemplary_members',views.manage_exemplary_members,name="manage_exemplary_members"),
+    path('manage_website/exemplary_members/update/<int:pk>',views.update_exemplary_members,name="update_exemplary_members"),
     
     path('manage_access',views.manage_view_access,name="manage_access"),
 

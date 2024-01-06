@@ -139,3 +139,20 @@ class GalleryVideos(models.Model):
         verbose_name="Gallery Video"
     def __str__(self) -> str:
         return str(self.pk)
+
+class ExemplaryMembers(models.Model):
+    member_name=models.CharField(null=False,blank=False,max_length=100)
+    member_picture=models.ImageField(null=True,blank=True,upload_to='main_website_files/exemplary_members_picture/')
+    former_position=models.CharField(null=True,blank=True,max_length=100)
+    activity_year=models.CharField(null=True,blank=True,max_length=50)
+    current_activity=models.CharField(null=True,blank=True, max_length=200)
+    facebook_account_link=models.URLField(null=True,blank=True,max_length=200)
+    email=models.EmailField(null=True,blank=True)
+    achievements=RichTextField(null=True,blank=True,max_length=1000)
+    rank=models.IntegerField(null=True,blank=True,help_text="This is used to sort exemplary members in the main website")
+    class Meta:
+        verbose_name="Exemplary Members"
+
+    def __str__(self) -> str:
+        return self.member_name
+
