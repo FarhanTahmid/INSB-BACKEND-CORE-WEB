@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from main_website.forms import About_IEEE_Bangladesh_Section_Form
-from .models import Research_Papers,Blog_Category,Blog,IEEE_Bangladesh_Section,IEEE_Bangladesh_Section_Gallery,HomePage_Thoughts
+from main_website.forms import About_IEEE_Bangladesh_Section_Form, About_IEEE_Form
+from .models import Research_Papers,Blog_Category,Blog,IEEE_Bangladesh_Section,IEEE_Bangladesh_Section_Gallery,HomePage_Thoughts,About_IEEE
 # Register your models here.
 ###Society AGS###
 # RAS
@@ -48,6 +48,11 @@ class IEEE_Bangladesh_Section_Admin(admin.ModelAdmin):
 @admin.register(IEEE_Bangladesh_Section_Gallery)
 class IEEE_Bangldesh_Section_Gallery(admin.ModelAdmin):
     list_display=['picture']
+
+@admin.register(About_IEEE)
+class About_IEEE(admin.ModelAdmin):
+    form=About_IEEE_Form
+    list_display = ['id']
 
 @admin.register(HomePage_Thoughts)
 class HomePage_Thoughts(admin.ModelAdmin):

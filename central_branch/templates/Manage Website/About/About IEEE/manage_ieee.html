@@ -3,6 +3,13 @@
 {% endblock about_base %}
 {% block manage_about_ieee %}
 {% load static %}
+
+<!-- CKEditor CDN -->
+<script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+<style>
+
+</style>
+
 <body>
     <div class="app" id="app">
         <div ui-view class="app-body" style="justify-content:center; margin-left:27%; margin-right:15%;" id="view">
@@ -19,16 +26,517 @@
             </div>
             <!--Messages End-->
             
-            <!--Achievements Table-->
-            <div class="box">
-                
-            </div>
-            <!--Table Ends-->
+            <div class="container">
+          
+                <div class="box">
             
+            
+                    <br>
+                    <div class="box-header">
+                        <h1 style="text-align:center;font-size:30px;">Details</h1>
+                        <hr>
+                    </div>
+                    
+            
+                    <form id="myForm" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <div class="box-body">    
+                            
+                            <h1 style="text-align:center;font-size:30px;">About</h1>
+                            <br>
+                            <div class="form-group">
+                                <label>About <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="about_details">{{about_ieee.about_ieee}}</textarea>
+                                <p id="aboutCharacterCount" style="color: red;">Required</p>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">About Image:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="about-image-input" name="about_picture" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                {% if about_ieee.about_image %}
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.about_image}}')">About IEEE Image</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{about_ieee.about_image}}', 'about_image')">✖</button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>  
+
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Largest Community</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Community Details <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="community_details">{{about_ieee.community_description}}</textarea>
+                                <p id="communityCharacterCount" style="color: red;">Required</p>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">Community Image:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="community-image-input" name="community_picture" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="community-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                {% if about_ieee.community_image %}
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.community_image}}')">Community Image</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{about_ieee.community_image}}', 'community_image')">✖</button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div> 
+
+                            <br> 
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Start Collabs Publications Events</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Start with IEEE <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="start_with_ieee_details">{{about_ieee.start_with_ieee_description}}</textarea>
+                                <p id="start_with_ieeeCharacterCount" style="color: red;">Required</p>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Collaboration <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="collaboration_details">{{about_ieee.collaboration_description}}</textarea>
+                                <p id="collaborationCharacterCount" style="color: red;">Required</p>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Publications <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="publications_details">{{about_ieee.publications_description}}</textarea>
+                                <p id="publicationsCharacterCount" style="color: red;">Required</p>
+
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Events and Conference <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="events_and_conferences_details">{{about_ieee.events_and_conferences_description}}</textarea>
+                                <p id="events_and_conferencesCharacterCount" style="color: red;">Required</p>
+                            </div>
+                            
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Achievements</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Achievements Details <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="achievements_details">{{about_ieee.achievements_description}}</textarea>
+                                <p id="achievementsCharacterCount" style="color: red;">Required</p>
+                            </div>
+
+                            <br>
+                            <hr>
+                            <br>
+
+                            <h1 style="text-align:center;font-size:30px;">Innovations and Developments</h1>
+                            <br>
+                            
+                            <div class="form-group">
+                                <label>Innovations and Developments Details <span style="color:red">*<span></label> 
+                                <textarea  
+                                class="form-control" 
+                                type="text"
+                                name="innovations_and_developments_details">{{about_ieee.innovations_and_developments_description}}</textarea>
+                                <p id="innovations_and_developmentsCharacterCount" style="color: red;">Required</p>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">Innovations and Developments Image </label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="innovations-and-developments-image-input" name="innovations_and_developments_picture" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="innovations-and-developments-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                {% if about_ieee.innovations_and_developments_image %}
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.innovations_and_developments_image}}')">Innovation & Developments Image</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{about_ieee.innovations_and_developments_image}}', 'innovations_and_developments_image')">✖</button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Students and Member Activities</h1>
+                            <br>
+                            
+                            <div class="form-group">
+                                <label>Students and Member Activities Details <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="students_and_member_activities_details">{{about_ieee.students_and_member_activities_description}}</textarea>
+                                <p id="students_and_member_activitiesCharacterCount" style="color: red;">Required</p>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">Students and Member Activities Image </label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="students-and-member-activities-image-input" name="students_and_member_activities_picture" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="students-and-member-activities-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                {% if about_ieee.students_and_member_activities_image %}
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.students_and_member_activities_image}}')">Students & Members Activities Image</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{about_ieee.students_and_member_activities_image}}', 'students_and_member_activities_image')">✖</button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Quality</h1>
+                            <br>
+                            
+                            <div class="form-group">
+                                <label>Quality Details <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="quality_details">{{about_ieee.quality_description}}</textarea>
+                                    <p id="qualityCharacterCount" style="color: red;">Required</p>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">Quality Image </label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="quality-image-input" name="quality_picture" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="quality-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                {% if about_ieee.quality_image %}
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.quality_image}}')">Quality Image</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{about_ieee.quality_image}}', 'quality_image')">✖</button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            {% comment %} <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Contact</h1>
+                            <br>
+                            
+                            <div class="form-group">
+                                <label>Asia Pacific Link <span style="color:red">*<span></label> 
+                                <input
+                                    placeholder="Asia Pacific Link"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="asia_pacific_link"/>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>IEEE computer organization Link <span style="color:red">*<span></label> 
+                                <input
+                                    placeholder="IEEE computer organization Link"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="ieee_computer_organization_link"/>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Customer Service Number <span style="color:red">*<span></label> 
+                                <input
+                                    placeholder="Customer Service Number"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="customer_service_number"/>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Presidents Names <span style="color:red">*<span></label> 
+                                <input
+                                    placeholder="Presidents Names"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="presidents_names"/>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Founders Names <span style="color:red">*<span></label> 
+                                <input
+                                    placeholder="Founders Names"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="founders_names"/>
+                            </div>
+                            <br> {% endcomment %}
+
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <div class="form-group text-center">
+                                <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
+                            </div>
+                            <br>
+
+                            
+                            
+                        </div> 
+        
+                    
+                    </form>  
+        
+                <div>
+            </div>
+
+            
+            <!-- for showing image -->
+            <div class="modal fade" id="showImageModal" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="showImageModalLabel">Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="modal_image" src="" class="img-fluid w-100" alt="Image">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Confirmation modal for delete -->
+            <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-top" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                        <p><input id="image_delete" name= "image_delete" type="hidden">
+                            <input id="image_id" name= "image_id" type="hidden" ></p>
+                        Are you sure you want to delete the note?
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            </div>
 
 
         </div>
     </div>
+
+
+    <!--Script for CKEditor Control-->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Replace the textareas with CKEditor instances
+            CKEDITOR.replace('about_details');
+            CKEDITOR.replace('community_details');
+            CKEDITOR.replace('start_with_ieee_details');
+            CKEDITOR.replace('collaboration_details');
+            CKEDITOR.replace('publications_details');
+            CKEDITOR.replace('events_and_conferences_details');
+            CKEDITOR.replace('achievements_details');
+            CKEDITOR.replace('innovations_and_developments_details');
+            CKEDITOR.replace('students_and_member_activities_details');
+            CKEDITOR.replace('quality_details');
+
+            // Attach a function to the change event for each CKEditor instance
+            ["about", "community", "start_with_ieee", "collaboration", "publications", "events_and_conferences", "achievements", "innovations_and_developments", "students_and_member_activities", "quality"]
+                .forEach(function (editorId) {
+                    var editor = CKEDITOR.instances[editorId + '_details'];
+
+                    editor.on('change', function () {
+                        // Update character count display for each CKEditor instance
+                        updateCharacterCount(editorId);
+                    });
+
+                    // Update character count initially
+                    updateCharacterCount(editorId);
+                });
+        });
+
+        function updateCharacterCount(editorId) {
+            var editorContent = CKEDITOR.instances[editorId + '_details'].getData();
+        
+            // Handle special space representations
+            var cleanedContent = editorContent.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+        
+            // Count each character (including spaces)
+            var characterCount = cleanedContent.length;
+        
+            var characterCountElement = document.getElementById(editorId + 'CharacterCount');
+        
+            // Check conditions and update text color and content
+            if (characterCount === 0) {
+                characterCountElement.style.color = "red";
+                characterCountElement.innerText = "Required";
+            } else if (characterCount > 500) {
+                characterCountElement.style.color = "red";
+                characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
+            } else {
+                characterCountElement.style.color = "black";
+                characterCountElement.innerText = "Character Count: " + characterCount;
+            }
+        }
+    </script>
+
+    <!--Script to handle file name showing when choosing file-->
+    <script type="text/javascript">
+
+        $('.custom-file input').change(function (e) {
+            var files = [];
+            for (var i = 0; i < $(this)[0].files.length; i++) {
+                files.push($(this)[0].files[i].name);
+            }
+            $(this).next('.custom-file-label').html(files.join(', '));
+        });
+    
+    </script>
+
+    <!--script to prevent user from selecting image is image already selected-->
+    <script>
+        // Function to check and disable file input if an image is already saved
+        function checkSavedImage(inputId, savedImageUrl) {
+            var fileInput = document.getElementById(inputId);
+
+            if (savedImageUrl) {
+                // If an image is already saved, disable the file input
+                fileInput.disabled = true;
+                fileInput.classList.add("disabled");
+
+                // Change the placeholder text
+                var fileLabel = fileInput.nextElementSibling;
+                fileLabel.innerText = "Delete existing file to Choose image.";
+            }
+        }
+
+        // Call the function for each image section when the page loads
+        window.onload = function () {
+            checkSavedImage("about-image-input", "{{ about_ieee.about_image }}");
+            checkSavedImage("community-image-input", "{{ about_ieee.community_image }}");
+            checkSavedImage("innovations-and-developments-image-input", "{{ about_ieee.innovations_and_developments_image }}");
+            checkSavedImage("students-and-member-activities-image-input", "{{ about_ieee.students_and_member_activities_image }}");
+            checkSavedImage("quality-image-input", "{{ about_ieee.quality_image }}");
+            // Add more calls for other image sections if needed
+        };
+    </script>
+
+    <script>
+        //Delete logic for image
+        function openModal(image_delete, image_id) {
+            // Set data in the modal
+            var inputElement = document.getElementById('image_delete');    
+            inputElement.value = image_delete;
+            var inputElement2 = document.getElementById('image_id');
+            inputElement2.value=image_id;
+        }
+
+        //View logic for image
+        function openImageModal(image_path){
+            var inputElement = document.getElementById('modal_image');
+            inputElement.src = image_path
+        }
+    </script>
     
 </body>
 {% endblock manage_about_ieee %}

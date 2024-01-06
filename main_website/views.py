@@ -197,27 +197,74 @@ def news(request):
 
     
 
-######################### SOCIETY & AG WORKS #######################
-from . import society_ag
+######################SC_AG############################################
 def rasPage(request):
-    # Title of the page
-    page_title="IEEE NSU RAS Student Branch Chapter"
-    # Second para after the title
-    secondary_para="Focusing on the research, study, and exchange of knowledge regarding Robotics & Automation."
-    
+
+    society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 3)
+        
+    featured_events = HomepageItems.get_featured_events_for_societies(3)
     # getRasAbout=society_ag.Ras.get_ras_about()
-    
+        
     # if getRasAbout is False:
     #     return HttpResponse("GG")
-    
+        
     context={
-        'page_title':page_title,
-        'secondary_para':secondary_para,
-        # 'about_ras':getRasAbout,
-        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+            
+        'society':society,
+        #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+        'media_url':settings.MEDIA_URL,
+        'featured_events':featured_events
 
     }
-    return render(request,'Society_AG/ras.html',context=context)
+    return render(request,'Society_AG/sc_ag.html',context=context)
+def pesPage(request):
+
+    society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 2)
+        
+    featured_events = HomepageItems.get_featured_events_for_societies(2)
+            
+    context={
+            
+        'society':society,
+        #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+        'media_url':settings.MEDIA_URL,
+        'featured_events':featured_events
+
+    }
+    return render(request,'Society_AG/sc_ag.html',context=context)
+def iasPage(request):
+
+    society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 4)
+        
+    featured_events = HomepageItems.get_featured_events_for_societies(4)
+            
+
+        
+    context={
+            
+        'society':society,
+        #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+        'media_url':settings.MEDIA_URL,
+        'featured_events':featured_events
+
+    }
+    return render(request,'Society_AG/sc_ag.html',context=context)
+def wiePage(request):
+
+    society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 5)
+        
+    featured_events = HomepageItems.get_featured_events_for_societies(5)
+            
+        
+    context={
+            
+        'society':society,
+        #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+        'media_url':settings.MEDIA_URL,
+        'featured_events':featured_events
+
+    }
+    return render(request,'Society_AG/sc_ag.html',context=context)
 
 
 
@@ -567,7 +614,17 @@ def ieee_region_10(request):
     return render(request, 'About/IEEE_region_10.html')
 
 def ieee(request):
-    return render(request, 'About/About_IEEE.html')
+    #working
+    about_ieee = About_IEEE.objects.get(id=1)
+    
+    context = {
+        'about_ieee':about_ieee
+    }
+
+    return render(request, 'About/About_IEEE.html', context)
 
 def faq(request):
     return render(request, 'About/faq.html')
+
+def contact(request):
+    return render(request, 'Contact/contact.html')

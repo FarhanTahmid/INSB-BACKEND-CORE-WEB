@@ -121,11 +121,10 @@ class Magazines(models.Model):
         return self.magazine_title
     
 class IEEE_Bangladesh_Section(models.Model):
-
     about_ieee_bangladesh = models.TextField(null=True,blank=True)
-    ieee_bangladesh_logo = ResizedImageField(null=False,blank=False,upload_to="main_website_files/About/IEEE Bangladesh Section/logo/")
+    ieee_bangladesh_logo = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Bangladesh Section/logo/")
     member_and_volunteer_description = models.TextField(null=True,blank=True)
-    member_and_volunteer_picture = ResizedImageField(null=False,blank=False,upload_to="main_website_files/About/IEEE Bangladesh Section/member_volunteer_picture/")
+    member_and_volunteer_picture = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Bangladesh Section/member_volunteer_picture/")
     benefits_description = models.TextField(null=True,blank=True)
     student_branches_description = models.TextField(null=True,blank=True)
     affinity_groups_description = models.TextField(null=True,blank=True)
@@ -133,11 +132,38 @@ class IEEE_Bangladesh_Section(models.Model):
 
     class Meta:
         verbose_name="IEEE Bangladesh Section"
+    def save(self, *args, **kwargs):
+        # Override the save method to ensure only one instance exists
+        self.id = 1  # Set the primary key to 1 to always update the same row
+        super(IEEE_Bangladesh_Section, self).save(*args, **kwargs)
     def __str__(self) -> str:
-        return self.pk
+        return str(self.pk)
+    
+class About_IEEE(models.Model):
+    about_ieee = models.TextField(null=True,blank=True)
+    about_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/About Image/")
+    community_description = models.TextField(null=True,blank=True)
+    community_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Community Image/")
+    start_with_ieee_description = models.TextField(null=True,blank=True)
+    collaboration_description = models.TextField(null=True,blank=True)
+    publications_description = models.TextField(null=True,blank=True)
+    events_and_conferences_description = models.TextField(null=True,blank=True)
+    achievements_description = models.TextField(null=True,blank=True)
+    innovations_and_developments_description = models.TextField(null=True,blank=True)
+    innovations_and_developments_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Innovation Development Image/")
+    students_and_member_activities_description = models.TextField(null=True,blank=True)
+    students_and_member_activities_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Student Member Activity Image/")
+    quality_description = models.TextField(null=True,blank=True)
+    quality_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Quality Image/")
 
-
-
+    class Meta:
+        verbose_name="About IEEE"
+    def save(self, *args, **kwargs):
+        # Override the save method to ensure only one instance exists
+        self.id = 1  # Set the primary key to 1 to always update the same row
+        super(About_IEEE, self).save(*args, **kwargs)
+    def __str__(self) -> str:
+        return str(self.pk)
 
 # class IEEE_Bangladesh_Section_Links(models.Model):
 
@@ -159,8 +185,8 @@ class IEEE_Bangladesh_Section_Gallery(models.Model):
 
 class HomePage_Thoughts(models.Model):
 
-    quote = models.CharField(null=False,blank=False,max_length=500)
-    author = models.CharField(null=False,blank=False,max_length=1)#can be a foreign key to a faculty
+    quote = models.TextField(null=False,blank=False)
+    author = models.CharField(null=False,blank=False,max_length=500)#can be a foreign key to a faculty
     
     class Meta:
         verbose_name="HomePage Thoughts"

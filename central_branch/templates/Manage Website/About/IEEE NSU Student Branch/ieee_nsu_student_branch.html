@@ -1,3 +1,4 @@
+
 {% block about_base %}
 {% include "Manage Website/About/about_base.html" %}
 {% endblock about_base %}
@@ -78,13 +79,13 @@
     <div class="app" id="app">
         <div ui-view class="app-body" style="justify-content:center; margin-left:27%; margin-right:15%;" id="view">
 
-            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>IEEE Section</b></h2>
+            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>IEEE NSU Student Branch</b></h2>
             
             <!--Messages-->
             <div style="justify-content:center; text-align:center;">
                 {% if messages %}
                     {% for message in messages %}
-                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                        <h4 {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
                     {% endfor %}
                 {% endif %}
             </div>
@@ -141,24 +142,42 @@
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">Members and Volunteers</h1>
+                            <h1 style="text-align:center;font-size:30px;">Chapters</h1>
                             <br>
 
                             <div class="form-group">
-                                <label>Members and Volunteers Details <span style="color:red">*<span></label> 
+                                <label>Chapters Details <span style="color:red">*<span></label> 
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="members_and_volunteers_details"></textarea>
-                                <p id="members_and_volunteersCharacterCount" style="color: red;">Required</p>
+                                name="chapters_details"></textarea>
+                                <p id="chaptersCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
-
+                            <!--RAS -->
                             <div class="form-group">
-                                <label for="images">Members and Volunteers Image:</label>
+                                <label for="images">RAS Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="members-and-volunteers-image-input" name="image" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="members-and-volunteers-image-input">Choose file</label>
+                                    <input type="file" class="custom-file-input" id="ras-image-input" name="image" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="ras-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
+                            </div> 
+                            <!-- PES -->
+                            <div class="form-group">
+                                <label for="images">PES Image:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="pes-image-input" name="image" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="pes-image-input">Choose file</label>
                                 </div>
                                 
                                 <br>
@@ -172,56 +191,159 @@
                                 </div>
                             </div> 
 
+                            <!-- IAS -->
+
+                            <div class="form-group">
+                                <label for="images">IAS Image:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="ias-image-input" name="image" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="ias-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
+                            </div> 
+
+                            <!-- WIE -->
+
+                            <div class="form-group">
+                                <label for="images">WIE Image:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="wie-image-input" name="image" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="wie-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
+                            </div> 
+
+
+
+
+
                             <br> 
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">Benefits Branches Groups Community</h1>
+                            <h1 style="text-align:center;font-size:30px;">Creative Team</h1>
                             <br>
 
                             <div class="form-group">
-                                <label>Benefits <span style="color:red">*<span></label> 
+                                <label>Creative Team <span style="color:red">*<span></label> 
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="benefits_details"></textarea>
-                                <p id="benefitsCharacterCount" style="color: red;">Required</p>
+                                name="creative_team_details"></textarea>
+                                <p id="creativeTeamCharacterCount" style="color: red;">Required</p>
 
                             </div>
                             <br>
 
-                            <div class="form-group">
-                                <label>Student Branches <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="student_branches_details"></textarea>
-                                <p id="student_branchesCharacterCount" style="color: red;">Required</p>
-
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Affinity Groups <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="affinity_groups_details"></textarea>
-                                <p id="affinity_groupsCharacterCount" style="color: red;">Required</p>
-
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Community and society <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="communty_and_society_details"></textarea>
-                                <p id="communty_and_societyCharacterCount" style="color: red;">Required</p>
-
-                            </div>
                             
+                        
+
+                           
+                         
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Mission</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Mission Details <span style="color:red">*<span></label> 
+                                <textarea  
+                                class="form-control" 
+                                type="text"
+                                name="mission_details"></textarea>
+                                <p id="missionCharacterCount" style="color: red;">Required</p>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">Mission Image:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="mission-image-input" name="image" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="mission-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
+                            </div> 
+
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Vision</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Mission Details <span style="color:red">*<span></label> 
+                                <textarea  
+                                class="form-control" 
+                                type="text"
+                                name="vision_details"></textarea>
+                                <p id="visionCharacterCount" style="color: red;">Required</p>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">Vision Image:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="vision-image-input" name="image" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="vision-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
+                            </div> 
+
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Events</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Event Details <span style="color:red">*<span></label> 
+                                <textarea  
+                                class="form-control" 
+                                type="text"
+                                name="events_details"></textarea>
+                                <p id="eventsCharacterCount" style="color: red;">Required</p>
+                            </div>
+
                             <br>
                             <hr>
                             <br> 
@@ -238,82 +360,10 @@
                                 <p id="achievementsCharacterCount" style="color: red;">Required</p>
                             </div>
 
-                            <br>
-                            <hr>
-                            <br> 
-
-                            <h1 style="text-align:center;font-size:30px;">Gallery</h1>
-                            <br>
                             
-                            <div class="form-group">
-                                <label for="images">Upload Images:</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="gallery-image-input" name="image" accept="image/*" multiple>
-                                    <label class="custom-file-label bg-light" for="gallery-image-input">Choose files</label>
-                                </div>
-                                
-                                <br>
-                        
-                                <div id="gallery-selected-images-container"></div>
-                                <input type="hidden" name="selected_images" id="gallery-selected-images">
-                                <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple images.</small>
-                                </div>
                                 
                         
-                                <div id="image-container" class="row text-center">
-                                {% for image_url in gallery_images %}
-                                    <hr>
-                                    <div class="col-lg-4 col-md-6 my-3">
-                                    <div class="image-container">
-                                        <img
-                                        src="{{ gallery_url }}{{ image_url.selected_images }}"
-                                        alt="Image"
-                                        class="img-fluid image-container-item"
-                                        data-toggle="modal"
-                                        data-target="#fullViewModalForGallery{{ forloop.counter }}"
-                                        />
-                        
-                                        <!-- Full View Modal -->
-                                        <div
-                                        id="fullViewModalForGallery{{ forloop.counter }}"
-                                        class="modal fade"
-                                        tabindex="-1"
-                                        role="dialog"
-                                        aria-labelledby="fullViewModalForGalleryLabel"
-                                        aria-hidden="true"
-                                        >
-                                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document" >
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                            <h5 class="modal-title" id="fullViewModalForGalleryLabel">Image Full View</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            </div>
-                                            <div class="modal-body">
-                                            <img
-                                                src="{{ gallery_url }}{{ image_url.selected_images }}"
-                                                alt="Image"
-                                                class="img-fluid"
-                                                style="width: 100%; height: auto; margin: 0 auto; display: block;"
-                                            />
-                                            </div>
-                                        </div>
-                                        </div>
-                                        </div>
-                        
-                                        
-                                        <!-- Cross button to trigger modal -->
-                                        <button type="button" class="cross-button" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{image_url.selected_images}}')">
-                                        &times; <!-- Use the "times" symbol (X) as a close icon -->
-                                        </button>
-                        
-                                    </div>
-                                    </div>
-                        
-                                    
-                                  {% endfor %}
-                                  </div>
+                                
 
 
                             <br>
@@ -488,15 +538,18 @@
         document.addEventListener("DOMContentLoaded", function () {
             // Replace the textareas with CKEditor instances
             CKEDITOR.replace('about_details');
-            CKEDITOR.replace('members_and_volunteers_details');
-            CKEDITOR.replace('benefits_details');
-            CKEDITOR.replace('student_branches_details');
-            CKEDITOR.replace('affinity_groups_details');
-            CKEDITOR.replace('communty_and_society_details');
+            CKEDITOR.replace('chapters_details');
+            CKEDITOR.replace('creative_team_details');
+            
+                   
+            CKEDITOR.replace('mission_details');
+            CKEDITOR.replace('vision_details');
+            CKEDITOR.replace('events_details');
             CKEDITOR.replace('achievements_details');
+            
 
             // Attach a function to the change event for each CKEditor instance
-            ["about", "members_and_volunteers", "benefits", "student_branches", "affinity_groups", "communty_and_society", "achievements"]
+            ["about", "chapters", "creative_team_details",  "achievements", "mission", "vision", "events"]
                 .forEach(function (editorId) {
                     var editor = CKEDITOR.instances[editorId + '_details'];
 

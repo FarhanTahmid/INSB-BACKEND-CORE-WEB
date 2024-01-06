@@ -13,6 +13,9 @@ urlpatterns = [
     
     #SOCIETY AG URLS
     path('ras_sbc/',views.rasPage,name="ras_home"),
+    path('pes_sbc/',views.pesPage,name="pes_home"),
+    path('ias_sbc/',views.iasPage,name="ias_home"),
+    path('wie_sbc/',views.wiePage,name="wie_home"),
 
     #Achievements
     path('achievements/',views.achievements,name="achievements"),
@@ -41,4 +44,7 @@ urlpatterns = [
     path('ieee_region_10',views.ieee_region_10, name="ieee_region_10"),
     path('ieee',views.ieee, name="ieee"),
     path('faq',views.faq, name="faq"),
+
+    # Contact
+    path('contact',views.contact, name="contact"),
 ]

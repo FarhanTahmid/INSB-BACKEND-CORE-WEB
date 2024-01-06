@@ -852,6 +852,7 @@ def event_edit_form(request, primary, event_id):
             is_flagship_event = Branch.is_flagship_event(event_id)
             is_event_published = Branch.load_event_published(event_id)
             is_registraion_fee_true = Branch.is_registration_fee_required(event_id)
+            is_featured_event = Branch.is_featured_event(event_id)
             #Get event details from databse
             event_details = Events.objects.get(pk=event_id)
 
@@ -880,11 +881,13 @@ def event_edit_form(request, primary, event_id):
                     inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
                     intra_branch_collaboration=request.POST['intra_branch_collaboration']
                     venue_list_for_event=request.POST.getlist('event_venues')
+                    is_featured = request.POST.get('is_featured_event')
 
                     #Checking to see of toggle button is on/True or off/False
                     publish_event = Branch.button_status(publish_event_status)
                     flagship_event = Branch.button_status(flagship_event_status)
                     registration_fee = Branch.button_status(registration_event_status)
+                    is_featured = Branch.button_status(is_featured)
 
                     #if there is registration fee then taking the amount from field
                     if registration_fee:
@@ -894,7 +897,7 @@ def event_edit_form(request, primary, event_id):
 
                     #Check if the update request is successful
                     if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
-                                                flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,form_link = form_link)):
+                                                flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,form_link = form_link,is_featured_event=is_featured)):
                         messages.success(request,f"EVENT: {event_name} was Updated successfully")
                         return redirect('chapters_and_affinity_group:event_edit_form',primary, event_id) 
                     else:
@@ -953,6 +956,7 @@ def event_edit_form(request, primary, event_id):
                 'is_flagship_event':is_flagship_event,
                 'is_registration_fee_required':is_registraion_fee_true,
                 'selected_venues':selected_venues,
+                'is_featured_event':is_featured_event
             }
 
             return render(request, 'Events/event_edit_form.html', context)
@@ -1319,7 +1323,6 @@ def manage_main_website(request, primary):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-        main_webpage_information = Sc_Ag.get_sc_ag(primary)
 
     
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
@@ -1329,17 +1332,50 @@ def manage_main_website(request, primary):
 
                 if request.POST.get('save'):
 
-                    about_description = request.POST.get('about_description')
-                    about_image = request.POST.get('sc_ag_logo')
-                    background_image = request.POST.get('background_image')
-                    mission_description = request.POST.get('mission_description')
-                    mission_image = request.POST.get('mission_picture')
-                    vision_description = request.POST.get('vision_description')
-                    vision_picture = request.POST.get('vision_picture')
-                    what_is_this_description = request.POST.get('what_is_this_description')
-                    why_join_it = request.POST.get('why_join_it')
-                    what_activites_it_has = request.POST.get('what_activites_it_has')
-                    how_to_join = request.POST.get('how_to_join')
+                    about_details = request.POST.get('about_details')
+                    about_image = request.FILES.get('sc_ag_logo')
+                    background_image =  request.FILES.get('background_image')
+                    mission_description = request.POST.get('mission_details')
+                    mission_image =  request.FILES.get('mission_picture')
+                    vision_description = request.POST.get('vision_details')
+                    vision_picture =  request.FILES.get('vision_picture')
+                    what_is_this_description = request.POST.get('what_is_this_details')
+                    why_join_it = request.POST.get('why_join_this_details')
+                    what_activites_it_has = request.POST.get('what_activities_does_this_do_details')
+                    how_to_join = request.POST.get('how_to_join_this_details')
+
+                    if about_image == None:
+                        about_image = get_sc_ag_info.sc_ag_logo
+                    if background_image == None:
+                        background_image = get_sc_ag_info.background_image
+                    if vision_picture == None:
+                        vision_picture = get_sc_ag_info.vision_picture
+                    if mission_image == None:
+                        mission_image = get_sc_ag_info.mission_picture
+
+                    if Sc_Ag.checking_length(request,about_details,mission_description,vision_description,what_is_this_description,
+                               why_join_it,what_activites_it_has,how_to_join):
+                        messages.error(request,"Please ensure your word limit is with in 500 and you have filled out all descriptions")
+                        return redirect("chapters_and_affinity_group:manage_main_website",primary)
+                    
+                    if Sc_Ag.main_website_info(request,primary,about_details,about_image,background_image,
+                                    mission_description,mission_image,vision_description,vision_picture,
+                                    what_is_this_description,why_join_it,what_activites_it_has,how_to_join):
+                        
+                            messages.success(request,"Saved Changes Successfully!")
+                    else:
+                        messages.error(request,"Error while saving changes.")
+                    return redirect("chapters_and_affinity_group:manage_main_website",primary)
+                
+                if request.POST.get('remove'):
+
+                    image = request.POST.get('image_delete')
+                    image_id = request.POST.get('image_id')
+                    if Sc_Ag.delete_image(request,primary,image_id,image):
+                        messages.success(request,"Deleted Successfully!")
+                    else:
+                        messages.error(request,"Error while deleting picture.")
+                    return redirect("chapters_and_affinity_group:manage_main_website",primary)
 
 
             context={

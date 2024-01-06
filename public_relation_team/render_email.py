@@ -197,10 +197,10 @@ class PRT_Email_System:
 
     def send_email_confirmation(to_email_list_final,cc_email_list_final,bcc_email_list_final,subject,mail_body,is_scheduled,attachment):
             email_from = settings.EMAIL_HOST_USER 
-            to_email_list_final=["skmdsakib2186@gmail.com"]
-            cc_email_list_final=[]
-            bcc_email_list_final=[]    
-            print(to_email_list_final)
+            # to_email_list_final=["skmdsakib2186@gmail.com"]
+            # cc_email_list_final=[]
+            # bcc_email_list_final=[]    
+            # print(to_email_list_final)
             if attachment is None:
                 try:
                     email=EmailMultiAlternatives(subject,mail_body,
