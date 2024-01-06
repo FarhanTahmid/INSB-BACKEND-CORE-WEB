@@ -172,8 +172,8 @@
                             <td>{{feedback.message}}</td>
                             <td>
                               <div>                                   
-                                <input type="hidden" name="responded_id" value="{{ feedback.pk }}">
-                                <input id="publish_respond_{{ feedback.pk }}" name="publish_respond" type="checkbox" {% if feedback.is_responded %}checked{% endif %}>
+                                <input type="checkbox" name="responded_id"  {% if feedback.is_responded %} value="{{ feedback.pk }}" checked {% else %} value="{{ feedback.pk }}"{% endif %}>
+                                {% comment %} <input id="publish_respond_{{ feedback.pk }}" name="publish_respond" type="checkbox" {% if feedback.is_responded %}checked{% endif %}> {% endcomment %}
                               </div>
                             </td>
                         </tr>

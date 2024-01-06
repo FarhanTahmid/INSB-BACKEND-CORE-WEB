@@ -1421,14 +1421,13 @@ def feedbacks(request,primary):
                 if request.POST.get('reponded'):
 
                     respond = request.POST.getlist('responded_id')
-                    state = request.POST.getlist('publish_respond')
+
                     print(respond)
-                    print(state)
-                    # if Sc_Ag.set_feedback_status(respond):
-                    #     messages.success(request,'Feedback status updated successfully.')
-                    # else:
-                    #     messages.error(request,'Feedback status could not be updated.')
-                    # return redirect("chapters_and_affinity_group:feedbacks",primary)
+                    if Sc_Ag.set_feedback_status(respond,primary):
+                        messages.success(request,'Feedback status updated successfully.')
+                    else:
+                        messages.error(request,'Feedback status could not be updated.')
+                    return redirect("chapters_and_affinity_group:feedbacks",primary)
         
             context={
                     'is_branch' : False,

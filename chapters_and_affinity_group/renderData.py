@@ -492,18 +492,26 @@ class Sc_Ag:
     def get_all_feedbacks(primary):
         
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
-        return SC_AG_FeedBack.objects.filter(society = society).order_by('-is_responded')
+        return SC_AG_FeedBack.objects.filter(society = society).order_by('is_responded','date')
     
-    def set_feedback_status(responded_list):
+    def set_feedback_status(responded_list,primary):
 
-        for i in responded_list:
-            
-            feedback = SC_AG_FeedBack.objects.get(id = i)
-            if feedback.is_responded:
-                feedback.is_responded = False
-            else:
+        feedback = SC_AG_FeedBack.objects.filter(society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
+
+        for i in feedback:
+
+            feedback = SC_AG_FeedBack.objects.get(id = i.id)
+            if str(i.id) in responded_list:
                 feedback.is_responded = True
+            else:
+                feedback.is_responded = False
             feedback.save()
+
+            # if feedback.is_responded:
+            #     feedback.is_responded = False
+            # else:
+            #     feedback.is_responded = True
+            # feedback.save()
         return True
 
 
