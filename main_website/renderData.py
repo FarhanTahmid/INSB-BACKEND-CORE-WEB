@@ -18,14 +18,14 @@ class HomepageItems:
 
     logger=logging.getLogger(__name__)
 
-    def load_all_events(flag,primary):
+    def load_all_events(request,flag,primary):
 
         ''' This function returns all the events with its banner picture depending on the value of flag being True or False'''
         try:
             #getting current date to compare with events date that are upcoming
             current_datetime = timezone.now()
             #getting which societies event to load
-            society = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
+            society = SC_AG_Info.get_sc_ag_details(request,primary)
             #declaring dictionart to store event object as key and graphic banner object as value
             dic = {}
             if flag:
@@ -114,13 +114,17 @@ class HomepageItems:
         '''Gets all the event Count'''
         return Events.objects.all().count()
 
-    def get_event_for_calender(primary):
+    def get_event_for_calender(request,primary):
 
         '''This function returns the events to show them on calender'''
         
         try:
             #getting all events according to the socities and affinity group primary value
-            all_events = HomepageItems.load_all_events(True,primary)
+            if primary == 1:
+                all_events = Events.objects.filter(publish_in_main_web= True).order_by('-event_date')
+            else:
+                society = SC_AG_Info.get_sc_ag_details(request,primary)
+                all_events = Events.objects.filter(publish_in_main_web= True,event_organiser = society).order_by('-event_date')
             #decalring empty dictionary for getting the event date and event
             #key is the date and event object is the value
             date_and_events = {}

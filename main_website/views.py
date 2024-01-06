@@ -76,9 +76,9 @@ def event_homepage(request):
     '''This view function loads all the events for the events homepage'''
     
     try:
-        all_events = HomepageItems.load_all_events(True,1)
-        latest_five_events = HomepageItems.load_all_events(False,1)
-        date_and_event = HomepageItems.get_event_for_calender(1)
+        all_events = HomepageItems.load_all_events(request,True,1)
+        latest_five_events = HomepageItems.load_all_events(request,False,1)
+        date_and_event = HomepageItems.get_event_for_calender(request,1)
         upcoming_event = HomepageItems.get_upcoming_event(1)
         upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
 
@@ -396,10 +396,10 @@ def events_for_sc_ag(request,primary):
 
     ''' This view function loads the events for the society affinity group event homepage'''
     try:
-        
-        all_events = HomepageItems.load_all_events(True,primary)
-        latest_five_events = HomepageItems.load_all_events(False,primary)
-        date_and_event = HomepageItems.get_event_for_calender(primary)
+
+        all_events = HomepageItems.load_all_events(request,True,primary)
+        latest_five_events = HomepageItems.load_all_events(request,False,primary)
+        date_and_event = HomepageItems.get_event_for_calender(request,primary)
         upcoming_event = HomepageItems.get_upcoming_event(primary)
         upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
