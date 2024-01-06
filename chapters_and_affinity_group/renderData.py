@@ -12,6 +12,9 @@ from central_events.models import Events
 from django.http import JsonResponse, HttpResponse
 import xlwt
 from membership_development_team import renewal_data
+from insb_port import settings
+import os
+from bs4 import BeautifulSoup
 
 class Sc_Ag:
     logger=logging.getLogger(__name__)
@@ -388,7 +391,106 @@ class Sc_Ag:
             messages.error(request,"Can not remove member from Data Access! Something went wrong!")
             return False
         
+    def main_website_info(request,primary,about_description,about_image,background_image,
+                        mission_description,mission_image,vision_description,vision_picture,
+                        what_is_this_description,why_join_it,what_activites_it_has,how_to_join,
+                        short_form,short_form_alternative_details,primary_color_code_details,secondary_color_code_details,
+                        text_color_code_details,pageTitle_details,secondParagraph_details):
+        try:
+            sc_ag = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
+            sc_ag.about_description =about_description
+            sc_ag.sc_ag_logo = about_image
+            sc_ag.background_image = background_image
+            sc_ag.mission_description = mission_description
+            sc_ag.mission_picture = mission_image
+            sc_ag.vision_description = vision_description
+            sc_ag.vision_picture = vision_picture
+            sc_ag.what_is_this_description = what_is_this_description
+            sc_ag.why_join_it = why_join_it
+            sc_ag.what_activites_it_has = what_activites_it_has
+            sc_ag.how_to_join = how_to_join
+            sc_ag.short_form = short_form
+            sc_ag.short_form_2 = short_form_alternative_details
+            sc_ag.primary_color_code = primary_color_code_details
+            sc_ag.secondary_color_code = secondary_color_code_details
+            sc_ag.text_color_code = text_color_code_details
+            sc_ag.page_title = pageTitle_details
+            sc_ag.secondary_paragraph = secondParagraph_details
+
+            sc_ag.save()
+
+            return True
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
         
+    def delete_image(request,primary,image_id,image_path):
+
+        try:
+            sc_ag = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
+            path = settings.MEDIA_ROOT+str(image_path)
+
+            if(image_id == 'sc_ag_logo'):
+                sc_ag.sc_ag_logo = None
+                os.remove(path)
+            elif(image_id == 'background_image'):
+                sc_ag.background_image = None
+                os.remove(path)
+            elif(image_id == 'mission_picture'):
+                sc_ag.mission_picture = None
+                os.remove(path)
+            elif(image_id == "vision_picture"):
+                sc_ag.vision_picture = None
+                os.remove(path)
+            
+            sc_ag.save()
+            return True
+
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def checking_length(request,about_details,mission_description,vision_description,
+                        what_is_this_description,why_join_it,what_activites_it_has,how_to_join):
+        try:
+            about_details = Sc_Ag.process_ckeditor_content(about_details)
+            mission_description = Sc_Ag.process_ckeditor_content(mission_description)
+            vision_description = Sc_Ag.process_ckeditor_content(vision_description)
+            what_is_this_description = Sc_Ag.process_ckeditor_content(what_is_this_description)
+            why_join_it = Sc_Ag.process_ckeditor_content(why_join_it)
+            what_activites_it_has = Sc_Ag.process_ckeditor_content(what_activites_it_has)
+            how_to_join = Sc_Ag.process_ckeditor_content(how_to_join)
+
+                
+            if (len(about_details)> 500 or len(mission_description)>500 or len(vision_description)>500 
+                or len(what_is_this_description)>500 or len(why_join_it) > 500 or len(what_activites_it_has) >500
+                or len(how_to_join)>500 or 
+                len(about_details) == 0 or len(mission_description)==0 or len(vision_description)==0
+                or len(what_is_this_description)==0 or len(why_join_it)==0 or len(what_activites_it_has)==0
+                or len(how_to_join)==0):
+                return True
+            else:
+                    return False
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def process_ckeditor_content(ckeditor_html):
+        # Parse the HTML content with Beautiful Soup
+        soup = BeautifulSoup(ckeditor_html, 'html.parser')
+
+        # Extract the text content without HTML tags
+        text_content = soup.get_text()
+
+        # Now, 'text_content' contains only the actual content without HTML tags
+        return text_content
+        
+        
+    
+    
 
 
     

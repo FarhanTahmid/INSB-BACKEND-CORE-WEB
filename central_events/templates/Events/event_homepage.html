@@ -54,6 +54,17 @@
             }
           }
         
+          .event_name_column_content {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: blue;
+            max-width: 200px;
+          }
+
+          
+        
     </style>
 </head>
 <body>
@@ -175,9 +186,9 @@
                         <tr>
                           <td>{{ forloop.counter }}</td>
                             {% if is_branch %}
-                            <td><a style="color:blue;" href="{% url 'central_branch:event_edit_form' key.id %}">{{key.event_name }}</a></td>
+                            <td><a class="event_name_column_content" style="color:blue;" href="{% url 'central_branch:event_edit_form' key.id %}">{{key.event_name }}</a></td>
                             {% else %}
-                            <td><a style="color:blue;" href="{% url 'chapters_and_affinity_group:event_edit_form' sc_ag_info.primary key.id %}">{{key.event_name }}</a></td>
+                            <td><a class="event_name_column_content" style="color:blue;" href="{% url 'chapters_and_affinity_group:event_edit_form' sc_ag_info.primary key.id %}">{{key.event_name }}</a></td>
                             {% endif %}
                             <td>{{ key.event_organiser.group_name }}</td>
                             <td>

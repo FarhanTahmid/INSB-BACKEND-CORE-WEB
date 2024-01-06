@@ -4,7 +4,7 @@
 
 <head>
 
-    <title>Events - IEEE NSU SB</title>
+    <title>{% if is_sc_ag %}Events - {{society.short_form}}{% else %}Events - IEEE NSU SB{% endif %}</title>
     <link rel="icon" href="{% static 'upload/logo.gif' %}"/>
     
     <!--Common CSS-->

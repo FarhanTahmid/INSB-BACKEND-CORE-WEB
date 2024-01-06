@@ -13,6 +13,10 @@ urlpatterns = [
     
     #SOCIETY AG URLS
     path('ras_sbc/',views.rasPage,name="ras_home"),
+    path('pes_sbc/',views.pesPage,name="pes_home"),
+    path('ias_sbc/',views.iasPage,name="ias_home"),
+    path('wie_sbc/',views.wiePage,name="wie_home"),
+    path('events/<int:primary>',views.events_for_sc_ag,name="events_for_sc_ag"),
 
     #Achievements
     path('achievements/',views.achievements,name="achievements"),

@@ -7,8 +7,8 @@ from port.renderData import PortData
 from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
 from .renderData import HomepageItems
 from django.conf import settings
-from users.models import User,Members
-from users.models import User
+from users.models import User_IP_Address,Members
+from users.models import User_IP_Address
 import logging
 from datetime import datetime
 from django.http import HttpResponseBadRequest,HttpResponseServerError
@@ -27,6 +27,8 @@ logger=logging.getLogger(__name__)
 def homepage(request):
     bannerItems=HomepageItems.getHomepageBannerItems()
     bannerWithStat=HomepageItems.getBannerPictureWithStat()
+    HomepageItems.get_ip_address(request)
+    
     
     # get recent 6 news
     get_recent_news=News.objects.filter().order_by('-news_date')[:6]
@@ -43,27 +45,6 @@ def homepage(request):
         'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
     }
     return render(request,"LandingPage/homepage.html",context)
-
-def index(request):
-
-    def get_ip_address(request):
-        address = request.META.get('HTTP_X_FORWARDED_FOR')
-        if address:
-            ip = address.split(',')[-1].strip()
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        return ip
-    ip = get_ip_address(request)
-    user =User(ip_address = ip)
-    print(f"Current user ip address {user}")
-    result = User.objects.filter(ip_address = ip)
-    print(f"User exists in database {result}")
-    if len(result)>=1:
-        pass
-    else:
-        user.save()
-
-    return HttpResponse("IEEE main Website")
 
 
 ##################### EVENT WORKS ####################
@@ -96,8 +77,8 @@ def event_homepage(request):
     try:
         all_events = HomepageItems.load_all_events(True)
         latest_five_events = HomepageItems.load_all_events(False)
-        date_and_event = HomepageItems.get_event_for_calender()
-        upcoming_event = HomepageItems.get_upcoming_event()
+        date_and_event = HomepageItems.get_event_for_calender(1)
+        upcoming_event = HomepageItems.get_upcoming_event(1)
         upcoming_event_banner_picture = HomepageItems.get_upcoming_event_banner_picture(upcoming_event)
 
 
@@ -216,27 +197,149 @@ def news(request):
 
     
 
-######################### SOCIETY & AG WORKS #######################
-from . import society_ag
+############################## SC_AG ############################################
 def rasPage(request):
-    # Title of the page
-    page_title="IEEE NSU RAS Student Branch Chapter"
-    # Second para after the title
-    secondary_para="Focusing on the research, study, and exchange of knowledge regarding Robotics & Automation."
     
-    # getRasAbout=society_ag.Ras.get_ras_about()
-    
-    # if getRasAbout is False:
-    #     return HttpResponse("GG")
-    
-    context={
-        'page_title':page_title,
-        'secondary_para':secondary_para,
-        # 'about_ras':getRasAbout,
-        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+    try:
+        society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 3)
+            
+        featured_events = HomepageItems.get_featured_events_for_societies(3)
+        
+        #loading executive body memebers
+        faculty_advisor = HomepageItems.get_faculty_advisor_for_society(3)
+        eb_members = HomepageItems.get_eb_members_for_society(3)
+        
+        # getRasAbout=society_ag.Ras.get_ras_about()
+            
+        # if getRasAbout is False:
+        #     return HttpResponse("GG")
+            
+        context={
+                
+            'society':society,
+            #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+            'media_url':settings.MEDIA_URL,
+            'featured_events':featured_events,
+            'faculty_advisor':faculty_advisor,
+            'eb_members':eb_members
 
-    }
-    return render(request,'Society_AG/ras.html',context=context)
+        }
+        return render(request,'Society_AG/sc_ag.html',context=context)
+    except Exception as e:
+            print(e)
+            response = HttpResponseServerError("Oops! Something went wrong.")
+            return response
+def pesPage(request):
+    
+    try:
+        society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 2)
+            
+        featured_events = HomepageItems.get_featured_events_for_societies(2)
+
+        #loading executive body memebers
+        faculty_advisor = HomepageItems.get_faculty_advisor_for_society(2)
+        eb_members = HomepageItems.get_eb_members_for_society(2)
+                
+        context={
+                
+            'society':society,
+            #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+            'media_url':settings.MEDIA_URL,
+            'featured_events':featured_events,
+            'faculty_advisor':faculty_advisor,
+            'eb_members':eb_members
+
+        }
+        return render(request,'Society_AG/sc_ag.html',context=context)
+    except Exception as e:
+            print(e)
+            response = HttpResponseServerError("Oops! Something went wrong.")
+            return response
+def iasPage(request):
+
+    try:
+        society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 4)
+            
+        featured_events = HomepageItems.get_featured_events_for_societies(4)
+
+        #loading executive body memebers
+        faculty_advisor = HomepageItems.get_faculty_advisor_for_society(4)
+        eb_members = HomepageItems.get_eb_members_for_society(4)
+                
+
+            
+        context={
+                
+            'society':society,
+            #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+            'media_url':settings.MEDIA_URL,
+            'featured_events':featured_events,
+            'faculty_advisor':faculty_advisor,
+            'eb_members':eb_members
+
+        }
+        return render(request,'Society_AG/sc_ag.html',context=context)
+    except Exception as e:
+            print(e)
+            response = HttpResponseServerError("Oops! Something went wrong.")
+            return response
+def wiePage(request):
+    
+    try:
+        society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 5)
+            
+        featured_events = HomepageItems.get_featured_events_for_societies(5)
+
+        #loading executive body memebers
+        faculty_advisor = HomepageItems.get_faculty_advisor_for_society(5)
+        eb_members = HomepageItems.get_eb_members_for_society(5)
+                
+            
+        context={
+                
+            'society':society,
+            #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+            'media_url':settings.MEDIA_URL,
+            'featured_events':featured_events,
+            'faculty_advisor':faculty_advisor,
+            'eb_members':eb_members
+
+        }
+        return render(request,'Society_AG/sc_ag.html',context=context)
+    except Exception as e:
+            print(e)
+            response = HttpResponseServerError("Oops! Something went wrong.")
+            return response
+
+def events_for_sc_ag(request,primary):
+    try:
+
+        all_events = HomepageItems.load_all_sc_ag_events(True,primary)
+        latest_five_events = HomepageItems.load_all_sc_ag_events(False,primary)
+        date_and_event = HomepageItems.get_event_for_calender(primary)
+        upcoming_event = HomepageItems.get_upcoming_event(primary)
+        upcoming_event_banner_picture = HomepageItems.get_upcoming_event_banner_picture(upcoming_event)
+        society = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
+
+        context = {
+            'is_sc_ag':True,
+            'society':society,
+            'all_events':all_events,
+            'media_url':settings.MEDIA_URL,
+            'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+            'latest_five_event':latest_five_events,
+            'date_and_event':date_and_event,
+            'upcoming_event':upcoming_event,
+            'upcoming_event_banner_picture':upcoming_event_banner_picture,
+        }
+
+
+
+        return render(request,'Events/events_homepage.html',context)
+    except Exception as e:
+            print(e)
+            response = HttpResponseServerError("Oops! Something went wrong.")
+            return response
 
 
 
@@ -604,7 +707,14 @@ def ieee_region_10(request):
     return render(request, 'About/IEEE_region_10.html')
 
 def ieee(request):
-    return render(request, 'About/About_IEEE.html')
+    #working
+    about_ieee = About_IEEE.objects.get(id=1)
+    
+    context = {
+        'about_ieee':about_ieee
+    }
+
+    return render(request, 'About/About_IEEE.html', context)
 
 def faq(request):
     return render(request, 'About/faq.html')
