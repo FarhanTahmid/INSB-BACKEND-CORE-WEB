@@ -15,6 +15,7 @@ from membership_development_team import renewal_data
 from insb_port import settings
 import os
 from bs4 import BeautifulSoup
+from .get_sc_ag_info import SC_AG_Info
 
 
 class Sc_Ag:
@@ -391,14 +392,20 @@ class Sc_Ag:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"Can not remove member from Data Access! Something went wrong!")
             return False
-        
+         
     def main_website_info(request,primary,about_description,about_image,background_image,
                         mission_description,mission_image,vision_description,vision_picture,
                         what_is_this_description,why_join_it,what_activites_it_has,how_to_join,
                         short_form,short_form_alternative_details,primary_color_code_details,secondary_color_code_details,
                         text_color_code_details,pageTitle_details,secondParagraph_details):
+        
+
+        ''''This function saves the data for the main website of societies and affinity groups'''
         try:
-            sc_ag = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
+            #getting the specific society using the primary and the get_sc_ag_details function
+            sc_ag = SC_AG_Info.get_sc_ag_details(request,primary)
+
+            #saving all the informations
             sc_ag.about_description =about_description
             sc_ag.sc_ag_logo = about_image
             sc_ag.background_image = background_image
@@ -421,6 +428,7 @@ class Sc_Ag:
             sc_ag.save()
 
             return True
+        
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -428,10 +436,16 @@ class Sc_Ag:
         
     def delete_image(request,primary,image_id,image_path):
 
+        '''This function deletes particular image requested from the portal for the main web page of
+            socities and affinity groups'''
+        
         try:
-            sc_ag = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
+            #getting the specific society using the primary
+            sc_ag = SC_AG_Info.get_sc_ag_details(request,primary)
+            #getting the path of the image from the local machine
             path = settings.MEDIA_ROOT+str(image_path)
 
+            #checking to see which image is requested to be deleted
             if(image_id == 'sc_ag_logo'):
                 sc_ag.sc_ag_logo = None
                 os.remove(path)
@@ -445,6 +459,7 @@ class Sc_Ag:
                 sc_ag.vision_picture = None
                 os.remove(path)
             
+            #saving before returning
             sc_ag.save()
             return True
 
@@ -455,7 +470,12 @@ class Sc_Ag:
         
     def checking_length(request,about_details,mission_description,vision_description,
                         what_is_this_description,why_join_it,what_activites_it_has,how_to_join):
+        
+        '''This function checks the length of the description fields. If any one exceed 500 or if any one is
+            empty then data won't be saved.'''
+        
         try:
+            #removing html tags to check true length of each fields
             about_details = Sc_Ag.process_ckeditor_content(about_details)
             mission_description = Sc_Ag.process_ckeditor_content(mission_description)
             vision_description = Sc_Ag.process_ckeditor_content(vision_description)
@@ -464,7 +484,7 @@ class Sc_Ag:
             what_activites_it_has = Sc_Ag.process_ckeditor_content(what_activites_it_has)
             how_to_join = Sc_Ag.process_ckeditor_content(how_to_join)
 
-                
+            #checking to see the length. Returns true if length is more than 500 or is 0
             if (len(about_details)> 500 or len(mission_description)>500 or len(vision_description)>500 
                 or len(what_is_this_description)>500 or len(why_join_it) > 500 or len(what_activites_it_has) >500
                 or len(how_to_join)>500 or 
@@ -473,13 +493,17 @@ class Sc_Ag:
                 or len(how_to_join)==0):
                 return True
             else:
-                    return False
+                return False
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
     def process_ckeditor_content(ckeditor_html):
+        
+        '''Using Ck editor results in texts to have html tags.To remove them,  BeautifulSoup 
+            have been used'''
+
         # Parse the HTML content with Beautiful Soup
         soup = BeautifulSoup(ckeditor_html, 'html.parser')
 
@@ -489,30 +513,41 @@ class Sc_Ag:
         # Now, 'text_content' contains only the actual content without HTML tags
         return text_content
     
-    def get_all_feedbacks(primary):
+    def get_all_feedbacks(request,primary):
+
+        '''This function returns a list of feedback according to the primary value of 
+            socities and affinity groups'''
         
-        society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
+        #getting the specific society
+        society = SC_AG_Info.get_sc_ag_details(request,primary)
+        #returning the feedbacks list ordered with boolean fields having highest priority and
+        #then secondary is date field
         return SC_AG_FeedBack.objects.filter(society = society).order_by('is_responded','date')
     
     def set_feedback_status(responded_list,primary):
 
-        feedback = SC_AG_FeedBack.objects.filter(society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
+        '''This function modifies which feedbacks are responded and which are not'''
+        try:
+            #getting all the feedback for the particular society and affinity group
+            all_feedback = SC_AG_FeedBack.objects.filter(society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
 
-        for i in feedback:
 
-            feedback = SC_AG_FeedBack.objects.get(id = i.id)
-            if str(i.id) in responded_list:
-                feedback.is_responded = True
-            else:
-                feedback.is_responded = False
-            feedback.save()
+            for i in all_feedback:
+                #getting the feedback with particular id
+                feedback = SC_AG_FeedBack.objects.get(id = i.id)
+                #checking to see if feedback in the 'all_feedback' is in the responded list
+                #if yes, the is_responded attribute is updated to True else to False
+                if str(i.id) in responded_list:
+                    feedback.is_responded = True
+                else:
+                    feedback.is_responded = False
+                feedback.save()
 
-            # if feedback.is_responded:
-            #     feedback.is_responded = False
-            # else:
-            #     feedback.is_responded = True
-            # feedback.save()
-        return True
+            return True
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
 
 
 
