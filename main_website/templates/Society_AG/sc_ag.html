@@ -22,8 +22,8 @@
     <style>
         :root {
             --main-color: {{society.primary_color_code}};
-            --secondary-color: #961A32;
-            --text-color: #F7FAFC;
+            --secondary-color: {{society.secondary_color_code}};
+            --text-color: {{society.text_color_code}};
         }
 
         .justify-pagragraph-content {
@@ -395,24 +395,24 @@
                         <div class="card executive-body-profile text-center">
                             <div class="executive-body-profile-img-container">
                                 <img class="executive-body-profile-images img-fluid"
-                                    src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
+                                    src="{{media_url}}{{faculty_advisor.member.user_profile_picture}}" alt="">
                             </div>
                             <div class="executive-body-profile-content">
-                                <p><b>Saif Ahmed</b></p>
-                                <p><small>Faculty Advisor, PES</small></p>
+                                <p><b>{{faculty_advisor.member.name}}</b></p>
+                                <p><small>Faculty Advisor, {{society.short_form_2}}</small></p>
                                 <div class="executive-body-profile-icons-container">
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
+                                        href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to={{faculty_advisor.member.email_nsu}}" target="_blank">
                                         <i class="fa fa-envelope" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
+                                        href="{{faculty_advisor.member.facebook_url}}" target="_blank">
                                         <i class="fa fa-facebook" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
+                                        href="{{faculty_advisor.member.linkedin_url}}" target="_blank">
                                         <i class="fa fa-linkedin" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
@@ -423,29 +423,29 @@
                 </div>
 
                 <div class="row justify-content-center">
-
+                    {% for members in eb_members %}
                     <div class="col-lg-3 col-md-6 col-sm-12 my-2">
                         <div class="card executive-body-profile text-center">
                             <div class="executive-body-profile-img-container">
                                 <img class="executive-body-profile-images img-fluid"
-                                    src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
+                                    src="{{media_url}}{{members.member.user.user_profile_picture}}" alt="">
                             </div>
                             <div class="executive-body-profile-content">
-                                <p><b>Saif Ahmed</b></p>
-                                <p><small>Faculty Advisor, PES</small></p>
+                                <p><b>{{members.member.name}}</b></p>
+                                <p><small>{{members.position.role}}, {{society.short_form_2}}</small></p>
                                 <div class="executive-body-profile-icons-container">
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
+                                        href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to={{members.member.email_nsu}}" target="_blank">
                                         <i class="fa fa-envelope" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
+                                        href="{{members.member.facebook_url}}" target="_blank">
                                         <i class="fa fa-facebook" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
+                                        href="{{members.member.linkedin_url}}" target="_blank">
                                         <i class="fa fa-linkedin" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
@@ -453,122 +453,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                        <div class="card executive-body-profile text-center">
-                            <div class="executive-body-profile-img-container">
-                                <img class="executive-body-profile-images img-fluid"
-                                    src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
-                            </div>
-                            <div class="executive-body-profile-content">
-                                <p><b>Saif Ahmed</b></p>
-                                <p><small>Faculty Advisor, PES</small></p>
-                                <div class="executive-body-profile-icons-container">
-                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
-                                        <i class="fa fa-envelope" aria-hidden="true"
-                                            style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
-                                    </a>
-                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
-                                        <i class="fa fa-facebook" aria-hidden="true"
-                                            style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
-                                    </a>
-                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
-                                        <i class="fa fa-linkedin" aria-hidden="true"
-                                            style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                        <div class="card executive-body-profile text-center">
-                            <div class="executive-body-profile-img-container">
-                                <img class="executive-body-profile-images img-fluid"
-                                    src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
-                            </div>
-                            <div class="executive-body-profile-content">
-                                <p><b>Saif Ahmed</b></p>
-                                <p><small>Faculty Advisor, PES</small></p>
-                                <div class="executive-body-profile-icons-container">
-                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
-                                        <i class="fa fa-envelope" aria-hidden="true"
-                                            style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
-                                    </a>
-                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
-                                        <i class="fa fa-facebook" aria-hidden="true"
-                                            style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
-                                    </a>
-                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
-                                        <i class="fa fa-linkedin" aria-hidden="true"
-                                            style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                        <div class="card executive-body-profile text-center">
-                            <div class="executive-body-profile-img-container">
-                                <img class="executive-body-profile-images img-fluid"
-                                    src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
-                            </div>
-                            <div class="executive-body-profile-content">
-                                <p><b>Saif Ahmed</b></p>
-                                <p><small>Faculty Advisor, PES</small></p>
-                                <div class="executive-body-profile-icons-container">
-                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
-                                        <i class="fa fa-envelope" aria-hidden="true"
-                                            style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
-                                    </a>
-                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
-                                        <i class="fa fa-facebook" aria-hidden="true"
-                                            style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
-                                    </a>
-                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
-                                        <i class="fa fa-linkedin" aria-hidden="true"
-                                            style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                        <div class="card executive-body-profile text-center">
-                            <div class="executive-body-profile-img-container">
-                                <img class="executive-body-profile-images img-fluid"
-                                    src="https://ieeensusb.org/wp-content/uploads/2022/11/unnamed-1.webp" alt="">
-                            </div>
-                            <div class="executive-body-profile-content">
-                                <p><b>Saif Ahmed</b></p>
-                                <p><small>Faculty Advisor, PES</small></p>
-                                <div class="executive-body-profile-icons-container">
-                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
-                                        <i class="fa fa-envelope" aria-hidden="true"
-                                            style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
-                                    </a>
-                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
-                                        <i class="fa fa-facebook" aria-hidden="true"
-                                            style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
-                                    </a>
-                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
-                                        <i class="fa fa-linkedin" aria-hidden="true"
-                                            style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
 
                 </div>
             </div>
