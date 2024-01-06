@@ -135,7 +135,7 @@ class HomepageItems:
                     date_and_events[date] = [event]
 
             return date_and_events
-        except:
+        except Exception as e:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
