@@ -44,6 +44,11 @@ urlpatterns = [
     path('manage_website/research/update/<int:pk>',views.update_researches,name="update_researches"),
     path('manage_website/magazine',views.manage_magazines,name="manage_magazines"),
     path('manage_website/magazine/update/<int:pk>',views.update_magazine,name="update_magazine"),
+    path('manage_website/gallery',views.manage_gallery,name="manage_gallery"),
+    path('manage_website/gallery/update/image/<int:pk>',views.update_images,name="update_image"),
+    path('manage_website/gallery/update/video/<int:pk>',views.update_videos,name="update_video"),
+    path('manage_website/exemplary_members',views.manage_exemplary_members,name="manage_exemplary_members"),
+    path('manage_website/exemplary_members/update/<int:pk>',views.update_exemplary_members,name="update_exemplary_members"),
     
     path('manage_access',views.manage_view_access,name="manage_access"),
 

@@ -66,16 +66,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div ui-include="'../views/blocks/dropdown.new.html'"></div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link" href="{% url 'central_branch:teams' %}">
-                <i class="fa fa-group"></i>
-                <span>Teams</span>
-                </a>
-                <div ui-include="'../views/blocks/dropdown.new.html'"></div>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link" href="{% url 'ieee_nsu_sb_pes_sbc:pes_members' %}">
-                <i class="material-icons">&#xe894;</i>
-                <span>Manage Branch Website</span>
+                <a class="nav-link" href="{% url 'central_branch:manage_exemplary_members' %}">
+                <i class="fa fa-users"></i>
+                <span>Exemplary Members</span>
                 </a>
                 <div ui-include="'../views/blocks/dropdown.new.html'"></div>
             </li>

@@ -224,15 +224,15 @@ def rasPage(request):
     # Second para after the title
     secondary_para="Focusing on the research, study, and exchange of knowledge regarding Robotics & Automation."
     
-    getRasAbout=society_ag.Ras.get_ras_about()
+    # getRasAbout=society_ag.Ras.get_ras_about()
     
-    if getRasAbout is False:
-        return HttpResponse("GG")
+    # if getRasAbout is False:
+    #     return HttpResponse("GG")
     
     context={
         'page_title':page_title,
         'secondary_para':secondary_para,
-        'about_ras':getRasAbout,
+        # 'about_ras':getRasAbout,
         'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
 
     }
@@ -287,7 +287,16 @@ def magazines(request):
 
 ######################### GALLERY WORKS ###########################
 def gallery(request):
-    return render(request, 'gallery.html')
+    # get all image and videos
+    all_images=GalleryImages.objects.all().order_by('-pk')
+    all_videos=GalleryVideos.objects.all().order_by('-pk')
+
+    context={
+        'page_title':"Gallery",
+        'all_images':all_images,
+        'all_videos':all_videos,
+    }
+    return render(request, 'Publications/Gallery/gallery.html',context=context)
 
 
 # Memeber works
@@ -522,6 +531,15 @@ def volunteers_page(request):
         }
     return render(request,'Members/Volunteers/volunteers_page.html',context=context)
 
+def exemplary_members(request):
+    # get all exemplary members
+    all_exemplary_members=ExemplaryMembers.objects.all().order_by('-rank')
+        
+    context={
+        'page_title':"Exemplary Members",
+        'exemplary_members':all_exemplary_members,
+    }
+    return render(request,"Members/Exemplary Members/exemplary_members.html",context=context)
 
 def team_intros(request,team_primary):
     
@@ -571,3 +589,25 @@ def all_members(request):
         'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
     }
     return render(request,'Members/All Members/all_members.html',context=context)
+
+def member_profile(request):
+    return render(request, 'Members/Profile/member_profile.html')
+
+def ieee_bd_section(request):
+    return render(request, 'About/IEEE_bangladesh_section.html')
+
+def ieee_nsu_student_branch(request):
+    return render(request, 'About/IEEE_NSU_student_branch.html')
+
+def ieee_region_10(request):
+    # template not done yet
+    return render(request, 'About/IEEE_region_10.html')
+
+def ieee(request):
+    return render(request, 'About/About_IEEE.html')
+
+def faq(request):
+    return render(request, 'About/faq.html')
+
+def contact(request):
+    return render(request, 'Contact/contact.html')

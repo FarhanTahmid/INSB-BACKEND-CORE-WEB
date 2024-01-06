@@ -1,6 +1,7 @@
 from django import forms
 import os
 from main_website.models import *
+from datetime import date
 
 class AchievementForm(forms.ModelForm):
     class Meta:
@@ -70,7 +71,7 @@ class BlogsForm(forms.ModelForm):
     class Meta:
         model=Blog
         fields=[
-            'title','writer_name','category','date','description','blog_banner_picture',
+            'title','writer_name','category','date','short_description','description','blog_banner_picture',
             'branch_or_society','publish_blog'
         ]
     def save(self, commit=True):
@@ -151,12 +152,95 @@ class MagazineForm(forms.ModelForm):
                 if os.path.isfile(previous_picture.path):
                     os.remove(previous_picture.path)
         if(instance.pk and 'magazine_file' in self.changed_data):
+            previous_instance = Magazines.objects.get(pk=instance.pk)
             if(os.path.isfile(previous_instance.magazine_file.path)):
                 os.remove(previous_instance.magazine_file.path)
 
             # Update the instance with the new image
             previous_instance.magazine_picture = instance.magazine_picture
             previous_instance.magazine_file=instance.magazine_file
+            previous_instance.save()
+
+        if commit:
+            instance.save()
+        return instance
+
+class GalleryImageForm(forms.ModelForm):
+    class Meta:
+        model=GalleryImages
+        fields=['image']
+        
+    def save(self, commit=True):
+        # Get the existing instance from the database
+        instance = super().save(commit=False)
+        
+        try:
+            new_image=GalleryImages.objects.get(pk=instance.pk)
+            pass
+        except GalleryImages.DoesNotExist:
+            instance.upload_date=date.today()
+        
+        # Delete the previous image if it exists
+        if instance.pk and 'image' in self.changed_data:
+            previous_instance = GalleryImages.objects.get(pk=instance.pk)
+            previous_picture = previous_instance.image
+
+            # Delete the associated file from the file system
+            if previous_picture:
+                if os.path.isfile(previous_picture.path):
+                    os.remove(previous_picture.path)
+            # Update the instance with the new image
+            previous_instance.image = instance.image
+            previous_instance.image=instance.image
+            previous_instance.save()
+
+        if commit:
+            instance.save()
+        return instance
+
+class GalleryVideoForm(forms.ModelForm):
+    class Meta:
+        model=GalleryVideos
+        fields=['video_title','video_link']
+    
+    def save(self, commit=True):
+        # Get the existing instance from the database
+        instance = super().save(commit=False)
+        
+        try:
+            new_video=GalleryVideos.objects.get(pk=instance.pk)
+            pass
+        except GalleryVideos.DoesNotExist:
+            instance.upload_date=date.today()
+        
+        if commit:
+            instance.save()
+        return instance
+
+class ExemplaryMembersForm(forms.ModelForm):
+    class Meta:
+        model=ExemplaryMembers
+        fields=[
+            'member_name','member_picture','former_position','activity_year','current_activity','facebook_account_link',
+            'email','achievements','rank']
+    
+    def save(self, commit=True):
+        # Get the existing instance from the database
+        instance = super().save(commit=False)
+        
+        
+        # Delete the previous image if it exists
+        if instance.pk and 'member_picture' in self.changed_data:
+            previous_instance = ExemplaryMembers.objects.get(pk=instance.pk)
+            previous_picture = previous_instance.member_picture
+
+            # Delete the associated file from the file system
+            if previous_picture:
+                if os.path.isfile(previous_picture.path):
+                    os.remove(previous_picture.path)
+            # Update the instance with the new image
+            previous_instance.member_picture = instance.member_picture
+            previous_instance.member_picture=instance.member_picture
             previous_instance.save()
 
         if commit:

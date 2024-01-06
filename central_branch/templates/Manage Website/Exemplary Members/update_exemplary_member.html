@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Teams | IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+
+    <style>
+        body, html {
+        
+        margin: 0;
+        
+        align-items: center;
+        justify-content: center;
+        }
+
+        .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+          }
+          .btn-container {
+            text-align: center;
+          }
+          
+          .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+          }
+          
+          /* Media query for smaller screens (adjust the breakpoint as needed) */
+          @media (max-width: 768px) {
+            .btn {
+              width: 100%; /* Make the button full width on smaller screens */
+            }
+          }
+        
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+                {% include 'navbar.html' %}
+            {% endblock navbar %}
+
+        </div>
+        <!--navbar content-->
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
+            <!--Start from here-->
+
+        </div>
+        <!--PAGE END-->
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+        <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>Update Exemplary Member</b></h4>
+        <div class="container">
+            <div class="padding">
+                <div class="row" >
+                    <div class="col-sm-10">
+                        <div class="box">
+                            <div class="box-header">
+                                <h3 style="text-align:center;color:#00629B;">{{exemplary_member.member_name}}</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="form-control">
+                                    <form method="POST" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        {{member_form.media}}
+                                        {{member_form.as_p}}
+                                        <input type="submit" name="update_member" class="btn btn-success p-x-md" value="Update"></input> 
+                                    </form>
+                                </div>
+                                <br>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+
+</body>
+</html>

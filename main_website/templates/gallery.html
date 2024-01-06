@@ -14,8 +14,43 @@
 
     <!--Extra CSS-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/event.css' %}"/>
-
+    <style>
+        @media screen and (max-width: 1199px){
+            .wavy{
+                margin-top: 300px;
+            }
+        }
+        @media screen and (max-width: 1194px){
+            .wavy{
+                margin-top: 188px;
+            }
+        }
+        @media screen and (max-width: 1053px){
+            .wavy{
+                margin-top: 250px;
+            }
+        }
+        @media screen and (max-width: 1049px){
+            .wavy{
+                margin-top: 187px;
+            }
+        }
+        @media screen and (max-width: 991px){
+            .wavy{
+                margin-top: 251px;
+            }
+        }
+        @media screen and (max-width: 960px){
+            .wavy{
+                margin-top: 184px;
+            }
+        }
+        @media screen and (max-width: 767px){
+            .wavy{
+                margin-top: 0;
+            }
+        }
+    </style>
 </head>
 
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
@@ -24,28 +59,27 @@
         {% block header %}
             {% include 'header.html' %}
         {% endblock header %}
-        
+
         {% block wave_design %}
             {% include 'wave.html' %}
-        {% endblock %}
+        {% endblock wave_design %}
 
         <!-- Gallery card -->
         {% block gallery_content %}
-        {% include "gallery_content.html" %}
+            {% include "gallery_content.html" %}
         {% endblock gallery_content %}
         <!-- Galler Card End-->
 
         <!--Footer-->
         {% block footer %}
-            {% include "footer_block.html" %}
+        {% include "footer_block.html" %}
         {% endblock footer %}
 
-       
+
     </div>
     {% block common_js %}
-        {% include "common_js_includes.html" %}
+    {% include "common_js_includes.html" %}
     {% endblock %}
-    <script src="{% static './js/event_script.js'%}"></script>
 </body>
 
 </html>

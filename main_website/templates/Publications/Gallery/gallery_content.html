@@ -1,0 +1,469 @@
+{% load static %} {% block gallery_content %}
+<style>
+    .centering{
+        display: flex;
+        margin: 15px 0px;
+        align-items: center;
+        flex-direction: column;
+    }
+    {% comment %} .gallery{
+        max-width: 1440px;
+        padding-left: 20px;
+        padding-right: 20px;
+        display: flex;
+        flex-wrap: nowrap;
+        column-gap: 20px;
+    }
+    .pic_container{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        max-width: 1000px;
+    }
+    .pic-box{
+        padding: 5px;
+    }
+    .pic_container img{
+        border-radius: 4px;
+        box-shadow: 5px 5px 5px black;
+    }
+    .vertical-line{
+        border-left: 2px solid wheat;
+        height: 500px;
+    }
+    .video-box{
+        background-color: white;
+        padding: 2px 5px 5px 5px;
+    }
+    .video_container{
+        box-shadow: 0px 0px 5px white;
+        border-radius: 6px;
+    }
+    /*media queries*/
+    @media (max-width: 1440px){
+        .gallery{
+            max-width: 85%;
+        }
+        .pic_container{
+            max-width: 800px;
+        }
+    }
+    @media (max-width: 1024px){
+        .gallery{
+            max-width: 892px;
+        }
+        .pic_container{
+            max-width: 550px;
+        }
+    }
+    @media (max-width: 992px){
+        .gallery{
+            max-width: 960px;
+        }
+        .pic_container{
+            max-width: 600px;
+        }
+    }
+    @media (max-width: 768px){
+        .gallery{
+            max-width: 720px;
+        }
+        .pic_container{
+            max-width: 400px;
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+    @media (max-width: 576px){
+        .gallery{
+            max-width: 100%;
+            grid-template-columns: 1fr;
+            flex-wrap: wrap;
+        }
+        .vertical-line{
+            display: none;
+        }
+        .pic_container{
+            grid-template-columns: 1fr;
+        }
+    } {% endcomment %}
+    .row{
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 1140px;
+        padding: 25px;
+    }
+    #videoGallery .row{
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      flex-wrap: wrap;
+      max-width: 1140px;
+      padding: 25px;
+      gap: 10px;
+    }
+    .column{
+        flex: 25%;
+        max-width: 25%;
+    }
+    .img-hover-zoom{
+        height: auto;
+        overflow: hidden;
+        border: 5px solid #ffff;
+    }
+    .img-hover-zoom img{
+        vertical-align: middle;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        transition:  transform .5s ease;
+    }
+    .img-hover-zoom:hover img{
+        transform: scale(1.5);
+    }
+
+    @media screen and (max-width: 800px) {
+        .column{
+            flex: 50%;
+            max-width: 50%;
+        }
+    }
+
+    @media screen and (max-width: 500px) {
+        .column{
+            flex: 100%;
+            max-width: 100%;
+        }
+    }
+    .centering .button .photo-btn{
+        background-color: aliceblue;
+        border: 1px solid black;
+        font-family: 'Poppins', sans-serif;
+        height: 3rem;
+        width: 10rem;
+        color: aqua;
+    }
+    .centering .button .photo-btn:hover{
+        border: 1px solid brown;
+    }
+    .gallery-buttons {
+        display: flex;
+        margin: 20px 0;
+      }
+
+      .gallery-button {
+        padding: 10px;
+        cursor: pointer;
+        background-color: 	#FFC72C;
+        color: #fff;
+        border: 2px solid #FFC72C;
+        border-radius: 5px;
+        font-family: 'Poppins', sans-serif;
+        margin-right: 10px;
+        transition: all 0.3s;
+      }
+      .gallery-button:hover{
+        background-color: 	#ffc72c1c;
+        color: #002855;
+        border: 2px solid #002855;
+      }
+
+      .active-btn {
+        background-color: #002855;
+        border: 2px solid #002855;
+        transition: all 0.3s;
+      }
+      .active-btn:hover{
+        background-color: 	#002855;
+        color: #ffffff;
+      }
+
+      .gallery-content {
+        display: none;
+      }
+
+      .gallery-content.active {
+        display: block;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    .modal-content {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .modal-content img {
+        width: 100%;
+        height: auto;
+    }
+
+    .close {
+        color: #fff;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 30px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .video {
+    background: #fff;
+    padding: 5px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    width: 23%; /* Thumbnails 4 across */
+    margin: 1%;
+    float: left;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+    #videoGallery .row .video{
+      width: 100%;
+    }
+
+   /*
+   These keep the height of each video thumbnail consistent between YouTube and Vimeo.
+   Each can have thumbnail sizes that vary by 1px and are likely break your layout.
+   */
+
+  .video figure {
+    height: 0;
+    padding-bottom: 56.25%;
+    overflow: hidden;
+
+    .video figure a {
+      display: block;
+      margin: 0;
+      padding: 0;
+      border: none;
+      line-height: 0;
+    }
+  }
+  .videoTitle{
+    font-family: 'Poppins', sans-serif;
+    width: 180px;
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+  }
+
+  /* Media Queries - This is the responsive grid. */
+
+  @media (max-width: 1024px) {
+    .video {
+      width: 31.333%; /* Thumbnails 3 across */
+    }
+  }
+
+  @media (max-width: 900px) {
+    #videoGallery .row{
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .video {
+      width: 48%; /* Thumbnails 2 across */
+    }
+    .videoTitle{
+        width: 150px;
+    }
+    #videoGallery .row{
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .video {
+      display: block;
+      width: 96%; /* Single column view. */
+      margin: 2%; /* The smaller the screen, the smaller the percentage actually is. */
+      float: none;
+    }
+    .videoTitle{
+        width: 250px;
+    }
+  }
+
+  /* These are my preferred rollover styles. */
+
+  .video img {
+    width: 100%;
+    opacity: 1;
+  }
+
+  .video img:hover, .video img:active, .video img:focus {
+    opacity: 0.75;
+  }
+</style>
+<section class="centering">
+  <div class="gallery-buttons">
+    <button class="gallery-button active-btn" onclick="toggleGallery('photo')">
+      Photo Gallery
+    </button>
+    <button class="gallery-button" onclick="toggleGallery('video')">
+      Video Gallery
+    </button>
+  </div>
+  <div class="gallery-content active" id="photoGallery">
+    <div class="row">
+      {% for i in all_images %}
+      <div class="column">
+        
+        <div class="img-hover-zoom">
+          <img
+            src="/media_files/{{i.image}}"
+            style="width: 100%"
+            alt=""
+          />
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div id="myModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage" />
+  </div>
+  <div class="gallery-content" id="videoGallery">
+    <div class="row">
+      {% for i in all_videos %}
+      <article class="video">
+        <figure>
+          <iframe src="{{i.video_link}}" frameborder="0" allowfullscreen></iframe>
+        </figure>
+        <p class="videoTitle">
+          {{i.video_title}}
+        </p>
+      </article>
+      {% endfor %}
+      
+      
+    </div>
+
+    <!-- <div class="video_container">
+            <div class="main-video">
+                <div class="video">
+                    <iframe src="https://www.youtube.com/embed/OKiyhOfZksk" frameborder="0" allowfullscreen></iframe>
+                    <h3 class="title">01. Video title</h3>
+                </div>
+            </div>
+        </div> -->
+    <!-- <div class="video_container">  
+            <div>
+                <h6 style="font-size: small; color: black; padding-left: 15px; padding-top: 10px; margin-bottom: -8px;">Watch videos</h6>
+            </div>      
+            <div class="video-box">
+                <div style="background: rgb(255, 255, 255); margin: 8px">
+                    <div>
+                        <iframe width="100%" height="auto" src="https://www.youtube.com/embed/OKiyhOfZksk" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <div style="height: 60px; width: auto; overflow: hidden;">
+                        <h6>How to make a good gallery??How to make a good gallery??How to make a good gallery??How to make a good gallery??</h6>
+                    </div>
+                </div>
+                <div style="background: rgb(255, 255, 255); margin: 8px">
+                    <div>
+                        <iframe width="100%" height="auto" src="https://www.youtube.com/embed/OKiyhOfZksk" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <div style="height: 60px; width: auto; overflow: hidden;">
+                        <h6>How to make a good gallery??How to make a good gallery??How to make a good gallery??How to make a good gallery??</h6>
+                    </div>
+                </div>
+                <div style="background: rgb(255, 255, 255); margin: 8px">
+                    <div>
+                        <iframe width="100%" height="auto" src="https://www.youtube.com/embed/OKiyhOfZksk" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <div style="height: 60px; width: auto; overflow: hidden;">
+                        <h6>How to make a good gallery??How to make a good gallery??How to make a good gallery??How to make a good gallery??</h6>
+                    </div>
+                </div>         
+           </div>
+        </div> -->
+  </div>
+</section>
+<script
+  src="http://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"
+></script>
+
+<script src="js/jquery.fancybox.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    $(".fancybox").fancybox({
+      padding: 0,
+      maxWidth: "100%",
+      maxHeight: "100%",
+      width: 560,
+      height: 315,
+      autoSize: true,
+      closeClick: true,
+      openEffect: "elastic",
+      closeEffect: "elastic",
+    });
+  });
+</script>
+<script>
+  var modal = document.getElementById("myModal");
+  var modalImage = document.getElementById("modalImage");
+  var closeButton = document.querySelector(".close");
+  var body = document.body;
+
+  function openModal(imageSrc) {
+    modal.style.display = "block";
+    modalImage.src = imageSrc;
+    body.style.overflow = "hidden"; // Disable scrolling
+  }
+
+  function closeModal() {
+    modal.style.display = "none";
+    body.style.overflow = "auto"; // Enable scrolling
+  }
+
+  var images = document.querySelectorAll(".img-hover-zoom img");
+  images.forEach(function (image) {
+    image.addEventListener("click", function () {
+      openModal(this.src);
+    });
+  });
+
+  closeButton.addEventListener("click", closeModal);
+
+  window.addEventListener("click", function (event) {
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
+</script>
+<script>
+  function toggleGallery(galleryType) {
+    // Hide all gallery content
+    document.querySelectorAll(".gallery-content").forEach(function (content) {
+      content.classList.remove("active");
+    });
+
+    // Activate the selected gallery
+    document.getElementById(galleryType + "Gallery").classList.add("active");
+
+    // Update button styles
+    document.querySelectorAll(".gallery-button").forEach(function (button) {
+      button.classList.remove("active-btn");
+    });
+    event.currentTarget.classList.add("active-btn");
+  }
+</script>
+{% endblock gallery_content %}

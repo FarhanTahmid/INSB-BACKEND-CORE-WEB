@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Manage Activities | IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+
+    <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
+
+
+    <style>
+        body, html {
+        
+        margin: 0;
+        
+        align-items: center;
+        justify-content: center;
+        }
+
+        .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+          }
+          .btn-container {
+            text-align: center;
+          }
+          
+          .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+          }
+          
+          /* Media query for smaller screens (adjust the breakpoint as needed) */
+          @media (max-width: 768px) {
+            .btn {
+              width: 100%; /* Make the button full width on smaller screens */
+            }
+          }
+        
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+                {% include 'Manage Website/manage_web_navbar.html' %}
+            {% endblock navbar %}
+        </div>
+        <!--navbar content-->
+        
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
+            <!--Start from here-->
+            <br>
+            <h2 style="text-align: center;">Manage <b>Exemplary Memebers</b> of <span style="color:#00629B;"><b>IEEE NSU Student Branch</b></span></h2>
+            <br>
+            <!--Exemplary Member Table Start-->
+            <!--Messages-->
+            <div style="justify-content:center; text-align:center;">
+                {% if messages %}
+                    {% for message in messages %}
+                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <!--Messages End-->
+            <div class="box">
+                <div class="box-header">
+                    
+                    <div style="text-align:right;">
+                    <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add New Member</button>
+                    </div>
+                    <small>This table holds the data of Exemplary Members in the main website of IEEE NSU SB</small>
+                    <small style="color:green;"><span style="color:red;">* </span>Adding Members here will update them in the Main Website.</small>
+                    <br>
+                    <label style="margin-left:5px;">Search:</label>
+                    <input class="form-control w-75" type="text" id="searchInput" placeholder="Search..." onkeyup="searchTable()">
+                </div>
+                <div class="table-responsive" style="max-height:300px; overflow-y:auto;">
+                <table class="table table-bordered m-0" style="text-align:center;">
+                    <thead>
+                    <tr>
+                        <th style="text-align:center;">Name</th>
+                        <th style="text-align:center;">Former Position in IEEE NSU SB</th>
+                        <th style="text-align:center;">Activity Year</th>
+                        <th style="text-align:center;">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    
+                        {% for i in all_exemplary_members %}
+                        <tr>
+                            <td><a style="text-decoration:none;color:#00629B;" href="{% url 'central_branch:update_exemplary_members' i.pk %}">{{i.member_name}}</a></td>
+                            <td>{{ i.former_position  }}</td>
+                            <td>{{ i.activity_year }}</td>
+                            <td>
+                            <form method="POST">
+                                {% csrf_token %}
+                                    <div style="justify-content:center;text-align:center;">  
+                                        <div class="btn-container">
+                                            <input class="btn btn-outline b-danger text-danger" name="remove_achievement" type="submit" value="Remove">
+                                            <a class="btn btn-outline b-warn text-warn" href="{% url 'central_branch:update_exemplary_members' i.pk %}">Update</a>
+        
+                                        </div>
+                                      </div>
+                                    <input type="hidden" name="remove_member_pk" value={{i.pk}}>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            <!--Table Ends-->
+            <!--Modal form-->
+            <div id="m-s-a" class="modal fade animate" data-backdrop="true">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-dialog modal-lg" id="animate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Add New Exemplary Members</h5>
+                            </div>
+                            
+                            <div class="modal-body text-left p-lg">
+                            
+                                <!--Form start-->
+        
+                                <div class="container">
+                                    <div class="padding">
+                                        <div class="row" >
+                                            <div class="col-sm-10">
+                                                <div class="box">
+                                                    <div class="box-header">
+                                                        <h1 style="text-align:center;">Provide Member Details</h1>
+                                                    </div>
+                                                    
+                                                    <div class="box-body">
+                                                        <div class="form-control">
+                                                            {{exemplary_member_form.media}}
+                                                            {{exemplary_member_form.as_p}}
+                                                        </div>
+                                                        <br>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                    
+                            </div>
+        
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <input type="submit" name="add_member" class="btn btn-success p-x-md" value="Add"></input>               
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </form>   
+            </div>
+            
+        </div>
+        <!--PAGE END-->
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+    
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+    <script>
+        function searchTable() {
+            // Declare variables
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.querySelector("table");
+            tr = table.getElementsByTagName("tr");
+        
+            // Loop through all table rows
+            for (i = 0; i < tr.length; i++) {
+                var rowVisible = false; // Flag to track if any column matches the search query in the current row
+        
+                // Loop through all columns in the current row
+                for (j = 0; j < tr[i].getElementsByTagName("td").length; j++) {
+                    td = tr[i].getElementsByTagName("td")[j];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            rowVisible = true; // If a match is found in any column, set the flag to true
+                        }
+                    }
+                }
+        
+                // Set the display style for the row based on the flag
+                if (rowVisible) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
