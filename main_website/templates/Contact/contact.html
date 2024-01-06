@@ -77,10 +77,10 @@
 
     .bar {
       width: 90px;
-      height: 5px;
+      height: 3px;
       background-color: #FFC72C;
-      margin: 18px 0px;
       border-radius: 5px;
+      margin-bottom: 15px;
     }
 
     /*common CSS used throughout the page*/
@@ -89,7 +89,6 @@
     .contact-card-container {
       width: 100%;
       display: flex;
-      column-gap: 20px;
     }
 
     .contact-card {
@@ -97,87 +96,57 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px 30px 10px 30px;
-      border-radius: 4px;
-      margin: 50px 0px;
+      margin: 40px 0px;
     }
 
-    .contact-card h4 {
-      margin: 20px 0px 20px 0px;
-      color: #000000;
+    .contact-card h6 {
+      margin: -24px 0px 10px 0px;
+      color: #002855bb;
     }
-
+    
     .contact-card p {
+      color: #002855bb;
       text-align: center;
       font-size: small;
+      font-weight: bold;
     }
 
-    .address-icon {
-      color: white;
-      font-size: 50px;
-      background: #ffd100;
-      padding: 30px;
-      border-radius: 500px;
-      height: 114px;
+    .card-icon {
+      color: #002855bb;
+      font-size: 35px;
+      height: 76px;
       transition: all .3s ease-in-out;
-    }
-
-    .email-icon {
-      color: white;
-      font-size: 50px;
-      background: #ffd100;
-      padding: 32px;
-      border-radius: 500px;
-      height: 114px;
-      transition: all .3s ease-in-out;
-    }
-
-    .mobile-icon {
-      color: white;
-      font-size: 50px;
-      background: #ffd100;
-      padding: 33px 41px;
-      border-radius: 500px;
-      height: 114px;
-      transition: all .3s ease-in-out;
-    }
-
-    .share-icon {
-      color: white;
-      font-size: 50px;
-      background: #ffd100;
-      padding: 33px 37px;
-      border-radius: 500px;
-      height: 114px;
-      transition: all .3s ease-in-out;
-    }
-
-    .address-icon:hover,
-    .email-icon:hover,
-    .mobile-icon:hover,
-    .share-icon:hover {
-      scale: 1.2;
     }
 
     .social-media-icons i {
-      font-size: 20px;
-      color: white;
-      background-color: #75787B;
-      padding: 7px;
-      border-radius: 6px;
+      background-color: white;
+      color: #002855bb;
+      padding: 4px;
       transition: all .3s ease-in-out;
-      margin-top: 20px
+      margin-top: 5px;
+      font-size: 25px;
     }
-
     .social-media-icons i:hover {
-      background-color: #ffd100;
+      color: #00629B;
+      
+    }
+    
+    .social-media-icons i::after {
+      content: "";
+      width: 0%;
+      transition: .4s;
+      display: block;
+    }
+    .social-media-icons i:hover::after{
+      width: 100%;
+      border: 1px solid #00629B;
     }
 
     /*cards*/
 
     /*location and contact*/
-    .even-col h1 {
-      margin-bottom: -15px;
+    .even-col h3 {
+      margin-bottom: -4px;
       color: black;
     }
 
@@ -190,21 +159,19 @@
     }
 
     .even-col iframe {
-      text-decoration: none;
-      padding: 10px;
-      border-radius: 4px;
+      padding-top: 10px;
       height: 480px;
     }
 
     .contact-us {
       height: 480px;
-      padding: 0px 10px;
-      border-radius: 4px;
+      padding-top:10px;
     }
 
     .contact-us p {
-      font-weight: 500;
+      font-weight: 600;
       margin-top: 15px;
+      font-size: 13px;
     }
 
     .contact-us-form {
@@ -228,23 +195,23 @@
       border: none;
       border-radius: 3px;
       padding: 0 10px;
-      height: 45px;
+      height: 35px;
+      font-size: 14px;
     }
 
     .contact-btn input[type=submit] {
       font-size: 14px;
-      background: #002855;
+      width: 131px;
+      margin: 12px 0px 0px 0px;
       color: white;
-      width: 150px;
+      background: #002855;
       border: 2px solid #002855;
       transition: all 0.3s;
-      margin: 12px 0px 0px 0px;
-      padding: 6px 0px;
     }
 
     .contact-btn input[type=submit]:hover {
-      background: #ffffff;
       color: #002855;
+      background: #ffffff;
       border: 2px solid #002855;
     }
 
@@ -253,8 +220,9 @@
       color: #000;
       border: none;
       border-radius: 3px;
-      height: 200px;
-      max-height: 200px;
+      height: 100px;
+      max-height: 258px;
+      font-size: 14px;
 
     }
 
@@ -271,7 +239,7 @@
       }
 
       .social-media-icons i {
-        font-size: 15px;
+        font-size: 25px;
       }
 
       .even-col {
@@ -290,6 +258,7 @@
 
       .contact-card {
         margin-top: 10px;
+        width: 50%;
       }
 
       .even-col {
@@ -309,6 +278,10 @@
 
       .even-col {
         max-width: 100%;
+      }
+
+      .contact-card {
+        width: 100%;
       }
     }
 
@@ -343,8 +316,8 @@
       color: #FFFFFF;
       font-family: "Poppins", Sans-serif;
       font-size: 20px;
-      font-weight: 300;
-      margin: -20px, 0, 0, 20px;
+      font-weight: bold;
+      margin: 0px 0px 0px 20px;
     }
 
     .section-B .container #a5 {
@@ -395,14 +368,12 @@
 
     .section-C .container .inner-container h2 {
       color: #000000;
-      font-family: "Poppins";
       font-size: 39px;
       font-weight: 600;
       margin-top: 0;
     }
 
     .channelBtn {
-      font-family: "Poppins";
       font-weight: 700;
       background-color: #BA0C2F;
       border: 2px solid white;
@@ -415,12 +386,8 @@
       margin-top: 20px;
     }
 
-    .channelBtn:active {
-      background-color: #BA0C2F;
-    }
 
     .channelBtn:hover {
-      box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
       background-color: white;
       color: #BA0C2F;
       border: 2px solid #BA0C2F;
@@ -458,7 +425,7 @@
     .frame {
       width: 560px;
       height: 315px;
-      border-radius: 5px;
+      border-radius: 4px;
     }
 
     @media only screen and (max-width: 900px) {
@@ -520,45 +487,45 @@
     <section class="centering">
       <section class="max-width contact-card-container">
         <div class="contact-card">
-          <div><i class="fa-solid fa-map-location-dot address-icon"></i></div>
+          <div><i class="fa-solid fa-map-location-dot card-icon"></i></div>
           <div>
-            <h4>Address</h4>
+            <h6>Address</h6>
           </div>
           <div>
             <p>Plot-15, Block-B, Bashundhara, Dhaka – 1229, Bangladesh</p>
           </div>
         </div>
         <div class="contact-card">
-          <div><i class="fa-solid fa-envelope email-icon"></i></div>
+          <div><i class="fa-solid fa-envelope card-icon"></i></div>
           <div>
-            <h4>Email Address</h4>
+            <h6>Email Address</h6>
           </div>
           <div>
             <p>ieeensusb@ieee.org </p>
-            <p>contact@ieeensusb.org</p>
+            <p style="margin-top: -10px;">contact@ieeensusb.org</p>
           </div>
         </div>
         <div class="contact-card">
           <div>
-            <i class="fa-solid fa-mobile-screen-button mobile-icon"></i>
+            <i class="fa-solid fa-phone card-icon"></i>
           </div>
           <div>
-            <h4>Mobile Number</h4>
+            <h6>Mobile Number</h6>
           </div>
           <div>
             <p>
               For Membership Queries : 01791001434 </p>
-            <p>For Corporate Engagement :
+            <p style="margin-top: -10px;">For Corporate Engagement :
               01886503931
             </p>
           </div>
         </div>
         <div class="contact-card">
-          <div><i class="fa-solid fa-share-nodes share-icon"></i></div>
+          <div><i class="fa-solid fa-share-from-square card-icon"></i></div>
           <div>
-            <h4>Social Media</h4>
+            <h6>Social Media</h6>
           </div>
-          <div class="social-media-icons"><a href="#"><i class="fa-brands fa-facebook"></i></a><a href="#"><i
+          <div class="social-media-icons"><a href="#"><i class="fa-brands fa-square-facebook"></i></a><a href="#"><i
                 class="fa-brands fa-linkedin-in"></i></a><a href="#"><i class="fa-brands fa-instagram"></i></a><a
               href="#"><i class="fa-brands fa-x-twitter"></i></a><a href="#"><i class="fa-brands fa-youtube"></i></a>
           </div>
@@ -572,7 +539,7 @@
         <div class="even-col">
           <div>
             <div>
-              <h1>Location</h1>
+              <h3>Location</h3>
             </div>
             <div class="bar"></div>
             <div><iframe
@@ -582,12 +549,12 @@
           </div>
           <div>
             <div>
-              <h1>Contact Us</h1>
+              <h3>Contact Us</h3>
             </div>
             <div class="bar"></div>
             <div class="contact-us">
               <form method="post" class="contact-us-form">
-                <p>Your Name</p>
+                <p style="margin-top: -6px;">Your Name</p>
                 <input type="text" name="name" placeholder="Name" required>
                 <p>Your Email</p>
                 <input type="email" name="email" placeholder="Email" required>
