@@ -34,9 +34,14 @@ def homepage(request):
     get_recent_news=News.objects.filter().order_by('-news_date')[:6]
     # get recent 6 Blogs
     get_recent_blogs=Blog.objects.filter(publish_blog=True).order_by('-date')[:6]
+    # get featured events of branch
+    get_featured_events=HomepageItems.load_featured_events(sc_ag_primary=1)
+    
+    
     context={
         'banner_item':bannerItems,
         'banner_pic_with_stat':bannerWithStat,
+        'featured_events':get_featured_events,
         'media_url':settings.MEDIA_URL,
         'all_member_count':HomepageItems.getAllIEEEMemberCount(),
         'event_count':HomepageItems.getEventCount(),
@@ -105,15 +110,18 @@ def event_details(request,event_id):
     '''Loads details for the corresponding event page on site'''
     try:
         get_event = Events.objects.get(id = event_id)
+        
         if(get_event.publish_in_main_web):
             event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
             event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
             return render(request,"Events/event_description_main.html",{
+                'page_title':get_event.event_name,
+                'page_subtitle':get_event.event_organiser,
                 "event":get_event,
                 'media_url':settings.MEDIA_URL,
                 'event_banner_image' : event_banner_image,
-                'event_gallery_images' : event_gallery_images
+                'event_gallery_images' : event_gallery_images,
             })
         else:
             return redirect('main_website:event_homepage')
