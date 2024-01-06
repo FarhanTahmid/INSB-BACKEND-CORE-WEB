@@ -141,20 +141,20 @@ class IEEE_Bangladesh_Section(models.Model):
     
 class About_IEEE(models.Model):
     about_ieee = models.TextField(null=True,blank=True)
-    about_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/")
+    about_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/About Image/")
     community_description = models.TextField(null=True,blank=True)
-    community_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/")
+    community_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Community Image/")
     start_with_ieee_description = models.TextField(null=True,blank=True)
     collaboration_description = models.TextField(null=True,blank=True)
     publications_description = models.TextField(null=True,blank=True)
     events_and_conferences_description = models.TextField(null=True,blank=True)
     achievements_description = models.TextField(null=True,blank=True)
     innovations_and_developments_description = models.TextField(null=True,blank=True)
-    innovations_and_developments_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/")
+    innovations_and_developments_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Innovation Development Image/")
     students_and_member_activities_description = models.TextField(null=True,blank=True)
-    students_and_member_activities_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/")
+    students_and_member_activities_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Student Member Activity Image/")
     quality_description = models.TextField(null=True,blank=True)
-    quality_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/")
+    quality_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Quality Image/")
 
     class Meta:
         verbose_name="About IEEE"

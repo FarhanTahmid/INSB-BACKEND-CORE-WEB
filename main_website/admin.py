@@ -52,7 +52,7 @@ class IEEE_Bangldesh_Section_Gallery(admin.ModelAdmin):
 @admin.register(About_IEEE)
 class About_IEEE(admin.ModelAdmin):
     form=About_IEEE_Form
-    list_display = ['about_ieee']
+    list_display = ['id']
 
 @admin.register(HomePage_Thoughts)
 class HomePage_Thoughts(admin.ModelAdmin):

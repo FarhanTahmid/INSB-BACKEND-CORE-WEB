@@ -4,7 +4,6 @@
 {% block manage_about_ieee %}
 {% load static %}
 
-
 <!-- CKEditor CDN -->
 <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
 <style>
@@ -63,14 +62,16 @@
                                 </div>
                                 
                                 <br>
+                                {% if about_ieee.about_image %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.about_image}}')">About IEEE Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{about_ieee.about_image}}', 'about_image')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>  
 
                             <br>
@@ -98,14 +99,16 @@
                                 </div>
                                 
                                 <br>
+                                {% if about_ieee.community_image %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.community_image}}')">Community Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{about_ieee.community_image}}', 'community_image')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div> 
 
                             <br> 
@@ -196,14 +199,16 @@
                                 </div>
                                 
                                 <br>
+                                {% if about_ieee.innovations_and_developments_image %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.innovations_and_developments_image}}')">Innovation & Developments Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{about_ieee.innovations_and_developments_image}}', 'innovations_and_developments_image')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
                             
                             <br>
@@ -231,14 +236,16 @@
                                 </div>
                                 
                                 <br>
+                                {% if about_ieee.students_and_member_activities_image %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.students_and_member_activities_image}}')">Students & Members Activities Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{about_ieee.students_and_member_activities_image}}', 'students_and_member_activities_image')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
                             
                             <br>
@@ -266,14 +273,16 @@
                                 </div>
                                 
                                 <br>
+                                {% if about_ieee.quality_image %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.quality_image}}')">Quality Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{about_ieee.quality_image}}', 'quality_image')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
                             
                             {% comment %} <br>
@@ -374,7 +383,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <img src="https://images.unsplash.com/photo-1549558549-415fe4c37b60?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8M3x8fGVufDB8fHx8fA%3D%3D" class="img-fluid w-100" alt="Image">
+                            <img id="modal_image" src="" class="img-fluid w-100" alt="Image">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
@@ -398,7 +407,8 @@
                     <div class="modal-body">
                         <form method="POST">
                             {% csrf_token %}
-                        <p><input id="image_delete" name= "image_delete" type="hidden"></p>
+                        <p><input id="image_delete" name= "image_delete" type="hidden">
+                            <input id="image_id" name= "image_id" type="hidden" ></p>
                         Are you sure you want to delete the note?
                     </div>
                     <div class="modal-footer">
@@ -483,13 +493,48 @@
     
     </script>
 
-
-    <!--Delete logic for image-->
+    <!--script to prevent user from selecting image is image already selected-->
     <script>
-        function openModal(image_delete) {
+        // Function to check and disable file input if an image is already saved
+        function checkSavedImage(inputId, savedImageUrl) {
+            var fileInput = document.getElementById(inputId);
+
+            if (savedImageUrl) {
+                // If an image is already saved, disable the file input
+                fileInput.disabled = true;
+                fileInput.classList.add("disabled");
+
+                // Change the placeholder text
+                var fileLabel = fileInput.nextElementSibling;
+                fileLabel.innerText = "Delete existing file to Choose image.";
+            }
+        }
+
+        // Call the function for each image section when the page loads
+        window.onload = function () {
+            checkSavedImage("about-image-input", "{{ about_ieee.about_image }}");
+            checkSavedImage("community-image-input", "{{ about_ieee.community_image }}");
+            checkSavedImage("innovations-and-developments-image-input", "{{ about_ieee.innovations_and_developments_image }}");
+            checkSavedImage("students-and-member-activities-image-input", "{{ about_ieee.students_and_member_activities_image }}");
+            checkSavedImage("quality-image-input", "{{ about_ieee.quality_image }}");
+            // Add more calls for other image sections if needed
+        };
+    </script>
+
+    <script>
+        //Delete logic for image
+        function openModal(image_delete, image_id) {
             // Set data in the modal
             var inputElement = document.getElementById('image_delete');    
-            inputElement.value=image_delete;
+            inputElement.value = image_delete;
+            var inputElement2 = document.getElementById('image_id');
+            inputElement2.value=image_id;
+        }
+
+        //View logic for image
+        function openImageModal(image_path){
+            var inputElement = document.getElementById('modal_image');
+            inputElement.src = image_path
         }
     </script>
     

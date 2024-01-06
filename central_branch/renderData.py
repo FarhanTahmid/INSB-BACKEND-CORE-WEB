@@ -1,5 +1,7 @@
+import os
 from bs4 import BeautifulSoup
 from django.http import Http404
+from insb_port import settings
 from main_website.models import About_IEEE
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
 from users.models import Members,Panel_Members,Alumni_Members
@@ -974,7 +976,59 @@ class Branch:
 
             about_ieee.save()
             return True
-        except:
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def checking_length(about_details, community_details, start_with_ieee_details, collaboration_details,
+                        publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
+                        students_and_member_activities_details, quality_details):
+        try:
+            about_details = Branch.process_ckeditor_content(about_details)
+
+                
+            if (len(about_details)> 500 or len(community_details)>500 or len(start_with_ieee_details)>500 
+                or len(collaboration_details)>500 or len(publications_details) > 500 or len(events_and_conferences_details) >500
+                or len(achievements_details)>500 or 
+                len(about_details) == 0 or len(innovations_and_developments_details)==0 or len(students_and_member_activities_details)==0
+                or len(quality_details)==0):
+                return True
+            else:
+                    return False
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def delete_image(image_id,image_path):
+
+        try:
+            about_ieee = About_IEEE.objects.get(id=1)
+            path = settings.MEDIA_ROOT+str(image_path)
+
+            if(image_id == 'about_image'):
+                about_ieee.about_image = None
+                os.remove(path)
+            elif(image_id == 'community_image'):
+                about_ieee.community_image = None
+                os.remove(path)
+            elif(image_id == 'innovations_and_developments_image'):
+                about_ieee.innovations_and_developments_image = None
+                os.remove(path)
+            elif(image_id == "students_and_member_activities_image"):
+                about_ieee.students_and_member_activities_image = None
+                os.remove(path)
+            elif(image_id == "quality_image"):
+                about_ieee.quality_image = None
+                os.remove(path)
+            
+            about_ieee.save()
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
     def process_ckeditor_content(ckeditor_html):

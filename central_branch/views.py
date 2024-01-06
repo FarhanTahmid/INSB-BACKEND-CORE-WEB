@@ -691,37 +691,58 @@ def manage_about(request):
         about_ieee, created = About_IEEE.objects.get_or_create(id=1)
 
         if request.method == "POST":
-            about_details = request.POST['about_details']
-            community_details = request.POST['community_details']
-            start_with_ieee_details = request.POST['start_with_ieee_details']
-            collaboration_details = request.POST['collaboration_details']
-            publications_details = request.POST['publications_details']
-            events_and_conferences_details = request.POST['events_and_conferences_details']
-            achievements_details = request.POST['achievements_details']
-            innovations_and_developments_details = request.POST['innovations_and_developments_details']
-            students_and_member_activities_details = request.POST['students_and_member_activities_details']
-            quality_details = request.POST['quality_details']
+            if 'save' in request.POST:
+                about_details = request.POST['about_details']
+                community_details = request.POST['community_details']
+                start_with_ieee_details = request.POST['start_with_ieee_details']
+                collaboration_details = request.POST['collaboration_details']
+                publications_details = request.POST['publications_details']
+                events_and_conferences_details = request.POST['events_and_conferences_details']
+                achievements_details = request.POST['achievements_details']
+                innovations_and_developments_details = request.POST['innovations_and_developments_details']
+                students_and_member_activities_details = request.POST['students_and_member_activities_details']
+                quality_details = request.POST['quality_details']
+                
+                about_image = request.FILES.get('about_picture')
+                community_image = request.FILES.get('community_picture')
+                innovations_and_developments_image = request.FILES.get('innovations_and_developments_picture')
+                students_and_member_activities_image = request.FILES.get('students_and_member_activities_picture')
+                quality_image = request.FILES.get('quality_picture')
 
-            about_image = request.FILES.get('about_picture')
-            community_image = request.FILES.get('community_picture')
-            innovations_and_developments_image = request.FILES.get('innovations_and_developments_picture')
-            students_and_member_activities_image = request.FILES.get('students_and_member_activities_picture')
-            quality_image = request.FILES.get('quality_picture')
+                if about_image == None:
+                    about_image = about_ieee.about_image
+                if community_image == None:
+                    community_image = about_ieee.community_image
+                if innovations_and_developments_image == None:
+                    innovations_and_developments_image = about_ieee.innovations_and_developments_image
+                if students_and_member_activities_image == None:
+                    students_and_member_activities_image = about_ieee.students_and_member_activities_image
+                if quality_image == None:
+                    quality_image = about_ieee.quality_image
 
-            if(Branch.set_about_ieee_page(about_details, community_details, start_with_ieee_details, collaboration_details,
-                                    publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
-                                    students_and_member_activities_details, quality_details, about_image, community_image,
-                                    innovations_and_developments_image, students_and_member_activities_image, quality_image)):
-                messages.success(request, "Details Updated Successfully!")
-            else:
-                messages.error(request, "Something went wrong while updating the details!")
-            
-            return redirect('central_branch:manage_about')
+                if(Branch.set_about_ieee_page(about_details, community_details, start_with_ieee_details, collaboration_details,
+                                        publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
+                                        students_and_member_activities_details, quality_details, about_image, community_image,
+                                        innovations_and_developments_image, students_and_member_activities_image, quality_image)):
+                    messages.success(request, "Details Updated Successfully!")
+                else:
+                    messages.error(request, "Something went wrong while updating the details!")
+                
+                return redirect('central_branch:manage_about')
+            elif 'remove' in request.POST:
+                image = request.POST.get('image_delete')
+                image_id = request.POST.get('image_id')
+                if Branch.delete_image(image_id,image):
+                    messages.success(request,"Deleted Successfully!")
+                else:
+                    messages.error(request,"Error while deleting picture.")
+                return redirect("central_branch:manage_about")
 
 
         context={
             'all_sc_ag':sc_ag,
-            'about_ieee':about_ieee
+            'about_ieee':about_ieee,
+            'media_url':settings.MEDIA_URL
         }
         return render(request,'Manage Website/About/About IEEE/manage_ieee.html',context=context)
     except Exception as e:
