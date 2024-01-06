@@ -36,6 +36,27 @@ class HomepageItems:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
+        
+    def load_all_sc_ag_events(flag,primary):
+        try:
+            current_datetime = timezone.now()
+            dic = {}
+            if flag:
+                events =  Events.objects.filter(publish_in_main_web= True,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)).order_by('-event_date')
+            else:
+                events =  Events.objects.filter(publish_in_main_web= True,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary),event_date__gt=current_datetime).order_by('event_date')[:5]
+                print(events)
+            for i in events:
+                try:
+                    event = Graphics_Banner_Image.objects.get(event_id = i.pk)
+                    dic[i]=event.selected_image
+                except:
+                    dic[i] = "#"
+            return dic
+        except Exception as e:
+            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
     
     def load_event_banner_image(event_id):
             try:
@@ -91,12 +112,15 @@ class HomepageItems:
         '''Gets all the event Count'''
         return Events.objects.all().count()
 
-    def get_event_for_calender():
+    def get_event_for_calender(primary):
 
         '''This function returns the events to show them on calender'''
         
         try:
-            all_events = HomepageItems.load_all_events(True)
+            if primary == 1:
+                all_events = HomepageItems.load_all_events(True)
+            else:
+                all_events = HomepageItems.load_all_sc_ag_events(True,primary)
             date_and_events = {}
             for event in all_events:
                 try:
@@ -115,11 +139,14 @@ class HomepageItems:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
     
-    def get_upcoming_event():
+    def get_upcoming_event(primary):
         
         try:
             current_datetime = timezone.now()
-            upcoming_event = Events.objects.filter(publish_in_main_web = True,event_date__gt=current_datetime).order_by('event_date')[:1]
+            if primary == 1:
+                upcoming_event = Events.objects.filter(publish_in_main_web = True,event_date__gt=current_datetime).order_by('event_date')[:1]
+            else:
+                upcoming_event = Events.objects.filter(publish_in_main_web = True,event_date__gt=current_datetime,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)).order_by('event_date')[:1]
             return upcoming_event[0]
         except:
             return None 

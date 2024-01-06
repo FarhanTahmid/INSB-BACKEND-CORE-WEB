@@ -242,7 +242,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="m-3">
-                            <h2><b>ABOUT RAS</b></h2>
+                            <h2><b>ABOUT {{society.short_form_2|upper}}</b></h2>
                             <div class="bar"></div>
                             <p class="justify-pagragraph-content">{{society.about_description|safe}}</p>
 
@@ -320,7 +320,7 @@
                 </div>
 
                 <div class="text-center"> <!-- Add 'text-center' class here -->
-                    <a href="#" class="see-all-events-button"><b><i class="fa-regular fa-calendar"></i> See All
+                    <a href="{% url 'main_website:events_for_sc_ag' society.primary %}" class="see-all-events-button"><b><i class="fa-regular fa-calendar"></i> See All
                             Events</b></a>
                 </div>
 
@@ -582,12 +582,12 @@
             <div class="container what-why-who-section-container">
                 <div class="row">
                     <div class="col-md-6 p-md-5 pt-5 px-4 what-why-who-section-partition">
-                        <h3 style="color: var(--secondary-color);"><b>What is RAS?</b></h3>
+                        <h3 style="color: var(--secondary-color);"><b>What is {{society.short_form_2|upper}}?</b></h3>
                         <p class="justify-pagragraph-content" id="pid">{{society.what_is_this_description|safe}}</p>
                     </div>
                     <div class="col-md-6 p-md-5 pt-5 px-4 what-why-who-section-partition"
                         style="border-left: 1px solid rgb(255, 255, 255);">
-                        <h3 style="color: var(--secondary-color);"><b>Why join RAS?</b></h3>
+                        <h3 style="color: var(--secondary-color);"><b>Why join {{society.short_form_2|upper}}?</b></h3>
                         <p class="justify-pagragraph-content" id="pid">{{society.why_join_it|safe}}</p>
                     </div>
                 </div>
@@ -601,7 +601,7 @@
                     </div>
                     <div class="col-md-6 p-md-5 py-5 px-4 what-why-who-section-partition"
                         style="border-left: 1px solid rgb(255, 255, 255);">
-                        <h3 style="color:var(--secondary-color);"><b>How to join IEEE NSU RAS SBC?</b></h3>
+                        <h3 style="color:var(--secondary-color);"><b>How to join {{society.short_form|upper}}?</b></h3>
                         <p class="justify-pagragraph-content" id="pid">{{society.how_to_join|safe}}</p>
                     </div>
                 </div>
