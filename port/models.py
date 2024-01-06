@@ -12,6 +12,7 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
     logo=models.ImageField(null=True,blank=True,upload_to='sc_ag_logos/')
 
     '''The next attributes are for the Sc_Ag main page'''
+    short_form_2 = models.CharField(null=True,blank=True,max_length=10)
     page_title = models.TextField(null=True,blank=True,default="",verbose_name="Page Title")
     secondary_paragraph = models.TextField(null=True,blank=True,default="",verbose_name="Second Paragraph")
     about_description = models.TextField(null=True,blank=True,default="",verbose_name="About")
