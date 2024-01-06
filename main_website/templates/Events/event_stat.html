@@ -12,10 +12,10 @@
 }
 </style>
 <div class="row" style="justify-content:center;">
-  <div class="col-md-6 chart-container">
+  <div class="col-md-4 mx-auto chart-container">
     <div id="main1" class="chart"></div>
   </div>
-  <div class="col-md-6 chart-container">
+  <div class="col-md-4 mx-auto chart-container">
     <div id="main2" class="chart"></div>
   </div>
 </div>
@@ -69,13 +69,13 @@
 
 
 
-    {% comment %} // Initialize the echarts instance based on the prepared dom
+    // Initialize the echarts instance based on the prepared dom
     var myChart2 = echarts.init(document.getElementById('main2'));
     var option2;
     // Specify the configuration items and data for the chart
     option2 = {
       title: {
-        text: 'Recruitment Statistics of IEEE NSU Student Branch',
+        text: 'Event Statistics of IEEE NSU Student Branch',
         subtext: 'Based on IEEE NSU SB Portal Data since 2023',
         left: 'center'
       },
@@ -100,32 +100,25 @@
         bottom: '3%',
         containLabel: true
       },
-      xAxis: [
-        {
-          type: 'category',
-          data: {{session_name | safe}},
-          axisTick: {
-            alignWithLabel: true
-          }
-        }
-      ],
-      yAxis: [
-        {
-          type: 'value'
-        }
-      ],
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: {{years|safe}}
+      },
+      yAxis: {
+        type: 'value'
+      },
       series: [
         {
-          name: 'Total Recruit',
-          type: 'bar',
-          barWidth: '60%',
-          data: {{session_recruitee}},
+          data: {{yearly_event_count}},
+          type: 'line',
+          areaStyle: {}
         }
       ]
     };
     
 
     // Display the chart using the configuration items and data just specified.
-    myChart2.setOption(option2); {% endcomment %}
+    myChart2.setOption(option2);
   </script>
 {% endblock stats %}

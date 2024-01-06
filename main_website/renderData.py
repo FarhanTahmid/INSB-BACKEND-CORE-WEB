@@ -25,7 +25,6 @@ class HomepageItems:
                 events =  Events.objects.filter(publish_in_main_web= True).order_by('-event_date')
             else:
                 events = Events.objects.filter(publish_in_main_web= True,event_date__gt=current_datetime).order_by('event_date')[:5]
-                print(events)
             for i in events:
                 try:
                     event = Graphics_Banner_Image.objects.get(event_id = i.pk)

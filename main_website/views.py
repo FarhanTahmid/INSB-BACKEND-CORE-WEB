@@ -85,17 +85,27 @@ def event_homepage(request):
         date_and_event = HomepageItems.get_event_for_calender(1)
         upcoming_event = HomepageItems.get_upcoming_event(1)
         upcoming_event_banner_picture = HomepageItems.get_upcoming_event_banner_picture(upcoming_event)
+        
+        # prepare event stat list for event category with numbers
         get_event_stat=userData.getTypeOfEventStats()
-        # prepare event stat list for frontend
         event_stat=[]
+        # prepare data from the tuple
         categories, count, percentage_mapping = get_event_stat
-
         for category, count in zip(categories, count):
             event_stat_dict={}
+            # get event name
             event_stat_dict['name']=category
+            # get event count according to category
             event_stat_dict['value']=count
+            # append the dict to list
             event_stat.append(event_stat_dict)
         
+        # prepare yearly event stat list for Branch
+        get_yearly_events=userData.getEventNumberStat()
+        # prepare years
+        get_years=get_yearly_events[0]
+        # prepare event counts according to years
+        get_yearly_event_count=get_yearly_events[1]
         
         context = {
             'page_title':"Events",
@@ -108,6 +118,8 @@ def event_homepage(request):
             'upcoming_event':upcoming_event,
             'upcoming_event_banner_picture':upcoming_event_banner_picture,
             'data':event_stat,
+            'years':get_years,
+            'yearly_event_count':get_yearly_event_count,
         }
 
         return render(request,'Events/events_homepage.html',context)

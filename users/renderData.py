@@ -268,20 +268,20 @@ def getEventNumberStat():
 
     event_num = []
     year = datetime.date.today().year
-    print(year)
     for i in range(5):
         count=0
         count = Events.objects.filter(event_date__year=(year-i)).count()
         event_num.append(count)
     event_num.reverse()
-    return event_num
+    year_list=getEventNumberStatYear()
+    return year_list,event_num
 
 import datetime
 def getEventNumberStatYear():
 
     '''Return the last 5 years including today as a list, so that it could be
     displayed for the x-axis values on the graph in the django template for the
-    chart 'Event for 6 years' '''
+    chart 'Event for 5 years' '''
     
     year_list =[]
     year = datetime.date.today().year
