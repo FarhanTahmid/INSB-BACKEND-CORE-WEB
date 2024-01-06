@@ -85,10 +85,21 @@ def event_homepage(request):
         date_and_event = HomepageItems.get_event_for_calender(1)
         upcoming_event = HomepageItems.get_upcoming_event(1)
         upcoming_event_banner_picture = HomepageItems.get_upcoming_event_banner_picture(upcoming_event)
+        get_event_stat=userData.getTypeOfEventStats()
+        # prepare event stat list for frontend
+        event_stat=[]
+        categories, count, percentage_mapping = get_event_stat
 
-
+        for category, count in zip(categories, count):
+            event_stat_dict={}
+            event_stat_dict['name']=category
+            event_stat_dict['value']=count
+            event_stat.append(event_stat_dict)
+        
+        
         context = {
-            'page_title':"Events - IEEE NSU Student Branch",
+            'page_title':"Events",
+            'page_subtitle':"IEEE NSU Student Branch",
             'all_events':all_events,
             'media_url':settings.MEDIA_URL,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
@@ -96,6 +107,7 @@ def event_homepage(request):
             'date_and_event':date_and_event,
             'upcoming_event':upcoming_event,
             'upcoming_event_banner_picture':upcoming_event_banner_picture,
+            'data':event_stat,
         }
 
         return render(request,'Events/events_homepage.html',context)

@@ -101,44 +101,9 @@
         <!-- Make sure all card is under "newsCardTotal" class -->
         <!-- "alt" class only making difference between left right image. Just add or remove the class -->
         <!-- For "Load more" button, under "newsCardTotal", class flow will be ==> flex > content, content, content....... -->
-        <div class="newsCardTotal container my-5"> 
-
-            <div class="flex">
-                <!-- This card for left image. Absent of "alt" class -->
-                {% for i in all_news %}
-                <div class="content">
-                    <div class="news-card">
-                        <div class="meta">
-                            <div
-                                class="photo"
-                                style="
-                                    background-image: url(/media_files/{{i.news_picture}});
-                                "
-                            ></div>
-                            <ul class="details">
-                                <li class="author"><a href="#">IEEE NSU SB</a></li>
-                                <li class="date">{{i.news_date}}</li>
-                                <li class="tags">
-                                    <ul>
-                                        <li><a href="#">IEEE</a></li>
-                                        <li><a href="#">NSU</a></li>
-                                        <li><a href="#">Success</a></li>
-                                        <li><a href="#">INSB</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="description">
-                            <h1>{{i.news_title}}</h1>
-                            <h2>{{i.news_subtitle}}</h2>
-                            <p>{{i.news_description|safe}}</p>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-                
-            </div>
-        </div>
+        {% block news_card_container %}
+            {% include "Activities/news_card_container.html" %}
+        {% endblock news_card_container %}
 
         <div class="text-center">
             <div class="btn btn-outline-primary px-5 py-2 mb-5"  id="loadMore">Load more</div>
