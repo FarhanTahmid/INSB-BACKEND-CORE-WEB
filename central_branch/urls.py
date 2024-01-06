@@ -44,8 +44,10 @@ urlpatterns = [
     path('manage_website/research/update/<int:pk>',views.update_researches,name="update_researches"),
     path('manage_website/magazine',views.manage_magazines,name="manage_magazines"),
     path('manage_website/about',views.manage_about,name = "manage_about"),
+    path('manage_website/ieee_region_10',views.ieee_region_10,name = "ieee_region_10"),
     path('manage_website/ieee_bangladesh_section',views.ieee_bangladesh_section,name = "ieee_bangladesh_section"),
     path('manage_website/ieee_nsu_student_branch',views.ieee_nsu_student_branch,name = "ieee_nsu_student_branch"),
+    path('manage_website/faq',views.faq,name = "faq"),
     path('manage_website/gallery',views.manage_gallery,name="manage_gallery"),
     
     
