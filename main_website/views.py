@@ -721,3 +721,6 @@ def faq(request):
 
 def contact(request):
     return render(request, 'Contact/contact.html')
+
+def blog_description(request):
+    return render(request, 'Publications/Blog/blog_description_main.html')
