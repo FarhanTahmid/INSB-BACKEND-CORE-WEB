@@ -2,7 +2,9 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from central_events.models import Events
 from central_branch.renderData import Branch
+from chapters_and_affinity_group.models import SC_AG_Members
 from main_website.models import Research_Papers,Blog,Achievements,News
+from membership_development_team.renderData import MDT_DATA
 from port.renderData import PortData
 from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
 from .renderData import HomepageItems
@@ -693,8 +695,17 @@ def all_members(request):
     }
     return render(request,'Members/All Members/all_members.html',context=context)
 
-def member_profile(request):
-    return render(request, 'Members/Profile/member_profile.html')
+def member_profile(request, ieee_id):
+    member_data = MDT_DATA.get_member_data(ieee_id=ieee_id)
+    sc_ag_position_data = SC_AG_Members.objects.filter(member=ieee_id)
+
+    context = {
+        'member':member_data,
+        'sc_ag_position_data':sc_ag_position_data,
+        'media_url':settings.MEDIA_URL,
+    }
+
+    return render(request, 'Members/Profile/member_profile.html', context)
 
 def ieee_bd_section(request):
     return render(request, 'About/IEEE_bangladesh_section.html')
