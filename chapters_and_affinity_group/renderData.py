@@ -1,5 +1,5 @@
 from django.contrib import messages
-from .models import SC_AG_Members
+from .models import SC_AG_Members,SC_AG_FeedBack
 from users.models import Members,Panel_Members
 from port.models import Panels,Chapters_Society_and_Affinity_Groups,Teams,Roles_and_Position
 from membership_development_team.models import Renewal_requests,Renewal_Sessions
@@ -15,6 +15,7 @@ from membership_development_team import renewal_data
 from insb_port import settings
 import os
 from bs4 import BeautifulSoup
+
 
 class Sc_Ag:
     logger=logging.getLogger(__name__)
@@ -487,6 +488,26 @@ class Sc_Ag:
 
         # Now, 'text_content' contains only the actual content without HTML tags
         return text_content
+    
+    def get_all_feedbacks(primary):
+        
+        society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
+        return SC_AG_FeedBack.objects.filter(society = society).order_by('-is_responded')
+    
+    def set_feedback_status(responded_list):
+
+        for i in responded_list:
+            
+            feedback = SC_AG_FeedBack.objects.get(id = i)
+            if feedback.is_responded:
+                feedback.is_responded = False
+            else:
+                feedback.is_responded = True
+            feedback.save()
+        return True
+
+
+
         
         
     

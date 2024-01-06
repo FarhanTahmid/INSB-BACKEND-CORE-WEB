@@ -20,6 +20,7 @@ from users import renderData as userData
 import json,requests
 from insb_port import settings
 from .models import *
+from django.contrib import messages
 
 logger=logging.getLogger(__name__)
 
@@ -213,6 +214,21 @@ def rasPage(request):
             
         # if getRasAbout is False:
         #     return HttpResponse("GG")
+
+        if request.method == "POST":
+
+            if request.POST.get('submit'):
+
+                name = request.POST.get('user_name')
+                email = request.POST.get('user_email')
+                message = request.POST.get('user_message')
+
+                if HomepageItems.save_feedback_information(3,name,email,message):
+                    messages.success(request,"You have reached us! Thanks for your feedback")  
+                else:
+                    messages.error(request,"Sorry! Try to contact us later") 
+                return redirect("main_website:ras_home")
+                
             
         context={
                 
@@ -239,6 +255,21 @@ def pesPage(request):
         #loading executive body memebers
         faculty_advisor = HomepageItems.get_faculty_advisor_for_society(2)
         eb_members = HomepageItems.get_eb_members_for_society(2)
+
+
+        if request.method == "POST":
+
+            if request.POST.get('submit'):
+
+                name = request.POST.get('user_name')
+                email = request.POST.get('user_email')
+                message = request.POST.get('user_message')
+
+                if HomepageItems.save_feedback_information(2,name,email,message):
+                    messages.success(request,"You have reached us! Thanks for your feedback")  
+                else:
+                    messages.error(request,"Sorry! Try to contact us later") 
+                return redirect("main_website:pes_home")
                 
         context={
                 
@@ -265,9 +296,21 @@ def iasPage(request):
         #loading executive body memebers
         faculty_advisor = HomepageItems.get_faculty_advisor_for_society(4)
         eb_members = HomepageItems.get_eb_members_for_society(4)
-                
 
-            
+        if request.method == "POST":
+
+            if request.POST.get('submit'):
+
+                name = request.POST.get('user_name')
+                email = request.POST.get('user_email')
+                message = request.POST.get('user_message')
+
+                if HomepageItems.save_feedback_information(4,name,email,message):
+                    messages.success(request,"You have reached us! Thanks for your feedback")  
+                else:
+                    messages.error(request,"Sorry! Try to contact us later") 
+                return redirect("main_website:ias_home")
+                  
         context={
                 
             'society':society,
@@ -293,6 +336,20 @@ def wiePage(request):
         #loading executive body memebers
         faculty_advisor = HomepageItems.get_faculty_advisor_for_society(5)
         eb_members = HomepageItems.get_eb_members_for_society(5)
+
+        if request.method == "POST":
+
+            if request.POST.get('submit'):
+
+                name = request.POST.get('user_name')
+                email = request.POST.get('user_email')
+                message = request.POST.get('user_message')
+
+                if HomepageItems.save_feedback_information(5,name,email,message):
+                    messages.success(request,"You have reached us! Thanks for your feedback")  
+                else:
+                    messages.error(request,"Sorry! Try to contact us later") 
+                return redirect("main_website:wie_home")
                 
             
         context={

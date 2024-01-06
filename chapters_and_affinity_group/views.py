@@ -1413,15 +1413,30 @@ def feedbacks(request,primary):
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
+        all_feedbacks = Sc_Ag.get_all_feedbacks(primary)
         if(has_access):
             
+            if request.method=="POST":
 
+                if request.POST.get('reponded'):
+
+                    respond = request.POST.getlist('responded_id')
+                    state = request.POST.getlist('publish_respond')
+                    print(respond)
+                    print(state)
+                    # if Sc_Ag.set_feedback_status(respond):
+                    #     messages.success(request,'Feedback status updated successfully.')
+                    # else:
+                    #     messages.error(request,'Feedback status could not be updated.')
+                    # return redirect("chapters_and_affinity_group:feedbacks",primary)
+        
             context={
                     'is_branch' : False,
                     'primary' : primary,
                     'all_sc_ag':sc_ag,
                     'sc_ag_info':get_sc_ag_info,
                     'media_url':settings.MEDIA_URL,
+                    'all_feedbacks':all_feedbacks,
 
             }
             return render(request,"FeedBack/feedback.html",context)
