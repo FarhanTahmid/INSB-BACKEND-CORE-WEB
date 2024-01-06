@@ -1343,6 +1343,14 @@ def manage_main_website(request, primary):
                     why_join_it = request.POST.get('why_join_this_details')
                     what_activites_it_has = request.POST.get('what_activities_does_this_do_details')
                     how_to_join = request.POST.get('how_to_join_this_details')
+                    short_form = request.POST.get('short_form_details')
+                    short_form_alternative_details = request.POST.get('short_form_alternative_details')
+                    primary_color_code_details = request.POST.get('primary_color_code_details')
+                    secondary_color_code_details = request.POST.get('secondary_color_code_details')
+                    text_color_code_details = request.POST.get('text_color_code_details')
+                    pageTitle_details = request.POST.get('pageTitle_details')
+                    secondParagraph_details = request.POST.get('secondParagraph_details')
+
 
                     if about_image == None:
                         about_image = get_sc_ag_info.sc_ag_logo
@@ -1360,7 +1368,9 @@ def manage_main_website(request, primary):
                     
                     if Sc_Ag.main_website_info(request,primary,about_details,about_image,background_image,
                                     mission_description,mission_image,vision_description,vision_picture,
-                                    what_is_this_description,why_join_it,what_activites_it_has,how_to_join):
+                                    what_is_this_description,why_join_it,what_activites_it_has,how_to_join,
+                                    short_form,short_form_alternative_details,primary_color_code_details,secondary_color_code_details,
+                                    text_color_code_details,pageTitle_details,secondParagraph_details):
                         
                             messages.success(request,"Saved Changes Successfully!")
                     else:

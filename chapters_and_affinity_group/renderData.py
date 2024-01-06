@@ -393,7 +393,9 @@ class Sc_Ag:
         
     def main_website_info(request,primary,about_description,about_image,background_image,
                         mission_description,mission_image,vision_description,vision_picture,
-                        what_is_this_description,why_join_it,what_activites_it_has,how_to_join):
+                        what_is_this_description,why_join_it,what_activites_it_has,how_to_join,
+                        short_form,short_form_alternative_details,primary_color_code_details,secondary_color_code_details,
+                        text_color_code_details,pageTitle_details,secondParagraph_details):
         try:
             sc_ag = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
             sc_ag.about_description =about_description
@@ -407,6 +409,13 @@ class Sc_Ag:
             sc_ag.why_join_it = why_join_it
             sc_ag.what_activites_it_has = what_activites_it_has
             sc_ag.how_to_join = how_to_join
+            sc_ag.short_form = short_form
+            sc_ag.short_form_2 = short_form_alternative_details
+            sc_ag.primary_color_code = primary_color_code_details
+            sc_ag.secondary_color_code = secondary_color_code_details
+            sc_ag.text_color_code = text_color_code_details
+            sc_ag.page_title = pageTitle_details
+            sc_ag.secondary_paragraph = secondParagraph_details
 
             sc_ag.save()
 

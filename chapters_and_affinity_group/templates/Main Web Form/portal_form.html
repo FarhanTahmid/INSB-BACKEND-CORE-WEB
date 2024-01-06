@@ -167,6 +167,34 @@
                     {% csrf_token %}
                         <div class="box-body">    
                             
+                            <div class="form-group">
+                                <label>Page Title <span style="color:red">*<span></label>
+                                <input 
+                                type="text" 
+                                class="form-control"
+                                name="pageTitle_details" 
+                                placeholder="Enter your page title" 
+                                maxlength="100" 
+                                value = {{sc_ag_info.page_title}}>
+                            </div>
+                            <br>
+                        
+                            <div class="form-group">
+                                <label>Second Paragraph <span style="color:red">*<span></label>
+                                <textarea 
+                                class="form-control"
+                                type="text"
+                                name="secondParagraph_details"
+                                rows="4" 
+                                placeholder="Enter your second paragraph" 
+                                maxlength="500" 
+                                >{{sc_ag_info.secondary_paragraph}}</textarea>
+                            </div>
+
+                            <br> 
+                            <hr>
+                            <br> 
+
                             <h1 style="text-align:center;font-size:30px;">About</h1>
                             <br>
                             
@@ -313,7 +341,7 @@
                             <br>
 
                             <div class="form-group">
-                                <label>What is {{sc_ag_info.short_form_2}}?<span style="color:red">*<span></label> 
+                                <label>What is {{sc_ag_info.short_form_2}}? <span style="color:red">*<span></label> 
                                 <textarea 
                                 class="form-control" 
                                 type="text"
@@ -362,6 +390,82 @@
 
 
                             </div>
+
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Short Forms</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Short Form</label>
+                                <input 
+                                type="text" 
+                                class="form-control"
+                                name="short_form_details" 
+                                placeholder="Short Form" 
+                                value = {{sc_ag_info.short_form| default:""}}
+                                >
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Short Form Alternatives</label>
+                                <input 
+                                type="text" 
+                                class="form-control"
+                                name="short_form_alternative_details" 
+                                placeholder="Short Form Alternatives" 
+                                value = {{sc_ag_info.short_form_2| default:""}}
+                                >
+                            </div>
+
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Color Sceheme</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Primary Color Code</label>
+                                <input 
+                                type="text" 
+                                class="form-control"
+                                name="primary_color_code_details" 
+                                placeholder="Primary Color Code" 
+                                maxlength="7" 
+                                value = {{sc_ag_info.primary_color_code| default:""}}
+                                >
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Secondary Color Code</label>
+                                <input 
+                                type="text" 
+                                class="form-control"
+                                name="secondary_color_code_details" 
+                                placeholder="Secondary Color Code" 
+                                maxlength="7" 
+                                value = {{sc_ag_info.secondary_color_code| default:""}}
+                                >
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Text Color Code</label>
+                                <input 
+                                type="text" 
+                                class="form-control"
+                                name="text_color_code_details" 
+                                placeholder="Text Color Code" 
+                                maxlength="7" 
+                                value = {{sc_ag_info.text_color_code| default:""}}
+                                >
+                            </div>
+                            
                             <br>
                             <hr>
                             <br> 
