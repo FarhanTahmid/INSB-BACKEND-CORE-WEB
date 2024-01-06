@@ -3,7 +3,7 @@ from django.http import HttpResponseServerError
 from users.models import Members,User_IP_Address
 from membership_development_team.renderData import MDT_DATA
 from central_events.models import Events
-from port.models import Chapters_Society_and_Affinity_Groups
+from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position
 from graphics_team.models import Graphics_Banner_Image
 from media_team.models import Media_Images
 from datetime import datetime
@@ -12,6 +12,7 @@ from system_administration.system_error_handling import ErrorHandling
 import logging
 from django.contrib import messages
 from django.utils import timezone
+from chapters_and_affinity_group.models import SC_AG_Members
 class HomepageItems:
 
     logger=logging.getLogger(__name__)
@@ -178,6 +179,8 @@ class HomepageItems:
             user.save()
 
     def get_featured_events_for_societies(primary):
+
+        '''This funtion gets the featured events for the societies depending on primary value'''
         
         try:
             dic={}
@@ -193,6 +196,44 @@ class HomepageItems:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
+        
+    def get_faculty_advisor_for_society(primary):
+
+        '''This function returns the faculty advisor for the particular society otherwise return none''' 
+        try:
+            society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
+            try:
+                faculty = SC_AG_Members.objects.get(sc_ag = society,position = Roles_and_Position.objects.get(is_faculty = True,role_of = society))
+            except:
+                faculty = None
+
+            return faculty
+
+        except Exception as e:
+            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def get_eb_members_for_society(primary):
+
+        '''This function returns a list of eb memebers for the particular society'''
+        
+        try:
+            eb_members=[]
+            society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
+            roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society).order_by('role_of')
+            for role in roles:
+                    try:
+                        member = SC_AG_Members.objects.get(sc_ag = society,position = role)
+                    except:
+                        member = None
+                    eb_members.append(member)
+            return eb_members
+        except Exception as e:
+            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+
     
 
         
