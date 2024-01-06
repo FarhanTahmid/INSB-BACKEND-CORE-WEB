@@ -696,16 +696,19 @@ def all_members(request):
     return render(request,'Members/All Members/all_members.html',context=context)
 
 def member_profile(request, ieee_id):
-    member_data = MDT_DATA.get_member_data(ieee_id=ieee_id)
-    sc_ag_position_data = SC_AG_Members.objects.filter(member=ieee_id)
+    try:
+        member_data = MDT_DATA.get_member_data(ieee_id=ieee_id)
+        sc_ag_position_data = SC_AG_Members.objects.filter(member=ieee_id)
 
-    context = {
-        'member':member_data,
-        'sc_ag_position_data':sc_ag_position_data,
-        'media_url':settings.MEDIA_URL,
-    }
+        context = {
+            'member':member_data,
+            'sc_ag_position_data':sc_ag_position_data,
+            'media_url':settings.MEDIA_URL,
+        }
 
-    return render(request, 'Members/Profile/member_profile.html', context)
+        return render(request, 'Members/Profile/member_profile.html', context)
+    except:
+        return redirect('main_website:all_members')
 
 def ieee_bd_section(request):
     return render(request, 'About/IEEE_bangladesh_section.html')
