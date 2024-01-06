@@ -1,6 +1,7 @@
 from django.db import models
 from ckeditor.fields import RichTextField
 from django_resized import ResizedImageField
+
 # Create your models here.
 class Chapters_Society_and_Affinity_Groups(models.Model):
     '''This model Includes Branch and all the Society'''
@@ -8,9 +9,12 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
     primary=models.IntegerField(null=False,blank=False,default=0)
     short_form=models.CharField(null=True,blank=True,max_length=20)
     primary_color_code=models.CharField(null=True,blank=True,max_length=20)
+    secondary_color_code = models.CharField(null=True,blank=True,max_length=20)
+    text_color_code = models.CharField(null=True,blank=True,max_length=20)
     logo=models.ImageField(null=True,blank=True,upload_to='sc_ag_logos/')
 
     '''The next attributes are for the Sc_Ag main page'''
+    short_form_2 = models.CharField(null=True,blank=True,max_length=10)
     page_title = models.TextField(null=True,blank=True,default="",verbose_name="Page Title")
     secondary_paragraph = models.TextField(null=True,blank=True,default="",verbose_name="Second Paragraph")
     about_description = models.TextField(null=True,blank=True,default="",verbose_name="About")
@@ -24,6 +28,8 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
     why_join_it = models.TextField(null=True,blank=True,default="",verbose_name=f"Why join it ?")
     what_activites_it_has = models.TextField(null=True,blank=True,default="",verbose_name="What activities we usually do ?")
     how_to_join = models.TextField(null=True,blank=True,default="",verbose_name=f"How to join it ?")
+    email = models.EmailField(null=True,blank=True)
+    facebook_link = models.URLField(blank=True,null=True)
 
     class Meta:
         verbose_name="Chapters-Societies-Affinity Group"

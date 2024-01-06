@@ -14,6 +14,7 @@ import xlwt
 from membership_development_team import renewal_data
 from insb_port import settings
 import os
+from bs4 import BeautifulSoup
 
 class Sc_Ag:
     logger=logging.getLogger(__name__)
@@ -413,7 +414,6 @@ class Sc_Ag:
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error(request,f"Could not update the main page of Sc_Ag group = {primary}!")
             return False
         
     def delete_image(request,primary,image_id,image_path):
@@ -441,21 +441,43 @@ class Sc_Ag:
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error(request,f"Could not update the main page of Sc_Ag group = {primary}!")
             return False
         
-    def checking_length(about_details,mission_description,vision_description,
+    def checking_length(request,about_details,mission_description,vision_description,
                         what_is_this_description,why_join_it,what_activites_it_has,how_to_join):
-        
-        if (len(about_details)> 500 or len(mission_description)>500 or len(vision_description)>500 
-            or len(what_is_this_description)>500 or len(why_join_it) > 500 or len(what_activites_it_has) >500
-            or len(how_to_join)>500 or 
-            len(about_details) == 0 or len(mission_description)==0 or len(vision_description)==0
-            or len(what_is_this_description)==0 or len(why_join_it)==0 or len(what_activites_it_has)==0
-            or len(how_to_join)==0):
-            return True
-        else:
+        try:
+            about_details = Sc_Ag.process_ckeditor_content(about_details)
+            mission_description = Sc_Ag.process_ckeditor_content(mission_description)
+            vision_description = Sc_Ag.process_ckeditor_content(vision_description)
+            what_is_this_description = Sc_Ag.process_ckeditor_content(what_is_this_description)
+            why_join_it = Sc_Ag.process_ckeditor_content(why_join_it)
+            what_activites_it_has = Sc_Ag.process_ckeditor_content(what_activites_it_has)
+            how_to_join = Sc_Ag.process_ckeditor_content(how_to_join)
+
+                
+            if (len(about_details)> 500 or len(mission_description)>500 or len(vision_description)>500 
+                or len(what_is_this_description)>500 or len(why_join_it) > 500 or len(what_activites_it_has) >500
+                or len(how_to_join)>500 or 
+                len(about_details) == 0 or len(mission_description)==0 or len(vision_description)==0
+                or len(what_is_this_description)==0 or len(why_join_it)==0 or len(what_activites_it_has)==0
+                or len(how_to_join)==0):
+                return True
+            else:
+                    return False
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
+        
+    def process_ckeditor_content(ckeditor_html):
+        # Parse the HTML content with Beautiful Soup
+        soup = BeautifulSoup(ckeditor_html, 'html.parser')
+
+        # Extract the text content without HTML tags
+        text_content = soup.get_text()
+
+        # Now, 'text_content' contains only the actual content without HTML tags
+        return text_content
         
         
     

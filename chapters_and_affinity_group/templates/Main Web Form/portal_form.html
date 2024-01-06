@@ -148,9 +148,7 @@
                 {% endfor %}
                 <br>
             </div>
-        
-              
-            
+                   
 
 
             <div class="container">
@@ -169,6 +167,34 @@
                     {% csrf_token %}
                         <div class="box-body">    
                             
+                            <div class="form-group">
+                                <label>Page Title <span style="color:red">*<span></label>
+                                <input 
+                                type="text" 
+                                class="form-control"
+                                name="pageTitle_details" 
+                                placeholder="Enter your page title" 
+                                maxlength="100" 
+                                required>
+                            </div>
+                            <br>
+                        
+                            <div class="form-group">
+                                <label>Second Paragraph <span style="color:red">*<span></label>
+                                <textarea 
+                                class="form-control"
+                                type="text"
+                                name="secondParagraph_details"
+                                rows="4" 
+                                placeholder="Enter your second paragraph" 
+                                maxlength="500" 
+                                required></textarea>
+                            </div>
+
+                            <br> 
+                            <hr>
+                            <br> 
+
                             <h1 style="text-align:center;font-size:30px;">About</h1>
                             <br>
                             
@@ -187,7 +213,7 @@
                             <br>
 
                             <div class="form-group">
-                                <label for="images">About Image:</label>
+                                <label for="images">Logo Image:</label>
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="about-image-input" name="sc_ag_logo"  accept="image/*">
                                     <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
@@ -315,7 +341,7 @@
                             <br>
 
                             <div class="form-group">
-                                <label>What is RAS?<span style="color:red">*<span></label> 
+                                <label>What is {{sc_ag_info.short_form_2}}? <span style="color:red">*<span></label> 
                                 <textarea 
                                 class="form-control" 
                                 type="text"
@@ -328,7 +354,7 @@
                             <br>
 
                             <div class="form-group">
-                                <label>Why join RAS? <span style="color:red">*<span></label> 
+                                <label>Why join {{sc_ag_info.short_form_2}}? <span style="color:red">*<span></label> 
                                 <textarea 
                                 class="form-control" 
                                 type="text"
@@ -354,7 +380,7 @@
                             <br>
 
                             <div class="form-group">
-                                <label>How to join IEEE NSU RAS SBC? <span style="color:red">*<span></label> 
+                                <label>How to join {{sc_ag_info.short_form_2}}? <span style="color:red">*<span></label> 
                                 <textarea 
                                 class="form-control" 
                                 type="text"
@@ -364,6 +390,79 @@
 
 
                             </div>
+
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Short Forms</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Short Form <span style="color:red">*<span></label>
+                                <input 
+                                type="text" 
+                                class="form-control"
+                                name="short_form_details" 
+                                placeholder="Short Form" 
+                                maxlength="50" 
+                                required>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Short Form Alternative <span style="color:red">*<span></label>
+                                <input 
+                                type="text" 
+                                class="form-control"
+                                name="short_form_alternative_details" 
+                                placeholder="Short Form Alternatives" 
+                                maxlength="50" 
+                                required>
+                            </div>
+
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Color Sceheme</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Primary Color Code <span style="color:red">*<span></label>
+                                <input 
+                                type="text" 
+                                class="form-control"
+                                name="primary_color_code_details" 
+                                placeholder="Primary Color Code" 
+                                maxlength="7" 
+                                required>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Secondary Color Code <span style="color:red">*<span></label>
+                                <input 
+                                type="text" 
+                                class="form-control"
+                                name="secondary_color_code_details" 
+                                placeholder="Secondary Color Code" 
+                                maxlength="7" 
+                                required>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Text Color Code <span style="color:red">*<span></label>
+                                <input 
+                                type="text" 
+                                class="form-control"
+                                name="text_color_code_details" 
+                                placeholder="Text Color Code" 
+                                maxlength="7" 
+                                required>
+                            </div>
+                            
                             <br>
                             <hr>
                             <br> 

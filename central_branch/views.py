@@ -1,5 +1,6 @@
 import logging
 import traceback
+from bs4 import BeautifulSoup
 from django.http import JsonResponse
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
@@ -680,14 +681,86 @@ def manage_website_homepage(request):
     return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
 
 
+
 @login_required
 def manage_about(request):
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+
+        about_ieee, created = About_IEEE.objects.get_or_create(id=1)
+
+        if request.method == "POST":
+            if 'save' in request.POST:
+                about_details = request.POST['about_details']
+                community_details = request.POST['community_details']
+                start_with_ieee_details = request.POST['start_with_ieee_details']
+                collaboration_details = request.POST['collaboration_details']
+                publications_details = request.POST['publications_details']
+                events_and_conferences_details = request.POST['events_and_conferences_details']
+                achievements_details = request.POST['achievements_details']
+                innovations_and_developments_details = request.POST['innovations_and_developments_details']
+                students_and_member_activities_details = request.POST['students_and_member_activities_details']
+                quality_details = request.POST['quality_details']
+                
+                about_image = request.FILES.get('about_picture')
+                community_image = request.FILES.get('community_picture')
+                innovations_and_developments_image = request.FILES.get('innovations_and_developments_picture')
+                students_and_member_activities_image = request.FILES.get('students_and_member_activities_picture')
+                quality_image = request.FILES.get('quality_picture')
+
+                if about_image == None:
+                    about_image = about_ieee.about_image
+                if community_image == None:
+                    community_image = about_ieee.community_image
+                if innovations_and_developments_image == None:
+                    innovations_and_developments_image = about_ieee.innovations_and_developments_image
+                if students_and_member_activities_image == None:
+                    students_and_member_activities_image = about_ieee.students_and_member_activities_image
+                if quality_image == None:
+                    quality_image = about_ieee.quality_image
+
+                if(Branch.set_about_ieee_page(about_details, community_details, start_with_ieee_details, collaboration_details,
+                                        publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
+                                        students_and_member_activities_details, quality_details, about_image, community_image,
+                                        innovations_and_developments_image, students_and_member_activities_image, quality_image)):
+                    messages.success(request, "Details Updated Successfully!")
+                else:
+                    messages.error(request, "Something went wrong while updating the details!")
+                
+                return redirect('central_branch:manage_about')
+            elif 'remove' in request.POST:
+                image = request.POST.get('image_delete')
+                image_id = request.POST.get('image_id')
+                if Branch.delete_image(image_id,image):
+                    messages.success(request,"Deleted Successfully!")
+                else:
+                    messages.error(request,"Error while deleting picture.")
+                return redirect("central_branch:manage_about")
+
+
+        context={
+            'all_sc_ag':sc_ag,
+            'about_ieee':about_ieee,
+            'media_url':settings.MEDIA_URL
+        }
+        return render(request,'Manage Website/About/About IEEE/manage_ieee.html',context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+
+@login_required
+def ieee_region_10(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     context={
         'all_sc_ag':sc_ag,
     }
-    return render(request,'Manage Website/About/About IEEE/manage_ieee.html',context=context)
+    return render(request,'Manage Website/About/IEEE Region 10/ieee_region_10.html',context=context)
+
 
 @login_required
 def ieee_bangladesh_section(request):
@@ -697,6 +770,25 @@ def ieee_bangladesh_section(request):
         'all_sc_ag':sc_ag,
     }
     return render(request,'Manage Website/About/IEEE Bangladesh Section/ieee_bangladesh_section.html',context=context)
+
+@login_required
+def ieee_nsu_student_branch(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
+    context={
+        'all_sc_ag':sc_ag,
+    }
+    return render(request,'Manage Website/About/IEEE NSU Student Branch/ieee_nsu_student_branch.html', context)
+
+@login_required
+def faq(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
+    context={
+        'all_sc_ag':sc_ag,
+    }
+    return render(request,'Manage Website/About/FAQ/faq.html', context)
+
 
 
 @login_required
@@ -860,6 +952,36 @@ def update_magazine(request,pk):
     }
     
     return render(request,'Manage Website/Publications/Magazine/update_magazine.html',context=context)
+
+@login_required
+def manage_gallery(request):
+    
+    # get all images of gallery
+    all_images = GalleryImages.objects.all().order_by('-upload_date')
+    all_videos=GalleryVideos.objects.all().order_by('-upload_date')
+    
+    if(request.method=="POST"):
+        image_form=GalleryImageForm(request.POST,request.FILES)
+        video_form=GalleryVideos(request.POST)
+        if(request.POST.get('add_image')):
+            if(image_form.is_valid()):
+                image_form.save()
+                messages.success(request,"New Image added Successfully!")
+                return redirect('central_branch:manage_gallery')
+        if(request.POST.get('add_video')):
+            if(video_form.is_valid()):
+                video_form.save()
+                messages.success(request,"New Video added Successfully")
+                return redirect('central_branch:manage_gallery')
+        
+    context={
+        'image_form':GalleryImageForm,
+        'video_form':GalleryVideoForm,
+        'all_images':all_images,
+        'all_videos':all_videos,
+    }
+    
+    return render(request,'Manage Website/Publications/Gallery/manage_gallery.html',context=context)
 
 
 @login_required
@@ -1187,6 +1309,7 @@ def event_edit_form(request, event_id):
             is_event_published = Branch.load_event_published(event_id)
             is_flagship_event = Branch.is_flagship_event(event_id)
             is_registraion_fee_true = Branch.is_registration_fee_required(event_id)
+            is_featured_event = Branch.is_featured_event(event_id)
             #Get event details from databse
             event_details = Events.objects.get(pk=event_id)
 
@@ -1216,11 +1339,13 @@ def event_edit_form(request, event_id):
                     inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
                     intra_branch_collaboration=request.POST['intra_branch_collaboration']
                     venue_list_for_event=request.POST.getlist('event_venues')
+                    is_featured = request.POST.get('is_featured_event')
                     
                     #Checking to see of toggle button is on/True or off/False
                     publish_event = Branch.button_status(publish_event_status)
                     flagship_event = Branch.button_status(flagship_event_status)
                     registration_fee = Branch.button_status(registration_event_status)
+                    is_featured = Branch.button_status(is_featured)
 
                     #if there is registration fee then taking the amount from field
                     if registration_fee:
@@ -1229,7 +1354,7 @@ def event_edit_form(request, event_id):
                         registration_fee_amount=0
                     #Check if the update request is successful
                     if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
-                                                            flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,form_link = form_link)):
+                                                            flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,form_link = form_link,is_featured_event= is_featured)):
                         messages.success(request,f"EVENT: {event_name} was Updated successfully")
                         return redirect('central_branch:event_edit_form', event_id) 
                     else:
@@ -1286,6 +1411,7 @@ def event_edit_form(request, event_id):
                 'is_flagship_event':is_flagship_event,
                 'is_registration_fee_required':is_registraion_fee_true,
                 'selected_venues':selected_venues,
+                'is_featured_event':is_featured_event
             }
 
             return render(request, 'Events/event_edit_form.html', context)
