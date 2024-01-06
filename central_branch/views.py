@@ -760,6 +760,14 @@ def ieee_bangladesh_section(request):
     }
     return render(request,'Manage Website/About/IEEE Bangladesh Section/ieee_bangladesh_section.html',context=context)
 
+@login_required
+def ieee_nsu_student_branch(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
+    context={
+        'all_sc_ag':sc_ag,
+    }
+    return render(request,'Manage Website/About/IEEE NSU Student Branch/ieee_nsu_student_branch.html', context)
 
 @login_required
 def manage_achievements(request):
