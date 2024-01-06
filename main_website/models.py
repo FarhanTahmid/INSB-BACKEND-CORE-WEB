@@ -192,3 +192,21 @@ class HomePage_Thoughts(models.Model):
         verbose_name="HomePage Thoughts"
     def __str__(self) -> str:
         return self.author
+    
+class GalleryImages(models.Model):
+    image=ResizedImageField(null=False,blank=False,upload_to='main_website_files/gallery_pictures/')
+    upload_date=models.DateField(null=False,blank=False)
+    
+    class Meta:
+        verbose_name = "Gallery Image"
+    def __str__(self) -> str:
+        return str(self.pk)
+
+class GalleryVideos(models.Model):
+    video_link=models.URLField(null=False,blank=False)
+    upload_date=models.DateField(null=False,blank=False)
+
+    class Meta:
+        verbose_name="Gallery Video"
+    def __str__(self) -> str:
+        return str(self.pk)

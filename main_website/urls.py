@@ -34,9 +34,12 @@ urlpatterns = [
     path('team/<int:team_primary>',views.team_intros,name="team_intro"),
     path('member_profile',views.member_profile, name="member_profile"),
 
+    path('member_profile',views.member_profile, name="member_profile"),
+
     # Publications
     path('blogs',views.blogs,name="blogs"),
     path('magazines',views.magazines,name="magazines"),
+    
 
     # About
     path('ieee_bangladesh_section',views.ieee_bd_section, name="ieee_bangladesh_section"),

@@ -4,7 +4,7 @@
 
 <head>
 
-    <title>Magazines - IEEE NSU SB</title>
+    <title>Gallery - IEEE NSU SB</title>
     <link rel="icon" href="{% static 'upload/logo.gif' %}"/>
     
     <!--Common CSS-->
@@ -64,23 +64,28 @@
             {% include 'wave.html' %}
         {% endblock wave_design %}
 
-        <!--Start adding from here-->
-        <section class="magazines">
-            {% block magazine_card %}
-                {% include "Publications/Magazines/magazine_cards.html" %}
-            {% endblock magazine_card %}
-        </section>
+        <!-- Gallery card -->
+        {% block gallery_content %}
+            {% include "Publications/Gallery/gallery_content.html" %}
+        {% endblock gallery_content %}
+        <!-- Galler Card End-->
 
+        <!--Footer-->
         {% block footer %}
-            {% include "footer_block.html" %}
+        {% include "footer_block.html" %}
         {% endblock footer %}
-    </div>
-    
 
-    
+
+    </div>
     {% block common_js %}
-        {% include "common_js_includes.html" %}
+    {% include "common_js_includes.html" %}
     {% endblock %}
 </body>
 
 </html>
+
+
+
+
+
+
