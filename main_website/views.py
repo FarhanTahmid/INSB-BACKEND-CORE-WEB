@@ -22,6 +22,7 @@ from users import renderData as userData
 import json,requests
 from insb_port import settings
 from .models import *
+from django.contrib import messages
 
 logger=logging.getLogger(__name__)
 
@@ -77,11 +78,11 @@ def event_homepage(request):
     '''This view function loads all the events for the events homepage'''
     
     try:
-        all_events = HomepageItems.load_all_events(True)
-        latest_five_events = HomepageItems.load_all_events(False)
+        all_events = HomepageItems.load_all_events(True,1)
+        latest_five_events = HomepageItems.load_all_events(False,1)
         date_and_event = HomepageItems.get_event_for_calender(1)
         upcoming_event = HomepageItems.get_upcoming_event(1)
-        upcoming_event_banner_picture = HomepageItems.get_upcoming_event_banner_picture(upcoming_event)
+        upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
 
 
         context = {
@@ -201,20 +202,39 @@ def news(request):
 
 ############################## SC_AG ############################################
 def rasPage(request):
+
+    '''This view function loads the ras main web page'''
     
     try:
+        #getting RAS object
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 3)
-            
+        #getting featured events of RAS   
         featured_events = HomepageItems.get_featured_events_for_societies(3)
         
-        #loading executive body memebers
-        faculty_advisor = HomepageItems.get_faculty_advisor_for_society(3)
-        eb_members = HomepageItems.get_eb_members_for_society(3)
+        #getting faculty member
+        faculty_advisor = HomepageItems.get_faculty_advisor_for_society(request,3)
+        #getting eb members for the particular society
+        eb_members = HomepageItems.get_eb_members_for_society(request,3)
         
         # getRasAbout=society_ag.Ras.get_ras_about()
             
         # if getRasAbout is False:
         #     return HttpResponse("GG")
+
+        if request.method == "POST":
+            #when user hits submit button on main page
+            if request.POST.get('submit'):
+                #getting the user's details
+                name = request.POST.get('user_name')
+                email = request.POST.get('user_email')
+                message = request.POST.get('user_message')
+                #passing them as arguments to the function to save the data
+                if HomepageItems.save_feedback_information(request,3,name,email,message):
+                    messages.success(request,"You have reached us! Thanks for your feedback")  
+                else:
+                    messages.error(request,"Sorry! Try to contact us later") 
+                return redirect("main_website:ras_home")
+                
             
         context={
                 
@@ -223,7 +243,9 @@ def rasPage(request):
             'media_url':settings.MEDIA_URL,
             'featured_events':featured_events,
             'faculty_advisor':faculty_advisor,
-            'eb_members':eb_members
+            'eb_members':eb_members,
+            'page_title':society.page_title,
+            'page_subtitle':society.secondary_paragraph
 
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
@@ -232,15 +254,34 @@ def rasPage(request):
             response = HttpResponseServerError("Oops! Something went wrong.")
             return response
 def pesPage(request):
+
+    '''This view function loads the pes main web page'''
     
     try:
+        #getting object of PES
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 2)
-            
+        #getting featured events of PES   
         featured_events = HomepageItems.get_featured_events_for_societies(2)
 
-        #loading executive body memebers
-        faculty_advisor = HomepageItems.get_faculty_advisor_for_society(2)
-        eb_members = HomepageItems.get_eb_members_for_society(2)
+        #getting faculty member
+        faculty_advisor = HomepageItems.get_faculty_advisor_for_society(request,2)
+        #getting eb members for the particular society
+        eb_members = HomepageItems.get_eb_members_for_society(request,2)
+
+
+        if request.method == "POST":
+            #when user hits submit button on main page
+            if request.POST.get('submit'):
+                #getting the user's details
+                name = request.POST.get('user_name')
+                email = request.POST.get('user_email')
+                message = request.POST.get('user_message')
+                #passing them as arguments to the function to save the data
+                if HomepageItems.save_feedback_information(request,2,name,email,message):
+                    messages.success(request,"You have reached us! Thanks for your feedback")  
+                else:
+                    messages.error(request,"Sorry! Try to contact us later") 
+                return redirect("main_website:pes_home")
                 
         context={
                 
@@ -249,7 +290,9 @@ def pesPage(request):
             'media_url':settings.MEDIA_URL,
             'featured_events':featured_events,
             'faculty_advisor':faculty_advisor,
-            'eb_members':eb_members
+            'eb_members':eb_members,
+            'page_title':society.page_title,
+            'page_subtitle':society.secondary_paragraph
 
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
@@ -259,17 +302,33 @@ def pesPage(request):
             return response
 def iasPage(request):
 
+    '''This view function loads the ias main web page'''
+
     try:
+        #getting object of IAS
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 4)
-            
+        #getting featured events of IAS   
         featured_events = HomepageItems.get_featured_events_for_societies(4)
 
-        #loading executive body memebers
-        faculty_advisor = HomepageItems.get_faculty_advisor_for_society(4)
-        eb_members = HomepageItems.get_eb_members_for_society(4)
-                
+        #getting faculty member
+        faculty_advisor = HomepageItems.get_faculty_advisor_for_society(request,4)
+        #getting eb members for the particular society
+        eb_members = HomepageItems.get_eb_members_for_society(request,4)
 
-            
+        if request.method == "POST":
+            #when user hits submit button on main page
+            if request.POST.get('submit'):  
+                #getting the user's details
+                name = request.POST.get('user_name')
+                email = request.POST.get('user_email')
+                message = request.POST.get('user_message')
+                #passing them as arguments to the function to save the data
+                if HomepageItems.save_feedback_information(request,4,name,email,message):
+                    messages.success(request,"You have reached us! Thanks for your feedback")  
+                else:
+                    messages.error(request,"Sorry! Try to contact us later") 
+                return redirect("main_website:ias_home")
+                  
         context={
                 
             'society':society,
@@ -277,7 +336,9 @@ def iasPage(request):
             'media_url':settings.MEDIA_URL,
             'featured_events':featured_events,
             'faculty_advisor':faculty_advisor,
-            'eb_members':eb_members
+            'eb_members':eb_members,
+            'page_title':society.page_title,
+            'page_subtitle':society.secondary_paragraph
 
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
@@ -286,15 +347,33 @@ def iasPage(request):
             response = HttpResponseServerError("Oops! Something went wrong.")
             return response
 def wiePage(request):
+
+    '''This view function loads the wie main web page'''
     
     try:
+        #getting object of WIE
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 5)
-            
+        #getting featured events of WIE    
         featured_events = HomepageItems.get_featured_events_for_societies(5)
 
-        #loading executive body memebers
-        faculty_advisor = HomepageItems.get_faculty_advisor_for_society(5)
-        eb_members = HomepageItems.get_eb_members_for_society(5)
+        #getting faculty member
+        faculty_advisor = HomepageItems.get_faculty_advisor_for_society(request,5)
+        #getting eb members for the particular society
+        eb_members = HomepageItems.get_eb_members_for_society(request,5)
+
+        if request.method == "POST":
+            #when user hits submit button on main page
+            if request.POST.get('submit'):
+                #getting the user's details
+                name = request.POST.get('user_name')
+                email = request.POST.get('user_email')
+                message = request.POST.get('user_message')
+                #passing them as arguments to the function to save the data
+                if HomepageItems.save_feedback_information(request,5,name,email,message):
+                    messages.success(request,"You have reached us! Thanks for your feedback")  
+                else:
+                    messages.error(request,"Sorry! Try to contact us later") 
+                return redirect("main_website:wie_home")
                 
             
         context={
@@ -304,7 +383,9 @@ def wiePage(request):
             'media_url':settings.MEDIA_URL,
             'featured_events':featured_events,
             'faculty_advisor':faculty_advisor,
-            'eb_members':eb_members
+            'eb_members':eb_members,
+            'page_title':society.page_title,
+            'page_subtitle':society.secondary_paragraph
 
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
@@ -314,13 +395,15 @@ def wiePage(request):
             return response
 
 def events_for_sc_ag(request,primary):
-    try:
 
-        all_events = HomepageItems.load_all_sc_ag_events(True,primary)
-        latest_five_events = HomepageItems.load_all_sc_ag_events(False,primary)
+    ''' This view function loads the events for the society affinity group event homepage'''
+    try:
+        
+        all_events = HomepageItems.load_all_events(True,primary)
+        latest_five_events = HomepageItems.load_all_events(False,primary)
         date_and_event = HomepageItems.get_event_for_calender(primary)
         upcoming_event = HomepageItems.get_upcoming_event(primary)
-        upcoming_event_banner_picture = HomepageItems.get_upcoming_event_banner_picture(upcoming_event)
+        upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
 
         context = {

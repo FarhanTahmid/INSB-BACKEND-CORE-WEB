@@ -1320,6 +1320,9 @@ def event_preview(request, primary, event_id):
 @login_required
 def manage_main_website(request, primary):
 
+    '''This view function loads the portals page for managung main website of socities
+        and affinity group'''
+
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
@@ -1329,7 +1332,7 @@ def manage_main_website(request, primary):
         if(has_access):
             
             if request.method == "POST":
-
+                #if save button is clicked then saving the details user entered
                 if request.POST.get('save'):
 
                     about_details = request.POST.get('about_details')
@@ -1351,7 +1354,8 @@ def manage_main_website(request, primary):
                     pageTitle_details = request.POST.get('pageTitle_details')
                     secondParagraph_details = request.POST.get('secondParagraph_details')
 
-
+                    #checking to see if no picture is uploaded by user, if so then if picture is already present in database
+                    #then updating it with saved value to prevent data loss. Otherwise it is None
                     if about_image == None:
                         about_image = get_sc_ag_info.sc_ag_logo
                     if background_image == None:
@@ -1361,11 +1365,12 @@ def manage_main_website(request, primary):
                     if mission_image == None:
                         mission_image = get_sc_ag_info.mission_picture
 
+                    #passing the fields data to the function to check length before saving
                     if Sc_Ag.checking_length(request,about_details,mission_description,vision_description,what_is_this_description,
                                why_join_it,what_activites_it_has,how_to_join):
                         messages.error(request,"Please ensure your word limit is with in 500 and you have filled out all descriptions")
                         return redirect("chapters_and_affinity_group:manage_main_website",primary)
-                    
+                    #passing the fields data to save the data in the database
                     if Sc_Ag.main_website_info(request,primary,about_details,about_image,background_image,
                                     mission_description,mission_image,vision_description,vision_picture,
                                     what_is_this_description,why_join_it,what_activites_it_has,how_to_join,
@@ -1378,9 +1383,13 @@ def manage_main_website(request, primary):
                     return redirect("chapters_and_affinity_group:manage_main_website",primary)
                 
                 if request.POST.get('remove'):
-
+                    #when user wants to remove any picture from the main website of sc_ag through the portal
+                    #getting the image path
                     image = request.POST.get('image_delete')
+                    #getting the image id
                     image_id = request.POST.get('image_id')
+                    #passing them to the delete function, if deleted successfully, success message pops else
+                    #error message
                     if Sc_Ag.delete_image(request,primary,image_id,image):
                         messages.success(request,"Deleted Successfully!")
                     else:
@@ -1409,19 +1418,38 @@ def manage_main_website(request, primary):
 
 @login_required
 def feedbacks(request,primary):
+
+    '''This view function loads the feedback page for the particular societies and affinity
+        groups'''
+    
     try:
+        #rendering all the data to be loaded on the page
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
+        #getting all the feedbacks for the particular societies and affinity groups
+        all_feedbacks = Sc_Ag.get_all_feedbacks(request,primary)
         if(has_access):
             
-
+            if request.method=="POST":
+                #when user hits submit button to changes status of responded fields
+                if request.POST.get('reponded'):
+                    #getting all the list of boolean fields that were changed
+                    respond = request.POST.getlist('responded_id')
+                    #passing the list to the updating funtion to change boolean values
+                    if Sc_Ag.set_feedback_status(respond,primary):
+                        messages.success(request,'Feedback status updated successfully.')
+                    else:
+                        messages.error(request,'Feedback status could not be updated.')
+                    return redirect("chapters_and_affinity_group:feedbacks",primary)
+        
             context={
                     'is_branch' : False,
                     'primary' : primary,
                     'all_sc_ag':sc_ag,
                     'sc_ag_info':get_sc_ag_info,
                     'media_url':settings.MEDIA_URL,
+                    'all_feedbacks':all_feedbacks,
 
             }
             return render(request,"FeedBack/feedback.html",context)
