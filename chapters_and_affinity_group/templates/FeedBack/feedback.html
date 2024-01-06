@@ -146,6 +146,8 @@
                       <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search.." class="form-control">
                     </div>
                   </div>
+                  <form method="POST" id="form-submit">
+                    {% csrf_token %}
                   <div class="table-responsive">
                     <table class="table table-striped table-class" id="table-id">
                   
@@ -155,35 +157,35 @@
                             <th>Date</th>
                             <th>Name</th>
                             <th>Email</th>
-                            <th></th>
+                            <th>Message</th>
+                            <th>Responded?</th>
                             
                         </tr>
                       </thead>
                       <tbody>
-                        {% for key, value in events.items %}
+                        {% for feedback in all_feedbacks %}
                         <tr>
                           <td>{{ forloop.counter }}</td>
-                            {% if is_branch %}
-                            <td><a class="event_name_column_content" style="color:blue;" href="{% url 'central_branch:event_edit_form' key.id %}">{{key.event_name }}</a></td>
-                            {% else %}
-                            <td><a class="event_name_column_content" style="color:blue;" href="{% url 'chapters_and_affinity_group:event_edit_form' sc_ag_info.primary key.id %}">{{key.event_name }}</a></td>
-                            {% endif %}
-                            <td>{{ key.event_organiser.group_name }}</td>
+                            <td>{{feedback.date}}</td>
+                            <td>{{feedback.name}}</td>
+                            <td>{{feedback.email}}</td>
+                            <td>{{feedback.message}}</td>
                             <td>
-                              {% for collabs in value %}
-                              <ul style="list-style-type: none; text-align:left;">
-                                    <li>{{ collabs }}</li>
-                              </ul>
-                            
-                              {% endfor %}
+                              <div>                                   
+                                <input type="checkbox" name="responded_id"  {% if feedback.is_responded %} value="{{ feedback.pk }}" checked {% else %} value="{{ feedback.pk }}"{% endif %}>
+                                {% comment %} <input id="publish_respond_{{ feedback.pk }}" name="publish_respond" type="checkbox" {% if feedback.is_responded %}checked{% endif %}> {% endcomment %}
+                              </div>
                             </td>
-                            <td>{{ key.event_date }}</td>
                         </tr>
                         {% endfor %}
-                        
+                      </form>
                       <tbody>
                     </table>
                   </div>
+                  <div>
+                    <input type="submit" value="submit" name="reponded">
+                  </div>
+                </form>
                   <!--		Start Pagination -->
                   <div class='pagination-container'>
                     <nav>
