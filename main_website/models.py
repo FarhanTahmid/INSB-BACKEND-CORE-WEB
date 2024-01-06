@@ -70,8 +70,9 @@ class Blog(models.Model):
     title = models.CharField(null=False,blank=False,max_length=150)
     category = models.ForeignKey(Blog_Category,null=True,blank=True,on_delete=models.CASCADE)
     date = models.DateField(null=False,blank=False,help_text = "<br>Please use the following format: <em>YYYY-MM-DD</em>.")
+    short_description=RichTextField(null=False,blank=False,max_length=200,help_text="Write within 50 words!")
     blog_banner_picture = ResizedImageField(null=False,blank=False,default='main_website_files/Blog_banner_pictures/default_blog_banner_picture.png',upload_to='main_website_files/Blog_pictures/')
-    description = RichTextField(null=False,blank=False,max_length=5000)
+    description = RichTextField(null=False,blank=False,max_length=5000,help_text="Write within 500 words!")
     branch_or_society = models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
     publish_blog=models.BooleanField(null=False,blank=False,default=False)
     class Meta:
@@ -203,10 +204,28 @@ class GalleryImages(models.Model):
         return str(self.pk)
 
 class GalleryVideos(models.Model):
-    video_link=models.URLField(null=False,blank=False)
+    video_title=models.CharField(null=False,blank=False,max_length=100)
+    video_link=models.URLField(null=False,blank=False,help_text="Please use embed link if you are pasting a link of Youtube video!")
     upload_date=models.DateField(null=False,blank=False)
 
     class Meta:
         verbose_name="Gallery Video"
     def __str__(self) -> str:
         return str(self.pk)
+
+class ExemplaryMembers(models.Model):
+    member_name=models.CharField(null=False,blank=False,max_length=100)
+    member_picture=models.ImageField(null=True,blank=True,upload_to='main_website_files/exemplary_members_picture/')
+    former_position=models.CharField(null=True,blank=True,max_length=100)
+    activity_year=models.CharField(null=True,blank=True,max_length=50)
+    current_activity=models.CharField(null=True,blank=True, max_length=200)
+    facebook_account_link=models.URLField(null=True,blank=True,max_length=200)
+    email=models.EmailField(null=True,blank=True)
+    achievements=RichTextField(null=True,blank=True,max_length=1000)
+    rank=models.IntegerField(null=True,blank=True,help_text="This is used to sort exemplary members in the main website")
+    class Meta:
+        verbose_name="Exemplary Members"
+
+    def __str__(self) -> str:
+        return self.member_name
+

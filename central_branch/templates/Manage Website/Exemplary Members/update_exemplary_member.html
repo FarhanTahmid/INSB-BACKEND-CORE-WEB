@@ -1,18 +1,14 @@
-{% block manage_activities_base %}
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Manage Activities | IEEE NSU Student Branch</title>
+    <title>Teams | IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
     {% block common_css %}
         {% include "common_css.html" %}
     {% endblock common_css %}
-
-    <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
-
 
     <style>
         body, html {
@@ -74,26 +70,17 @@
         <!-- navbar content -->
         <div id="content" class="app-content box-shadow-z0" role="main">
             {% block navbar %}
-                {% include 'Manage Website/manage_web_navbar.html' %}
+                {% include 'navbar.html' %}
             {% endblock navbar %}
+
         </div>
         <!--navbar content-->
-        
         
         <!-- ############ PAGE START-->
         <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
 
             <!--Start from here-->
-            <br>
-            <h2 style="text-align: center;">Manage the <b>Activities Section</b> of the Central Website of <span style="color:#00629B;"><b>IEEE NSU Student Branch</b></span></h2>
-            <br>
 
-            <!--Tabs Section-->
-            {% block tabs %}
-                {% include "Manage Website/Activities/tabs.html" %}
-            {% endblock tabs %}
-            <!--Tabs Section End-->
-            
         </div>
         <!--PAGE END-->
 
@@ -102,6 +89,32 @@
         {% block theme_switcher %}
             {% include "theme_switcher.html" %}
         {% endblock theme_switcher %}
+        <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>Update Exemplary Member</b></h4>
+        <div class="container">
+            <div class="padding">
+                <div class="row" >
+                    <div class="col-sm-10">
+                        <div class="box">
+                            <div class="box-header">
+                                <h3 style="text-align:center;color:#00629B;">{{exemplary_member.member_name}}</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="form-control">
+                                    <form method="POST" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        {{member_form.media}}
+                                        {{member_form.as_p}}
+                                        <input type="submit" name="update_member" class="btn btn-success p-x-md" value="Update"></input> 
+                                    </form>
+                                </div>
+                                <br>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     
     </div>
     <!-- app end-->
@@ -112,4 +125,3 @@
 
 </body>
 </html>
-{% endblock manage_activities_base %}

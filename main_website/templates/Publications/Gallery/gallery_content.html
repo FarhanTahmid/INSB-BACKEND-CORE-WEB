@@ -319,98 +319,18 @@
   </div>
   <div class="gallery-content active" id="photoGallery">
     <div class="row">
+      {% for i in all_images %}
       <div class="column">
+        
         <div class="img-hover-zoom">
           <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/64880737_1310807015753136_1705662526923997184_n.jpg"
+            src="/media_files/{{i.image}}"
             style="width: 100%"
             alt=""
           />
         </div>
       </div>
-      <div class="column">
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2022/11/Untitled-26-01.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-      </div>
-      <div class="column">
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-      </div>
-      <div class="column">
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-        <div class="img-hover-zoom">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/04/grp-1-768x466.png"
-            style="width: 100%"
-            alt=""
-          />
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
   <div id="myModal" class="modal">
@@ -419,38 +339,18 @@
   </div>
   <div class="gallery-content" id="videoGallery">
     <div class="row">
+      {% for i in all_videos %}
       <article class="video">
         <figure>
-          <iframe src="https://www.youtube.com/embed/OKiyhOfZksk" frameborder="0" allowfullscreen></iframe>
+          <iframe src="{{i.video_link}}" frameborder="0" allowfullscreen></iframe>
         </figure>
         <p class="videoTitle">
-          MesopotamiaMesopotamiaMesopotamiaMesopotamiaMesopotamia
+          {{i.video_title}}
         </p>
       </article>
-      <article class="video">
-        <figure>
-          <iframe src="https://www.youtube.com/embed/OKiyhOfZksk" frameborder="0" allowfullscreen></iframe>
-        </figure>
-        <p class="videoTitle">
-          MesopotamiaMesopotamiaMesopotamiaMesopotamiaMesopotamia
-        </p>
-      </article>
-      <article class="video">
-        <figure>
-          <iframe src="https://www.youtube.com/embed/OKiyhOfZksk" frameborder="0" allowfullscreen></iframe>
-        </figure>
-        <p class="videoTitle">
-          MesopotamiaMesopotamiaMesopotamiaMesopotamiaMesopotamia
-        </p>
-      </article>
-      <article class="video">
-        <figure>
-          <iframe src="https://www.youtube.com/embed/OKiyhOfZksk" frameborder="0" allowfullscreen></iframe>
-        </figure>
-        <p class="videoTitle">
-          MesopotamiaMesopotamiaMesopotamiaMesopotamiaMesopotamia
-        </p>
-      </article>
+      {% endfor %}
+      
+      
     </div>
 
     <!-- <div class="video_container">
