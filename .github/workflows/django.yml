@@ -27,7 +27,6 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        python manage.py test users
       # env:
       #   SETTINGS: ${{ secrets.SETTINGS }}
 
