@@ -1,5 +1,6 @@
 from django import forms
-from port.models import Teams
+from port.models import Chapters_Society_and_Affinity_Groups, Teams
+from ckeditor.widgets import CKEditorWidget
 import os
 
 class TeamForm(forms.ModelForm):
@@ -29,3 +30,23 @@ class TeamForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+class Chapter_Society_Affinity_Groups_Form(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['about_description'].widget = CKEditorWidget()
+        self.fields['mission_description'].widget = CKEditorWidget()
+        self.fields['vision_description'].widget = CKEditorWidget()
+        self.fields['what_is_this_description'].widget = CKEditorWidget()
+        self.fields['why_join_it'].widget = CKEditorWidget()
+        self.fields['what_activites_it_has'].widget = CKEditorWidget()
+        self.fields['how_to_join'].widget = CKEditorWidget()
+    
+    class Meta:
+        model=Chapters_Society_and_Affinity_Groups
+        fields=[
+            'group_name','primary','short_form','primary_color_code','logo','page_title','secondary_paragraph','about_description','sc_ag_logo','background_image','mission_description','mission_picture','vision_description','vision_picture','what_is_this_description',
+            'why_join_it','what_activites_it_has','how_to_join','email','facebook_link'
+        ]

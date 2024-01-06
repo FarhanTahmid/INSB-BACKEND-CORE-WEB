@@ -199,6 +199,18 @@
 
                 <div class="form-group">
                     <div class="flagship-event-switch">
+                        <label class="form-control-label">Is Featured Event:</label>
+                        <span>                                            
+                            <label class="ui-switch m-t-xs m-r">
+                                <input name="is_featured_event" type="checkbox" id="Checkbox" {% if is_featured_event %} checked {% endif %}>
+                                <i></i>
+                            </label>                
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="flagship-event-switch">
                         <label class="form-control-label">Flagship:</label>
                         <span>                                            
                             <label class="ui-switch m-t-xs m-r">
@@ -211,7 +223,7 @@
 
                 <br>
                 <div class="form-group">
-                    <label class="form-control-label">Form Link:</label>
+                    <label class="form-control-label"> Event Form Link:</label>
                     <span>
                         <input
                         placeholder="Provide Link"

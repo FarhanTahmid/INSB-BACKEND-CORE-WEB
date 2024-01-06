@@ -1,0 +1,563 @@
+{% block about_base %}
+{% include "Manage Website/About/about_base.html" %}
+{% endblock about_base %}
+{% block manage_ieee_bangladesh_section %}
+{% load static %}
+
+
+<!-- CKEditor CDN -->
+<script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+
+<style>
+
+
+    @media only screen and (max-width: 768px) {
+      
+        .custom-file {
+            margin-bottom: 10px;
+        }
+      }
+  
+      #gallery-selected-images-container {
+        max-width: 100%; /* Set the maximum width for the image container */
+      }
+      
+      #gallery-selected-images {
+        width: 200px; /* Set the width to 100% */
+        height: auto; /* Set the height to 150px */
+        object-fit: cover; /* Maintain aspect ratio and cover the container */
+        margin-top:10px;
+      }
+  
+      .image-container-item{
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        transition: box-shadow 0.3s ease;
+      }
+  
+      .image-container-item:hover {
+          box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+      }
+  
+      .image-container {
+        position: relative;
+        display: inline-block;
+      }
+  
+      .cross-button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        cursor: pointer;
+        background-color: white; /* Set the background color to white */
+        border: none;
+        padding: 0;
+        width: 25px; /* Set the width and height to create a circle */
+        height: 25px;
+        border-radius: 50%; /* Make it a circle */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2rem; /* Adjust font size */
+        color: black; /* Set the initial color */
+        z-index: 2;
+        transition: background-color 0.3s ease, color 0.3s ease; /* Add transitions for color and background-color changes */
+        line-height: 1; /* Ensure line height does not affect vertical alignment */
+      }
+    
+    
+      .cross-button:hover {
+          color: gray; /* Change color on hover */
+      }
+
+</style>
+
+<body>
+    <div class="app" id="app">
+        <div ui-view class="app-body" style="justify-content:center; margin-left:27%; margin-right:15%;" id="view">
+
+            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>IEEE Section</b></h2>
+            
+            <!--Messages-->
+            <div style="justify-content:center; text-align:center;">
+                {% if messages %}
+                    {% for message in messages %}
+                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <!--Messages End-->
+            
+            <div class="container">
+          
+                <div class="box">
+            
+            
+                    <br>
+                    <div class="box-header">
+                        <h1 style="text-align:center;font-size:30px;">Details</h1>
+                        <hr>
+                    </div>
+                    
+            
+                    <form id="myForm" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <div class="box-body">    
+                            
+                            <h1 style="text-align:center;font-size:30px;">About</h1>
+                            <br>
+                            
+                            <div class="form-group">
+                                <label>About <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="about_details"></textarea>
+                                <p id="aboutCharacterCount" style="color: red;">Required</p>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">About Image:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="about-image-input" name="image" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
+                            </div>  
+
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Members and Volunteers</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Members and Volunteers Details <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="members_and_volunteers_details"></textarea>
+                                <p id="members_and_volunteersCharacterCount" style="color: red;">Required</p>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">Members and Volunteers Image:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="members-and-volunteers-image-input" name="image" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="members-and-volunteers-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
+                            </div> 
+
+                            <br> 
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Benefits Branches Groups Community</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Benefits <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="benefits_details"></textarea>
+                                <p id="benefitsCharacterCount" style="color: red;">Required</p>
+
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Student Branches <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="student_branches_details"></textarea>
+                                <p id="student_branchesCharacterCount" style="color: red;">Required</p>
+
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Affinity Groups <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="affinity_groups_details"></textarea>
+                                <p id="affinity_groupsCharacterCount" style="color: red;">Required</p>
+
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Community and society <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="communty_and_society_details"></textarea>
+                                <p id="communty_and_societyCharacterCount" style="color: red;">Required</p>
+
+                            </div>
+                            
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Achievements</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Achievements Details <span style="color:red">*<span></label> 
+                                <textarea  
+                                class="form-control" 
+                                type="text"
+                                name="achievements_details"></textarea>
+                                <p id="achievementsCharacterCount" style="color: red;">Required</p>
+                            </div>
+
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Gallery</h1>
+                            <br>
+                            
+                            <div class="form-group">
+                                <label for="images">Upload Images:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="gallery-image-input" name="image" accept="image/*" multiple>
+                                    <label class="custom-file-label bg-light" for="gallery-image-input">Choose files</label>
+                                </div>
+                                
+                                <br>
+                        
+                                <div id="gallery-selected-images-container"></div>
+                                <input type="hidden" name="selected_images" id="gallery-selected-images">
+                                <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple images.</small>
+                                </div>
+                                
+                        
+                                <div id="image-container" class="row text-center">
+                                {% for image_url in gallery_images %}
+                                    <hr>
+                                    <div class="col-lg-4 col-md-6 my-3">
+                                    <div class="image-container">
+                                        <img
+                                        src="{{ gallery_url }}{{ image_url.selected_images }}"
+                                        alt="Image"
+                                        class="img-fluid image-container-item"
+                                        data-toggle="modal"
+                                        data-target="#fullViewModalForGallery{{ forloop.counter }}"
+                                        />
+                        
+                                        <!-- Full View Modal -->
+                                        <div
+                                        id="fullViewModalForGallery{{ forloop.counter }}"
+                                        class="modal fade"
+                                        tabindex="-1"
+                                        role="dialog"
+                                        aria-labelledby="fullViewModalForGalleryLabel"
+                                        aria-hidden="true"
+                                        >
+                                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document" >
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                            <h5 class="modal-title" id="fullViewModalForGalleryLabel">Image Full View</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            </div>
+                                            <div class="modal-body">
+                                            <img
+                                                src="{{ gallery_url }}{{ image_url.selected_images }}"
+                                                alt="Image"
+                                                class="img-fluid"
+                                                style="width: 100%; height: auto; margin: 0 auto; display: block;"
+                                            />
+                                            </div>
+                                        </div>
+                                        </div>
+                                        </div>
+                        
+                                        
+                                        <!-- Cross button to trigger modal -->
+                                        <button type="button" class="cross-button" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{image_url.selected_images}}')">
+                                        &times; <!-- Use the "times" symbol (X) as a close icon -->
+                                        </button>
+                        
+                                    </div>
+                                    </div>
+                        
+                                    
+                                  {% endfor %}
+                                  </div>
+
+
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <div class="form-group text-center">
+                                <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
+                            </div>
+                            <br>
+
+                            
+                            
+                        </div> 
+        
+                    
+                    </form>  
+        
+                <div>
+            </div>
+
+
+
+            <!-- for showing image except for gallery -->
+            <div class="modal fade" id="showImageModal" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="showImageModalLabel">Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img src="https://images.unsplash.com/photo-1549558549-415fe4c37b60?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8M3x8fGVufDB8fHx8fA%3D%3D" class="img-fluid w-100" alt="Image">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Confirmation modal for delete -->
+            <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-top" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                        <p><input id="image_delete" name= "image_delete" type="hidden"></p>
+                        Are you sure you want to delete the note?
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <!--Scripts for Gallery Start-->
+    <script>
+        $(document).ready(function () {
+        $('#gallery-image-input').on('change', function () {
+            var container = $('#gallery-selected-images-container');
+            container.empty();
+    
+            var input = $(this)[0];
+            var files = input.files;
+    
+            var rowContainer;
+    
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var reader = new FileReader();
+    
+                (function (index) {
+                    reader.onload = function (e) {
+                        if (index % 3 === 0) {
+                            rowContainer = $('<div class="row"></div>'); // Start a new row for every three images
+                        }
+    
+                        var imageContainer = $('<div class="gallery-selected-image-container"></div>');
+                        var image = $('<img class="gallery-selected-image" src="' + e.target.result + '"  style="width: auto; height: 100px; margin: 5px 10px;">');
+    
+                        imageContainer.append(image);
+                        rowContainer.append(imageContainer);
+    
+                        if ((index + 1) % 3 === 0 || index === files.length - 1) {
+                            container.append(rowContainer); // Append the row when it's full or it's the last image
+                        }
+                    };
+                })(i);
+    
+                reader.readAsDataURL(file);
+            }
+        });
+        });
+        
+
+        document.addEventListener("DOMContentLoaded", function () {
+        const fileInput = document.getElementById("gallery-image-input");
+
+        fileInput.addEventListener("change", function () {
+            const selectedFiles = this.files;
+            const maxAllowedFiles = {{allowed_image_upload}};
+
+            if (selectedFiles.length > maxAllowedFiles) {
+            
+            alert("You can upload a maximum of "+maxAllowedFiles+" images.");
+            // Clear the file input or handle it based on your requirements
+            this.value = null;
+            }
+
+            // Update the selected images container or perform other actions as needed
+            updateSelectedImagesContainer(selectedFiles);
+        });
+
+        function updateSelectedImagesContainer(files) {
+            const container = document.getElementById("gallery-selected-images-container");
+            container.innerHTML = ""; // Clear existing content
+
+            for (const file of files) {
+            const fileName = file.name;
+            const listItem = document.createElement("div");
+            listItem.textContent = fileName;
+            container.appendChild(listItem);
+            }
+
+            // Update the hidden input with selected images' information
+            updateHiddenInput(files);
+        }
+
+        function updateHiddenInput(files) {
+            const hiddenInput = document.getElementById("gallery-selected-images");
+            const fileNames = Array.from(files).map((file) => file.name);
+            hiddenInput.value = fileNames.join(", ");
+        }
+        });
+
+        function openModal(gallery_image_id) {
+        // Set data in the modal
+        var inputElement = document.getElementById('gallery_image_id');
+        inputElement.value=gallery_image_id;
+
+        }
+    
+    </script>
+    <!--Scripts for Gallery End-->
+
+
+
+
+
+      <!--Script for CKEditor Control-->
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Replace the textareas with CKEditor instances
+            CKEDITOR.replace('about_details');
+            CKEDITOR.replace('members_and_volunteers_details');
+            CKEDITOR.replace('benefits_details');
+            CKEDITOR.replace('student_branches_details');
+            CKEDITOR.replace('affinity_groups_details');
+            CKEDITOR.replace('communty_and_society_details');
+            CKEDITOR.replace('achievements_details');
+
+            // Attach a function to the change event for each CKEditor instance
+            ["about", "members_and_volunteers", "benefits", "student_branches", "affinity_groups", "communty_and_society", "achievements"]
+                .forEach(function (editorId) {
+                    var editor = CKEDITOR.instances[editorId + '_details'];
+
+                    editor.on('change', function () {
+                        // Update character count display for each CKEditor instance
+                        updateCharacterCount(editorId);
+                    });
+
+                    // Update character count initially
+                    updateCharacterCount(editorId);
+                });
+        });
+
+        function updateCharacterCount(editorId) {
+            var editorContent = CKEDITOR.instances[editorId + '_details'].getData();
+        
+            // Handle special space representations
+            var cleanedContent = editorContent.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+        
+            // Count each character (including spaces)
+            var characterCount = cleanedContent.length;
+        
+            var characterCountElement = document.getElementById(editorId + 'CharacterCount');
+        
+            // Check conditions and update text color and content
+            if (characterCount === 0) {
+                characterCountElement.style.color = "red";
+                characterCountElement.innerText = "Required";
+            } else if (characterCount > 500) {
+                characterCountElement.style.color = "red";
+                characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
+            } else {
+                characterCountElement.style.color = "black";
+                characterCountElement.innerText = "Character Count: " + characterCount;
+            }
+        }
+    </script>
+
+    <!--Script to handle file name showing when choosing file-->
+    <script type="text/javascript">
+
+        $('.custom-file input').change(function (e) {
+            var files = [];
+            for (var i = 0; i < $(this)[0].files.length; i++) {
+                files.push($(this)[0].files[i].name);
+            }
+            $(this).next('.custom-file-label').html(files.join(', '));
+        });
+    
+    </script>
+
+
+    <!--Delete logic for image-->
+    <script>
+        function openModal(image_delete) {
+            // Set data in the modal
+            var inputElement = document.getElementById('image_delete');    
+            inputElement.value=image_delete;
+        }
+    </script>
+ 
+</body>
+
+{% endblock manage_ieee_bangladesh_section %}

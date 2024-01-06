@@ -299,7 +299,7 @@
                             <div class="upcoming_event_link">
                                 <div class="line"></div>
                                 <!-- Upcoming Event Link -->
-                                <a href="{% url 'main_website:event_details' upcoming_event.pk %}">EVENT DETAIL</a>
+                                <a href="{% if upcoming_event.pk %}{% url 'main_website:event_details' upcoming_event.pk %}{% endif %}">EVENT DETAIL</a>
                             </div>
                         </div>
                     </div>
