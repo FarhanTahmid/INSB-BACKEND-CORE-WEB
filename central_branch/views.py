@@ -931,6 +931,36 @@ def update_magazine(request,pk):
     
     return render(request,'Manage Website/Publications/Magazine/update_magazine.html',context=context)
 
+@login_required
+def manage_gallery(request):
+    
+    # get all images of gallery
+    all_images = GalleryImages.objects.all().order_by('-upload_date')
+    all_videos=GalleryVideos.objects.all().order_by('-upload_date')
+    
+    if(request.method=="POST"):
+        image_form=GalleryImageForm(request.POST,request.FILES)
+        video_form=GalleryVideos(request.POST)
+        if(request.POST.get('add_image')):
+            if(image_form.is_valid()):
+                image_form.save()
+                messages.success(request,"New Image added Successfully!")
+                return redirect('central_branch:manage_gallery')
+        if(request.POST.get('add_video')):
+            if(video_form.is_valid()):
+                video_form.save()
+                messages.success(request,"New Video added Successfully")
+                return redirect('central_branch:manage_gallery')
+        
+    context={
+        'image_form':GalleryImageForm,
+        'video_form':GalleryVideoForm,
+        'all_images':all_images,
+        'all_videos':all_videos,
+    }
+    
+    return render(request,'Manage Website/Publications/Gallery/manage_gallery.html',context=context)
+
 
 @login_required
 def manage_view_access(request):

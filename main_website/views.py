@@ -365,7 +365,10 @@ def magazines(request):
 
 ######################### GALLERY WORKS ###########################
 def gallery(request):
-    return render(request, 'gallery.html')
+    context={
+        'page_title':"Gallery"
+    }
+    return render(request, 'Publications/Gallery/gallery.html',context=context)
 
 
 # Memeber works

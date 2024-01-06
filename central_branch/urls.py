@@ -46,6 +46,7 @@ urlpatterns = [
     path('manage_website/about',views.manage_about,name = "manage_about"),
     path('manage_website/ieee_bangladesh_section',views.ieee_bangladesh_section,name = "ieee_bangladesh_section"),
     path('manage_website/ieee_nsu_student_branch',views.ieee_nsu_student_branch,name = "ieee_nsu_student_branch"),
+    path('manage_website/gallery',views.manage_gallery,name="manage_gallery"),
     
     
     path('manage_access',views.manage_view_access,name="manage_access"),

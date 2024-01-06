@@ -40,6 +40,11 @@ from .models import Achievements
 class Achievements(admin.ModelAdmin):
     list_display=['id','award_name','award_of']
 
+from .models import Magazines
+@admin.register(Magazines)
+class Magazines(admin.ModelAdmin):
+    list_display=['id','magazine_title']
+
 @admin.register(IEEE_Bangladesh_Section)
 class IEEE_Bangladesh_Section_Admin(admin.ModelAdmin):
     form=About_IEEE_Bangladesh_Section_Form
@@ -58,3 +63,8 @@ class About_IEEE(admin.ModelAdmin):
 class HomePage_Thoughts(admin.ModelAdmin):
 
     list_display = ['quote','author']
+
+from .models import GalleryImages
+@admin.register(GalleryImages)
+class GalleryImages(admin.ModelAdmin):
+    list_display=['pk']
