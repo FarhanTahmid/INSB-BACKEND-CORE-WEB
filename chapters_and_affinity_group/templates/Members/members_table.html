@@ -32,6 +32,7 @@
             <th style="text-align:center;">IEEE Email</th>
             <th style="text-align:center;">Current Position</th>
             <th style="text-align:center;">Current Team</th>
+            <th style="text-align:center;">Action</th>
         </tr>
         </thead>
         <tbody>
@@ -47,6 +48,13 @@
                 <td>{{member.member.email_ieee}}</td>
                 <td>{{member.position}}</td>
                 <td>{{member.team}}</td>
+                <td>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input class="btn btn-outline b-danger text-danger has-value" name="remove_member" type="submit" value="Remove Member">
+                        <input type="hidden" name="remove_sc_ag_member" value="{{member.member.ieee_id}}" class="has-value">
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
