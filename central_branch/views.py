@@ -625,6 +625,8 @@ def publish_blog_request(request,pk):
                 blog_to_publish.is_requested=False
                 blog_to_publish.publish_blog=True
                 blog_to_publish.save()
+                print("Saved")
+                print(blog_to_publish.publish_blog)
                 messages.info(request,"Blog was published in the main website")
                 return redirect('central_branch:blog_requests')
     else:
