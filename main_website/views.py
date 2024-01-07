@@ -377,7 +377,27 @@ def blog_Description(request,blog_id):
 
 def write_blogs(request):
     '''Creates a form and allows user to give a request to publish their blogs in the site'''
+    # load all sc ag and Branch
+    load_all_sc_ag=Chapters_Society_and_Affinity_Groups.objects.all().order_by('primary')
+    # load all blog categories
+    load_all_blog_category=Blog_Category.objects.all()
+    
+    if(request.method=="POST"):
+        if(request.POST.get('submit_blog')):
+            writer_ieee_id=request.POST['writer_ieee_id']
+            writer_name=request.POST['writer_name']
+            group=request.POST.get('group')
+            blog_title=request.POST['blog_title']
+            blog_category=request.POST.get('blog_category')
+            blog_short_description=request.POST['blog_short_description']
+            blog_description=request.POST['blog_description']
+            blog_banner=request.FILES['blog_banner_picture']
+            
+            print(writer_ieee_id)
+    
     context={
+        'all_sc_ag':load_all_sc_ag,
+        'blog_categories':load_all_blog_category,
         'page_title':"Write a Blog",
         'page_subtitle':"""Empower your voice in the realm of knowledge! 
                         Dive into the fascinating worlds of science & technology. 

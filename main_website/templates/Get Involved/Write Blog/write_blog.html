@@ -152,12 +152,12 @@
                             <br>
                             <div class="form-group">
                                 <label>From which Chapter/Affinity Group you want to submit the Blog?</label> 
-                                <select class="form-control" name="blog_category">
+                                <select class="form-control" name="group">
                                     <option value="">-------</option>
+                                    {% for i in all_sc_ag %}
+                                        <option value="{{i.primary}}">{{i.group_name}}</option>
+                                    {% endfor %}
                                     
-                                    <option value="saab">Saab</option>
-                                    <option value="mercedes">Mercedes</option>
-                                    <option value="audi">Audi</option>
                                 </select>
                             </div>
 
@@ -186,10 +186,10 @@
                                 <label>Blog Category</label> 
                                 <select class="form-control" name="blog_category">
                                     <option value="">-------</option>
+                                    {% for i in blog_categories %}
+                                        <option value="{{i.pk}}">{{i.blog_category}}</option>
+                                    {% endfor %}
                                     
-                                    <option value="saab">Saab</option>
-                                    <option value="mercedes">Mercedes</option>
-                                    <option value="audi">Audi</option>
                                 </select>
                             </div>
                             <br>
@@ -229,7 +229,7 @@
                             <br> 
                             
                             <div class="form-group text-center">
-                                <input type="submit" name="save" class="btn btn-outline-success p-x-md" value="Save">
+                                <input type="submit" name="submit_blog" class="btn btn-outline-success p-x-md" value="Save">
                             </div>
                             <br>
 
