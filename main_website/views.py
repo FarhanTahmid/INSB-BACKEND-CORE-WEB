@@ -393,7 +393,7 @@ def write_blogs(request):
             blog_description=request.POST['blog_description']
             blog_banner=request.FILES['blog_banner_picture']
             
-            print(writer_ieee_id)
+            
     
     context={
         'all_sc_ag':load_all_sc_ag,
