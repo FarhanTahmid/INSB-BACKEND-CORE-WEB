@@ -11,6 +11,15 @@
 
 <style>
 
+    h1{
+        text-align:center;
+        font-size:30px;
+        font-weight:bold;
+    }
+
+    label{
+        font-size:20px;
+    }
 
     @media only screen and (max-width: 768px) {
       
@@ -79,7 +88,34 @@
     <div class="app" id="app">
         <div ui-view class="app-body" style="justify-content:center; margin-left:27%; margin-right:15%;" id="view">
 
-            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>IEEE NSU Student Branch</b></h2>
+            <br>
+            <h4 style="justify-content:center;text-align:center;"><b>IEEE NSU Student Branch</b></h2>
+            <br>
+
+            <div class="btn-container">
+                <button class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#previewModal">Preview Event</button>
+            </div>
+            <br>
+
+            <!-- Preview Event Modal -->
+            <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="max-width: 80%; height: 90%;">
+                    <div class="modal-content" style="width: 100%; height: 100%;">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="previewModalLabel">Preview Event</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <iframe src="https://ieeensusb.org/ieee-nsu-student-branch-2/" style="width: 100%; height: 100%;" loading="lazy"></iframe>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <!--Messages-->
             <div style="justify-content:center; text-align:center;">
@@ -96,18 +132,19 @@
                 <div class="box">
             
             
-                    <br>
+                    {% comment %} <br>
                     <div class="box-header">
-                        <h1 style="text-align:center;font-size:30px;">Details</h1>
+                        <h1>Details</h1>
                         <hr>
-                    </div>
+                    </div> {% endcomment %}
                     
             
                     <form id="myForm" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                         <div class="box-body">    
                             
-                            <h1 style="text-align:center;font-size:30px;">About</h1>
+                            <br>
+                            <h1>About</h1>
                             <br>
                             
                             <div class="form-group">
@@ -126,8 +163,8 @@
                                     <input type="file" class="custom-file-input" id="about-image-input" name="image" accept="image/*">
                                     <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
                                 </div>
-                                
                                 <br>
+
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
@@ -142,7 +179,7 @@
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">Chapters</h1>
+                            <h1>Chapters</h1>
                             <br>
 
                             <div class="form-group">
@@ -154,6 +191,7 @@
                                 <p id="chaptersCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
+
                             <!--RAS -->
                             <div class="form-group">
                                 <label for="images">RAS Image:</label>
@@ -171,7 +209,19 @@
                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
                                     </div>
                                 </div>
-                            </div> 
+                                <br>
+
+                                <label>RAS Read More Link <span style="color:red">*<span></label> 
+                                <input
+                                placeholder="Read More Link"
+                                class="form-control"
+                                type="text"
+                                autocomplete="off"
+                                required
+                                name="ras_read_more_link"/>
+                            </div>
+                            <br> 
+
                             <!-- PES -->
                             <div class="form-group">
                                 <label for="images">PES Image:</label>
@@ -189,10 +239,20 @@
                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
                                     </div>
                                 </div>
+                                <br>
+
+                                <label>PES Read More Link <span style="color:red">*<span></label> 
+                                <input
+                                placeholder="Read More Link"
+                                class="form-control"
+                                type="text"
+                                autocomplete="off"
+                                required
+                                name="pes_read_more_link"/>
                             </div> 
+                            <br>
 
                             <!-- IAS -->
-
                             <div class="form-group">
                                 <label for="images">IAS Image:</label>
                                 <div class="custom-file">
@@ -209,10 +269,20 @@
                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
                                     </div>
                                 </div>
+                                <br>
+
+                                <label>IAS Read More Link <span style="color:red">*<span></label> 
+                                <input
+                                placeholder="Read More Link"
+                                class="form-control"
+                                type="text"
+                                autocomplete="off"
+                                required
+                                name="ias_read_more_link"/>
                             </div> 
+                            <br>
 
                             <!-- WIE -->
-
                             <div class="form-group">
                                 <label for="images">WIE Image:</label>
                                 <div class="custom-file">
@@ -229,17 +299,24 @@
                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
                                     </div>
                                 </div>
+                                <br>
+
+                                <label>WIE Read More Link <span style="color:red">*<span></label> 
+                                <input
+                                placeholder="Read More Link"
+                                class="form-control"
+                                type="text"
+                                autocomplete="off"
+                                required
+                                name="wie_read_more_link"/>
                             </div> 
-
-
-
 
 
                             <br> 
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">Creative Team</h1>
+                            <h1>Creative Team</h1>
                             <br>
 
                             <div class="form-group">
@@ -251,18 +328,12 @@
                                 <p id="creativeTeamCharacterCount" style="color: red;">Required</p>
 
                             </div>
-                            <br>
-
-                            
-                        
-
-                           
                          
                             <br>
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">Mission</h1>
+                            <h1>Mission</h1>
                             <br>
 
                             <div class="form-group">
@@ -297,7 +368,7 @@
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">Vision</h1>
+                            <h1>Vision</h1>
                             <br>
 
                             <div class="form-group">
@@ -332,7 +403,7 @@
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">Events</h1>
+                            <h1>Events</h1>
                             <br>
 
                             <div class="form-group">
@@ -342,13 +413,41 @@
                                 type="text"
                                 name="events_details"></textarea>
                                 <p id="eventsCharacterCount" style="color: red;">Required</p>
+                                <br>
+
+                                <label>All Events Link <span style="color:red">*<span></label> 
+                                <input
+                                placeholder="All Events link"
+                                class="form-control"
+                                type="text"
+                                autocomplete="off"
+                                required
+                                name="all_events_link"/>
                             </div>
 
                             <br>
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">Achievements</h1>
+                            <h1>Join US</h1>
+                            <br>
+                            
+                            <div class="form-group">
+                                <label>Join Now Button Link <span style="color:red">*<span></label> 
+                                <input
+                                placeholder="Join Now Link"
+                                class="form-control"
+                                type="text"
+                                autocomplete="off"
+                                required
+                                name="join_now_link"/>
+                            </div>
+
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <h1>Achievements</h1>
                             <br>
 
                             <div class="form-group">
@@ -361,11 +460,6 @@
                             </div>
 
                             
-                                
-                        
-                                
-
-
                             <br>
                             <hr>
                             <br> 

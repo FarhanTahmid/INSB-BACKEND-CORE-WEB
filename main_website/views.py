@@ -837,3 +837,6 @@ def contact(request):
     }
 
     return render(request, 'Contact/contact.html', context)
+
+def blog_description(request):
+    return render(request, 'Publications/Blog/blog_description_main.html')
