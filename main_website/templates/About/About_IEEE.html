@@ -430,7 +430,8 @@
     <section class="centering">
       <section class="about-IEEE max-width">
         <div class="IEEE-bd-section-logo">
-          <img src="https://ieeensusb.org/wp-content/uploads/2021/03/e4c81f5dd1d43164425630c4ab971bd5.jpg" alt="" />
+          {% comment %} <img src="https://ieeensusb.org/wp-content/uploads/2021/03/e4c81f5dd1d43164425630c4ab971bd5.jpg" alt="" /> {% endcomment %}
+          <img src="{{media_url}}{{about_ieee.about_image}}" alt="" />
         </div>
         <div>
           <div style="margin-bottom: -18px">
@@ -482,7 +483,8 @@
           </div>
         </div>
         <div class="mem-vol-pic">
-          <img src="https://ieeensusb.org/wp-content/uploads/2021/03/branches.jpg" alt="" />
+          {% comment %} <img src="https://ieeensusb.org/wp-content/uploads/2021/03/branches.jpg" alt="" /> {% endcomment %}
+          <img src="{{media_url}}{{about_ieee.community_image}}" alt="" />
         </div>
       </section>
     </section>
@@ -524,6 +526,20 @@
             <p>
               {{about_ieee.collaboration_description|safe}}
             </p>
+          </div>
+          <div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
+                Xplore</a>
+            </div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
+                Spectrum</a>
+            </div>
+            <div>
+              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
+                Standards</a>
+            </div>
           </div>
 
         </div>
@@ -678,9 +694,8 @@
           </div>
         </div>
         <div class="mem-vol-pic">
-          <img
-            src="https://ieeensusb.org/wp-content/uploads/2021/03/112942791_646944699242400_5651045497133643740_o.jpg"
-            alt="" />
+          {% comment %} <img src="https://ieeensusb.org/wp-content/uploads/2021/03/112942791_646944699242400_5651045497133643740_o.jpg" alt="" /> {% endcomment %}
+          <img src="{{media_url}}{{about_ieee.innovations_and_developments_image}}" alt="" />
         </div>
       </section>
     </section>
@@ -688,7 +703,8 @@
     <section class="centering" style="background-color: #f9f9f9">
       <section class="members-volunteers max-width">
         <div class="mem-vol-pic">
-          <img src="https://ieeensusb.org/wp-content/uploads/2021/03/illustrated-character-4.png" alt="" />
+          {% comment %} <img src="https://ieeensusb.org/wp-content/uploads/2021/03/illustrated-character-4.png" alt="" /> {% endcomment %}
+          <img src="{{media_url}}{{about_ieee.students_and_member_activities_image}}" alt="" />
         </div>
         <div>
           <div style="margin-bottom: -38px">
@@ -745,7 +761,8 @@
           </div>
         </div>
         <div class="mem-vol-pic">
-          <img src="https://ieeensusb.org/wp-content/uploads/2021/03/image3.png" alt="" />
+          {% comment %} <img src="https://ieeensusb.org/wp-content/uploads/2021/03/image3.png" alt="" /> {% endcomment %}
+          <img src="{{media_url}}{{about_ieee.quality_image}}" alt="" />
         </div>
       </section>
     </section>

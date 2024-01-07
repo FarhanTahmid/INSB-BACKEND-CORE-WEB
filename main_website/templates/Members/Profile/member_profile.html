@@ -218,27 +218,31 @@
             <div class="card_container">
                 <div class="card_content">
                     <div class="profile_image">
-                        <img src="{% static 'upload/logo.gif' %}" alt="">
+                        <img src="{{media_url}}{{member.user_profile_picture}}" alt="">
                     </div>
                     <div class="profile_details">
                         <div class="social_links">
                             <div class="icons">
+                                {% if member.facebook_url %}
                                 <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
-                                    href="#" target="_blank">
+                                    href="{{member.facebook_url}}" target="_blank">
                                     <i class="fa fa-facebook" aria-hidden="true"
                                         style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                 </a>
+                                {% endif %}
+                                {% if member.linkedin_url %}
                                 <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
-                                    href="#" target="_blank">
+                                    href="{{member.linkedin_url}}" target="_blank">
                                     <i class="fa fa-linkedin" aria-hidden="true"
                                         style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                 </a>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="information">
                             <div class="information_1">
-                                <div class="name">Md. Shakib Shahariar Junayed</div>
-                                <div class="ieee_id">99131140</div>
+                                <div class="name">{{member.name}}</div>
+                                <div class="ieee_id">{{member.ieee_id}}</div>
                                 <div class="another_icons">
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
                                         href="#" target="_blank">
@@ -255,11 +259,18 @@
                             <div class="light_bar"></div>
                             <div class="information_2">
                                 <div class="info">
-                                    <div class="ieee_email">IEEE Email: junayed@ieee.org</div>
-                                    <div class="nsu_email">NSU Email: shakib.junayed@northsouth.edu</div>
-                                    <div class="birthday">Birthdate: February 15, 2002</div>
+                                    {% if member.email_ieee %}
+                                    <div class="ieee_email">IEEE Email: {{member.email_ieee}}</div>
+                                    {% endif %}
+                                    {% if member.email_nsu %}
+                                    <div class="nsu_email">NSU Email: {{member.email_nsu}}</div>
+                                    {% endif %}
+                                    {% if member.date_of_birth %}
+                                    <div class="birthday">Birthdate: {{member.date_of_birth}}</div>
+                                    {% endif %}
                                 </div>
                                 <div class="designation">
+                                    {% if member.team %}
                                     <div class="des-r1">
                                         <div class="des-r2">
                                             <div class="circle"></div>
@@ -267,54 +278,24 @@
                                         </div>
                                         <div class="des-r3">
                                             <div class="title">Main Branch</div>
-                                            <div class="position">Position: Core Volunteer</div>
-                                            <div class="team">Team: Web Development</div>
+                                            <div class="position">Position: {{member.position}}</div>
+                                            <div class="team">Team: {{member.team}}</div>
                                         </div>
                                     </div>
+                                    {% endif %}
+                                    {% for sc_ag in sc_ag_position_data %}
                                     <div class="des-r1">
                                         <div class="des-r2">
                                             <div class="circle"></div>
                                             <div class="line"></div>
                                         </div>
                                         <div class="des-r3">
-                                            <div class="title">Main Branch</div>
-                                            <div class="position">Position: Core Volunteer</div>
-                                            <div class="team">Team: Web Development</div>
+                                            <div class="title">{{sc_ag.sc_ag.short_form}}</div>
+                                            <div class="position">Position: {{sc_ag.position}}</div>
+                                            <div class="team">Team: {{sc_ag.team}}</div>
                                         </div>
                                     </div>
-                                    <div class="des-r1">
-                                        <div class="des-r2">
-                                            <div class="circle"></div>
-                                            <div class="line"></div>
-                                        </div>
-                                        <div class="des-r3">
-                                            <div class="title">Main Branch</div>
-                                            <div class="position">Position: Core Volunteer</div>
-                                            <div class="team">Team: Web Development</div>
-                                        </div>
-                                    </div>
-                                    <div class="des-r1">
-                                        <div class="des-r2">
-                                            <div class="circle"></div>
-                                            <div class="line"></div>
-                                        </div>
-                                        <div class="des-r3">
-                                            <div class="title">Main Branch</div>
-                                            <div class="position">Position: Core Volunteer</div>
-                                            <div class="team">Team: Web Development</div>
-                                        </div>
-                                    </div>
-                                    <div class="des-r1">
-                                        <div class="des-r2">
-                                            <div class="circle"></div>
-                                            <div class="line"></div>
-                                        </div>
-                                        <div class="des-r3">
-                                            <div class="title">Main Branch</div>
-                                            <div class="position">Position: Core Volunteer</div>
-                                            <div class="team">Team: Public Relation & Promotion Team</div>
-                                        </div>
-                                    </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
