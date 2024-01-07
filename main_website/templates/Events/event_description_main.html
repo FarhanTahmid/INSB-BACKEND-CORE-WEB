@@ -352,13 +352,15 @@
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
     <div class="body-wrapper  float-menu">
 
-        {% block header %}
-        {% include "header.html" %}
-        {% endblock %}
+        {% if is_live %}
+            {% block header %}
+            {% include "header.html" %}
+            {% endblock %}
+            {% block wave_design %}
+                {% include 'wave.html' %}
+            {% endblock wave_design %}
+        {% endif %}
 
-        {% block wave_design %}
-            {% include 'wave.html' %}
-        {% endblock wave_design %}
 
         <section class="event_description_container">
             <section class="event_description_content">
@@ -508,9 +510,11 @@
             </section>
         </section>
         
-        {% block footer %}
-        {% include "footer_block.html" %}
-        {% endblock %}
+        {% if is_live %}
+            {% block footer %}
+            {% include "footer_block.html" %}
+            {% endblock %}
+        {% endif %}
 
 
         <script src="{% static './js/event_script.js'%}"></script>
