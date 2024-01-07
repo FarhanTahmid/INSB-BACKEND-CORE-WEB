@@ -64,12 +64,20 @@
         line-height: 0;
     }
 
-    .wavy .title h2 {
+    .wavy .title .tt {
         font-family: 'Poppins', sans-serif;
         color: #fff;
         font-size: 35px;
         font-weight: 600;
         text-transform: uppercase;
+    }
+    .wavy .title .sub {
+        font-family: 'Poppins', sans-serif;
+        color: #fff;
+        font-size: 35px;
+        font-weight: 600;
+        margin-left:5%;
+        margin-right:5%;
     }
 
     .wavy .title p {
@@ -133,8 +141,8 @@
 </style>
 <section class="wavy">
     <div class="title">
-        <h2 style="justify-content:center;text-align:center;">{{page_title}}</h2>
-        <h2 style="font-size:20px; font-weight:300; text-align:center;">{{page_subtitle}}</h2>
+        <h2 class="tt" style="justify-content:center;text-align:center;">{{page_title}}</h2>
+        <h2 class="sub" style="font-size:20px; font-weight:300; text-align:center;">{{page_subtitle|safe}}</h2>
     </div>
     <div class="wave wave1"></div>
     <div class="wave wave2"></div>

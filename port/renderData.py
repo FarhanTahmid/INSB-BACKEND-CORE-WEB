@@ -23,7 +23,7 @@ class PortData:
     def get_all_sc_ag(request):
         '''Returns all the Chapters, Affinity Groups with their Primary. Branch is excluded.'''
         try:
-            return Chapters_Society_and_Affinity_Groups.objects.all().exclude(primary=1) #excluding branch's Primary
+            return Chapters_Society_and_Affinity_Groups.objects.all().exclude(primary=1).order_by('primary') #excluding branch's Primary
         except Exception as e:
             PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -191,7 +191,7 @@ class PortData:
     def create_team(request,sc_ag_primary,team_name):
         '''Creates a Team with given name for sc ag and branch'''
         try:    
-            get_the_last_team_primary=Teams.objects.all().last()
+            get_the_last_team_primary=Teams.objects.all().order_by('-primary').first()
             # The logic of creating new Team is to assign the primary = last objects primary + 1.
             # this ensures that primary of teams never conflict with each other
             new_team=Teams.objects.create(
