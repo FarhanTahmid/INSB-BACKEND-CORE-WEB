@@ -488,7 +488,7 @@ def write_blogs(request):
                         )
                         new_requested_blog.save()
 
-                elif(group is not "" and blog_category==""):
+                elif(group != "" and blog_category==""):
                         new_requested_blog=Blog.objects.create(
                         ieee_id=writer_ieee_id,writer_name=writer_name,title=blog_title,
                         date=datetime.today(),
@@ -498,7 +498,7 @@ def write_blogs(request):
                         )
                         new_requested_blog.save()
 
-                elif(group=="" and blog_category is not ""):
+                elif(group=="" and blog_category != ""):
                         new_requested_blog=Blog.objects.create(
                         ieee_id=writer_ieee_id,writer_name=writer_name,title=blog_title,
                         category=Blog_Category.objects.get(pk=blog_category),date=datetime.today(),
@@ -536,6 +536,19 @@ def write_blogs(request):
         
     }
     return render(request,"Get Involved/Write Blog/write_blog.html",context=context)
+
+def blog_description(request,pk):
+    # get the blog
+    
+    get_blog=Blog.objects.get(pk=pk)
+    
+    context={
+        'page_title':get_blog.title,
+        'page_subtitle':get_blog.branch_or_society.group_name,
+        'blog':get_blog,
+    }
+    return render(request, 'Publications/Blog/blog_description_main.html',context=context)
+
 
 ######################### RESEARCH PAPER WORKS ###########################
 
@@ -925,5 +938,3 @@ def contact(request):
 
     return render(request, 'Contact/contact.html', context)
 
-def blog_description(request):
-    return render(request, 'Publications/Blog/blog_description_main.html')

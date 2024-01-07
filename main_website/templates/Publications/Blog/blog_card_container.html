@@ -83,12 +83,12 @@
     <div class="card">
         <img src="media_files/{{i.blog_banner_picture}}" alt="Sample photo">
         <div class="card_content">
-            <h5>{{i.title}}</h5>
+            <a href="{% url 'main_website:blog_description' i.pk %}"><h5>{{i.title}}</h5></a>
             <i class="fa-regular fa-clock"></i>
             <span>{{i.date}}</span>
             <i class="fa-solid fa-align-left"></i><span> Category-{{i.category}} •</span><br>
             <p>{{i.short_description | safe}}</p>
-            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">Read More</a>
+            <a href="{% url 'main_website:blog_description' i.pk %}">Read More</a>
 
         </div>
     </div>
