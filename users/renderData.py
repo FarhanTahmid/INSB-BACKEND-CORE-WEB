@@ -21,6 +21,7 @@ from port.models import Panels
 import traceback
 import logging
 from system_administration.system_error_handling import ErrorHandling
+from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 
 
 class LoggedinUser:
@@ -237,15 +238,17 @@ def getRecruitmentStats():
     except:
         return False  
 
-def getTypeOfEventStats():
+def getTypeOfEventStats(request):
 
     '''This fucntion is for the circular chart that shows the total events of each type
-    and their corresponding percentages on poral'''
+    and their corresponding percentages on poral. It only shows event type for IEEE NSU SB
+    and not for societies'''
 
     event_stats_keys =[]
     event_stats_values=[]
-    all_event_type=Event_Category.objects.all()
-    all_events_number = Events.objects.all().count()
+    society = SC_AG_Info.get_sc_ag_details(request,1)
+    all_event_type=Event_Category.objects.filter(event_category_for = society)
+    all_events_number = Events.objects.filter(event_organiser = society).count()
     event_percentage ={}
     for i in all_event_type:
         event_count = Events.objects.filter(event_type = i.pk).count()

@@ -248,9 +248,9 @@ def rasPage(request):
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
     except Exception as e:
-            print(e)
-            response = HttpResponseServerError("Oops! Something went wrong.")
-            return response
+        print(e)
+        response = HttpResponseServerError("Oops! Something went wrong.")
+        return response
 def pesPage(request):
 
     '''This view function loads the pes main web page'''
@@ -295,9 +295,9 @@ def pesPage(request):
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
     except Exception as e:
-            print(e)
-            response = HttpResponseServerError("Oops! Something went wrong.")
-            return response
+        print(e)
+        response = HttpResponseServerError("Oops! Something went wrong.")
+        return response
 def iasPage(request):
 
     '''This view function loads the ias main web page'''
@@ -341,9 +341,9 @@ def iasPage(request):
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
     except Exception as e:
-            print(e)
-            response = HttpResponseServerError("Oops! Something went wrong.")
-            return response
+        print(e)
+        response = HttpResponseServerError("Oops! Something went wrong.")
+        return response
 def wiePage(request):
 
     '''This view function loads the wie main web page'''
@@ -388,9 +388,9 @@ def wiePage(request):
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
     except Exception as e:
-            print(e)
-            response = HttpResponseServerError("Oops! Something went wrong.")
-            return response
+        print(e)
+        response = HttpResponseServerError("Oops! Something went wrong.")
+        return response
 
 def events_for_sc_ag(request,primary):
 
@@ -420,9 +420,9 @@ def events_for_sc_ag(request,primary):
 
         return render(request,'Events/events_homepage.html',context)
     except Exception as e:
-            print(e)
-            response = HttpResponseServerError("Oops! Something went wrong.")
-            return response
+        print(e)
+        response = HttpResponseServerError("Oops! Something went wrong.")
+        return response
 
 
 
