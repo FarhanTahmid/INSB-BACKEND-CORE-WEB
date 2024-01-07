@@ -32,9 +32,7 @@ class HomepageItems:
                 #when True getting all the events which are published, is of particular society and is ordered by latest date
                 events =  Events.objects.filter(publish_in_main_web= True,event_organiser = society).order_by('-event_date')
             else:
-                #when False getting events 5 events which are upcoming, is published and is of particular society
-                events = Events.objects.filter(publish_in_main_web= True,event_organiser = society,event_date__gt=current_datetime).order_by('event_date')[:5]
-            #using this loop, assigning the event with its corresponding banner picture in the dictionary as key and value
+                events = Events.objects.filter(publish_in_main_web= True,event_date__gt=current_datetime).order_by('event_date')[:5]
             for i in events:
                 #getting the event banner image using load_event_banner_image funtion
                 event_selected_image = HomepageItems.load_event_banner_image(i.pk)
@@ -68,10 +66,27 @@ class HomepageItems:
 
         return Media_Images.objects.filter(event_id = event_id)
 
+    
+    def load_featured_events(sc_ag_primary):
+        '''This function loads all the featured events for SC Ag & Branch with banners'''
+        # get featured events
+        featured_event=Events.objects.filter(event_organiser=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),is_featured=True).order_by('-event_date')[:6] 
+        # store event data (event obj+ event banner obj in a dictionary) in a list
+        featured_event_list=[]
         
-
-
-
+        # create dictionary of featured events and then keep it on the list
+        for i in featured_event:
+            featured_event_dict={}
+            # store event obj in 'featured_event' key
+            featured_event_dict['featured_event']=i
+            # get banner image of every event and put it into the 'banner_image" key
+            featured_event_dict['banner_image']=HomepageItems.load_event_banner_image(event_id=i.pk)
+            # store the dict in the list
+            featured_event_list.append(featured_event_dict)
+        
+        return featured_event_list
+        
+        
     def getHomepageBannerItems():
         
         '''This function returns the returns the top banner items for homepage'''
