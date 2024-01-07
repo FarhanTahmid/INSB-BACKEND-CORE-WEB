@@ -171,21 +171,26 @@ class HomepageItems:
 
         '''This function saves the ip address every day. So if same user visits the page everyday,
             then each day his ip address will counted only once'''
-        
-        address = request.META.get('HTTP_X_FORWARDED_FOR')
-        if address:
-            ip = address.split(',')[-1].strip()
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        #creating user IP address model with auto saved date
-        user =User_IP_Address(ip_address = ip)
-        #checking if this user already exists today or not. If yes the length of result is more than 1
-        #and his ip wont be saved
-        result = User_IP_Address.objects.filter(ip_address = ip,created_at = datetime.today())
-        if len(result)>=1:
-            pass
-        else:
-            user.save()
+        try:
+            address = request.META.get('HTTP_X_FORWARDED_FOR')
+            if address:
+                ip = address.split(',')[-1].strip()
+            else:
+                ip = request.META.get('REMOTE_ADDR')
+            #creating user IP address model with auto saved date
+            user =User_IP_Address(ip_address = ip)
+            #checking if this user already exists today or not. If yes the length of result is more than 1
+            #and his ip wont be saved
+            result = User_IP_Address.objects.filter(ip_address = ip,created_at = datetime.today())
+            if len(result)>=1:
+                pass
+            else:
+                user.save()
+                
+        except Exception as e:
+            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
 
     def get_featured_events_for_societies(primary):
 

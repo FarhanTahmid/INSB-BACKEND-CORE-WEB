@@ -21,6 +21,7 @@ from port.models import Panels
 import traceback
 import logging
 from system_administration.system_error_handling import ErrorHandling
+from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 
 
 class LoggedinUser:
@@ -237,21 +238,31 @@ def getRecruitmentStats():
     except:
         return False  
 
-def getTypeOfEventStats():
+def getTypeOfEventStats(request):
 
     '''This fucntion is for the circular chart that shows the total events of each type
-    and their corresponding percentages on poral'''
+    and their corresponding percentages on poral. It only shows event type for IEEE NSU SB
+    and not for societies'''
 
     event_stats_keys =[]
     event_stats_values=[]
-    all_event_type=Event_Category.objects.all()
-    all_events_number = Events.objects.all().count()
+    #getting the IEEE NSU SB only
+    society = SC_AG_Info.get_sc_ag_details(request,1)
+    #getting event type of SB
+    all_event_type=Event_Category.objects.filter(event_category_for = society)
+    #getting all events of NSU SB
+    all_events_number = Events.objects.filter(event_organiser = society).count()
+    #initializing empty dictionary which holds the events category as key and the
+    #number of events of that category occured as value which is calculated in percentage
     event_percentage ={}
     for i in all_event_type:
         event_count = Events.objects.filter(event_type = i.pk).count()
         try:
+            #calculating the percentage and rounding it to 1 decimal place
             percentage = (event_count/all_events_number*1.0)*100
             percentage = round(percentage,1)
+
+            #assigning the values of keys and values in the dictionary
             event_stats_keys.append(i.event_category)
             event_stats_values.append(event_count)
             event_percentage.update({i.event_category:percentage})
@@ -267,12 +278,16 @@ def getEventNumberStat():
     5 years including current year'''
 
     event_num = []
+    #getting current year
     year = datetime.date.today().year
-    print(year)
     for i in range(5):
+        #iterating over past five year including this year
+        #the count variables counts the number of events that occured in a specific year
         count=0
         count = Events.objects.filter(event_date__year=(year-i)).count()
+        #assiging the number of events occured in a year to the list
         event_num.append(count)
+    #reversing list to get the oldest count first and lasted count last
     event_num.reverse()
     return event_num
 
@@ -284,20 +299,30 @@ def getEventNumberStatYear():
     chart 'Event for 6 years' '''
     
     year_list =[]
+    #getting current year
     year = datetime.date.today().year
     for i in range(5):
+        #basically getting the last five years 'year number'
         year_list.append(year-i)
+    #reversing to get oldest one first and lasted (which is current year) last
     year_list.reverse()
     return year_list
 
 def getHitCountMonthly():
     '''
     For the time being shows monthly hit page count only which is seen on the Page visitor chart'''
+    #daily list holds the number of people that visited the website on a specific date
+    #days_of_month list holds the dates on which there is atleast one visitor on the main web page
     daily = []
     days_of_month=[]
+
     for i in range(31):
+        #getting number of people on each day from database
         number_of_people_per_day = User_IP_Address.objects.filter(Q(created_at__day=(i+1)), Q(created_at__month=datetime.datetime.now().month), Q(created_at__year=datetime.datetime.now().year)).count()   
         if number_of_people_per_day>0:
+            #if there is visitor then it is appended to the list else not because showing all
+            #dates of a month on the page looks bad. So needs styling
+            #TODO: need styling
             daily.append(number_of_people_per_day)
             days_of_month.append(i+1)
 
@@ -310,7 +335,11 @@ def getHitCountYearly():
     monthly=[]
     month_names = []
     for i in range(12):
+        #getting the total number of people visited the main website in a single month. And this is 
+        #repeated for every month
         number_of_people_per_month = User_IP_Address.objects.filter(Q(created_at__month = (i+1)), Q(created_at__year=datetime.datetime.now().year)).count()
+        #if there are no people registered in a month then not appended
+        #TODO: need styling
         if number_of_people_per_month>0:
             monthly.append(number_of_people_per_month)
             month_names.append(getMonthName(i+1)[0:3])
@@ -322,6 +351,7 @@ def getHitCountOver5Years():
     yearly=[]
     current_year = datetime.datetime.now().year
     for i in range(5):
+        #getting the total number of people that visited the main website in a single month.
         number_of_people_over_5_years = User_IP_Address.objects.filter(created_at__year=(current_year-i)).count()
         yearly.append(number_of_people_over_5_years)
     yearly.reverse()
@@ -332,7 +362,7 @@ def getHitCountOver5Years():
 
 def getMaleFemaleRationAndActiveStatusStats():
 
-    '''This function is for the seconf circular chart'''
+    '''This function is for the second circular chart'''
 
     all_females = Members.objects.filter(gender="Female").count()
     all_males = Members.objects.filter(gender="Male").count()
@@ -350,6 +380,9 @@ def getMaleFemaleRationAndActiveStatusStats():
     return total_list_keys,total_list_values,dic
 
 def getMonthName(numb: int)->str:
+
+    '''Returns month name according to input value'''
+
     if numb == 1:
         return "January"
     elif numb==2:
