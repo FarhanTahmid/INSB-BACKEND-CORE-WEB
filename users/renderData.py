@@ -238,17 +238,16 @@ def getRecruitmentStats():
     except:
         return False  
 
-def getTypeOfEventStats(request):
+def getTypeOfEventStats(request,primary):
 
     '''This fucntion is for the circular chart that shows the total events of each type
-    and their corresponding percentages on poral. It only shows event type for IEEE NSU SB
-    and not for societies'''
+    and their corresponding percentages on poral. It shows event type for societies'''
 
     event_stats_keys =[]
     event_stats_values=[]
-    #getting the IEEE NSU SB only
-    society = SC_AG_Info.get_sc_ag_details(request,1)
-    #getting event type of SB
+    #getting the society
+    society = SC_AG_Info.get_sc_ag_details(request,primary)
+    #getting event type of societies
     all_event_type=Event_Category.objects.filter(event_category_for = society)
     #getting all events of NSU SB
     all_events_number = Events.objects.filter(event_organiser = society).count()

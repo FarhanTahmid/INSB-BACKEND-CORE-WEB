@@ -2,7 +2,7 @@ from .models import HomePageTopBanner,BannerPictureWithStat
 from django.http import HttpResponseServerError
 from users.models import Members,User_IP_Address
 from membership_development_team.renderData import MDT_DATA
-from central_events.models import Events
+from central_events.models import Events,InterBranchCollaborations
 from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position
 from graphics_team.models import Graphics_Banner_Image
 from media_team.models import Media_Images
@@ -14,6 +14,7 @@ from django.contrib import messages
 from django.utils import timezone
 from chapters_and_affinity_group.models import SC_AG_Members,SC_AG_FeedBack
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
+from central_branch.renderData import Branch
 class HomepageItems:
 
     logger=logging.getLogger(__name__)
@@ -21,6 +22,9 @@ class HomepageItems:
     def load_all_events(request,flag,primary):
 
         ''' This function returns all the events with its banner picture depending on the value of flag being True or False'''
+            
+            #when flag is true we are trying to fetch all events, else latest upcoming five events
+        
         try:
             #getting current date to compare with events date that are upcoming
             current_datetime = timezone.now()
@@ -29,10 +33,26 @@ class HomepageItems:
             #declaring dictionart to store event object as key and graphic banner object as value
             dic = {}
             if flag:
-                #when True getting all the events which are published, is of particular society and is ordered by latest date
-                events =  Events.objects.filter(publish_in_main_web= True,event_organiser = society).order_by('-event_date')
+                #when flag is true , checking to see if primary is 1 to get all events
+                if primary == 1:
+                    events = Events.objects.filter(publish_in_main_web= True,).order_by('-event_date') 
+                else:
+                    #when True getting all the events which are published, is of particular society and is ordered by latest date
+                    events =  Events.objects.filter(publish_in_main_web= True,event_organiser = society).order_by('-event_date')
+                    ####getting collaborated events###if dont want collaborated event remove bottom section
+                    collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
+                    #joining both the events list of collbarated and their own organised events
+                    events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('event_date') 
+                  
             else:
-                events = Events.objects.filter(publish_in_main_web= True,event_date__gt=current_datetime).order_by('event_date')[:5]
+                if primary == 1:
+                    #when false getting upcoming five events
+                    events = Events.objects.filter(publish_in_main_web= True,event_date__gt=current_datetime).order_by('event_date')[:5]
+                else:
+                    #when False getting events 5 events which are upcoming, is published and is of particular society
+                    events = Events.objects.filter(publish_in_main_web= True,event_organiser = society,event_date__gt=current_datetime).order_by('event_date')[:5]
+                
+            #using this loop, assigning the event with its corresponding banner picture in the dictionary as key and value
             for i in events:
                 #getting the event banner image using load_event_banner_image funtion
                 event_selected_image = HomepageItems.load_event_banner_image(i.pk)
@@ -139,7 +159,11 @@ class HomepageItems:
                 all_events = Events.objects.filter(publish_in_main_web= True).order_by('-event_date')
             else:
                 society = SC_AG_Info.get_sc_ag_details(request,primary)
-                all_events = Events.objects.filter(publish_in_main_web= True,event_organiser = society).order_by('-event_date')
+                #getting collaborated events
+                collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
+                events = Events.objects.filter(publish_in_main_web= True,event_organiser = society).order_by('-event_date')
+                #joining both the events list of collbarated and their own organised events
+                all_events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('event_date')   
             #decalring empty dictionary for getting the event date and event
             #key is the date and event object is the value
             date_and_events = {}
@@ -164,19 +188,24 @@ class HomepageItems:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
     
-    def get_upcoming_event(primary):
+    def get_upcoming_event(request,primary):
 
         '''This function returns a list of events which are upcoming'''
         
         try:
             #getting current date time to compare which events are upcoming
             current_datetime = timezone.now()
+            society = SC_AG_Info.get_sc_ag_details(request,primary)
             if primary == 1:
                 #getting the latest upcoming event for INSB student branch 
                 upcoming_event = Events.objects.filter(publish_in_main_web = True,event_date__gt=current_datetime).order_by('event_date')[:1]
             else:
                 #getting the latest upcoming event for affinity groups and societies
-                upcoming_event = Events.objects.filter(publish_in_main_web = True,event_date__gt=current_datetime,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)).order_by('event_date')[:1]
+                upcoming_event = Events.objects.filter(publish_in_main_web = True,event_date__gt=current_datetime,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)).order_by('event_date')#[:1]
+                #getting collaborated upcoming event
+                collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
+                #joining both the events list of collbarated and their own organised events
+                upcoming_event = upcoming_event .union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True,event_date__gt=current_datetime)).order_by('event_date')[:1] 
             #returning only the first item of the list as filter always returns a list
             return upcoming_event[0]
         except:
@@ -216,6 +245,7 @@ class HomepageItems:
             dic={}
             #getting 4 events which are published, is featured and is of the particular society. it is ordered bt latest date
             events = Events.objects.filter(event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary),is_featured = True,publish_in_main_web= True).order_by('-event_date')[:4]
+            print(events)
             #iterating for each event to set graphics banner image
             for i in events:
                     #getting the event banner image using load_event_banner_image funtion
@@ -225,7 +255,7 @@ class HomepageItems:
                         dic[i] = "#"
                     else:
                         #if not none assigning banner image as value to the event which is the key
-                        dic[i]=event.selected_image
+                        dic[i]=event
                         
             return dic
         except Exception as e:

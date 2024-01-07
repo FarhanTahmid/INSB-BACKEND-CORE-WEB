@@ -115,7 +115,7 @@ def dashboard(request):
     #getting data for the recruitment stats graph
     recruitement_stat = renderData.getRecruitmentStats()
     #getting data for the circular graph on portal
-    type_of_events_stat = renderData.getTypeOfEventStats(request)
+    type_of_events_stat = renderData.getTypeOfEventStats(request,1)
     #getting male female active inactive numbers
     male_female_active_inactive_stats = renderData.getMaleFemaleRationAndActiveStatusStats()
     #getting montly page view for the year
