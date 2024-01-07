@@ -41,13 +41,53 @@
     .plus-sign::before {
         content: '+';
     }
+
+
+    
+    .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+        max-width: 80%; 
+        height: 90%; 
+        z-index: 1500;
+    }
+    @media screen and (max-width:700px){
+        .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+            max-width:100%;
+        }
+    }
 </style>
 
 <body>
     <div class="app" id="app">
         <div ui-view class="app-body" style="justify-content:center; margin-left:27%; margin-right:15%;" id="view">
 
-            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>IEEE Section</b></h2>
+            <br>
+            <h4 style="justify-content:center;text-align:center;"><b>IEEE Section</b></h2>
+            <br>
+
+            <div class="btn-container">
+                <button class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#previewModal">Preview Event</button>
+            </div>
+            <br>
+
+            <!-- Preview Event Modal -->
+            <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" style="z-index: 1500;">
+                <div class="modal-dialog modal-dialog-centered modal-lg preview_modal_box" role="document">
+                    <div class="modal-content" style="width: 100%; height: 100%;">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="previewModalLabel">Preview Event</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <iframe src="https://ieeensusb.org/ieee/" style="width: 100%; height: 100%;" loading="lazy"></iframe>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <!--Messages-->
             <div style="justify-content:center; text-align:center;">
@@ -58,6 +98,8 @@
                 {% endif %}
             </div>
             <!--Messages End-->
+
+            
             
             <div class="container">
           
