@@ -26,11 +26,14 @@ class HomepageItems:
             else:
                 events = Events.objects.filter(publish_in_main_web= True,event_date__gt=current_datetime).order_by('event_date')[:5]
             for i in events:
-                try:
-                    event = Graphics_Banner_Image.objects.get(event_id = i.pk)
-                    dic[i]=event.selected_image
-                except:
+                #getting the event banner image using load_event_banner_image funtion
+                event_selected_image = HomepageItems.load_event_banner_image(i.pk)
+                if event_selected_image == None:
+                    #else assigning '#'
                     dic[i] = "#"
+                else:
+                    #if not none assigning banner image as value to the event which is the key
+                    dic[i]=event_selected_image
             return dic
         except Exception as e:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
