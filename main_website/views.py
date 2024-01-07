@@ -2,7 +2,9 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from central_events.models import Events
 from central_branch.renderData import Branch
+from chapters_and_affinity_group.models import SC_AG_Members
 from main_website.models import Research_Papers,Blog,Achievements,News
+from membership_development_team.renderData import MDT_DATA
 from port.renderData import PortData
 from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
 from .renderData import HomepageItems
@@ -110,12 +112,16 @@ def event_details(request,event_id):
             event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
             event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
-            return render(request,"Events/event_description_main.html",{
+            context = {
+                'is_live':True,
+                'page_title':get_event.event_name,
                 "event":get_event,
                 'media_url':settings.MEDIA_URL,
                 'event_banner_image' : event_banner_image,
-                'event_gallery_images' : event_gallery_images
-            })
+                'event_gallery_images' : event_gallery_images,
+            }
+
+            return render(request,"Events/event_description_main.html", context)
         else:
             return redirect('main_website:event_homepage')
     except:
@@ -728,7 +734,8 @@ def exemplary_members(request):
     return render(request,"Members/Exemplary Members/exemplary_members.html",context=context)
 
 def team_intros(request,team_primary):
-    
+    #loading all the teams of Branch
+    branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
     # get team details
     team = PortData.get_team_details(team_primary=team_primary,request=request)
     
@@ -750,6 +757,7 @@ def team_intros(request,team_primary):
     context={
         'page_title':team.team_name +' Team',
         'page_subtitle':"IEEE NSU Student Branch",
+        'branch_teams':branch_teams,
         'team':team,
         'co_ordinators':team_co_ordinators,
         'incharges':team_incharges,
@@ -776,8 +784,24 @@ def all_members(request):
     }
     return render(request,'Members/All Members/all_members.html',context=context)
 
-def member_profile(request):
-    return render(request, 'Members/Profile/member_profile.html')
+def member_profile(request, ieee_id):
+    try:
+        #loading all the teams of Branch
+        branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+        member_data = MDT_DATA.get_member_data(ieee_id=ieee_id)
+        sc_ag_position_data = SC_AG_Members.objects.filter(member=ieee_id)
+
+        context = {
+            'page_title':'Member Details',
+            'branch_teams': branch_teams,
+            'member':member_data,
+            'sc_ag_position_data':sc_ag_position_data,
+            'media_url':settings.MEDIA_URL,
+        }
+
+        return render(request, 'Members/Profile/member_profile.html', context)
+    except:
+        return redirect('main_website:all_members')
 
 def ieee_bd_section(request):
     return render(request, 'About/IEEE_bangladesh_section.html')
@@ -791,10 +815,15 @@ def ieee_region_10(request):
 
 def ieee(request):
     #working
+    #loading all the teams of Branch
+    branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
     about_ieee = About_IEEE.objects.get(id=1)
     
     context = {
-        'about_ieee':about_ieee
+        'page_title':'About - IEEE',
+        'branch_teams':branch_teams,
+        'about_ieee':about_ieee,
+        'media_url':settings.MEDIA_URL
     }
 
     return render(request, 'About/About_IEEE.html', context)
@@ -803,4 +832,15 @@ def faq(request):
     return render(request, 'About/faq.html')
 
 def contact(request):
-    return render(request, 'Contact/contact.html')
+    #loading all the teams of Branch
+    branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+
+    context = {
+        'page_title':'Contact',
+        'branch_teams':branch_teams
+    }
+
+    return render(request, 'Contact/contact.html', context)
+
+def blog_description(request):
+    return render(request, 'Publications/Blog/blog_description_main.html')

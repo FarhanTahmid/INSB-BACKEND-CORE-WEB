@@ -50,10 +50,10 @@ urlpatterns = [
     path('manage_website/exemplary_members',views.manage_exemplary_members,name="manage_exemplary_members"),
     path('manage_website/exemplary_members/update/<int:pk>',views.update_exemplary_members,name="update_exemplary_members"),
     path('manage_website/about',views.manage_about,name = "manage_about"),
-    path('manage_website/ieee_region_10',views.ieee_region_10,name = "ieee_region_10"),
-    path('manage_website/ieee_bangladesh_section',views.ieee_bangladesh_section,name = "ieee_bangladesh_section"),
-    path('manage_website/ieee_nsu_student_branch',views.ieee_nsu_student_branch,name = "ieee_nsu_student_branch"),
-    path('manage_website/faq',views.faq,name = "faq"),
+    path('manage_website/about/ieee_region_10',views.ieee_region_10,name = "ieee_region_10"),
+    path('manage_website/about/ieee_bangladesh_section',views.ieee_bangladesh_section,name = "ieee_bangladesh_section"),
+    path('manage_website/about/ieee_nsu_student_branch',views.ieee_nsu_student_branch,name = "ieee_nsu_student_branch"),
+    path('manage_website/about/faq',views.faq,name = "faq"),
     
     path('manage_access',views.manage_view_access,name="manage_access"),
 

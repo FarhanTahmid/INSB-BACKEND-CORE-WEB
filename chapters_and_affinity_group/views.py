@@ -734,6 +734,17 @@ def event_creation_form_page(request,primary):
                     else:
                         #if the method returns true, it will redirect to the new page
                         return redirect('chapters_and_affinity_group:event_creation_form2',primary,get_event)
+                elif(request.POST.get('add_event_type')):
+                    ''' Adding a new event type '''
+                    event_type = request.POST.get('event_type')
+                    created_event_type = Branch.add_event_type_for_group(event_type,primary)
+                    if created_event_type:
+                        print("Event type did not exists, so new event was created")
+                        messages.success(request,"New Event Type Added Successfully")
+                    else:
+                        print("Event type already existed")
+                        messages.info(request,"Event Type Already Exists")
+                    return redirect('chapters_and_affinity_group:event_creation_form1', primary)
 
             return render(request,'Events/event_creation_form.html',context)
         else:

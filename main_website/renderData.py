@@ -37,13 +37,13 @@ class HomepageItems:
             #using this loop, assigning the event with its corresponding banner picture in the dictionary as key and value
             for i in events:
                 #getting the event banner image using load_event_banner_image funtion
-                event = HomepageItems.load_event_banner_image(i.pk)
-                if event == None:
+                event_selected_image = HomepageItems.load_event_banner_image(i.pk)
+                if event_selected_image == None:
                     #else assigning '#'
                     dic[i] = "#"
                 else:
                     #if not none assigning banner image as value to the event which is the key
-                    dic[i]=event.selected_image
+                    dic[i]=event_selected_image
             return dic
         except Exception as e:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
