@@ -70,7 +70,6 @@ INSTALLED_APPS = [
     'central_events',
     'django_celery_beat',
     'django_celery_results',
-    'django_q',
 ]
 
 MIDDLEWARE = [
