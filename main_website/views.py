@@ -37,9 +37,14 @@ def homepage(request):
     get_recent_news=News.objects.filter().order_by('-news_date')[:6]
     # get recent 6 Blogs
     get_recent_blogs=Blog.objects.filter(publish_blog=True).order_by('-date')[:6]
+    # get featured events of branch
+    get_featured_events=HomepageItems.load_featured_events(sc_ag_primary=1)
+    
+    
     context={
         'banner_item':bannerItems,
         'banner_pic_with_stat':bannerWithStat,
+        'featured_events':get_featured_events,
         'media_url':settings.MEDIA_URL,
         'all_member_count':HomepageItems.getAllIEEEMemberCount(),
         'event_count':HomepageItems.getEventCount(),
@@ -52,27 +57,6 @@ def homepage(request):
 
 ##################### EVENT WORKS ####################
 
-# def all_events(request):
-
-#     '''Loads all events up untill today on Event page'''
-#     get_all_events = Branch.load_all_events()
-
-#     '''Fetching 6 events among which atleast 2 are flagship events.
-#        If no flagship event exists then all are normal events'''
-#     count = 0
-#     get_flagship_event = Events.objects.filter(Q(flagship_event = True) & Q(publish_in_main_web= True)).order_by('-probable_date')[:6]
-#     count += len(get_flagship_event)
-#     get_event = Events.objects.filter(Q(flagship_event = False) & Q(publish_in_main_web= True)).order_by('-probable_date')[:(6-count)]
-    
-#     context={
-#         "events":get_all_events,
-#         "last_event":get_all_events.last(),
-#         "flagship_event":get_flagship_event,
-#         "normal_event":get_event,
-#     }
-#     return render(request,"Events/events_homepage.html",context)
-
-
 def event_homepage(request):
 
     '''This view function loads all the events for the events homepage'''
@@ -82,11 +66,32 @@ def event_homepage(request):
         latest_five_events = HomepageItems.load_all_events(request,False,1)
         date_and_event = HomepageItems.get_event_for_calender(request,1)
         upcoming_event = HomepageItems.get_upcoming_event(1)
-        upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
-
-
+        upcoming_event_banner_picture = HomepageItems.get_upcoming_event_banner_picture(upcoming_event)
+        
+        # prepare event stat list for event category with numbers
+        get_event_stat=userData.getTypeOfEventStats()
+        event_stat=[]
+        # prepare data from the tuple
+        categories, count, percentage_mapping = get_event_stat
+        for category, count in zip(categories, count):
+            event_stat_dict={}
+            # get event name
+            event_stat_dict['name']=category
+            # get event count according to category
+            event_stat_dict['value']=count
+            # append the dict to list
+            event_stat.append(event_stat_dict)
+        
+        # prepare yearly event stat list for Branch
+        get_yearly_events=userData.getEventNumberStat()
+        # prepare years
+        get_years=get_yearly_events[0]
+        # prepare event counts according to years
+        get_yearly_event_count=get_yearly_events[1]
+        
         context = {
-            'page_title':"Events - IEEE NSU Student Branch",
+            'page_title':"Events",
+            'page_subtitle':"IEEE NSU Student Branch",
             'all_events':all_events,
             'media_url':settings.MEDIA_URL,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
@@ -94,6 +99,9 @@ def event_homepage(request):
             'date_and_event':date_and_event,
             'upcoming_event':upcoming_event,
             'upcoming_event_banner_picture':upcoming_event_banner_picture,
+            'data':event_stat,
+            'years':get_years,
+            'yearly_event_count':get_yearly_event_count,
         }
 
         return render(request,'Events/events_homepage.html',context)
@@ -108,20 +116,19 @@ def event_details(request,event_id):
     '''Loads details for the corresponding event page on site'''
     try:
         get_event = Events.objects.get(id = event_id)
+        
         if(get_event.publish_in_main_web):
             event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
             event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
-            context = {
-                'is_live':True,
+            return render(request,"Events/event_description_main.html",{
                 'page_title':get_event.event_name,
+                'page_subtitle':get_event.event_organiser,
                 "event":get_event,
                 'media_url':settings.MEDIA_URL,
                 'event_banner_image' : event_banner_image,
                 'event_gallery_images' : event_gallery_images,
-            }
-
-            return render(request,"Events/event_description_main.html", context)
+            })
         else:
             return redirect('main_website:event_homepage')
     except:
@@ -453,6 +460,82 @@ def blog_Description(request,blog_id):
         "blog_details":load_specific_blog
     })
 
+def write_blogs(request):
+    '''Creates a form and allows user to give a request to publish their blogs in the site'''
+    # load all sc ag and Branch
+    load_all_sc_ag=Chapters_Society_and_Affinity_Groups.objects.all().order_by('primary')
+    # load all blog categories
+    load_all_blog_category=Blog_Category.objects.all()
+    
+    if(request.method=="POST"):
+        if(request.POST.get('submit_blog')):
+            writer_ieee_id=request.POST['writer_ieee_id']
+            writer_name=request.POST['writer_name']
+            group=request.POST.get('group')
+            blog_title=request.POST['blog_title']
+            blog_category=request.POST.get('blog_category')
+            blog_short_description=request.POST['blog_short_description']
+            blog_description=request.POST['blog_description']
+            blog_banner=request.FILES['blog_banner_picture']
+            try:
+                if(group=="" and blog_category==""):
+                        new_requested_blog=Blog.objects.create(
+                        ieee_id=writer_ieee_id,writer_name=writer_name,title=blog_title,
+                        date=datetime.today(),
+                        short_description=blog_short_description,blog_banner_picture=blog_banner,
+                        description=blog_description,
+                        is_requested=True
+                        )
+                        new_requested_blog.save()
+
+                elif(group is not "" and blog_category==""):
+                        new_requested_blog=Blog.objects.create(
+                        ieee_id=writer_ieee_id,writer_name=writer_name,title=blog_title,
+                        date=datetime.today(),
+                        short_description=blog_short_description,blog_banner_picture=blog_banner,
+                        description=blog_description,branch_or_society=Chapters_Society_and_Affinity_Groups.objects.get(primary=group),
+                        is_requested=True
+                        )
+                        new_requested_blog.save()
+
+                elif(group=="" and blog_category is not ""):
+                        new_requested_blog=Blog.objects.create(
+                        ieee_id=writer_ieee_id,writer_name=writer_name,title=blog_title,
+                        category=Blog_Category.objects.get(pk=blog_category),date=datetime.today(),
+                        short_description=blog_short_description,blog_banner_picture=blog_banner,
+                        description=blog_description,
+                        is_requested=True
+                        )
+                        new_requested_blog.save()
+
+                else:
+                        new_requested_blog=Blog.objects.create(
+                            ieee_id=writer_ieee_id,writer_name=writer_name,title=blog_title,
+                            category=Blog_Category.objects.get(pk=blog_category),date=datetime.today(),
+                            short_description=blog_short_description,blog_banner_picture=blog_banner,
+                            description=blog_description,branch_or_society=Chapters_Society_and_Affinity_Groups.objects.get(primary=group),
+                            is_requested=True
+                        )
+                        new_requested_blog.save()
+                messages.success(request,"We have recieved your blog publishing request! You will be notified via email when it get's published. Thank you.")
+                return redirect('main_website:write_blogs')
+            except Exception as e:
+                messages.warning(request,"Something went wrong! Please try again!")
+                logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+                ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                return redirect('main_website:write_blogs')
+            
+    context={
+        'all_sc_ag':load_all_sc_ag,
+        'blog_categories':load_all_blog_category,
+        'page_title':"Write a Blog",
+        'page_subtitle':"""Empower your voice in the realm of knowledge! 
+                        Dive into the fascinating worlds of science & technology. 
+                        Illuminate the path to a sustainable future through the lens of power and energy.<br>
+                        Let your thoughts spark innovation and ignite conversations – we are waiting for your unique perspective!""",
+        
+    }
+    return render(request,"Get Involved/Write Blog/write_blog.html",context=context)
 
 ######################### RESEARCH PAPER WORKS ###########################
 

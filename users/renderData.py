@@ -289,14 +289,15 @@ def getEventNumberStat():
         event_num.append(count)
     #reversing list to get the oldest count first and lasted count last
     event_num.reverse()
-    return event_num
+    year_list=getEventNumberStatYear()
+    return year_list,event_num
 
 import datetime
 def getEventNumberStatYear():
 
     '''Return the last 5 years including today as a list, so that it could be
     displayed for the x-axis values on the graph in the django template for the
-    chart 'Event for 6 years' '''
+    chart 'Event for 5 years' '''
     
     year_list =[]
     #getting current year

@@ -60,7 +60,7 @@ class Events(models.Model):
     flagship_event = models.BooleanField(null=False,blank=False,default=False)
     publish_in_main_web = models.BooleanField(null=False,blank=False,default=False)
     form_link = models.URLField(null=True,blank=True,max_length=500)
-    is_featured = models.BooleanField(null=False,blank=False,default=False)
+    is_featured = models.BooleanField(null=False,blank=False,default=False,verbose_name="Feature this event")
     
     class Meta:
         verbose_name="Registered Event"
