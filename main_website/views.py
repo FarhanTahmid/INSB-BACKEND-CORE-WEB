@@ -20,6 +20,7 @@ from users import renderData as userData
 import json,requests
 from insb_port import settings
 from .models import *
+from django.contrib import messages
 
 logger=logging.getLogger(__name__)
 
@@ -392,9 +393,54 @@ def write_blogs(request):
             blog_short_description=request.POST['blog_short_description']
             blog_description=request.POST['blog_description']
             blog_banner=request.FILES['blog_banner_picture']
+            try:
+                if(group=="" and blog_category==""):
+                        new_requested_blog=Blog.objects.create(
+                        ieee_id=writer_ieee_id,writer_name=writer_name,title=blog_title,
+                        date=datetime.today(),
+                        short_description=blog_short_description,blog_banner_picture=blog_banner,
+                        description=blog_description,
+                        is_requested=True
+                        )
+                        new_requested_blog.save()
+
+                elif(group is not "" and blog_category==""):
+                        new_requested_blog=Blog.objects.create(
+                        ieee_id=writer_ieee_id,writer_name=writer_name,title=blog_title,
+                        date=datetime.today(),
+                        short_description=blog_short_description,blog_banner_picture=blog_banner,
+                        description=blog_description,branch_or_society=Chapters_Society_and_Affinity_Groups.objects.get(primary=group),
+                        is_requested=True
+                        )
+                        new_requested_blog.save()
+
+                elif(group=="" and blog_category is not ""):
+                        new_requested_blog=Blog.objects.create(
+                        ieee_id=writer_ieee_id,writer_name=writer_name,title=blog_title,
+                        category=Blog_Category.objects.get(pk=blog_category),date=datetime.today(),
+                        short_description=blog_short_description,blog_banner_picture=blog_banner,
+                        description=blog_description,
+                        is_requested=True
+                        )
+                        new_requested_blog.save()
+
+                else:
+                        new_requested_blog=Blog.objects.create(
+                            ieee_id=writer_ieee_id,writer_name=writer_name,title=blog_title,
+                            category=Blog_Category.objects.get(pk=blog_category),date=datetime.today(),
+                            short_description=blog_short_description,blog_banner_picture=blog_banner,
+                            description=blog_description,branch_or_society=Chapters_Society_and_Affinity_Groups.objects.get(primary=group),
+                            is_requested=True
+                        )
+                        new_requested_blog.save()
+                messages.success(request,"We have recieved your blog publishing request! You will be notified via email when it get's published. Thank you.")
+                return redirect('main_website:write_blogs')
+            except Exception as e:
+                messages.warning(request,"Something went wrong! Please try again!")
+                logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+                ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                return redirect('main_website:write_blogs')
             
-            
-    
     context={
         'all_sc_ag':load_all_sc_ag,
         'blog_categories':load_all_blog_category,
