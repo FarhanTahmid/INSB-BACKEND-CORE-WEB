@@ -54,27 +54,6 @@ def homepage(request):
 
 ##################### EVENT WORKS ####################
 
-# def all_events(request):
-
-#     '''Loads all events up untill today on Event page'''
-#     get_all_events = Branch.load_all_events()
-
-#     '''Fetching 6 events among which atleast 2 are flagship events.
-#        If no flagship event exists then all are normal events'''
-#     count = 0
-#     get_flagship_event = Events.objects.filter(Q(flagship_event = True) & Q(publish_in_main_web= True)).order_by('-probable_date')[:6]
-#     count += len(get_flagship_event)
-#     get_event = Events.objects.filter(Q(flagship_event = False) & Q(publish_in_main_web= True)).order_by('-probable_date')[:(6-count)]
-    
-#     context={
-#         "events":get_all_events,
-#         "last_event":get_all_events.last(),
-#         "flagship_event":get_flagship_event,
-#         "normal_event":get_event,
-#     }
-#     return render(request,"Events/events_homepage.html",context)
-
-
 def event_homepage(request):
 
     '''This view function loads all the events for the events homepage'''
@@ -396,6 +375,17 @@ def blog_Description(request,blog_id):
         "blog_details":load_specific_blog
     })
 
+def write_blogs(request):
+    '''Creates a form and allows user to give a request to publish their blogs in the site'''
+    context={
+        'page_title':"Write a Blog",
+        'page_subtitle':"""Empower your voice in the realm of knowledge! 
+                        Dive into the fascinating worlds of science & technology. 
+                        Illuminate the path to a sustainable future through the lens of power and energy.<br>
+                        Let your thoughts spark innovation and ignite conversations – we are waiting for your unique perspective!""",
+        
+    }
+    return render(request,"Get Involved/Write Blog/write_blog.html",context=context)
 
 ######################### RESEARCH PAPER WORKS ###########################
 

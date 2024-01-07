@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+
+    <title>Write Blogs - IEEE NSU SB</title>
+    <link rel="icon" href="{% static 'upload/logo.gif' %}"/>
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!--Common CSS-->
+    {% block common_css %}
+        {% include "common_css_includes.html" %}
+    {% endblock common_css %}
+
+    <!--Extra CSS-->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <!-- CKEditor CDN -->
+    <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+
+    <style>
+        .gdlr-header-inner,
+        .gdlr-header-wrapper.header-style-2-wrapper .gdlr-header-inner-overlay {
+            background-color: 	#002855;
+        }
+
+        .gdlr-header-wrapper.header-style-3-wrapper,
+        .gdlr-header-wrapper.header-style-7-wrapper {
+            background-color: #002855;
+        }
+
+        .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+            background-color: #002855;
+        }
+
+        @media only screen and (max-width: 767px) {
+            .gdlr-header-wrapper.header-style-5-wrapper {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-6-wrapper {
+                background-color: #002855;
+            }
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button {
+            background-color: #002855;
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button:hover, #gdlr-responsive-navigation.dl-menuwrapper button.dl-active, #gdlr-responsive-navigation.dl-menuwrapper ul {
+            background-color: #002855;
+        }
+        .dl-menuwrapper li a {
+            display: block;
+            position: relative;
+            padding: 15px 20px;
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 300;
+            color: #fff;
+            outline: none;
+        }
+        .dl-menuwrapper li.dl-back:after, .dl-menuwrapper li > a:not(:only-child):after {
+            position: absolute;
+            top: 0;
+            line-height: 50px;
+            font-family: 'FontAwesome';
+            speak: none;
+            -webkit-font-smoothing: antialiased;
+            content: "\f105";
+            font-size: 16px;
+            color: #ffffff;
+        }
+        a{
+            text-decoration:none;
+        }
+    </style>
+</head>
+
+<body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+    <div class="body-wrapper  float-menu">
+        
+        {% block header %}
+            {% include 'header.html' %}
+        {% endblock header %}
+        
+        {% block wave_design %}
+            {% include 'wave.html' %}
+        {% endblock wave_design %}
+
+        <!--Start adding from here-->
+        <section class="col-md-6 mx-auto">
+            <h5>Read instructions given below before submitting your Blog:</h5>
+            <ul>
+                <li>You must be a Registered IEEE NSU Student Branch Member to get your blogs published in our website!</li>
+                <li>IEEE NSU Student Branch holds the right to decline or delete your Blog.</li>
+                <li>IEEE NSU Student Branch will not publish any Blog that does not go with the Code of Conduct!</li>
+                <li>Keep Blogging! &#128515; &#128513;</li>
+            </ul>
+        </section>
+        <section style="margin-top:3%">
+            <div class="col-md-6 mx-auto">
+                <h1>Write a Blog</h1>
+                <br>
+                <br>
+                <div class="container">
+          
+                <div class="box">
+            
+            
+                    <br>
+                    <div class="box-header">
+                        <h1 style="text-align:center;font-size:30px;">Writer Information</h1>
+                        <hr>
+                    </div>
+                    
+            
+                    <form id="myForm" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <div class="box-body">    
+                            
+                            <div class="form-group">
+                                <label>IEEE ID <span style="color:red">*<span></label>
+                                <input 
+                                    type="text" 
+                                    class="form-control"
+                                    name="writer_ieee_id" 
+                                    placeholder="Enter your IEEE ID" 
+                                    maxlength="100" 
+                                    value = {{sc_ag_info.page_title}}
+                                >
+                            </div>
+                            <br>
+                        
+                            <div class="form-group">
+                                <label>Writer Name <span style="color:red">*<span></label>
+                                <input 
+                                    type="text" 
+                                    class="form-control"
+                                    name="writer_name" 
+                                    placeholder="Enter your name" 
+                                    maxlength="50" 
+                                    value = {{sc_ag_info.page_title}}
+                                >
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label>From which Chapter/Affinity Group you want to submit the Blog?</label> 
+                                <select class="form-control" name="blog_category">
+                                    <option value="">-------</option>
+                                    
+                                    <option value="saab">Saab</option>
+                                    <option value="mercedes">Mercedes</option>
+                                    <option value="audi">Audi</option>
+                                </select>
+                            </div>
+
+                            <br> 
+                            <br> 
+
+                            <h1 style="text-align:center;font-size:30px;">Blog Description</h1>
+                            <br>
+                            <hr>
+                            <div class="form-group">
+                                <label>Blog Title <span style="color:red">*<span></label> 
+                                <input 
+                                    class="form-control" 
+                                    type="text"
+                                    name="blog_title"
+                                    maxlength="150"
+                                    placeholder="Title of your Blog" 
+                                    Required
+                                    >
+                                    {{sc_ag_info.about_description|default:""}}
+                                </input>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Blog Category</label> 
+                                <select class="form-control" name="blog_category">
+                                    <option value="">-------</option>
+                                    
+                                    <option value="saab">Saab</option>
+                                    <option value="mercedes">Mercedes</option>
+                                    <option value="audi">Audi</option>
+                                </select>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label>Write a short description of your Blog<span style="color:red">*<span></label> 
+                                <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="blog_short_description"
+                                    maxlength="200"
+                                    Required>
+                                    {{sc_ag_info.mission_description}}
+                                </textarea>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label>Write your Blog <span style="color:red">*<span></label> 
+                                <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="blog_description"
+                                    Required>
+                                    {{sc_ag_info.vision_description|default:""}}
+                                </textarea>
+                                <p id="blogCharacterCount" style="color: red;">Required</p>
+                            </div> 
+                            <br> 
+
+                            <div class="form-group">
+                                <label for="images">Blog Banner Picture:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="mission-image-input" required name="blog_banner_picture" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="mission-image-input">Choose file</label>
+                                </div>
+                            
+                            </div>
+                            <br> 
+                            
+                            <div class="form-group text-center">
+                                <input type="submit" name="save" class="btn btn-outline-success p-x-md" value="Save">
+                            </div>
+                            <br>
+
+                            
+                            
+                        </div> 
+        
+                    
+                    </form>  
+        
+                <div>
+            </div> 
+            </div>
+        </section>
+        {% block footer %}
+            {% include "footer_block.html" %}
+        {% endblock footer %}
+    </div>
+    
+    {% block common_js %}
+        {% include "common_js_includes.html" %}
+    {% endblock %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Replace the textareas with CKEditor instances
+            CKEDITOR.replace('blog_description');
+            
+            // Attach a function to the change event for each CKEditor instance
+            ["blog"]
+                .forEach(function (editorId) {
+                    var editor = CKEDITOR.instances[editorId + '_description'];
+
+                    editor.on('change', function () {
+                        // Update character count display for each CKEditor instance
+                        updateCharacterCount(editorId);
+                    });
+
+                    // Update character count initially
+                    updateCharacterCount(editorId);
+                });
+        });
+
+        function updateCharacterCount(editorId) {
+            var editorContent = CKEDITOR.instances[editorId + '_description'].getData();
+        
+            // Handle special space representations
+            var cleanedContent = editorContent.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+        
+            // Count each character (including spaces)
+            var characterCount = cleanedContent.length;
+        
+            var characterCountElement = document.getElementById(editorId + 'CharacterCount');
+        
+            // Check conditions and update text color and content
+            if (characterCount === 0) {
+                characterCountElement.style.color = "red";
+                characterCountElement.innerText = "Required";
+            } else if (characterCount > 4800) {
+                characterCountElement.style.color = "red";
+                characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
+            } else {
+                characterCountElement.style.color = "black";
+                characterCountElement.innerText = "Character Count: " + characterCount;
+            }
+        }  
+    </script>
+</body>
+
+</html>
