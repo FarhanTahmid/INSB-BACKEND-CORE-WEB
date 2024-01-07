@@ -66,6 +66,7 @@ class Blog_Category(models.Model):
     
 #Table for Blogs
 class Blog(models.Model):
+    ieee_id=models.IntegerField(null=True,blank=True)
     writer_name=models.CharField(null=False,blank=False,max_length=50)
     title = models.CharField(null=False,blank=False,max_length=150)
     category = models.ForeignKey(Blog_Category,null=True,blank=True,on_delete=models.CASCADE)
