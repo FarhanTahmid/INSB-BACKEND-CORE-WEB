@@ -397,7 +397,8 @@ class Sc_Ag:
                         mission_description,mission_image,vision_description,vision_picture,
                         what_is_this_description,why_join_it,what_activites_it_has,how_to_join,
                         short_form,short_form_alternative_details,primary_color_code_details,secondary_color_code_details,
-                        text_color_code_details,pageTitle_details,secondParagraph_details):
+                        text_color_code_details,pageTitle_details,secondParagraph_details,
+                        email,facebook_link):
         
 
         ''''This function saves the data for the main website of societies and affinity groups'''
@@ -424,6 +425,8 @@ class Sc_Ag:
             sc_ag.text_color_code = text_color_code_details
             sc_ag.page_title = pageTitle_details
             sc_ag.secondary_paragraph = secondParagraph_details
+            sc_ag.email = email
+            sc_ag.facebook_link = facebook_link
 
             sc_ag.save()
 
@@ -503,26 +506,34 @@ class Sc_Ag:
         
         '''Using Ck editor results in texts to have html tags.To remove them,  BeautifulSoup 
             have been used'''
+        try:
+            # Parse the HTML content with Beautiful Soup
+            soup = BeautifulSoup(ckeditor_html, 'html.parser')
 
-        # Parse the HTML content with Beautiful Soup
-        soup = BeautifulSoup(ckeditor_html, 'html.parser')
+            # Extract the text content without HTML tags
+            text_content = soup.get_text()
 
-        # Extract the text content without HTML tags
-        text_content = soup.get_text()
-
-        # Now, 'text_content' contains only the actual content without HTML tags
-        return text_content
+            # Now, 'text_content' contains only the actual content without HTML tags
+            return text_content
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
     
     def get_all_feedbacks(request,primary):
 
         '''This function returns a list of feedback according to the primary value of 
             socities and affinity groups'''
-        
-        #getting the specific society
-        society = SC_AG_Info.get_sc_ag_details(request,primary)
-        #returning the feedbacks list ordered with boolean fields having highest priority and
-        #then secondary is date field
-        return SC_AG_FeedBack.objects.filter(society = society).order_by('is_responded','date')
+        try:
+            #getting the specific society
+            society = SC_AG_Info.get_sc_ag_details(request,primary)
+            #returning the feedbacks list ordered with boolean fields having highest priority and
+            #then secondary is date field
+            return SC_AG_FeedBack.objects.filter(society = society).order_by('is_responded','date')
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
     
     def set_feedback_status(responded_list,primary):
 

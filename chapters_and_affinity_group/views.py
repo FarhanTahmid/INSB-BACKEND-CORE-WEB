@@ -1357,14 +1357,17 @@ def manage_main_website(request, primary):
                     why_join_it = request.POST.get('why_join_this_details')
                     what_activites_it_has = request.POST.get('what_activities_does_this_do_details')
                     how_to_join = request.POST.get('how_to_join_this_details')
-                    short_form = request.POST.get('short_form_details')
-                    short_form_alternative_details = request.POST.get('short_form_alternative_details')
-                    primary_color_code_details = request.POST.get('primary_color_code_details')
-                    secondary_color_code_details = request.POST.get('secondary_color_code_details')
-                    text_color_code_details = request.POST.get('text_color_code_details')
-                    pageTitle_details = request.POST.get('pageTitle_details')
-                    secondParagraph_details = request.POST.get('secondParagraph_details')
+                    short_form = request.POST.get('short_form')
+                    short_form_alternative_details = request.POST.get('short_form_alternative')
+                    primary_color_code_details = request.POST.get('primary_color_code')
+                    secondary_color_code_details = request.POST.get('secondary_color_code')
+                    text_color_code_details = request.POST.get('text_color_code')
+                    pageTitle_details = request.POST.get('pageTitle')
+                    secondParagraph_details = request.POST.get('secondParagraph')
+                    email = request.POST.get('email')
+                    facebook_link = request.POST.get('facebook_link')
 
+                    print(pageTitle_details)
                     #checking to see if no picture is uploaded by user, if so then if picture is already present in database
                     #then updating it with saved value to prevent data loss. Otherwise it is None
                     if about_image == None:
@@ -1386,7 +1389,7 @@ def manage_main_website(request, primary):
                                     mission_description,mission_image,vision_description,vision_picture,
                                     what_is_this_description,why_join_it,what_activites_it_has,how_to_join,
                                     short_form,short_form_alternative_details,primary_color_code_details,secondary_color_code_details,
-                                    text_color_code_details,pageTitle_details,secondParagraph_details):
+                                    text_color_code_details,pageTitle_details,secondParagraph_details,email,facebook_link):
                         
                             messages.success(request,"Saved Changes Successfully!")
                     else:
