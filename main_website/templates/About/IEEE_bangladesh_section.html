@@ -10,47 +10,71 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+        
     <!--Common CSS-->
     {% block common_css %}
-        {% include "common_css_includes.html" %}
+    {% include "common_css_includes.html" %}
     {% endblock common_css %}
-    
+        
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" href="{% static 'upload/logo.gif' %}" />
 
 
 
     <style>
-
+        /*common CSS used throughout the page*/
         .centering {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
         }
+        .max-width {
+            max-width: 1080px;
+            margin: 30px 35px;
+        }
 
+        .max-width p {
+            text-align: justify;
+        }
+        .bar {
+            width: 90px;
+            height: 5px;
+            background-color: #FFC72C;
+            margin: 18px 0 20px;
+            border-radius: 5px;
+        }
+        .link {
+            text-decoration: none;
+            color: #002855;
+        }
+        .link:hover {
+            text-decoration: none;
+            color: #FFC72C;
+        }
+        .members-volunteers h2,
+        .achievements h2,
+        .gallery h2,
+        .contact-us h2 {
+            font-weight: bolder;
+            color: #002855;
+            padding-bottom: 25px;
+        }
+        /*common CSS used throughout the page*/
+
+        /*about IEEE*/
         .about-IEEE {
             display: flex;
             column-gap: 14px;
             background: #ffffff;
         }
-
         .IEEE-bd-section-logo {
-            width: 2000px;
+            min-width: 255px;
+            max-width: 500px;
             display: flex;
-            align-items: center;
+            object-fit: contain;
+            flex-direction: column;
+            justify-content: center;
         }
-
-        .members-volunteers {
-            display: flex;
-            column-gap: 50px;
-        }
-
-        .mem-vol-pic {
-            width: 2300px;
-            margin-top: 20px;
-            display: flex;
-            align-items: center;
-        }
-
         .ieee-bd-btn a {
             background-color: #002855;
             border: none;
@@ -66,107 +90,55 @@
             transition: all .3s ease-in-out;
             font-weight: bold;
         }
-
         .ieee-bd-btn a:hover {
             background-color: #FFC72C;
         }
+        /*about IEEE*/
 
-        .members-volunteers h2,
-        .achievements h2,
-        .gallery h2,
-        .contact-us h2 {
-            font-weight: bolder;
-            color: #002855;
-            padding-bottom: 25px;
+        /*members and volunteers*/
+        .members-volunteers {
+            display: flex;
+            column-gap: 50px;
         }
+        .mem-vol-pic {
+            min-width: 255px;
+            max-width: 500px;
+            display: flex;
+            object-fit: contain;
+            flex-direction: column;
+            justify-content: center;
+        }
+        /*members and volunteers*/
 
-        .benefits-student_branches-affinity_grp-community_society {
+        /*even columns*/
+        .even-col {
             display: grid;
             grid-template-columns: 1fr 1px 1fr;
             padding-top: 30px;
             padding-bottom: 30px;
             grid-gap: 50px;
         }
-
-        .benefits-student_branches-affinity_grp-community_society h2,
-        .benefits-student_branches-affinity_grp-community_society p {
+        .even-col h2,
+        .even-col p {
             color: #f9f9f9;
         }
-
-        .max-width {
-            max-width: 1080px;
-            margin: 30px 35px;
-        }
-
-        .max-width p {
-            text-align: justify;
-        }
-
-        .pic-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            grid-gap: 20px;
-        }
-
-        .pic-box {
-            width: 100%;
-            overflow: hidden;
-            border-radius: 6px;
-            box-shadow: 5px 5px 5px rgb(117, 117, 117);
-        }
-
-        .pic-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: all .5s;
-        }
-
-        .pic-box img:hover {
-            scale: 1.2;
-        }
-
-        .link {
-            text-decoration: none;
-            color: #002855;
-        }
-
-        .link:hover {
-            text-decoration: none;
-            color: #FFC72C;
-        }
-
-        .benefits-student_branches-affinity_grp-community_society .link {
+        .even-col .link {
             text-decoration: none;
             color: #FFC72C;
             transition: all .6 ease-in-out;
         }
-
-        .benefits-student_branches-affinity_grp-community_society .link:hover {
+        .even-col .link:hover {
             color: white;
         }
+        /*even columns*/
 
-        .contact-us {
-            width: 1080px;
-        }
-
-        .contact-us p {
-            font-weight: bold;
-            text-align: start;
-        }
-
-        .contact-details div {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-        }
-
+        /*achievements*/
         .achievement-container {
             display: flex;
             flex-wrap: wrap;
             gap: 28px;
             justify-content: space-around;
         }
-
         .achievement-card {
             width: 320px;
             height: 370px;
@@ -176,37 +148,30 @@
             overflow: hidden;
             transition: all 1s;
         }
-
         .achievement-card img {
             width: 320px;
             height: 370px;
             object-fit: cover;
             object-position: left;
         }
-
         .achievement-card div {
             transition: all 1s;
         }
-
         .achievement-card div:hover {
             scale: 1.1;
         }
-
         .achievement-card:hover {
             box-shadow: 0px 0px 15px #002855;
         }
-
         .achievement-card a {
             text-decoration: none;
             color: #f9f9f9;
             position: relative;
             top: -134px;
         }
-
         .achievement-card a:hover {
             color: #FFC72C;
         }
-
         .achievement-card h4 {
             margin: 0px 20px;
             color: #f9f9f9;
@@ -215,110 +180,28 @@
             position: relative;
             bottom: 231px;
         }
+        /*achievements*/
 
-        @media screen and (max-width: 1199px) {
-            .max-width {
-                max-width: 850px;
-            }
-
-            .achievement-card {
-                width: 220px;
-                height: 270px;
-            }
-
-            .achievement-container {
-                gap: 25px;
-            }
-
-            .achievement-card h4 {
-                margin: 0px 10px;
-                bottom: 285px;
-                font-size: 15px;
-            }
-
-            .achievement-card a {
-                top: -215px;
-            }
+        /*gallery*/
+        .pic-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-gap: 20px;
         }
-
-        @media screen and (max-width: 991px) {
-            .max-width {
-                max-width: 650px;
-            }
-
-            .about-IEEE {
-                display: grid;
-                grid-gap: 40px;
-                grid-template-columns: 100%;
-            }
-
-            .members-volunteers {
-                display: grid;
-                grid-template-columns: 100%;
-            }
-
-            .mem-vol-pic {
-                width: 100%;
-            }
-
-            .IEEE-bd-section-logo {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .achievement-card {
-                width: 199px;
-                height: 244px;
-            }
+        .pic-box {
+            width: 100%;
+            overflow: hidden;
+            border-radius: 6px;
+            box-shadow: 5px 5px 5px rgb(117, 117, 117);
         }
-
-        @media screen and (max-width: 544px) {
-            .max-width {
-                max-width: 370px;
-                margin: auto;
-            }
-
-            .mem-vol-pic {
-                width: 100%;
-            }
-
-            .benefits-student_branches-affinity_grp-community_society {
-                display: grid;
-                grid-template-columns: 1fr;
-            }
-
-            .line {
-                display: none;
-            }
-
-            .pic-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: 200px 200px 200px;
-            }
-
-            .achievement-card {
-                width: 100%;
-                height: 244px;
-            }
-
-            .centering {
-                padding-top: 50px;
-            }
+        .pic-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all .5s;
         }
-
-        @media screen and (max-width: 425px) {
-            .max-width {
-                max-width: 80%;
-                margin: 0% 5%;
-            }
-        }
-
-        .bar {
-            width: 90px;
-            height: 5px;
-            background-color: #FFC72C;
-            margin: 18px 0 20px;
-            border-radius: 5px;
+        .pic-box img:hover {
+            scale: 1.2;
         }
         .modal {
             display: none;
@@ -331,7 +214,6 @@
             overflow: hidden;
             background-color: rgba(0, 0, 0, 0.9);
         }
-    
         .modal-content {
             margin: auto;
             display: block;
@@ -342,12 +224,10 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
-    
         .modal-content img {
             width: 100%;
             height: auto;
         }
-    
         .close {
             color: #ffffff;
             position: absolute;
@@ -356,6 +236,105 @@
             font-size: 30px;
             font-weight: bold;
             cursor: pointer;
+        }
+        /*gallery*/
+
+        /*contact*/
+        .contact-us {
+            width: 1080px;
+        }
+        .contact-us p {
+            font-weight: bold;
+            text-align: start;
+        }
+        .contact-details div {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+        }
+        /*contact*/
+        
+
+        /*media queries*/
+        @media screen and (max-width: 1199px) {
+            .max-width {
+                max-width: 850px;
+            }
+            .achievement-card {
+                width: 220px;
+                height: 270px;
+            }
+            .achievement-container {
+                gap: 25px;
+            }
+            .achievement-card h4 {
+                margin: 0px 10px;
+                bottom: 285px;
+                font-size: 15px;
+            }
+            .achievement-card a {
+                top: -215px;
+            }
+        }
+
+        @media screen and (max-width: 991px) {
+            .max-width {
+                max-width: 650px;
+            }
+            .about-IEEE {
+                display: grid;
+                grid-gap: 40px;
+                grid-template-columns: 100%;
+            }
+            .members-volunteers {
+                display: grid;
+                grid-template-columns: 100%;
+            }
+            .mem-vol-pic {
+                width: 100%;
+            }
+            .IEEE-bd-section-logo {
+                width: 100%;
+                justify-content: center;
+            }
+            .achievement-card {
+                width: 199px;
+                height: 244px;
+            }
+        }
+
+        @media screen and (max-width: 544px) {
+            .max-width {
+                max-width: 370px;
+                margin: auto;
+            }
+            .mem-vol-pic {
+                width: 100%;
+            }
+            .even-col {
+                display: grid;
+                grid-template-columns: 1fr;
+            }
+            .line {
+                display: none;
+            }
+            .pic-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 200px 200px 200px;
+            }
+            .achievement-card {
+                width: 100%;
+                height: 244px;
+            }
+            .centering {
+                padding-top: 50px;
+            }
+        }
+
+        @media screen and (max-width: 425px) {
+            .max-width {
+                max-width: 80%;
+                margin: 0% 5%;
+            }
         }
     </style>
 </head>
@@ -371,9 +350,12 @@
             {% include 'wave.html' %}
         {% endblock wave_design %}
 
+        <!--page start-->
+        <!--about ieee section-->
         <section class="centering">
             <section class="about-IEEE max-width">
                 <div class="IEEE-bd-section-logo">
+                    <!--logo-->
                     <img src="https://ieeensusb.org/wp-content/uploads/2021/03/IEEE-BDS-Logo-800x326-2-400x163-1-300x122.png"
                         alt="">
                 </div>
@@ -390,6 +372,7 @@
                             India, USA, China and Canada. Bangladesh Section is maintaining the 5th ranking among 342
                             sections all over 160 countries in the world</p>
                     </div>
+                    <!--links-->
                     <div class="ieee-bd-btn">
                         <a href="#">IEEEBD.net</a>
                     </div>
@@ -398,7 +381,7 @@
         </section>
 
 
-
+        <!--members and volunteers section-->
         <section class="centering" style="background-color:#f9f9f9;">
             <section class="members-volunteers max-width">
                 <div>
@@ -418,6 +401,7 @@
                             Please go through this links:</p>
                     </div>
                     <div>
+                        <!--links-->
                         <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square "></i> WEB
                                 Team</a></div>
                         <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square "></i> Vice Chair
@@ -426,6 +410,7 @@
                                 Candidates</a></div>
                     </div>
                 </div>
+                <!--pic-->
                 <div class="mem-vol-pic">
                     <img src="https://ieeensusb.org/wp-content/uploads/2021/03/celia.jpg" alt="">
                 </div>
@@ -433,8 +418,9 @@
         </section>
 
 
+        <!--benefits-student_branches section-->
         <section class="centering" style="background-color: #002855;">
-            <section class="benefits-student_branches-affinity_grp-community_society max-width">
+            <section class="even-col max-width">
                 <div>
                     <div style="margin-bottom: -10px;">
                         <h2>Benefits</h2>
@@ -463,6 +449,7 @@
                             student branches link bellow</p>
                     </div>
                     <div>
+                        <!--links-->
                         <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE BDS</a>
                         </div>
                         <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE BDS
@@ -472,10 +459,13 @@
             </section>
         </section>
 
+
         <hr class="line" style="width:100%; border: #ffffff solid 1px; margin-bottom: -15px;">
 
+
+        <!--affinity_grp-community_society section-->
         <section class="centering" style="background-color: #002855;">
-            <section class="benefits-student_branches-affinity_grp-community_society max-width">
+            <section class="even-col max-width">
                 <div>
                     <div style="margin-bottom: -10px;">
                         <h2>Affinity Groups</h2>
@@ -489,6 +479,7 @@
                             Affinity groups in IEEE Bangladesh Section</p>
                     </div>
                     <div>
+                        <!--links-->
                         <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Visit
                                 Now</a></div>
                     </div>
@@ -505,6 +496,7 @@
                             and Energy Society), YP(Young Professionals) etc.</p>
                     </div>
                     <div>
+                        <!--links-->
                         <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Community
                                 and Society</a></div>
                         <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Other
@@ -515,7 +507,7 @@
         </section>
 
 
-
+        <!--achievements section-->
         <section class="centering" style="background-color:#f9f9f9;">
             <section class="achievements max-width">
                 <div style="margin-bottom: -38px;">
@@ -532,6 +524,7 @@
                         <div>
                             <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
                                 alt="">
+                                <!--links-->
                             <h4>IEEE NSU Achievements</h4>
                             <a href="#">Read More</a>
                         </div>
@@ -540,6 +533,7 @@
                         <div>
                             <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
                                 alt="">
+                                <!--links-->
                             <h4>IEEE BUET Achievements</h4>
                             <a href="#">Read More</a>
                         </div>
@@ -548,6 +542,7 @@
                         <div>
                             <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
                                 alt="">
+                                <!--links-->
                             <h4>IEEE AIUB Achievements</h4>
                             <a href="#">Read More</a>
                         </div>
@@ -556,6 +551,7 @@
                         <div>
                             <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
                                 alt="">
+                                <!--links-->
                             <h4>Achievements of DUET</h4>
                             <a href="#">Read More</a>
                         </div>
@@ -564,6 +560,7 @@
                         <div>
                             <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
                                 alt="">
+                                <!--links-->
                             <h4>Achievements of Milestone</h4>
                             <a href="#">Read More</a>
                         </div>
@@ -572,6 +569,8 @@
             </section>
         </section>
 
+
+        <!--gallery section-->
         <section class="centering" style="background-color: #ffffff;">
             <section class="gallery max-width">
                 <div style="margin-bottom: -38px;">
@@ -606,8 +605,7 @@
         </section>
 
 
-
-        <!--Contact Us-->
+        <!--contact section-->
         <section class="centering" style="background-color: #ffffff;">
             <section class="contact-us max-width">
                 <div>
@@ -644,7 +642,6 @@
         {% block footer %}
         {% include "footer_block.html" %}
         {% endblock footer %}
-
 
 
     </div>
