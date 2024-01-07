@@ -65,11 +65,11 @@ def event_homepage(request):
         all_events = HomepageItems.load_all_events(request,True,1)
         latest_five_events = HomepageItems.load_all_events(request,False,1)
         date_and_event = HomepageItems.get_event_for_calender(request,1)
-        upcoming_event = HomepageItems.get_upcoming_event(1)
-        upcoming_event_banner_picture = HomepageItems.get_upcoming_event_banner_picture(upcoming_event)
+        upcoming_event = HomepageItems.get_upcoming_event(request,1)
+        upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
         
         # prepare event stat list for event category with numbers
-        get_event_stat=userData.getTypeOfEventStats()
+        get_event_stat=userData.getTypeOfEventStats(request,1)
         event_stat=[]
         # prepare data from the tuple
         categories, count, percentage_mapping = get_event_stat
@@ -121,16 +121,14 @@ def event_details(request,event_id):
             event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
             event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
-            context = {
-                'is_live':True,
+            return render(request,"Events/event_description_main.html",{
                 'page_title':get_event.event_name,
+                'page_subtitle':get_event.event_organiser,
                 "event":get_event,
                 'media_url':settings.MEDIA_URL,
                 'event_banner_image' : event_banner_image,
                 'event_gallery_images' : event_gallery_images,
-            }
-
-            return render(request,"Events/event_description_main.html", context)
+            })
         else:
             return redirect('main_website:event_homepage')
     except:
@@ -415,13 +413,35 @@ def events_for_sc_ag(request,primary):
         all_events = HomepageItems.load_all_events(request,True,primary)
         latest_five_events = HomepageItems.load_all_events(request,False,primary)
         date_and_event = HomepageItems.get_event_for_calender(request,primary)
-        upcoming_event = HomepageItems.get_upcoming_event(primary)
+        upcoming_event = HomepageItems.get_upcoming_event(request,primary)
         upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
+
+        # prepare event stat list for event category with numbers
+        get_event_stat=userData.getTypeOfEventStats(request,primary)
+        event_stat=[]
+        # prepare data from the tuple
+        categories, count, percentage_mapping = get_event_stat
+        for category, count in zip(categories, count):
+            event_stat_dict={}
+            # get event name
+            event_stat_dict['name']=category
+            # get event count according to category
+            event_stat_dict['value']=count
+            # append the dict to list
+            event_stat.append(event_stat_dict)
+        
+        # prepare yearly event stat list for Branch
+        get_yearly_events=userData.getEventNumberStat()
+        # prepare years
+        get_years=get_yearly_events[0]
+        # prepare event counts according to years
+        get_yearly_event_count=get_yearly_events[1]
 
         context = {
             'is_sc_ag':True,
             'society':society,
+            'page_subtitle':society.short_form,
             'all_events':all_events,
             'media_url':settings.MEDIA_URL,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
@@ -429,6 +449,9 @@ def events_for_sc_ag(request,primary):
             'date_and_event':date_and_event,
             'upcoming_event':upcoming_event,
             'upcoming_event_banner_picture':upcoming_event_banner_picture,
+            'data':event_stat,
+            'years':get_years,
+            'yearly_event_count':get_yearly_event_count,
         }
 
 
