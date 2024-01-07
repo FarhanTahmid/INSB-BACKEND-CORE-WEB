@@ -165,8 +165,9 @@ class HomepageItems:
         '''This function returns the events to show them on calender'''
         
         try:
+            #getting all events according to the socities and affinity group primary value
             if primary == 1:
-                all_events = HomepageItems.load_all_events(True)
+                all_events = Events.objects.filter(publish_in_main_web= True).order_by('-event_date')
             else:
                 society = SC_AG_Info.get_sc_ag_details(request,primary)
                 #getting collaborated events
@@ -177,14 +178,18 @@ class HomepageItems:
             #decalring empty dictionary for getting the event date and event
             #key is the date and event object is the value
             date_and_events = {}
+            #iterating over each event
             for event in all_events:
                 try:
+                    #if date exists then formatting it
                     date = event.event_date.strftime("%Y-%m-%d")
                 except:
+                    #otherwise assigning empty value
                     date = ""
-
+                #if date does not exist in dictionart then appending it
                 if date in date_and_events:
                     date_and_events[date].append(event)
+                #else not appending it
                 else:
                     date_and_events[date] = [event]
 
@@ -266,7 +271,7 @@ class HomepageItems:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
-    def get_faculty_advisor_for_society(primary):
+    def get_faculty_advisor_for_society(request,primary):
 
         '''This function returns the faculty advisor for the particular society otherwise return none''' 
         try:
@@ -283,7 +288,7 @@ class HomepageItems:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
-    def get_eb_members_for_society(primary):
+    def get_eb_members_for_society(request,primary):
 
         '''This function returns a list of eb memebers for the particular society'''
         

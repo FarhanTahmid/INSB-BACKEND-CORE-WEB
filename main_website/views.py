@@ -210,7 +210,26 @@ def news(request):
     }
     return render(request,'Activities/news.html',context=context)
 
+def news_description(request,pk):
+    # get news
+    news=News.objects.get(pk=pk)
     
+    # get recent 3 news
+    recent_news=News.objects.all().order_by('-news_date').exclude(pk=pk)[:3]
+    
+    # get recent 5 blogs
+    recent_blogs=Blog.objects.filter(publish_blog=True).order_by('-date')[:5]
+    
+    context={
+        'page_title':news.news_title,
+        'page_subtitle':"IEEE NSU Student Branch",
+        'news':news,
+        'recent_news':recent_news,
+        'recent_blogs':recent_blogs,
+        
+    }
+    return render(request,"Activities/news_description.html",context=context)
+
 
 ############################## SC_AG ############################################
 def rasPage(request):
@@ -472,7 +491,7 @@ def blogs(request):
 
     '''Loads the blog page where all blog is shown'''
 
-    get_all_blog= Blog.objects.filter(publish_blog=True)
+    get_all_blog= Blog.objects.filter(publish_blog=True).order_by('-date')
     context={
         'page_title':"Blogs",
         'blogs':get_all_blog,
@@ -565,13 +584,26 @@ def write_blogs(request):
 
 def blog_description(request,pk):
     # get the blog
-    
     get_blog=Blog.objects.get(pk=pk)
+    # this shows IEEE NSU Student branch as default if there is no group selected in Blog
+    if(get_blog.branch_or_society is None):
+        society_name="IEEE NSU Student Branch"
+    else:
+        society_name=get_blog.branch_or_society.group_name
+    
+    # get recent blogs
+    get_recent_blogs=Blog.objects.filter(publish_blog=True).order_by('-date').exclude(pk=pk)[:3]
+    # get recent news
+    get_recent_news=News.objects.all().order_by('-news_date')[:5]
+    
+    print(get_recent_blogs)
     
     context={
         'page_title':get_blog.title,
-        'page_subtitle':get_blog.branch_or_society.group_name,
+        'page_subtitle':society_name,
         'blog':get_blog,
+        'recent_blogs':get_recent_blogs,
+        'recent_news':get_recent_news,
     }
     return render(request, 'Publications/Blog/blog_description_main.html',context=context)
 
