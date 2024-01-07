@@ -37,73 +37,14 @@
         margin-top: 40px; /* Adjust the margin as needed */
     }
 
-    @media only screen and (max-width: 768px) {
-      
-        .custom-file {
-            margin-bottom: 10px;
-        }
-      }
-  
-      #gallery-selected-images-container {
-        max-width: 100%; /* Set the maximum width for the image container */
-      }
-      
-      #gallery-selected-images {
-        width: 200px; /* Set the width to 100% */
-        height: auto; /* Set the height to 150px */
-        object-fit: cover; /* Maintain aspect ratio and cover the container */
-        margin-top:10px;
-      }
-  
-      .image-container-item{
-        width: 100%;
-        height: auto;
-        border-radius: 8px;
-        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-        transition: box-shadow 0.3s ease;
-      }
-  
-      .image-container-item:hover {
-          box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
-      }
-  
-      .image-container {
-        position: relative;
-        display: inline-block;
-      }
-  
-      .cross-button {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        cursor: pointer;
-        background-color: white; /* Set the background color to white */
-        border: none;
-        padding: 0;
-        width: 25px; /* Set the width and height to create a circle */
-        height: 25px;
-        border-radius: 50%; /* Make it a circle */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 2rem; /* Adjust font size */
-        color: black; /* Set the initial color */
-        z-index: 2;
-        transition: background-color 0.3s ease, color 0.3s ease; /* Add transitions for color and background-color changes */
-        line-height: 1; /* Ensure line height does not affect vertical alignment */
-      }
     
-    
-      .cross-button:hover {
-          color: gray; /* Change color on hover */
-      }
 
 
 </style>
 
 <body>
     <div class="app" id="app">
-        <div ui-view class="app-body" style="justify-content:center; margin-left:27%; margin-right:15%;" id="view">
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
 
             <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>IEEE NSU Student Branch</b></h2>
             
