@@ -240,7 +240,7 @@
                                            
                                         </div>
                                         <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                            <button type="submit" id="addFieldsBtn" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddFaqModal"></button>
+                                            <button type="button" id="addFieldsBtn" class="circle-btn plus-sign" ></button>
                                         </div>    
                                     
                                     </div>
@@ -288,6 +288,7 @@
                                         <hr>
                                         <button class="btn btn-danger deleteBtn" data-toggle="modal" data-target="#confirmationModal">Delete</button>
                                     </div>
+                                    
                                    
                                 </div>
                         </div>
@@ -330,7 +331,7 @@
             <!-- confirmation modal for faq delete-->
            
             <!-- Bootstrap Modal -->
-                <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+                 <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -348,7 +349,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> 
             
 
         </div>
@@ -399,7 +400,7 @@
 
         var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
         
-        */
+        
         // Append new fields and labels to the faq-set container
         faqSet.appendChild(newQuestionLabel);
         faqSet.appendChild(newQuestion);
