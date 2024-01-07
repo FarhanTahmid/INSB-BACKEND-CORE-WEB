@@ -1315,6 +1315,17 @@ def event_creation_form_page(request):
                 else:
                     #if the method returns true, it will redirect to the new page
                     return redirect('central_branch:event_creation_form2',get_event)
+            elif(request.POST.get('add_event_type')):
+                ''' Adding a new event type '''
+                event_type = request.POST.get('event_type')
+                created_event_type = Branch.add_event_type_for_group(event_type,1)
+                if created_event_type:
+                    print("Event type did not exists, so new event was created")
+                    messages.success(request,"New Event Type Added Successfully")
+                else:
+                    print("Event type already existed")
+                    messages.info(request,"Event Type Already Exists")
+                return redirect('central_branch:event_creation_form1')
         
         context={
             'super_events':super_events,

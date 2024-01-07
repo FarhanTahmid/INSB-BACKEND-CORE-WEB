@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Blog Title</title>
+
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+    <link rel="icon" href="{% static 'upload/logo.gif' %}" />
+
+
+    <!--Common CSS-->
+    {% block common_css %}
+    {% include "common_css_includes.html" %}
+    {% endblock common_css %}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+
+
+    <style>
+        /*common CSS used throughout the page*/
+        .centering {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+        }
+
+        .max-width {
+            max-width: 1080px;
+            margin: 30px 15px;
+            text-align: justify;
+        }
+
+        .vertical-line {
+            border-left: 1px solid #75787b75;
+            position: relative;
+            left: 25px;
+        }
+
+        /*common CSS used throughout the page*/
+        hr {
+            border-top: 1px solid #75787b75;
+            position: relative;
+        }
+
+        /*left portion CSS*/
+        .blog-container {
+            display: grid;
+            grid-template-columns: 3fr .2fr 1fr;
+        }
+
+
+
+        .blog-banner {
+            width: 100%;
+            object-fit: cover;
+            min-height: 430px;
+            max-height: 430px;
+            overflow: hidden;
+        }
+
+        .blog-title h3 {
+            margin-top: 10px;
+            margin-bottom: -10px;
+            color: #000000;
+        }
+
+        /*blog card CSS*/
+        .blog-card-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-gap: 15px;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .blog-card-banner {
+            overflow: hidden;
+        }
+
+        .blog-card-banner img {
+            object-fit: cover;
+            width: 100%;
+            max-height: 140px;
+            transition: all .6s ease-in-out;
+        }
+
+        .blog-card-banner img:hover {
+            scale: 1.05;
+        }
+
+        .blog-card a {
+            text-decoration: none;
+            color: #000000;
+        }
+
+        .blog-card a:hover {
+            text-decoration: none;
+            color: #00629B;
+        }
+
+        /*blog card CSS*/
+        /*left portion CSS*/
+
+        /*right portion CSS*/
+        .aside div hr {
+            position: relative;
+            top: 10px;
+        }
+
+        .aside div p {
+            margin-bottom: -20px;
+            font-size: 13px;
+            font-weight: 400;
+        }
+
+        .aside div p a {
+            text-decoration: none;
+            color: #000000;
+            transition: all .3 ease-in-out;
+        }
+
+        .aside div p a:hover {
+            color: #00629B;
+            font-weight: 500;
+        }
+
+        /*right portion CSS*/
+
+        /*media queries*/
+        @media screen and (max-width: 1199px) {
+            .max-width {
+                max-width: 850px;
+            }
+
+            .blog-banner {
+                min-height: 335px;
+                max-height: 335px;
+            }
+
+            .blog-card img {
+                max-height: 108px;
+            }
+        }
+
+        @media screen and (max-width: 991px) {
+            .max-width {
+                max-width: 650px;
+            }
+
+            .blog-container {
+                grid-template-columns: 1fr;
+            }
+
+            .blog-banner {
+                min-height: auto;
+                max-height: auto;
+            }
+
+            .blog-card img {
+                max-height: 1000px;
+                height: 150px;
+            }
+        }
+
+        @media screen and (max-width: 630px) {
+            .max-width {
+                max-width: 90%;
+            }
+
+            .blog-card-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media screen and (max-width: 425px) {
+            .max-width {
+                max-width: 80%;
+            }
+        }
+
+        .blog-card::after {
+            content: "";
+            width: 0%;
+            transition: all .4s ease-in-out;
+            display: block;
+        }
+
+        .blog-card:hover::after {
+            width: 100%;
+            border: 1px solid #00629B;
+        }
+        .blog_content .blog_time_and_category p, .blog_content .blog_description p{
+            font-weight: 400;
+            font-size: 15px;
+        }
+        .blog_content .blog-title h3{
+            font-weight: 700;
+        }
+        .blog-card-container p{
+            font-weight: 400;
+        }
+    </style>
+</head>
+
+<body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+    <div class="body-wrapper  float-menu">
+
+        {% block header %}
+        {% include 'header.html' %}
+        {% endblock header %}
+
+
+        {% block wave_design %}
+        {% include 'wave.html' %}
+        {% endblock wave_design %}
+
+        <!--Page Start-->
+        <section class="centering">
+            <section class="max-width">
+                <div class="blog-container">
+
+
+                    <!--Divides the page in two parts-->
+                    <!--Left part of the page start-->
+                    <div class="blog_content">
+                        <!--Blog Banner-->
+                        <div class="blog-banner"><img
+                                src="https://ieeensusb.org/wp-content/uploads/2021/10/SUSTAINABLE-DEVELOPMENT-WITH-INDUSTRY-4.0-com.png"
+                                alt=""></div>
+                        <!--Blog Title-->
+                        <div class="blog-title">
+                            <h3>SUSTAINABLE DEVELOPMENT WITH INDUSTRY 4.0</h3>
+                        </div>
+                        <div>
+                            <hr>
+                        </div>
+                        <!--Blog Time and Category-->
+                        <div class="blog_time_and_category" style="font-weight: 500;">
+                            <p><i class="fa-regular fa-clock"></i>13/10/2021 -
+                                <i class="fa-regular fa-folder" style="font-size: 18px;"></i>Uncategorized
+                            </p>
+                        </div>
+                        <div>
+                            <hr>
+                        </div>
+                        <!--Blog Description-->
+                        <div class="blog_description">
+                            <p>Sustainable development is an integral part of economic development in all countries,
+                                even when the emphasis is diverted away from it. The harmony between humanity’s need to
+                                produce and its desire to avoid ruining the world is constantly questioned and
+                                shattered. The subject of sustainability arises as a result of the disruptive new models
+                                that Industry 4.0 has demonstrated to the world, as well as the ever-expanding prospects
+                                for innovations, production, and improvements in the way organizations operate.
+                                The idea of Industry 4.0 allows for a globally equal distribution of the benefits of
+                                digitalization in the industrial industry. There is little question that the workplace
+                                will change from what we know it to be. It also emphasizes that the fourth industrial
+                                revolution is context-dependent and that the effect could be different in a developing
+                                country compared to a developed country. Employers will increasingly attempt to arrange
+                                their employment contracts in order to meet the transition to a more flexible workforce
+                                in the future.</p>
+                        </div>
+                        <div>
+                            <hr>
+                        </div>
+                        <!--Blog Card start-->
+                        <div style="font-weight: bold; color: #002855; font-size: 15px;">
+                            <p><i class="fa-solid fa-angles-right"></i> YOU MIGHT ALSO LIKE</p>
+                        </div>
+                        <div class="blog-card-container">
+                            <div class="blog-card">
+                                <div class="blog-card-banner"><img
+                                        src="https://ieeensusb.org/wp-content/uploads/2021/10/SUSTAINABLE-DEVELOPMENT-WITH-INDUSTRY-4.0-com.png"
+                                        alt=""></div>
+                                <div style="margin-top: 10px;">
+                                    <p><a href="#">SUSTAINABLE DEVELOPMENT WITH INDUSTRY 4.0</a></p>
+                                </div>
+                                <div style="color: #000000;">
+                                    <p><i class="fa-regular fa-clock"></i>13/10/2021</p>
+                                </div>
+                            </div>
+
+                            <div class="blog-card">
+                                <div class="blog-card-banner"><img
+                                        src="https://ieeensusb.org/wp-content/uploads/2023/11/VC-Congratulations-1536x1536.jpg"
+                                        alt=""></div>
+                                <div style="margin-top: 10px;">
+                                    <p><a href="#">SUSTAINABLE DEVELOPMENT WITH INDUSTRY 4.0</a></p>
+                                </div>
+                                <div style="color: #000000;">
+                                    <p><i class="fa-regular fa-clock"></i>13/10/2021</p>
+                                </div>
+                            </div>
+
+                            <div class="blog-card">
+                                <div class="blog-card-banner"><img
+                                        src="https://ieeensusb.org/wp-content/uploads/2021/10/SUSTAINABLE-DEVELOPMENT-WITH-INDUSTRY-4.0-com.png"
+                                        alt=""></div>
+                                <div style="margin-top: 10px;">
+                                    <p><a href="#">SUSTAINABLE DEVELOPMENT WITH INDUSTRY 4.0</a></p>
+                                </div>
+                                <div style="color: #000000;">
+                                    <p><i class="fa-regular fa-clock"></i>13/10/2021</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Blog Card end-->
+                    </div>
+                    <!--Left part of the page end-->
+
+
+                    <!--Adds the vertical line in the middle-->
+                    <div class="vertical-line"></div>
+
+                    <!--Right part of the page start-->
+                    <div class="aside">
+                        <div>
+                            <p style="font-size: 20px; font-weight:400; color: #75787B;">Recent Posts</p>
+                        </div>
+                        <div>
+                            <hr>
+                        </div>
+                        <!--Recent Posts-->
+                        <div>
+                            <p><a href="#"><i class="fa-solid fa-chevron-right" style="font-size: 12px;"></i></i>Eid ul
+                                    Adha-2023</a></p>
+                        </div>
+                        <div>
+                            <hr>
+                        </div>
+                        <div>
+                            <p><a href="#"><i class="fa-solid fa-chevron-right"
+                                        style="font-size: 12px;"></i></i>Feelings About IEEE NSU Student Branch</a></p>
+                        </div>
+                        <div>
+                            <hr>
+                        </div>
+                        <div>
+                            <p><a href="#"><i class="fa-solid fa-chevron-right"
+                                        style="font-size: 12px;"></i></i>Mother’s Day 2023</a></p>
+                        </div>
+                        <div>
+                            <hr>
+                        </div>
+                        <div>
+                            <p><a href="#"><i class="fa-solid fa-chevron-right" style="font-size: 12px;"></i></i>Happy
+                                    May Day!</a></p>
+                        </div>
+                        <div>
+                            <hr>
+                        </div>
+                    </div>
+                    <!--Right part of the page end-->
+
+                </div>
+                <!--Page End-->
+
+
+            </section>
+        </section>
+
+
+        <!--Footer-->
+        {% block footer %}
+        {% include "footer_block.html" %}
+        {% endblock footer %}
+
+
+
+    </div>
+    {% block common_js %}
+    {% include "common_js_includes.html" %}
+    {% endblock %}
+
+</body>
+
+</html>

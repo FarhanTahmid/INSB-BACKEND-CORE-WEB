@@ -34,13 +34,12 @@ urlpatterns = [
     path('exemplary_members',views.exemplary_members,name="exemplary_members"),
     path('all_members',views.all_members,name="all_members"),
     path('team/<int:team_primary>',views.team_intros,name="team_intro"),
-    path('member_profile',views.member_profile, name="member_profile"),
-
-    path('member_profile',views.member_profile, name="member_profile"),
+    path('member_profile/<str:ieee_id>',views.member_profile, name="member_profile"),
 
     # Publications
     path('blogs',views.blogs,name="blogs"),
     path('write_blogs',views.write_blogs,name="write_blogs"),
+    path('blog_description',views.blog_description, name="blog_description"),
     path('magazines',views.magazines,name="magazines"),
     
 

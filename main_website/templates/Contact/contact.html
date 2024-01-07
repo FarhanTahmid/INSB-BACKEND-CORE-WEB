@@ -90,6 +90,7 @@
       width: 100%;
       display: flex;
       column-gap: 20px;
+      margin-top: 30px;
     }
 
     .contact-card {
@@ -97,9 +98,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px 30px 10px 30px;
       border-radius: 4px;
-      margin: 50px 0px;
     }
 
     .contact-card h4 {
@@ -112,57 +111,26 @@
       font-size: small;
     }
 
-    .address-icon {
+    .address-icon, .email-icon, .mobile-icon, .share-icon {
       color: white;
-      font-size: 50px;
-      background: #ffd100;
+      font-size: 30px;
+      background: #75787B;
       padding: 30px;
-      border-radius: 500px;
-      height: 114px;
-      transition: all .3s ease-in-out;
-    }
-
-    .email-icon {
-      color: white;
-      font-size: 50px;
-      background: #ffd100;
-      padding: 32px;
-      border-radius: 500px;
-      height: 114px;
-      transition: all .3s ease-in-out;
-    }
-
-    .mobile-icon {
-      color: white;
-      font-size: 50px;
-      background: #ffd100;
-      padding: 33px 41px;
-      border-radius: 500px;
-      height: 114px;
-      transition: all .3s ease-in-out;
-    }
-
-    .share-icon {
-      color: white;
-      font-size: 50px;
-      background: #ffd100;
-      padding: 33px 37px;
-      border-radius: 500px;
-      height: 114px;
-      transition: all .3s ease-in-out;
+      border-radius: 50%;
+      transition: all .5s;
     }
 
     .address-icon:hover,
     .email-icon:hover,
     .mobile-icon:hover,
     .share-icon:hover {
-      scale: 1.2;
+      background: #000000;
     }
 
     .social-media-icons i {
       font-size: 20px;
       color: white;
-      background-color: #75787B;
+      background-color: 	#002855;
       padding: 7px;
       border-radius: 6px;
       transition: all .3s ease-in-out;
@@ -191,14 +159,12 @@
 
     .even-col iframe {
       text-decoration: none;
-      padding: 10px;
       border-radius: 4px;
       height: 480px;
     }
 
     .contact-us {
       height: 480px;
-      padding: 0px 10px;
       border-radius: 4px;
     }
 
@@ -266,9 +232,6 @@
         max-width: 850px;
       }
 
-      .contact-card {
-        padding: 34px 0px 24px 0px;
-      }
 
       .social-media-icons i {
         font-size: 15px;
@@ -280,12 +243,12 @@
     }
 
     @media screen and (max-width: 991px) {
+      .contact-card-container{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
       .max-width {
         max-width: 650px;
-      }
-
-      .contact-card-container {
-        flex-wrap: wrap;
       }
 
       .contact-card {
@@ -303,6 +266,9 @@
     }
 
     @media screen and (max-width: 630px) {
+      .contact-card-container{
+        grid-template-columns: 1fr;
+      }
       .max-width {
         max-width: 90%;
       }
@@ -329,7 +295,7 @@
 
     .section-B .container h2 {
       color: #FFFFFF;
-      font-family: "Poppins", Sans-serif;
+      font-family: "Poppins", sans-serif;
       font-size: 40px;
       font-weight: 600;
       margin: 0;
@@ -341,7 +307,7 @@
 
     .section-B .container p {
       color: #FFFFFF;
-      font-family: "Poppins", Sans-serif;
+      font-family: "Poppins", sans-serif;
       font-size: 20px;
       font-weight: 300;
       margin: -20px, 0, 0, 20px;
@@ -395,14 +361,14 @@
 
     .section-C .container .inner-container h2 {
       color: #000000;
-      font-family: "Poppins";
+      font-family: "Poppins", sans-serif;
       font-size: 39px;
       font-weight: 600;
       margin-top: 0;
     }
 
     .channelBtn {
-      font-family: "Poppins";
+      font-family: "Poppins", sans-serif;
       font-weight: 700;
       background-color: #BA0C2F;
       border: 2px solid white;
