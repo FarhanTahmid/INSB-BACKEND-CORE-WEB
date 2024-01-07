@@ -72,10 +72,10 @@
 <div ui-view class="app-body" style="justify-content:center; margin-left:25%; margin-right:15%;" id="view">
     <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>Update Blogs</b></h4>
     <div class="tooltip-container">
-        <a href="{% url 'central_branch:manage_blogs' %}" class="image-button">
-            <img src="{% static 'back-arrow.png' %}" alt="Go back to Blogs">
+        <a href="{% url 'central_branch:blog_requests' %}" class="image-button">
+            <img src="{% static 'back-arrow.png' %}" alt="Go back to Blog Requests">
         </a>
-        <span class="tooltip-text">Manage Blogs</span>
+        <span class="tooltip-text">Manage Blog Requests</span>
     </div>
     <div class="container">
         <div class="padding">
@@ -91,7 +91,7 @@
                                     {% csrf_token %}
                                     {{form.media}}
                                     {{form.as_p}}
-                                    <input type="submit" name="update_blog" class="btn btn-success p-x-md" value="Update"></input> 
+                                    <input type="submit" name="publish_blog" class="btn btn-success p-x-md" value="Publish"></input> 
                                 </form>
                             </div>
                             <br>
