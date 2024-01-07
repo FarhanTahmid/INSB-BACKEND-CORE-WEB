@@ -112,12 +112,16 @@ def event_details(request,event_id):
             event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
             event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
-            return render(request,"Events/event_description_main.html",{
+            context = {
+                'is_live':True,
+                'page_title':get_event.event_name,
                 "event":get_event,
                 'media_url':settings.MEDIA_URL,
                 'event_banner_image' : event_banner_image,
-                'event_gallery_images' : event_gallery_images
-            })
+                'event_gallery_images' : event_gallery_images,
+            }
+
+            return render(request,"Events/event_description_main.html", context)
         else:
             return redirect('main_website:event_homepage')
     except:
