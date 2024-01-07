@@ -1,1 +1,463 @@
-GG BOI Best of luck
+{% block about_base %}
+{% include "Manage Website/About/about_base.html" %}
+{% endblock about_base %}
+{% block manage_region_10_section %}
+{% load static %}
+
+
+<!-- CKEditor CDN -->
+<script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+
+<style>
+
+
+    @media only screen and (max-width: 768px) {
+      
+        .custom-file {
+            margin-bottom: 10px;
+        }
+      }
+  
+  
+      .image-container-item{
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        transition: box-shadow 0.3s ease;
+      }
+  
+      .image-container-item:hover {
+          box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+      }
+  
+      .image-container {
+        position: relative;
+        display: inline-block;
+      }
+  
+      .cross-button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        cursor: pointer;
+        background-color: white; /* Set the background color to white */
+        border: none;
+        padding: 0;
+        width: 25px; /* Set the width and height to create a circle */
+        height: 25px;
+        border-radius: 50%; /* Make it a circle */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2rem; /* Adjust font size */
+        color: black; /* Set the initial color */
+        z-index: 2;
+        transition: background-color 0.3s ease, color 0.3s ease; /* Add transitions for color and background-color changes */
+        line-height: 1; /* Ensure line height does not affect vertical alignment */
+      }
+    
+    
+      .cross-button:hover {
+          color: gray; /* Change color on hover */
+      }
+
+</style>
+
+<body>
+  
+    <div class="app" id="app">
+        <div ui-view class="app-body" style="justify-content:center; margin-left:27%; margin-right:15%;" id="view">
+
+            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>IEEE REGION 10 Section</b></h2>
+            
+            <!--Messages-->
+            <div style="justify-content:center; text-align:center;">
+                {% if messages %}
+                    {% for message in messages %}
+                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <!--Messages End-->
+            
+            <div class="container">
+          
+                <div class="box">
+            
+            
+                    <br>
+                    <div class="box-header">
+                        <h1 style="text-align:center;font-size:30px;">Details</h1>
+                        <hr>
+                    </div>
+
+                      <!-- Form starts here -->
+                    
+            
+                    <form id="myForm" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="box-body">  
+                            <!-- IEEE REGION 10 -->
+                            
+                            <h1 style="text-align:center;font-size:30px;">IEEE REGION 10</h1>
+                            <br>
+                            
+                            <!-- Text field -->
+                            <div class="form-group">
+                                <label>IEEE REGION 10 <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="about_details"></textarea>
+                                <p id="aboutCharacterCount" style="color: red;">Required</p>
+                            </div>
+                            <br>
+
+                            <!-- image input -->
+                            <div class="form-group">
+                                <label for="images">IEEE REGION 10 Image:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="about-image-input" name="image" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
+                            </div>  
+
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <!-- Young Professionals -->
+
+                            <h1 style="text-align:center;font-size:30px;">Young Professionals</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Young Professionals Details <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="members_and_volunteers_details"></textarea>
+                                <p id="members_and_volunteersCharacterCount" style="color: red;">Required</p>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">Young Professionals Image:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="members-and-volunteers-image-input" name="image" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="members-and-volunteers-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
+                            </div> 
+
+                            <br> 
+                            <hr>
+                            <br> 
+
+                            <!-- WIE Students Educational Industry -->
+
+                            <h1 style="text-align:center;font-size:30px;">WIE Students Educational Industry</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Women in Engineering <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="benefits_details"></textarea>
+                                <p id="benefitsCharacterCount" style="color: red;">Required</p>
+
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Students and Member Activites <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="student_branches_details"></textarea>
+                                <p id="student_branchesCharacterCount" style="color: red;">Required</p>
+
+                            </div>
+                            <br>
+                            
+
+                            <div class="form-group">
+                                <label>Educational Activities and Involvements <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="affinity_groups_details"></textarea>
+                                <p id="affinity_groupsCharacterCount" style="color: red;">Required</p>
+
+                            </div>
+                            <br>
+
+                            
+                            <div class="form-group">
+                                <label>Industry Relations <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="communty_and_society_details"></textarea>
+                                <p id="communty_and_societyCharacterCount" style="color: red;">Required</p>
+
+                            </div>
+                            
+                            <br>
+                            <hr>
+                            <br>
+
+                             <!-- Membership Development -->
+                            
+                             <h1 style="text-align:center;font-size:30px;">Membership Development</h1>
+                             <br>
+                             
+                             <!-- Text field -->
+                             <div class="form-group">
+                                 <label>Membership Development <span style="color:red">*<span></label> 
+                                 <textarea 
+                                 class="form-control" 
+                                 type="text"
+                                 name="membership_details"></textarea>
+                                 <p id="membershipCharacterCount" style="color: red;">Required</p>
+                             </div>
+                             <br>
+ 
+                             <!-- image input -->
+                             <div class="form-group">
+                                 <label for="images">Membership Development Image:</label>
+                                 <div class="custom-file">
+                                     <input type="file" class="custom-file-input" id="membership-image-input" name="image" accept="image/*">
+                                     <label class="custom-file-label bg-light" for="membership-image-input">Choose file</label>
+                                 </div>
+                                 
+                                 <br>
+                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                     <div class="col-sm-11">
+                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                     </div>
+                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                     </div>
+                                 </div>
+                             </div>  
+ 
+                             <br>
+                             <hr>
+                             <br> 
+ 
+                             <!-- Events and Conference -->
+ 
+                             <h1 style="text-align:center;font-size:30px;">Events and Conference</h1>
+                             <br>
+ 
+                             <div class="form-group">
+                                 <label>Events and Conference Details <span style="color:red">*<span></label> 
+                                 <textarea 
+                                 class="form-control" 
+                                 type="text"
+                                 name="events_and_conference_details"></textarea>
+                                 <p id="events_and_conferenceCharacterCount" style="color: red;">Required</p>
+                             </div>
+                             <br>
+ 
+                             <div class="form-group">
+                                 <label for="images">Events and Conference Image:</label>
+                                 <div class="custom-file">
+                                     <input type="file" class="custom-file-input" id="events-and-conference-image-input" name="image" accept="image/*">
+                                     <label class="custom-file-label bg-light" for="events-and-conference-image-input">Choose file</label>
+                                 </div>
+                                 
+                                 <br>
+                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                     <div class="col-sm-11">
+                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                     </div>
+                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                     </div>
+                                 </div>
+                             </div> 
+ 
+                             <br> 
+                             <hr>
+                             <br> 
+
+                            
+                                
+                            <!-- Submit Button -->
+                            <div class="form-group text-center">
+                                <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
+                            </div>
+                            <br>
+
+                            
+                            
+                        </div> 
+        
+                    
+                    </form>  
+        
+                <div>
+            </div>
+
+
+
+            <!-- for showing image except for gallery -->
+            <div class="modal fade" id="showImageModal" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="showImageModalLabel">Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img src="https://images.unsplash.com/photo-1549558549-415fe4c37b60?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8M3x8fGVufDB8fHx8fA%3D%3D" class="img-fluid w-100" alt="Image">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Confirmation modal for delete -->
+            <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-top" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                        <p><input id="image_delete" name= "image_delete" type="hidden"></p>
+                        Are you sure you want to delete the note?
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+      <!--Script for CKEditor Control-->
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Replace the textareas with CKEditor instances
+            CKEDITOR.replace('about_details');
+            CKEDITOR.replace('members_and_volunteers_details');
+            CKEDITOR.replace('benefits_details');
+            CKEDITOR.replace('student_branches_details');
+            CKEDITOR.replace('affinity_groups_details');
+            CKEDITOR.replace('communty_and_society_details');
+            CKEDITOR.replace('membership_details');
+            CKEDITOR.replace('events_and_conference_details');
+            
+
+            // Attach a function to the change event for each CKEditor instance
+            ["about", "members_and_volunteers", "benefits", "student_branches", "affinity_groups", "communty_and_society", "membership", "events_and_conference"]
+                .forEach(function (editorId) {
+                    var editor = CKEDITOR.instances[editorId + '_details'];
+
+                    editor.on('change', function () {
+                        // Update character count display for each CKEditor instance
+                        updateCharacterCount(editorId);
+                    });
+
+                    // Update character count initially
+                    updateCharacterCount(editorId);
+                });
+        });
+
+        function updateCharacterCount(editorId) {
+            var editorContent = CKEDITOR.instances[editorId + '_details'].getData();
+        
+            // Handle special space representations
+            var cleanedContent = editorContent.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+        
+            // Count each character (including spaces)
+            var characterCount = cleanedContent.length;
+        
+            var characterCountElement = document.getElementById(editorId + 'CharacterCount');
+        
+            // Check conditions and update text color and content
+            if (characterCount === 0) {
+                characterCountElement.style.color = "red";
+                characterCountElement.innerText = "Required";
+            } else if (characterCount > 500) {
+                characterCountElement.style.color = "red";
+                characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
+            } else {
+                characterCountElement.style.color = "black";
+                characterCountElement.innerText = "Character Count: " + characterCount;
+            }
+        }
+    </script>
+
+    <!--Script to handle file name showing when choosing file-->
+    <script type="text/javascript">
+
+        $('.custom-file input').change(function (e) {
+            var files = [];
+            for (var i = 0; i < $(this)[0].files.length; i++) {
+                files.push($(this)[0].files[i].name);
+            }
+            $(this).next('.custom-file-label').html(files.join(', '));
+        });
+    
+    </script>
+
+
+    <!--Delete logic for image-->
+    <script>
+        function openModal(image_delete) {
+            // Set data in the modal
+            var inputElement = document.getElementById('image_delete');    
+            inputElement.value=image_delete;
+        }
+    </script>
+ 
+</body>
+
+{% endblock manage_region_10_section %}
