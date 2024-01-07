@@ -202,7 +202,7 @@ class HomepageItems:
             else:
                 #getting the latest upcoming event for affinity groups and societies
                 upcoming_event = Events.objects.filter(publish_in_main_web = True,event_date__gt=current_datetime,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)).order_by('event_date')#[:1]
-                #getting collaborated upcoming event
+                #getting collaborated upcoming event#if dont want this then remove bottom section and uncomment the list value to one, in the top line --------------------------------------------------------------------------here
                 collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
                 #joining both the events list of collbarated and their own organised events
                 upcoming_event = upcoming_event .union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True,event_date__gt=current_datetime)).order_by('event_date')[:1] 
