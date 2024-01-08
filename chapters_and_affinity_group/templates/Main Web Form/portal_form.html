@@ -229,7 +229,7 @@
                                 <input
                                 type="text" 
                                 class="form-control"
-                                name="pageTitle_details" 
+                                name="pageTitle" 
                                 placeholder="Enter your page title" 
                                 maxlength="100"
                                 value="{{sc_ag_info.page_title}}">
@@ -460,9 +460,9 @@
                                 <input 
                                 type="text" 
                                 class="form-control"
-                                name="short_form_details" 
+                                name="short_form" 
                                 placeholder="Short Form" 
-                                value = {{sc_ag_info.short_form| default:""}}
+                                value = "{{sc_ag_info.short_form| default:""}}"
                                 >
                             </div>
                             <br>
@@ -472,10 +472,32 @@
                                 <input 
                                 type="text" 
                                 class="form-control"
-                                name="short_form_alternative_details" 
+                                name="short_form_alternative" 
                                 placeholder="Short Form Alternatives" 
-                                value = {{sc_ag_info.short_form_2| default:""}}
+                                value = "{{sc_ag_info.short_form_2| default:""}}"
                                 >
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input
+                                type="email" 
+                                class="form-control"
+                                name="email" 
+                                placeholder="Enter {{sc_ag_info.short_form_2}} email" 
+                                maxlength="100"
+                                value="{{sc_ag_info.email|default:""}}">
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label>Facebook Link</label>
+                                <input
+                                type="url" 
+                                class="form-control"
+                                name="facebook_link" 
+                                placeholder="Enter {{sc_ag_info.short_form_2}} facebook link" 
+                                maxlength="100"
+                                value="{{sc_ag_info.facebook_link|default:""}}">
                             </div>
 
                             <br>
@@ -490,10 +512,10 @@
                                 <input 
                                 type="text" 
                                 class="form-control"
-                                name="primary_color_code_details" 
+                                name="primary_color_code" 
                                 placeholder="Primary Color Code" 
                                 maxlength="7" 
-                                value = {{sc_ag_info.primary_color_code| default:""}}
+                                value = "{{sc_ag_info.primary_color_code| default:""}}"
                                 >
                             </div>
                             <br>
@@ -503,10 +525,10 @@
                                 <input 
                                 type="text" 
                                 class="form-control"
-                                name="secondary_color_code_details" 
+                                name="secondary_color_code" 
                                 placeholder="Secondary Color Code" 
                                 maxlength="7" 
-                                value = {{sc_ag_info.secondary_color_code| default:""}}
+                                value = "{{sc_ag_info.secondary_color_code| default:""}}"
                                 >
                             </div>
                             <br>
@@ -516,10 +538,10 @@
                                 <input 
                                 type="text" 
                                 class="form-control"
-                                name="text_color_code_details" 
+                                name="text_color_code" 
                                 placeholder="Text Color Code" 
                                 maxlength="7" 
-                                value = {{sc_ag_info.text_color_code| default:""}}
+                                value = "{{sc_ag_info.text_color_code| default:""}}"
                                 >
                             </div>
                             

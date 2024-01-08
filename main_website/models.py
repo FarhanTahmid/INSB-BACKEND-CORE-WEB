@@ -76,7 +76,7 @@ class Blog(models.Model):
     description = RichTextField(null=False,blank=False,max_length=5000,help_text="Write within 500 words!")
     branch_or_society = models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
     publish_blog=models.BooleanField(null=False,blank=False,default=False)
-    is_requested=models.BooleanField(null=True,blank=True)
+    is_requested=models.BooleanField(null=False,blank=False,default=False)
     class Meta:
         verbose_name = "Blog"
     def __str__(self):

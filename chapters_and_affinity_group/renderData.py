@@ -45,6 +45,32 @@ class Sc_Ag:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"Can not add Member to Database. Something went wrong!")
             return False
+        
+    def remove_insb_member_from_sc_ag(request,sc_ag_primary,ieee_id):
+        '''This function removes Member Registered in INSB from SC or AG'''
+        try:
+            sc_ag_member = SC_AG_Members.objects.get(member=ieee_id, sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary))
+            panels = SC_AG_Info.get_panels_of_sc_ag(request=request,sc_ag_primary=sc_ag_primary)
+
+            #check which panel is current
+            for panel in panels:
+                if panel.current:
+                    #if current then check if the member exists in the panel
+                    check_existing_member=Panel_Members.objects.filter(tenure=Panels.objects.get(id=panel.id),member=Members.objects.get(ieee_id=ieee_id))
+                    if check_existing_member:
+                        #if yes then remove the member from panel
+                        Sc_Ag.remove_sc_ag_member_from_panel(request=request,panel_id=panel.id, member_ieee_id=ieee_id, sc_ag_primary=sc_ag_primary)
+            
+            #remove the member from sc_ag members
+            sc_ag_member.delete()
+            messages.success(request, 'Member Deleted from Database successfully')
+            return True
+        except Exception as e:
+            Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Cannot remove Member from Database. Something went wrong!")
+            return False
+
     
     def make_panel_members_position_and_team_none_in_sc_ag_database(request,panel_id):
         '''This function finds the members in a panel and makes their Position and team None
@@ -397,7 +423,8 @@ class Sc_Ag:
                         mission_description,mission_image,vision_description,vision_picture,
                         what_is_this_description,why_join_it,what_activites_it_has,how_to_join,
                         short_form,short_form_alternative_details,primary_color_code_details,secondary_color_code_details,
-                        text_color_code_details,pageTitle_details,secondParagraph_details):
+                        text_color_code_details,pageTitle_details,secondParagraph_details,
+                        email,facebook_link):
         
 
         ''''This function saves the data for the main website of societies and affinity groups'''
@@ -424,6 +451,8 @@ class Sc_Ag:
             sc_ag.text_color_code = text_color_code_details
             sc_ag.page_title = pageTitle_details
             sc_ag.secondary_paragraph = secondParagraph_details
+            sc_ag.email = email
+            sc_ag.facebook_link = facebook_link
 
             sc_ag.save()
 

@@ -38,6 +38,7 @@ urlpatterns = [
 
     # Publications
     path('blogs',views.blogs,name="blogs"),
+    path('blog_description',views.blog_description, name="blog_description"),
     path('write_blogs',views.write_blogs,name="write_blogs"),
     path('magazines',views.magazines,name="magazines"),
     
