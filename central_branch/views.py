@@ -730,6 +730,8 @@ def manage_about(request):
         if request.method == "POST":
             if 'save' in request.POST:
                 about_details = request.POST['about_details']
+                learn_more_link = request.POST['learn_more_link']
+                mission_and_vision_link = request.POST['mission_and_vision_link']
                 community_details = request.POST['community_details']
                 start_with_ieee_details = request.POST['start_with_ieee_details']
                 collaboration_details = request.POST['collaboration_details']
@@ -739,6 +741,12 @@ def manage_about(request):
                 innovations_and_developments_details = request.POST['innovations_and_developments_details']
                 students_and_member_activities_details = request.POST['students_and_member_activities_details']
                 quality_details = request.POST['quality_details']
+                join_now_link = request.POST['join_now_link']
+                asia_pacific_link = request.POST['asia_pacific_link']
+                ieee_computer_organization_link = request.POST['ieee_computer_organization_link']
+                customer_service_number = request.POST['customer_service_number']
+                presidents_names = request.POST['presidents_names']
+                founders_names = request.POST['founders_names']
                 
                 about_image = request.FILES.get('about_picture')
                 community_image = request.FILES.get('community_picture')
@@ -757,9 +765,10 @@ def manage_about(request):
                 if quality_image == None:
                     quality_image = about_ieee.quality_image
 
-                if(Branch.set_about_ieee_page(about_details, community_details, start_with_ieee_details, collaboration_details,
+                if(Branch.set_about_ieee_page(about_details, learn_more_link, mission_and_vision_link, community_details, start_with_ieee_details, collaboration_details,
                                         publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
-                                        students_and_member_activities_details, quality_details, about_image, community_image,
+                                        students_and_member_activities_details, quality_details, join_now_link, asia_pacific_link, ieee_computer_organization_link,
+                                        customer_service_number, presidents_names, founders_names, about_image, community_image,
                                         innovations_and_developments_image, students_and_member_activities_image, quality_image)):
                     messages.success(request, "Details Updated Successfully!")
                 else:
@@ -774,12 +783,48 @@ def manage_about(request):
                 else:
                     messages.error(request,"Error while deleting picture.")
                 return redirect("central_branch:manage_about")
+            elif 'add_link' in request.POST:
+                page_title = 'about_ieee'
+                category = request.POST.get('link_category')
+                title = request.POST.get('title')
+                link = request.POST.get('form_link_add')
 
+                if(Branch.add_about_page_link(page_title, category, title, link)):
+                    messages.success(request, 'Link added successfully')
+                else:
+                    messages.error(request,'Something went wrong while adding the link')
 
+                return redirect("central_branch:manage_about")
+            elif 'update_link' in request.POST:
+                page_title = 'about_ieee'
+                link_id = request.POST.get('link_id')
+                title = request.POST.get('title')
+                link = request.POST.get('form_link_edit')
+
+                if(Branch.update_about_page_link(link_id, page_title, title, link)):
+                    messages.success(request,'Link updated successfully')
+                else:
+                    messages.error(request,'Something went wrong while updating the link')
+                
+                return redirect("central_branch:manage_about")
+            elif 'remove_form_link' in request.POST:
+                page_title = 'about_ieee'
+                link_id = request.POST.get('link_id')
+
+                if(Branch.remove_about_page_link(link_id, page_title)):
+                    messages.success(request,'Link removed successfully')
+                else:
+                    messages.error(request,'Something went wrong while deleting the link')
+
+                return redirect("central_branch:manage_about")
+
+        page_links_dict = Branch.get_about_page_links(page_title='about_ieee')
+        
         context={
             'all_sc_ag':sc_ag,
             'about_ieee':about_ieee,
-            'media_url':settings.MEDIA_URL
+            'media_url':settings.MEDIA_URL,
+            'page_links':page_links_dict
         }
         return render(request,'Manage Website/About/About IEEE/manage_ieee.html',context=context)
     except Exception as e:

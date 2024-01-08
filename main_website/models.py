@@ -145,6 +145,8 @@ class IEEE_Bangladesh_Section(models.Model):
 class About_IEEE(models.Model):
     about_ieee = models.TextField(null=True,blank=True)
     about_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/About Image/")
+    learn_more_link = models.URLField(null=True,blank=True,max_length=200)
+    mission_and_vision_link = models.URLField(null=True,blank=True,max_length=200)
     community_description = models.TextField(null=True,blank=True)
     community_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Community Image/")
     start_with_ieee_description = models.TextField(null=True,blank=True)
@@ -158,6 +160,13 @@ class About_IEEE(models.Model):
     students_and_member_activities_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Student Member Activity Image/")
     quality_description = models.TextField(null=True,blank=True)
     quality_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Quality Image/")
+    join_now_link = models.URLField(null=True,blank=True,max_length=200)
+    asia_pacific_link = models.URLField(null=True,blank=True,max_length=200)
+    ieee_computer_organization_link = models.URLField(null=True,blank=True,max_length=200)
+    customer_service_number = models.CharField(null=True,blank=True,max_length=100)
+    presidents_names = models.CharField(null=True,blank=True,max_length=150)
+    founders_names = models.CharField(null=True,blank=True,max_length=150)
+
 
     class Meta:
         verbose_name="About IEEE"
@@ -231,3 +240,14 @@ class ExemplaryMembers(models.Model):
     def __str__(self) -> str:
         return self.member_name
 
+class Page_Link(models.Model):
+    page_title = models.CharField(null=False,blank=False,max_length=120)
+    category = models.CharField(null=False,blank=False,max_length=120)
+    title = models.CharField(null=False,blank=False,max_length=120)
+    link = models.URLField(null=False,blank=False,max_length=250)
+
+    class Meta:
+        verbose_name="Page Link"
+
+    def __str__(self) -> str:
+        return str(self.pk)

@@ -2,7 +2,7 @@ import os
 from bs4 import BeautifulSoup
 from django.http import Http404
 from insb_port import settings
-from main_website.models import About_IEEE
+from main_website.models import About_IEEE, Page_Link
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
@@ -952,13 +952,16 @@ class Branch:
         except:
             return False
         
-    def set_about_ieee_page(about_details, community_details, start_with_ieee_details, collaboration_details,
-                                   publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
-                                   students_and_member_activities_details, quality_details, about_image, community_image,
-                                    innovations_and_developments_image, students_and_member_activities_image, quality_image):
+    def set_about_ieee_page(about_details, learn_more_link, mission_and_vision_link, community_details, start_with_ieee_details, collaboration_details,
+                                publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
+                                students_and_member_activities_details, quality_details, join_now_link, asia_pacific_link, ieee_computer_organization_link,
+                                customer_service_number, presidents_names, founders_names, about_image, community_image,
+                                innovations_and_developments_image, students_and_member_activities_image, quality_image):
         try:
             about_ieee, created = About_IEEE.objects.get_or_create(id=1)
             about_ieee.about_ieee=about_details
+            about_ieee.learn_more_link=learn_more_link
+            about_ieee.mission_and_vision_link=mission_and_vision_link
             about_ieee.community_description=community_details
             about_ieee.start_with_ieee_description=start_with_ieee_details
             about_ieee.collaboration_description=collaboration_details
@@ -973,6 +976,12 @@ class Branch:
             about_ieee.innovations_and_developments_image=innovations_and_developments_image
             about_ieee.students_and_member_activities_image=students_and_member_activities_image
             about_ieee.quality_image=quality_image
+            about_ieee.join_now_link=join_now_link
+            about_ieee.asia_pacific_link=asia_pacific_link
+            about_ieee.ieee_computer_organization_link=ieee_computer_organization_link
+            about_ieee.customer_service_number=customer_service_number
+            about_ieee.presidents_names=presidents_names
+            about_ieee.founders_names=founders_names
 
             about_ieee.save()
             return True
@@ -1040,3 +1049,56 @@ class Branch:
 
         # Now, 'text_content' contains only the actual content without HTML tags
         return text_content
+    
+    def add_about_page_link(page_title, category, title, link):
+        try:
+            page_link = Page_Link.objects.create(page_title=page_title, category=category, title=title, link=link)
+            page_link.save()
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def update_about_page_link(link_id, page_title, title, link):
+        try:
+            page_link = Page_Link.objects.get(id=link_id, page_title=page_title)
+            page_link.title = title
+            page_link.link = link
+            page_link.save()
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+    
+    def remove_about_page_link(link_id, page_title):
+        try:
+            Page_Link.objects.get(id=link_id, page_title=page_title).delete()
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+    
+    def get_about_page_links(page_title):
+        try:
+            page_links_all = Page_Link.objects.filter(page_title=page_title).order_by('pk')
+            page_links_dict = {}
+            categories = []
+
+            for page_link in page_links_all:
+                if(page_link.category not in categories):
+                    categories.append(page_link.category)
+            
+            for category in categories:
+                values = []
+                for page_link in page_links_all:
+                    if page_link.category == category:
+                        values.append(page_link)
+                page_links_dict.update({category : values})
+            return page_links_dict
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False

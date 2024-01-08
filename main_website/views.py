@@ -928,12 +928,27 @@ def ieee(request):
     #loading all the teams of Branch
     branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
     about_ieee = About_IEEE.objects.get(id=1)
+    page_links_all = Page_Link.objects.filter(page_title='about_ieee').order_by('pk')
+    page_links_categorised = {}
+    categories = []
+
+    for page_link in page_links_all:
+        if(page_link.category not in categories):
+            categories.append(page_link.category)
+    
+    for category in categories:
+        values = []
+        for a in page_links_all:
+            if a.category == category:
+                values.append(a)
+        page_links_categorised.update({category : values})
     
     context = {
         'page_title':'About - IEEE',
         'branch_teams':branch_teams,
         'about_ieee':about_ieee,
-        'media_url':settings.MEDIA_URL
+        'media_url':settings.MEDIA_URL,
+        'page_links':page_links_categorised
     }
 
     return render(request, 'About/About_IEEE.html', context)

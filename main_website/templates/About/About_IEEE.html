@@ -445,10 +445,10 @@
           </div>
           <div class="first_buttons">
             <div class="ieee-bd-btn">
-              <a href="#">Learn More</a>
+              <a href="{{about_ieee.learn_more_link}}">Learn More</a>
             </div>
             <div class="mission-btn">
-              <a href="#">Mission and Vision</a>
+              <a href="{{about_ieee.mission_and_vision_link}}">Mission and Vision</a>
             </div>
           </div>
         </div>
@@ -468,18 +468,11 @@
             </p>
           </div>
           <div>
+            {% for page_link in page_links.community_link %}
             <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical Society</a>
+              <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
             </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical councils</a>
-            </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical Committees</a>
-            </div>
+            {% endfor %}
           </div>
         </div>
         <div class="mem-vol-pic">
@@ -502,18 +495,11 @@
             </p>
           </div>
           <div>
+            {% for page_link in page_links.start_with_ieee_link %}
             <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
-                Xplore</a>
+              <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
             </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
-                Spectrum</a>
-            </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
-                Standards</a>
-            </div>
+            {% endfor %}
           </div>
         </div>
         <div style="border-left: 1px solid rgb(255, 255, 255)"></div>
@@ -528,18 +514,11 @@
             </p>
           </div>
           <div>
+            {% for page_link in page_links.collaboration_link %}
             <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
-                Xplore</a>
+              <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
             </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
-                Spectrum</a>
-            </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
-                Standards</a>
-            </div>
+            {% endfor %}
           </div>
 
         </div>
@@ -561,14 +540,11 @@
             </p>
           </div>
           <div>
+            {% for page_link in page_links.publications_link %}
             <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                IEEE Publications </a>
+              <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
             </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                List of IEEE publications</a>
-            </div>
+            {% endfor %}
           </div>
         </div>
         <div style="border-left: 1px solid rgb(255, 255, 255)"></div>
@@ -583,18 +559,11 @@
             </p>
           </div>
           <div>
+            {% for page_link in page_links.events_and_conference_link %}
             <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                IEEE Conferences and events</a>
+              <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
             </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Conferences and Events search</a>
-            </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Events and Conferences Calender</a>
-            </div>
+            {% endfor %}
           </div>
         </div>
       </section>
@@ -679,18 +648,11 @@
             </p>
           </div>
           <div>
+            {% for page_link in page_links.innovations_and_developments_link %}
             <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Development and Innovations</a>
+              <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
             </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical councils</a>
-            </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical Committees</a>
-            </div>
+            {% endfor %}
           </div>
         </div>
         <div class="mem-vol-pic">
@@ -717,18 +679,11 @@
             </p>
           </div>
           <div>
+            {% for page_link in page_links.students_and_member_activities_link %}
             <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Development and Innovations</a>
+              <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
             </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical councils</a>
-            </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical Committees</a>
-            </div>
+            {% endfor %}
           </div>
         </div>
       </section>
@@ -746,18 +701,11 @@
             </p>
           </div>
           <div>
+            {% for page_link in page_links.quality_link %}
             <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Development and Innovations</a>
+              <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
             </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical councils</a>
-            </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical Committees</a>
-            </div>
+            {% endfor %}
           </div>
         </div>
         <div class="mem-vol-pic">
@@ -779,7 +727,7 @@
           </div>
         </div>
         <div class="join-btn">
-          <button>Join Now</button>
+          <button src="{{about_ieee.join_now_link}}">Join Now</button>
         </div>
       </section>
     </section>
@@ -793,24 +741,23 @@
           <div class="bar"></div>
           <div style="display: grid; grid-template-columns: 2fr 5fr">
             <p>Asia Pacific:</p>
-            <a href="https://site.ieee.org/ieeeap/contact-us/location/">https://site.ieee.org/ieeeap/contact-us/location/
-            </a>
+            <a href="{{about_ieee.asia_pacific_link}}">{{about_ieee.asia_pacific_link}}</a>
           </div>
           <div style="display: grid; grid-template-columns: 2fr 5fr">
             <p>IEEE computer organization:</p>
-            <a href="https://www.computer.org/about/contact"> https://www.computer.org/about/contact </a>
+            <a href="{{about_ieee.ieee_computer_organization_link}}">{{about_ieee.ieee_computer_organization_link}}</a>
           </div>
           <div style="display: grid; grid-template-columns: 2fr 5fr">
             <p>Customer Service:</p>
-            <p>00 1 732-981-0060</p>
+            <p>{{about_ieee.customer_service_number}}</p>
           </div>
           <div style="display: grid; grid-template-columns: 2fr 5fr">
             <p>Presidents:</p>
-            <p>Karen Bartleson (2017-2018), James A. Jefferies (Incumbent)</p>
+            <p>{{about_ieee.presidents_names}}</p>
           </div>
           <div style="display: grid; grid-template-columns: 2fr 5fr">
             <p>Founders:</p>
-            <p>American Institute of Electrical Engineers, Institute of Radio Engineers</p>
+            <p>{{about_ieee.founders_names}}</p>
           </div>
           <div>
 
