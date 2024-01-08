@@ -41,7 +41,7 @@ urlpatterns = [
     path('blogs/<int:pk>',views.blog_description, name="blog_description"),
     path('write_blogs',views.write_blogs,name="write_blogs"),
     path('magazines',views.magazines,name="magazines"),
-    
+    path('add_research',views.add_research_form,name="add_research"),
 
     # About
     path('ieee_bangladesh_section',views.ieee_bd_section, name="ieee_bangladesh_section"),

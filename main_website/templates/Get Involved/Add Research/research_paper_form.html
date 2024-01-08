@@ -4,7 +4,7 @@
 
 <head>
 
-    <title>Write Blogs - IEEE NSU Student Branch</title>
+    <title>Add Research - IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'upload/logo.gif' %}"/>
     <meta name="mobile-web-app-capable" content="yes">
 
@@ -96,12 +96,12 @@
 
         <!--Start adding from here-->
         <section class="col-md-6 mx-auto">
-            <h5>Read instructions given below before submitting your Blog:</h5>
+            <h5>Read instructions given below before adding your Research Paper:</h5>
             <ul>
-                <li>You must be a Registered IEEE NSU Student Branch Member to get your blogs published in our website!</li>
-                <li>IEEE NSU Student Branch holds the right to decline or delete your Blog.</li>
-                <li>IEEE NSU Student Branch will not publish any Blog that does not go with the Code of Conduct!</li>
-                <li>Keep Blogging! &#128515; &#128513;</li>
+                <li>You must be a Registered IEEE NSU Student Branch Member to get your Research Paper added in our website!</li>
+                <li>IEEE NSU Student Branch holds the right to decline or delete your Research Paper.</li>
+                <li>IEEE NSU Student Branch will not publish any Research that is not authentic and does not go with the Code of Conduct!</li>
+                <li>Keep Grinding! &#128515; &#128513;</li>
             </ul>
         </section>
         <!--Messages-->
@@ -115,7 +115,7 @@
         <!--Messages End-->
         <section style="margin-top:3%">
             <div class="col-md-6 mx-auto">
-                <h1>Write a Blog</h1>
+                <h1>Add Research Paper</h1>
                 <br>
                 <br>
                 <div class="container">
@@ -125,7 +125,7 @@
             
                     <br>
                     <div class="box-header">
-                        <h1 style="text-align:center;font-size:30px;">Writer Information</h1>
+                        <h1 style="text-align:center;font-size:30px;">Author Information</h1>
                         <hr>
                     </div>
                     
@@ -133,34 +133,20 @@
                     <form id="myForm" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                         <div class="box-body">    
-                            
                             <div class="form-group">
-                                <label>IEEE ID <span style="color:red">*<span></label>
+                                <label>Authors<span style="color:red">*<span></label>
                                 <input 
                                     type="text" 
                                     class="form-control"
-                                    name="writer_ieee_id" 
-                                    placeholder="Enter your IEEE ID" 
-                                    maxlength="100" 
-                                >
-                            </div>
-                            <br>
-                        
-                            <div class="form-group">
-                                <label>Writer Name <span style="color:red">*<span></label>
-                                <input 
-                                    type="text" 
-                                    class="form-control"
-                                    name="writer_name" 
-                                    placeholder="Enter your name" 
-                                    maxlength="50" 
+                                    name="author_names" 
+                                    placeholder="E.g: Sakib Shahriar Junayed, Sami Uddin, Farhana Rahman" 
+                                    maxlength="300" 
                                 >
                             </div>
                             <br>
                             <div class="form-group">
-                                <label>From which Chapter/Affinity Group you want to submit the Blog?</label> 
+                                <label>From which Chapter/Affinity Group you want to submit the Research Paper?</label> 
                                 <select class="form-control" name="group">
-                                    <option value="">-------</option>
                                     {% for i in all_sc_ag %}
                                         <option value="{{i.primary}}">{{i.group_name}}</option>
                                     {% endfor %}
@@ -171,17 +157,17 @@
                             <br> 
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">Blog Description</h1>
+                            <h1 style="text-align:center;font-size:30px;">Research Paper Description</h1>
                             <br>
                             <hr>
                             <div class="form-group">
-                                <label>Blog Title <span style="color:red">*<span></label> 
+                                <label>Research Paper Title <span style="color:red">*<span></label> 
                                 <input 
                                     class="form-control" 
                                     type="text"
-                                    name="blog_title"
-                                    maxlength="150"
-                                    placeholder="Title of your Blog" 
+                                    name="paper_title"
+                                    maxlength="200"
+                                    placeholder="Title of your Paper" 
                                     Required
                                     >
                                 </input>
@@ -189,51 +175,51 @@
                             <br>
 
                             <div class="form-group">
-                                <label>Blog Category</label> 
-                                <select class="form-control" name="blog_category">
-                                    <option value="">-------</option>
-                                    {% for i in blog_categories %}
-                                        <option value="{{i.pk}}">{{i.blog_category}}</option>
+                                <label>Research Category</label> 
+                                <select class="form-control" name="research_category">
+                                    <option value="">-----------</option>
+                                    {% for i in research_categories %}
+                                        <option value="{{i.pk}}">{{i.category}}</option>
                                     {% endfor %}
                                     
                                 </select>
                             </div>
                             <br>
                             <div class="form-group">
-                                <label>Write a short description of your Blog<span style="color:red">*<span></label> 
+                                <label>Abstract <span style="color:red">*<span></label> 
                                 <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="blog_short_description"
-                                    maxlength="200"
+                                    name="abstract_description"
                                     Required>
                                 </textarea>
+                                <p id="abstractCharacterCount" style="color: red;">Required</p>
+                            </div> 
+                            <br> 
+                            <div class="form-group">
+                                <label>Paper Publication Link <span style="color:red">*<span></label> 
+                                <input 
+                                    class="form-control" 
+                                    type="url"
+                                    name="paper_link"
+                                    placeholder="Link to read the paper" 
+                                    Required
+                                    >
+                                </input>
                             </div>
                             <br>
                             <div class="form-group">
-                                <label>Write your Blog <span style="color:red">*<span></label> 
-                                <textarea 
-                                    class="form-control" 
-                                    type="text"
-                                    name="blog_description"
-                                    Required>
-                                </textarea>
-                                <p id="blogCharacterCount" style="color: red;">Required</p>
-                            </div> 
-                            <br> 
-
-                            <div class="form-group">
-                                <label for="images">Blog Banner Picture:</label>
+                                <label for="images">Research Banner Picture:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="mission-image-input" required name="blog_banner_picture" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="mission-image-input">Choose file</label>
+                                    <input placeholder="Upload a picture which is related to your research" type="file" class="custom-file-input" id="mission-image-input" required name="research_banner_picture" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="mission-image-input">Upload</label>
                                 </div>
                             
                             </div>
                             <br> 
                             
                             <div class="form-group text-center">
-                                <input type="submit" name="submit_blog" class="btn btn-outline-success p-x-md" value="Place Publish Request">
+                                <input type="submit" name="submit_paper" class="btn btn-outline-success p-x-md" value="Place Add Request">
                             </div>
                             <br>
 
@@ -259,10 +245,10 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Replace the textareas with CKEditor instances
-            CKEDITOR.replace('blog_description');
+            CKEDITOR.replace('abstract_description');
             
             // Attach a function to the change event for each CKEditor instance
-            ["blog"]
+            ["abstract"]
                 .forEach(function (editorId) {
                     var editor = CKEDITOR.instances[editorId + '_description'];
 
@@ -291,7 +277,7 @@
             if (characterCount === 0) {
                 characterCountElement.style.color = "red";
                 characterCountElement.innerText = "Required";
-            } else if (characterCount > 4600) {
+            } else if (characterCount > 2500) {
                 characterCountElement.style.color = "red";
                 characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
             } else {

@@ -100,7 +100,7 @@ class ResearchPaperForm(forms.ModelForm):
     class Meta:
         model=Research_Papers
         fields=[
-            'title','category','research_banner_picture','author_names','short_description','publication_link','publish_date','publish_research'
+            'title','category','group','research_banner_picture','author_names','short_description','publication_link','publish_date','publish_research'
         ]
     
     def save(self, commit=True):
