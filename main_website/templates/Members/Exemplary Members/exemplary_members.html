@@ -4,7 +4,7 @@
 
 <head>
 
-    <title>Exemplary Members - IEEE NSU SB</title>
+    <title>All Members - IEEE NSU SB</title>
     <link rel="icon" href="{% static 'upload/logo.gif' %}"/>
     <meta name="mobile-web-app-capable" content="yes">
 
@@ -94,6 +94,52 @@
 
         <!--Start adding from here-->
 
+        <div class="container my-5">
+            <div class="row m-0">
+                {% for i in exemplary_members %}
+                <div class="col-md-6 my-3">
+                    <div class="border rounded shadow">
+                        <div class="row m-0 p-3" style="background-color: #3780d3;">
+                            <div class="col-md-4 d-flex align-items-center">
+                                <img class="img-fluid rounded-circle shadow" src="/media_files/{{i.member_picture}}" alt="">
+                            </div>
+                            <div class="col-md-8 mt-2">
+                                <h3 class="fw-bold text-capitalize  text-white">{{i.member_name}}</h3>
+                                <h6 class="fw-bold text-light mt-4">{{i.former_position}} {{i.activity_year}}</h6>
+                                <h6 class="text-light">{{i.current_activity}}</h6>
+
+                                <div class="my-4">
+                                    <a class="h4 me-2 text-light" href="{{i.facebook_account_link}}"><i class="fa-brands fa-facebook"></i></a>
+                                    <a class="h4 me-2 text-light" href="mailto:{{i.email}}"><i class="fa-solid fa-envelope"></i></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion" id="">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                                <button style="background-color: #f0f0f1;" class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#member_1" aria-expanded="false" aria-controls="member_1">
+                                    View Some Achivements
+                                </button>
+                                </h2>
+                                <div id="member_1" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+                                <div class="accordion-body">
+                                    <ul class="small">
+                                        {{i.achievements | safe}}                                    </ul>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                {% endfor %}
+                
+
+                <!-- Just add more div here with class="col-md-6 my-3"-->
+            </div>
+
+        </div>
 
         {% block footer %}
             {% include "footer_block.html" %}

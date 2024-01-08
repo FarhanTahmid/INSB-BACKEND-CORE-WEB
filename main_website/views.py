@@ -930,6 +930,7 @@ def exemplary_members(request):
         
     context={
         'page_title':"Exemplary Members",
+        'page_subtitle':"IEEE NSU Student Branch",
         'exemplary_members':all_exemplary_members,
     }
     return render(request,"Members/Exemplary Members/exemplary_members.html",context=context)
