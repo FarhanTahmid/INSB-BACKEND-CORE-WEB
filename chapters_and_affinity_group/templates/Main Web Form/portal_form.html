@@ -267,7 +267,7 @@
                                 type="text"
                                 name="mission_details"
                                 Required>
-                                {{sc_ag_info.mission_description}}
+                                {{sc_ag_info.mission_description|default:""}}
                                 </textarea>
                                 <p id="missionCharacterCount" style="color: red;">Required</p>
 
@@ -399,7 +399,7 @@
                             <br>
 
                             <div class="form-group">
-                                <label>Short Form</label>
+                                <label>Short Form (In capital letters)</label>
                                 <input 
                                 type="text" 
                                 class="form-control"
@@ -411,7 +411,7 @@
                             <br>
 
                             <div class="form-group">
-                                <label>Short Form Alternatives</label>
+                                <label>Short Form Alternatives (In capital letters)</label>
                                 <input 
                                 type="text" 
                                 class="form-control"
