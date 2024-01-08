@@ -65,7 +65,7 @@
             <br>
 
             <div class="btn-container">
-                <button class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#previewModal">Preview Event</button>
+                <button class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#previewModal">Preview</button>
             </div>
             <br>
 
@@ -74,7 +74,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-lg preview_modal_box" role="document">
                     <div class="modal-content" style="width: 100%; height: 100%;">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="previewModalLabel">Preview Event</h5>
+                            <h5 class="modal-title" id="previewModalLabel">Preview</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -90,12 +90,18 @@
             </div>
             
             <!--Messages-->
-            <div style="justify-content:center; text-align:center;">
-                {% if messages %}
-                    {% for message in messages %}
-                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
-                    {% endfor %}
-                {% endif %}
+            <div class="container">
+                {% for message in messages  %}
+                    <p>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{message}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </p>
+                    <br>
+                {% endfor %}
             </div>
             <!--Messages End-->
 
@@ -210,8 +216,8 @@
                             </div> 
 
                             <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
+                                <label class="col-sm-7 form-control-label">Add Links (Community):</label>
+                                <div class="col-sm-3">
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
@@ -221,7 +227,7 @@
                             
                             <hr>
                             <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
+                                <label class="mb-0">Links (Community):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
@@ -250,8 +256,8 @@
                             <br>
 
                             <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
+                                <label class="col-sm-7 form-control-label">Add Links (Start with IEEE):</label>
+                                <div class="col-sm-3">
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
@@ -261,7 +267,7 @@
                             
                             <hr>
                             <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
+                                <label class="mb-0">Links (Start with IEEE):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
@@ -284,8 +290,8 @@
                             <br>
 
                             <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
+                                <label class="col-sm-7 form-control-label">Add Links (Collaboration):</label>
+                                <div class="col-sm-3">
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
@@ -295,7 +301,7 @@
                             
                             <hr>
                             <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
+                                <label class="mb-0">Links (Collaboration):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
@@ -319,8 +325,8 @@
                             <br>
 
                             <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
+                                <label class="col-sm-7 form-control-label">Add Links (Publications):</label>
+                                <div class="col-sm-3">
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
@@ -330,7 +336,7 @@
                             
                             <hr>
                             <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
+                                <label class="mb-0">Links (Publications):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
@@ -353,8 +359,8 @@
                             <br>
 
                             <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
+                                <label class="col-sm-7 form-control-label">Add Links (Events and Conference):</label>
+                                <div class="col-sm-3">
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
@@ -364,7 +370,7 @@
                             
                             <hr>
                             <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
+                                <label class="mb-0">Links (Events and Conference):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
@@ -430,8 +436,8 @@
                             <br>
 
                             <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
+                                <label class="col-sm-7 form-control-label">Add Links (Innovations and Developments):</label>
+                                <div class="col-sm-3">
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
@@ -441,7 +447,7 @@
                             
                             <hr>
                             <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
+                                <label class="mb-0">Links (Innovations and Developments):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
@@ -491,8 +497,8 @@
                             <br>
 
                             <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
+                                <label class="col-sm-7 form-control-label">Add Links (Students and Member Activities):</label>
+                                <div class="col-sm-3">
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
@@ -502,7 +508,7 @@
                             
                             <hr>
                             <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
+                                <label class="mb-0">Links (Students and Member Activities):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
@@ -552,8 +558,8 @@
                             <br>
 
                             <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
+                                <label class="col-sm-7 form-control-label">Add Links (Quality):</label>
+                                <div class="col-sm-3">
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
@@ -563,7 +569,7 @@
                             
                             <hr>
                             <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
+                                <label class="mb-0">Links (Quality):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>

@@ -48,22 +48,22 @@
             <div class="box-body">
                 
                 <div class="form-group row">
-                    <label for="captions" class="col-sm-3 form-control-label">Add Links:</label>
+                    <label for="Links" class="col-sm-3 form-control-label">Add Links:</label>
                     <div class="col-sm-7">
-                        <!-- Add input field for captions here if needed -->
+                        <!-- Add input field for Links here if needed -->
                     </div>
                     <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddCaptionModal"></button>
+                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinkModal"></button>
                     </div>
                 </div>
                 
                 <hr>
-                <div id="captions-container" class="mt-3">
+                <div id="Links-container" class="mt-3">
                     <label class="mb-0">Links:</label> 
                     {% for link in all_graphics_link %}
                     <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                         <div class="col-sm-11">
-                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal{{link.pk}}">{{link.graphics_form_link_name}}</a>
+                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal{{link.pk}}">{{link.graphics_form_link_name}}</a>
                         </div>
                         <div class="col-sm-1 d-flex align-items-center justify-content-center">
                             <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal"  onclick="openModal('{{link.pk}}')">✖</button>
@@ -83,12 +83,12 @@
 </div>
 
 
-<!-- Updated Modal for adding captions -->
-<div class="modal fade" id="AddCaptionModal" tabindex="-1" role="dialog" aria-labelledby="AddCaptionModalLabel" aria-hidden="true">
+<!-- Updated Modal for adding Links -->
+<div class="modal fade" id="AddLinkModal" tabindex="-1" role="dialog" aria-labelledby="AddLinkModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addCaptionModalLabel">Add Links</h5>
+                <h5 class="modal-title" id="addLinkModalLabel">Add Links</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -131,19 +131,19 @@
 </div>
 
 
-<!-- New modal for editing captions -->
+<!-- New modal for editing Links -->
 {% for link in all_graphics_link%}
-<div class="modal fade" id="EditCaptionModal{{link.pk}}" tabindex="-1" role="dialog" aria-labelledby="EditCaptionModalLabel" aria-hidden="true">
+<div class="modal fade" id="EditLinkModal{{link.pk}}" tabindex="-1" role="dialog" aria-labelledby="EditLinkModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editCaptionModalLabel">Edit Link</h5>
+                <h5 class="modal-title" id="editLinkModalLabel">Edit Link</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Display existing caption in a textarea for editing -->
+                <!-- Display existing Link in a textarea for editing -->
                 <form method="POST">
                     {% csrf_token %}
                     <div class="form-group">
