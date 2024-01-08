@@ -95,12 +95,18 @@
             </div>
             
             <!--Messages-->
-            <div style="justify-content:center; text-align:center;">
-                {% if messages %}
-                    {% for message in messages %}
-                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
-                    {% endfor %}
-                {% endif %}
+            <div class="container">
+                {% for message in messages  %}
+                    <p>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{message}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </p>
+                    <br>
+                {% endfor %}
             </div>
             <!--Messages End-->
             
@@ -437,44 +443,64 @@
                                     </div>
                                 </div>
                             </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">Background Image For Parallax Effect:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="background-image-input" name="background_picture" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="background-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{sc_ag_info.background_image}}', 'background_image')">✖</button>
+                                    </div>
+                                </div>
+                            </div>
+
  
-                             <br>
-                             <hr>
-                             <br> 
- 
-                             <!-- Events and Conference -->
- 
-                             <h1>Events and Conference</h1>
-                             <br>
- 
-                             <div class="form-group">
-                                 <label>Events and Conference Details <span style="color:red">*<span></label> 
-                                 <textarea 
-                                 class="form-control" 
-                                 type="text"
-                                 name="events_and_conference_details"></textarea>
-                                 <p id="events_and_conferenceCharacterCount" style="color: red;">Required</p>
-                             </div>
-                             <br>
- 
-                             <div class="form-group">
-                                 <label for="images">Events and Conference Image:</label>
-                                 <div class="custom-file">
-                                     <input type="file" class="custom-file-input" id="events-and-conference-image-input" name="image" accept="image/*">
-                                     <label class="custom-file-label bg-light" for="events-and-conference-image-input">Choose file</label>
-                                 </div>
-                                 
-                                 <br>
-                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                     <div class="col-sm-11">
-                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
-                                     </div>
-                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
-                                     </div>
-                                 </div>
-                             </div>
-                             <br>
+                            <br>
+                            <hr>
+                            <br> 
+
+                            <!-- Events and Conference -->
+
+                            <h1>Events and Conference</h1>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Events and Conference Details <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="events_and_conference_details"></textarea>
+                                <p id="events_and_conferenceCharacterCount" style="color: red;">Required</p>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="images">Events and Conference Image:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="events-and-conference-image-input" name="image" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="events-and-conference-image-input">Choose file</label>
+                                </div>
+                                
+                                <br>
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
 
                             <div class="form-group row">
                                 <label class="col-sm-7 form-control-label">Add Links (Events and Conference):</label>
@@ -626,7 +652,7 @@
                             {% csrf_token %}
                             <p><input id="image_delete" name= "image_delete" type="hidden">
                                 <input id="image_id" name= "image_id" type="hidden" ></p>
-                        Are you sure you want to delete the note?
+                        Are you sure you want to delete the Image?
                     </div>
                     <div class="modal-footer">
                         <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >

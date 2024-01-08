@@ -68,12 +68,18 @@
             </div>
             
             <!--Messages-->
-            <div style="justify-content:center; text-align:center;">
-                {% if messages %}
-                    {% for message in messages %}
-                        <h4 {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
-                    {% endfor %}
-                {% endif %}
+            <div class="container">
+                {% for message in messages  %}
+                    <p>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{message}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </p>
+                    <br>
+                {% endfor %}
             </div>
             <!--Messages End-->
             
@@ -468,7 +474,7 @@
                                 {% csrf_token %}
                                 <p><input id="image_delete" name= "image_delete" type="hidden">
                                     <input id="image_id" name= "image_id" type="hidden" ></p>
-                            Are you sure you want to delete the note?
+                            Are you sure you want to delete the Image?
                         </div>
                         <div class="modal-footer">
                             <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
