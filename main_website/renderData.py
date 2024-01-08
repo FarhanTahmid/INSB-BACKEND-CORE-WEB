@@ -43,7 +43,7 @@ class HomepageItems:
                     collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
                     #joining both the events list of collbarated and their own organised events
                     events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('event_date') 
-                  
+                    ####################################################################################################################
             else:
                 if primary == 1:
                     #when false getting upcoming five events
@@ -206,6 +206,7 @@ class HomepageItems:
                 collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
                 #joining both the events list of collbarated and their own organised events
                 upcoming_event = upcoming_event .union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True,event_date__gt=current_datetime)).order_by('event_date')[:1] 
+                #########################################################################################################################################################################
             #returning only the first item of the list as filter always returns a list
             return upcoming_event[0]
         except:
