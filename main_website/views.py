@@ -590,9 +590,7 @@ def blog_description(request,pk):
     get_recent_blogs=Blog.objects.filter(publish_blog=True).order_by('-date').exclude(pk=pk)[:3]
     # get recent news
     get_recent_news=News.objects.all().order_by('-news_date')[:5]
-    
-    print(get_recent_blogs)
-    
+        
     context={
         'page_title':get_blog.title,
         'page_subtitle':society_name,
