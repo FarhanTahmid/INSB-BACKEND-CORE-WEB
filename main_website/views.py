@@ -461,6 +461,7 @@ def events_for_sc_ag(request,primary):
         context = {
             'is_sc_ag':True,
             'society':society,
+            'page_title': 'Events',
             'page_subtitle':society.short_form,
             'all_events':all_events,
             'media_url':settings.MEDIA_URL,

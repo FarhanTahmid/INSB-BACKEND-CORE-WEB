@@ -866,12 +866,37 @@ def ieee_nsu_student_branch(request):
 
 @login_required
 def faq(request):
-    sc_ag=PortData.get_all_sc_ag(request=request)
 
-    context={
-        'all_sc_ag':sc_ag,
-    }
-    return render(request,'Manage Website/About/FAQ/faq.html', context)
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+
+
+        if request.method == "POST":
+            #when user submits a new category title
+            if request.POST.get('add_category'):
+                #getting the new title for the category
+                category_title = request.POST.get('category_title')
+            
+            if request.POST.get('update_faq'):
+
+                questions = request.POST.getlist('faq_question')
+                answers = request.POST.getlist('faq_question_answer')
+
+                print(questions)
+                print(answers)
+                
+
+
+        context={
+            'all_sc_ag':sc_ag,
+        }
+        return render(request,'Manage Website/About/FAQ/portal_faq.html', context)
+    
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 
 

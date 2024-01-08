@@ -176,10 +176,9 @@
                             <td>{{feedback.message}}</td>
                             <td>
                               <div>
-                                <label class="ui-switch">                                   
-                                <input type="checkbox" name="responded_id"  {% if feedback.is_responded %} value="{{ feedback.pk }}" checked {% else %} value="{{ feedback.pk }}"{% endif %}>
-                                <i></i>
-                              </label>
+                                <label>
+                                    <input type="checkbox" style="transform: scale(1.5);" name="responded_id" {% if feedback.is_responded %} value="{{ feedback.pk }}" checked {% else %} value="{{ feedback.pk }}"{% endif %}>
+                                </label>
                               </div>
                             </td>
                         </tr>

@@ -83,6 +83,10 @@ def sc_ag_members(request,primary):
                                             team_pk=team,
                                             request=request)
             return redirect('chapters_and_affinity_group:sc_ag_members',primary)
+        elif request.POST.get('remove_member'):
+            member = request.POST['remove_sc_ag_member']
+            Sc_Ag.remove_insb_member_from_sc_ag(request,sc_ag_primary=primary, ieee_id=member)
+            return redirect('chapters_and_affinity_group:sc_ag_members',primary)
                 
     context={
         'all_sc_ag':sc_ag,

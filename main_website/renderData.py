@@ -12,7 +12,7 @@ from system_administration.system_error_handling import ErrorHandling
 import logging
 from django.contrib import messages
 from django.utils import timezone
-from chapters_and_affinity_group.models import SC_AG_Members
+from chapters_and_affinity_group.models import SC_AG_Members,SC_AG_FeedBack
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from central_branch.renderData import Branch
 class HomepageItems:
@@ -43,15 +43,20 @@ class HomepageItems:
                     collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
                     #joining both the events list of collbarated and their own organised events
                     events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('event_date') 
-                  
+                    ####################################################################################################################
             else:
                 if primary == 1:
                     #when false getting upcoming five events
                     events = Events.objects.filter(publish_in_main_web= True,event_date__gt=current_datetime).order_by('event_date')[:5]
                 else:
                     #when False getting events 5 events which are upcoming, is published and is of particular society
-                    events = Events.objects.filter(publish_in_main_web= True,event_organiser = society,event_date__gt=current_datetime).order_by('event_date')[:5]
-                
+                    events = Events.objects.filter(publish_in_main_web= True,event_organiser = society,event_date__gt=current_datetime).order_by('event_date')#[:5]
+                    ####getting collaborated events###if dont want collaborated event remove bottom section and uncommment the list here -----------------------here
+                    collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
+                    #joining both the events list of collbarated and their own organised events
+                    events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True,event_date__gt=current_datetime)).order_by('event_date')[:5]
+                    ####################################################################################################################
+
             #using this loop, assigning the event with its corresponding banner picture in the dictionary as key and value
             for i in events:
                 #getting the event banner image using load_event_banner_image funtion
@@ -215,6 +220,7 @@ class HomepageItems:
                 collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
                 #joining both the events list of collbarated and their own organised events
                 upcoming_event = upcoming_event .union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True,event_date__gt=current_datetime)).order_by('event_date')[:1] 
+                #########################################################################################################################################################################
             #returning only the first item of the list as filter always returns a list
             return upcoming_event[0]
         except:
@@ -303,6 +309,24 @@ class HomepageItems:
                         member = None
                     eb_members.append(member)
             return eb_members
+        except Exception as e:
+            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def save_feedback_information(request,primary,name,email,message):
+
+        '''This function saves the feedback data to the database'''
+
+        try:
+            #getting the particular society object
+            society = SC_AG_Info.get_sc_ag_details(request,primary)
+            #creating the new feedback object for the particular society
+            feedback = SC_AG_FeedBack.objects.create(society = society, name = name,email = email, message = message)
+            #saving it to the database
+            feedback.save()
+            return True
+
         except Exception as e:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
