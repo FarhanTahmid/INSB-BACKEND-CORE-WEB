@@ -5,12 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 41e0bce976e6d8da57321ef17f6b682c946fdeb5
-    <title>Blog Title</title>
+    <title>Blog - {{blog.title}}</title>
 
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
     <link rel="icon" href="{% static 'upload/logo.gif' %}" />
@@ -396,19 +392,19 @@
                     <div class="blog_content">
                         <!--Blog Banner-->
                         <div class="blog-banner"><img
-                                src="https://ieeensusb.org/wp-content/uploads/2021/10/SUSTAINABLE-DEVELOPMENT-WITH-INDUSTRY-4.0-com.png"
+                                src="/media_files/{{blog.blog_banner_picture}}"
                                 alt=""></div>
                         <!--Blog Title-->
                         <div class="blog-title">
-                            <h3>SUSTAINABLE DEVELOPMENT WITH INDUSTRY 4.0</h3>
+                            <h3>{{blog.title}}</h3>
                         </div>
                         <div>
                             <hr>
                         </div>
                         <!--Blog Time and Category-->
                         <div class="blog_time_and_category" style="font-weight: 500;">
-                            <p><i class="fa-regular fa-clock"></i>13/10/2021 -
-                                <i class="fa-regular fa-folder" style="font-size: 18px;"></i>Uncategorized
+                            <p><i class="fa-regular fa-clock"></i>{{blog.date}} -
+                                <i class="fa-regular fa-folder" style="font-size: 18px;"></i>Category- {{blog.category}}
                             </p>
                         </div>
                         <div>
@@ -416,19 +412,7 @@
                         </div>
                         <!--Blog Description-->
                         <div class="blog_description">
-                            <p>Sustainable development is an integral part of economic development in all countries,
-                                even when the emphasis is diverted away from it. The harmony between humanity’s need to
-                                produce and its desire to avoid ruining the world is constantly questioned and
-                                shattered. The subject of sustainability arises as a result of the disruptive new models
-                                that Industry 4.0 has demonstrated to the world, as well as the ever-expanding prospects
-                                for innovations, production, and improvements in the way organizations operate.
-                                The idea of Industry 4.0 allows for a globally equal distribution of the benefits of
-                                digitalization in the industrial industry. There is little question that the workplace
-                                will change from what we know it to be. It also emphasizes that the fourth industrial
-                                revolution is context-dependent and that the effect could be different in a developing
-                                country compared to a developed country. Employers will increasingly attempt to arrange
-                                their employment contracts in order to meet the transition to a more flexible workforce
-                                in the future.</p>
+                            <p>{{ blog.description | safe }}</p>
                         </div>
                         <div>
                             <hr>
@@ -438,41 +422,19 @@
                             <p><i class="fa-solid fa-angles-right"></i> YOU MIGHT ALSO LIKE</p>
                         </div>
                         <div class="blog-card-container">
+                            {% for i in recent_blogs %}
                             <div class="blog-card">
                                 <div class="blog-card-banner"><img
-                                        src="https://ieeensusb.org/wp-content/uploads/2021/10/SUSTAINABLE-DEVELOPMENT-WITH-INDUSTRY-4.0-com.png"
+                                        src="/media_files/{{i.blog_banner_picture}}"
                                         alt=""></div>
                                 <div style="margin-top: 10px;">
-                                    <p><a href="#">SUSTAINABLE DEVELOPMENT WITH INDUSTRY 4.0</a></p>
+                                    <p><a href="{% url 'main_website:blog_description' i.pk %}">{{i.title}}</a></p>
                                 </div>
                                 <div style="color: #000000;">
-                                    <p><i class="fa-regular fa-clock"></i>13/10/2021</p>
+                                    <p><i class="fa-regular fa-clock"></i>{{i.date}}</p>
                                 </div>
                             </div>
-
-                            <div class="blog-card">
-                                <div class="blog-card-banner"><img
-                                        src="https://ieeensusb.org/wp-content/uploads/2023/11/VC-Congratulations-1536x1536.jpg"
-                                        alt=""></div>
-                                <div style="margin-top: 10px;">
-                                    <p><a href="#">SUSTAINABLE DEVELOPMENT WITH INDUSTRY 4.0</a></p>
-                                </div>
-                                <div style="color: #000000;">
-                                    <p><i class="fa-regular fa-clock"></i>13/10/2021</p>
-                                </div>
-                            </div>
-
-                            <div class="blog-card">
-                                <div class="blog-card-banner"><img
-                                        src="https://ieeensusb.org/wp-content/uploads/2021/10/SUSTAINABLE-DEVELOPMENT-WITH-INDUSTRY-4.0-com.png"
-                                        alt=""></div>
-                                <div style="margin-top: 10px;">
-                                    <p><a href="#">SUSTAINABLE DEVELOPMENT WITH INDUSTRY 4.0</a></p>
-                                </div>
-                                <div style="color: #000000;">
-                                    <p><i class="fa-regular fa-clock"></i>13/10/2021</p>
-                                </div>
-                            </div>
+                            {% endfor %}
                         </div>
 >>>>>>> 41e0bce976e6d8da57321ef17f6b682c946fdeb5
                         <!--Blog Card end-->
@@ -512,34 +474,16 @@
                             <hr>
                         </div>
                         <!--Recent Posts-->
+                        {% for i in recent_news %}
                         <div>
-                            <p><a href="#"><i class="fa-solid fa-chevron-right" style="font-size: 12px;"></i></i>Eid ul
-                                    Adha-2023</a></p>
+                            <p><a href="{% url 'main_website:news_description' i.pk %}"><i class="fa-solid fa-chevron-right" style="font-size: 12px;"></i></i>{{i.news_title}}</a></p>
                         </div>
                         <div>
                             <hr>
                         </div>
-                        <div>
-                            <p><a href="#"><i class="fa-solid fa-chevron-right"
-                                        style="font-size: 12px;"></i></i>Feelings About IEEE NSU Student Branch</a></p>
-                        </div>
-                        <div>
-                            <hr>
-                        </div>
-                        <div>
-                            <p><a href="#"><i class="fa-solid fa-chevron-right"
-                                        style="font-size: 12px;"></i></i>Mother’s Day 2023</a></p>
-                        </div>
-                        <div>
-                            <hr>
-                        </div>
-                        <div>
-                            <p><a href="#"><i class="fa-solid fa-chevron-right" style="font-size: 12px;"></i></i>Happy
-                                    May Day!</a></p>
-                        </div>
-                        <div>
-                            <hr>
-                        </div>
+                        {% endfor %}
+                        
+                        
                     </div>
                     <!--Right part of the page end-->
 

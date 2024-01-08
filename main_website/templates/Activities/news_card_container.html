@@ -44,7 +44,7 @@
                 <img class="card-img-top" src="/media_files/{{i.news_picture}}" alt="">
 
                 <div class="card-body">
-                    <h5 class="card-title fw-bold mt-2">{{i.news_title}}<br></h5>
+                    <a href="{% url 'main_website:news_description' i.pk %}"><h5 class="card-title fw-bold mt-2">{{i.news_title}}<br></h5></a>
                     <div class="description-container">
                         <p class="card-text">{{i.news_description|safe}}</p>
                     </div>

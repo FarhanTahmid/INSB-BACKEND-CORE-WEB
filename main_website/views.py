@@ -137,7 +137,6 @@ def event_details(request,event_id):
         return redirect('main_website:event_homepage')
 
 
-
 # ###################### ACHIEVEMENTS ##############################
 
 def achievements(request):
@@ -211,7 +210,26 @@ def news(request):
     }
     return render(request,'Activities/news.html',context=context)
 
+def news_description(request,pk):
+    # get news
+    news=News.objects.get(pk=pk)
     
+    # get recent 3 news
+    recent_news=News.objects.all().order_by('-news_date').exclude(pk=pk)[:3]
+    
+    # get recent 5 blogs
+    recent_blogs=Blog.objects.filter(publish_blog=True).order_by('-date')[:5]
+    
+    context={
+        'page_title':news.news_title,
+        'page_subtitle':"IEEE NSU Student Branch",
+        'news':news,
+        'recent_news':recent_news,
+        'recent_blogs':recent_blogs,
+        
+    }
+    return render(request,"Activities/news_description.html",context=context)
+
 
 ############################## SC_AG ############################################
 def rasPage(request):
@@ -474,7 +492,7 @@ def blogs(request):
 
     '''Loads the blog page where all blog is shown'''
 
-    get_all_blog= Blog.objects.filter(publish_blog=True)
+    get_all_blog= Blog.objects.filter(publish_blog=True).order_by('-date')
     context={
         'page_title':"Blogs",
         'blogs':get_all_blog,
@@ -516,7 +534,7 @@ def write_blogs(request):
                         )
                         new_requested_blog.save()
 
-                elif(group is not "" and blog_category==""):
+                elif(group != "" and blog_category==""):
                         new_requested_blog=Blog.objects.create(
                         ieee_id=writer_ieee_id,writer_name=writer_name,title=blog_title,
                         date=datetime.today(),
@@ -526,7 +544,7 @@ def write_blogs(request):
                         )
                         new_requested_blog.save()
 
-                elif(group=="" and blog_category is not ""):
+                elif(group=="" and blog_category != ""):
                         new_requested_blog=Blog.objects.create(
                         ieee_id=writer_ieee_id,writer_name=writer_name,title=blog_title,
                         category=Blog_Category.objects.get(pk=blog_category),date=datetime.today(),
@@ -565,6 +583,32 @@ def write_blogs(request):
     }
     return render(request,"Get Involved/Write Blog/write_blog.html",context=context)
 
+def blog_description(request,pk):
+    # get the blog
+    get_blog=Blog.objects.get(pk=pk)
+    # this shows IEEE NSU Student branch as default if there is no group selected in Blog
+    if(get_blog.branch_or_society is None):
+        society_name="IEEE NSU Student Branch"
+    else:
+        society_name=get_blog.branch_or_society.group_name
+    
+    # get recent blogs
+    get_recent_blogs=Blog.objects.filter(publish_blog=True).order_by('-date').exclude(pk=pk)[:3]
+    # get recent news
+    get_recent_news=News.objects.all().order_by('-news_date')[:5]
+    
+    print(get_recent_blogs)
+    
+    context={
+        'page_title':get_blog.title,
+        'page_subtitle':society_name,
+        'blog':get_blog,
+        'recent_blogs':get_recent_blogs,
+        'recent_news':get_recent_news,
+    }
+    return render(request, 'Publications/Blog/blog_description_main.html',context=context)
+
+
 ######################### RESEARCH PAPER WORKS ###########################
 
 def Research_Paper(request):
@@ -577,6 +621,57 @@ def Research_Paper(request):
         "research_paper":get_all_research_papers
     })
 
+def add_research_form(request):
+    '''Handles form responses for add research paper form'''
+    # get research categories
+    research_categories=ResearchCategory.objects.all()
+    # load all sc ag and Branch
+    load_all_sc_ag=Chapters_Society_and_Affinity_Groups.objects.all().order_by('primary')
+
+    if(request.method=="POST"):
+        if(request.POST.get('submit_paper')):
+            author_names=request.POST['author_names']
+            group=request.POST.get('group')
+            paper_title=request.POST['paper_title']
+            research_category=request.POST.get('research_category')
+            abstract_description=request.POST['abstract_description']
+            paper_link=request.POST['paper_link']
+            research_banner_picture=request.FILES['research_banner_picture']
+            
+            if(research_category == ""):
+                new_research_request=Research_Papers.objects.create(
+                    title=paper_title,
+                    group=Chapters_Society_and_Affinity_Groups.objects.get(primary=group),
+                    research_banner_picture=research_banner_picture,
+                    author_names=author_names,short_description=abstract_description,
+                    publish_date=datetime.today(),publication_link=paper_link,
+                    is_requested=True
+                )
+                new_research_request.save()
+                messages.success(request,"Your request has been submitted! Thank you.")
+                return redirect('main_website:add_research')
+            else:
+                new_research_request=Research_Papers.objects.create(
+                    title=paper_title,category=ResearchCategory.objects.get(pk=research_category),
+                    group=Chapters_Society_and_Affinity_Groups.objects.get(primary=group),
+                    research_banner_picture=research_banner_picture,
+                    author_names=author_names,short_description=abstract_description,
+                    publish_date=datetime.today(),publication_link=paper_link,
+                    is_requested=True
+                )
+                new_research_request.save()
+                messages.success(request,"Your request has been submitted! Thank you.")
+                return redirect('main_website:add_research')                   
+    context={
+        'page_title':"Add Research Papers",
+        'page_subtitle':"""Join the thriving academic community at IEEE NSU Student Branch by sharing your research papers with fellow students and scholars! 
+        Contribute to the collective knowledge pool, showcase your expertise, and collaborate by submitting your work to our platform. 
+        Together, let's make a lasting impact in the world of research and innovation!""",
+        'research_categories':research_categories,
+        'all_sc_ag':load_all_sc_ag,
+    }
+    
+    return render(request,"Get Involved/Add Research/research_paper_form.html",context=context)
 ######################### Magazine WORKS ###########################
 
 def magazines(request):
@@ -953,5 +1048,3 @@ def contact(request):
 
     return render(request, 'Contact/contact.html', context)
 
-def blog_description(request):
-    return render(request, 'Publications/Blog/blog_description_main.html')

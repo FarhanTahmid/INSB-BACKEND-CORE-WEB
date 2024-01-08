@@ -12,7 +12,7 @@ from system_administration.system_error_handling import ErrorHandling
 import logging
 from django.contrib import messages
 from django.utils import timezone
-from chapters_and_affinity_group.models import SC_AG_Members,SC_AG_FeedBack
+from chapters_and_affinity_group.models import SC_AG_Members
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from central_branch.renderData import Branch
 class HomepageItems:
@@ -73,21 +73,34 @@ class HomepageItems:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
+    def load_all_sc_ag_events(flag,primary):
+        try:
+            current_datetime = timezone.now()
+            dic = {}
+            if flag:
+                events =  Events.objects.filter(publish_in_main_web= True,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)).order_by('-event_date')
+            else:
+                events =  Events.objects.filter(publish_in_main_web= True,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary),event_date__gt=current_datetime).order_by('event_date')[:5]
+                print(events)
+            for i in events:
+                try:
+                    event = Graphics_Banner_Image.objects.get(event_id = i.pk)
+                    dic[i]=event.selected_image
+                except:
+                    dic[i] = "#"
+            return dic
+        except Exception as e:
+            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
     
     def load_event_banner_image(event_id):
-            
-            '''This function returns the banner_image for the particular event'''
-            
             try:
-                #getting the banner image using the event id sent as parameter
                 return Graphics_Banner_Image.objects.get(event_id = event_id).selected_image
             except:
-                #if not found any image returning none
                 return None
     
     def load_event_gallery_images(event_id):
-
-        '''This function loads all the media images for the particular event'''
 
         return Media_Images.objects.filter(event_id = event_id)
 
@@ -114,8 +127,6 @@ class HomepageItems:
         
     def getHomepageBannerItems():
         
-        '''This function returns the returns the top banner items for homepage'''
-
         try:
             return HomePageTopBanner.objects.all()
             
@@ -198,11 +209,9 @@ class HomepageItems:
         '''This function returns a list of events which are upcoming'''
         
         try:
-            #getting current date time to compare which events are upcoming
             current_datetime = timezone.now()
             society = SC_AG_Info.get_sc_ag_details(request,primary)
             if primary == 1:
-                #getting the latest upcoming event for INSB student branch 
                 upcoming_event = Events.objects.filter(publish_in_main_web = True,event_date__gt=current_datetime).order_by('event_date')[:1]
             else:
                 #getting the latest upcoming event for affinity groups and societies
@@ -217,39 +226,38 @@ class HomepageItems:
         except:
             return None 
     
-    def get_ip_address(request):
+    def get_upcoming_event_banner_picture(event):
 
-        '''This function saves the ip address every day. So if same user visits the page everyday,
-            then each day his ip address will counted only once'''
         try:
-            address = request.META.get('HTTP_X_FORWARDED_FOR')
-            if address:
-                ip = address.split(',')[-1].strip()
-            else:
-                ip = request.META.get('REMOTE_ADDR')
-            #creating user IP address model with auto saved date
-            user =User_IP_Address(ip_address = ip)
-            #checking if this user already exists today or not. If yes the length of result is more than 1
-            #and his ip wont be saved
-            result = User_IP_Address.objects.filter(ip_address = ip,created_at = datetime.today())
-            if len(result)>=1:
-                pass
-            else:
-                user.save()
-                
-        except Exception as e:
-            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            return False
+            return Graphics_Banner_Image.objects.get(event_id = event)
+        except:
+            return None
+    
+    def get_ip_address(request):
+        
+        address = request.META.get('HTTP_X_FORWARDED_FOR')
+        print(address)
+        if address:
+            ip = address.split(',')[-1].strip()
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        
+        user =User_IP_Address(ip_address = ip)
+        print(datetime.today())
+        print(f"Current user ip address {user}")
+        result = User_IP_Address.objects.filter(ip_address = ip,created_at = datetime.today())
+        print(f"User exists in database {result}")
+        if len(result)>=1:
+            pass
+        else:
+            user.save()
 
     def get_featured_events_for_societies(primary):
 
         '''This funtion gets the featured events for the societies depending on primary value'''
         
         try:
-            #assigning empty dictionary
             dic={}
-            #getting 4 events which are published, is featured and is of the particular society. it is ordered bt latest date
             events = Events.objects.filter(event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary),is_featured = True,publish_in_main_web= True).order_by('-event_date')[:4]
             print(events)
             #iterating for each event to set graphics banner image
@@ -271,16 +279,12 @@ class HomepageItems:
         
     def get_faculty_advisor_for_society(request,primary):
 
-        '''This function returns the faculty advisor for the particular society otherwise returns none''' 
-        
+        '''This function returns the faculty advisor for the particular society otherwise return none''' 
         try:
-            #getting the particular society object
-            society = SC_AG_Info.get_sc_ag_details(request,primary)
+            society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
             try:
-                #getting the faculty advisor of the particular society
                 faculty = SC_AG_Members.objects.get(sc_ag = society,position = Roles_and_Position.objects.get(is_faculty = True,role_of = society))
             except:
-                #else returning None
                 faculty = None
 
             return faculty
@@ -295,21 +299,14 @@ class HomepageItems:
         '''This function returns a list of eb memebers for the particular society'''
         
         try:
-            #assingning empty eb_member list
             eb_members=[]
-            #getting the particular society object
-            society = SC_AG_Info.get_sc_ag_details(request,primary)
-            #getting the list of roles of the eb members which is ordered by roles
+            society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
             roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society).order_by('role_of')
-            #for each roles gettiing the corresponding member of that role
             for role in roles:
                     try:
-                        #getting the member of the particular society whose role matches with the role iteration in the list
                         member = SC_AG_Members.objects.get(sc_ag = society,position = role)
                     except:
-                        #if no member is found assigning none
                         member = None
-                    #appending the member found in the list
                     eb_members.append(member)
             return eb_members
         except Exception as e:
@@ -317,22 +314,6 @@ class HomepageItems:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
 
-    def save_feedback_information(request,primary,name,email,message):
-
-        '''This function saves the feedback data to the database'''
-
-        try:
-            #getting the particular society object
-            society = SC_AG_Info.get_sc_ag_details(request,primary)
-            #creating the new feedback object for the particular society
-            feedback = SC_AG_FeedBack.objects.create(society = society, name = name,email = email, message = message)
-            #saving it to the database
-            feedback.save()
-            return True
-
-        except Exception as e:
-            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            return False
+    
 
         
