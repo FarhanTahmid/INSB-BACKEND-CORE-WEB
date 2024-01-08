@@ -54,4 +54,5 @@ urlpatterns = [
     path('contact',views.contact, name="contact"),
     # test
     path('blog_description',views.blog_description, name="blog_description"),
+    path('toolkit',views.toolkit, name="toolkit"),
 ]
