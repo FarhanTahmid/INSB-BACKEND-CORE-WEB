@@ -42,7 +42,7 @@ class HomepageItems:
                     ####getting collaborated events###if dont want collaborated event remove bottom section
                     collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
                     #joining both the events list of collbarated and their own organised events
-                    events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('event_date') 
+                    events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('-event_date') 
                     ####################################################################################################################
             else:
                 if primary == 1:
@@ -164,7 +164,7 @@ class HomepageItems:
                 collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
                 events = Events.objects.filter(publish_in_main_web= True,event_organiser = society).order_by('-event_date')
                 #joining both the events list of collbarated and their own organised events
-                all_events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('event_date')   
+                all_events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('-event_date')   
             #decalring empty dictionary for getting the event date and event
             #key is the date and event object is the value
             date_and_events = {}
