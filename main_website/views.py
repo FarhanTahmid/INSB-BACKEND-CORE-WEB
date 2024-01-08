@@ -500,11 +500,6 @@ def blogs(request):
     }
     return render(request,"Publications/Blog/blog.html",context=context)
 
-def blog_Description(request,blog_id):
-    load_specific_blog = Blog.objects.get(id=blog_id)
-    return render(request,"Blog_Details.html",{
-        "blog_details":load_specific_blog
-    })
 
 def write_blogs(request):
     '''Creates a form and allows user to give a request to publish their blogs in the site'''
@@ -596,9 +591,7 @@ def blog_description(request,pk):
     get_recent_blogs=Blog.objects.filter(publish_blog=True).order_by('-date').exclude(pk=pk)[:3]
     # get recent news
     get_recent_news=News.objects.all().order_by('-news_date')[:5]
-    
-    print(get_recent_blogs)
-    
+        
     context={
         'page_title':get_blog.title,
         'page_subtitle':society_name,
@@ -611,15 +604,17 @@ def blog_description(request,pk):
 
 ######################### RESEARCH PAPER WORKS ###########################
 
-def Research_Paper(request):
+def research_Paper(request):
 
     '''Loads all research papers for the corresponding page'''
-
-
-    get_all_research_papers = Research_Papers.objects.all() 
-    return render(request,"All_Research_Papers.html",{
-        "research_paper":get_all_research_papers
-    })
+    get_all_research_papers = Research_Papers.objects.filter(publish_research=True).order_by('-publish_date')
+    
+    context={
+        'page_title':"Research Papers",
+        'page_subtitle':"IEEE NSU Student Branch",
+        "all_research_papers":get_all_research_papers
+    } 
+    return render(request,"Publications/Research Paper/research_paper.html",context=context)
 
 def add_research_form(request):
     '''Handles form responses for add research paper form'''
@@ -935,6 +930,7 @@ def exemplary_members(request):
         
     context={
         'page_title':"Exemplary Members",
+        'page_subtitle':"IEEE NSU Student Branch",
         'exemplary_members':all_exemplary_members,
     }
     return render(request,"Members/Exemplary Members/exemplary_members.html",context=context)

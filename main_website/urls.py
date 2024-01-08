@@ -41,6 +41,7 @@ urlpatterns = [
     path('blogs/<int:pk>',views.blog_description, name="blog_description"),
     path('write_blogs',views.write_blogs,name="write_blogs"),
     path('magazines',views.magazines,name="magazines"),
+    path('research',views.research_Paper,name="research_paper"),
     path('add_research',views.add_research_form,name="add_research"),
 
     # About
