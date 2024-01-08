@@ -26,7 +26,7 @@
                     <div style="text-align:right;">
                     <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add New Blogs</button>
                     <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-c" ui-toggle-class="bounce" ui-target="#animate">Add Blog Category</button>
-                    <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#" ui-toggle-class="bounce" ui-target="#animate">Blog Requests</button>
+                    <a href="{% url 'central_branch:blog_requests' %}" class="btn btn-outline b-success text-success">Blog Requests</a>
                     </div>
                     <small>This table holds the data of Blogs in the main website of IEEE NSU SB</small>
                     <small style="color:green;"><span style="color:red;">* </span>Adding Blogs here will update them in the Main Website.</small>

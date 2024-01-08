@@ -1,6 +1,6 @@
 {% load static %}
 
-{% block achievement_card_container %}
+{% block news_card_container %}
 
 <style>
 
@@ -38,19 +38,15 @@
     <div class="row m-0">
 
         <!-- Repeat the card -->
-        {% for i in achievements %}
+        {% for i in all_news %}
         <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
             <div class="card shadow achievement_card">
-                <img class="card-img-top" src="/media_files/{{i.award_picture}}" alt="">
-
-                <div class="position-absolute">
-                    <span style="background-color: #00629B;" class=" text-white px-3 py-2 rounded h6">{{i.award_winning_year}}</span>
-                </div>
+                <img class="card-img-top" src="/media_files/{{i.news_picture}}" alt="">
 
                 <div class="card-body">
-                    <h5 class="card-title fw-bold mt-2">{{i.award_name}} - <span style="color:{{i.award_of.primary_color_code}};">{{i.award_of.group_name}}</span></h5>
+                    <a href="{% url 'main_website:news_description' i.pk %}"><h5 class="card-title fw-bold mt-2">{{i.news_title}}<br></h5></a>
                     <div class="description-container">
-                        <p class="card-text">{{i.award_description|safe}}</p>
+                        <p class="card-text">{{i.news_description|safe}}</p>
                     </div>
                     <a href="#" class="read-more-link" >Read More</a>
 
@@ -89,4 +85,4 @@
     });
 </script>
 
-{% endblock achievement_card_container %}
+{% endblock news_card_container %}

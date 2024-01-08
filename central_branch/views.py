@@ -544,7 +544,7 @@ def manage_blogs(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # Load all blogs
-    all_blogs=Blog.objects.all()
+    all_blogs=Blog.objects.filter(is_requested=False)
     
     form=BlogsForm
     form2=BlogCategoryForm
@@ -601,6 +601,43 @@ def update_blogs(request,pk):
     }
 
     return render(request,"Manage Website/Publications/Blogs/update_blogs.html",context=context)
+
+@login_required
+def blog_requests(request):
+    # get all blog requests
+    all_requested_blogs=Blog.objects.filter(is_requested=True).order_by('-date')
+    context={
+        'all_requested_blogs':all_requested_blogs
+    }
+    return render(request,"Manage Website/Publications/Blogs/blog_requests.html",context=context)
+
+@login_required
+def publish_blog_request(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
+    # get the blog and form
+    blog_to_publish=get_object_or_404(Blog,pk=pk)
+    if(request.method=="POST"):
+        if(request.POST.get('publish_blog')):
+            form=BlogsForm(request.POST,request.FILES,instance=blog_to_publish)
+            if(form.is_valid()):
+                form.save()
+                blog_to_publish.is_requested=False
+                blog_to_publish.publish_blog=True
+                blog_to_publish.save()
+                print("Saved")
+                print(blog_to_publish.publish_blog)
+                messages.info(request,"Blog was published in the main website")
+                return redirect('central_branch:blog_requests')
+    else:
+        form=BlogsForm(instance=blog_to_publish)
+    
+    context={
+        'all_sc_ag':sc_ag,
+        'form':form,
+        'blog':blog_to_publish,
+    }
+    return render(request,"Manage Website/Publications/Blogs/publish_blog.html",context=context)
 
 from main_website.models import HomePageTopBanner
 @login_required
