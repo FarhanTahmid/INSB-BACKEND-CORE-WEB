@@ -1907,3 +1907,49 @@ def event_preview(request, event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
+
+@login_required
+def manage_toolkit(request):
+    # get all toolkits
+    all_toolkits=Toolkit.objects.all().order_by('-pk')
+    if(request.method=="POST"):
+        toolkit_form=ToolkitForm(request.POST,request.FILES)
+        if(request.POST.get('add_item')):
+            if(toolkit_form.is_valid()):
+                toolkit_form.save()
+                messages.success(request,"A new Toolkit Item was added!")
+                return redirect('central_branch:manage_toolkit')
+        if(request.POST.get('remove_toolkit')):
+            item_to_delete=Toolkit.objects.get(pk=request.POST['toolkit_pk'])
+            # first delete the picture from the filesystem
+            if(os.path.isfile(item_to_delete.picture.path)):
+                os.remove(item_to_delete.picture.path)
+            item_to_delete.delete()
+            messages.warning(request,"A Toolkit Item was deleted!")
+            return redirect('central_branch:manage_toolkit')
+    else:
+        toolkit_form=ToolkitForm
+    context={
+        'all_toolkits':all_toolkits,
+        'form':toolkit_form,
+    }
+    return render(request,"Manage Website/Publications/Toolkit/manage_toolkit.html",context=context)
+
+@login_required
+def update_toolkit(request,pk):
+    # toolkit to update
+    toolkit_to_update=get_object_or_404(Toolkit,pk=pk)
+    if(request.method=="POST"):
+        toolkit_form=ToolkitForm(request.POST,request.FILES,instance=toolkit_to_update)
+        if(request.POST.get('update_toolkit_item')):
+            if(toolkit_form.is_valid()):
+                toolkit_form.save()
+                messages.success(request,"Toolkit Item was updated!")
+                return redirect('central_branch:manage_toolkit')
+    else:
+        toolkit_form=ToolkitForm(instance=toolkit_to_update)
+    context={
+        'toolkit':toolkit_to_update,
+        'form':toolkit_form,
+    }
+    return render(request,"Manage Website/Publications/Toolkit/update_toolkit.html",context=context)
