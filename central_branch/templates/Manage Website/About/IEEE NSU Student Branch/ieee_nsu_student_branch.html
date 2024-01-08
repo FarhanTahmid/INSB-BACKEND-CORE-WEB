@@ -120,7 +120,7 @@
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
                                     </div>
                                 </div>
                             </div>  
@@ -156,7 +156,7 @@
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
                                     </div>
                                 </div>
                                 <br>
@@ -186,7 +186,7 @@
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
                                     </div>
                                 </div>
                                 <br>
@@ -216,7 +216,7 @@
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
                                     </div>
                                 </div>
                                 <br>
@@ -246,7 +246,7 @@
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
                                     </div>
                                 </div>
                                 <br>
@@ -309,7 +309,7 @@
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
                                     </div>
                                 </div>
                             </div> 
@@ -344,7 +344,7 @@
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
                                     </div>
                                 </div>
                             </div> 
@@ -453,30 +453,31 @@
             </div>
 
 
-            <!-- Confirmation modal for delete -->
-            <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-top" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+            <!-- Confirmation modal for deleting images-->
+            <div class="modal fade" id="ConfirmDeleteModalForImages" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForImagesLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-top" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ConfirmDeleteModalForImagesLabel">Confirm Delete</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <p><input id="image_delete" name= "image_delete" type="hidden">
+                                    <input id="image_id" name= "image_id" type="hidden" ></p>
+                            Are you sure you want to delete the note?
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                        </form>
                     </div>
-                    <div class="modal-body">
-                        <form method="POST">
-                            {% csrf_token %}
-                        <p><input id="image_delete" name= "image_delete" type="hidden"></p>
-                        Are you sure you want to delete the note?
-                    </div>
-                    <div class="modal-footer">
-                        <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
-                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                    </div>
-                    </form>
                 </div>
-            </div>
-            </div>
+                </div>
 
         </div>
     </div>
@@ -646,12 +647,27 @@
     </script>
 
 
-    <!--Delete logic for image-->
     <script>
-        function openModal(image_delete) {
+        //Delete logic for image
+        function openModal(image_delete, image_id) {
             // Set data in the modal
             var inputElement = document.getElementById('image_delete');    
-            inputElement.value=image_delete;
+            inputElement.value = image_delete;
+            var inputElement2 = document.getElementById('image_id');
+            inputElement2.value=image_id;
+        }
+
+        //View logic for image
+        function openImageModal(image_path){
+            var inputElement = document.getElementById('modal_image');
+            inputElement.src = image_path
+        }
+
+        //Delete logic for Link
+        function openLinkModal(id) {
+            // Set data in the modal
+            var inputElement = document.getElementById('remove_link');    
+            inputElement.value=id;
         }
     </script>
  

@@ -66,8 +66,33 @@
         <div ui-view class="app-body" style="justify-content:center; margin-left:27%; margin-right:15%;" id="view">
 
             <br>
-            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>IEEE REGION 10 Section</b></h4>
+            <h4 style="justify-content:center;text-align:center;"><b>IEEE REGION 10 Section</b></h4>
             <br>
+
+            <div class="btn-container">
+                <button class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#previewModal">Preview</button>
+            </div>
+            <br>
+
+            <!-- Preview Event Modal -->
+            <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" style="z-index: 1500;">
+                <div class="modal-dialog modal-dialog-centered modal-lg preview_modal_box" role="document">
+                    <div class="modal-content" style="width: 100%; height: 100%;">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="previewModalLabel">Preview</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <iframe src="https://ieeensusb.org/ieee/" style="width: 100%; height: 100%;" loading="lazy"></iframe>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <!--Messages-->
             <div style="justify-content:center; text-align:center;">
@@ -104,8 +129,8 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="about_details"></textarea>
-                                <p id="aboutCharacterCount" style="color: red;">Required</p>
+                                name="ieee_region_10_details"></textarea>
+                                <p id="ieee_region_10CharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
 
@@ -113,8 +138,8 @@
                             <div class="form-group">
                                 <label for="images">IEEE REGION 10 Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="about-image-input" name="image" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
+                                    <input type="file" class="custom-file-input" id="ieee-region-10-image-input" name="ieee_region_10_picture" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="ieee-region-10-image-input">Choose file</label>
                                 </div>
                                 
                                 <br>
@@ -123,19 +148,19 @@
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
                                     </div>
                                 </div>
                                 <br>
 
                                 <label>Region 10 History Link <span style="color:red">*<span></label> 
                                 <input
-                                placeholder="IEEEBD.net Link"
+                                placeholder="Region 10 History Link"
                                 class="form-control"
                                 type="text"
                                 autocomplete="off"
                                 required
-                                name="ieeebd_link"/>
+                                name="region_10_history_link"/>
                             </div>  
 
                             <br>
@@ -152,16 +177,16 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="members_and_volunteers_details"></textarea>
-                                <p id="members_and_volunteersCharacterCount" style="color: red;">Required</p>
+                                name="young_professionals_details"></textarea>
+                                <p id="young_professionalsCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
 
                             <div class="form-group">
                                 <label for="images">Young Professionals Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="members-and-volunteers-image-input" name="image" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="members-and-volunteers-image-input">Choose file</label>
+                                    <input type="file" class="custom-file-input" id="young-professionals-image-input" name="young_professionals_picture" accept="image/*">
+                                    <label class="custom-file-label bg-light" for="young-professionals-image-input">Choose file</label>
                                 </div>
                                 
                                 <br>
@@ -170,15 +195,15 @@
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
                                     </div>
                                 </div>
                             </div>
                             <br>
 
                             <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
+                                <label class="col-sm-7 form-control-label">Add Links (Young Professionals):</label>
+                                <div class="col-sm-3">
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
@@ -188,7 +213,7 @@
                             
                             <hr>
                             <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
+                                <label class="mb-0">Links (Young Professionals):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
@@ -213,15 +238,15 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="benefits_details"></textarea>
-                                <p id="benefitsCharacterCount" style="color: red;">Required</p>
+                                name="women_in_engineering_details"></textarea>
+                                <p id="women_in_engineeringCharacterCount" style="color: red;">Required</p>
 
                             </div>
                             <br>
 
                             <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
+                                <label class="col-sm-7 form-control-label">Add Links (Women in Engineering):</label>
+                                <div class="col-sm-3">
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
@@ -231,7 +256,7 @@
                             
                             <hr>
                             <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
+                                <label class="mb-0">Links (Women in Engineering):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
@@ -248,27 +273,15 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="student_branches_details"></textarea>
-                                <p id="student_branchesCharacterCount" style="color: red;">Required</p>
-
-                            </div>
-                            <br>
-                            
-
-                            <div class="form-group">
-                                <label>Educational Activities and Involvements <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="affinity_groups_details"></textarea>
-                                <p id="affinity_groupsCharacterCount" style="color: red;">Required</p>
+                                name="student_and_member_activities_details"></textarea>
+                                <p id="student_and_member_activitiesCharacterCount" style="color: red;">Required</p>
 
                             </div>
                             <br>
 
                             <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
+                                <label class="col-sm-7 form-control-label">Add Links (Students and Member Activites):</label>
+                                <div class="col-sm-3">
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
@@ -278,7 +291,43 @@
                             
                             <hr>
                             <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
+                                <label class="mb-0">Links (Students and Member Activites):</label> 
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Educational Activities and Involvements <span style="color:red">*<span></label> 
+                                <textarea 
+                                class="form-control" 
+                                type="text"
+                                name="educational_activities_and_involvements_details"></textarea>
+                                <p id="educational_activities_and_involvementsCharacterCount" style="color: red;">Required</p>
+
+                            </div>
+                            <br>
+                            
+
+                            <div class="form-group row">
+                                <label class="col-sm-7 form-control-label">Add Links (Educational Activities and Involvements):</label>
+                                <div class="col-sm-3">
+                                    <!-- Add input field for links here if needed -->
+                                </div>
+                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            <div id="links-container" class="mt-3">
+                                <label class="mb-0">Links (Educational Activities and Involvements):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
@@ -296,9 +345,33 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="communty_and_society_details"></textarea>
-                                <p id="communty_and_societyCharacterCount" style="color: red;">Required</p>
+                                name="industry_relations_details"></textarea>
+                                <p id="industry_relationsCharacterCount" style="color: red;">Required</p>
 
+                            </div>
+                            <br>
+
+                            <div class="form-group row">
+                                <label class="col-sm-7 form-control-label">Add Links (Industry Relations):</label>
+                                <div class="col-sm-3">
+                                    <!-- Add input field for links here if needed -->
+                                </div>
+                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            <div id="links-container" class="mt-3">
+                                <label class="mb-0">Links (Industry Relations):</label> 
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
+                                    </div>
+                                </div>
                             </div>
                             
                             <br>
@@ -312,12 +385,12 @@
                              
                              <!-- Text field -->
                              <div class="form-group">
-                                 <label>Membership Development <span style="color:red">*<span></label> 
+                                 <label>Membership Development Details <span style="color:red">*<span></label> 
                                  <textarea 
                                  class="form-control" 
                                  type="text"
-                                 name="membership_details"></textarea>
-                                 <p id="membershipCharacterCount" style="color: red;">Required</p>
+                                 name="membership_development_details"></textarea>
+                                 <p id="membership_developmentCharacterCount" style="color: red;">Required</p>
                              </div>
                              <br>
  
@@ -335,7 +408,7 @@
                                          <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
                                      </div>
                                      <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
                                      </div>
                                  </div>
                              </div>
@@ -343,8 +416,8 @@
                              <br>
 
                             <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
+                                <label class="col-sm-7 form-control-label">Add Links (Membership Development):</label>
+                                <div class="col-sm-3">
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
@@ -354,7 +427,7 @@
                             
                             <hr>
                             <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
+                                <label class="mb-0">Links (Membership Development):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
@@ -397,15 +470,15 @@
                                          <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
                                      </div>
                                      <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
                                      </div>
                                  </div>
                              </div>
                              <br>
 
                             <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
+                                <label class="col-sm-7 form-control-label">Add Links (Events and Conference):</label>
+                                <div class="col-sm-3">
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
@@ -415,7 +488,7 @@
                             
                             <hr>
                             <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
+                                <label class="mb-0">Links (Events and Conference):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
@@ -538,12 +611,12 @@
             </div>
 
 
-            <!-- Confirmation modal for delete -->
-            <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+            <!-- Confirmation modal for deleting images-->
+            <div class="modal fade" id="ConfirmDeleteModalForImages" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForImagesLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-top" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                        <h5 class="modal-title" id="ConfirmDeleteModalForImagesLabel">Confirm Delete</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -551,7 +624,8 @@
                     <div class="modal-body">
                         <form method="POST">
                             {% csrf_token %}
-                        <p><input id="image_delete" name= "image_delete" type="hidden"></p>
+                            <p><input id="image_delete" name= "image_delete" type="hidden">
+                                <input id="image_id" name= "image_id" type="hidden" ></p>
                         Are you sure you want to delete the note?
                     </div>
                     <div class="modal-footer">
@@ -559,6 +633,127 @@
                         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                     </div>
                     </form>
+                </div>
+            </div>
+            </div>
+
+            <!-- Updated Modal for adding links -->
+            <div class="modal fade" id="AddLinksModal" tabindex="-1" role="dialog" aria-labelledby="AddLinksModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="AddLinksModalLabel">Add Links</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST">
+                                {% csrf_token %}
+                                
+                                <div class="form-group">
+                                    <label>Title: </label> 
+                                        <input
+                                            placeholder="Title"
+                                            class="form-control"
+                                            type="text"
+                                            autocomplete="off"
+                                            required
+                                            name="title"
+                                            value="" 
+                                        />
+                                    <br>
+                                    <label>Links:</label>
+                                    <input
+                                    placeholder="Provide Drive Link for The Banner Pictures"
+                                    class="form-control"
+                                    type="url"
+                                    autocomplete="off"
+                                    id="field1"
+                                    name="form_link_add"
+                                    value=""/>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <!-- Change the button label and name attribute -->
+                            <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_link" value="Add">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- New modal for editing links -->
+            <div class="modal fade" id="EditLinkModal" tabindex="-1" role="dialog" aria-labelledby="EditLinkModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="EditLinkModalLabel">Edit Link</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Display existing link in a textarea for editing -->
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label>Title: </label> 
+                                        <input
+                                            placeholder="Title"
+                                            class="form-control"
+                                            type="text"
+                                            autocomplete="off"
+                                            required
+                                            name="title"
+                                            value="" 
+                                        />
+                                    <br>
+                                    <label>Links:</label>
+                                    <input
+                                    placeholder="Provide Drive Link for The Banner Pictures"
+                                    class="form-control"
+                                    type="url"
+                                    autocomplete="off"
+                                    id="field1"
+                                    name="form_link_edit"
+                                    value=""/>
+                                    <input type="hidden" name = "link_pk" value ="{{link.pk}}">
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" name = "update_link" class="btn btn-outline-primary txt-primary buttons" value="Update">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Confirmation modal for deleting links -->
+            <div class="modal fade" id="ConfirmDeleteModalForLinks" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForLinksLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-top" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ConfirmDeleteModalForLinksLabel">Confirm Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                        <p><input id="remove_link" name= "remove_link" type="hidden"></p>
+                        Are you sure you want to delete this link?
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-outline-danger" value="Confirm" name = "remove_form_link">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
                 </div>
             </div>
             </div>
@@ -577,18 +772,18 @@
       <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Replace the textareas with CKEditor instances
-            CKEDITOR.replace('about_details');
-            CKEDITOR.replace('members_and_volunteers_details');
-            CKEDITOR.replace('benefits_details');
-            CKEDITOR.replace('student_branches_details');
-            CKEDITOR.replace('affinity_groups_details');
-            CKEDITOR.replace('communty_and_society_details');
-            CKEDITOR.replace('membership_details');
+            CKEDITOR.replace('ieee_region_10_details');
+            CKEDITOR.replace('young_professionals_details');
+            CKEDITOR.replace('women_in_engineering_details');
+            CKEDITOR.replace('student_and_member_activities_details');
+            CKEDITOR.replace('educational_activities_and_involvements_details');
+            CKEDITOR.replace('industry_relations_details');
+            CKEDITOR.replace('membership_development_details');
             CKEDITOR.replace('events_and_conference_details');
             
 
             // Attach a function to the change event for each CKEditor instance
-            ["about", "members_and_volunteers", "benefits", "student_branches", "affinity_groups", "communty_and_society", "membership", "events_and_conference"]
+            ["ieee_region_10", "young_professionals", "women_in_engineering", "student_and_member_activities", "educational_activities_and_involvements", "industry_relations", "membership_development", "events_and_conference"]
                 .forEach(function (editorId) {
                     var editor = CKEDITOR.instances[editorId + '_details'];
 
@@ -641,12 +836,27 @@
     </script>
 
 
-    <!--Delete logic for image-->
     <script>
-        function openModal(image_delete) {
+        //Delete logic for image
+        function openModal(image_delete, image_id) {
             // Set data in the modal
             var inputElement = document.getElementById('image_delete');    
-            inputElement.value=image_delete;
+            inputElement.value = image_delete;
+            var inputElement2 = document.getElementById('image_id');
+            inputElement2.value=image_id;
+        }
+
+        //View logic for image
+        function openImageModal(image_path){
+            var inputElement = document.getElementById('modal_image');
+            inputElement.src = image_path
+        }
+
+        //Delete logic for Link
+        function openLinkModal(id) {
+            // Set data in the modal
+            var inputElement = document.getElementById('remove_link');    
+            inputElement.value=id;
         }
     </script>
  
