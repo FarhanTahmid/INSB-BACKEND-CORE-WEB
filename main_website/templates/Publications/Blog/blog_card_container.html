@@ -1,96 +1,46 @@
 {% load static %}
 
+<!--YOU MUST IMPORT THE blog.css IN THE HTML FILE YOU ARE USING THIS BLOCK. JS IS INTEGRATED IN THIS BLOCK -->
+
 {% block blog_card_container %}
 
 <style>
-
-    
-
-    .card_container{
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 20px;
-            margin-bottom: 50px;
-
-            vertical-align: baseline;
-            font-family: inherit;
-            font-size: 100%;
-            font-style: inherit;
-            font-weight: inherit;
+    .gdlr-blog-grid .excerpt-read-more{
+        color: #002855;
+    }
+    .gdlr-blog-grid .excerpt-read-more:hover{
+        color: #FFC72C;
+    }
+    .article-image {
+        width: 100%; /* Make the image fill the container */
+        height: 250px; /* Fix the image height to 250px */
+        object-fit: cover; /* Maintain aspect ratio and cover the container */
+      }
+      .search_blog{
+        width: 100%;
+        max-width: 1140px;
+        margin: 60px auto 30px auto;
+        border: 2px solid #fecd13;
+        border-radius: 10px;
+        padding: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+      .search_blog input{
+        width: 100%;
+        height: 50px;
+        padding: 0 10px;
+        font-size: 18px;
+      }
+      @media screen and (max-width: 1200px) {
+        .search_blog {
+            width: 90%;
+            max-width: 960px;
         }
-        .card {
-            width: 356.625px;
-            height: 497.719px;
-            background-color: #ffffff;
-            box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
-            margin: 20px;
-            border-radius: 15px;
-            overflow: hidden;
-            position: relative;
-            transition: box-shadow 0.3s ease-in-out;
-        }
-
-        .card:hover {
-            box-shadow: 0px 8px 16px rgba(0,0,0,0.3);
-        }
-
-        .card img {
-            width: 100%;
-            height: auto;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .card:hover img {
-            transform: scale(1.1);
-        }
-
-        .card_content {
-            padding: 20px;
-        }
-
-        .card_content h5 {
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-
-        .card_content span {
-            font-size: 14px;
-            color: #302f2f;
-            line-height: 1.5;
-        }
-
-        .card_content i {
-            margin-right: 5px;
-        }
-
-        .card_content a {
-            color: #007bff;
-            text-decoration: none;
-            transition: color 0.3s ease-in-out;
-        }
-
-        .card_content a:hover {
-            color: #0056b3;
-        }
-        .search_blog{
-            width: 100%;
-            max-width: 1140px;
-            margin: 60px auto 30px auto;
-            border: 2px solid #fecd13;
-            border-radius: 10px;
-            padding: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-          }
-          @media screen and (max-width: 1200px) {
-            .search_blog {
-                width: 90%;
-                max-width: 960px;
-            }
-        }
-        
-
+    }
 </style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
 <!-- Search Section -->
 <div class="search_blog">
     
@@ -98,51 +48,101 @@
     type="text"
     id="blogFilter"
     onkeyup="blogFilterFunction()"
-    placeholder="Search Blogs.."
+    placeholder="Search by blog name.."
     title="Type in a name"
     />
 </div>
 
-<!-- Cards starts here -->
-<div class="card_container">
-    {% for i in blogs %}
-        <div class="card">
-            <img src="media_files/{{i.blog_banner_picture}}" alt="Sample photo">
-            <div class="card_content">
-                <a href="{% url 'main_website:blog_description' i.pk %}"><h5>{{i.title}}</h5></a>
-                <i class="fa-regular fa-clock"></i>
-                <span>{{i.date}}</span>
-                <i class="fa-solid fa-align-left"></i><span> {{i.writer_name}} •</span><br>
-                <p>{{i.short_description | safe}}</p>
-                <a href="{% url 'main_website:blog_description' i.pk %}">Read More</a>
+<!--Blog CARD CONTAINER-->
 
+<section class="blog">
+    <div class="blog-container container" style="padding:0px; "> 
+
+        <div class="row m-0 box-container" style="transition: .3s ease-in-out; ">
+            {% for i in blogs %}
+            <div style="border-radius: 7px;" class="col-lg-4 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box blog_box">
+                <article id="post-2255"
+                    class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
+                    <div class="gdlr-standard-style" style="height:500px;">
+                        <div class="gdlr-blog-thumbnail">
+                            <a href="{% url 'main_website:blog_description' i.pk %}"> <img
+                                    class="article-image"
+                                    src="media_files/{{i.blog_banner_picture}}"
+                                    alt="" width="100%" /></a>
+                        </div>
+
+                        <div class="gdlr-blog-grid-content" style="overflow: hidden;">
+                            <header class="post-header">
+                                <div class="gdlr-blog-info">
+                                    <div
+                                        class="blog-info blog-date gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span><a
+                                            href="{% url 'main_website:blog_description' i.pk %}">{{i.date}}</a></div>
+                                    <div
+                                        class="blog-info blog-author gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span>By <a
+                                            href="{% url 'main_website:blog_description' i.pk %}" title="{{i.writer_name}}"
+                                            rel="author">{{i.writer_name}}</a></div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <h3 class="gdlr-blog-title blog_name"><a href="{% url 'main_website:blog_description' i.pk %}">{{i.title}}</a></h3>
+                                <div class="clear"></div>
+                            </header>
+                            <!-- entry-header -->
+
+                            <div class="description-container" style="display: -webkit-box;
+                            overflow: hidden;
+                            -webkit-box-orient: vertical;
+                            text-overflow: ellipsis;
+                            -webkit-line-clamp: 2;">
+                                <p class="card-text">{{i.short_description | safe}}</p>
+                            </div>
+                            <a href="{% url 'main_website:blog_description' i.pk %}" class="excerpt-read-more">Read More</a>
+                        </div>
+                    </div>
+                </article>
             </div>
+            {% endfor %}
         </div>
-    {% endfor %}
-    
-</div>
-
+    </div>
+</section>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    var element = document.getElementById('gdlr-blog-title');
+    var maxLength = 40; // Set your desired maximum length
+  
+    if (element.textContent.length > maxLength) {
+        element.textContent = element.textContent.substring(0, maxLength) + '...';
+    }
+  </script>
 
 <script>
+    // BLOG SEARCH FUNCTION WITH NAME ONLY
     function blogFilterFunction() {
-        var input, filter, cardContainer, cards, card, title, writer;
+        let input, filter, container, blogs, blogTitle, i;
         input = document.getElementById("blogFilter");
         filter = input.value.toUpperCase();
-        cardContainer = document.querySelector(".card_container");
-        cards = cardContainer.getElementsByClassName("card");
+        container = document.querySelector(".box-container");
+        blogs = container.querySelectorAll(".blog_box");
 
-        for (var i = 0; i < cards.length; i++) {
-            card = cards[i];
-            title = card.getElementsByTagName("h5")[0].innerText;
+        for (i = 0; i < blogs.length; i++) {
+            blogTitle = blogs[i].querySelector(".gdlr-blog-title a");
+            message = document.getElementById("no_data");
 
-            if (title.toUpperCase().indexOf(filter) > -1) {
-                card.style.display = "";
+            if (blogTitle.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                blogs[i].style.display = "";
+                message.innerHTML = "";
             } else {
-                card.style.display = "none";
+                blogs[i].style.display = "none";
             }
+        }
+
+        // Display a message if no matching blogs are found
+        let visibleBlogs = container.querySelectorAll(".blog_box[style='display: block;']");
+        if (visibleBlogs.length === 0) {
+            message.innerHTML = "Blog not found!";
         }
     }
 </script>
-
-
 {% endblock blog_card_container %}
