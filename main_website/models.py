@@ -126,12 +126,20 @@ class Magazines(models.Model):
 class IEEE_Bangladesh_Section(models.Model):
     about_ieee_bangladesh = models.TextField(null=True,blank=True)
     ieee_bangladesh_logo = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Bangladesh Section/logo/")
+    ieee_bd_link = models.URLField(null=True,blank=True,max_length=200)
     member_and_volunteer_description = models.TextField(null=True,blank=True)
     member_and_volunteer_picture = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Bangladesh Section/member_volunteer_picture/")
     benefits_description = models.TextField(null=True,blank=True)
     student_branches_description = models.TextField(null=True,blank=True)
     affinity_groups_description = models.TextField(null=True,blank=True)
     community_and_society_description = models.TextField(null=True,blank=True)
+    achievements_description = models.TextField(null=True,blank=True)
+    chair_name = models.CharField(null=True,blank=True,max_length=150)
+    chair_email = models.CharField(null=True,blank=True,max_length=200)
+    secretary_name = models.CharField(null=True,blank=True,max_length=150)
+    secretary_email = models.CharField(null=True,blank=True,max_length=200)
+    office_secretary_name = models.CharField(null=True,blank=True,max_length=150)
+    office_secretary_number = models.CharField(null=True,blank=True,max_length=200)
 
     class Meta:
         verbose_name="IEEE Bangladesh Section"

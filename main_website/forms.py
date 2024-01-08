@@ -18,10 +18,11 @@ class About_IEEE_Bangladesh_Section_Form(forms.ModelForm):
         self.fields['student_branches_description'].widget = CKEditorWidget()
         self.fields['affinity_groups_description'].widget = CKEditorWidget()
         self.fields['community_and_society_description'].widget = CKEditorWidget()
+        self.fields['achievements_description'].widget = CKEditorWidget()
     
     class Meta:
         model = IEEE_Bangladesh_Section
-        fields = ['about_ieee_bangladesh','member_and_volunteer_description','benefits_description','student_branches_description','affinity_groups_description','community_and_society_description']
+        fields = ['about_ieee_bangladesh', 'ieee_bangladesh_logo', 'ieee_bd_link', 'member_and_volunteer_description', 'member_and_volunteer_picture', 'benefits_description','student_branches_description','affinity_groups_description','community_and_society_description', 'achievements_description', 'chair_name', 'chair_email', 'secretary_name', 'secretary_email', 'office_secretary_name', 'office_secretary_number']
 
 class About_IEEE_Form(forms.ModelForm):
 
@@ -41,4 +42,4 @@ class About_IEEE_Form(forms.ModelForm):
     
     class Meta:
         model = About_IEEE
-        fields = ['about_ieee', 'about_image', 'learn_more_link', 'mission_and_vision_link', 'community_description', 'community_image', 'start_with_ieee_description', 'collaboration_description', 'publications_description', 'events_and_conferences_description', 'achievements_description', 'innovations_and_developments_description', 'innovations_and_developments_image', 'students_and_member_activities_description', 'students_and_member_activities_image', 'quality_description', 'quality_image', 'join_now_link', 'asia_pacific_link', 'ieee_computer_organization_link', 'customer_service_number', 'presidents_names', 'founders_names',]
+        fields = ['about_ieee', 'about_image', 'learn_more_link', 'mission_and_vision_link', 'community_description', 'community_image', 'start_with_ieee_description', 'collaboration_description', 'publications_description', 'events_and_conferences_description', 'achievements_description', 'innovations_and_developments_description', 'innovations_and_developments_image', 'students_and_member_activities_description', 'students_and_member_activities_image', 'quality_description', 'quality_image', 'join_now_link', 'asia_pacific_link', 'ieee_computer_organization_link', 'customer_service_number', 'presidents_names', 'founders_names']

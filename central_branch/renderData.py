@@ -2,7 +2,7 @@ import os
 from bs4 import BeautifulSoup
 from django.http import Http404
 from insb_port import settings
-from main_website.models import About_IEEE, Page_Link
+from main_website.models import About_IEEE, IEEE_Bangladesh_Section, Page_Link
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
@@ -990,6 +990,36 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
+    def set_ieee_bangladesh_section_page(about_details, ieeebd_link, members_and_volunteers_details, benefits_details,
+                                            student_branches_details, affinity_groups_details, communty_and_society_details,
+                                            achievements_details, chair_name, chair_email, secretary_name,
+                                            secretary_email, office_secretary_name, office_secretary_number, about_image, members_and_volunteers_image):
+        try:
+            ieee_bangladesh_section, created = IEEE_Bangladesh_Section.objects.get_or_create(id=1)
+            ieee_bangladesh_section.about_ieee_bangladesh = about_details
+            ieee_bangladesh_section.ieee_bangladesh_logo = about_image
+            ieee_bangladesh_section.ieee_bd_link = ieeebd_link
+            ieee_bangladesh_section.member_and_volunteer_description = members_and_volunteers_details
+            ieee_bangladesh_section.member_and_volunteer_picture = members_and_volunteers_image
+            ieee_bangladesh_section.benefits_description = benefits_details
+            ieee_bangladesh_section.student_branches_description = student_branches_details
+            ieee_bangladesh_section.affinity_groups_description = affinity_groups_details
+            ieee_bangladesh_section.community_and_society_description = communty_and_society_details
+            ieee_bangladesh_section.achievements_description = achievements_details
+            ieee_bangladesh_section.chair_name = chair_name
+            ieee_bangladesh_section.chair_email = chair_email
+            ieee_bangladesh_section.secretary_name = secretary_name
+            ieee_bangladesh_section.secretary_email = secretary_email
+            ieee_bangladesh_section.office_secretary_name = office_secretary_name
+            ieee_bangladesh_section.office_secretary_number = office_secretary_number
+
+            ieee_bangladesh_section.save()
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
     def checking_length(about_details, community_details, start_with_ieee_details, collaboration_details,
                         publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
                         students_and_member_activities_details, quality_details):
@@ -1010,7 +1040,7 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
-    def delete_image(image_id,image_path):
+    def about_ieee_delete_image(image_id,image_path):
 
         try:
             about_ieee = About_IEEE.objects.get(id=1)
@@ -1033,6 +1063,27 @@ class Branch:
                 os.remove(path)
             
             about_ieee.save()
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def ieee_bangladesh_section_page_delete_image(image_id,image_path):
+
+        try:
+            ieee_bangladesh_section = IEEE_Bangladesh_Section.objects.get(id=1)
+            path = settings.MEDIA_ROOT+str(image_path)
+
+            if(image_id == 'ieee_bangladesh_logo'):
+                ieee_bangladesh_section.ieee_bangladesh_logo = None
+                os.remove(path)
+            elif(image_id == 'member_and_volunteer_picture'):
+                ieee_bangladesh_section.member_and_volunteer_picture = None
+                os.remove(path)
+            
+            ieee_bangladesh_section.save()
             return True
 
         except Exception as e:

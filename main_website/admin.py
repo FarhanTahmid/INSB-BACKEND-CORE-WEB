@@ -48,7 +48,7 @@ class Magazines(admin.ModelAdmin):
 @admin.register(IEEE_Bangladesh_Section)
 class IEEE_Bangladesh_Section_Admin(admin.ModelAdmin):
     form=About_IEEE_Bangladesh_Section_Form
-    list_display = ['about_ieee_bangladesh','ieee_bangladesh_logo','member_and_volunteer_description','member_and_volunteer_picture','benefits_description','student_branches_description','affinity_groups_description','community_and_society_description']  
+    list_display = ['id']  
     
 @admin.register(IEEE_Bangladesh_Section_Gallery)
 class IEEE_Bangldesh_Section_Gallery(admin.ModelAdmin):
