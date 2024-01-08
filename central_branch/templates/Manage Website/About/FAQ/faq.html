@@ -157,7 +157,10 @@
                         </div>
         
                     
-                    </form>  
+                    </form> 
+                    {% comment %} <form id="myForm" method="POST" enctype="multipart/form-data">
+
+                    </form> {% endcomment %}
                     <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-top" role="document">
                             <div class="modal-content">
@@ -167,20 +170,23 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
+                                <form method="POST">
                                 <div class="modal-body">
-                                    <form method="POST">
-                                        {% comment %} {% csrf_token %} {% endcomment %}
+                                    
+                                        {% csrf_token %}
                                         <p><input id="remove_link" name="remove_link" type="hidden"></p>
                                         Are you sure you want to delete this link?
-                                    </form>
+                                 
                                 </div>
                                 <div class="modal-footer">
                                     <input type="submit" class="btn btn-outline-danger" value="Confirm" name="remove_form_link">
                                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                                 </div>
+                            </form>
                             </div>
                         </div>
                     </div>
+                    
                 <div>
             </div>
 
