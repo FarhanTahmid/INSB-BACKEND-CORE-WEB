@@ -12,7 +12,7 @@ from system_administration.system_error_handling import ErrorHandling
 import logging
 from django.contrib import messages
 from django.utils import timezone
-from chapters_and_affinity_group.models import SC_AG_Members
+from chapters_and_affinity_group.models import SC_AG_Members,SC_AG_FeedBack
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from central_branch.renderData import Branch
 class HomepageItems:
@@ -309,6 +309,24 @@ class HomepageItems:
                         member = None
                     eb_members.append(member)
             return eb_members
+        except Exception as e:
+            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def save_feedback_information(request,primary,name,email,message):
+
+        '''This function saves the feedback data to the database'''
+
+        try:
+            #getting the particular society object
+            society = SC_AG_Info.get_sc_ag_details(request,primary)
+            #creating the new feedback object for the particular society
+            feedback = SC_AG_FeedBack.objects.create(society = society, name = name,email = email, message = message)
+            #saving it to the database
+            feedback.save()
+            return True
+
         except Exception as e:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
