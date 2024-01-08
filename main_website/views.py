@@ -37,9 +37,14 @@ def homepage(request):
     get_recent_news=News.objects.filter().order_by('-news_date')[:6]
     # get recent 6 Blogs
     get_recent_blogs=Blog.objects.filter(publish_blog=True).order_by('-date')[:6]
+    # get featured events of branch
+    get_featured_events=HomepageItems.load_featured_events(sc_ag_primary=1)
+    
+    
     context={
         'banner_item':bannerItems,
         'banner_pic_with_stat':bannerWithStat,
+        'featured_events':get_featured_events,
         'media_url':settings.MEDIA_URL,
         'all_member_count':HomepageItems.getAllIEEEMemberCount(),
         'event_count':HomepageItems.getEventCount(),
@@ -52,27 +57,6 @@ def homepage(request):
 
 ##################### EVENT WORKS ####################
 
-# def all_events(request):
-
-#     '''Loads all events up untill today on Event page'''
-#     get_all_events = Branch.load_all_events()
-
-#     '''Fetching 6 events among which atleast 2 are flagship events.
-#        If no flagship event exists then all are normal events'''
-#     count = 0
-#     get_flagship_event = Events.objects.filter(Q(flagship_event = True) & Q(publish_in_main_web= True)).order_by('-probable_date')[:6]
-#     count += len(get_flagship_event)
-#     get_event = Events.objects.filter(Q(flagship_event = False) & Q(publish_in_main_web= True)).order_by('-probable_date')[:(6-count)]
-    
-#     context={
-#         "events":get_all_events,
-#         "last_event":get_all_events.last(),
-#         "flagship_event":get_flagship_event,
-#         "normal_event":get_event,
-#     }
-#     return render(request,"Events/events_homepage.html",context)
-
-
 def event_homepage(request):
 
     '''This view function loads all the events for the events homepage'''
@@ -81,12 +65,33 @@ def event_homepage(request):
         all_events = HomepageItems.load_all_events(request,True,1)
         latest_five_events = HomepageItems.load_all_events(request,False,1)
         date_and_event = HomepageItems.get_event_for_calender(request,1)
-        upcoming_event = HomepageItems.get_upcoming_event(1)
+        upcoming_event = HomepageItems.get_upcoming_event(request,1)
         upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
-
-
+        
+        # prepare event stat list for event category with numbers
+        get_event_stat=userData.getTypeOfEventStats(request,1)
+        event_stat=[]
+        # prepare data from the tuple
+        categories, count, percentage_mapping = get_event_stat
+        for category, count in zip(categories, count):
+            event_stat_dict={}
+            # get event name
+            event_stat_dict['name']=category
+            # get event count according to category
+            event_stat_dict['value']=count
+            # append the dict to list
+            event_stat.append(event_stat_dict)
+        
+        # prepare yearly event stat list for Branch
+        get_yearly_events=userData.getEventNumberStat()
+        # prepare years
+        get_years=get_yearly_events[0]
+        # prepare event counts according to years
+        get_yearly_event_count=get_yearly_events[1]
+        
         context = {
-            'page_title':"Events - IEEE NSU Student Branch",
+            'page_title':"Events",
+            'page_subtitle':"IEEE NSU Student Branch",
             'all_events':all_events,
             'media_url':settings.MEDIA_URL,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
@@ -94,6 +99,9 @@ def event_homepage(request):
             'date_and_event':date_and_event,
             'upcoming_event':upcoming_event,
             'upcoming_event_banner_picture':upcoming_event_banner_picture,
+            'data':event_stat,
+            'years':get_years,
+            'yearly_event_count':get_yearly_event_count,
         }
 
         return render(request,'Events/events_homepage.html',context)
@@ -108,21 +116,25 @@ def event_details(request,event_id):
     '''Loads details for the corresponding event page on site'''
     try:
         get_event = Events.objects.get(id = event_id)
+        
         if(get_event.publish_in_main_web):
             event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
             event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
-            return render(request,"Events/event_description_main.html",{
+            context = {
+                'is_live':True,
+                'page_title':get_event.event_name,
+                'page_subtitle':get_event.event_organiser,
                 "event":get_event,
                 'media_url':settings.MEDIA_URL,
                 'event_banner_image' : event_banner_image,
-                'event_gallery_images' : event_gallery_images
-            })
+                'event_gallery_images' : event_gallery_images,
+            }
+            return render(request,"Events/event_description_main.html", context)
         else:
             return redirect('main_website:event_homepage')
     except:
         return redirect('main_website:event_homepage')
-
 
 
 # ###################### ACHIEVEMENTS ##############################
@@ -198,7 +210,26 @@ def news(request):
     }
     return render(request,'Activities/news.html',context=context)
 
+def news_description(request,pk):
+    # get news
+    news=News.objects.get(pk=pk)
     
+    # get recent 3 news
+    recent_news=News.objects.all().order_by('-news_date').exclude(pk=pk)[:3]
+    
+    # get recent 5 blogs
+    recent_blogs=Blog.objects.filter(publish_blog=True).order_by('-date')[:5]
+    
+    context={
+        'page_title':news.news_title,
+        'page_subtitle':"IEEE NSU Student Branch",
+        'news':news,
+        'recent_news':recent_news,
+        'recent_blogs':recent_blogs,
+        
+    }
+    return render(request,"Activities/news_description.html",context=context)
+
 
 ############################## SC_AG ############################################
 def rasPage(request):
@@ -250,9 +281,9 @@ def rasPage(request):
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
     except Exception as e:
-            print(e)
-            response = HttpResponseServerError("Oops! Something went wrong.")
-            return response
+        print(e)
+        response = HttpResponseServerError("Oops! Something went wrong.")
+        return response
 def pesPage(request):
 
     '''This view function loads the pes main web page'''
@@ -297,9 +328,9 @@ def pesPage(request):
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
     except Exception as e:
-            print(e)
-            response = HttpResponseServerError("Oops! Something went wrong.")
-            return response
+        print(e)
+        response = HttpResponseServerError("Oops! Something went wrong.")
+        return response
 def iasPage(request):
 
     '''This view function loads the ias main web page'''
@@ -343,9 +374,9 @@ def iasPage(request):
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
     except Exception as e:
-            print(e)
-            response = HttpResponseServerError("Oops! Something went wrong.")
-            return response
+        print(e)
+        response = HttpResponseServerError("Oops! Something went wrong.")
+        return response
 def wiePage(request):
 
     '''This view function loads the wie main web page'''
@@ -390,9 +421,9 @@ def wiePage(request):
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
     except Exception as e:
-            print(e)
-            response = HttpResponseServerError("Oops! Something went wrong.")
-            return response
+        print(e)
+        response = HttpResponseServerError("Oops! Something went wrong.")
+        return response
 
 def events_for_sc_ag(request,primary):
 
@@ -402,13 +433,36 @@ def events_for_sc_ag(request,primary):
         all_events = HomepageItems.load_all_events(request,True,primary)
         latest_five_events = HomepageItems.load_all_events(request,False,primary)
         date_and_event = HomepageItems.get_event_for_calender(request,primary)
-        upcoming_event = HomepageItems.get_upcoming_event(primary)
+        upcoming_event = HomepageItems.get_upcoming_event(request,primary)
         upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
+
+        # prepare event stat list for event category with numbers
+        get_event_stat=userData.getTypeOfEventStats(request,primary)
+        event_stat=[]
+        # prepare data from the tuple
+        categories, count, percentage_mapping = get_event_stat
+        for category, count in zip(categories, count):
+            event_stat_dict={}
+            # get event name
+            event_stat_dict['name']=category
+            # get event count according to category
+            event_stat_dict['value']=count
+            # append the dict to list
+            event_stat.append(event_stat_dict)
+        
+        # prepare yearly event stat list for Branch
+        get_yearly_events=userData.getEventNumberStat()
+        # prepare years
+        get_years=get_yearly_events[0]
+        # prepare event counts according to years
+        get_yearly_event_count=get_yearly_events[1]
 
         context = {
             'is_sc_ag':True,
             'society':society,
+            'page_title': 'Events',
+            'page_subtitle':society.short_form,
             'all_events':all_events,
             'media_url':settings.MEDIA_URL,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
@@ -416,15 +470,18 @@ def events_for_sc_ag(request,primary):
             'date_and_event':date_and_event,
             'upcoming_event':upcoming_event,
             'upcoming_event_banner_picture':upcoming_event_banner_picture,
+            'data':event_stat,
+            'years':get_years,
+            'yearly_event_count':get_yearly_event_count,
         }
 
 
 
         return render(request,'Events/events_homepage.html',context)
     except Exception as e:
-            print(e)
-            response = HttpResponseServerError("Oops! Something went wrong.")
-            return response
+        print(e)
+        response = HttpResponseServerError("Oops! Something went wrong.")
+        return response
 
 
 
@@ -435,7 +492,7 @@ def blogs(request):
 
     '''Loads the blog page where all blog is shown'''
 
-    get_all_blog= Blog.objects.filter(publish_blog=True)
+    get_all_blog= Blog.objects.filter(publish_blog=True).order_by('-date')
     context={
         'page_title':"Blogs",
         'blogs':get_all_blog,
@@ -448,6 +505,108 @@ def blog_Description(request,blog_id):
     return render(request,"Blog_Details.html",{
         "blog_details":load_specific_blog
     })
+
+def write_blogs(request):
+    '''Creates a form and allows user to give a request to publish their blogs in the site'''
+    # load all sc ag and Branch
+    load_all_sc_ag=Chapters_Society_and_Affinity_Groups.objects.all().order_by('primary')
+    # load all blog categories
+    load_all_blog_category=Blog_Category.objects.all()
+    
+    if(request.method=="POST"):
+        if(request.POST.get('submit_blog')):
+            writer_ieee_id=request.POST['writer_ieee_id']
+            writer_name=request.POST['writer_name']
+            group=request.POST.get('group')
+            blog_title=request.POST['blog_title']
+            blog_category=request.POST.get('blog_category')
+            blog_short_description=request.POST['blog_short_description']
+            blog_description=request.POST['blog_description']
+            blog_banner=request.FILES['blog_banner_picture']
+            try:
+                if(group=="" and blog_category==""):
+                        new_requested_blog=Blog.objects.create(
+                        ieee_id=writer_ieee_id,writer_name=writer_name,title=blog_title,
+                        date=datetime.today(),
+                        short_description=blog_short_description,blog_banner_picture=blog_banner,
+                        description=blog_description,
+                        is_requested=True
+                        )
+                        new_requested_blog.save()
+
+                elif(group != "" and blog_category==""):
+                        new_requested_blog=Blog.objects.create(
+                        ieee_id=writer_ieee_id,writer_name=writer_name,title=blog_title,
+                        date=datetime.today(),
+                        short_description=blog_short_description,blog_banner_picture=blog_banner,
+                        description=blog_description,branch_or_society=Chapters_Society_and_Affinity_Groups.objects.get(primary=group),
+                        is_requested=True
+                        )
+                        new_requested_blog.save()
+
+                elif(group=="" and blog_category != ""):
+                        new_requested_blog=Blog.objects.create(
+                        ieee_id=writer_ieee_id,writer_name=writer_name,title=blog_title,
+                        category=Blog_Category.objects.get(pk=blog_category),date=datetime.today(),
+                        short_description=blog_short_description,blog_banner_picture=blog_banner,
+                        description=blog_description,
+                        is_requested=True
+                        )
+                        new_requested_blog.save()
+
+                else:
+                        new_requested_blog=Blog.objects.create(
+                            ieee_id=writer_ieee_id,writer_name=writer_name,title=blog_title,
+                            category=Blog_Category.objects.get(pk=blog_category),date=datetime.today(),
+                            short_description=blog_short_description,blog_banner_picture=blog_banner,
+                            description=blog_description,branch_or_society=Chapters_Society_and_Affinity_Groups.objects.get(primary=group),
+                            is_requested=True
+                        )
+                        new_requested_blog.save()
+                messages.success(request,"We have recieved your blog publishing request! You will be notified via email when it get's published. Thank you.")
+                return redirect('main_website:write_blogs')
+            except Exception as e:
+                messages.warning(request,"Something went wrong! Please try again!")
+                logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+                ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                return redirect('main_website:write_blogs')
+            
+    context={
+        'all_sc_ag':load_all_sc_ag,
+        'blog_categories':load_all_blog_category,
+        'page_title':"Write a Blog",
+        'page_subtitle':"""Empower your voice in the realm of knowledge! 
+                        Dive into the fascinating worlds of science & technology. 
+                        Illuminate the path to a sustainable future through the lens of power and energy.<br>
+                        Let your thoughts spark innovation and ignite conversations – we are waiting for your unique perspective!""",
+        
+    }
+    return render(request,"Get Involved/Write Blog/write_blog.html",context=context)
+
+def blog_description(request,pk):
+    # get the blog
+    get_blog=Blog.objects.get(pk=pk)
+    # this shows IEEE NSU Student branch as default if there is no group selected in Blog
+    if(get_blog.branch_or_society is None):
+        society_name="IEEE NSU Student Branch"
+    else:
+        society_name=get_blog.branch_or_society.group_name
+    
+    # get recent blogs
+    get_recent_blogs=Blog.objects.filter(publish_blog=True).order_by('-date').exclude(pk=pk)[:3]
+    # get recent news
+    get_recent_news=News.objects.all().order_by('-news_date')[:5]
+    
+    print(get_recent_blogs)
+    
+    context={
+        'page_title':get_blog.title,
+        'page_subtitle':society_name,
+        'blog':get_blog,
+        'recent_blogs':get_recent_blogs,
+        'recent_news':get_recent_news,
+    }
+    return render(request, 'Publications/Blog/blog_description_main.html',context=context)
 
 
 ######################### RESEARCH PAPER WORKS ###########################
@@ -462,6 +621,57 @@ def Research_Paper(request):
         "research_paper":get_all_research_papers
     })
 
+def add_research_form(request):
+    '''Handles form responses for add research paper form'''
+    # get research categories
+    research_categories=ResearchCategory.objects.all()
+    # load all sc ag and Branch
+    load_all_sc_ag=Chapters_Society_and_Affinity_Groups.objects.all().order_by('primary')
+
+    if(request.method=="POST"):
+        if(request.POST.get('submit_paper')):
+            author_names=request.POST['author_names']
+            group=request.POST.get('group')
+            paper_title=request.POST['paper_title']
+            research_category=request.POST.get('research_category')
+            abstract_description=request.POST['abstract_description']
+            paper_link=request.POST['paper_link']
+            research_banner_picture=request.FILES['research_banner_picture']
+            
+            if(research_category == ""):
+                new_research_request=Research_Papers.objects.create(
+                    title=paper_title,
+                    group=Chapters_Society_and_Affinity_Groups.objects.get(primary=group),
+                    research_banner_picture=research_banner_picture,
+                    author_names=author_names,short_description=abstract_description,
+                    publish_date=datetime.today(),publication_link=paper_link,
+                    is_requested=True
+                )
+                new_research_request.save()
+                messages.success(request,"Your request has been submitted! Thank you.")
+                return redirect('main_website:add_research')
+            else:
+                new_research_request=Research_Papers.objects.create(
+                    title=paper_title,category=ResearchCategory.objects.get(pk=research_category),
+                    group=Chapters_Society_and_Affinity_Groups.objects.get(primary=group),
+                    research_banner_picture=research_banner_picture,
+                    author_names=author_names,short_description=abstract_description,
+                    publish_date=datetime.today(),publication_link=paper_link,
+                    is_requested=True
+                )
+                new_research_request.save()
+                messages.success(request,"Your request has been submitted! Thank you.")
+                return redirect('main_website:add_research')                   
+    context={
+        'page_title':"Add Research Papers",
+        'page_subtitle':"""Join the thriving academic community at IEEE NSU Student Branch by sharing your research papers with fellow students and scholars! 
+        Contribute to the collective knowledge pool, showcase your expertise, and collaborate by submitting your work to our platform. 
+        Together, let's make a lasting impact in the world of research and innovation!""",
+        'research_categories':research_categories,
+        'all_sc_ag':load_all_sc_ag,
+    }
+    
+    return render(request,"Get Involved/Add Research/research_paper_form.html",context=context)
 ######################### Magazine WORKS ###########################
 
 def magazines(request):
@@ -838,5 +1048,3 @@ def contact(request):
 
     return render(request, 'Contact/contact.html', context)
 
-def blog_description(request):
-    return render(request, 'Publications/Blog/blog_description_main.html')

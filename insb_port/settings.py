@@ -175,17 +175,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 
-if(os.environ.get('SETTINGS')=='dev'):
-    STATIC_URL = 'static/'
-    #static directory
-    STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
-    STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static/'))
+STATIC_URL = 'static/'
+#static directory
+STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
+STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static/'))
     
-if(os.environ.get('SETTINGS')=='prod'):
-    STATIC_URL = 'static/'
-    #static directory
-    STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static/'))
-    STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles_build','static')
 
 
 #TEMPLATE_DIRS=(os.path.join(os.path.dirname(__file__) ,'../Templates').replace('\\','/'))
@@ -250,3 +244,10 @@ CELERY_TASK_SERIALIZER = 'json'
 # }
 
 NEWS_API_KEY=os.environ.get('NEWS_API_KEY')
+
+Q_CLUSTER = {
+    'name': 'insb_port',
+    'workers': 8,
+    'timeout': 60,
+    'broker_class':'insb_port.rabbitMQ_Broker.RabbitMQBroker'
+}

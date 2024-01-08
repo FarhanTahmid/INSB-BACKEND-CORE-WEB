@@ -6,15 +6,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Blog - {{blog.title}}</title>
+    <title>News - {{news.news_title}}</title>
 
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
     <link rel="icon" href="{% static 'upload/logo.gif' %}" />
+
 
     <!--Common CSS-->
     {% block common_css %}
     {% include "common_css_includes.html" %}
     {% endblock common_css %}
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -233,19 +235,18 @@
                     <div class="blog_content">
                         <!--Blog Banner-->
                         <div class="blog-banner"><img
-                                src="/media_files/{{blog.blog_banner_picture}}"
+                                src="/media_files/{{news.news_picture}}"
                                 alt=""></div>
                         <!--Blog Title-->
                         <div class="blog-title">
-                            <h3>{{blog.title}}</h3>
+                            <h3>{{news.news_title}}</h3>
                         </div>
                         <div>
                             <hr>
                         </div>
                         <!--Blog Time and Category-->
                         <div class="blog_time_and_category" style="font-weight: 500;">
-                            <p><i class="fa-regular fa-clock"></i>{{blog.date}} -
-                                <i class="fa-regular fa-folder" style="font-size: 18px;"></i>Category- {{blog.category}}
+                            <p><i class="fa-regular fa-clock"></i>{{news.news_date}} -
                             </p>
                         </div>
                         <div>
@@ -253,7 +254,7 @@
                         </div>
                         <!--Blog Description-->
                         <div class="blog_description">
-                            <p>{{ blog.description | safe }}</p>
+                            <p>{{ news.news_description | safe }}</p>
                         </div>
                         <div>
                             <hr>
@@ -263,16 +264,16 @@
                             <p><i class="fa-solid fa-angles-right"></i> YOU MIGHT ALSO LIKE</p>
                         </div>
                         <div class="blog-card-container">
-                            {% for i in recent_blogs %}
+                            {% for i in recent_news %}
                             <div class="blog-card">
                                 <div class="blog-card-banner"><img
-                                        src="/media_files/{{i.blog_banner_picture}}"
+                                        src="/media_files/{{i.news_picture}}"
                                         alt=""></div>
                                 <div style="margin-top: 10px;">
-                                    <p><a href="{% url 'main_website:blog_description' i.pk %}">{{i.title}}</a></p>
+                                    <p><a href="{% url 'main_website:news_description' i.pk %}">{{i.news_title}}</a></p>
                                 </div>
                                 <div style="color: #000000;">
-                                    <p><i class="fa-regular fa-clock"></i>{{i.date}}</p>
+                                    <p><i class="fa-regular fa-clock"></i>{{i.news_date}}</p>
                                 </div>
                             </div>
                             {% endfor %}
@@ -288,28 +289,27 @@
                     <!--Right part of the page start-->
                     <div class="aside">
                         <div>
-                            <p style="font-size: 20px; font-weight:400; color: #75787B;">Recent Posts</p>
+                            <p style="font-size: 20px; font-weight:400; color: #75787B;">Recent Blogs</p>
                         </div>
                         <div>
                             <hr>
                         </div>
-                        <!--Recent Posts-->
-                        {% for i in recent_news %}
+                        <!--Recent Blogs-->
+                        {% for i in recent_blogs %}
                         <div>
-                            <p><a href="{% url 'main_website:news_description' i.pk %}"><i class="fa-solid fa-chevron-right" style="font-size: 12px;"></i></i>{{i.news_title}}</a></p>
+                            <p><a href="{% url 'main_website:blog_description' i.pk %}"><i class="fa-solid fa-chevron-right" style="font-size: 12px;"></i></i>{{i.title}}</a></p>
                         </div>
                         <div>
                             <hr>
                         </div>
                         {% endfor %}
                         
-                        
                     </div>
                     <!--Right part of the page end-->
 
                 </div>
                 <!--Page End-->
-                
+
 
             </section>
         </section>

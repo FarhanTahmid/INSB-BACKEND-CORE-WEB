@@ -43,11 +43,13 @@ class ResearchCategory(models.Model):
 class Research_Papers(models.Model):
     title = models.CharField(null=False,blank=False,max_length=200)
     category=models.ForeignKey(ResearchCategory,null=True,blank=True,on_delete=models.CASCADE)
+    group=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
     research_banner_picture = models.ImageField(null=False,blank=False,default='main_website_files/Research_pictures/default_research_banner_picture.png',upload_to='main_website_files/Research_pictures/')
     author_names = RichTextField(null=False,blank=False,max_length=300)
-    short_description=RichTextField(null=False,blank=False,max_length=500)
+    short_description=RichTextField(null=False,blank=False,max_length=3000,verbose_name="Abstract")
     publish_date=models.DateField(null=False,blank=False,help_text = "<br>Please use the following format: <em>YYYY-MM-DD</em>.")
     publication_link = models.URLField(null=False)
+    is_requested=models.BooleanField(null=False,blank=False,default=False)
     publish_research=models.BooleanField(null=False,blank=False,default=False)
 
     class Meta:
@@ -66,6 +68,7 @@ class Blog_Category(models.Model):
     
 #Table for Blogs
 class Blog(models.Model):
+    ieee_id=models.IntegerField(null=True,blank=True)
     writer_name=models.CharField(null=False,blank=False,max_length=50)
     title = models.CharField(null=False,blank=False,max_length=150)
     category = models.ForeignKey(Blog_Category,null=True,blank=True,on_delete=models.CASCADE)
@@ -75,6 +78,7 @@ class Blog(models.Model):
     description = RichTextField(null=False,blank=False,max_length=5000,help_text="Write within 500 words!")
     branch_or_society = models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
     publish_blog=models.BooleanField(null=False,blank=False,default=False)
+    is_requested=models.BooleanField(null=False,blank=False,default=False)
     class Meta:
         verbose_name = "Blog"
     def __str__(self):

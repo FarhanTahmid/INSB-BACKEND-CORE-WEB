@@ -71,7 +71,7 @@ class BlogsForm(forms.ModelForm):
     class Meta:
         model=Blog
         fields=[
-            'title','writer_name','category','date','short_description','description','blog_banner_picture',
+            'title','ieee_id','writer_name','category','date','short_description','description','blog_banner_picture',
             'branch_or_society','publish_blog'
         ]
     def save(self, commit=True):
@@ -100,7 +100,7 @@ class ResearchPaperForm(forms.ModelForm):
     class Meta:
         model=Research_Papers
         fields=[
-            'title','category','research_banner_picture','author_names','short_description','publication_link','publish_date','publish_research'
+            'title','category','group','research_banner_picture','author_names','short_description','publication_link','publish_date','publish_research'
         ]
     
     def save(self, commit=True):

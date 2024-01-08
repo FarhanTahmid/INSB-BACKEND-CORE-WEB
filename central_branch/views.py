@@ -487,7 +487,7 @@ def manage_research(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # load all research papers
-    researches = Research_Papers.objects.all().order_by('-publish_date')
+    researches = Research_Papers.objects.filter(is_requested=False).order_by('-publish_date','publish_research')
     '''function for adding new Research paper'''
     if request.method == "POST":
         add_research_form=ResearchPaperForm(request.POST,request.FILES)
@@ -517,6 +517,41 @@ def manage_research(request):
     return render(request,"Manage Website/Publications/Research Paper/manage_research_paper.html",context=context)
 
 @login_required
+def manage_research_request(request):
+    # get all research requests
+    research_requests=Research_Papers.objects.filter(is_requested=True).order_by('-publish_date')
+    if(request.method=="POST"):
+        if(request.POST.get('remove_research')):
+            MainWebsiteRenderData.delete_research_paper(request=request)
+            return redirect('central_branch:manage_research_request')
+    context={
+        'all_research_requests':research_requests
+    }
+    return render(request,"Manage Website/Publications/Research Paper/manage_paper_request.html",context=context)
+
+@login_required
+def publish_research_request(request,pk):
+    # get research to publish
+    research_to_publish=get_object_or_404(Research_Papers,pk=pk)
+    if(request.method=="POST"):
+        research_form=ResearchPaperForm(request.POST,request.FILES,instance=research_to_publish)
+        if(request.POST.get('publish_research')):
+            if(research_form.is_valid()):
+                research_to_publish.is_requested=False
+                research_to_publish.publish_research=True
+                research_to_publish.save()
+                research_form.save()
+                messages.success(request,f"{research_to_publish.title} was Published in the Main Website")
+                return redirect('central_branch:manage_research_request')
+    else:
+        research_form=ResearchPaperForm(instance=research_to_publish)            
+    context={
+        'research':research_to_publish,
+        'form':research_form,
+    }
+    return render(request,"Manage Website/Publications/Research Paper/publish_research.html",context=context)
+
+@login_required
 def update_researches(request,pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
 
@@ -544,7 +579,7 @@ def manage_blogs(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # Load all blogs
-    all_blogs=Blog.objects.all()
+    all_blogs=Blog.objects.filter(is_requested=False)
     
     form=BlogsForm
     form2=BlogCategoryForm
@@ -601,6 +636,55 @@ def update_blogs(request,pk):
     }
 
     return render(request,"Manage Website/Publications/Blogs/update_blogs.html",context=context)
+
+@login_required
+def blog_requests(request):
+    # get all blog requests
+    all_requested_blogs=Blog.objects.filter(is_requested=True).order_by('-date')
+    
+    if(request.method=="POST"):
+        if(request.POST.get('remove_blog')):
+            get_blog_to_remove=Blog.objects.get(pk=request.POST['blog_pk'])
+            # delete blog banner picture from system at first
+            if(os.path.isfile(get_blog_to_remove.blog_banner_picture.path)):
+                os.remove(get_blog_to_remove.blog_banner_picture.path)
+            # remove the requested blog object from database
+            get_blog_to_remove.delete()
+            messages.warning(request,"The blog was deleted from requests!")
+            return redirect('central_branch:blog_requests')
+    
+    context={
+        'all_requested_blogs':all_requested_blogs
+    }
+    return render(request,"Manage Website/Publications/Blogs/blog_requests.html",context=context)
+
+@login_required
+def publish_blog_request(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
+    # get the blog and form
+    blog_to_publish=get_object_or_404(Blog,pk=pk)
+    if(request.method=="POST"):
+        if(request.POST.get('publish_blog')):
+            form=BlogsForm(request.POST,request.FILES,instance=blog_to_publish)
+            if(form.is_valid()):
+                form.save()
+                blog_to_publish.is_requested=False
+                blog_to_publish.publish_blog=True
+                blog_to_publish.save()
+                print("Saved")
+                print(blog_to_publish.publish_blog)
+                messages.info(request,"Blog was published in the main website")
+                return redirect('central_branch:blog_requests')
+    else:
+        form=BlogsForm(instance=blog_to_publish)
+    
+    context={
+        'all_sc_ag':sc_ag,
+        'form':form,
+        'blog':blog_to_publish,
+    }
+    return render(request,"Manage Website/Publications/Blogs/publish_blog.html",context=context)
 
 from main_website.models import HomePageTopBanner
 @login_required
@@ -782,12 +866,37 @@ def ieee_nsu_student_branch(request):
 
 @login_required
 def faq(request):
-    sc_ag=PortData.get_all_sc_ag(request=request)
 
-    context={
-        'all_sc_ag':sc_ag,
-    }
-    return render(request,'Manage Website/About/FAQ/faq.html', context)
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+
+
+        if request.method == "POST":
+            #when user submits a new category title
+            if request.POST.get('add_category'):
+                #getting the new title for the category
+                category_title = request.POST.get('category_title')
+            
+            if request.POST.get('update_faq'):
+
+                questions = request.POST.getlist('faq_question')
+                answers = request.POST.getlist('faq_question_answer')
+
+                print(questions)
+                print(answers)
+                
+
+
+        context={
+            'all_sc_ag':sc_ag,
+        }
+        return render(request,'Manage Website/About/FAQ/portal_faq.html', context)
+    
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 
 

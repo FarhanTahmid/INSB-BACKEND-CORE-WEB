@@ -22,168 +22,28 @@
                 <div class="portfolio-item-holder  gdlr-portfolio-column-3">
                     <div class="gdlr-isotope" data-type="portfolio" data-layout="fitRows">
                         <div class="clear"></div>
+                        {% for i in featured_events %}
                         <div class="four columns">
                             <div class="gdlr-item gdlr-portfolio-item gdlr-modern-portfolio">
                                 <div class="gdlr-ux gdlr-modern-portfolio-ux">
                                     <div class="portfolio-thumbnail gdlr-image"><img
-                                            src="{% static 'upload/SPAC-2022.png' %}" alt="" width="540"
+                                            src="/media_files/{{i.banner_image}}" alt="" width="540"
                                             height="326" /><span
                                             class="portfolio-overlay">&nbsp;</span>
                                         <div class="portfolio-overlay-content">
-                                            <h3 class="portfolio-title"><a href="#">SPAC 2022</a>
+                                            <h3 class="portfolio-title"><a href="{% url 'main_website:event_details' i.featured_event.pk %}">{{i.featured_event.event_name}}</a>
                                             </h3>
-                                            <!-- <div class="gdlr-portfolio-info">
-                                                <div class="portfolio-info portfolio-tag"><span
-                                                        class="info-head gdlr-title"></span><a
-                                                        href="#"
-                                                        rel="tag">NSU</a><span class="sep"></span>
-                                                    <a href="#"
-                                                        rel="tag"></a></div>
-                                                <div class="clear"></div>
-                                            </div> -->
+                                        
                                         </div><a class="portfolio-overlay-icon"
-                                            href="{% static 'upload/SPAC-2022.png' %}" data-rel="fancybox"><span
+                                            href="/media_files/{{i.banner_image}}" data-rel="fancybox"><span
                                                 class="portfolio-icon"><i
                                                     class="fa fa-search"></i></span></a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="four columns">
-                            <div class="gdlr-item gdlr-portfolio-item gdlr-modern-portfolio">
-                                <div class="gdlr-ux gdlr-modern-portfolio-ux">
-                                    <div class="portfolio-thumbnail gdlr-image"><img
-                                            src="{% static 'upload/SPAC-2022.png' %}" alt="" width="540"
-                                            height="326" /><span
-                                            class="portfolio-overlay">&nbsp;</span>
-                                        <div class="portfolio-overlay-content">
-                                            <h3 class="portfolio-title"><a href="#">SPAC 2022</a>
-                                            </h3>
-                                            <!-- <div class="gdlr-portfolio-info">
-                                                <div class="portfolio-info portfolio-tag"><span
-                                                        class="info-head gdlr-title"></span><a
-                                                        href="#"
-                                                        rel="tag">NSU</a><span class="sep"></span>
-                                                    <a href="#"
-                                                        rel="tag"></a></div>
-                                                <div class="clear"></div>
-                                            </div> -->
-                                        </div><a class="portfolio-overlay-icon"
-                                            href="{% static 'upload/SPAC-2022.png' %}" data-rel="fancybox"><span
-                                                class="portfolio-icon"><i
-                                                    class="fa fa-search"></i></span></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="four columns">
-                            <div class="gdlr-item gdlr-portfolio-item gdlr-modern-portfolio">
-                                <div class="gdlr-ux gdlr-modern-portfolio-ux">
-                                    <div class="portfolio-thumbnail gdlr-image"><img
-                                            src="{% static 'upload/SPAC-2022.png' %}" alt="" width="540"
-                                            height="326" /><span
-                                            class="portfolio-overlay">&nbsp;</span>
-                                        <div class="portfolio-overlay-content">
-                                            <h3 class="portfolio-title"><a href="#">SPAC 2022</a>
-                                            </h3>
-                                            <!-- <div class="gdlr-portfolio-info">
-                                                <div class="portfolio-info portfolio-tag"><span
-                                                        class="info-head gdlr-title"></span><a
-                                                        href="#"
-                                                        rel="tag">NSU</a><span class="sep"></span>
-                                                    <a href="#"
-                                                        rel="tag"></a></div>
-                                                <div class="clear"></div>
-                                            </div> -->
-                                        </div><a class="portfolio-overlay-icon"
-                                            href="{% static 'upload/SPAC-2022.png' %}" data-rel="fancybox"><span
-                                                class="portfolio-icon"><i
-                                                    class="fa fa-search"></i></span></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="four columns">
-                            <div class="gdlr-item gdlr-portfolio-item gdlr-modern-portfolio">
-                                <div class="gdlr-ux gdlr-modern-portfolio-ux">
-                                    <div class="portfolio-thumbnail gdlr-image"><img
-                                            src="{% static 'upload/SPAC-2022.png' %}" alt="" width="540"
-                                            height="326" /><span
-                                            class="portfolio-overlay">&nbsp;</span>
-                                        <div class="portfolio-overlay-content">
-                                            <h3 class="portfolio-title"><a href="#">SPAC 2022</a>
-                                            </h3>
-                                            <!-- <div class="gdlr-portfolio-info">
-                                                <div class="portfolio-info portfolio-tag"><span
-                                                        class="info-head gdlr-title"></span><a
-                                                        href="#"
-                                                        rel="tag">NSU</a><span class="sep"></span>
-                                                    <a href="#"
-                                                        rel="tag"></a></div>
-                                                <div class="clear"></div>
-                                            </div> -->
-                                        </div><a class="portfolio-overlay-icon"
-                                            href="{% static 'upload/SPAC-2022.png' %}" data-rel="fancybox"><span
-                                                class="portfolio-icon"><i
-                                                    class="fa fa-search"></i></span></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="four columns">
-                            <div class="gdlr-item gdlr-portfolio-item gdlr-modern-portfolio">
-                                <div class="gdlr-ux gdlr-modern-portfolio-ux">
-                                    <div class="portfolio-thumbnail gdlr-image"><img
-                                            src="{% static 'upload/SPAC-2022.png' %}" alt="" width="540"
-                                            height="326" /><span
-                                            class="portfolio-overlay">&nbsp;</span>
-                                        <div class="portfolio-overlay-content">
-                                            <h3 class="portfolio-title"><a href="#">SPAC 2022</a>
-                                            </h3>
-                                            <!-- <div class="gdlr-portfolio-info">
-                                                <div class="portfolio-info portfolio-tag"><span
-                                                        class="info-head gdlr-title"></span><a
-                                                        href="#"
-                                                        rel="tag">NSU</a><span class="sep"></span>
-                                                    <a href="#"
-                                                        rel="tag"></a></div>
-                                                <div class="clear"></div>
-                                            </div> -->
-                                        </div><a class="portfolio-overlay-icon"
-                                            href="{% static 'upload/SPAC-2022.png' %}" data-rel="fancybox"><span
-                                                class="portfolio-icon"><i
-                                                    class="fa fa-search"></i></span></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="four columns">
-                            <div class="gdlr-item gdlr-portfolio-item gdlr-modern-portfolio">
-                                <div class="gdlr-ux gdlr-modern-portfolio-ux">
-                                    <div class="portfolio-thumbnail gdlr-image"><img
-                                            src="{% static 'upload/SPAC-2022.png' %}" alt="" width="540"
-                                            height="326" /><span
-                                            class="portfolio-overlay">&nbsp;</span>
-                                        <div class="portfolio-overlay-content">
-                                            <h3 class="portfolio-title"><a href="#">SPAC 2022</a>
-                                            </h3>
-                                            <!-- <div class="gdlr-portfolio-info">
-                                                <div class="portfolio-info portfolio-tag"><span
-                                                        class="info-head gdlr-title"></span><a
-                                                        href="#"
-                                                        rel="tag">NSU</a><span class="sep"></span>
-                                                    <a href="#"
-                                                        rel="tag"></a></div>
-                                                <div class="clear"></div>
-                                            </div> -->
-                                        </div><a class="portfolio-overlay-icon"
-                                            href="{% static 'upload/SPAC-2022.png' %}" data-rel="fancybox"><span
-                                                class="portfolio-icon"><i
-                                                    class="fa fa-search"></i></span></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
+                        
                     </div>
                     <div class="clear"></div>
                 </div>

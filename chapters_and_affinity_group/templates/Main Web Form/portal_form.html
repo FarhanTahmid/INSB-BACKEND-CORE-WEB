@@ -66,6 +66,17 @@
                 margin-bottom: 10px;
             }
         }
+
+
+        h1{
+            text-align:center;
+            font-size:30px;
+            font-weight:bold;
+        }
+    
+        label{
+            font-size:20px;
+        }
   
 
         .circle-btn {
@@ -92,7 +103,16 @@
             content: '+';
         }
 
-
+        .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+            max-width: 80%; 
+            height: 90%; 
+            z-index: 1500;
+        }
+        @media screen and (max-width:700px){
+            .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+                max-width:100%;
+            }
+        }
 
         
          
@@ -128,11 +148,44 @@
                 <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
                 <h6>Note:</h6>
                 <ol style="justify-content:center;margin-bottom:15px;"><b>
-                <li>Provide the Link of the folder for the Banner Images </li>
-                <li>If the banner picture is already uploaded, you can change it by deleting existing one.
-                    Select the desired picture and hit <span style="color:blue;">'Save'</span>.</li>
-                <li>Make sure to save any changes made before leaving</li>
+                    <li>All ( * ) marked fields are mandatory to be filled </li>
+                    <li>Keep in mind your description does not exceed the character count </li>
+                    <li>Maximum 1 picture can be uploaded in dedicated sections </li>
+                    <li>To replace a picture, delete the previous one and add a new one </li>
+                    <li>You can view the image by clicking on it  </li>
+                    <li>You can add as many links as you want </li>
+                    <li>For color scheme, use hexcodes (e.g. "#002855").</li>
+                    <li>You can see your changes by clicking the preview button </li>
+                    <li>Don’t forget to save the changes by clicking save button </li>
+                    <li>Rename logo picture as ' {{sc_ag_info.short_form_2}} ' before uploading</li>
                 </ol></b>
+
+
+                <br>
+                <div class="btn-container">
+                    <button class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#previewModal">Preview</button>
+                </div>
+                <br>
+    
+                <!-- Preview Event Modal -->
+                <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" style="z-index: 1500;">
+                    <div class="modal-dialog modal-dialog-centered modal-lg preview_modal_box" role="document">
+                        <div class="modal-content" style="width: 100%; height: 100%;">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="previewModalLabel">Preview</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="https://ieeensusb.org/ieee/" style="width: 100%; height: 100%;" loading="lazy"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <br>
 
@@ -145,8 +198,9 @@
                             </button>
                         </div>
                     </p>
+                    <br>
                 {% endfor %}
-                <br>
+                
             </div>
                    
 
@@ -156,46 +210,50 @@
                 <div class="box">
             
             
-                    <br>
+                    {% comment %} <br>
                     <div class="box-header">
-                        <h1 style="text-align:center;font-size:30px;">Details</h1>
+                        <h1>Details</h1>
                         <hr>
-                    </div>
+                    </div> {% endcomment %}
                     
             
                     <form id="myForm" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                         <div class="box-body">    
                             
+                            <br>
+                            <h1>Page Header</h1>
+                            <br>
+
                             <div class="form-group">
                                 <label>Page Title <span style="color:red">*<span></label>
-                                <input 
+                                <input
                                 type="text" 
                                 class="form-control"
-                                name="pageTitle_details" 
+                                name="pageTitle" 
                                 placeholder="Enter your page title" 
-                                maxlength="100" 
-                                value = {{sc_ag_info.page_title}}>
+                                maxlength="100"
+                                value="{{sc_ag_info.page_title}}">
                             </div>
                             <br>
                         
                             <div class="form-group">
-                                <label>Second Paragraph <span style="color:red">*<span></label>
-                                <textarea 
+                                <label>Page Subtitle <span style="color:red">*<span></label>
+                                <input
                                 class="form-control"
                                 type="text"
                                 name="secondParagraph_details"
-                                rows="4" 
-                                placeholder="Enter your second paragraph" 
-                                maxlength="500" 
-                                >{{sc_ag_info.secondary_paragraph}}</textarea>
+                                placeholder="Enter your page subtitle" 
+                                maxlength="100" 
+                                value="{{sc_ag_info.secondary_paragraph}}"
+                                >
                             </div>
 
                             <br> 
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">About</h1>
+                            <h1>About</h1>
                             <br>
                             
                             <div class="form-group">
@@ -257,7 +315,7 @@
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">Mission & Vision</h1>
+                            <h1>Mission & Vision</h1>
                             <br>
 
                             <div class="form-group">
@@ -267,7 +325,7 @@
                                 type="text"
                                 name="mission_details"
                                 Required>
-                                {{sc_ag_info.mission_description}}
+                                {{sc_ag_info.mission_description|default:""}}
                                 </textarea>
                                 <p id="missionCharacterCount" style="color: red;">Required</p>
 
@@ -337,7 +395,7 @@
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">What Why Who How</h1>
+                            <h1>What Why Who How</h1>
                             <br>
 
                             <div class="form-group">
@@ -395,37 +453,59 @@
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">Short Forms</h1>
+                            <h1>Short Forms</h1>
                             <br>
 
                             <div class="form-group">
-                                <label>Short Form</label>
+                                <label>Short Form (In capital letters)</label>
                                 <input 
                                 type="text" 
                                 class="form-control"
-                                name="short_form_details" 
+                                name="short_form" 
                                 placeholder="Short Form" 
-                                value = {{sc_ag_info.short_form| default:""}}
+                                value = "{{sc_ag_info.short_form| default:""}}"
                                 >
                             </div>
                             <br>
 
                             <div class="form-group">
-                                <label>Short Form Alternatives</label>
+                                <label>Short Form Alternatives (In capital letters)</label>
                                 <input 
                                 type="text" 
                                 class="form-control"
-                                name="short_form_alternative_details" 
+                                name="short_form_alternative" 
                                 placeholder="Short Form Alternatives" 
-                                value = {{sc_ag_info.short_form_2| default:""}}
+                                value = "{{sc_ag_info.short_form_2| default:""}}"
                                 >
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input
+                                type="email" 
+                                class="form-control"
+                                name="email" 
+                                placeholder="Enter {{sc_ag_info.short_form_2}} email" 
+                                maxlength="100"
+                                value="{{sc_ag_info.email|default:""}}">
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label>Facebook Link</label>
+                                <input
+                                type="url" 
+                                class="form-control"
+                                name="facebook_link" 
+                                placeholder="Enter {{sc_ag_info.short_form_2}} facebook link" 
+                                maxlength="100"
+                                value="{{sc_ag_info.facebook_link|default:""}}">
                             </div>
 
                             <br>
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">Color Sceheme</h1>
+                            <h1>Color Scheme</h1>
                             <br>
 
                             <div class="form-group">
@@ -433,10 +513,10 @@
                                 <input 
                                 type="text" 
                                 class="form-control"
-                                name="primary_color_code_details" 
+                                name="primary_color_code" 
                                 placeholder="Primary Color Code" 
                                 maxlength="7" 
-                                value = {{sc_ag_info.primary_color_code| default:""}}
+                                value = "{{sc_ag_info.primary_color_code| default:""}}"
                                 >
                             </div>
                             <br>
@@ -446,10 +526,10 @@
                                 <input 
                                 type="text" 
                                 class="form-control"
-                                name="secondary_color_code_details" 
+                                name="secondary_color_code" 
                                 placeholder="Secondary Color Code" 
                                 maxlength="7" 
-                                value = {{sc_ag_info.secondary_color_code| default:""}}
+                                value = "{{sc_ag_info.secondary_color_code| default:""}}"
                                 >
                             </div>
                             <br>
@@ -459,10 +539,10 @@
                                 <input 
                                 type="text" 
                                 class="form-control"
-                                name="text_color_code_details" 
+                                name="text_color_code" 
                                 placeholder="Text Color Code" 
                                 maxlength="7" 
-                                value = {{sc_ag_info.text_color_code| default:""}}
+                                value = "{{sc_ag_info.text_color_code| default:""}}"
                                 >
                             </div>
                             
@@ -676,10 +756,7 @@
                 characterCountElement.style.color = "black";
                 characterCountElement.innerText = "Character Count: " + characterCount;
             }
-        }
-        
-        
-        
+        }  
     </script>
 
     <!--Script to handle file name showing when choosing file-->

@@ -124,7 +124,9 @@
 
             <!--Events Table-->
             <br>
-            <div style="text-align:center; margin-top:30px;">  
+            <div style="text-align:center; margin-top:30px;">
+              <form method="POST" id="form-submit">
+                {% csrf_token %}  
                 <div class="container" style="justify-content:center;">
                   <div class="header_wrap">
                     <div class="num_rows">
@@ -145,9 +147,11 @@
                     <div class="tb_search">
                       <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search.." class="form-control">
                     </div>
+                    <div style="text-align: left;">
+                      <input type="submit" value="Submit" name="reponded" class="btn btn-outline b-success text-success mb-2" >
+                    </div> 
                   </div>
-                  <form method="POST" id="form-submit">
-                    {% csrf_token %}
+                  
                   <div class="table-responsive">
                     <table class="table table-striped table-class" id="table-id">
                   
@@ -171,9 +175,10 @@
                             <td>{{feedback.email}}</td>
                             <td>{{feedback.message}}</td>
                             <td>
-                              <div>                                   
-                                <input type="checkbox" name="responded_id"  {% if feedback.is_responded %} value="{{ feedback.pk }}" checked {% else %} value="{{ feedback.pk }}"{% endif %}>
-                                {% comment %} <input id="publish_respond_{{ feedback.pk }}" name="publish_respond" type="checkbox" {% if feedback.is_responded %}checked{% endif %}> {% endcomment %}
+                              <div>
+                                <label>
+                                    <input type="checkbox" style="transform: scale(1.5);" name="responded_id" {% if feedback.is_responded %} value="{{ feedback.pk }}" checked {% else %} value="{{ feedback.pk }}"{% endif %}>
+                                </label>
                               </div>
                             </td>
                         </tr>
@@ -182,10 +187,7 @@
                       <tbody>
                     </table>
                   </div>
-                  <div>
-                    <input type="submit" value="submit" name="reponded">
-                  </div>
-                </form>
+                  
                   <!--		Start Pagination -->
                   <div class='pagination-container'>
                     <nav>
@@ -194,9 +196,11 @@
                       </ul>
                     </nav>
                   </div>
-                  <div class="rows_count">Showing 11 to 20 of 91 entries</div>    
+                  <div class="rows_count">Showing 11 to 20 of 91 entries</div>   
                         
                 </div>
+                
+                </form>
               </div>
 
               <!--Events table end-->

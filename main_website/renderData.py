@@ -2,7 +2,7 @@ from .models import HomePageTopBanner,BannerPictureWithStat
 from django.http import HttpResponseServerError
 from users.models import Members,User_IP_Address
 from membership_development_team.renderData import MDT_DATA
-from central_events.models import Events
+from central_events.models import Events,InterBranchCollaborations
 from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position
 from graphics_team.models import Graphics_Banner_Image
 from media_team.models import Media_Images
@@ -14,6 +14,7 @@ from django.contrib import messages
 from django.utils import timezone
 from chapters_and_affinity_group.models import SC_AG_Members,SC_AG_FeedBack
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
+from central_branch.renderData import Branch
 class HomepageItems:
 
     logger=logging.getLogger(__name__)
@@ -21,6 +22,9 @@ class HomepageItems:
     def load_all_events(request,flag,primary):
 
         ''' This function returns all the events with its banner picture depending on the value of flag being True or False'''
+            
+            #when flag is true we are trying to fetch all events, else latest upcoming five events
+        
         try:
             #getting current date to compare with events date that are upcoming
             current_datetime = timezone.now()
@@ -29,53 +33,100 @@ class HomepageItems:
             #declaring dictionart to store event object as key and graphic banner object as value
             dic = {}
             if flag:
-                #when True getting all the events which are published, is of particular society and is ordered by latest date
-                events =  Events.objects.filter(publish_in_main_web= True,event_organiser = society).order_by('-event_date')
+                #when flag is true , checking to see if primary is 1 to get all events
+                if primary == 1:
+                    events = Events.objects.filter(publish_in_main_web= True,).order_by('-event_date') 
+                else:
+                    #when True getting all the events which are published, is of particular society and is ordered by latest date
+                    events =  Events.objects.filter(publish_in_main_web= True,event_organiser = society).order_by('-event_date')
+                    ####getting collaborated events###if dont want collaborated event remove bottom section
+                    collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
+                    #joining both the events list of collbarated and their own organised events
+                    events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('event_date') 
+                    ####################################################################################################################
             else:
-                #when False getting events 5 events which are upcoming, is published and is of particular society
-                events = Events.objects.filter(publish_in_main_web= True,event_organiser = society,event_date__gt=current_datetime).order_by('event_date')[:5]
+                if primary == 1:
+                    #when false getting upcoming five events
+                    events = Events.objects.filter(publish_in_main_web= True,event_date__gt=current_datetime).order_by('event_date')[:5]
+                else:
+                    #when False getting events 5 events which are upcoming, is published and is of particular society
+                    events = Events.objects.filter(publish_in_main_web= True,event_organiser = society,event_date__gt=current_datetime).order_by('event_date')#[:5]
+                    ####getting collaborated events###if dont want collaborated event remove bottom section and uncommment the list here -----------------------here
+                    collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
+                    #joining both the events list of collbarated and their own organised events
+                    events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True,event_date__gt=current_datetime)).order_by('event_date')[:5]
+                    ####################################################################################################################
+
             #using this loop, assigning the event with its corresponding banner picture in the dictionary as key and value
             for i in events:
                 #getting the event banner image using load_event_banner_image funtion
-                event = HomepageItems.load_event_banner_image(i.pk)
-                if event == None:
+                event_selected_image = HomepageItems.load_event_banner_image(i.pk)
+                if event_selected_image == None:
                     #else assigning '#'
                     dic[i] = "#"
                 else:
                     #if not none assigning banner image as value to the event which is the key
-                    dic[i]=event.selected_image
+                    dic[i]=event_selected_image
             return dic
         except Exception as e:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
+    def load_all_sc_ag_events(flag,primary):
+        try:
+            current_datetime = timezone.now()
+            dic = {}
+            if flag:
+                events =  Events.objects.filter(publish_in_main_web= True,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)).order_by('-event_date')
+            else:
+                events =  Events.objects.filter(publish_in_main_web= True,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary),event_date__gt=current_datetime).order_by('event_date')[:5]
+                print(events)
+            for i in events:
+                try:
+                    event = Graphics_Banner_Image.objects.get(event_id = i.pk)
+                    dic[i]=event.selected_image
+                except:
+                    dic[i] = "#"
+            return dic
+        except Exception as e:
+            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
     
     def load_event_banner_image(event_id):
-            
-            '''This function returns the banner_image for the particular event'''
-            
             try:
-                #getting the banner image using the event id sent as parameter
                 return Graphics_Banner_Image.objects.get(event_id = event_id).selected_image
             except:
-                #if not found any image returning none
                 return None
     
     def load_event_gallery_images(event_id):
 
-        '''This function loads all the media images for the particular event'''
-
         return Media_Images.objects.filter(event_id = event_id)
 
+    
+    def load_featured_events(sc_ag_primary):
+        '''This function loads all the featured events for SC Ag & Branch with banners'''
+        # get featured events
+        featured_event=Events.objects.filter(event_organiser=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),is_featured=True).order_by('-event_date')[:6] 
+        # store event data (event obj+ event banner obj in a dictionary) in a list
+        featured_event_list=[]
         
-
-
-
+        # create dictionary of featured events and then keep it on the list
+        for i in featured_event:
+            featured_event_dict={}
+            # store event obj in 'featured_event' key
+            featured_event_dict['featured_event']=i
+            # get banner image of every event and put it into the 'banner_image" key
+            featured_event_dict['banner_image']=HomepageItems.load_event_banner_image(event_id=i.pk)
+            # store the dict in the list
+            featured_event_list.append(featured_event_dict)
+        
+        return featured_event_list
+        
+        
     def getHomepageBannerItems():
         
-        '''This function returns the returns the top banner items for homepage'''
-
         try:
             return HomePageTopBanner.objects.all()
             
@@ -124,7 +175,11 @@ class HomepageItems:
                 all_events = Events.objects.filter(publish_in_main_web= True).order_by('-event_date')
             else:
                 society = SC_AG_Info.get_sc_ag_details(request,primary)
-                all_events = Events.objects.filter(publish_in_main_web= True,event_organiser = society).order_by('-event_date')
+                #getting collaborated events
+                collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
+                events = Events.objects.filter(publish_in_main_web= True,event_organiser = society).order_by('-event_date')
+                #joining both the events list of collbarated and their own organised events
+                all_events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('event_date')   
             #decalring empty dictionary for getting the event date and event
             #key is the date and event object is the value
             date_and_events = {}
@@ -149,39 +204,49 @@ class HomepageItems:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
     
-    def get_upcoming_event(primary):
+    def get_upcoming_event(request,primary):
 
         '''This function returns a list of events which are upcoming'''
         
         try:
-            #getting current date time to compare which events are upcoming
             current_datetime = timezone.now()
+            society = SC_AG_Info.get_sc_ag_details(request,primary)
             if primary == 1:
-                #getting the latest upcoming event for INSB student branch 
                 upcoming_event = Events.objects.filter(publish_in_main_web = True,event_date__gt=current_datetime).order_by('event_date')[:1]
             else:
                 #getting the latest upcoming event for affinity groups and societies
-                upcoming_event = Events.objects.filter(publish_in_main_web = True,event_date__gt=current_datetime,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)).order_by('event_date')[:1]
+                upcoming_event = Events.objects.filter(publish_in_main_web = True,event_date__gt=current_datetime,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)).order_by('event_date')#[:1]
+                #getting collaborated upcoming event#if dont want this then remove bottom section and uncomment the list value to one, in the top line --------------------------------------------------------------------------here
+                collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
+                #joining both the events list of collbarated and their own organised events
+                upcoming_event = upcoming_event .union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True,event_date__gt=current_datetime)).order_by('event_date')[:1] 
+                #########################################################################################################################################################################
             #returning only the first item of the list as filter always returns a list
             return upcoming_event[0]
         except:
             return None 
     
-    def get_ip_address(request):
+    def get_upcoming_event_banner_picture(event):
 
-        '''This function saves the ip address every day. So if same user visits the page everyday,
-            then each day his ip address will counted only once'''
+        try:
+            return Graphics_Banner_Image.objects.get(event_id = event)
+        except:
+            return None
+    
+    def get_ip_address(request):
         
         address = request.META.get('HTTP_X_FORWARDED_FOR')
+        print(address)
         if address:
             ip = address.split(',')[-1].strip()
         else:
             ip = request.META.get('REMOTE_ADDR')
-        #creating user IP address model with auto saved date
+        
         user =User_IP_Address(ip_address = ip)
-        #checking if this user already exists today or not. If yes the length of result is more than 1
-        #and his ip wont be saved
+        print(datetime.today())
+        print(f"Current user ip address {user}")
         result = User_IP_Address.objects.filter(ip_address = ip,created_at = datetime.today())
+        print(f"User exists in database {result}")
         if len(result)>=1:
             pass
         else:
@@ -192,10 +257,9 @@ class HomepageItems:
         '''This funtion gets the featured events for the societies depending on primary value'''
         
         try:
-            #assigning empty dictionary
             dic={}
-            #getting 4 events which are published, is featured and is of the particular society. it is ordered bt latest date
             events = Events.objects.filter(event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary),is_featured = True,publish_in_main_web= True).order_by('-event_date')[:4]
+            print(events)
             #iterating for each event to set graphics banner image
             for i in events:
                     #getting the event banner image using load_event_banner_image funtion
@@ -205,7 +269,7 @@ class HomepageItems:
                         dic[i] = "#"
                     else:
                         #if not none assigning banner image as value to the event which is the key
-                        dic[i]=event.selected_image
+                        dic[i]=event
                         
             return dic
         except Exception as e:
@@ -215,16 +279,12 @@ class HomepageItems:
         
     def get_faculty_advisor_for_society(request,primary):
 
-        '''This function returns the faculty advisor for the particular society otherwise returns none''' 
-        
+        '''This function returns the faculty advisor for the particular society otherwise return none''' 
         try:
-            #getting the particular society object
-            society = SC_AG_Info.get_sc_ag_details(request,primary)
+            society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
             try:
-                #getting the faculty advisor of the particular society
                 faculty = SC_AG_Members.objects.get(sc_ag = society,position = Roles_and_Position.objects.get(is_faculty = True,role_of = society))
             except:
-                #else returning None
                 faculty = None
 
             return faculty
@@ -239,28 +299,21 @@ class HomepageItems:
         '''This function returns a list of eb memebers for the particular society'''
         
         try:
-            #assingning empty eb_member list
             eb_members=[]
-            #getting the particular society object
-            society = SC_AG_Info.get_sc_ag_details(request,primary)
-            #getting the list of roles of the eb members which is ordered by roles
+            society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
             roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society).order_by('role_of')
-            #for each roles gettiing the corresponding member of that role
             for role in roles:
                     try:
-                        #getting the member of the particular society whose role matches with the role iteration in the list
                         member = SC_AG_Members.objects.get(sc_ag = society,position = role)
                     except:
-                        #if no member is found assigning none
                         member = None
-                    #appending the member found in the list
                     eb_members.append(member)
             return eb_members
         except Exception as e:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
-
+        
     def save_feedback_information(request,primary,name,email,message):
 
         '''This function saves the feedback data to the database'''
@@ -278,5 +331,7 @@ class HomepageItems:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
+
+    
 
         
