@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Toolkit IEEE NSU SB</title>
+
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+    <link rel="icon" href="{% static 'upload/logo.gif' %}" />
+
+    <!--Common CSS-->
+    {% block common_css %}
+    {% include "common_css_includes.html" %}
+    {% endblock common_css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+
+
+    <style>
+        /*common CSS used throughout the page*/
+        .centering {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+        }
+
+        .max_width {
+            max-width: 1080px;
+            margin: 30px 15px;
+            text-align: justify;
+        }
+        /*common CSS used throughout the page*/
+        
+        .toolcard_container{
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            gap: 40px;
+        }
+        
+        .toolcard{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 2px 3px 6px #bfbfbf;
+            width: 250px;
+            border-radius: 4px;
+        }
+
+        .toolcard_logo {
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        .toolcard_logo img{
+            height: 70px;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        .toolcard p{
+            font-size: small;
+            margin: 0%;
+            color: #000;
+            display: block;
+        }
+
+        .toolcard a{
+            font-size: small;
+            color: white;
+            text-decoration: none;
+            background-color: #002855;
+            padding: 4px 10px;
+            margin-top: 18px;
+            margin-bottom: 25px;
+            border: 1px solid white;
+            border-radius: 1px;
+            transition: all .4s ease-in-out;
+        }
+
+        .toolcard a:hover{
+            color: #002855;
+            background-color: white;
+            border: 1px solid #002855;
+        }
+        
+        .toolcard h5 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #000;
+        } 
+        .toolcard h6{
+            font-weight: 600;
+            color: #000;
+        }
+        /*media queries*/
+        @media screen and (max-width: 1199px) {
+            .max_width {
+                max-width: 850px;
+            }
+
+        }
+
+        @media screen and (max-width: 991px) {
+            .max_width {
+                max-width: 650px;
+            }
+
+        }
+
+        @media screen and (max-width: 630px) {
+            .max_width {
+                max-width: 90%;
+            }
+        }
+
+        @media screen and (max-width: 425px) {
+            .max_width {
+                max-width: 80%;
+            }
+        }
+        
+    </style>
+</head>
+
+<body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+    <div class="body-wrapper  float-menu">
+
+        {% block header %}
+        {% include 'header.html' %}
+        {% endblock header %}
+
+
+        {% block wave_design %}
+        {% include 'wave.html' %}
+        {% endblock wave_design %}
+
+        <!--Page Start-->
+        <section class="centering">
+            <section class="max_width toolcard_container">
+               <div class="toolcard">
+                <div class="toolcard_logo">
+                    <img src="https://ieeensusb.org/wp-content/uploads/2021/04/INSB-main-logo.png" alt="">
+                </div>
+                    <h5>INSB Logo (square)</h5>
+                    <h6>Color codes</h6>
+                    <div class="toolcard_p">
+                        <p>Blue #137AAC</p>
+                        <p>Yellow #FEC937</p>
+                        <p>White #F7FAFC</p>
+                    </div>
+                    <a href="#">Download PNG</a>
+               </div>
+               <div class="toolcard">
+                <div class="toolcard_logo">
+                    <img src="https://ieeensusb.org/wp-content/uploads/2021/04/INSB-2.png" alt="">
+                </div>
+                    <h5>INSB Logo (rectangle)</h5>
+                    <h6>Color codes</h6>
+                    <div class="toolcard_p">
+                    <p>Blue #137AAC</p>
+                    <p>Yellow #FEC937</p>
+                    <p>White #F7FAFC</p>
+                    </div>
+                    <a href="#">Download PNG</a>
+               </div>
+               <div class="toolcard">
+                <div class="toolcard_logo">
+                    <img src="https://ieeensusb.org/wp-content/uploads/2021/03/ias-1.png" alt="">
+                </div>
+                    <h5>INSB IAS SBC</h5>
+                    <h6>Color codes</h6>
+                    <div class="toolcard_p">
+                    <p>Blue #137AAC</p>
+                    <p>Yellow #FEC937</p>
+                    <p>Green #14924D</p>
+                    </div>
+                    <a href="#">Download PNG</a>
+               </div>
+               <div class="toolcard">
+                <div class="toolcard_logo">
+                    <img src="https://ieeensusb.org/wp-content/uploads/2021/04/PES-1.png" alt="">
+                </div>
+                    <h5>INSB PES SBC</h5>
+                    <h6>Color codes</h6>
+                    <div class="toolcard_p">
+                    <p>Blue #137AAC</p>
+                    <p>Yellow #FEC937</p>
+                    <p>Green #679B41</p>
+                    </div>
+                    <a href="#">Download PNG</a>
+               </div>
+               <div class="toolcard">
+                <div class="toolcard_logo">
+                    <img src="https://ieeensusb.org/wp-content/uploads/2021/04/Ras-1.png" alt="">
+                </div>
+                    <h5>INSB RAS SBC</h5>
+                    <h6>Color codes</h6>
+                    <div class="toolcard_p">
+                    <p>Purple #602568</p>
+                    <p>Old brick #961A32</p>
+                    <p>White #F7FAFC</p>
+                    </div>
+                    <a href="#">Download PNG</a>
+               </div>
+               <div class="toolcard">
+                <div class="toolcard_logo">
+                    <img src="https://ieeensusb.org/wp-content/uploads/2021/04/WIE.png" alt="">
+                </div>
+                    <h5>INSB WIE AG</h5>
+                    <h6>Color codes</h6>
+                    <div class="toolcard_p">
+                    <p>Blue #11689B</p>
+                    <p>Eminence #FEC937</p>
+                    <p>White #FFFFFF</p>
+                    </div>
+                    <a href="#">Download PNG</a>
+               </div>
+            </section>
+        </section>
+
+        <!--Page End-->
+
+
+        <!--Footer-->
+        {% block footer %}
+        {% include "footer_block.html" %}
+        {% endblock footer %}
+
+    </div>
+    {% block common_js %}
+    {% include "common_js_includes.html" %}
+    {% endblock %}
+</body>
+</html>
