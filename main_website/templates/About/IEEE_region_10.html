@@ -5,19 +5,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>IEEE Region 10</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!--Common CSS-->
-    {% block common_css %}
-    {% include "common_css_includes.html" %}
-    {% endblock common_css %}
-
     <link rel="icon" href="{% static 'upload/logo.gif' %}" />
 
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />  
+        
+        <!--Common CSS-->
+        {% block common_css %}
+        {% include "common_css_includes.html" %}
+        {% endblock common_css %}
+        
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
         /*common CSS used throughout the page*/
@@ -26,16 +28,18 @@
             flex-wrap: wrap;
             justify-content: center;
         }
-
         .max-width {
             max-width: 1080px;
             margin: 30px 15px;
         }
-
         .max-width p {
             text-align: justify;
         }
-
+        .max-width h2 {
+            font-weight: bolder;
+            color: #002855;
+            margin-bottom: -20px;
+        }
         .bar {
             width: 90px;
             height: 5px;
@@ -43,28 +47,19 @@
             margin: 18px 0px;
             border-radius: 5px;
         }
-
-        .max-width h2 {
-            font-weight: bolder;
-            color: #002855;
-            margin-bottom: -20px;
-        }
-
         .link {
             text-decoration: none;
             cursor: pointer;
             font-weight: bold;
             color: #002855;
         }
-
         .link:hover {
             text-decoration: none;
             color: #FFC72C;
         }
-
         /*common CSS used throughout the page*/
 
-        
+        /*parallax*/
         .parallax {
             /* Set a specific height */
             min-height: 250px;
@@ -72,7 +67,6 @@
             position: relative;
             clip-path: inset(0);
         }
-        
         .parallax img {
             object-fit: cover;
             position: fixed;
@@ -82,6 +76,7 @@
             width: 100%;
             height: 100%;
         }
+        /*parallax*/
 
         /*IEEE Region 10*/
         .IEEE-Region-10 {
@@ -89,16 +84,17 @@
             flex-wrap: nowrap;
             column-gap: 30px;
         }
-
-        .IEEE-Region-10 img {
-            width: 1251px;
-            padding-top: 67px;
+        .IEEE-Region-10-pic{
+            min-width: 255px;
+            max-width: 500px;
+            display: flex;
+            object-fit: contain;
+            flex-direction: column;
+            justify-content: center;
         }
-
         .IEEE-Region-10 p {
             margin-bottom: 30px;
         }
-
         .IEEE-Region-10 div div a {
             text-decoration: none;
             color: #fff;
@@ -109,11 +105,9 @@
             border-radius: 4px;
             transition: all 0.3s;
         }
-
         .IEEE-Region-10 div div a:hover {
             background: #FFC72C;
         }
-
         /*IEEE Region 10*/
 
         /*Young Professionals*/
@@ -122,16 +116,17 @@
             flex-wrap: nowrap;
             column-gap: 50px;
         }
-
-        .young-professionals img {
-            width: 1954px;
-            border-radius: 4px;
+        .young-professionals-pic{
+            min-width: 255px;
+            max-width: 500px;
+            display: flex;
+            object-fit: contain;
+            flex-direction: column;
+            justify-content: center;
         }
-
         .young-professionals p {
             margin-bottom: 30px;
         }
-
         /*young professionals*/
 
         /* women-student-educational-indstry relations*/
@@ -140,45 +135,36 @@
             grid-template-columns: 1fr 1px 1fr;
             grid-gap: 50px;
         }
-
         .women-student h2 {
             color: #fff;
             font-size: 23px;
         }
-
         .women-student .bar {
             height: 3px;
         }
-
         .women-student p {
             color: #fff;
         }
-
         .women-student .link {
             color: #FFD100;
         }
-
         .women-student .link:hover {
             color: white;
         }
-
         /* women-student-educational-indstry relations*/
 
         /*contact us*/
         .contact-us {
             width: 1080px;
         }
-
         .contact-us p {
             font-weight: 500;
             text-align: left;
         }
-
         .contact-details div {
             display: grid;
             grid-template-columns: 1fr 2fr;
         }
-
         /*contact us*/
 
         /*media queries*/
@@ -242,11 +228,14 @@
         {% include 'wave.html' %}
         {% endblock wave_design %}
 
-        <!--IEEE Region 10-->
+
+        <!--Page Start-->
+        <!--IEEE Region 10 section-->
         <section class="centering" style="background-color: #ffffff;">
             <section class="max-width">
                 <div class="IEEE-Region-10">
-                    <div><img src="https://ieeensusb.org/wp-content/uploads/2021/03/R10-Logo-768x310.png" alt=""></div>
+                    <!--IEEE Region 10 pic-->
+                    <div class="IEEE-Region-10-pic"><img src="https://ieeensusb.org/wp-content/uploads/2021/03/R10-Logo-768x310.png" alt=""></div>
                     <div>
                         <div>
                             <h2>IEEE REGION 10</h2>
@@ -259,13 +248,14 @@
                                 tied together like a family. This is most certainly the base for all Asian-Pacific
                                 organizational units.</p>
                         </div>
+                        <!--IEEE Region 10 history button-->
                         <div><a href="#">Region 10 History</a></div>
                     </div>
             </section>
         </section>
 
 
-        <!--young professionals-->
+        <!--Young Professionals section-->
         <section class="centering" style="background-color: #75787b17;">
             <section class="max-width">
                 <div class="young-professionals">
@@ -281,18 +271,21 @@
                                 established to assist young professionals in achieving their career goals, cultivating a
                                 dazzling professional image, and establishing a high profile in a variety of fields</p>
                         </div>
+                        <!--Links-->
                         <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square "></i>IEEE R10
                                 YP</a></div>
                     </div>
-                    <div><img src="https://ieeensusb.org/wp-content/uploads/2021/03/achivement-2.jpg"></div>
+                    <!--Young Professionals pic-->
+                    <div class="young-professionals-pic"><img src="https://ieeensusb.org/wp-content/uploads/2021/03/achivement-2.jpg"></div>
                 </div>
             </section>
         </section>
 
 
-        <!--Women in Engineering & Student and Member Activities-->
+        <!--Women in Engineering & Student and Member Activities section-->
         <section class="centering" style="background-color: #002855;">
             <section class="women-student max-width">
+                <!--Women in enginnering section-->
                 <div>
                     <div>
                         <h2>Women in Engineering</h2>
@@ -308,10 +301,12 @@
 
                         </p>
                     </div>
+                    <!--links-->
                     <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE R10
                             WIE</a></div>
                 </div>
                 <div style="border-left: 1px solid rgb(255, 255, 255);"></div>
+                <!--Student and member activities section-->
                 <div>
                     <div>
                         <h2>Students and Member Activites</h2>
@@ -325,17 +320,23 @@
                             are quick to inform them of their opportunities.
                             Further details please go through this link:</p>
                     </div>
+                    <!--links-->
                     <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE R10
                             SAC</a>
                     </div>
                 </div>
             </section>
         </section>
+
+
         <!--horizontal line in between-->
-        <hr class="line" style="width:100%; border: #ffffff solid 1px; margin-bottom: -15px;">
-        <!--Educational Activities and Involvements & Industry Relations-->
+        <hr style="width:100%; border: #ffffff solid 1px; margin-bottom: -15px;">
+
+
+        <!--Educational Activities and Involvements & Industry Relations section-->
         <!--used class same as Women in Engineering & Student and Member Activities-->
         <section class="centering" style="background-color:#002855">
+            <!--Educational Activities and Involvements section-->
             <section class="women-student max-width">
                 <div>
                     <div>
@@ -349,11 +350,14 @@
                             participants as effective as professionals
                             Further details please go through this link:</p>
                     </div>
+                    <!--links-->
                     <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>Region 10
                             Educational Involvements
                         </a></div>
                 </div>
                 <div style="border-left: 1px solid rgb(255, 255, 255);"></div>
+                
+                <!--Industry Relations section-->
                 <div>
                     <div>
                         <h2>Industry Relations</h2>
@@ -367,12 +371,15 @@
                             working hard to incorporate the industry members
                             Further details please go through this link:</p>
                     </div>
+                    <!--links-->
                     <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>R10 Industry
                             Relations</a></div>
                 </div>
             </section>
         </section>
-        <!--Membership Development-->
+
+
+        <!--Membership Development section-->
         <!--used class same as Young Professionals-->
         <section class="centering" style="background-color: #ffffff;">
             <section class="max-width">
@@ -390,6 +397,7 @@
                                 was established to persuade sections/student divisions to arrange events for the
                                 training of professionalism and growing up with leadership experience.</p>
                         </div>
+                        <!--links-->
                         <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>Membership
                                 Development</a></div>
                         <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>Membership
@@ -403,7 +411,7 @@
             <img src="https://ieeensusb.org/wp-content/uploads/2021/03/region-10-events-1-1024x270.jpg" alt="Your Image Description">
          </div>
 
-        <!--Events and Conference-->
+        <!--Events and Conference section-->
         <section class="centering" style="background-color:	#75787b17;">
             <section class="max-width">
                 <div>
@@ -415,13 +423,14 @@
                         more than 1,900 annual conferences and events worldwide, curating cutting-edge content for all
                         of the technical fields of interest within IEEE.</p>
                 </div>
+                <!--links-->
                 <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>Events List</a>
                 </div>
             </section>
         </section>
 
 
-        <!--Contact Us-->
+        <!--Contact Us section-->
         <section class="centering" style="background-color: #ffffff;">
             <section class="contact-us max-width">
                 <div>
@@ -436,19 +445,23 @@
                     <div class="contact-details">
                         <div>
                             <p>Home page</p>
-                            <a href="#" class="link">: http://www.ieeer10.org/</a>
+                            <!--links-->
+                            <p><a href="#" class="link">: http://www.ieeer10.org/</a></p>
                         </div>
                         <div>
                             <p>Website</p>
-                            <a href="#" class="link">: IEEE Asia Pacific Region 10</a>
+                            <!--links-->
+                            <p><a href="#" class="link">: IEEE Asia Pacific Region 10</a></p>
                         </div>
                         <div>
                             <p>For membership enquiry</p>
-                            <a href="#" class="link">: IEEE Support Center</a>
+                            <!--links-->
+                            <p><a href="#" class="link">: IEEE Support Center</a></p>
                         </div>
                         <div>
                             <p>For Volunteers</p>
-                            <a href="#" class="link">: Ewell Tan</a>
+                            <!--links-->
+                            <p><a href="#" class="link">: Ewell Tan</a></p>
                         </div>
                         <div>
                             <p>Contact number</p>
@@ -457,7 +470,7 @@
                     </div>
             </section>
         </section>
-
+        <!--Page End-->
 
 
         <!--Footer-->
