@@ -233,3 +233,12 @@ class ExemplaryMembers(models.Model):
     def __str__(self) -> str:
         return self.member_name
 
+class Toolkit(models.Model):
+    title=models.CharField(null=False,blank=False,max_length=100)
+    picture=ResizedImageField(null=True,blank=True,upload_to='main_website_files/toolkit_pictures/')
+    color_codes=RichTextField(null=True,blank=True,max_length=500)
+    
+    class Meta:
+        verbose_name="Toolkit"
+    def __str__(self) -> str:
+        return self.title
