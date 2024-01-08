@@ -50,8 +50,13 @@ class HomepageItems:
                     events = Events.objects.filter(publish_in_main_web= True,event_date__gt=current_datetime).order_by('event_date')[:5]
                 else:
                     #when False getting events 5 events which are upcoming, is published and is of particular society
-                    events = Events.objects.filter(publish_in_main_web= True,event_organiser = society,event_date__gt=current_datetime).order_by('event_date')[:5]
-                
+                    events = Events.objects.filter(publish_in_main_web= True,event_organiser = society,event_date__gt=current_datetime).order_by('event_date')#[:5]
+                    ####getting collaborated events###if dont want collaborated event remove bottom section and uncommment the list here -----------------------here
+                    collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
+                    #joining both the events list of collbarated and their own organised events
+                    events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True,event_date__gt=current_datetime)).order_by('event_date')[:5]
+                    ####################################################################################################################
+
             #using this loop, assigning the event with its corresponding banner picture in the dictionary as key and value
             for i in events:
                 #getting the event banner image using load_event_banner_image funtion
