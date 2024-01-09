@@ -61,6 +61,7 @@ urlpatterns = [
     path('manage_website/toolkit',views.manage_toolkit,name="manage_toolkit"),
     path('manage_website/toolkit/update/<int:pk>',views.update_toolkit,name="update_toolkit"),
     path('manage_access',views.manage_view_access,name="manage_access"),
+    path('manage_website/feedbacks',views.feedbacks,name="feedbacks"),
 
     #Events urls
     #Event control page 
