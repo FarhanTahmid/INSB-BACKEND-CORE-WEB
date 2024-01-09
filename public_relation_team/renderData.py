@@ -1,4 +1,5 @@
 from central_events.models import Events
+from central_branch.renderData import Branch
 from .models import Manage_Team
 from port.models import Teams,Roles_and_Position
 from users.models import Members
@@ -31,14 +32,14 @@ class PRT_Data:
         
         '''This function loads all the team members for the public relation team'''
 
-        load_team_members=Members.objects.filter(team=PRT_Data.get_team_id()).order_by('position')
+        load_team_members=Branch.load_team_members(team_primary=6)
         team_members=[]
         for i in range(len(load_team_members)):
             team_members.append(load_team_members[i])
             
         # This is only for special case where PR and Promotions Team gets Merged
         if (len(team_members)==0):
-            load_team_members=Members.objects.filter(team=PRT_Data.getPublicRelationPromotionTeamID()).order_by('position')
+            load_team_members=Branch.load_team_members(team_primary=6)
             team_members=[]
             for i in range(len(load_team_members)):
                 team_members.append(load_team_members[i])
@@ -81,8 +82,7 @@ class PRT_Data:
         return recruitment_session.objects.all().order_by('-id')
     
     def add_member_to_team(ieee_id,position):
-        team_id=PRT_Data.get_team_id()
-        Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
+        Branch.add_member_to_team(ieee_id=ieee_id,position=position,team_primary=6) 
 
     def prt_manage_team_access_modifications(manage_team_access,ieee_id):
         try:

@@ -217,11 +217,10 @@
                                             <td>{{ member.position }}</td>
                                             <td>{{ member.email_ieee }}</td>
                                             <td>
-                                                <input type="checkbox" id="select" name="member_select1" value={{member.ieee_id}}>
+                                                <input type="checkbox" class="select-checkbox" name="member_select1" value="{{member.ieee_id}}">
                                             </td>
                                         </tr>
                                     {% endfor %}
-                                    
                                 </tbody>
                             </table>
                         </div>
@@ -316,7 +315,7 @@
                                 
                                     <td>
                                         <input class="btn btn-outline b-success text-success" name="access_update" type="submit" value="Update">
-                                        <input class="btn btn-outline b-danger text-danger" type="submit" value="Remove">
+                                        <input class="btn btn-outline b-danger text-danger" name="access_remove" type="submit" value="Remove">
                                         <input type="hidden" name="access_ieee_id" value={{data_access.ieee_id}}>
                                     </td>
                                 </form>
@@ -414,29 +413,13 @@
 
     <!--Script for table search-->
     <script>
-        // Get the input element and table
-        var input = document.getElementById("searchInput");
-        var table = document.getElementById("data");
-
-        input.addEventListener("keyup", function () {
-            var filter, row, cell, i, j;
-            filter = input.value.toUpperCase();
-
-            // Loop through all table rows and hide those that don't match the search query
-            for (i = 0; i < table.rows.length; i++) {
-                row = table.rows[i];
-                for (j = 0; j < row.cells.length; j++) {
-                    cell = row.cells[j];
-                    if (cell) {
-                        if (cell.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                            row.style.display = "";
-                            break;
-                        } else {
-                            row.style.display = "none";
-                        }
-                    }
-                }
-            }
+        $(document).ready(function() {
+            $("#searchInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#data tbody tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
         });
     </script>
 

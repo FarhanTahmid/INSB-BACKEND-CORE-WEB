@@ -31,11 +31,14 @@ def team_homepage(request):
     print(in_charges)
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
+    volunteers=GraphicsTeam.get_volunteers()
     context={
         'co_ordinators':co_ordinators,
         'incharges':in_charges,
         'media_url':settings.MEDIA_URL,
         'user_data':user_data,
+        'core_volunteers':volunteers[0],
+        'team_volunteers':volunteers[1],
     }
 
 

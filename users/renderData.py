@@ -525,12 +525,12 @@ class PanelMembersData:
     def remove_member_from_panel(request,ieee_id,panel_id):
         
         try:
+            print(panel_id)
             # Delete from panel members database
             Panel_Members.objects.filter(tenure=Panels.objects.get(id=panel_id),member=Members.objects.get(ieee_id=ieee_id)).delete()
-
             # Remove Positions from Members Table database,turing their position in general members
             Members.objects.filter(ieee_id=ieee_id).update(position=Roles_and_Position.objects.get(id=13),team=None)
-            messages.info(request,f"{ieee_id} was removed from the Panel")
+            messages.info(request,f"{ieee_id} was removed from the Panel and Teams")
             return True
         except sqlite3.OperationalError:
             messages.error(request,"An internal Database error has occured!")

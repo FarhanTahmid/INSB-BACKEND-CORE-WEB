@@ -57,17 +57,13 @@
 
 
             <br>
-<h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to <span style="color:#00629B;"> <b>The Graphics Team</b></span> of <b><span style="color:#00629B;">IEEE NSU Student Branch</b></span> </h2>
-        {% block co_ordinators_and_incharges %}
-          {% include 'Common_Templates/co_ordinators_and_incharges.html' %}
-        {% endblock %}
-          
-
-
-            <!--The other panel members-->
-            {% block cardbody %}
-                {% include "Homepage/media_cardbody.html" %}
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to <span style="color:#00629B;"> <b>The Graphics Team</b></span> of <b><span style="color:#00629B;">IEEE NSU Student Branch</b></span> </h2>
+            
+            <!--Graphics Members-->
+            {% block co_ordinators_and_incharges %}
+                {% include 'Common_Templates/co_ordinators_and_incharges.html' %}
             {% endblock %}
+          
 
         </div>
         <!--PAGE END-->

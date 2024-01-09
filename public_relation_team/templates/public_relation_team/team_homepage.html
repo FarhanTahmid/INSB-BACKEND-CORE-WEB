@@ -2,1225 +2,212 @@
 {% load static %}
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Home | Public Relations Team</title>
-  <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8" />
+    <title>Public Relation Team | IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
-  <!-- for ios 7 style, multi-resolution icon of 152x152 -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
-  <link rel="apple-touch-icon" href="../assets/images/logo.png">
-  <meta name="apple-mobile-web-app-title" content="Flatkit">
-  <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <link rel="shortcut icon" sizes="196x196" href="../assets/images/logo.png">
-  
-  <!-- style -->
-  <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
-  <link rel="stylesheet" href="{% static '/assets/animate.css/animate.min.css' %}" type="text/css" />
-  <link rel="stylesheet" href="{% static '/assets/glyphicons/glyphicons.css' %}" type="text/css" />
-  <link rel="stylesheet" href="{% static '/assets/font-awesome/css/font-awesome.min.css' %}" type="text/css" />
-  <link rel="stylesheet" href="{% static '/assets/material-design-icons/material-design-icons.css' %}" type="text/css" />
-  
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
 
-  <link rel="stylesheet" href="{% static '/assets/bootstrap/dist/css/bootstrap.min.css' %}" type="text/css" />
-  <!-- build:css ../assets/styles/app.min.css -->
-  <link rel="stylesheet" href="{% static '/assets/styles/app.css' %}" type="text/css" />
-  <!-- endbuild -->
-  <link rel="stylesheet" href="{% static '/assets/styles/font.css' %}" type="text/css" />
-  <style>
-    body, html {
-      
-      margin: 0;
-      
-      align-items: center;
-      justify-content: center;
-    }
+    <style>
+        body, html {
+        
+        margin: 0;
+        
+        align-items: center;
+        justify-content: center;
+        }
 
-    .row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-    }
-  </style>
+        .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+          }
+          .btn-container {
+            text-align: center;
+          }
+          
+          .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+          }
+          
+          /* Media query for smaller screens (adjust the breakpoint as needed) */
+          @media (max-width: 768px) {
+            .btn {
+              width: 100%; /* Make the button full width on smaller screens */
+            }
+          }
+        
+    </style>
 </head>
 <body>
-  <div class="app" id="app">
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
 
-<!-- ############ LAYOUT START-->
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+                {% include 'public_relation_team\public_relation_navbar.html' %}
+            {% endblock navbar %}
 
-<!-- aside -->
-<div id="aside" class="app-aside modal nav-dropdown">
-    <!-- fluid app aside -->
-  <div class="left navside dark dk" data-layout="column">
-      <div class="navbar no-radius">
-      <!-- brand -->
-      <a class="navbar-brand" href="{% url 'users:dashboard' %}">
-          <div ui-include="'logos/logo.gif'"></div>
-          <img src="{% static 'logos/logo.gif'%}" alt=".">
-          <span class="hidden-folded inline"><br><br> IEEE NSU SB</span>
-      </a>
-      <!-- / brand -->
-    </div>
-    <div class="hide-scroll" data-flex>
-        <nav class="scroll nav-light">
-          
-            <ul class="nav" ui-nav>
-              <li class="nav-header hidden-folded">
-                <small class="text-muted">Main</small>
-              </li>
+        </div>
+        <!--navbar content-->
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
+            <!--Start from here-->
+            <br>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to <span style="color:#00629B;"> <b>The Public Relations Team</b></span> of <b><span style="color:#00629B;">IEEE NSU Student Branch</b></span> </h2>
+            <!--CO ORDINATORS-->
+            <h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our <span><b>Co-Ordinators</b></span> </h3>
+            <!-- Grid row -->
+            <div class="row d-flex justify-content-center">
+                                        
+              <!-- Grid column -->
+              {% for i in co_ordinators %}
+                  <div class="col-md-3 mb-4 text-center">
               
-              <li>
-                <a href="{% url 'users:dashboard' %}" >
-                  <span class="nav-icon">
-                    <i class="material-icons">&#xe3fc;
-                      <span ui-include="'../assets/images/i_0.svg'"></span>
-                    </i>
-                  </span>
-                  <span class="">Dashboard</span>
-                </a>
-              </li>
-          
-          
-              <li class="nav-header hidden-folded">
-                <small class="text-muted">Teams</small>
-              </li>
-              <li>
-                  <a>
-                    <span class="nav-caret">
-                      <i class="fa fa-caret-down"></i>
-                    </span>
-                    
-                    <span class="nav-icon">
-                      <img src={% static 'images/logo.gif' %} width="20px" height="20px">
-                      <i class="fa-fa-user">
-                      </i>
-                    </span>
-                    <span class="nav-text">IEEE NSU Student Branch</span>
-                  </a>
-                  <ul class="nav-sub nav-mega nav-mega-3">
-                    <li>
-                      <a href={% url 'central_branch:central_home' %}>
-                        <span class="nav-text">Home</span>
-                      </a>
-                    </li>
-                    
-                  </ul>
-                </li>
-              <li>
-                <a>
-                  <span class="nav-caret">
-                    <i class="fa fa-caret-down"></i>
-                  </span>
-                  
-                  <span class="nav-icon">
-                      <img src={% static 'images/content.png' %} width="20px" height="20px">
-                      <i class="fa-fa-user">
-                      </i>
-                  </span>
-                  <span class="nav-text">Content Writing and Publications</span>
-                </a>
-                <ul class="nav-sub nav-mega nav-mega-3">
-                  <li>
-                    <a href="arrow.html" >
-                      <span class="nav-text">Home</span>
-                    </a>
-                  </li>
-                  
-                </ul>
-              </li>
-          
-              <li>
-                  <a>
-                    <span class="nav-caret">
-                      <i class="fa fa-caret-down"></i>
-                    </span>
-                    
-                    <span class="nav-icon">
-                      <img src={% static 'images/event.png' %} width="20px" height="20px">
-                      <i class="fa-fa-user">
-                      </i>
-                    </span>
-                    <span class="nav-text">Event and Management</span>
-                  </a>
-                  <ul class="nav-sub nav-mega nav-mega-3">
-                    <li>
-                      <a href="{% url 'events_and_management_team:em_team_homepage' %}" >
-                        <span class="nav-text">Home</span>
-                      </a>
-                    </li>
-                    
-                  </ul>
-                </li>
+                      <div class="avatar mx-auto white" style="height: 250px; width:200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                          <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                      </div>
+                      <h6 class="font-weight-bold">{{i.name}}</h6>
+                      <small class="text-muted">{{i.team}} Team<br></small>
+                      <small class="text-muted">{{i.contact_no}}</small>
 
-                <li>
-                  <a>
-                    <span class="nav-caret">
-                      <i class="fa fa-caret-down"></i>
-                    </span>
-                    
-                  <span class="nav-icon">
-                      <img src={% static 'images/logistics.png' %} width="20px" height="20px">
-                      <i class="fa-fa-user">
-                      </i>
-                  </span>
-                    <span class="nav-text">Logistics and Operations</span>
-                  </a>
-                  <ul class="nav-sub nav-mega nav-mega-3">
-                    <li>
-                      <a href="arrow.html" >
-                        <span class="nav-text">Arrow</span>
-                      </a>
-                    </li>
-                    
-                  </ul>
-                </li>
-                <li>
-                  <a>
-                    <span class="nav-caret">
-                      <i class="fa fa-caret-down"></i>
-                    </span>
-                    
-                  <span class="nav-icon">
-                      <img src={% static 'images/promotion.png' %} width="20px" height="20px">
-                      <i class="fa-fa-user">
-                      </i>
-                  </span>
-                    <span class="nav-text">Promotions</span>
-                  </a>
-                  <ul class="nav-sub nav-mega nav-mega-3">
-                    <li>
-                      <a href="arrow.html" >
-                        <span class="nav-text">Arrow</span>
-                      </a>
-                    </li>
-                    
-                  </ul>
-                </li>
-
-                <li>
-                  <a>
-                    <span class="nav-caret">
-                      <i class="fa fa-caret-down"></i>
-                    </span>
-                    
-                  <span class="nav-icon">
-                      <img src={% static 'images/pr.png' %} width="20px" height="20px">
-                      <i class="fa-fa-user">
-                      </i>
-                  </span>
-                    <span class="nav-text">Public Relations</span>
-                  </a>
-                  <ul class="nav-sub nav-mega nav-mega-3">
-                    <li>
-                      <a href="{% url 'public_relation_team:team_homepage' %}" >
-                        <span class="nav-text">Home</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="{% url 'public_relation_team:send_email' %}" >
-                        <span class="nav-text">Send Email</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="{% url 'public_relation_team:manage_event' %}" >
-                        <span class="nav-text">Manage Events</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="{% url 'public_relation_team:team_homepage' %}" >
-                        <span class="nav-text">Manage Website</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="{% url 'public_relation_team:manage_team' %}" >
-                        <span class="nav-text">Manage Team</span>
-                      </a>
-                    </li>
-                    
-                  </ul>
-                </li>
-                <li>
-                  <a>
-                    <span class="nav-caret">
-                      <i class="fa fa-caret-down"></i>
-                    </span>
-                    
-                  <span class="nav-icon">
-                      <img src={% static 'images/membership.png' %} width="20px" height="20px">
-                      <i class="fa-fa-user">
-                      </i>
-                  </span>
-                    <span class="nav-text">Membership Development</span>
-                  </a>
-                  <ul class="nav-sub nav-mega nav-mega-3">
-                    <li>
-                      <a href="{% url 'membership_development_team:md_team_homepage' %}" >
-                        <span class="nav-text">Home</span>
-                      </a>
-                    </li>
-                    
-                  </ul>
-                </li>
-
-                <li>
-                  <a>
-                    <span class="nav-caret">
-                      <i class="fa fa-caret-down"></i>
-                    </span>
-                    
-                  <span class="nav-icon">
-                      <img src={% static 'images/website.png' %} width="20px" height="20px">
-                      <i class="fa-fa-user">
-                      </i>
-                  </span>
-                    <span class="nav-text">Website Development</span>
-                  </a>
-                  <ul class="nav-sub nav-mega nav-mega-3">
-                    <li>
-                      <a href="arrow.html" >
-                        <span class="nav-text">Arrow</span>
-                      </a>
-                    </li>
-                    
-                  </ul>
-                </li>
-
-                <li>
-                  <a>
-                    <span class="nav-caret">
-                      <i class="fa fa-caret-down"></i>
-                    </span>
-                    
-                    <span class="nav-icon">
-                      <img src={% static 'images/media.gif' %} width="20px" height="20px">
-                      <i class="fa-fa-user">
-                      </i>
-                  </span>
-                    <span class="nav-text">Media</span>
-                  </a>
-                  <ul class="nav-sub nav-mega nav-mega-3">
-                    <li>
-                      <a href="arrow.html" >
-                        <span class="nav-text">Arrow</span>
-                      </a>
-                    </li>
-                    
-                  </ul>
-                </li>
-
-                <li>
-                  <a>
-                    <span class="nav-caret">
-                      <i class="fa fa-caret-down"></i>
-                    </span>
-                    
-                    <span class="nav-icon">
-                      <img src={% static 'images/graphics.png' %} width="20px" height="20px">
-                      <i class="fa-fa-user">
-                      </i>
-                  </span>
-                    <span class="nav-text">Graphics</span>
-                  </a>
-                  <ul class="nav-sub nav-mega nav-mega-3">
-                    <li>
-                      <a href="arrow.html" >
-                        <span class="nav-text">Arrow</span>
-                      </a>
-                    </li>
-                    
-                  </ul>
-                </li>
-
-                <li>
-                  <a>
-                    <span class="nav-caret">
-                      <i class="fa fa-caret-down"></i>
-                    </span>
-                    
-                    <span class="nav-icon">
-                      <img src={% static 'images/finance.png' %} width="20px" height="20px">
-                      <i class="fa-fa-user">
-                      </i>
-                  </span>
-                    <span class="nav-text">Finance and Corporate</span>
-                  </a>
-                  <ul class="nav-sub nav-mega nav-mega-3">
-                    <li>
-                      <a href="arrow.html" >
-                        <span class="nav-text">Arrow</span>
-                      </a>
-                    </li>
-                    
-                  </ul>
-                </li>
-                <ul class="nav" ui-nav>
-                  <li class="nav-header hidden-folded">
-                    <small class="text-muted">Chapters and Affinity Group</small>
-                  </li>
-                  
-                  <li>
-                      <a>
-                        <span class="nav-caret">
-                          <i class="fa fa-caret-down"></i>
-                        </span>
-                        
-                        <span class="nav-icon">
-                          <img src={% static 'logos/PES.png' %} width="20px" height="20px">
-                          <i class="fa-fa-user">
-                          </i>
-                      </span>
-                        <span class="nav-text">IEEE NSU PES SBC</span>
-                      </a>
-                      <ul class="nav-sub nav-mega nav-mega-3">
-                        <li>
-                          <a href="arrow.html" >
-                            <span class="nav-text">Arrow</span>
-                          </a>
-                        </li>
-                        
+                      <ul class="list-unstyled d-flex justify-content-center m-2">
+                          <li><a href="{{i.linkedin_url}}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+                          <li><a href="{{i.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
+                          <li><a href="mailto:{{i.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
                       </ul>
-                  </li>
+              
+              </div>
+              {% endfor %}
+              <!-- Grid column -->
 
-                  <li>
-                      <a>
-                        <span class="nav-caret">
-                          <i class="fa fa-caret-down"></i>
-                        </span>
-                        
-                        <span class="nav-icon">
-                          <img src={% static 'logos/RAS.png' %} width="20px" height="20px">
-                          <i class="fa-fa-user">
-                          </i>
-                      </span>
-                        <span class="nav-text">IEEE NSU RAS SBC</span>
-                      </a>
-                      <ul class="nav-sub nav-mega nav-mega-3">
-                        <li>
-                          <a href="arrow.html" >
-                            <span class="nav-text">Arrow</span>
-                          </a>
-                        </li>
-                        
-                      </ul>
-                  </li>
-
-                  <li>
-                      <a>
-                        <span class="nav-caret">
-                          <i class="fa fa-caret-down"></i>
-                        </span>
-                        
-                        <span class="nav-icon">
-                          <img src={% static 'logos/IAS.png' %} width="20px" height="20px">
-                          <i class="fa-fa-user">
-                          </i>
-                      </span>
-                        <span class="nav-text">IEEE NSU IAS SBC</span>
-                      </a>
-                      <ul class="nav-sub nav-mega nav-mega-3">
-                        <li>
-                          <a href="arrow.html" >
-                            <span class="nav-text">Arrow</span>
-                          </a>
-                        </li>
-                        
-                      </ul>
-                  </li>
-
-                  <li>
-                      <a>
-                        <span class="nav-caret">
-                          <i class="fa fa-caret-down"></i>
-                        </span>
-                        
-                        <span class="nav-icon">
-                          <img src={% static 'logos/WIE.png' %} width="20px" height="20px">
-                          <i class="fa-fa-user">
-                          </i>
-                      </span>
-                        <span class="nav-text">IEEE WIE AG</span>
-                      </a>
-                      <ul class="nav-sub nav-mega nav-mega-3">
-                        <li>
-                          <a href="arrow.html" >
-                            <span class="nav-text">Arrow</span>
-                          </a>
-                        </li>
-                        
-                      </ul>
-                  </li>
-            </ul>
-        </nav>
-    </div>
-    <div class="b-t">
-      <div class="nav-fold">
-        <a href="{% url 'users:profile' %}">
-            <span class="pull-left">
-              <img src="{{ user_data.profile_picture }}" alt="..." class="w-40 img-circle">
-            </span>
-            <span class="clear hidden-folded p-x">
-              <span class="block _500">{{user_data.name}}</span>
-              <small class="block text-muted"><i class="fa fa-circle text-success m-r-sm"></i>online</small>
-            </span>
-        </a>
-      </div>
-  </div>
-  </div>
-</div>
-<!-- / -->
-  
-  <!-- content -->
-<div id="content" class="app-content box-shadow-z0" role="main">
-    <div class="app-header white box-shadow">
-        <div class="navbar navbar-toggleable-sm flex-row align-items-center">
-            <!-- Open side - Naviation on mobile -->
-            <a data-toggle="modal" data-target="#aside" class="hidden-lg-up mr-3">
-              <i class="material-icons">&#xe5d2;</i>
-            </a>
-            <!-- / -->
-        
-            <!-- Page title - Bind to $state's title -->
-            <div class="mb-0 h5 no-wrap" ng-bind="$state.current.data.title" id="pageTitle"></div>
-        
-            <!-- navbar collapse -->
-            <div class="collapse navbar-collapse" id="collapse">
-              <!-- link and dropdown -->
-              <ul class="nav navbar-nav mr-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="{% url 'public_relation_team:team_homepage' %}">
-                      <i class="fa fa-home"></i>
-                      <span style="color:#FFA300">Home</span>
-                    </a>
-                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="{% url 'public_relation_team:send_email' %}">
-                      <i class="fa fa-envelope text-muted"></i>
-                      <span>Send Email</span>
-                    </a>
-                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
-                </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link" href="{% url 'public_relation_team:manage_event' %}">
-                    <i class="fa fa-calendar"></i>
-                    <span>Manage Events</span>
-                  </a>
-                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
-              </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="" data-toggle="dropdown">
-                      <img src={% static 'images/website.png' %} width="20px" height="20px">
-                        <i class="fa-fa-user"></i>
-                      <span>Manage Website</span>
-                    </a>
-                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
-                </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link" href="{% url 'public_relation_team:manage_team' %}">
-                    <i class="fa fa-group"></i>
-                    <span>Manage Team</span>
-                  </a>
-                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
-                </li>
-              </ul>
-        
-              <div ui-include="'../views/blocks/navbar.form.html'"></div>
-              <!-- / -->
             </div>
-            <!-- / navbar collapse -->
-        
-            <!-- navbar right -->
-            <ul class="nav navbar-nav ml-auto flex-row">
-              <li class="nav-item dropdown pos-stc-xs">
-                <a class="nav-link mr-2" href data-toggle="dropdown">
-                  <i class="material-icons">&#xe7f5;</i>
-                  <span class="label label-sm up warn">3</span>
-                </a>
-                <div ui-include="'../views/blocks/dropdown.notification.html'"></div>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
-                  <span class="avatar w-32">
-                    <img src="{{ user_data.profile_picture }}" alt="...">
-                    <i class="on b-white bottom"></i>
-                  </span>
-                </a>
-                <div ui-include="'../views/blocks/dropdown.user.html'"></div>
-              </li>
-              <li class="nav-item hidden-md-up">
-                <a class="nav-link pl-2" data-toggle="collapse" data-target="#collapse">
-                  <i class="material-icons">&#xe5d4;</i>
-                </a>
-              </li>
-            </ul>
-            <!-- / navbar right -->
+            <!-- Grid row -->
+            <!--INCHARGES-->
+            <h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our <span><b>Incharges</b></span> </h3>
+            <!-- Grid row -->
+            <div class="row d-flex justify-content-center">
+                                        
+              <!-- Grid column -->
+              {% for i in incharges %}
+                  <div class="col-md-3 mb-4 text-center">
+              
+                      <div class="avatar mx-auto white" style="height: 250px; width:200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                          <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                      </div>
+                      <h6 class="font-weight-bold">{{i.name}}</h6>
+                      <small class="text-muted">{{i.team}} Team<br></small>
+                      <small class="text-muted">{{i.contact_no}}</small>
+
+                      <ul class="list-unstyled d-flex justify-content-center m-2">
+                          <li><a href="{{i.linkedin_url}}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+                          <li><a href="{{i.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
+                          <li><a href="mailto:{{i.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
+                      </ul>
+              
+              </div>
+              {% endfor %}
+              <!-- Grid column -->
+
+            </div>
+            <!-- Grid row -->
+            <!--Core Volunteers-->
+            <h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our <span><b>Core Volunteers</b></span> </h3>
+            <!-- Grid row -->
+            <div class="row d-flex justify-content-center">
+                                        
+              <!-- Grid column -->
+              {% for i in core_volunteers %}
+                  <div class="col-md-3 mb-4 text-center">
+              
+                      <div class="avatar mx-auto white" style="height: 250px; width:200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                          <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                      </div>
+                      <h6 class="font-weight-bold">{{i.name}}</h6>
+                      <small class="text-muted">{{i.team}} Team<br></small>
+                      <small class="text-muted">{{i.contact_no}}</small>
+
+                      <ul class="list-unstyled d-flex justify-content-center m-2">
+                          <li><a href="{{i.linkedin_url}}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+                          <li><a href="{{i.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
+                          <li><a href="mailto:{{i.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
+                      </ul>
+              
+              </div>
+              {% endfor %}
+              <!-- Grid column -->
+
+            </div>
+            <!-- Grid row -->
+            <!--Team Volunteers-->
+            <h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our <span><b>Team Volunteers</b></span> </h3>
+            <!-- Grid row -->
+            <div class="row d-flex justify-content-center">
+                                        
+              <!-- Grid column -->
+              {% for i in volunteers %}
+                  <div class="col-md-3 mb-4 text-center">
+              
+                      <div class="avatar mx-auto white" style="height: 250px; width:200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                          <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                      </div>
+                      <h6 class="font-weight-bold">{{i.name}}</h6>
+                      <small class="text-muted">{{i.team}} Team<br></small>
+                      <small class="text-muted">{{i.contact_no}}</small>
+
+                      <ul class="list-unstyled d-flex justify-content-center m-2">
+                          <li><a href="{{i.linkedin_url}}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+                          <li><a href="{{i.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
+                          <li><a href="mailto:{{i.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
+                      </ul>
+              </div>
+              {% endfor %}
+              <!-- Grid column -->
+
+            </div>
+            <!-- Grid row -->
         </div>
-</div>
+        <!--PAGE END-->
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
     
-<div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
-
-<!-- ############ PAGE START-->
-<br>
-<h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to <span style="color:#00629B;"> <b>The Public Relations Team</b></span> of <b><span style="color:#00629B;">IEEE NSU Student Branch</b></span> </h2>
-
-<!--CO ORDINATORS-->
-<h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our <span><b>Co-Ordinators</b></span> </h3>
-
-<div class="row" style="margin-bottom:15px;">
-    <div class="col-xs-6 col-sm-12 col-md-6" >
-      {% for i in co_ordinators %}
-        <div class="box">
-            <div class="item">
-              <div class="item-bg">
-                <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
-              </div>
-              <div class="p-a-lg pos-rlt text-center">
-                <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
-              </div>
-            </div>
-            <div class="p-a text-center">
-              <a href class="text-md m-t block">{{i.name}}</a>
-              <p><small>NSU ID: {{i.nsu_id}}</small></p>
-              <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
-                <i class="fa fa-facebook"></i>
-                <i class="fa fa-facebook indigo"></i>
-              </a>
-              <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
-                <i class="fa fa-envelope-o"></i>
-                <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
-              </a>
-              <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
-                <i class="fa fa-linkedin"></i>
-                <i class="fa fa-linkedin light-blue-800"></i>
-              </a>
-              <div class="text-xs">
-                <em>Contact: <strong>{{i.contact_no}}</strong></em>
-              </div>
-            </div>
-        </div>
-      {% endfor %}
     </div>
-</div>
+    <!-- app end-->
 
-<!--INCHARGES-->
-<h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our <span><b>Incharges</b></span> </h3>
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
 
-<div class="row" style="margin-bottom:15px;">
-  <div class="col-xs-6 col-sm-12 col-md-6" >
-    {% for i in incharges %}
-      <div class="box">
-          <div class="item">
-            <div class="item-bg">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
-            </div>
-            <div class="p-a-lg pos-rlt text-center">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
->>>>>>> 45e94e7889759f53b001223d87938a6a056ca61d
-            </div>
-          </div>
-          <div class="p-a text-center">
-            <a href class="text-md m-t block">{{i.name}}</a>
-            <p><small>NSU ID: {{i.nsu_id}}</small></p>
-            <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
-              <i class="fa fa-facebook"></i>
-              <i class="fa fa-facebook indigo"></i>
-            </a>
-            <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
-              <i class="fa fa-envelope-o"></i>
-              <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
-            </a>
-            <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
-              <i class="fa fa-linkedin"></i>
-              <i class="fa fa-linkedin light-blue-800"></i>
-            </a>
-            <div class="text-xs">
-              <em>Contact: <strong>{{i.contact_no}}</strong></em>
-            </div>
-          </div>
-      </div>
-    {% endfor %}
-  </div>
-</div>
-
-<!--CORE Volunteers-->
-<h3 style="justify-content:center;text-align:center;margin-bottom:15px;">Meet our <span><b>Core Volunteers</b></span> </h3>
-
-<div class="row" style="margin-bottom:15px;">
-  <div class="col-xs-6 col-sm-12 col-md-6" >
-    {% for i in core_volunteers %}
-      <div class="box">
-          <div class="item">
-            <div class="item-bg">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
-            </div>
-            <div class="p-a-lg pos-rlt text-center">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
-            </div>
-          </div>
-          <div class="p-a text-center">
-            <a href class="text-md m-t block">{{i.name}}</a>
-            <p><small>NSU ID: {{i.nsu_id}}</small></p>
-            <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
-              <i class="fa fa-facebook"></i>
-              <i class="fa fa-facebook indigo"></i>
-            </a>
-            <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
-              <i class="fa fa-envelope-o"></i>
-              <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
-            </a>
-            <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
-              <i class="fa fa-linkedin"></i>
-              <i class="fa fa-linkedin light-blue-800"></i>
-            </a>
-            <div class="text-xs">
-              <em>Contact: <strong>{{i.contact_no}}</strong></em>
-            </div>
-          </div>
-      </div>
-    {% endfor %}
-  </div>
-</div>
-
-
-<!--VOLUNTEERS-->
-<h3 style="justify-content:center;text-align:center;margin-bottom:15px;">Meet our <span><b>Volunteers</b></span> </h3>
-
-<div class="row" style="margin-bottom:15px;">
-  <div class="col-xs-6 col-sm-12 col-md-6" >
-    {% for i in volunteers %}
-      <div class="box">
-          <div class="item">
-            <div class="item-bg">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
-            </div>
-            <div class="p-a-lg pos-rlt text-center">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
-            </div>
-          </div>
-          <div class="p-a text-center">
-            <a href class="text-md m-t block">{{i.name}}</a>
-            <p><small>NSU ID: {{i.nsu_id}}</small></p>
-            <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
-              <i class="fa fa-facebook"></i>
-              <i class="fa fa-facebook indigo"></i>
-            </a>
-            <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
-              <i class="fa fa-envelope-o"></i>
-              <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
-            </a>
-            <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
-              <i class="fa fa-linkedin"></i>
-              <i class="fa fa-linkedin light-blue-800"></i>
-            </a>
-            <div class="text-xs">
-              <em>Contact: <strong>{{i.contact_no}}</strong></em>
-            </div>
-          </div>
-      </div>
-    {% endfor %}
-  </div>
-</div>
-
-
-
-
-
-</div>
-
-<!-- ############ PAGE END-->
-
-    </div>
-  </div>
-  <!-- / -->
-
-  <!-- theme switcher -->
-  <div id="switcher">
-    <div class="switcher box-color dark-white text-color" id="sw-theme">
-      <a href ui-toggle-class="active" target="#sw-theme" class="box-color dark-white text-color sw-btn">
-        <i class="fa fa-gear"></i>
-      </a>
-      <div class="box-header">
-        <h2>Theme Switcher</h2>
-      </div>
-      <div class="box-divider"></div>
-      <div class="box-body">
-        <p class="hidden-md-down">
-          <label class="md-check m-y-xs"  data-target="folded">
-            <input type="checkbox">
-            <i class="green"></i>
-            <span class="hidden-folded">Folded Aside</span>
-          </label>
-          
-        </p>
-        
-        <p>Themes:</p>
-        <div data-target="bg" class="row no-gutter text-u-c text-center _600 clearfix">
-          <label class="p-a col-sm-6 light pointer m-0">
-            <input type="radio" name="theme" value="" hidden>
-            Light
-          </label>
-          
-          <label class="p-a col-sm-6 dark pointer m-0">
-            <input type="radio" name="theme" value="dark" hidden>
-            Dark
-          </label>
-          
-        </div>
-      </div>
-    </div>
-
-    </div>
-  </div>
-  <!-- / -->
-
-<!-- ############ LAYOUT END-->
-
-  </div>
-<!-- build:js scripts/app.html.js -->
-<!-- jQuery -->
-<script src="{% static 'script/jquery.js'%}"></script>
-<!-- Bootstrap -->
-  <script src="{% static 'script/tether.min.js'%}"></script>
-  <script src="{% static 'script/bootstrap.js'%}"></script>
-<!-- core -->
-  <script src="{% static 'script/underscore-min.js'%}"></script>
-  <script src="{% static 'script/jquery.storageapi.min.js'%}"></script>
-  <script src="{% static 'script/pace.min.js'%}"></script>
-
-  {% comment %} <script src="{% static 'script/config.lazyload.js'%}"></script> {% endcomment %}
-
-  <script src="{% static 'script/palette.js'%}"></script>
-  <script src="{% static 'script/ui-load.js'%}"></script>
-  <script src="{% static 'script/ui-jp.js' %}"></script>
-  <script src="{% static 'script/ui-include.js'%}"></script>
-  <script src="{% static 'script/ui-device.js'%}"></script>
-  <script src="{% static 'script/ui-form.js'%}"></script>
-  <script src="{% static 'script/ui-nav.js'%}"></script>
-  <script src="{% static 'script/ui-screenfull.js'%}"></script>
-  <script src="{% static 'script/ui-scroll-to.js'%}"></script>
-  <script src="{% static 'script/ui-toggle-class.js'%}"></script>
-  {% comment %} <script src="{% static 'script/screenfull.min.js'%}"></script> {% endcomment %}
-  <script src="{% static 'script/app.js'%}"></script>
-  <!-- apexcharts -->
-  <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
-  <!-- Chart JS -->
-  <script src="{% static 'scripts/chartjs.js' %}"></script>
-  <script src="{% static 'scripts/dashboard.init.js' %}"></script>
-  <!-- ajax -->
-  {% comment %} <script src="{% static 'script/jquery.pjax.js'%}"></script> {% endcomment %}
-  <script src="{% static 'script/ajax.js'%}"></script>
-<!-- endbuild -->
 </body>
 </html>
-=======
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>Home | Public Relations Team</title>
-  <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-  <!-- for ios 7 style, multi-resolution icon of 152x152 -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
-  <link rel="apple-touch-icon" href="../assets/images/logo.png">
-  <meta name="apple-mobile-web-app-title" content="Flatkit">
-  <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <link rel="shortcut icon" sizes="196x196" href="../assets/images/logo.png">
-  
-  <!-- style -->
-  <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
-  <link rel="stylesheet" href="{% static '/assets/animate.css/animate.min.css' %}" type="text/css" />
-  <link rel="stylesheet" href="{% static '/assets/glyphicons/glyphicons.css' %}" type="text/css" />
-  <link rel="stylesheet" href="{% static '/assets/font-awesome/css/font-awesome.min.css' %}" type="text/css" />
-  <link rel="stylesheet" href="{% static '/assets/material-design-icons/material-design-icons.css' %}" type="text/css" />
-  
-
-  <link rel="stylesheet" href="{% static '/assets/bootstrap/dist/css/bootstrap.min.css' %}" type="text/css" />
-  <!-- build:css ../assets/styles/app.min.css -->
-  <link rel="stylesheet" href="{% static '/assets/styles/app.css' %}" type="text/css" />
-  <!-- endbuild -->
-  <link rel="stylesheet" href="{% static '/assets/styles/font.css' %}" type="text/css" />
-  <style>
-    body, html {
-      
-      margin: 0;
-      
-      align-items: center;
-      justify-content: center;
-    }
-
-    .row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-    }
-  </style>
-</head>
-<body>
-  <div class="app" id="app">
-
-<!-- ############ LAYOUT START-->
-
-<!-- aside -->
-<div id="aside" class="app-aside modal nav-dropdown">
-  
-  	{% block sidebar %}
-	    {% include 'users/sidebar.html' %}
-  	{% endblock %}
-  
-</div>
-<!-- / -->
-  
-  <!-- content -->
-<div id="content" class="app-content box-shadow-z0" role="main">
-    <div class="app-header white box-shadow">
-        <div class="navbar navbar-toggleable-sm flex-row align-items-center">
-            <!-- Open side - Naviation on mobile -->
-            <a data-toggle="modal" data-target="#aside" class="hidden-lg-up mr-3">
-              <i class="material-icons">&#xe5d2;</i>
-            </a>
-            <!-- / -->
-        
-            <!-- Page title - Bind to $state's title -->
-            <div class="mb-0 h5 no-wrap" ng-bind="$state.current.data.title" id="pageTitle"></div>
-        
-            <!-- navbar collapse -->
-            <div class="collapse navbar-collapse" id="collapse">
-              <!-- link and dropdown -->
-              <ul class="nav navbar-nav mr-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="{% url 'public_relation_team:team_homepage' %}">
-                      <i class="fa fa-home"></i>
-                      <span style="color:#FFA300">Home</span>
-                    </a>
-                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="{% url 'public_relation_team:send_email' %}">
-                      <i class="fa fa-envelope text-muted"></i>
-                      <span>Send Email</span>
-                    </a>
-                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
-                </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link" href="{% url 'public_relation_team:manage_event' %}">
-                    <i class="fa fa-calendar"></i>
-                    <span>Manage Events</span>
-                  </a>
-                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
-              </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="" data-toggle="dropdown">
-                      <img src={% static 'images/website.png' %} width="20px" height="20px">
-                        <i class="fa-fa-user"></i>
-                      <span>Manage Website</span>
-                    </a>
-                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
-                </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link" href="{% url 'public_relation_team:manage_team' %}">
-                    <i class="fa fa-group"></i>
-                    <span>Manage Team</span>
-                  </a>
-                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
-                </li>
-              </ul>
-        
-              <div ui-include="'../views/blocks/navbar.form.html'"></div>
-              <!-- / -->
-            </div>
-            <!-- / navbar collapse -->
-        
-            <!-- navbar right -->
-            <ul class="nav navbar-nav ml-auto flex-row">
-              <li class="nav-item hidden-md-up">
-                <a class="nav-link pl-2" data-toggle="collapse" data-target="#collapse">
-                  <i class="material-icons">more_horiz</i>
-                </a>
-              </li>
-              <li class="nav-item dropdown pos-stc-xs">
-                <a class="nav-link mr-2" href data-toggle="dropdown">
-                  <i class="material-icons">&#xe7f5;</i>
-                  <span class="label label-sm up warn">3</span>
-                </a>
-                <div ui-include="'../views/blocks/dropdown.notification.html'"></div>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
-                  <span class="avatar w-32">
-                    <img src="{{ user_data.profile_picture }}" alt="user_profile">
-                    <i class="on b-white bottom"></i>
-                  </span>
-                </a>
-                <div ui-include="'../views/blocks/dropdown.user.html'"></div>
-              </li>
-            </ul>
-            <!-- / navbar right -->
-        </div>
-</div>
-    
-<div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
-
-<!-- ############ PAGE START-->
-<br>
-<h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to <span style="color:#00629B;"> <b>The Public Relations Team</b></span> of <b><span style="color:#00629B;">IEEE NSU Student Branch</b></span> </h2>
-
-<!--CO ORDINATORS-->
-<h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our <span><b>Co-Ordinators</b></span> </h3>
-
-<div class="row" style="margin-bottom:15px;">
-    <div class="col-xs-6 col-sm-12 col-md-6" >
-      {% for i in co_ordinators %}
-        <div class="box">
-            <div class="item">
-              <div class="item-bg">
-                <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
-              </div>
-              <div class="p-a-lg pos-rlt text-center">
-                <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
-              </div>
-            </div>
-            <div class="p-a text-center">
-              <a href class="text-md m-t block">{{i.name}}</a>
-              <p><small>NSU ID: {{i.nsu_id}}</small></p>
-              <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
-                <i class="fa fa-facebook"></i>
-                <i class="fa fa-facebook indigo"></i>
-              </a>
-              <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
-                <i class="fa fa-envelope-o"></i>
-                <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
-              </a>
-              <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
-                <i class="fa fa-linkedin"></i>
-                <i class="fa fa-linkedin light-blue-800"></i>
-              </a>
-              <div class="text-xs">
-                <em>Contact: <strong>{{i.contact_no}}</strong></em>
-              </div>
-            </div>
-        </div>
-      {% endfor %}
-    </div>
-</div>
-
-<!--INCHARGES-->
-<h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our <span><b>Incharges</b></span> </h3>
-
-<div class="row" style="margin-bottom:15px;">
-  <div class="col-xs-6 col-sm-12 col-md-6" >
-    {% for i in incharges %}
-      <div class="box">
-          <div class="item">
-            <div class="item-bg">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
-            </div>
-            <div class="p-a-lg pos-rlt text-center">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
-            </div>
-          </div>
-          <div class="p-a text-center">
-            <a href class="text-md m-t block">{{i.name}}</a>
-            <p><small>NSU ID: {{i.nsu_id}}</small></p>
-            <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
-              <i class="fa fa-facebook"></i>
-              <i class="fa fa-facebook indigo"></i>
-            </a>
-            <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
-              <i class="fa fa-envelope-o"></i>
-              <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
-            </a>
-            <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
-              <i class="fa fa-linkedin"></i>
-              <i class="fa fa-linkedin light-blue-800"></i>
-            </a>
-            <div class="text-xs">
-              <em>Contact: <strong>{{i.contact_no}}</strong></em>
-            </div>
-          </div>
-      </div>
-    {% endfor %}
-  </div>
-</div>
-
-<!--CORE Volunteers-->
-<h3 style="justify-content:center;text-align:center;margin-bottom:15px;">Meet our <span><b>Core Volunteers</b></span> </h3>
-
-<div class="row" style="margin-bottom:15px;">
-  <div class="col-xs-6 col-sm-12 col-md-6" >
-    {% for i in core_volunteers %}
-      <div class="box">
-          <div class="item">
-            <div class="item-bg">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
-            </div>
-            <div class="p-a-lg pos-rlt text-center">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
-            </div>
-          </div>
-          <div class="p-a text-center">
-            <a href class="text-md m-t block">{{i.name}}</a>
-            <p><small>NSU ID: {{i.nsu_id}}</small></p>
-            <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
-              <i class="fa fa-facebook"></i>
-              <i class="fa fa-facebook indigo"></i>
-            </a>
-            <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
-              <i class="fa fa-envelope-o"></i>
-              <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
-            </a>
-            <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
-              <i class="fa fa-linkedin"></i>
-              <i class="fa fa-linkedin light-blue-800"></i>
-            </a>
-            <div class="text-xs">
-              <em>Contact: <strong>{{i.contact_no}}</strong></em>
-            </div>
-          </div>
-      </div>
-    {% endfor %}
-  </div>
-</div>
-
-
-<!--VOLUNTEERS-->
-<h3 style="justify-content:center;text-align:center;margin-bottom:15px;">Meet our <span><b>Volunteers</b></span> </h3>
-
-<div class="row" style="margin-bottom:15px;">
-  <div class="col-xs-6 col-sm-12 col-md-6" >
-    {% for i in volunteers %}
-      <div class="box">
-          <div class="item">
-            <div class="item-bg">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
-            </div>
-            <div class="p-a-lg pos-rlt text-center">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
-            </div>
-          </div>
-          <div class="p-a text-center">
-            <a href class="text-md m-t block">{{i.name}}</a>
-            <p><small>NSU ID: {{i.nsu_id}}</small></p>
-            <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
-              <i class="fa fa-facebook"></i>
-              <i class="fa fa-facebook indigo"></i>
-            </a>
-            <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
-              <i class="fa fa-envelope-o"></i>
-              <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
-            </a>
-            <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
-              <i class="fa fa-linkedin"></i>
-              <i class="fa fa-linkedin light-blue-800"></i>
-            </a>
-            <div class="text-xs">
-              <em>Contact: <strong>{{i.contact_no}}</strong></em>
-            </div>
-          </div>
-      </div>
-    {% endfor %}
-  </div>
-</div>
-
-
-
-
-
-</div>
-
-<!-- ############ PAGE END-->
-
-    </div>
-  </div>
-  <!-- / -->
-
-  <!-- theme switcher -->
-  <div id="switcher">
-    <div class="switcher box-color dark-white text-color" id="sw-theme">
-      <a href ui-toggle-class="active" target="#sw-theme" class="box-color dark-white text-color sw-btn">
-        <i class="fa fa-gear"></i>
-      </a>
-      <div class="box-header">
-        <h2>Theme Switcher</h2>
-      </div>
-      <div class="box-divider"></div>
-      <div class="box-body">
-        <p class="hidden-md-down">
-          <label class="md-check m-y-xs"  data-target="folded">
-            <input type="checkbox">
-            <i class="green"></i>
-            <span class="hidden-folded">Folded Aside</span>
-          </label>
-          
-        </p>
-        
-        <p>Themes:</p>
-        <div data-target="bg" class="row no-gutter text-u-c text-center _600 clearfix">
-          <label class="p-a col-sm-6 light pointer m-0">
-            <input type="radio" name="theme" value="" hidden>
-            Light
-          </label>
-          
-          <label class="p-a col-sm-6 dark pointer m-0">
-            <input type="radio" name="theme" value="dark" hidden>
-            Dark
-          </label>
-          
-        </div>
-      </div>
-    </div>
-
-    </div>
-  </div>
-  <!-- / -->
-
-<!-- ############ LAYOUT END-->
-
-  </div>
-<!-- build:js scripts/app.html.js -->
-<!-- jQuery -->
-<script src="{% static 'script/jquery.js'%}"></script>
-<!-- Bootstrap -->
-  <script src="{% static 'script/tether.min.js'%}"></script>
-  <script src="{% static 'script/bootstrap.js'%}"></script>
-<!-- core -->
-  <script src="{% static 'script/underscore-min.js'%}"></script>
-  <script src="{% static 'script/jquery.storageapi.min.js'%}"></script>
-  <script src="{% static 'script/pace.min.js'%}"></script>
-
-  {% comment %} <script src="{% static 'script/config.lazyload.js'%}"></script> {% endcomment %}
-
-  <script src="{% static 'script/palette.js'%}"></script>
-  <script src="{% static 'script/ui-load.js'%}"></script>
-  <script src="{% static 'script/ui-jp.js' %}"></script>
-  <script src="{% static 'script/ui-include.js'%}"></script>
-  <script src="{% static 'script/ui-device.js'%}"></script>
-  <script src="{% static 'script/ui-form.js'%}"></script>
-  <script src="{% static 'script/ui-nav.js'%}"></script>
-  <script src="{% static 'script/ui-screenfull.js'%}"></script>
-  <script src="{% static 'script/ui-scroll-to.js'%}"></script>
-  <script src="{% static 'script/ui-toggle-class.js'%}"></script>
-  {% comment %} <script src="{% static 'script/screenfull.min.js'%}"></script> {% endcomment %}
-  <script src="{% static 'script/app.js'%}"></script>
-  <!-- apexcharts -->
-  <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
-  <!-- Chart JS -->
-  <script src="{% static 'scripts/chartjs.js' %}"></script>
-  <script src="{% static 'scripts/dashboard.init.js' %}"></script>
-  <!-- ajax -->
-  {% comment %} <script src="{% static 'script/jquery.pjax.js'%}"></script> {% endcomment %}
-  <script src="{% static 'script/ajax.js'%}"></script>
-<!-- endbuild -->
-</body>
-</html>
-
