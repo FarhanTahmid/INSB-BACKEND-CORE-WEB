@@ -16,14 +16,11 @@ class MediaTeam:
     def get_co_ordinator():
         roles = Roles_and_Position.objects.get(is_co_ordinator=True)
         members = Members.objects.filter(position=roles,team=MediaTeam.get_team_id())
-        print(members)
         return members
 
     def get_officer():
         roles = Roles_and_Position.objects.get(is_officer = True,is_co_ordinator=False)
         members = Members.objects.filter(position = roles,team=MediaTeam.get_team_id())
-        
-        print(roles,members)
         return members
 
     def get_member_with_postion(position):
@@ -162,6 +159,19 @@ class MediaTeam:
         for i in range(len(load_team_members)):
             team_members.append(load_team_members[i])
         return team_members
+    
+    
+    def get_volunteers():
+        team_members=MediaTeam.load_team_members()
+        core_volunteer=[]
+        team_volunteer=[]
+        for i in team_members:
+            if(i.position.is_volunteer):
+                if(i.position.is_core_volunteer):
+                    core_volunteer.append(i)
+                else:
+                    team_volunteer.append(i)
+        return core_volunteer,team_volunteer    
     
     def media_manage_team_access_modifications(manage_team_access, event_access, ieee_id):
         try:
