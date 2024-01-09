@@ -104,7 +104,7 @@
 
 
             <br>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"><span><b>Messages</b></span> for <span style="color:#00629B;">{{sc_ag_info.short_form}}</b></span></h2>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"><span><b>Messages</b></span> for <span style="color:#00629B;">{% if sc_ag_info %}{{sc_ag_info.short_form}}{% else %}INSB{% endif %}</b></span></h2>
             
             <div class="container">
               <br>
