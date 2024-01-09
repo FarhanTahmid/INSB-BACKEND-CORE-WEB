@@ -2,7 +2,7 @@ import os
 from bs4 import BeautifulSoup
 from django.http import Http404
 from insb_port import settings
-from main_website.models import About_IEEE, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, Page_Link
+from main_website.models import About_IEEE, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
@@ -1053,6 +1053,40 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
+    def set_ieee_region_10_page(ieee_region_10_description,ieee_region_10_history_link,young_professionals_description,women_in_engineering_ddescription,
+                                    student_and_member_activities_description,educational_activities_and_involvements_description,industry_relations_description,
+                                    membership_development_description,events_and_conference_description,home_page_link,website_link,membership_inquiry_link,
+                                    for_volunteers_link,contact_number,ieee_region_10_image,young_professionals_image,membership_development_image,
+                                    background_picture_parallax,events_and_conference_image):
+        try:
+            ieee_region_10, created = IEEE_Region_10.objects.get_or_create(id=1)
+            ieee_region_10.ieee_region_10_description = ieee_region_10_description
+            ieee_region_10.ieee_region_10_history_link = ieee_region_10_history_link
+            ieee_region_10.young_professionals_description = young_professionals_description
+            ieee_region_10.women_in_engineering_ddescription = women_in_engineering_ddescription
+            ieee_region_10.student_and_member_activities_description =student_and_member_activities_description
+            ieee_region_10.educational_activities_and_involvements_description = educational_activities_and_involvements_description
+            ieee_region_10.industry_relations_description = industry_relations_description
+            ieee_region_10.membership_development_description = membership_development_description
+            ieee_region_10.events_and_conference_description = events_and_conference_description
+            ieee_region_10.home_page_link = home_page_link
+            ieee_region_10.website_link = website_link
+            ieee_region_10.membership_inquiry_link = membership_inquiry_link
+            ieee_region_10.for_volunteers_link = for_volunteers_link
+            ieee_region_10.contact_number = contact_number
+            ieee_region_10.ieee_region_10_image = ieee_region_10_image
+            ieee_region_10.young_professionals_image = young_professionals_image
+            ieee_region_10.membership_development_image = membership_development_image
+            ieee_region_10.background_picture_parallax = background_picture_parallax
+            ieee_region_10.events_and_conference_image = events_and_conference_image
+
+            ieee_region_10.save()
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
     def checking_length(about_details, community_details, start_with_ieee_details, collaboration_details,
                         publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
                         students_and_member_activities_details, quality_details):
@@ -1152,6 +1186,32 @@ class Branch:
             
             ieee_nsu_student_branch.save()
             return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def ieee_region_10_page_delete_image(image_id,image_path):
+        try:
+            ieee_region_10 = IEEE_Region_10.objects.get(id=1)
+            path = settings.MEDIA_ROOT+str(image_path)
+
+            if(image_id == 'ieee_region_10_picture'):
+                ieee_region_10.ieee_region_10_image = None
+                os.remove(path)
+            elif(image_id == 'young_professionals_picture'):
+                ieee_region_10.young_professionals_image = None
+                os.remove(path)
+            elif(image_id == 'membership_development_picture'):
+                ieee_region_10.membership_development_image = None
+                os.remove(path)
+            elif(image_id == 'background_picture'):
+                ieee_region_10.background_picture_parallax = None
+                os.remove(path)
+            elif(image_id == 'events_and_conference_picture'):
+                ieee_region_10.events_and_conference_image = None
+                os.remove(path)
 
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)

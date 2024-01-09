@@ -301,3 +301,33 @@ class Toolkit(models.Model):
         verbose_name="Toolkit"
     def __str__(self) -> str:
         return self.title
+    
+class IEEE_Region_10(models.Model):
+    ieee_region_10_description = models.TextField(null=True,blank=True)
+    ieee_region_10_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Region 10/Region 10 Image/")
+    ieee_region_10_history_link = models.CharField(null=True,blank=True,max_length=200)
+    young_professionals_description = models.TextField(null=True,blank=True)
+    young_professionals_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Region 10/Young Professionals Image/")
+    women_in_engineering_ddescription = models.TextField(null=True,blank=True)
+    student_and_member_activities_description = models.TextField(null=True,blank=True)
+    educational_activities_and_involvements_description = models.TextField(null=True,blank=True)
+    industry_relations_description = models.TextField(null=True,blank=True)
+    membership_development_description = models.TextField(null=True,blank=True)
+    membership_development_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Region 10/Membership Development Image/")
+    background_picture_parallax = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Region 10/Parallax Background Image/")
+    events_and_conference_description = models.TextField(null=True,blank=True)
+    events_and_conference_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Region 10/Events and Conference Image/")
+    home_page_link = models.CharField(null=True,blank=True,max_length=200)
+    website_link = models.CharField(null=True,blank=True,max_length=200)
+    membership_inquiry_link = models.CharField(null=True,blank=True,max_length=200)
+    for_volunteers_link = models.CharField(null=True,blank=True,max_length=200)
+    contact_number = models.CharField(null=True,blank=True,max_length=150)
+
+    class Meta:
+        verbose_name="IEEE Region 10"
+    def save(self, *args, **kwargs):
+        # Override the save method to ensure only one instance exists
+        self.id = 1  # Set the primary key to 1 to always update the same row
+        super(IEEE_Region_10, self).save(*args, **kwargs)
+    def __str__(self) -> str:
+        return str(self.pk)

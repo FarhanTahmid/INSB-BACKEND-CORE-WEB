@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from main_website.forms import About_IEEE_Bangladesh_Section_Form, About_IEEE_Form, About_IEEE_NSU_Student_Branch_Form
-from .models import Research_Papers,Blog_Category,Blog,IEEE_Bangladesh_Section,IEEE_Bangladesh_Section_Gallery,HomePage_Thoughts,About_IEEE,IEEE_NSU_Student_Branch,Page_Link
+from main_website.forms import About_IEEE_Bangladesh_Section_Form, About_IEEE_Form, About_IEEE_NSU_Student_Branch_Form, About_IEEE_Region_10_Form
+from .models import Research_Papers,Blog_Category,Blog,IEEE_Bangladesh_Section,IEEE_Bangladesh_Section_Gallery,HomePage_Thoughts,About_IEEE,IEEE_NSU_Student_Branch,IEEE_Region_10,Page_Link
 # Register your models here.
 ###Society AGS###
 # RAS
@@ -76,4 +76,9 @@ class Page_Link(admin.ModelAdmin):
 @admin.register(IEEE_NSU_Student_Branch)
 class IEEE_NSU_Student_Branch(admin.ModelAdmin):
     form=About_IEEE_NSU_Student_Branch_Form
+    list_display = ['id']
+
+@admin.register(IEEE_Region_10)
+class IEEE_Region_10(admin.ModelAdmin):
+    form = About_IEEE_Region_10_Form
     list_display = ['id']

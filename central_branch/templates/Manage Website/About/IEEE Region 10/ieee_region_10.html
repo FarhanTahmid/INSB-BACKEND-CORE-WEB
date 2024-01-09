@@ -135,7 +135,7 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="ieee_region_10_details"></textarea>
+                                name="ieee_region_10_details">{{ieee_region_10.ieee_region_10_description}}</textarea>
                                 <p id="ieee_region_10CharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
@@ -166,7 +166,8 @@
                                 type="text"
                                 autocomplete="off"
                                 required
-                                name="region_10_history_link"/>
+                                name="region_10_history_link"
+                                value="{{ieee_region_10.ieee_region_10_history_link}}"/>
                             </div>  
 
                             <br>
@@ -183,7 +184,7 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="young_professionals_details"></textarea>
+                                name="young_professionals_details">{{ieee_region_10.young_professionals_description}}</textarea>
                                 <p id="young_professionalsCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
@@ -244,7 +245,7 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="women_in_engineering_details"></textarea>
+                                name="women_in_engineering_details">{{ieee_region_10.women_in_engineering_ddescription}}</textarea>
                                 <p id="women_in_engineeringCharacterCount" style="color: red;">Required</p>
 
                             </div>
@@ -279,7 +280,7 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="student_and_member_activities_details"></textarea>
+                                name="student_and_member_activities_details">{{ieee_region_10.student_and_member_activities_description}}</textarea>
                                 <p id="student_and_member_activitiesCharacterCount" style="color: red;">Required</p>
 
                             </div>
@@ -314,7 +315,7 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="educational_activities_and_involvements_details"></textarea>
+                                name="educational_activities_and_involvements_details">{{ieee_region_10.educational_activities_and_involvements_description}}</textarea>
                                 <p id="educational_activities_and_involvementsCharacterCount" style="color: red;">Required</p>
 
                             </div>
@@ -351,7 +352,7 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="industry_relations_details"></textarea>
+                                name="industry_relations_details">{{ieee_region_10.industry_relations_description}}</textarea>
                                 <p id="industry_relationsCharacterCount" style="color: red;">Required</p>
 
                             </div>
@@ -395,7 +396,7 @@
                                  <textarea 
                                  class="form-control" 
                                  type="text"
-                                 name="membership_development_details"></textarea>
+                                 name="membership_development_details">{{ieee_region_10.membership_development_description}}</textarea>
                                  <p id="membership_developmentCharacterCount" style="color: red;">Required</p>
                              </div>
                              <br>
@@ -478,7 +479,7 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="events_and_conference_details"></textarea>
+                                name="events_and_conference_details">{{ieee_region_10.events_and_conference_description}}</textarea>
                                 <p id="events_and_conferenceCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
@@ -540,7 +541,8 @@
                                     type="text"
                                     autocomplete="off"
                                     required
-                                    name="home_page_link"/>
+                                    name="home_page_link"
+                                    value="{{ieee_region_10.home_page_link}}"/>
                             </div>
                             <br>
 
@@ -552,7 +554,8 @@
                                     type="text"
                                     autocomplete="off"
                                     required
-                                    name="website_link"/>
+                                    name="website_link"
+                                    value="{{ieee_region_10.website_link}}"/>
                             </div>
                             <br>
 
@@ -564,7 +567,8 @@
                                     type="text"
                                     autocomplete="off"
                                     required
-                                    name="membership_inquiry_link"/>
+                                    name="membership_inquiry_link"
+                                    value="{{ieee_region_10.membership_inquiry_link}}"/>
                             </div>
                             <br>
 
@@ -576,7 +580,8 @@
                                     type="text"
                                     autocomplete="off"
                                     required
-                                    name="for_volunteers_link"/>
+                                    name="for_volunteers_link"
+                                    value="{{ieee_region_10.for_volunteers_link}}"/>
                             </div>
                             <br>
                             
@@ -588,7 +593,8 @@
                                     type="text"
                                     autocomplete="off"
                                     required
-                                    name="contact_number"/>
+                                    name="contact_number"
+                                    value="{{ieee_region_10.contact_number}}"/>
                             </div>
 
                             <br>
@@ -613,9 +619,7 @@
                 <div>
             </div>
 
-
-
-            <!-- for showing image except for gallery -->
+            <!-- for showing image -->
             <div class="modal fade" id="showImageModal" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
@@ -626,7 +630,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <img src="https://images.unsplash.com/photo-1549558549-415fe4c37b60?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8M3x8fGVufDB8fHx8fA%3D%3D" class="img-fluid w-100" alt="Image">
+                            <img id="modal_image" src="" class="img-fluid w-100" alt="Image">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
@@ -637,7 +641,7 @@
             </div>
 
 
-            <!-- Confirmation modal for deleting images-->
+            <!-- Confirmation modal for deleting images -->
             <div class="modal fade" id="ConfirmDeleteModalForImages" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForImagesLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-top" role="document">
                 <div class="modal-content">
@@ -650,8 +654,8 @@
                     <div class="modal-body">
                         <form method="POST">
                             {% csrf_token %}
-                            <p><input id="image_delete" name= "image_delete" type="hidden">
-                                <input id="image_id" name= "image_id" type="hidden" ></p>
+                        <p><input id="image_delete" name= "image_delete" type="hidden">
+                            <input id="image_id" name= "image_id" type="hidden" ></p>
                         Are you sure you want to delete the Image?
                     </div>
                     <div class="modal-footer">
@@ -662,6 +666,8 @@
                 </div>
             </div>
             </div>
+
+
 
             <!-- Updated Modal for adding links -->
             <div class="modal fade" id="AddLinksModal" tabindex="-1" role="dialog" aria-labelledby="AddLinksModalLabel" aria-hidden="true">
@@ -702,6 +708,7 @@
                         </div>
                         <div class="modal-footer">
                             <!-- Change the button label and name attribute -->
+                            <input type="hidden" name="link_category" id="link_category"/>
                             <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_link" value="Add">
                             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                         </div>
@@ -734,7 +741,7 @@
                                             autocomplete="off"
                                             required
                                             name="title"
-                                            value="" 
+                                            id="link_title"
                                         />
                                     <br>
                                     <label>Links:</label>
@@ -743,13 +750,14 @@
                                     class="form-control"
                                     type="url"
                                     autocomplete="off"
-                                    id="field1"
+                                    id="link"
                                     name="form_link_edit"
                                     value=""/>
                                     <input type="hidden" name = "link_pk" value ="{{link.pk}}">
                                 </div>
                         </div>
                         <div class="modal-footer">
+                            <input type="hidden" name="link_id" id="link_id"/>
                             <input type="submit" name = "update_link" class="btn btn-outline-primary txt-primary buttons" value="Update">
                             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                         </div>
@@ -776,6 +784,7 @@
                         Are you sure you want to delete this link?
                     </div>
                     <div class="modal-footer">
+                        <input type="hidden" name="link_id" id="remove_link_id"/>
                         <input type="submit" class="btn btn-outline-danger" value="Confirm" name = "remove_form_link">
                         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                     </div>
@@ -784,14 +793,9 @@
             </div>
             </div>
 
+
         </div>
     </div>
-
-
-
-
-
-
 
 
       <!--Script for CKEditor Control-->
