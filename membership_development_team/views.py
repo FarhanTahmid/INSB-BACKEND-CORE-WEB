@@ -21,7 +21,7 @@ from system_administration.render_access import Access_Render
 from django.core.mail import send_mail
 from . import email_sending
 from central_branch.renderData import Branch
-from users.renderData import LoggedinUser
+from users.renderData import LoggedinUser,PanelMembersData
 from port.renderData import PortData
 
 
@@ -44,7 +44,7 @@ def md_team_homepage(request):
         'co_ordinators':co_ordinators,
         'incharges':in_charges,
         'core_volunteers':core_volunteers,
-        'volunteers':volunteers,
+        'team_volunteers':volunteers,
         'media_url':settings.MEDIA_URL,
         'user_data':user_data,
     }
@@ -818,7 +818,7 @@ def data_access(request):
     data_access=renderData.MDT_DATA.load_mdt_data_access()
     team_members=renderData.MDT_DATA.load_team_members()
     #load all position for insb members
-    position=Branch.load_roles_and_positions()
+    position=PortData.get_all_volunteer_position_with_sc_ag_id(request=request,sc_ag_primary=1)
     
     # Excluding position of EB, Faculty and SC-AG members
     for i in position:
@@ -860,7 +860,6 @@ def data_access(request):
         
         if request.POST.get('access_remove'):
             '''To remove record from data access table'''
-            
             ieeeId=request.POST['access_ieee_id']
             if(renderData.MDT_DATA.remove_member_from_data_access(ieee_id=ieeeId)):
                 messages.info(request,"Removed member from View Permission Controls")
@@ -873,10 +872,12 @@ def data_access(request):
         if request.POST.get('remove_member'):
             '''To remove member from team table'''
             try:
+                get_current_panel=Branch.load_current_panel()
+                PanelMembersData.remove_member_from_panel(request=request,ieee_id=request.POST['remove_ieee_id'],panel_id=get_current_panel.pk)
                 Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
                 try:
                     MDT_Data_Access.objects.filter(ieee_id=request.POST['remove_ieee_id']).delete()
-                    messages.error(request,f"A Member with IEEE ID {request.POST['remove_ieee_id']} was Removed Successfully From Team")
+                    messages.warning(request,f"A Member with IEEE ID {request.POST['remove_ieee_id']} was Removed Successfully From Team")
                 except MDT_Data_Access.DoesNotExist:
                     messages.error(request,"Something went wrong! Please, try again!")
                     return redirect('membership_development_team:data_access')

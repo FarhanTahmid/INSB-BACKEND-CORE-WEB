@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Manage Team | Content Writing & Publications Team</title>
+    <title>Manage Team | Events & Management Team</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
     {% block common_css %}
@@ -93,7 +93,7 @@
         <!-- navbar content -->
         <div id="content" class="app-content box-shadow-z0" role="main">
             {% block navbar %}
-                {% include 'content_navbar.html' %}
+                {% include 'emt_navbar.html' %}
             {% endblock navbar %}
 
         </div>
@@ -105,7 +105,7 @@
             <!--Start from here-->
 
             <br>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Content Writing & Publications Team - <span style="color:#00629B;"><b>Manage Team</b></span></h2>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Events & Management Team - <span style="color:#00629B;"><b>Manage Team</b></span></h2>
             <br>
             <!--Messages-->
             <div style="justify-content:center; text-align:center;">
@@ -453,16 +453,18 @@
         {% include "common_js.html" %}
     {% endblock common_js %}
 
+    <!--Script for table search-->
+    <!--Script for table search-->
     <script>
-        $(document).ready(function() {
-            $("#searchInput").on("keyup", function() {
-                var value = $(this).val().toLowerCase();
-                $("#data tbody tr").filter(function() {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                });
-            });
-        });
-      </script>
+      $(document).ready(function() {
+          $("#searchInput").on("keyup", function() {
+              var value = $(this).val().toLowerCase();
+              $("#data tbody tr").filter(function() {
+                  $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+              });
+          });
+      });
+    </script>
 
     <!--Script for table search 2-->
     <script>

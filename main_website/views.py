@@ -1082,3 +1082,5 @@ def contact(request):
 
     return render(request, 'Contact/contact.html', context)
 
+def toolkit(request):
+    return render(request, 'Publications/Toolkit/toolkit.html')

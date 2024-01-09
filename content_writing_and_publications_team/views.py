@@ -18,17 +18,25 @@ import logging
 from datetime import datetime
 import traceback
 from .forms import Content_Form
+from users.renderData import PanelMembersData
 
 logger=logging.getLogger(__name__)
 # Create your views here.
 
 @login_required
 def homepage(request):
-
     sc_ag=PortData.get_all_sc_ag(request=request)
 
+    # get team members
+    get_officers=ContentWritingTeam.get_officers()
+    get_volunteers=ContentWritingTeam.get_volunteers()
+    
     context = {
         'all_sc_ag':sc_ag,
+        'co_ordinators':get_officers[0],
+        'incharges':get_officers[1],
+        'core_volunteers':get_volunteers[0],
+        'team_volunteers':get_volunteers[1]
     }
     return render(request,"Homepage/content_homepage.html", context)
 
@@ -44,13 +52,7 @@ def manage_team(request):
         data_access = ContentWritingTeam.load_manage_team_access()
         team_members = ContentWritingTeam.load_team_members()
         #load all position for insb members
-        position=Branch.load_roles_and_positions()
-
-        # Excluding position of EB, Faculty and SC-AG members
-        for i in position:
-            if(i.is_eb_member or i.is_faculty or i.is_sc_ag_eb_member):
-                position=position.exclude(pk=i.pk)
-
+        position=PortData.get_all_volunteer_position_with_sc_ag_id(request=request,sc_ag_primary=1)
         #load all insb members
         all_insb_members=Members.objects.all()
         #load all current panel members
@@ -64,12 +66,14 @@ def manage_team(request):
                 position=request.POST.get('position')
                 for member in members_to_add:
                     ContentWritingTeam.add_member_to_team(member,position)
+                    messages.success(request,f"{member} added successfully in the Team")
                 return redirect('content_writing_and_publications_team:manage_team')
             
             if (request.POST.get('remove_member')):
                 '''To remove member from team table'''
                 try:
-                    Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
+                    current_panel=Branch.load_current_panel()
+                    PanelMembersData.remove_member_from_panel(request=request,panel_id=current_panel.pk,ieee_id=request.POST['remove_ieee_id'])
                     try:
                         CWP_Data_Access.objects.filter(ieee_id=request.POST['remove_ieee_id']).delete()
                     except CWP_Data_Access.DoesNotExist:

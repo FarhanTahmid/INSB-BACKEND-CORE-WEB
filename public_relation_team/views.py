@@ -23,7 +23,8 @@ from django.core.files.storage import default_storage
 from users.renderData import LoggedinUser
 from django.utils.datastructures import MultiValueDictKeyError
 from .render_email import PRT_Email_System
-
+from port.renderData import PortData
+from users.renderData import PanelMembersData
 # Create your views here.
 
 def team_home_page(request):
@@ -245,7 +246,7 @@ def manage_team(request):
     data_access = PRT_Data.load_manage_team_access()
     team_members = PRT_Data.load_team_members()
     #load all position for insb members
-    position=Branch.load_roles_and_positions()
+    position=PortData.get_all_volunteer_position_with_sc_ag_id(request=request,sc_ag_primary=1)
     #load all insb members
     all_insb_members=Members.objects.all()
 
@@ -263,6 +264,8 @@ def manage_team(request):
         if (request.POST.get('remove_member')):
             '''To remove member from team table'''
             try:
+                get_current_panel=Branch.load_current_panel()
+                PanelMembersData.remove_member_from_panel(request=request,ieee_id=request.POST['remove_ieee_id'],panel_id=get_current_panel.pk)
                 Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
                 try:
                     Manage_Team.objects.filter(ieee_id=request.POST['remove_ieee_id']).delete()
@@ -306,7 +309,6 @@ def manage_team(request):
                     elif(PRT_Data.add_member_to_manage_team_access(ieeeID)==True):
                         messages.info(request,f"Member with {ieeeID} was added to the team table!")
                         return redirect('public_relation_team:manage_team')
-
     context={
         'data_access':data_access,
         'members':team_members,
