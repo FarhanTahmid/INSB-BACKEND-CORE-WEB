@@ -1175,14 +1175,42 @@ def faq(request):
                 return redirect("central_branch:faq")
             
             if request.POST.get('update_faq'):
-
+                #when user wants to update the exisitng question answers by clicking update
+                #getting them from the page
                 questions = request.POST.getlist('faq_question')
                 answers = request.POST.getlist('faq_question_answer')
+                category_id = request.POST.get('category_id')
+                title = request.POST.get('saved_title')
 
-                print(questions)
-                print(answers)
-                
+                #passing them in function
+                if Branch.update_question_answer(category_id,title,questions,answers):
+                    messages.success(request,"Updated Successfully!")
+                else:
+                    messages.error(request,"Error Occured! Could not update")
+                return redirect("central_branch:faq")
 
+            if request.POST.get('faq_question_answer_delete'):
+
+                #when user clicks delete button
+                #getting the id of title and of the question they want to delete
+                cat_id = request.POST.get('category_id_delete')
+                question_id = request.POST.get('question_answer_id_delete')
+
+                if Branch.delete_question_answer(cat_id,question_id):
+                    messages.success(request,"Deleted Successfully!")
+                else:
+                    messages.error(request,"Error Occured! Could not delete")
+                return redirect("central_branch:faq")
+            
+            if request.POST.get('category_delete'):
+                #if user wants to delete an entire category of FAQ
+
+                id = request.POST.get('delete_category')
+                if Branch.delete_faq_category(id):
+                    messages.success(request,"Deleted Successfully!")
+                else:
+                    messages.error(request,"Error Occured! Could not delete")
+                return redirect("central_branch:faq")
 
         context={
             'all_sc_ag':sc_ag,
