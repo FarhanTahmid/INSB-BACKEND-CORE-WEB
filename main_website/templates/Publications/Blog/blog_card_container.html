@@ -103,13 +103,27 @@
       .search_blog input:hover{
         background-color: #75787b25;
       }
-          @media screen and (max-width: 1200px) {
-            .search_blog {
-                width: 90%;
-                max-width: 960px;
-            }
+      @media screen and (max-width: 1200px) {
+        .search_blog {
+            width: 90%;
+            max-width: 960px;
         }
-        
+        .card_container{
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+    
+    @media screen and (max-width: 770px) {
+        .card_container{
+            grid-template-columns: 1fr;
+        }
+    }
+    @media screen and (max-width: 370px) {
+        .card{
+            width: 300px;
+        }
+    }
+    
 
 </style>
 <!-- Search Section -->
@@ -129,6 +143,48 @@
     <div>
         <div class="card_container">
             {% for i in blogs %}
+            <div class="card">
+                <div class="image">
+                    <img src="media_files/{{i.blog_banner_picture}}" alt="Sample photo">
+                </div>
+                <div class="card_content">
+                    <a href="{% url 'main_website:blog_description' i.pk %}"><h5>{{i.title}}</h5></a>
+                    <i class="fa-regular fa-clock"></i>
+                    <span>{{i.date}}</span>
+                    <i class="fa-solid fa-align-left"></i><span> {{i.writer_name}} •</span><br>
+                    <p>{{i.short_description | safe}}</p>
+                    <a href="{% url 'main_website:blog_description' i.pk %}">Read More</a>
+        
+                </div>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <img src="media_files/{{i.blog_banner_picture}}" alt="Sample photo">
+                </div>
+                <div class="card_content">
+                    <a href="{% url 'main_website:blog_description' i.pk %}"><h5>{{i.title}}</h5></a>
+                    <i class="fa-regular fa-clock"></i>
+                    <span>{{i.date}}</span>
+                    <i class="fa-solid fa-align-left"></i><span> {{i.writer_name}} •</span><br>
+                    <p>{{i.short_description | safe}}</p>
+                    <a href="{% url 'main_website:blog_description' i.pk %}">Read More</a>
+        
+                </div>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <img src="media_files/{{i.blog_banner_picture}}" alt="Sample photo">
+                </div>
+                <div class="card_content">
+                    <a href="{% url 'main_website:blog_description' i.pk %}"><h5>{{i.title}}</h5></a>
+                    <i class="fa-regular fa-clock"></i>
+                    <span>{{i.date}}</span>
+                    <i class="fa-solid fa-align-left"></i><span> {{i.writer_name}} •</span><br>
+                    <p>{{i.short_description | safe}}</p>
+                    <a href="{% url 'main_website:blog_description' i.pk %}">Read More</a>
+        
+                </div>
+            </div>
             <div class="card">
                 <div class="image">
                     <img src="media_files/{{i.blog_banner_picture}}" alt="Sample photo">
