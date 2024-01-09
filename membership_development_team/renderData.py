@@ -6,6 +6,7 @@ from system_administration.models import MDT_Data_Access
 from system_administration.render_access import Access_Render
 from datetime import date
 from datetime import datetime
+from central_branch import renderData
 
 
 
@@ -134,7 +135,7 @@ class MDT_DATA:
         
         '''This function loads all the team members for membership development team'''
 
-        load_team_members=Members.objects.filter(team=MDT_DATA.get_team_id()).order_by('position')
+        load_team_members=renderData.Branch.load_team_members(team_primary=7)
         team_members=[]
         for i in range(len(load_team_members)):
             team_members.append(load_team_members[i])
