@@ -43,11 +43,13 @@ class ResearchCategory(models.Model):
 class Research_Papers(models.Model):
     title = models.CharField(null=False,blank=False,max_length=200)
     category=models.ForeignKey(ResearchCategory,null=True,blank=True,on_delete=models.CASCADE)
+    group=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
     research_banner_picture = models.ImageField(null=False,blank=False,default='main_website_files/Research_pictures/default_research_banner_picture.png',upload_to='main_website_files/Research_pictures/')
     author_names = RichTextField(null=False,blank=False,max_length=300)
-    short_description=RichTextField(null=False,blank=False,max_length=500)
+    short_description=RichTextField(null=False,blank=False,max_length=3000,verbose_name="Abstract")
     publish_date=models.DateField(null=False,blank=False,help_text = "<br>Please use the following format: <em>YYYY-MM-DD</em>.")
     publication_link = models.URLField(null=False)
+    is_requested=models.BooleanField(null=False,blank=False,default=False)
     publish_research=models.BooleanField(null=False,blank=False,default=False)
 
     class Meta:
@@ -231,3 +233,12 @@ class ExemplaryMembers(models.Model):
     def __str__(self) -> str:
         return self.member_name
 
+class Toolkit(models.Model):
+    title=models.CharField(null=False,blank=False,max_length=100)
+    picture=ResizedImageField(null=True,blank=True,upload_to='main_website_files/toolkit_pictures/')
+    color_codes=RichTextField(null=True,blank=True,max_length=500)
+    
+    class Meta:
+        verbose_name="Toolkit"
+    def __str__(self) -> str:
+        return self.title

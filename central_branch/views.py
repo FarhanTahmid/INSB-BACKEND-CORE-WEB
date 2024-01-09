@@ -487,7 +487,7 @@ def manage_research(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # load all research papers
-    researches = Research_Papers.objects.all().order_by('-publish_date')
+    researches = Research_Papers.objects.filter(is_requested=False).order_by('-publish_date','publish_research')
     '''function for adding new Research paper'''
     if request.method == "POST":
         add_research_form=ResearchPaperForm(request.POST,request.FILES)
@@ -515,6 +515,41 @@ def manage_research(request):
         'form2':form2,'all_researches':researches,
     }
     return render(request,"Manage Website/Publications/Research Paper/manage_research_paper.html",context=context)
+
+@login_required
+def manage_research_request(request):
+    # get all research requests
+    research_requests=Research_Papers.objects.filter(is_requested=True).order_by('-publish_date')
+    if(request.method=="POST"):
+        if(request.POST.get('remove_research')):
+            MainWebsiteRenderData.delete_research_paper(request=request)
+            return redirect('central_branch:manage_research_request')
+    context={
+        'all_research_requests':research_requests
+    }
+    return render(request,"Manage Website/Publications/Research Paper/manage_paper_request.html",context=context)
+
+@login_required
+def publish_research_request(request,pk):
+    # get research to publish
+    research_to_publish=get_object_or_404(Research_Papers,pk=pk)
+    if(request.method=="POST"):
+        research_form=ResearchPaperForm(request.POST,request.FILES,instance=research_to_publish)
+        if(request.POST.get('publish_research')):
+            if(research_form.is_valid()):
+                research_to_publish.is_requested=False
+                research_to_publish.publish_research=True
+                research_to_publish.save()
+                research_form.save()
+                messages.success(request,f"{research_to_publish.title} was Published in the Main Website")
+                return redirect('central_branch:manage_research_request')
+    else:
+        research_form=ResearchPaperForm(instance=research_to_publish)            
+    context={
+        'research':research_to_publish,
+        'form':research_form,
+    }
+    return render(request,"Manage Website/Publications/Research Paper/publish_research.html",context=context)
 
 @login_required
 def update_researches(request,pk):
@@ -606,6 +641,18 @@ def update_blogs(request,pk):
 def blog_requests(request):
     # get all blog requests
     all_requested_blogs=Blog.objects.filter(is_requested=True).order_by('-date')
+    
+    if(request.method=="POST"):
+        if(request.POST.get('remove_blog')):
+            get_blog_to_remove=Blog.objects.get(pk=request.POST['blog_pk'])
+            # delete blog banner picture from system at first
+            if(os.path.isfile(get_blog_to_remove.blog_banner_picture.path)):
+                os.remove(get_blog_to_remove.blog_banner_picture.path)
+            # remove the requested blog object from database
+            get_blog_to_remove.delete()
+            messages.warning(request,"The blog was deleted from requests!")
+            return redirect('central_branch:blog_requests')
+    
     context={
         'all_requested_blogs':all_requested_blogs
     }
@@ -819,12 +866,37 @@ def ieee_nsu_student_branch(request):
 
 @login_required
 def faq(request):
-    sc_ag=PortData.get_all_sc_ag(request=request)
 
-    context={
-        'all_sc_ag':sc_ag,
-    }
-    return render(request,'Manage Website/About/FAQ/faq.html', context)
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+
+
+        if request.method == "POST":
+            #when user submits a new category title
+            if request.POST.get('add_category'):
+                #getting the new title for the category
+                category_title = request.POST.get('category_title')
+            
+            if request.POST.get('update_faq'):
+
+                questions = request.POST.getlist('faq_question')
+                answers = request.POST.getlist('faq_question_answer')
+
+                print(questions)
+                print(answers)
+                
+
+
+        context={
+            'all_sc_ag':sc_ag,
+        }
+        return render(request,'Manage Website/About/FAQ/portal_faq.html', context)
+    
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 
 
@@ -1860,3 +1932,49 @@ def event_preview(request, event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
+
+@login_required
+def manage_toolkit(request):
+    # get all toolkits
+    all_toolkits=Toolkit.objects.all().order_by('-pk')
+    if(request.method=="POST"):
+        toolkit_form=ToolkitForm(request.POST,request.FILES)
+        if(request.POST.get('add_item')):
+            if(toolkit_form.is_valid()):
+                toolkit_form.save()
+                messages.success(request,"A new Toolkit Item was added!")
+                return redirect('central_branch:manage_toolkit')
+        if(request.POST.get('remove_toolkit')):
+            item_to_delete=Toolkit.objects.get(pk=request.POST['toolkit_pk'])
+            # first delete the picture from the filesystem
+            if(os.path.isfile(item_to_delete.picture.path)):
+                os.remove(item_to_delete.picture.path)
+            item_to_delete.delete()
+            messages.warning(request,"A Toolkit Item was deleted!")
+            return redirect('central_branch:manage_toolkit')
+    else:
+        toolkit_form=ToolkitForm
+    context={
+        'all_toolkits':all_toolkits,
+        'form':toolkit_form,
+    }
+    return render(request,"Manage Website/Publications/Toolkit/manage_toolkit.html",context=context)
+
+@login_required
+def update_toolkit(request,pk):
+    # toolkit to update
+    toolkit_to_update=get_object_or_404(Toolkit,pk=pk)
+    if(request.method=="POST"):
+        toolkit_form=ToolkitForm(request.POST,request.FILES,instance=toolkit_to_update)
+        if(request.POST.get('update_toolkit_item')):
+            if(toolkit_form.is_valid()):
+                toolkit_form.save()
+                messages.success(request,"Toolkit Item was updated!")
+                return redirect('central_branch:manage_toolkit')
+    else:
+        toolkit_form=ToolkitForm(instance=toolkit_to_update)
+    context={
+        'toolkit':toolkit_to_update,
+        'form':toolkit_form,
+    }
+    return render(request,"Manage Website/Publications/Toolkit/update_toolkit.html",context=context)
