@@ -137,15 +137,16 @@
                             <hr>
                         <div id="captions-container" class="mt-3">
                                 <label class="mb-0">Categories:</label> 
-                            
+                                {% for title in all_titles%}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal{{link.pk}}">Static</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal{{title.pk}}">{{title.title}}</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal"  onclick="openModal('{{link.pk}}')">✖</button>
                                     </div>
                                 </div>
+                                {% endfor %}
                                 
 
                                 
@@ -233,8 +234,8 @@
 
 
 
-          
-            <div class="modal fade" id="EditCaptionModal" tabindex="-1" role="dialog" aria-labelledby="EditCaptionModalLabel" aria-hidden="true">
+            {% for key,value in saved_question_answers.items %}
+            <div class="modal fade" id="EditCaptionModal{{key.pk}}" tabindex="-1" role="dialog" aria-labelledby="EditCaptionModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -256,6 +257,7 @@
                                             autocomplete="off"
                                             required
                                             name="saved_title"
+                                            
                                         />
                                     <br>
                                 
@@ -300,7 +302,8 @@
                         </form>
                     </div>
                 </div>
-            </div>              
+            </div>
+            {% endfor %}            
           
 
             <!-- Confirmation modal for delete -->

@@ -2,7 +2,7 @@ import os
 from bs4 import BeautifulSoup
 from django.http import Http404
 from insb_port import settings
-from main_website.models import About_IEEE, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link
+from main_website.models import About_IEEE, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link,FAQ_Question_Category,FAQ_Questions
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
@@ -1276,6 +1276,61 @@ class Branch:
                         values.append(page_link)
                 page_links_dict.update({category : values})
             return page_links_dict
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def save_category_of_faq(title):
+        
+        '''This function saves the title of the new category FAQ in the database'''
+
+        try:
+            #creating the title object
+            save_title = FAQ_Question_Category.objects.create(title = title)
+            #saving it in database
+            save_title.save()
+
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def get_all_category_of_questions():
+
+        '''This function returns all the titles registered in database for FAW'''
+
+        try:
+            #getting all the titles and returning them
+            return FAQ_Question_Category.objects.all()
+        
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+
+    def get_saved_questions_and_answers():
+        
+        '''This function returns a dictionary of all categories of question as key and
+            the value containts the list of that categories question and answer objects'''
+        
+        try:
+            #initiazlizing empty dictionary
+            dic={}
+            #getting all the categories of question using function
+            all_categories = Branch.get_all_category_of_questions()
+            #iterating over each category 
+            for category in all_categories:
+                #getting the question and answers of that particular category
+                question_answer_list = FAQ_Questions.objects.filter(title = category)
+                #updating dictionart
+                dic[category] = question_answer_list
+            #returning the dictionary
+            print(dic)
+            return dic
+        
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
