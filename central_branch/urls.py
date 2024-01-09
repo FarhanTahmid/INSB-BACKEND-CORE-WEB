@@ -53,34 +53,40 @@ urlpatterns = [
     path('manage_website/gallery/update/video/<int:pk>',views.update_videos,name="update_video"),
     path('manage_website/exemplary_members',views.manage_exemplary_members,name="manage_exemplary_members"),
     path('manage_website/exemplary_members/update/<int:pk>',views.update_exemplary_members,name="update_exemplary_members"),
-    path('manage_website/about',views.manage_about,name = "manage_about"),
-    path('manage_website/about/ieee_region_10',views.ieee_region_10,name = "ieee_region_10"),
-    path('manage_website/about/ieee_bangladesh_section',views.ieee_bangladesh_section,name = "ieee_bangladesh_section"),
-    path('manage_website/about/ieee_nsu_student_branch',views.ieee_nsu_student_branch,name = "ieee_nsu_student_branch"),
-    path('manage_website/about/faq',views.faq,name = "faq"),
+    path('manage_website/about/ieee/',views.manage_about,name = "manage_about"),
+    path('manage_website/about/ieee_region_10/',views.ieee_region_10,name = "ieee_region_10"),
+    path('manage_website/about/ieee_bangladesh_section/',views.ieee_bangladesh_section,name = "ieee_bangladesh_section"),
+    path('manage_website/about/ieee_nsu_student_branch/',views.ieee_nsu_student_branch,name = "ieee_nsu_student_branch"),
+    path('manage_website/about/faq/',views.faq,name = "faq"),
     path('manage_website/toolkit',views.manage_toolkit,name="manage_toolkit"),
     path('manage_website/toolkit/update/<int:pk>',views.update_toolkit,name="update_toolkit"),
     path('manage_access',views.manage_view_access,name="manage_access"),
+    
+    #About Page preview urls
+    path('manage_website/about/ieee/preview/',views.manage_about_preview,name = "manage_about_preview"),
+    path('manage_website/about/ieee_region_10/preview/',views.ieee_region_10_preview,name = "ieee_region_10_preview"),
+    path('manage_website/about/ieee_bangladesh_section/preview/',views.ieee_bangladesh_section_preview,name = "ieee_bangladesh_section_preview"),
+    path('manage_website/about/ieee_nsu_student_branch/preview/',views.ieee_nsu_student_branch_preview,name = "ieee_nsu_student_branch_preview"),
 
     #Events urls
     #Event control page 
-    path('events',views.event_control_homepage, name='event_control'),
+    path('events/',views.event_control_homepage, name='event_control'),
     #Event Creation Form page 1
     path('events/create_event/',views.event_creation_form_page,name='event_creation_form1'),
     #Event Creation Form Page 2
-    path("events/create_event/<int:event_id>/page-2", views.event_creation_form_page2, name="event_creation_form2"),
+    path("events/create_event/<int:event_id>/page-2/", views.event_creation_form_page2, name="event_creation_form2"),
     #Event creation page 3
-    path("events/create_event/<int:event_id>/page-3", views.event_creation_form_page3, name="event_creation_form3"),
+    path("events/create_event/<int:event_id>/page-3/", views.event_creation_form_page3, name="event_creation_form3"),
     #Event edit page
     path('event_details/<int:event_id>/edit/',views.event_edit_form,name='event_edit_form'),
     #Event media tab page
-    path('event_details/<int:event_id>/edit/media',views.event_edit_media_form_tab,name='event_edit_media_form_tab'),
+    path('event_details/<int:event_id>/edit/media/',views.event_edit_media_form_tab,name='event_edit_media_form_tab'),
     #Event graphics tab page
-    path('event_details/<int:event_id>/edit/graphics',views.event_edit_graphics_form_tab,name='event_edit_graphics_form_tab'),
+    path('event_details/<int:event_id>/edit/graphics/',views.event_edit_graphics_form_tab,name='event_edit_graphics_form_tab'),
     #Event graphics links sub tab page
-    path('event_details/<int:event_id>/edit/graphics/links',views.event_edit_graphics_form_links_sub_tab,name='event_edit_graphics_form_links_sub_tab'),
+    path('event_details/<int:event_id>/edit/graphics/links/',views.event_edit_graphics_form_links_sub_tab,name='event_edit_graphics_form_links_sub_tab'),
     #Event content tab page
-    path('event_details/<int:event_id>/edit/content',views.event_edit_content_form_tab,name='event_edit_content_form_tab'),
+    path('event_details/<int:event_id>/edit/content/',views.event_edit_content_form_tab,name='event_edit_content_form_tab'),
     #Super Event Creation Form
     path('events/create_super_event/',views.super_event_creation,name="super_event_creation"), 
     #Event preview

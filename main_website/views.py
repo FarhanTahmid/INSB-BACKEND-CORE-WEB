@@ -122,7 +122,7 @@ def event_details(request,event_id):
             event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
             context = {
-                'is_live':True,
+                'is_live':True, #This enables the header and footer along with the wavy
                 'page_title':get_event.event_name,
                 'page_subtitle':get_event.event_organiser,
                 "event":get_event,
@@ -1012,6 +1012,7 @@ def ieee_bd_section(request):
     page_links = Branch.get_about_page_links(page_title='ieee_bangladesh_section')
 
     context = {
+        'is_live':True, #This enables the header and footer of the page along with wavy
         'page_title':'About - IEEE Bangladesh Section',
         'branch_teams':branch_teams,
         'ieee_bangladesh_section':ieee_bangladesh_section,
@@ -1027,6 +1028,7 @@ def ieee_nsu_student_branch(request):
     date_and_event = HomepageItems.get_event_for_calender(request,1)
 
     context = {
+        'is_live':True, #This enables the header and footer of the page along with wavy
         'page_title':'About - IEEE NSU Student Branch',
         'branch_teams':branch_teams,
         'ieee_nsu_student_branch':about_ieee_nsu_student_branch,
@@ -1043,6 +1045,7 @@ def ieee_region_10(request):
     page_links = Branch.get_about_page_links(page_title='ieee_region_10')
 
     context = {
+        'is_live':True, #This enables the header and footer of the page along with wavy
         'page_title':'About - IEEE Region 10',
         'branch_teams':branch_teams,
         'ieee_region_10':about_ieee_region_10,
@@ -1059,6 +1062,7 @@ def ieee(request):
     page_links = Branch.get_about_page_links(page_title='about_ieee')
     
     context = {
+        'is_live':True, #This enables the header and footer of the page along with wavy
         'page_title':'About - IEEE',
         'branch_teams':branch_teams,
         'about_ieee':about_ieee,
