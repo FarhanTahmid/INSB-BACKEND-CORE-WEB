@@ -42,6 +42,7 @@ from .forms import *
 from .website_render_data import MainWebsiteRenderData
 from django.views.decorators.clickjacking import xframe_options_exempt
 import port.forms as PortForms
+from chapters_and_affinity_group.renderData import Sc_Ag
 
 
 # Create your views here.
@@ -2392,3 +2393,46 @@ def update_toolkit(request,pk):
         'form':toolkit_form,
     }
     return render(request,"Manage Website/Publications/Toolkit/update_toolkit.html",context=context)
+
+@login_required
+def feedbacks(request):
+
+    '''This view function loads the feedback page for the particular societies and affinity
+        groups'''
+    
+    try:
+        #rendering all the data to be loaded on the page
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        #getting all the feedbacks for INSB
+        all_feedbacks = Sc_Ag.get_all_feedbacks(request,1)
+        # has_access = Branch.event_page_access(request)
+        
+        if(True):
+
+            if request.method=="POST":
+                #when user hits submit button to changes status of responded fields
+                if request.POST.get('reponded'):
+                    #getting all the list of boolean fields that were changed
+                    respond = request.POST.getlist('responded_id')
+                    #passing the list to the updating funtion to change boolean values
+                    if Sc_Ag.set_feedback_status(respond,1):
+                        messages.success(request,'Feedback status updated successfully.')
+                    else:
+                        messages.error(request,'Feedback status could not be updated.')
+                    return redirect("central_branch:feedbacks")
+        
+            context={
+                    'is_branch' : True,
+                    'all_sc_ag':sc_ag,
+                    'media_url':settings.MEDIA_URL,
+                    'all_feedbacks':all_feedbacks,
+
+            }
+            return render(request,"FeedBack/feedback.html",context)
+        else:
+            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")

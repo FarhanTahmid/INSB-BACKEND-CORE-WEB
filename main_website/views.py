@@ -1078,6 +1078,20 @@ def faq(request):
     all_categories = Branch.get_all_category_of_questions()
     saved_question_answers = Branch.get_saved_questions_and_answers()
 
+    if request.method == "POST":
+            #when user hits submit button on main page
+            if request.POST.get('submit'):
+                #getting the user's details
+                name = request.POST.get('user_name')
+                email = request.POST.get('user_email')
+                message = request.POST.get('user_message')
+                #passing them as arguments to the function to save the data
+                if HomepageItems.save_feedback_information(request,1,name,email,message):
+                    messages.success(request,"You have reached us! Thanks for your feedback")  
+                else:
+                    messages.error(request,"Sorry! Try to contact us later") 
+                return redirect("main_website:faq")
+
     context = {
         'all_categories':all_categories,
         'saved_question_answer':saved_question_answers,
