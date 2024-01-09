@@ -3,12 +3,6 @@ from django.contrib import admin
 from main_website.forms import About_IEEE_Bangladesh_Section_Form, About_IEEE_Form
 from .models import Research_Papers,Blog_Category,Blog,IEEE_Bangladesh_Section,IEEE_Bangladesh_Section_Gallery,HomePage_Thoughts,About_IEEE
 # Register your models here.
-###Society AGS###
-# RAS
-from ieee_nsu_sb_ras_sbc.models import Ras_Sbc
-@admin.register(Ras_Sbc)
-class Ras_Sbc(admin.ModelAdmin):
-    list_display=['id']
 
 #Research Blogs Category
 @admin.register(Research_Papers)
