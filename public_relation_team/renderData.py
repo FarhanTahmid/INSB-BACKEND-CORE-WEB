@@ -42,7 +42,6 @@ class PRT_Data:
         if (len(team_members)==0) or (len(team_members)>0):
             team_members.extend(Branch.load_team_members(team_primary=0))
         
-        print(f"Team members after merging:{team_members}")
         return team_members
     
     def get_team_members_with_position():
