@@ -1304,7 +1304,7 @@ class Branch:
 
         try:
             #getting all the titles and returning them
-            return FAQ_Question_Category.objects.all()
+            return FAQ_Question_Category.objects.all().order_by('id')
         
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)

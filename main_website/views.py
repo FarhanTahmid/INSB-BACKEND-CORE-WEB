@@ -23,6 +23,7 @@ import json,requests
 from insb_port import settings
 from .models import *
 from django.contrib import messages
+from central_branch.renderData import Branch
 
 logger=logging.getLogger(__name__)
 
@@ -1057,7 +1058,17 @@ def ieee(request):
     return render(request, 'About/About_IEEE.html', context)
 
 def faq(request):
-    return render(request, 'About/faq.html')
+
+    all_categories = Branch.get_all_category_of_questions()
+    saved_question_answers = Branch.get_saved_questions_and_answers()
+
+    context = {
+        'all_categories':all_categories,
+        'saved_question_answer':saved_question_answers,
+        'page_title':'FAQ'
+    }
+
+    return render(request, 'About/faq.html',context)
 
 def contact(request):
     #loading all the teams of Branch
