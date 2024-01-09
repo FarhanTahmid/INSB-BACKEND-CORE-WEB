@@ -331,3 +331,29 @@ class IEEE_Region_10(models.Model):
         super(IEEE_Region_10, self).save(*args, **kwargs)
     def __str__(self) -> str:
         return str(self.pk)
+    
+
+class FAQ_Question_Category(models.Model):
+
+    '''This model is for storing all the category of questions'''
+    
+    title = models.CharField(null=True,blank=True,max_length=150)
+
+    class Meta:
+        verbose_name="FAQ Category"
+    def __str__(self) -> str:
+        return self.title
+    
+class FAQ_Questions(models.Model):
+
+    '''This model is for storing the Question and Answers for a category '''
+
+    title = models.ForeignKey(FAQ_Question_Category,null=True,blank=True,on_delete=models.CASCADE)
+    question =  models.TextField(null=True,blank=True)
+    answer =   models.TextField(null=True,blank=True)
+
+    class Meta:
+        verbose_name="FAQ Questions"
+    def __str__(self) -> str:
+        return self.title.title
+

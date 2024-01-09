@@ -137,15 +137,16 @@
                             <hr>
                         <div id="captions-container" class="mt-3">
                                 <label class="mb-0">Categories:</label> 
-                            
+                                {% for title in all_titles%}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal{{link.pk}}">Static</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal{{title.pk}}">{{title.title}}</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal"  onclick="openModal('{{link.pk}}')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal2"  onclick="openModal('{{title.pk}}')">✖</button>
                                     </div>
                                 </div>
+                                {% endfor %}
                                 
 
                                 
@@ -174,12 +175,39 @@
                                 <div class="modal-body">
                                     
                                         {% csrf_token %}
-                                        <p><input id="remove_link" name="remove_link" type="hidden"></p>
+                                        <p><input id="category_id_delete" name="category_id_delete" type="hidden"></p>
+                                        <p><input id="question_answer_id_delete" name="question_answer_id_delete" type="hidden"></p>
+                                        Are you sure you want to delete this ?
+                                 
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="submit" class="btn btn-outline-danger" value="Confirm" name="faq_question_answer_delete">
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal fade" id="ConfirmDeleteModal2" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-top" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form method="POST">
+                                <div class="modal-body">
+                                    
+                                        {% csrf_token %}
+                                        <p><input id="delete_category" name="delete_category" type="hidden"></p>
                                         Are you sure you want to delete this category?
                                  
                                 </div>
                                 <div class="modal-footer">
-                                    <input type="submit" class="btn btn-outline-danger" value="Confirm" name="remove_form_link">
+                                    <input type="submit" class="btn btn-outline-danger" value="Confirm" name="category_delete">
                                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                                 </div>
                             </form>
@@ -233,19 +261,19 @@
 
 
 
-          
-            <div class="modal fade" id="EditCaptionModal" tabindex="-1" role="dialog" aria-labelledby="EditCaptionModalLabel" aria-hidden="true">
+            {% for key,value in saved_question_answers.items %}
+            <div class="modal fade" id="EditCaptionModal{{key.pk}}" tabindex="-1" role="dialog" aria-labelledby="EditCaptionModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="editCaptionModalLabel">Edit Category</h5>
+                            <h5 class="modal-title" id="editCaptionModalLabel{{key.pk}}">Edit Category</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                             <!-- Display existing caption in a textarea for editing -->
-                            <form method="POST">
+                            <form method="POST" id="form-1">
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <label>Name: </label> 
@@ -256,6 +284,7 @@
                                             autocomplete="off"
                                             required
                                             name="saved_title"
+                                            value = "{{key.title}}"
                                         />
                                     <br>
                                 
@@ -266,41 +295,74 @@
                                         
                                         </div>
                                         <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                            <button type="button" id="addFieldsBtn" class="circle-btn plus-sign" ></button>
+                                            <button type="button" id="addFieldsBtn{{key.id}}" class="circle-btn plus-sign" ></button>
                                         </div>    
                                     
                                     </div>
-                                
-                                <div class="faq_container" id="container">
-                                    <div class="faq-set">
-                                        <label for="question">Question:</label>
-                                        <input
-                                            placeholder="Title"
-                                            class="form-control"
-                                            type="text"
-                                            autocomplete="off"
-                                            required
-                                            name="faq_question"
-                                            id="question"
-                                        />
-                                        <br>
-                                        <label for="answer">Answer:</label>
-                                        <textarea id="answer" class="form-control" rows="3" name="faq_question_answer"></textarea>
-                                        <hr>
-                                        <button class="btn btn-danger deleteBtn" name="faq_question_answer_delete">Delete</button>
-                                    </div>
+                                    {% if value|length > 0 %}
+                                        {% for question_answer in value %}
+                                        <div class="faq_container" id="container{{key.id}}">
+                                            <div class="faq-set {{key.id}}">
+                                                <label for="question">Question:</label>
+                                                <input
+                                                    placeholder="Title"
+                                                    class="form-control"
+                                                    type="text"
+                                                    autocomplete="off"
+                                                    required
+                                                    name="faq_question"
+                                                    id="question"
+                                                    value="{{question_answer.question}}"
+                                                />
+                                                <br>
+                                                <label for="answer">Answer:</label>
+                                                <textarea id="answer" class="form-control" rows="3" name="faq_question_answer">{{question_answer.answer|default:""}}</textarea>
+                                                <input type = "hidden"  id="category_id" name="category_id" value="{{key.id}}">
+                                                <input type = "hidden"   id="delete_FAQ"  name="delete_FAQ" value="{{question_answer.pk}}">
+                                                <hr>
+                                                <button type="button" class="btn btn-danger deleteBtn" data-toggle="modal" data-target="#ConfirmDeleteModal"  onclick="deleteFAQ('{{key.id}}','{{question_answer.pk}}')">Delete</button>
+                                            </div>
+                                        
+                                    
+                                        </div>
+                                        {% endfor %}
+                                    {% else %}
+                                    <div class="faq_container" id="container{{key.id}}">
+                                        <div class="faq-set {{key.id}}">
+                                            <label for="question">Question:</label>
+                                            <input
+                                                placeholder="Title"
+                                                class="form-control"
+                                                type="text"
+                                                autocomplete="off"
+                                                required
+                                                name="faq_question"
+                                                id="question"
+                                                value="{{question_answer.question}}"
+                                            />
+                                            <br>
+                                            <label for="answer">Answer:</label>
+                                            <textarea id="answer" class="form-control" rows="3" name="faq_question_answer">{{question_answer.answer|default:""}}</textarea>
+                                            <input type = "hidden" value="{{key.pk}}" name="category_id">
+                                            <input type = "hidden" value="{{question_answer.pk}}" name="delete_id">
+                                            <hr>
+                                        </div>
                                     
                                 
+                                    </div>
+                                    {% endif %}
+
                                 </div>
+                                <div class="modal-footer">
+                                    <input type="submit" name = "update_faq" class="btn btn-outline-primary txt-primary buttons" value="Update">
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </form>
                         </div>
-                        <div class="modal-footer">
-                            <input type="submit" name = "update_faq" class="btn btn-outline-primary txt-primary buttons" value="Update">
-                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                        </div>
-                        </form>
                     </div>
                 </div>
-            </div>              
+            </div>
+            {% endfor %}            
           
 
             <!-- Confirmation modal for delete -->
@@ -317,18 +379,28 @@
 <script>
     function openModal(id) {
         // Set data in the modal
-        var inputElement = document.getElementById('remove_link');    
+        var inputElement = document.getElementById('delete_category');    
         inputElement.value=id;
+    }
+    function deleteFAQ(id,id2) {
+        // Set data in the modal
+        var inputElement = document.getElementById('category_id_delete');    
+        inputElement.value=id;
+        var inputElement2 = document.getElementById('question_answer_id_delete'); 
+        inputElement2.value = id2;
     }
 </script>
 
+
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 <script>
-    document.getElementById('addFieldsBtn').addEventListener('click', function() {
+    {% for key,value in saved_question_answers.items %}
+    document.getElementById('addFieldsBtn{{key.id}}').addEventListener('click', function() {
         // Create new question and answer fields
         var faqSet = document.createElement('div');
-        faqSet.className = 'faq-set';
+        faqSet.className = 'faq-set {{key.id}}';
 
         var newQuestionLabel = document.createElement('label');
         newQuestionLabel.textContent = 'Question:';
@@ -351,12 +423,6 @@
         newAnswer.id = 'answer';
         newAnswer.name = 'faq_question_answer';
 
-        var deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'Delete';
-        deleteBtn.className = 'btn btn-danger deleteBtn';
-        deleteBtn.dataset.toggle = 'modal';
-        deleteBtn.name = 'faq_question_answer_delete';
-        deleteBtn.dataset.target = '#confirmationModal';
 
         var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
         
@@ -368,12 +434,13 @@
         faqSet.appendChild(newAnswerLabel);
         faqSet.appendChild(newAnswer);
         faqSet.appendChild(document.createElement('hr'));
-        faqSet.appendChild(deleteBtn);
 
         // Append the faq-set to the main container
-        document.getElementById('container').appendChild(faqSet);
+        document.getElementById('container{{key.id}}').appendChild(faqSet);
     });
+    {% endfor %}
 </script>
+
  <!-- Add Bootstrap JS and Popper.js scripts here -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
  {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
