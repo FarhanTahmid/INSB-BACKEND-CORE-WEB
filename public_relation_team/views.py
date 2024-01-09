@@ -31,12 +31,13 @@ def team_home_page(request):
     
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    
+    # get team members
+    get_team_members=PRT_Data.get_team_members_with_position()
     context={
-        'co_ordinators':PRT_Data.getTeamCoOrdinators(),
-        'incharges':PRT_Data.getTeamIncharges(),
-        'core_volunteers':PRT_Data.getTeamCoreVolunteers(),
-        'volunteers':PRT_Data.getTeamVolunteers(),
+        'co_ordinators':get_team_members[0],
+        'incharges':get_team_members[1],
+        'core_volunteers':get_team_members[2],
+        'team_volunteers':get_team_members[3],
         'user_data':user_data,
         'media_url':settings.MEDIA_URL,
     }
