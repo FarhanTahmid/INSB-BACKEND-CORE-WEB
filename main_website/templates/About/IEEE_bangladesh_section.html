@@ -342,13 +342,15 @@
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
     <div class="body-wrapper  float-menu">
 
-        {% block header %}
-        {% include 'header.html' %}
-        {% endblock header %}
+        {% if is_live %}
+            {% block header %}
+            {% include 'header.html' %}
+            {% endblock header %}
 
-        {% block wave_design %}
-            {% include 'wave.html' %}
-        {% endblock wave_design %}
+            {% block wave_design %}
+                {% include 'wave.html' %}
+            {% endblock wave_design %}
+        {% endif %}
 
         <!--page start-->
         <!--about ieee section-->
@@ -614,10 +616,12 @@
             </section>
         </section>
 
-        <!--Footer-->
-        {% block footer %}
-        {% include "footer_block.html" %}
-        {% endblock footer %}
+        {% if is_live %}
+            <!--Footer-->
+            {% block footer %}
+            {% include "footer_block.html" %}
+            {% endblock footer %}
+        {% endif %}
 
 
     </div>
