@@ -1158,6 +1158,8 @@ def faq(request):
 
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
+        all_categories_of_faq = Branch.get_all_category_of_questions()
+        saved_questions_answers = Branch.get_saved_questions_and_answers()
 
 
         if request.method == "POST":
@@ -1165,19 +1167,55 @@ def faq(request):
             if request.POST.get('add_category'):
                 #getting the new title for the category
                 category_title = request.POST.get('category_title')
+                #passing the title to the function to save in databse
+                if Branch.save_category_of_faq(category_title):
+                    messages.success(request,"New Category Added Successfully!")
+                else:
+                    messages.error(request,"Error Occured! Could not add the new category")
+                return redirect("central_branch:faq")
             
             if request.POST.get('update_faq'):
-
+                #when user wants to update the exisitng question answers by clicking update
+                #getting them from the page
                 questions = request.POST.getlist('faq_question')
                 answers = request.POST.getlist('faq_question_answer')
+                category_id = request.POST.get('category_id')
+                title = request.POST.get('saved_title')
 
-                print(questions)
-                print(answers)
-                
+                #passing them in function
+                if Branch.update_question_answer(category_id,title,questions,answers):
+                    messages.success(request,"Updated Successfully!")
+                else:
+                    messages.error(request,"Error Occured! Could not update")
+                return redirect("central_branch:faq")
 
+            if request.POST.get('faq_question_answer_delete'):
+
+                #when user clicks delete button
+                #getting the id of title and of the question they want to delete
+                cat_id = request.POST.get('category_id_delete')
+                question_id = request.POST.get('question_answer_id_delete')
+
+                if Branch.delete_question_answer(cat_id,question_id):
+                    messages.success(request,"Deleted Successfully!")
+                else:
+                    messages.error(request,"Error Occured! Could not delete")
+                return redirect("central_branch:faq")
+            
+            if request.POST.get('category_delete'):
+                #if user wants to delete an entire category of FAQ
+
+                id = request.POST.get('delete_category')
+                if Branch.delete_faq_category(id):
+                    messages.success(request,"Deleted Successfully!")
+                else:
+                    messages.error(request,"Error Occured! Could not delete")
+                return redirect("central_branch:faq")
 
         context={
             'all_sc_ag':sc_ag,
+            'all_titles':all_categories_of_faq,
+            'saved_question_answers':saved_questions_answers,
         }
         return render(request,'Manage Website/About/FAQ/portal_faq.html', context)
     
