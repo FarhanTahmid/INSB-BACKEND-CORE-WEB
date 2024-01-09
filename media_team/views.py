@@ -28,16 +28,20 @@ logger=logging.getLogger(__name__)
 def team_homepage(request):
 
     #Loading data of the co-ordinators, co ordinator id is 9,
-    co_ordinators=renderData.MediaTeam.get_member_with_postion(9)
+    co_ordinators=renderData.MediaTeam.get_co_ordinator()
     #Loading data of the incharges, incharge id is 10
-    in_charges=renderData.MediaTeam.get_member_with_postion(10)
+    in_charges=renderData.MediaTeam.get_officer()
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
+    # get media volunteers
+    volunteers=MediaTeam.get_volunteers()
     context={
         'co_ordinators':co_ordinators,
         'incharges':in_charges,
         'media_url':settings.MEDIA_URL,
         'user_data':user_data,
+        'core_volunteers':volunteers[0],
+        'team_volunteers':volunteers[1],
     }
 
     

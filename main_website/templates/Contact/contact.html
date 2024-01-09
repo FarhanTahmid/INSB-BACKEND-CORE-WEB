@@ -4,7 +4,6 @@
 
 <head>
   <title>Contact - IEEE NSU SB</title>
-  <link rel="icon" href="{% static 'logos/logo.gif' %}" />
   <link rel="icon" href="{% static 'upload/logo.gif' %}" />
 
   <!--Common CSS-->
@@ -13,7 +12,7 @@
   {% endblock common_css %}
 
   <!--Extra CSS-->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <style>
     /*important?*/
     @media screen and (max-width: 1199px) {
@@ -59,71 +58,58 @@
     }
 
     /*common CSS used throughout the page*/
+
     body {
       margin: 0%;
       padding: 0%;
+      font-family: "Poppins", sans-serif;
     }
+
     .centering {
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: "Poppins", sans-serif;
     }
+
     .max-width {
       max-width: 1080px;
     }
+
     .bar {
       width: 90px;
-      height: 3px;
+      height: 5px;
       background-color: #FFC72C;
+      margin: 18px 0px;
       border-radius: 5px;
-      margin-bottom: 15px;
     }
+
     /*common CSS used throughout the page*/
 
     /*cards*/
     .contact-card-container {
       width: 100%;
       display: flex;
-<<<<<<< HEAD
-=======
       column-gap: 20px;
       margin-top: 30px;
->>>>>>> 41e0bce976e6d8da57321ef17f6b682c946fdeb5
     }
+
     .contact-card {
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-<<<<<<< HEAD
-      margin: 40px 0px;
-=======
       border-radius: 4px;
->>>>>>> 41e0bce976e6d8da57321ef17f6b682c946fdeb5
     }
-    .contact-card h6 {
-      margin: -24px 0px 10px 0px;
-      color: #002855bb;
+
+    .contact-card h4 {
+      margin: 20px 0px 20px 0px;
+      color: #000000;
     }
+
     .contact-card p {
-      color: #002855bb;
       text-align: center;
       font-size: small;
-      font-weight: bold;
     }
-<<<<<<< HEAD
-    .card-icon {
-      color: #002855bb;
-      font-size: 35px;
-      height: 76px;
-      transition: all .3s ease-in-out;
-    }
-    .social-media-icons i {
-      background-color: white;
-      color: #002855bb;
-      padding: 4px;
-=======
 
     .address-icon, .email-icon, .mobile-icon, .share-icon {
       color: white;
@@ -147,27 +133,22 @@
       background-color: 	#002855;
       padding: 7px;
       border-radius: 6px;
->>>>>>> 41e0bce976e6d8da57321ef17f6b682c946fdeb5
       transition: all .3s ease-in-out;
-      margin-top: 5px;
-      font-size: 25px;
+      margin-top: 20px
     }
+
     .social-media-icons i:hover {
-      color: #00629B;
+      background-color: #ffd100;
     }
-    .social-media-icons i::after {
-      content: "";
-      width: 0%;
-      transition: .4s;
-      display: block;
-    }
-    .social-media-icons i:hover::after{
-      width: 100%;
-      border: 1px solid #00629B;
-    }
+
     /*cards*/
 
     /*location and contact*/
+    .even-col h1 {
+      margin-bottom: -15px;
+      color: black;
+    }
+
     .even-col {
       margin: 40px 0px;
       width: 1080px;
@@ -175,81 +156,76 @@
       grid-template-columns: 1fr 1fr;
       grid-gap: 40px;
     }
-    .even-col h3 {
-      color: black;
-    }
+
     .even-col iframe {
-<<<<<<< HEAD
-      padding-top: 10px;
-=======
       text-decoration: none;
       border-radius: 4px;
->>>>>>> 41e0bce976e6d8da57321ef17f6b682c946fdeb5
       height: 480px;
     }
+
     .contact-us {
       height: 480px;
-<<<<<<< HEAD
-      padding-top:10px;
-=======
       border-radius: 4px;
->>>>>>> 41e0bce976e6d8da57321ef17f6b682c946fdeb5
     }
+
     .contact-us p {
-      font-weight: 600;
+      font-weight: 500;
       margin-top: 15px;
-      font-size: 13px;
     }
+
     .contact-us-form {
       display: flex;
       flex-direction: column;
     }
+
     .contact-us-form input,
     .contact-us-form textarea {
       margin-top: -14px;
     }
+
     .contact-btn {
       display: flex;
       justify-content: flex-end;
     }
+
     .contact-us-form input {
       background-color: #75787b22;
       color: #000;
       border: none;
       border-radius: 3px;
       padding: 0 10px;
-      height: 35px;
-      font-size: 14px;
+      height: 45px;
     }
+
     .contact-btn input[type=submit] {
       font-size: 14px;
-      width: 131px;
-      margin: 12px 0px 0px 0px;
-      color: white;
       background: #002855;
+      color: white;
+      width: 150px;
       border: 2px solid #002855;
       transition: all 0.3s;
+      margin: 12px 0px 0px 0px;
+      padding: 6px 0px;
     }
+
     .contact-btn input[type=submit]:hover {
-      color: #002855;
       background: #ffffff;
+      color: #002855;
       border: 2px solid #002855;
     }
+
     textarea {
       background-color: #75787b22;
       color: #000;
       border: none;
       border-radius: 3px;
-      height: 100px;
-      max-height: 258px;
-      font-size: 14px;
+      height: 200px;
+      max-height: 200px;
+
     }
+
     /*location and contact*/
 
-<<<<<<< HEAD
-    /*follow us*/
-    .follow-us {
-=======
     /*media queries*/
     @media screen and (max-width: 1199px) {
       .max-width {
@@ -310,33 +286,37 @@
 
 
     .section-B {
->>>>>>> 41e0bce976e6d8da57321ef17f6b682c946fdeb5
       min-height: 150px;
       height: auto;
       background-image: linear-gradient(60deg, #00B5E2 0%, #00629B 70%);
       text-align: center;
       width: 100%;
     }
-    .follow-us .container h2 {
+
+    .section-B .container h2 {
       color: #FFFFFF;
       font-family: "Poppins", sans-serif;
       font-size: 40px;
       font-weight: 600;
       margin: 0;
     }
-    .follow-us .container {
+
+    .section-B .container {
       padding: 30px;
     }
-    .follow-us .container p {
+
+    .section-B .container p {
       color: #FFFFFF;
       font-family: "Poppins", sans-serif;
       font-size: 20px;
-      font-weight: bold;
-      margin: 0px 0px 0px 20px;
+      font-weight: 300;
+      margin: -20px, 0, 0, 20px;
     }
-    .follow-us .container #a5 {
+
+    .section-B .container #a5 {
       color: #F4CE0A;
     }
+
     .cursor {
       display: inline-block;
       background-color: #4d4d4d;
@@ -344,51 +324,51 @@
       width: 2px;
       animation: blink 1s infinite;
     }
+
     .cursor.typing {
       animation: none;
     }
+
     @keyframes blink {
       0% {
         background-color: #000000;
       }
+
       49% {
         background-color: #000000;
       }
+
       50% {
         background-color: transparent;
       }
+
       99% {
         background-color: transparent;
       }
+
       100% {
         background-color: #000000;
       }
     }
-    /*follow us*/
 
-    /*youtube*/
-    .youtube .container {
+    .section-C .container {
       width: 90%;
       margin: auto auto;
       display: grid;
       height: auto;
       grid-template-columns: 50% 50%;
     }
-    .youtube .container .inner-container h2 {
+
+    .section-C .container .inner-container h2 {
       color: #000000;
-<<<<<<< HEAD
-=======
       font-family: "Poppins", sans-serif;
->>>>>>> 41e0bce976e6d8da57321ef17f6b682c946fdeb5
       font-size: 39px;
       font-weight: 600;
       margin-top: 0;
     }
+
     .channelBtn {
-<<<<<<< HEAD
-=======
       font-family: "Poppins", sans-serif;
->>>>>>> 41e0bce976e6d8da57321ef17f6b682c946fdeb5
       font-weight: 700;
       background-color: #BA0C2F;
       border: 2px solid white;
@@ -400,23 +380,33 @@
       transition: all .3s ease-in-out;
       margin-top: 20px;
     }
+
+    .channelBtn:active {
+      background-color: #BA0C2F;
+    }
+
     .channelBtn:hover {
+      box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
       background-color: white;
       color: #BA0C2F;
       border: 2px solid #BA0C2F;
     }
+
     .channelBtn a {
       color: white;
       text-decoration: none;
       padding: 15px 32px;
     }
+
     .channelBtn a:hover {
       color: #BA0C2F;
     }
-    .youtube {
+
+    .section-C {
       margin-top: 50px;
       margin-bottom: 50px;
     }
+
     .video-container {
       display: flex;
       height: 100%;
@@ -424,96 +414,56 @@
       justify-content: center;
       flex-wrap: wrap;
     }
-    .youtube .container .inner-container {
+
+    .section-C .container .inner-container {
       text-align: left;
       padding: 30px;
       margin: auto 0px;
     }
+
     .frame {
       width: 560px;
       height: 315px;
-      border-radius: 4px;
-    }
-    /*youtube*/
-
-    /*media queries*/
-    @media screen and (max-width: 1199px) {
-      .max-width {
-        max-width: 850px;
-      }
-      .contact-card {
-        padding: 34px 0px 24px 0px;
-      }
-      .social-media-icons i {
-        font-size: 25px;
-      }
-      .even-col {
-        max-width: 850px;
-      }
-    }
-
-    @media screen and (max-width: 991px) {
-      .max-width {
-        max-width: 650px;
-      }
-      .contact-card-container {
-        flex-wrap: wrap;
-      }
-      .contact-card {
-        margin-top: 10px;
-        width: 50%;
-      }
-      .even-col {
-        grid-template-columns: 1fr;
-        max-width: 650px;
-      }
-      .even-col iframe {
-        height: 300px;
-      }
-    }
-
-    @media screen and (max-width: 630px) {
-      .max-width {
-        max-width: 90%;
-      }
-      .even-col {
-        max-width: 100%;
-      }
-      .contact-card {
-        width: 100%;
-      }
-    }
-
-    @media screen and (max-width: 425px) {
-      .max-width {
-        max-width: 80%;
-      }
+      border-radius: 5px;
     }
 
     @media only screen and (max-width: 900px) {
-      .youtube {
+
+      .section-A .container {
+        grid-template-columns: auto;
+        grid-auto-flow: row;
+        row-gap: 20px;
+        margin: 10px;
+      }
+
+      .section-C {
         margin-top: 5px;
       }
-      .youtube .container {
+
+      .section-C .container {
         grid-template-columns: auto;
       }
-      .youtube .container .inner-container {
+
+      .section-C .container .inner-container {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         padding-bottom: 10px;
       }
-      .youtube .container .video-container {
+
+      .section-C .container .video-container {
         display: flex;
         justify-content: center;
         align-items: center;
         width: 100%;
       }
-      .youtube .container .inner-container h2 {
+
+      .section-C .container .inner-container h2 {
         font-size: 30px;
         text-align: center;
       }
+
       .frame {
         width: 100%;
         height: 360px;
@@ -531,66 +481,64 @@
     {% include 'wave.html' %}
     {% endblock wave_design %}
 
-    <!-- contact start -->
-    <!-- contact cards section-->
+    <!-- Contact start -->
+    <!-- Contact card start -->
     <section class="centering">
       <section class="max-width contact-card-container">
         <div class="contact-card">
-          <div><i class="fa-solid fa-map-location-dot card-icon"></i></div>
+          <div><i class="fa-solid fa-map-location-dot address-icon"></i></div>
           <div>
-            <h6>Address</h6>
+            <h4>Address</h4>
           </div>
           <div>
             <p>Plot-15, Block-B, Bashundhara, Dhaka – 1229, Bangladesh</p>
           </div>
         </div>
         <div class="contact-card">
-          <div><i class="fa-solid fa-envelope card-icon"></i></div>
+          <div><i class="fa-solid fa-envelope email-icon"></i></div>
           <div>
-            <h6>Email Address</h6>
+            <h4>Email Address</h4>
           </div>
           <div>
             <p>ieeensusb@ieee.org </p>
-            <p style="margin-top: -10px;">contact@ieeensusb.org</p>
+            <p>contact@ieeensusb.org</p>
           </div>
         </div>
         <div class="contact-card">
           <div>
-            <i class="fa-solid fa-phone card-icon"></i>
+            <i class="fa-solid fa-mobile-screen-button mobile-icon"></i>
           </div>
           <div>
-            <h6>Mobile Number</h6>
+            <h4>Mobile Number</h4>
           </div>
           <div>
             <p>
               For Membership Queries : 01791001434 </p>
-            <p style="margin-top: -10px;">For Corporate Engagement :
+            <p>For Corporate Engagement :
               01886503931
             </p>
           </div>
         </div>
         <div class="contact-card">
-          <div><i class="fa-solid fa-share-from-square card-icon"></i></div>
+          <div><i class="fa-solid fa-share-nodes share-icon"></i></div>
           <div>
-            <h6>Social Media</h6>
+            <h4>Social Media</h4>
           </div>
-          <!--links-->
-          <div class="social-media-icons"><a href="#"><i class="fa-brands fa-square-facebook"></i></a><a href="#"><i
+          <div class="social-media-icons"><a href="#"><i class="fa-brands fa-facebook"></i></a><a href="#"><i
                 class="fa-brands fa-linkedin-in"></i></a><a href="#"><i class="fa-brands fa-instagram"></i></a><a
               href="#"><i class="fa-brands fa-x-twitter"></i></a><a href="#"><i class="fa-brands fa-youtube"></i></a>
           </div>
         </div>
       </section>
     </section>
+    <!-- Contact card end -->
 
-
-    <!--location and contact us section-->
     <section class="centering">
       <section class="max-width">
         <div class="even-col">
           <div>
             <div>
-              <h3>Location</h3>
+              <h1>Location</h1>
             </div>
             <div class="bar"></div>
             <div><iframe
@@ -600,19 +548,18 @@
           </div>
           <div>
             <div>
-              <h3>Contact Us</h3>
+              <h1>Contact Us</h1>
             </div>
             <div class="bar"></div>
             <div class="contact-us">
               <form method="post" class="contact-us-form">
-                <p style="margin-top: -6px;">Your Name</p>
+                <p>Your Name</p>
                 <input type="text" name="name" placeholder="Name" required>
                 <p>Your Email</p>
                 <input type="email" name="email" placeholder="Email" required>
                 <p>Your Message</p>
                 <textarea name="message" placeholder="Your message here...." style="min-height: 150px;" maxlength="1000" required></textarea>
                 <div class="contact-btn">
-                  <!--submit button-->
                   <input type="submit" value="submit">
                 </div>
               </form>
@@ -622,26 +569,25 @@
       </section>
     </section>
 
-    
-    <!--follow us now section-->
-    <section class="follow-us">
+
+
+    <!-- Contact last part -->
+
+    <section class="section-B">
       <div class="container">
         <h2>Follow Us Now!</h2>
         <p>our activities on <span id="a5"></span><span class="cursor" id="a6">&nbsp;</span></h3>
       </div>
     </section>
 
-    <!--youtube section-->
-    <section class="youtube">
+    <section class="section-C">
       <div class="container">
         <div class="inner-container">
           <h2>Subscribe to our Youtube Channel</h2>
-          <!--links-->
           <button class="channelBtn"><a href="https://www.youtube.com/channel/UCR--MNc_lCe9lvgdnSWm6kA">Our Youtube
               Channel</a></button>
         </div>
         <div class="video-container">
-          <!--links-->
           <iframe class="frame" src="https://www.youtube.com/embed/Z4_zikeiNQ8?si=6j_UflrVqQ_vrnUT"
             title="YouTube video player" frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

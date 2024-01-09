@@ -44,7 +44,7 @@ def md_team_homepage(request):
         'co_ordinators':co_ordinators,
         'incharges':in_charges,
         'core_volunteers':core_volunteers,
-        'volunteers':volunteers,
+        'team_volunteers':volunteers,
         'media_url':settings.MEDIA_URL,
         'user_data':user_data,
     }

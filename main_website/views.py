@@ -1038,8 +1038,20 @@ def ieee_nsu_student_branch(request):
     return render(request, 'About/IEEE_NSU_student_branch.html', context)
 
 def ieee_region_10(request):
-    # template not done yet
-    return render(request, 'About/IEEE_region_10.html')
+    #loading all the teams of Branch
+    branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+    about_ieee_region_10 = IEEE_Region_10.objects.get(id=1)
+    page_links = Branch.get_about_page_links(page_title='ieee_region_10')
+
+    context = {
+        'page_title':'About - IEEE Region 10',
+        'branch_teams':branch_teams,
+        'ieee_region_10':about_ieee_region_10,
+        'media_url':settings.MEDIA_URL,
+        'page_links':page_links
+    }
+
+    return render(request, 'About/IEEE_region_10.html', context)
 
 def ieee(request):
     #loading all the teams of Branch
@@ -1081,3 +1093,5 @@ def contact(request):
 
     return render(request, 'Contact/contact.html', context)
 
+def toolkit(request):
+    return render(request, 'Publications/Toolkit/toolkit.html')

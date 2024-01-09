@@ -149,14 +149,16 @@
                                 </div>
                                 
                                 <br>
+                                {% if ieee_region_10.ieee_region_10_image %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_region_10.ieee_region_10_image}}')">IEEE Region 10 Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{ieee_region_10.ieee_region_10_image}}', 'ieee_region_10_picture')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                                 <br>
 
                                 <label>Region 10 History Link <span style="color:red">*<span></label> 
@@ -197,14 +199,16 @@
                                 </div>
                                 
                                 <br>
+                                {% if ieee_region_10.young_professionals_image %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_region_10.young_professionals_image}}')">Young Professionals Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{ieee_region_10.young_professionals_image}}', 'young_professionals_picture')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
                             <br>
 
@@ -214,7 +218,7 @@
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
+                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('young_professionals_link')"></button>
                                 </div>
                             </div>
                             
@@ -222,12 +226,14 @@
                             <div id="links-container" class="mt-3">
                                 <label class="mb-0">Links (Young Professionals):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    {% for page_link in page_links.young_professionals_link %}
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
                                     </div>
+                                    {% endfor %}
                                 </div>
                             </div>
 
@@ -257,7 +263,7 @@
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
+                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('women_in_engineering_link')"></button>
                                 </div>
                             </div>
                             
@@ -265,12 +271,14 @@
                             <div id="links-container" class="mt-3">
                                 <label class="mb-0">Links (Women in Engineering):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    {% for page_link in page_links.women_in_engineering_link %}
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
                                     </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                             <br>
@@ -292,7 +300,7 @@
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
+                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('student_and_member_activities_link')"></button>
                                 </div>
                             </div>
                             
@@ -300,12 +308,14 @@
                             <div id="links-container" class="mt-3">
                                 <label class="mb-0">Links (Students and Member Activites):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    {% for page_link in page_links.student_and_member_activities_link %}
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
                                     </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                             <br>
@@ -328,7 +338,7 @@
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
+                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('educational_activities_and_involvements_link')"></button>
                                 </div>
                             </div>
                             
@@ -336,12 +346,14 @@
                             <div id="links-container" class="mt-3">
                                 <label class="mb-0">Links (Educational Activities and Involvements):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    {% for page_link in page_links.educational_activities_and_involvements_link %}
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
                                     </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                             <br>
@@ -364,7 +376,7 @@
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
+                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('industry_relations_link')"></button>
                                 </div>
                             </div>
                             
@@ -372,12 +384,14 @@
                             <div id="links-container" class="mt-3">
                                 <label class="mb-0">Links (Industry Relations):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    {% for page_link in page_links.industry_relations_link %}
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
                                     </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                             
@@ -405,19 +419,21 @@
                              <div class="form-group">
                                  <label for="images">Membership Development Image:</label>
                                  <div class="custom-file">
-                                     <input type="file" class="custom-file-input" id="membership-image-input" name="image" accept="image/*">
+                                     <input type="file" class="custom-file-input" id="membership-image-input" name="membership_development_picture" accept="image/*">
                                      <label class="custom-file-label bg-light" for="membership-image-input">Choose file</label>
                                  </div>
                                  
                                  <br>
-                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                     <div class="col-sm-11">
-                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
-                                     </div>
-                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
-                                     </div>
-                                 </div>
+                                {% if ieee_region_10.membership_development_image %}
+                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    <div class="col-sm-11">
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_region_10.membership_development_image}}')">Membership Development Image</a>
+                                    </div>
+                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{ieee_region_10.membership_development_image}}', 'membership_development_picture')">✖</button>
+                                    </div>
+                                </div>
+                                {% endif %}
                              </div>
                              
                              <br>
@@ -428,7 +444,7 @@
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
+                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('membership_development_link')"></button>
                                 </div>
                             </div>
                             
@@ -436,12 +452,14 @@
                             <div id="links-container" class="mt-3">
                                 <label class="mb-0">Links (Membership Development):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    {% for page_link in page_links.membership_development_link %}
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
                                     </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                             <br>
@@ -454,14 +472,16 @@
                                 </div>
                                 
                                 <br>
+                                {% if ieee_region_10.background_picture_parallax %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_region_10.background_picture_parallax}}')">Parallax Background Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{sc_ag_info.background_image}}', 'background_image')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{ieee_region_10.background_picture_parallax}}', 'background_picture')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
 
  
@@ -487,19 +507,21 @@
                             <div class="form-group">
                                 <label for="images">Events and Conference Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="events-and-conference-image-input" name="image" accept="image/*">
+                                    <input type="file" class="custom-file-input" id="events-and-conference-image-input" name="events_and_conference_picture" accept="image/*">
                                     <label class="custom-file-label bg-light" for="events-and-conference-image-input">Choose file</label>
                                 </div>
                                 
                                 <br>
+                                {% if ieee_region_10.events_and_conference_image %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_region_10.events_and_conference_image}}')">Events and Conference Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{ieee_region_10.events_and_conference_image}}', 'events_and_conference_picture')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
                             <br>
 
@@ -509,7 +531,7 @@
                                     <!-- Add input field for links here if needed -->
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
+                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"  onclick="setLinkCategoryInModal('events_and_conference_link')"></button>
                                 </div>
                             </div>
                             
@@ -517,12 +539,14 @@
                             <div id="links-container" class="mt-3">
                                 <label class="mb-0">Links (Events and Conference):</label> 
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                    {% for page_link in page_links.events_and_conference_link %}
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
                                     </div>
+                                    {% endfor %}
                                 </div>
                             </div> 
  
@@ -865,6 +889,34 @@
     
     </script>
 
+    <!--script to prevent user from selecting image is image already selected-->
+    <script>
+        // Function to check and disable file input if an image is already saved
+        function checkSavedImage(inputId, savedImageUrl) {
+            var fileInput = document.getElementById(inputId);
+
+            if (savedImageUrl) {
+                // If an image is already saved, disable the file input
+                fileInput.disabled = true;
+                fileInput.classList.add("disabled");
+
+                // Change the placeholder text
+                var fileLabel = fileInput.nextElementSibling;
+                fileLabel.innerText = "Delete existing file to Choose image.";
+            }
+        }
+
+        // Call the function for each image section when the page loads
+        window.onload = function () {
+            checkSavedImage("ieee-region-10-image-input", "{{ ieee_region_10.ieee_region_10_image }}");
+            checkSavedImage("young-professionals-image-input", "{{ ieee_region_10.young_professionals_image }}");
+            checkSavedImage("membership-image-input", "{{ ieee_region_10.membership_development_image }}");
+            checkSavedImage("background-image-input", "{{ ieee_region_10.background_picture_parallax }}");
+            checkSavedImage("events-and-conference-image-input", "{{ ieee_region_10.events_and_conference_image }}");
+            // Add more calls for other image sections if needed
+        };
+    </script>
+
 
     <script>
         //Delete logic for image
@@ -881,11 +933,27 @@
             var inputElement = document.getElementById('modal_image');
             inputElement.src = image_path
         }
+    </script>
+
+    <script>
+        function setLinkCategoryInModal(category){
+            var inputElement = document.getElementById('link_category');    
+            inputElement.value=category;
+        }
+
+        function setLinkDetailsInModal(link_id, title, link){
+            var inputElement2 = document.getElementById('link_title');    
+            inputElement2.value=title;
+            var inputElement3 = document.getElementById('link');    
+            inputElement3.value=link;
+            var inputElement4 = document.getElementById('link_id');    
+            inputElement4.value=link_id;
+        }
 
         //Delete logic for Link
         function openLinkModal(id) {
             // Set data in the modal
-            var inputElement = document.getElementById('remove_link');    
+            var inputElement = document.getElementById('remove_link_id');    
             inputElement.value=id;
         }
     </script>

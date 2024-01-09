@@ -75,6 +75,11 @@
             font-size: 16px;
             color: #ffffff;
         }
+        .reveal-section.reveal-content.revealed{
+            display: flex;
+            margin-left: -250px;
+            justify-content: center;
+        }
         .reveal-content {
             opacity: 0;
             transform: translateY(20px);
@@ -84,6 +89,16 @@
         .revealed {
             opacity: 1;
             transform: translateY(0);
+        }
+        @media screen and (max-width:1235px){
+            .reveal-section.reveal-content.revealed{
+                margin-left: -405px;
+            }
+        }
+        @media screen and (max-width:767px){
+            .reveal-section.reveal-content.revealed{
+                margin-left: -60px;
+            }
         }
     </style>
 
@@ -121,7 +136,7 @@
         <!--Event card with search function and load more option-->
         {% block event_container %}
             {% include 'Events/event_card_block.html' %}
-        {% endblock  %}
+        {% endblock event_container %}
 
         <!--Footer-->
         {% block footer %}
