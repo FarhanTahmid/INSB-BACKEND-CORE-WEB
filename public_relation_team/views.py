@@ -332,101 +332,101 @@ def manageWebsiteHome(request):
 
 @login_required
 def send_email(request):
-        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-        user_data=current_user.getUserData() #getting user data as dictionary file
-        recruitment_sessions=PRT_Data.getAllRecruitmentSessions()
-    # under_maintainance = system.objects.all()
-    # if under_maintainance[0].scheduling_under_maintenance.:
-        if(request.method=="POST"):
-            if(request.POST.get('send_email')):
-                
-                '''
-                The recruitment sessions "option value" from html comes
-                as "recruits_{session_id}. Applied an algorithm that will retrieve
-                session_id from this.
-                
-                If no option is selected, backend will recieve an empty string as value.
-                
-                Settled value for the options in HTML:
-                    All Registered Members - "general_members"
-                    ALL officers of IEEE NSU SB - "all_officers",
-                    Executive Panel (Branch Only) - "eb_panel",
-                    Branch Ex-Com Members - "excom_branch",
-                    All, Society, Chapters, Affinity Group Ebs - "scag_eb"
-                
-                '''
-                
-                
-                email_single_email=request.POST['email_to']
-                email_to_list=request.POST.getlist('to')
-                email_cc_list=request.POST.getlist('cc')
-                email_bcc_list=request.POST.getlist('bcc')
-                email_subject=request.POST['subject']
-                email_body=request.POST['body']
-                email_schedule_date_time = request.POST['date_time']
+    
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    recruitment_sessions=PRT_Data.getAllRecruitmentSessions()
+    under_maintainance = system.objects.all().first()
+    
+    if(request.method=="POST"):
+        if(request.POST.get('send_email')):
+            
+            '''
+            The recruitment sessions "option value" from html comes
+            as "recruits_{session_id}. Applied an algorithm that will retrieve
+            session_id from this.
+            
+            If no option is selected, backend will recieve an empty string as value.
+            
+            Settled value for the options in HTML:
+                All Registered Members - "general_members"
+                ALL officers of IEEE NSU SB - "all_officers",
+                Executive Panel (Branch Only) - "eb_panel",
+                Branch Ex-Com Members - "excom_branch",
+                All, Society, Chapters, Affinity Group Ebs - "scag_eb"
+            
+            '''
+            
+            
+            email_single_email=request.POST['email_to']
+            email_to_list=request.POST.getlist('to')
+            email_cc_list=request.POST.getlist('cc')
+            email_bcc_list=request.POST.getlist('bcc')
+            email_subject=request.POST['subject']
+            email_body=request.POST['body']
+            email_schedule_date_time = request.POST['date_time']
 
+            
+            if email_schedule_date_time != "":
                 
-                if email_schedule_date_time != "":
-                    
-                    if(email_single_email=='' and email_to_list[0]=='' and email_cc_list[0]=='' and email_bcc_list[0]==''):
-                        messages.error(request,"Select atleast one recipient")
-                    else:
-                        try:
+                if(email_single_email=='' and email_to_list[0]=='' and email_cc_list[0]=='' and email_bcc_list[0]==''):
+                    messages.error(request,"Select atleast one recipient")
+                else:
+                    try:
+                    # If there is a file 
+                        email_attachment=request.FILES.getlist('attachment')                       
+                        to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
+                            email_single_email,email_to_list,email_cc_list,email_bcc_list
+                        )
+                        
+                        if PRT_Email_System.send_scheduled_email(to_email_list,cc_email_list,bcc_email_list,email_subject,email_body,email_schedule_date_time,email_attachment):
+                            messages.success(request,"Email scheduled successfully!")
+                        else:
+                            messages.error(request,"Email could not be scheduled! Try again Later") 
+                    except MultiValueDictKeyError:
+                        to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
+                            email_single_email,email_to_list,email_cc_list,email_bcc_list
+                        )
+                        if PRT_Email_System.send_scheduled_email(to_email_list,cc_email_list,bcc_email_list,email_subject,email_body,email_schedule_date_time):
+                            messages.success(request,"Email scheduled successfully!")
+                        else:
+                            messages.error(request,"Email could not be scheduled! Try again Later")
+                                    
+            else:   
+
+                if(email_single_email=='' and email_to_list[0]=='' and email_cc_list[0]=='' and email_bcc_list[0]==''):
+                    messages.error(request,"Select atleast one recipient")
+                else:
+                
+                    try:
                         # If there is a file 
-                            email_attachment=request.FILES.getlist('attachment')                       
-                            to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
-                                email_single_email,email_to_list,email_cc_list,email_bcc_list
-                            )
-                            
-                            if PRT_Email_System.send_scheduled_email(to_email_list,cc_email_list,bcc_email_list,email_subject,email_body,email_schedule_date_time,email_attachment):
-                                messages.success(request,"Email scheduled successfully!")
-                            else:
-                                messages.error(request,"Email could not be scheduled! Try again Later") 
-                        except MultiValueDictKeyError:
-                            to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
-                                email_single_email,email_to_list,email_cc_list,email_bcc_list
-                            )
-                            if PRT_Email_System.send_scheduled_email(to_email_list,cc_email_list,bcc_email_list,email_subject,email_body,email_schedule_date_time):
-                                messages.success(request,"Email scheduled successfully!")
-                            else:
-                                messages.error(request,"Email could not be scheduled! Try again Later")
-                                        
-                else:   
+                        email_attachment=request.FILES.getlist('attachment')
 
-                    if(email_single_email=='' and email_to_list[0]=='' and email_cc_list[0]=='' and email_bcc_list[0]==''):
-                        messages.error(request,"Select atleast one recipient")
-                    else:
-                    
-                        try:
-                            # If there is a file 
-                            email_attachment=request.FILES.getlist('attachment')
-
-                            to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
-                                email_single_email,email_to_list,email_cc_list,email_bcc_list
-                            )
-                            if PRT_Email_System.send_email(to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,is_scheduled=False,attachment=email_attachment):
-                                messages.success(request,"Email sent successfully!")
-                            else:
-                                messages.error(request,"Email sending failed! Try again Later")
-                            
-                        # IF there is no files
-                        except MultiValueDictKeyError:
-                            to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
-                                email_single_email,email_to_list,email_cc_list,email_bcc_list
-                            )
-                            if PRT_Email_System.send_email(to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,is_scheduled=False):
-                                messages.success(request,"Email sent successfully!")
-                            else:
-                                messages.error(request,"Email sending failed! Try again Later")
+                        to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
+                            email_single_email,email_to_list,email_cc_list,email_bcc_list
+                        )
+                        if PRT_Email_System.send_email(to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,is_scheduled=False,attachment=email_attachment):
+                            messages.success(request,"Email sent successfully!")
+                        else:
+                            messages.error(request,"Email sending failed! Try again Later")
+                        
+                    # IF there is no files
+                    except MultiValueDictKeyError:
+                        to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
+                            email_single_email,email_to_list,email_cc_list,email_bcc_list
+                        )
+                        if PRT_Email_System.send_email(to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,is_scheduled=False):
+                            messages.success(request,"Email sent successfully!")
+                        else:
+                            messages.error(request,"Email sending failed! Try again Later")
 
                     
         
-        context={
-            'user_data':user_data,
-            'media_url':settings.MEDIA_URL,
-            'recruitment_sessions':recruitment_sessions,
-        }
-        return render(request,'public_relation_team/email/compose_email.html',context)
-    # else:
-    #     return render(request,'public_relation_team/access_denied.html')
+    context={
+        'user_data':user_data,
+        'media_url':settings.MEDIA_URL,
+        'recruitment_sessions':recruitment_sessions,
+        'under_maintenance':under_maintainance,
+    }
+    return render(request,'public_relation_team/email/compose_email.html',context)
     
