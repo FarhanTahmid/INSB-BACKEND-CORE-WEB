@@ -259,3 +259,33 @@ class Page_Link(models.Model):
 
     def __str__(self) -> str:
         return str(self.pk)
+    
+class IEEE_NSU_Student_Branch(models.Model):
+    about_nsu_student_branch = models.TextField(null=True,blank=True)
+    about_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/About Image/")
+    chapters_description = models.TextField(null=True,blank=True)
+    ras_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/RAS Image/")
+    ras_read_more_link = models.CharField(null=True,blank=True,max_length=200)
+    pes_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/PES Image/")
+    pes_read_more_link = models.CharField(null=True,blank=True,max_length=200)
+    ias_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/IAS Image/")
+    ias_read_more_link = models.CharField(null=True,blank=True,max_length=200)
+    wie_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/WIE Image/")
+    wie_read_more_link = models.CharField(null=True,blank=True,max_length=200)
+    creative_team_description = models.TextField(null=True,blank=True)
+    mission_description = models.TextField(null=True,blank=True)
+    mission_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/Mission Image/")
+    vision_description = models.TextField(null=True,blank=True)
+    vision_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/Vision Image/")
+    events_description = models.TextField(null=True,blank=True)
+    join_now_link = models.CharField(null=True,blank=True,max_length=200)
+    achievements_description = models.TextField(null=True,blank=True)
+
+    class Meta:
+        verbose_name="IEEE NSU Student Branch"
+    def save(self, *args, **kwargs):
+        # Override the save method to ensure only one instance exists
+        self.id = 1  # Set the primary key to 1 to always update the same row
+        super(IEEE_NSU_Student_Branch, self).save(*args, **kwargs)
+    def __str__(self) -> str:
+        return str(self.pk)

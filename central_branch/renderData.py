@@ -2,7 +2,7 @@ import os
 from bs4 import BeautifulSoup
 from django.http import Http404
 from insb_port import settings
-from main_website.models import About_IEEE, IEEE_Bangladesh_Section, Page_Link
+from main_website.models import About_IEEE, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, Page_Link
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
@@ -1020,6 +1020,39 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
+    def set_ieee_nsu_student_branch_page(about_nsu_student_branch, chapters_description, ras_read_more_link,
+                                            pes_read_more_link, ias_read_more_link, wie_read_more_link, creative_team_description,
+                                            mission_description, vision_description, events_description, join_now_link, achievements_description,
+                                            about_image,ras_image,pes_image,ias_image,wie_image,mission_image,vision_image):
+        try:
+            ieee_nsu_student_branch, created = IEEE_NSU_Student_Branch.objects.get_or_create(id=1)
+            ieee_nsu_student_branch.about_nsu_student_branch = about_nsu_student_branch
+            ieee_nsu_student_branch.about_image = about_image
+            ieee_nsu_student_branch.chapters_description = chapters_description
+            ieee_nsu_student_branch.ras_read_more_link = ras_read_more_link
+            ieee_nsu_student_branch.ras_image = ras_image
+            ieee_nsu_student_branch.pes_read_more_link = pes_read_more_link
+            ieee_nsu_student_branch.pes_image = pes_image
+            ieee_nsu_student_branch.ias_read_more_link = ias_read_more_link
+            ieee_nsu_student_branch.ias_image = ias_image
+            ieee_nsu_student_branch.wie_read_more_link = wie_read_more_link
+            ieee_nsu_student_branch.wie_image = wie_image
+            ieee_nsu_student_branch.creative_team_description = creative_team_description
+            ieee_nsu_student_branch.mission_description = mission_description
+            ieee_nsu_student_branch.mission_image = mission_image
+            ieee_nsu_student_branch.vision_description = vision_description
+            ieee_nsu_student_branch.vision_image = vision_image
+            ieee_nsu_student_branch.events_description = events_description
+            ieee_nsu_student_branch.join_now_link = join_now_link
+            ieee_nsu_student_branch.achievements_description = achievements_description
+
+            ieee_nsu_student_branch.save()
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
     def checking_length(about_details, community_details, start_with_ieee_details, collaboration_details,
                         publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
                         students_and_member_activities_details, quality_details):
@@ -1071,7 +1104,6 @@ class Branch:
             return False
         
     def ieee_bangladesh_section_page_delete_image(image_id,image_path):
-
         try:
             ieee_bangladesh_section = IEEE_Bangladesh_Section.objects.get(id=1)
             path = settings.MEDIA_ROOT+str(image_path)
@@ -1084,6 +1116,41 @@ class Branch:
                 os.remove(path)
             
             ieee_bangladesh_section.save()
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def ieee_nsu_student_branch_page_delete_image(image_id,image_path):
+        try:
+            ieee_nsu_student_branch = IEEE_NSU_Student_Branch.objects.get(id=1)
+            path = settings.MEDIA_ROOT+str(image_path)
+
+            if(image_id == 'about_image'):
+                ieee_nsu_student_branch.about_image = None
+                os.remove(path)
+            elif(image_id == 'ras_image'):
+                ieee_nsu_student_branch.ras_image = None
+                os.remove(path)
+            elif(image_id == 'pes_image'):
+                ieee_nsu_student_branch.pes_image = None
+                os.remove(path)
+            elif(image_id == 'ias_image'):
+                ieee_nsu_student_branch.ias_image = None
+                os.remove(path)
+            elif(image_id == 'wie_image'):
+                ieee_nsu_student_branch.wie_image = None
+                os.remove(path)
+            elif(image_id == 'mission_image'):
+                ieee_nsu_student_branch.mission_image = None
+                os.remove(path)
+            elif(image_id == 'vision_image'):
+                ieee_nsu_student_branch.ras_image = None
+                os.remove(path)
+            
+            ieee_nsu_student_branch.save()
             return True
 
         except Exception as e:

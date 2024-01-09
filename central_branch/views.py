@@ -923,12 +923,12 @@ def ieee_bangladesh_section(request):
 
             return redirect("central_branch:ieee_bangladesh_section")
         
-    page_links_dict = Branch.get_about_page_links(page_title=page_title)
+    page_links = Branch.get_about_page_links(page_title=page_title)
 
     context={
         'all_sc_ag':sc_ag,
         'ieee_bangladesh_section':ieee_bangladesh_section,
-        'page_links':page_links_dict,
+        'page_links':page_links,
         'media_url':settings.MEDIA_URL,
     }
     return render(request,'Manage Website/About/IEEE Bangladesh Section/ieee_bangladesh_section.html',context=context)
@@ -937,8 +937,68 @@ def ieee_bangladesh_section(request):
 def ieee_nsu_student_branch(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
 
+    ieee_nsu_student_branch, created = IEEE_NSU_Student_Branch.objects.get_or_create(id=1)
+
+    if request.method == 'POST':
+        if 'save' in request.POST:
+            about_nsu_student_branch = request.POST['about_details']
+            chapters_description = request.POST['chapters_details']
+            ras_read_more_link = request.POST['ras_read_more_link']
+            pes_read_more_link = request.POST['pes_read_more_link']
+            ias_read_more_link = request.POST['ias_read_more_link']
+            wie_read_more_link = request.POST['wie_read_more_link']
+            creative_team_description = request.POST['creative_team_details']
+            mission_description = request.POST['mission_details']
+            vision_description = request.POST['vision_details']
+            events_description = request.POST['events_details']
+            join_now_link = request.POST['join_now_link']
+            achievements_description = request.POST['achievements_details']
+
+            about_image = request.FILES.get('about_image')
+            ras_image = request.FILES.get('ras_image')
+            pes_image = request.FILES.get('pes_image')
+            ias_image = request.FILES.get('ias_image')
+            wie_image = request.FILES.get('wie_image')
+            mission_image = request.FILES.get('mission_image')
+            vision_image = request.FILES.get('vision_image')
+
+            if about_image == None:
+                about_image = ieee_nsu_student_branch.about_image
+            if ras_image == None:
+                ras_image = ieee_nsu_student_branch.ras_image
+            if pes_image == None:
+                pes_image = ieee_nsu_student_branch.pes_image
+            if ias_image == None:
+                ias_image = ieee_nsu_student_branch.ias_image
+            if wie_image == None:
+                wie_image = ieee_nsu_student_branch.wie_image
+            if mission_image == None:
+                mission_image = ieee_nsu_student_branch.mission_image
+            if vision_image == None:
+                vision_image = ieee_nsu_student_branch.vision_image
+            
+            if(Branch.set_ieee_nsu_student_branch_page(about_nsu_student_branch, chapters_description, ras_read_more_link,
+                                                       pes_read_more_link, ias_read_more_link, wie_read_more_link, creative_team_description,
+                                                       mission_description, vision_description, events_description, join_now_link, achievements_description,
+                                                       about_image,ras_image,pes_image,ias_image,wie_image,mission_image,vision_image)):
+                messages.success(request, "Details Updated Successfully!")
+            else:
+                messages.error(request, "Something went wrong while updating the details!")
+
+            return redirect('central_branch:ieee_nsu_student_branch')
+        elif 'remove' in request.POST:
+            image = request.POST.get('image_delete')
+            image_id = request.POST.get('image_id')
+            if Branch.ieee_nsu_student_branch_page_delete_image(image_id,image):
+                messages.success(request,"Deleted Successfully!")
+            else:
+                messages.error(request,"Error while deleting picture.")
+            return redirect("central_branch:ieee_nsu_student_branch")
+
     context={
         'all_sc_ag':sc_ag,
+        'ieee_nsu_student_branch':ieee_nsu_student_branch,
+        'media_url':settings.MEDIA_URL,
     }
     return render(request,'Manage Website/About/IEEE NSU Student Branch/ieee_nsu_student_branch.html', context)
 
