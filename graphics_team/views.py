@@ -58,12 +58,7 @@ def manage_team(request):
         data_access = GraphicsTeam.load_data_access()
         team_members = GraphicsTeam.load_team_members()
         #load all position for insb members
-        position=Branch.load_roles_and_positions()
-
-        # Excluding position of EB, Faculty and SC-AG members
-        for i in position:
-            if(i.is_eb_member or i.is_faculty or i.is_sc_ag_eb_member):
-                position=position.exclude(pk=i.pk)
+        position=PortData.get_all_volunteer_position_with_sc_ag_id(request=request,sc_ag_primary=1)
                 
         #load all insb members
         all_insb_members=Members.objects.all()
