@@ -208,7 +208,7 @@
                                 {% if ieee_bangladesh_section.ieee_bangladesh_logo %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="{{media_url}}{{ieee_bangladesh_section.ieee_bangladesh_logo}}" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_bangladesh_section.ieee_bangladesh_logo}}')">About Image</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_bangladesh_section.ieee_bangladesh_logo}}')">About Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{ieee_bangladesh_section.ieee_bangladesh_logo}}', 'ieee_bangladesh_logo')">✖</button>
@@ -256,7 +256,7 @@
                                 {% if ieee_bangladesh_section.member_and_volunteer_picture %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="{{media_url}}{{ieee_bangladesh_section.member_and_volunteer_picture}}" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_bangladesh_section.member_and_volunteer_picture}}')">Members and Volunteer Image</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_bangladesh_section.member_and_volunteer_picture}}')">Members and Volunteer Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{ieee_bangladesh_section.member_and_volunteer_picture}}', 'member_and_volunteer_picture')">✖</button>
@@ -460,6 +460,74 @@
                                 type="text"
                                 name="achievements_details">{{ieee_bangladesh_section.achievements_description}}</textarea>
                                 <p id="achievementsCharacterCount" style="color: red;">Required</p>
+                            </div>
+                            <br>
+
+                            <div class="achievements-link-label">
+                                <div class="form-group row">
+                                    <label class="col-sm-7 form-control-label">Add Links (Achievements Read More Link):</label>
+                                    <div class="col-sm-3">
+                                        <!-- Add input field for links here if needed -->
+                                    </div>
+                                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            <div id="links-container achievements-container" class="mt-3">
+                                <label class="mb-0">Links (Achievements Read More Link):</label> 
+                                <div class="achievements-item">
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="achievements-item">
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="achievements-item">
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="achievements-item">
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="achievements-item">
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <br>
@@ -1066,6 +1134,55 @@
             var inputElement = document.getElementById('remove_link_id');    
             inputElement.value=id;
         }
+    </script>
+
+    <!--For Achievements-->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Function to check the number of achievement items and update the achievements-link-label
+            function checkAchievementCount() {
+                var achievementsContainer = document.getElementById('links-container achievements-container');
+                var achievementItems = achievementsContainer.querySelectorAll('.achievements-item');
+                var achievementsLinkLabel = document.querySelector('.achievements-link-label');
+        
+                // Set the maximum allowed slots
+                var maxSlots = 6;
+        
+                if (achievementItems.length >= maxSlots) {
+                    // Update the achievements-link-label content with the maximum limit message
+                    if (achievementsLinkLabel) {
+                        achievementsLinkLabel.innerHTML = '<div class="form-group row">' +
+                            '<label class="col-sm-12 form-control-label text-left" style="color:red;">Maximum limit for achievements reached. Please remove 1 to add another link. Allowed Slots: 0</label>' +
+                            '</div>';
+                    }
+                } else {
+                    // Calculate the remaining slots
+                    var remainingSlots = maxSlots - achievementItems.length;
+        
+                    // Reset the achievements-link-label content with the original form and remaining slots count
+                    if (achievementsLinkLabel) {
+                        achievementsLinkLabel.innerHTML = '<div class="form-group row">' +
+                            '<label class="col-sm-7 form-control-label">Add Links (Achievements Read More Link):</label>' +
+                            '<div class="col-sm-3">' +
+                            '<!-- Add input field for links here if needed -->' +
+                            '</div>' +
+                            '<div class="col-sm-2 d-flex align-items-center justify-content-center">' +
+                            '<button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>' +
+                            '</div>' +
+                            '<label class="col-sm-12 form-control-label text-left">Allowed Slots: ' + remainingSlots + '</label>' +
+                            '</div>';
+                    }
+                }
+            }
+        
+            // Call the function initially
+            checkAchievementCount();
+        
+            // Set up an interval to continuously check the count
+            setInterval(checkAchievementCount, 1000); // Adjust the interval time as needed
+        });
+        
+        
     </script>
  
 </body>
