@@ -24,11 +24,18 @@ logger=logging.getLogger(__name__)
 
 @login_required
 def homepage(request):
-
     sc_ag=PortData.get_all_sc_ag(request=request)
 
+    # get team members
+    get_officers=ContentWritingTeam.get_officers()
+    get_volunteers=ContentWritingTeam.get_volunteers()
+    
     context = {
         'all_sc_ag':sc_ag,
+        'co_ordinators':get_officers[0],
+        'incharges':get_officers[1],
+        'core_volunteers':get_volunteers[0],
+        'team_volunteers':get_volunteers[1]
     }
     return render(request,"Homepage/content_homepage.html", context)
 
