@@ -957,6 +957,8 @@ class Branch:
                                 students_and_member_activities_details, quality_details, join_now_link, asia_pacific_link, ieee_computer_organization_link,
                                 customer_service_number, presidents_names, founders_names, about_image, community_image,
                                 innovations_and_developments_image, students_and_member_activities_image, quality_image):
+        ''' This function saves all data for about_ieee page to database, except for external links added through '+' button '''
+        
         try:
             about_ieee, created = About_IEEE.objects.get_or_create(id=1)
             about_ieee.about_ieee=about_details
@@ -994,6 +996,8 @@ class Branch:
                                             student_branches_details, affinity_groups_details, communty_and_society_details,
                                             achievements_details, chair_name, chair_email, secretary_name,
                                             secretary_email, office_secretary_name, office_secretary_number, about_image, members_and_volunteers_image):
+        ''' This function saves all data for about_ieee_bangladesh_section page to database, except for external links added through '+' button '''
+
         try:
             ieee_bangladesh_section, created = IEEE_Bangladesh_Section.objects.get_or_create(id=1)
             ieee_bangladesh_section.about_ieee_bangladesh = about_details
@@ -1024,6 +1028,8 @@ class Branch:
                                             pes_read_more_link, ias_read_more_link, wie_read_more_link, creative_team_description,
                                             mission_description, vision_description, events_description, join_now_link, achievements_description,
                                             about_image,ras_image,pes_image,ias_image,wie_image,mission_image,vision_image):
+        ''' This function saves all data for about_ieee_nsu_student_branch page to database, except for external links added through '+' button '''        
+        
         try:
             ieee_nsu_student_branch, created = IEEE_NSU_Student_Branch.objects.get_or_create(id=1)
             ieee_nsu_student_branch.about_nsu_student_branch = about_nsu_student_branch
@@ -1058,6 +1064,8 @@ class Branch:
                                     membership_development_description,events_and_conference_description,home_page_link,website_link,membership_inquiry_link,
                                     for_volunteers_link,contact_number,ieee_region_10_image,young_professionals_image,membership_development_image,
                                     background_picture_parallax,events_and_conference_image):
+        ''' This function saves all data for about_ieee_region_10 page to database, except for external links added through '+' button '''
+        
         try:
             ieee_region_10, created = IEEE_Region_10.objects.get_or_create(id=1)
             ieee_region_10.ieee_region_10_description = ieee_region_10_description
@@ -1108,6 +1116,7 @@ class Branch:
             return False
         
     def about_ieee_delete_image(image_id,image_path):
+        ''' This function deletes an image from the about_ieee database. It takes an image_id(category) and image_path as parameter '''
 
         try:
             about_ieee = About_IEEE.objects.get(id=1)
@@ -1138,6 +1147,8 @@ class Branch:
             return False
         
     def ieee_bangladesh_section_page_delete_image(image_id,image_path):
+        ''' This function deletes an image from the ieee_bangladesh_section database. It takes an image_id(category) and image_path as parameter '''
+
         try:
             ieee_bangladesh_section = IEEE_Bangladesh_Section.objects.get(id=1)
             path = settings.MEDIA_ROOT+str(image_path)
@@ -1158,6 +1169,8 @@ class Branch:
             return False
         
     def ieee_nsu_student_branch_page_delete_image(image_id,image_path):
+        ''' This function deletes an image from the ieee_nsu_student_branch database. It takes an image_id(category) and image_path as parameter '''
+
         try:
             ieee_nsu_student_branch = IEEE_NSU_Student_Branch.objects.get(id=1)
             path = settings.MEDIA_ROOT+str(image_path)
@@ -1193,6 +1206,8 @@ class Branch:
             return False
         
     def ieee_region_10_page_delete_image(image_id,image_path):
+        ''' This function deletes an image from the ieee_region_10 database. It takes an image_id(category) and image_path as parameter '''
+
         try:
             ieee_region_10 = IEEE_Region_10.objects.get(id=1)
             path = settings.MEDIA_ROOT+str(image_path)
@@ -1229,6 +1244,8 @@ class Branch:
         return text_content
     
     def add_about_page_link(page_title, category, title, link):
+        ''' This function adds a new page link. Used in About pages. It takes a page_title, category, title and link as parameter '''
+
         try:
             page_link = Page_Link.objects.create(page_title=page_title, category=category, title=title, link=link)
             page_link.save()
@@ -1239,6 +1256,8 @@ class Branch:
             return False
         
     def update_about_page_link(link_id, page_title, title, link):
+        ''' This function updates a page link. Used in About pages. It takes a link_id, page_title, category, title and link as parameter '''
+
         try:
             page_link = Page_Link.objects.get(id=link_id, page_title=page_title)
             page_link.title = title
@@ -1251,6 +1270,8 @@ class Branch:
             return False
     
     def remove_about_page_link(link_id, page_title):
+        ''' This function deletes a page link. Used in About pages. It takes a link_id and page_title as parameter '''
+
         try:
             Page_Link.objects.get(id=link_id, page_title=page_title).delete()
             return True
@@ -1260,20 +1281,30 @@ class Branch:
             return False
     
     def get_about_page_links(page_title):
+        ''' This function returns all page links for a specific page. Used in About pages. It takes a page_title as parameter.
+            It returns a dictionary where category is the key and value is an array of page_link '''
+
         try:
+            #Getting all links for a specific page and ordering by primary key
             page_links_all = Page_Link.objects.filter(page_title=page_title).order_by('pk')
             page_links_dict = {}
             categories = []
 
+            #Find all the categories and put them in the categories array
             for page_link in page_links_all:
+                #Checking for duplicate entry
                 if(page_link.category not in categories):
                     categories.append(page_link.category)
             
+            #For each category in the categories array, find all the page links it contains
             for category in categories:
                 values = []
                 for page_link in page_links_all:
+                    #If the category matches
                     if page_link.category == category:
+                        #Add the page_link to the values array
                         values.append(page_link)
+                #After finding all page_links for a category, create a new key(category) and value(page_link array) and add them to the dictionary
                 page_links_dict.update({category : values})
             return page_links_dict
         except Exception as e:
