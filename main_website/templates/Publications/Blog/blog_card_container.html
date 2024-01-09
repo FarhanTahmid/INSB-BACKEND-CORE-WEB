@@ -73,33 +73,76 @@
         .card_content a:hover {
             color: #0056b3;
         }
+        .search_blog{
+            width: 100%;
+            max-width: 1140px;
+            margin: 60px auto 30px auto;
+            border: 2px solid #fecd13;
+            border-radius: 10px;
+            padding: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+          }
+          @media screen and (max-width: 1200px) {
+            .search_blog {
+                width: 90%;
+                max-width: 960px;
+            }
+        }
         
 
 </style>
+<!-- Search Section -->
+<div class="search_blog">
+    
+    <input
+    type="text"
+    id="blogFilter"
+    onkeyup="blogFilterFunction()"
+    placeholder="Search Blogs.."
+    title="Type in a name"
+    />
+</div>
 
 <!-- Cards starts here -->
 <div class="card_container">
     {% for i in blogs %}
-    <div class="card">
-        <img src="media_files/{{i.blog_banner_picture}}" alt="Sample photo">
-        <div class="card_content">
-            <h5>{{i.title}}</h5>
-            <i class="fa-regular fa-clock"></i>
-            <span>{{i.date}}</span>
-            <i class="fa-solid fa-align-left"></i><span> Category-{{i.category}} •</span><br>
-            <p>{{i.short_description | safe}}</p>
-            <a href="https://ieeensusb.org/sustainable-development-with-industry-4-0/#respond">Read More</a>
+        <div class="card">
+            <img src="media_files/{{i.blog_banner_picture}}" alt="Sample photo">
+            <div class="card_content">
+                <a href="{% url 'main_website:blog_description' i.pk %}"><h5>{{i.title}}</h5></a>
+                <i class="fa-regular fa-clock"></i>
+                <span>{{i.date}}</span>
+                <i class="fa-solid fa-align-left"></i><span> {{i.writer_name}} •</span><br>
+                <p>{{i.short_description | safe}}</p>
+                <a href="{% url 'main_website:blog_description' i.pk %}">Read More</a>
 
+            </div>
         </div>
-    </div>
     {% endfor %}
-    
-
     
 </div>
 
-<!-- Add more cards as needed -->
 
+<script>
+    function blogFilterFunction() {
+        var input, filter, cardContainer, cards, card, title, writer;
+        input = document.getElementById("blogFilter");
+        filter = input.value.toUpperCase();
+        cardContainer = document.querySelector(".card_container");
+        cards = cardContainer.getElementsByClassName("card");
+
+        for (var i = 0; i < cards.length; i++) {
+            card = cards[i];
+            title = card.getElementsByTagName("h5")[0].innerText;
+
+            if (title.toUpperCase().indexOf(filter) > -1) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
+        }
+    }
+</script>
 
 
 {% endblock blog_card_container %}

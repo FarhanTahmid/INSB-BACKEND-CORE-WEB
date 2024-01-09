@@ -100,7 +100,7 @@ class ResearchPaperForm(forms.ModelForm):
     class Meta:
         model=Research_Papers
         fields=[
-            'title','category','research_banner_picture','author_names','short_description','publication_link','publish_date','publish_research'
+            'title','category','group','research_banner_picture','author_names','short_description','publication_link','publish_date','publish_research'
         ]
     
     def save(self, commit=True):
@@ -241,6 +241,34 @@ class ExemplaryMembersForm(forms.ModelForm):
             # Update the instance with the new image
             previous_instance.member_picture = instance.member_picture
             previous_instance.member_picture=instance.member_picture
+            previous_instance.save()
+
+        if commit:
+            instance.save()
+        return instance
+
+class ToolkitForm(forms.ModelForm):
+    class Meta:
+        model=Toolkit
+        fields=['title','picture','color_codes']
+    
+    def save(self, commit=True):
+        # Get the existing instance from the database
+        instance = super().save(commit=False)
+        
+        
+        # Delete the previous image if it exists
+        if instance.pk and 'picture' in self.changed_data:
+            previous_instance = Toolkit.objects.get(pk=instance.pk)
+            previous_picture = previous_instance.picture
+
+            # Delete the associated file from the file system
+            if previous_picture:
+                if os.path.isfile(previous_picture.path):
+                    os.remove(previous_picture.path)
+            # Update the instance with the new image
+            previous_instance.picture = instance.picture
+            previous_instance.picture=instance.picture
             previous_instance.save()
 
         if commit:

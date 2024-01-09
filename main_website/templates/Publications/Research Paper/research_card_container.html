@@ -1,6 +1,6 @@
 {% load static %}
 
-{% block news_card_container %}
+{% block research_card_container %}
 
 <style>
 
@@ -38,15 +38,19 @@
     <div class="row m-0">
 
         <!-- Repeat the card -->
-        {% for i in all_news %}
+        {% for i in all_research_papers %}
         <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
             <div class="card shadow achievement_card">
-                <img class="card-img-top" src="/media_files/{{i.news_picture}}" alt="">
+                <img class="card-img-top" src="/media_files/{{i.research_banner_picture}}" alt="">
+
+                <div class="position-absolute">
+                    <span style="background-color: {{i.primary_color_code}};" class=" text-white px-3 py-2 rounded h6">{{i.group.short_form}}</span>
+                </div>
 
                 <div class="card-body">
-                    <a href="{% url 'main_website:news_description' i.pk %}"><h5 class="card-title fw-bold mt-2">{{i.news_title}}<br></h5></a>
+                    <a href="{{i.publication_link}}"><h5 class="card-title fw-bold mt-2">{{i.title}}</h5></a>-<span> <b> {{i.category}}</b></span>
                     <div class="description-container">
-                        <p class="card-text">{{i.news_description|safe}}</p>
+                        <p class="card-text">{{i.short_description|safe}}</p>
                     </div>
                     <a href="#" class="read-more-link" >Read More</a>
 
@@ -85,4 +89,4 @@
     });
 </script>
 
-{% endblock news_card_container %}
+{% endblock research_card_container %}

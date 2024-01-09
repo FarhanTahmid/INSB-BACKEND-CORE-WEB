@@ -42,16 +42,21 @@ class HomepageItems:
                     ####getting collaborated events###if dont want collaborated event remove bottom section
                     collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
                     #joining both the events list of collbarated and their own organised events
-                    events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('event_date') 
-                  
+                    events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('-event_date') 
+                    ####################################################################################################################
             else:
                 if primary == 1:
                     #when false getting upcoming five events
                     events = Events.objects.filter(publish_in_main_web= True,event_date__gt=current_datetime).order_by('event_date')[:5]
                 else:
                     #when False getting events 5 events which are upcoming, is published and is of particular society
-                    events = Events.objects.filter(publish_in_main_web= True,event_organiser = society,event_date__gt=current_datetime).order_by('event_date')[:5]
-                
+                    events = Events.objects.filter(publish_in_main_web= True,event_organiser = society,event_date__gt=current_datetime).order_by('event_date')#[:5]
+                    ####getting collaborated events###if dont want collaborated event remove bottom section and uncommment the list here -----------------------here
+                    collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
+                    #joining both the events list of collbarated and their own organised events
+                    events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True,event_date__gt=current_datetime)).order_by('event_date')[:5]
+                    ####################################################################################################################
+
             #using this loop, assigning the event with its corresponding banner picture in the dictionary as key and value
             for i in events:
                 #getting the event banner image using load_event_banner_image funtion
@@ -67,18 +72,16 @@ class HomepageItems:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
-        
     
     def load_event_banner_image(event_id):
             
-            '''This function returns the banner_image for the particular event'''
-            
-            try:
-                #getting the banner image using the event id sent as parameter
-                return Graphics_Banner_Image.objects.get(event_id = event_id).selected_image
-            except:
-                #if not found any image returning none
-                return None
+        '''This function returns the banner_image for the particular event'''
+        try:
+            #getting the banner image using the event id sent as parameter
+            return Graphics_Banner_Image.objects.get(event_id = event_id).selected_image
+        except:
+            #if not found any image returning none
+            return None
     
     def load_event_gallery_images(event_id):
 
@@ -109,8 +112,6 @@ class HomepageItems:
         
     def getHomepageBannerItems():
         
-        '''This function returns the returns the top banner items for homepage'''
-
         try:
             return HomePageTopBanner.objects.all()
             
@@ -163,7 +164,7 @@ class HomepageItems:
                 collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
                 events = Events.objects.filter(publish_in_main_web= True,event_organiser = society).order_by('-event_date')
                 #joining both the events list of collbarated and their own organised events
-                all_events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('event_date')   
+                all_events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('-event_date')   
             #decalring empty dictionary for getting the event date and event
             #key is the date and event object is the value
             date_and_events = {}
@@ -193,19 +194,18 @@ class HomepageItems:
         '''This function returns a list of events which are upcoming'''
         
         try:
-            #getting current date time to compare which events are upcoming
             current_datetime = timezone.now()
             society = SC_AG_Info.get_sc_ag_details(request,primary)
             if primary == 1:
-                #getting the latest upcoming event for INSB student branch 
                 upcoming_event = Events.objects.filter(publish_in_main_web = True,event_date__gt=current_datetime).order_by('event_date')[:1]
             else:
                 #getting the latest upcoming event for affinity groups and societies
                 upcoming_event = Events.objects.filter(publish_in_main_web = True,event_date__gt=current_datetime,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)).order_by('event_date')#[:1]
-                #getting collaborated upcoming event
+                #getting collaborated upcoming event#if dont want this then remove bottom section and uncomment the list value to one, in the top line --------------------------------------------------------------------------here
                 collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
                 #joining both the events list of collbarated and their own organised events
                 upcoming_event = upcoming_event .union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True,event_date__gt=current_datetime)).order_by('event_date')[:1] 
+                #########################################################################################################################################################################
             #returning only the first item of the list as filter always returns a list
             return upcoming_event[0]
         except:
@@ -215,8 +215,10 @@ class HomepageItems:
 
         '''This function saves the ip address every day. So if same user visits the page everyday,
             then each day his ip address will counted only once'''
+        
         try:
             address = request.META.get('HTTP_X_FORWARDED_FOR')
+            print(address)
             if address:
                 ip = address.split(',')[-1].strip()
             else:
@@ -230,7 +232,6 @@ class HomepageItems:
                 pass
             else:
                 user.save()
-                
         except Exception as e:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -241,9 +242,7 @@ class HomepageItems:
         '''This funtion gets the featured events for the societies depending on primary value'''
         
         try:
-            #assigning empty dictionary
             dic={}
-            #getting 4 events which are published, is featured and is of the particular society. it is ordered bt latest date
             events = Events.objects.filter(event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary),is_featured = True,publish_in_main_web= True).order_by('-event_date')[:4]
             print(events)
             #iterating for each event to set graphics banner image
@@ -265,11 +264,11 @@ class HomepageItems:
         
     def get_faculty_advisor_for_society(request,primary):
 
-        '''This function returns the faculty advisor for the particular society otherwise returns none''' 
+        '''This function returns the faculty advisor for the particular society otherwise return none''' 
         
         try:
             #getting the particular society object
-            society = SC_AG_Info.get_sc_ag_details(request,primary)
+            society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
             try:
                 #getting the faculty advisor of the particular society
                 faculty = SC_AG_Members.objects.get(sc_ag = society,position = Roles_and_Position.objects.get(is_faculty = True,role_of = society))
@@ -292,7 +291,7 @@ class HomepageItems:
             #assingning empty eb_member list
             eb_members=[]
             #getting the particular society object
-            society = SC_AG_Info.get_sc_ag_details(request,primary)
+            society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
             #getting the list of roles of the eb members which is ordered by roles
             roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society).order_by('role_of')
             #for each roles gettiing the corresponding member of that role
@@ -310,7 +309,7 @@ class HomepageItems:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
-
+        
     def save_feedback_information(request,primary,name,email,message):
 
         '''This function saves the feedback data to the database'''
@@ -328,5 +327,7 @@ class HomepageItems:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
+
+    
 
         

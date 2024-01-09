@@ -4,8 +4,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
     <link rel="stylesheet" href=" {% static 'css/event.css' %}" />
     <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
@@ -16,44 +17,53 @@
     {% include "common_css_includes.html" %}
     {% endblock common_css %}
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <title>IEEE NSU Student Branch</title>
     <style>
-
+        /*common CSS used throughout the page*/
         .centering {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
         }
-
         .max-width {
             max-width: 1080px;
             font-family: 'Poppins', sans-serif;
         }
-
         .max-width p {
             font-size: 15px;
             text-align: justify;
         }
+        .bar {
+            width: 90px;
+            height: 5px;
+            background-color: #FFC72C;
+            margin: 18px 0 20px;
+            border-radius: 5px;
+        }
+        /*common CSS used throughout the page*/
 
+        /*about INSB*/
         .about-INSB {
             display: flex;
             column-gap: 44px;
             background: white;
         }
-
         .IEEE-INSB-logo {
             width: 3000px;
             display: flex;
             justify-content: center;
         }
+        /*about INSB*/
 
+        /*chapters*/
         .chapter-container {
             display: flex;
             flex-wrap: wrap;
             gap: 28px;
             justify-content: space-around;
         }
-
         .chapter-card {
             width: 249px;
             height: 312px;
@@ -64,104 +74,117 @@
             cursor: pointer;
             transition: all .3s;
         }
-
         .chapter-container .RAS {
             background: #602568;
             border: 3px solid #602568;
         }
-
         .chapter-container .PES {
             background: #679B41;
             border: 3px solid #679B41;
         }
-
         .chapter-container .IAS {
             background: #14924D;
             border: 3px solid #14924D;
         }
-
         .chapter-container .WIE {
             background: #11689B;
             border: 3px solid #11689B;
         }
-
         .chapter-container .RAS:hover {
             box-shadow: 0px 0px 15px #602568;
         }
-
         .chapter-container .PES:hover {
             box-shadow: 0px 0px 15px #679B41;
         }
-
         .chapter-container .IAS:hover {
             box-shadow: 0px 0px 15px #14924D;
         }
-
         .chapter-container .WIE:hover {
             box-shadow: 0px 0px 15px #11689B;
         }
-
         .chapter-card img {
             width: 100%;
             height: 218px;
             object-fit: contain;
             background-color: #fff;
             transition: all 1s;
-
         }
-
         .chapter-card a {
             text-decoration: none;
             color: white;
             font-size: 12px;
         }
-
         .chapter-card a:hover {
             color: #FFC72C;
         }
-
         .chapter-card h4 {
             margin: 16px 0px;
             color: white;
         }
+        /*chapters*/
 
+        /*creative team*/
+        .creative-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+        .creative-box {
+            width: 100%;
+            height: 154px;
+            color: 	#75787B;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.5s;
+        }
+        .creative-box:hover{
+            color: #000;
+        }
+        .creative-box i {
+            font-size: 40px;
+            margin-bottom: -10px;
+            transition: all .1s;
+        }
+        .creative-box p {
+            padding-top: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+        /*creative team*/
+
+        /*mission vision*/
         .mission,
         .vision {
             display: grid;
             grid-template-columns: 1fr 1fr;
             background: #002855;
         }
-
         .mission img,
         .vision img {
             object-fit: cover;
             height: 100%;
             width: 100%;
         }
-
         .mission h2,
         .vision h2,
         .mission p,
         .vision p {
             color: #f9f9f9;
         }
+        /*mission vision*/
 
+        /*events*/
         .events {
             margin: 20px 0;
             display: grid;
             grid-template-columns: 1.5fr 1fr;
+            grid-gap: 20px;
         }
-
-        .join-us {
-            display: flex;
-        }
-
         .event_calender {
             position: relative;
             margin-left: 18px;
             width: 377px;
         }
-
         .events h2,
         .creative-team h2,
         .chapters h2,
@@ -170,19 +193,6 @@
             color: #000;
             padding-bottom: 25px;
         }
-
-        .join-us h2 {
-            color: white;
-            padding-bottom: 55px;
-            font-weight: bold;
-        }
-
-        .join-us p {
-            color: white;
-            padding-right: 300px;
-        }
-
-
         .events-btn button {
             background-color: #002855;
             border: none;
@@ -197,11 +207,24 @@
             transition: all .3s ease-in-out;
             font-weight: bold;
         }
-
         .events-btn button:hover {
             background-color: #FFC72C;
         }
+        /*events*/
 
+        /*join us*/
+        .join-us {
+            display: flex;
+        }
+        .join-us h2 {
+            color: white;
+            padding-bottom: 55px;
+            font-weight: bold;
+        }
+        .join-us p {
+            color: white;
+            padding-right: 300px;
+        }
         .join-btn button {
             background-color: #FFC72C;
             border: none;
@@ -213,86 +236,38 @@
             transition: all .3s ease-in-out;
             font-weight: bold;
         }
-
         .join-btn button:hover {
             background-color: white;
             color: #FFC72C;
         }
+        /*join us*/
 
-        .bar {
-            width: 90px;
-            height: 5px;
-            background-color: #FFC72C;
-            margin: 18px 0 20px;
-            border-radius: 5px;
-        }
-
-        .creative-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-        }
-
-        .creative-box {
-            width: 100%;
-            height: 154px;
-            color: 	#75787B;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: all 0.5s;
-        }
-        .creative-box:hover{
-            color: #000;
-        }
-
-        .creative-box i {
-            font-size: 40px;
-            margin-bottom: -10px;
-            transition: all .1s;
-        }
-
-        .creative-box p {
-            padding-top: 20px;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        .upnext {
-            display: none;
-        }
-
+        /*media queries*/
         @media screen and (max-width: 1199px) {
             .max-width {
                 width: 90%;
             }
-
             .chapter-card {
                 width: 191px;
                 height: 232px;
             }
-
             .chapter-container {
                 gap: 10px;
             }
-
             .chapter-card h4 {
                 margin: 0px 10px;
                 bottom: 285px;
                 font-size: 17px;
             }
-
             .chapter-card a {
                 top: -215px;
             }
-
             .chapter-card img {
                 height: auto;
             }
-
             .events {
                 grid-template-columns: 1fr 1fr;
             }
-
             .event_calender {
                 margin-left: 15px;
             }
@@ -300,8 +275,6 @@
         }
 
         @media screen and (max-width: 991px) {
-
-
             .mission{
                 display: flex;
                 flex-direction: column-reverse;
@@ -314,96 +287,75 @@
                 width: 155px;
                 height: 177px;
             }
-
             .chapter-card img {
                 height: 128px;
             }
-
             .chapter-card h4 {
                 margin: 0;
             }
-
             .events,
             .join-us {
                 display: grid;
                 grid-template-columns: 100%;
             }
-
             .event_calender {
                 width: 100%;
                 margin-left: 0px;
             }
-
-
             .creative-box {
                 padding: 0%;
             }
-
             .join-btn button {
                 padding: 14px 40px;
                 margin: 20px -10px;
             }
-
             .join-us p {
                 padding: 0;
             }
-
             .about-INSB {
                 display: grid;
                 grid-template-columns: 100%;
             }
-
             .IEEE-INSB-logo {
                 width: auto;
             }
-
         }
 
         @media screen and (max-width: 544px) {
-
             .centering {
                 padding-top: 50px;
             }
-
             .chapter-card {
                 width: 180px;
                 height: 200px;
             }
-
             .chapter-card img {
                 height: 147px;
             }
-
             .event_calender {
                 width: 100%;
             }
-
             .creative-container {
                 grid-template-columns: 1fr 1fr;
             }
-
             .creative-box p {
                 font-size: small;
             }
         }
 
         @media screen and (max-width: 424px) {
-
             .chapter-container {
                 display: grid;
                 grid-template-columns: 1fr;
             }
-
             .chapter-card {
                 width: 100%;
                 height: 150px;
                 font-size: 15px;
             }
-
             .chapter-card img {
                 height: 87px;
             }
-
             .chapter-card h4 {
                 font-size: 15px;
                 padding-top: 5px;
@@ -423,8 +375,11 @@
             {% include 'wave.html' %}
         {% endblock wave_design %}
 
+        <!--Page start-->
+        <!--About INSB section-->
         <section class="centering" style="background-color:white; margin: 20px 0;">
             <section class="about-INSB max-width">
+                <!--INSB logo-->
                 <div class="IEEE-INSB-logo">
                     <img src="{{media_url}}{{ieee_nsu_student_branch.about_image}}" alt="">
                 </div>
@@ -440,6 +395,8 @@
             </section>
         </section>
 
+
+        <!--chapters section-->
         <section class="centering" style="background-color:#f9f9f9; padding: 20px 0;">
             <section class="chapters max-width">
                 <div style="margin-bottom: -38px;">
@@ -495,6 +452,8 @@
             </section>
         </section>
 
+
+        <!--creative team section-->
         <section class="centering" style="background-color:white; margin-top: 20px;">
             <section class="creative-team max-width">
                 <div style="margin-bottom: -38px;">
@@ -545,6 +504,8 @@
             </section>
         </section>
 
+
+        <!--mission section-->
         <section class="centering" style="background-color: #f9f9f9; margin-bottom: 20px;">
             <section class="mission max-width">
                 <div style="padding: 20px;">
@@ -562,6 +523,8 @@
             </section>
         </section>
 
+
+        <!--vision section-->
         <section class="centering" style="background-color: #f9f9f9; margin: 10px 0;">
             <section class="vision max-width">
                 <div>
@@ -579,6 +542,8 @@
             </section>
         </section>
 
+
+        <!--events section-->
         <section class="centering" style="background-color:white; margin: 10px 0;">
             <section class="events max-width">
                 <div>
@@ -593,9 +558,9 @@
                         <button><i class="fa-solid fa-angles-right" style="color: #f9f9f9;"></i> All Events</button>
                     </div>
                 </div>
+
                 <!-- Calender start -->
                 <div class="event_calender">
-
                     <h4 style="margin-bottom: 30px; font-weight: bolder; color: #000;"><span
                             style="border-bottom: 4px solid #fecd13;">EVENT C</span>ALENDER</h4>
                     <div class="calendar">
@@ -618,7 +583,6 @@
                         </div>
                         <div class="days" style="padding: 15px 0px; font-weight: bold;">
                             <span style="color:red; height:20px"></span>
-
                         </div>
                     </div>
                     <div class="event-box" style="padding: 20px;">
@@ -626,16 +590,14 @@
                             <ul style="list-style-type: disc; margin-top: 15px;" class="events-list"></ul>
                     </div>
                     {% comment %} <div id="calendar"></div> {% endcomment %}
-
-
                     <!--my calender-->
-
-
                 </div>
                 <!-- calender end -->
             </section>
         </section>
 
+
+        <!--join us section-->
         <section class="centering" style="background-color:#002855; padding-top: 20px;">
             <section class="join-us max-width" style="margin-bottom: -3px;">
                 <div>
@@ -653,6 +615,8 @@
             </section>
         </section>
 
+
+        <!--acheivements section-->
         <section class="centering" style="background-color:#f9f9f9; margin: 20px 0;">
             <section class="achievements max-width">
                 <div style="margin-bottom: -38px;">
@@ -665,6 +629,7 @@
             </section>
         </section>
 
+        
         <!--Footer-->
         {% block footer %}
         {% include "footer_block.html" %}
@@ -675,176 +640,180 @@
         {% endblock %}
 
     </div>
-    <script>
-        // Dummy events data for demonstration, this is the calendar event load function
 
+<script> 
+  // Dummy events data for demonstration, this is the calendar event load function
 
-        const eventsData = {
-        {% for date, events in date_and_event.items %}
-        '{{ date }}': [
-            {% for event in events %}
-        ["{% url 'main_website:event_details' event %}", "{{ event.event_name }}"],
-            {% endfor %}
-        ],
-        {% endfor %}
-      
-      };
+  
+const eventsData = {
+  {% for date, events in date_and_event.items %}
+  '{{ date }}': [
+      {% for event in events %}
+      ["{% url 'main_website:event_details' event %}", "{{ event.event_name }}"],
+      {% endfor %}
+  ],
+{% endfor %}
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const calendarContainer = document.querySelector('.calendar');
-            const daysContainer = document.querySelector('.days');
-            const monthYear = document.querySelector('.month-year');
-            const eventBox = document.querySelector('.event-box');
-            const selectedDateText = document.querySelector('.selected-date');
-            const eventsList = document.querySelector('.events-list');
+};
 
-            let currentDate = new Date();
-            renderCalendar(currentDate);
+document.addEventListener('DOMContentLoaded', () => {
+  const calendarContainer = document.querySelector('.calendar');
+  const daysContainer = document.querySelector('.days');
+  const monthYear = document.querySelector('.month-year');
+  const eventBox = document.querySelector('.event-box');
+  const selectedDateText = document.querySelector('.selected-date');
+  const eventsList = document.querySelector('.events-list');
 
-            function renderCalendar(date) {
-                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; // Day abbreviations
-                const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-                const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-                const prevMonthLastDay = new Date(date.getFullYear(), date.getMonth(), 0);
-                const daysInMonth = lastDay.getDate();
-                const daysInPrevMonth = prevMonthLastDay.getDate();
-                const startDay = firstDay.getDay();
-                const endDay = lastDay.getDay();
-                const prevMonthDays = startDay === 0 ? 6 : startDay - 1;
-                const nextMonthDays = endDay === 0 ? 0 : 7 - endDay;
+  let currentDate = new Date();
+  renderCalendar(currentDate);
 
-                daysContainer.innerHTML = '';
+  function renderCalendar(date) {
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; // Day abbreviations
+      const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+      const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      const prevMonthLastDay = new Date(date.getFullYear(), date.getMonth(), 0);
+      const daysInMonth = lastDay.getDate();
+      const daysInPrevMonth = prevMonthLastDay.getDate();
+      const startDay = firstDay.getDay();
+      const endDay = lastDay.getDay();
+      const prevMonthDays = startDay === 0 ? 6 : startDay - 1;
+      const nextMonthDays = endDay === 0 ? 0 : 7 - endDay;
 
-                // Display previous month days
-                for (let i = prevMonthDays; i > 0; i--) {
-                    const day = daysInPrevMonth - i + 1;
-                    const dayElement = createDayElement(new Date(date.getFullYear(), date.getMonth() - 1, day));
-                    dayElement.classList.add('prev-month');
+      daysContainer.innerHTML = '';
 
-                    daysContainer.appendChild(dayElement);
+      // Display previous month days
+      for (let i = prevMonthDays; i > 0; i--) {
+          const day = daysInPrevMonth - i + 1;
+          const dayElement = createDayElement(new Date(date.getFullYear(), date.getMonth() - 1, day));
+          dayElement.classList.add('prev-month');
+          
+          daysContainer.appendChild(dayElement);
+          
 
+      }
 
-                }
-
-                // Display current month days
-                for (let i = 1; i <= daysInMonth; i++) {
-                    const dayElement = createDayElement(new Date(Date.UTC(date.getFullYear(), date.getMonth(), i)));
-
-                    const formattedDate = getFormattedDate(dayElement.date);
-                    const event_marks = document.createElement('div');
-                    event_marks.style.display = 'flex';
-                    event_marks.style.textAlign = 'center';
-
-                    if (eventsData.hasOwnProperty(formattedDate)) {
-                        eventsData[formattedDate].forEach(() => {
-                            const eventMark = document.createElement('div');
-                            eventMark.classList.add('event-mark');
-                            event_marks.appendChild(eventMark);
-                            eventMark.style.width = '6px';
-                            eventMark.style.height = '6px';
-                            eventMark.style.borderRadius = '50%';
-                            eventMark.style.backgroundColor = 'red';
-                            eventMark.style.margin = '2px 1px';
-                            eventMark.style.position = 'static';
-                            eventMark.style.bottom = '1px';
-                            eventMark.style.left = '0';
-                            eventMark.style.transform = 'translateX(50%)';
-                            eventMark.style.transform = 'translateY(0%)';
-                            eventMark.style.top = '2px';
-                            dayElement.appendChild(event_marks);
-                        });
-                    }
-
-                    daysContainer.appendChild(dayElement);
-
-                }
-
-                // Display next month days
-                for (let i = 1; i <= nextMonthDays; i++) {
-                    const dayElement = createDayElement(new Date(date.getFullYear(), date.getMonth() + 1, i));
-                    dayElement.classList.add('next-month');
-                    daysContainer.appendChild(dayElement);
-                }
-
-                monthYear.textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-            }
-
-            function createDayElement(date) {
-                const dayElement = document.createElement('div');
-                dayElement.classList.add('day');
-                dayElement.style.display = 'flex';
-                dayElement.style.flexDirection = 'column';
-                dayElement.textContent = date.getDate();
-                {% comment %} dayElement.date = date; {% endcomment %}
-                dayElement.date = new Date(date.toISOString().split('T')[0]);
-                dayElement.addEventListener('click', () => showEventsForDate(date));
-                return dayElement;
-            }
-
-            function showEventsForDate(date) {
-                const formattedDate = getFormattedDate(date);
-
-                selectedDateText.textContent = formattedDate;
-                const eventsForDate = eventsData[formattedDate] || [];
-                console.log(eventsData)
-                console.log(eventsForDate)
-
-                eventsList.innerHTML = '';
-                if (eventsForDate.length > 0) {
-                    eventBox.style.display = 'block';
-                    eventBox.classList.add('show');
-                    eventsForDate.forEach((event) => {
-
-                        const eventItem = document.createElement('li');
-                        eventItem.innerHTML = "<a href='" + event[0] + "'>" + event[1] + "</a>";
-                        eventsList.appendChild(eventItem);
-                    });
-                } else {
-                    eventBox.style.display = 'none';
-                    eventBox.classList.remove('show');
-                }
-            }
-
-            function getFormattedDate(date) {
-                return date.toISOString('en-US').split('T')[0];
-
-            }
-
-            document.querySelector('.prev-btn').addEventListener('click', () => {
-                currentDate.setMonth(currentDate.getMonth() - 1);
-                renderCalendar(currentDate);
+      // Display current month days
+      for (let i = 1; i <= daysInMonth; i++) {
+          const dayElement = createDayElement(new Date(Date.UTC(date.getFullYear(), date.getMonth(), i)));
+          
+          const formattedDate = getFormattedDate(dayElement.date);
+          const event_marks = document.createElement('div');
+          event_marks.style.display = 'flex';
+          event_marks.style.textAlign = 'center';
+          
+          if (eventsData.hasOwnProperty(formattedDate)) {
+            eventsData[formattedDate].forEach(() => {
+                const eventMark = document.createElement('div');
+                eventMark.classList.add('event-mark');
+                event_marks.appendChild(eventMark);
+                eventMark.style.width = '6px';
+                  eventMark.style.height = '6px';
+                  eventMark.style.borderRadius = '50%';
+                  eventMark.style.backgroundColor = 'red';
+                  eventMark.style.margin = '2px 1px';
+                  eventMark.style.position = 'static';
+                  eventMark.style.bottom = '1px';
+                  eventMark.style.left = '0';
+                  eventMark.style.transform = 'translateX(50%)';
+                  eventMark.style.transform = 'translateY(0%)';
+                  eventMark.style.top = '2px';
+                dayElement.appendChild(event_marks);
             });
-
-            document.querySelector('.next-btn').addEventListener('click', () => {
-                currentDate.setMonth(currentDate.getMonth() + 1);
-                renderCalendar(currentDate);
-            });
-        });
-
-
-        function eventFilterFunction() {
-            var input, filter, box, eventName, i, txtValue;
-            input = document.getElementById("eventFilter");
-            filter = input.value.toUpperCase();
-            box = document.getElementsByClassName("event_box");
-            for (i = 0; i < box.length; i++) {
-                eventName = box[i].getElementsByClassName("event_name")[0];
-                if (eventName) {
-                    txtValue = eventName.textContent || eventName.innerText;
-                    console.log('Name: ', txtValue)
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-
-                        box[i].style.display = "block";
-                    } else {
-                        box[i].style.display = "none";
-                    }
-                }
-            }
         }
+          
+          daysContainer.appendChild(dayElement);
+          
+      }
+      
+      // Display next month days
+      for (let i = 1; i <= nextMonthDays; i++) {
+          const dayElement = createDayElement(new Date(date.getFullYear(), date.getMonth() + 1, i));
+          dayElement.classList.add('next-month');
+          daysContainer.appendChild(dayElement);
+      }
+
+      monthYear.textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  }
+
+  function createDayElement(date) {
+      const dayElement = document.createElement('div');
+      dayElement.classList.add('day');
+      dayElement.style.display = 'flex';
+      dayElement.style.flexDirection = 'column';
+      dayElement.textContent = date.getDate();
+      {% comment %} dayElement.date = date; {% endcomment %}
+      dayElement.date = new Date(date.toISOString().split('T')[0]);
+      dayElement.addEventListener('click', () => showEventsForDate(date));
+      return dayElement;
+  }
+
+  function showEventsForDate(date) {
+      const formattedDate = getFormattedDate(date);
+
+      selectedDateText.textContent = formattedDate;
+      const eventsForDate = eventsData[formattedDate] || [];
+      console.log(eventsData)
+      console.log(eventsForDate)
+
+      eventsList.innerHTML = '';
+      if (eventsForDate.length > 0) {
+          eventBox.style.display = 'block';
+          eventBox.classList.add('show');
+          eventsForDate.forEach((event) => {
+
+              const eventItem = document.createElement('li');
+              eventItem.innerHTML = "<a href='"+ event[0] +"'>" + event[1] + "</a>";
+              eventsList.appendChild(eventItem);
+          });
+      } else {
+          eventBox.style.display = 'none';
+          eventBox.classList.remove('show');
+      }
+  }
+
+  function getFormattedDate(date) {
+    return date.toISOString('en-US').split('T')[0];
+      
+  }
+
+  document.querySelector('.prev-btn').addEventListener('click', () => {
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      renderCalendar(currentDate);
+  });
+
+  document.querySelector('.next-btn').addEventListener('click', () => {
+      currentDate.setMonth(currentDate.getMonth() + 1);
+      renderCalendar(currentDate);
+  });
+});
+
+
+function eventFilterFunction() {
+  var input, filter, box, eventName, i, txtValue;
+  input = document.getElementById("eventFilter");
+  filter = input.value.toUpperCase();
+  box = document.getElementsByClassName("event_box");
+  for (i = 0; i < box.length; i++) {
+      eventName = box[i].getElementsByClassName("event_name")[0];
+      if (eventName) {
+          txtValue = eventName.textContent || eventName.innerText;
+          console.log('Name: ', txtValue)
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+
+              box[i].style.display = "block";
+          } else {
+              box[i].style.display = "none";
+          }
+      }
+  }
+}
 
 
 
-    </script>
+</script>
+{% comment %} <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script> {% endcomment %}
+
+{% comment %} <script src="{% static './js/event_script.js'%}"></script> {% endcomment %}
 </body>
 
 

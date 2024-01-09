@@ -1,13 +1,13 @@
 {% block manage_publication_base %}
 {% include "Manage Website/Publications/manage_publications_base.html" %}
 {% endblock manage_publication_base %}
-{% block manage_research_papers %}
+{% block manage_toolkit %}
 {% load static %}
 <body>
     <div class="app" id="app">
         <div ui-view class="app-body" style="justify-content:center; margin-left:27%; margin-right:15%;" id="view">
 
-            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>Research Paper Section</b></h2>
+            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;"><b>Manage Toolkit Section</b></h2>
             
             <!--Messages-->
             <div style="justify-content:center; text-align:center;">
@@ -24,12 +24,10 @@
                 <div class="box-header">
                     
                     <div style="text-align:right;">
-                    <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add New Research Paper</button>
-                    <button type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-c" ui-toggle-class="bounce" ui-target="#animate">Add New Research Category</button>
-                    <a href="{% url 'central_branch:manage_research_request' %}" class="btn btn-outline b-success text-success">Research Paper Requests</a>
+                    <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add New Toolkit</button>
                     </div>
-                    <small>This table holds the data of Research Papers in the main website of IEEE NSU SB</small>
-                    <small style="color:green;"><span style="color:red;">* </span>Adding Research Papers here will update them in the Main Website.</small>
+                    <small>This table holds the data of Toolkit Items in the main website of IEEE NSU SB</small>
+                    <small style="color:green;"><span style="color:red;">* </span>Adding Toolkit Items here will update them in the Main Website.</small>
                     <br>
                     <label style="margin-left:5px;">Search:</label>
                     <input class="form-control w-75" type="text" id="searchInput" placeholder="Search..." onkeyup="searchTable()">
@@ -38,33 +36,27 @@
                 <table class="table table-bordered m-0" style="text-align:center;">
                     <thead>
                     <tr>
-                        <th style="text-align:center;">Research Title</th>
-                        <th style="text-align:center;">Research Authors</th>
-                        <th style="text-align:center;">Publish Status</th>
+                        <th style="text-align:center;">ID</th>
+                        <th style="text-align:center;">Title</th>
                         <th style="text-align:center;">Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     
-                        {% for i in all_researches %}
+                        {% for i in all_toolkits %}
                         <tr>
-                            <td><a style="text-decoration:none;color:#00629B;" href="{% url 'central_branch:update_researches' i.pk %}">{{i.title}}</a></td>
-                            <td>{{ i.author_names|safe }}</td>
-                            {% if i.publish_research %}
-                              <td><img src="/static/admin/img/icon-yes.svg" alt="True"></td>
-                              {% else %}
-                              <td><img src="/static/admin/img/icon-no.svg" alt="True"></td>
-                            {% endif %}
+                            <td><a style="text-decoration:none;color:#00629B;" href="{% url 'central_branch:update_toolkit' i.pk %}">{{i.pk}}</a></td>
+                            <td><a style="text-decoration:none;color:#00629B;" href="{% url 'central_branch:update_toolkit' i.pk %}">{{i.title}}</a></td>
                             <td>
                             <form method="POST">
                                 {% csrf_token %}
                                     <div style="justify-content:center;text-align:center;">  
                                         <div class="btn-container">
-                                            <input class="btn btn-outline b-danger text-danger" name="remove_research" type="submit" value="Remove">
-                                            <a class="btn btn-outline b-warn text-warn" href="{% url 'central_branch:update_researches' i.pk %}">Update</a>
+                                            <input class="btn btn-outline b-danger text-danger" name="remove_toolkit" type="submit" value="Remove">
+                                            <a class="btn btn-outline b-warn text-warn" href="{% url 'central_branch:update_toolkit' i.pk %}">Update</a>
                                         </div>
                                       </div>
-                                    <input type="hidden" name="research_pk" value={{i.pk}}>
+                                    <input type="hidden" name="toolkit_pk" value={{i.pk}}>
                                 </form>
                             </td>
                         </tr>
@@ -83,7 +75,7 @@
                     <div class="modal-dialog modal-lg" id="animate">
                         <div class="modal-content">
                             <div class="modal-header">
-                            <h5 class="modal-title">Add a New Research</h5>
+                            <h5 class="modal-title">Add a Toolkit Item</h5>
                             </div>
                             
                             <div class="modal-body text-left p-lg">
@@ -117,7 +109,7 @@
         
                             <div class="modal-footer">
                             <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                            <input type="submit" name="add_research" class="btn btn-success p-x-md" value="Add"></input>               
+                            <input type="submit" name="add_item" class="btn btn-success p-x-md" value="Add"></input>               
                             </div>
                         </div><!-- /.modal-content -->
                     </div>
@@ -125,52 +117,6 @@
                 
             </div>
             <br>
-
-            <!--Modal form-->
-            <div id="m-s-c" class="modal fade animate" data-backdrop="true">
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="modal-dialog modal-md" id="animate">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h5 class="modal-title">Add a New Research Category</h5>
-                            </div>
-                            
-                            <div class="modal-body text-left">
-                                <!--Form start-->
-        
-                                <div class="container">
-                                    <div class="padding">
-                                        <div class="row" >
-                                            <div class="col-sm-10">
-                                                <div class="box">
-                                                    <div class="box-body">
-                                                        <div class="form-control">
-                                                            {{form2.media}}
-                                                            {{form2.as_p}}
-                                                        </div>
-                                                        <br>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                    
-                            </div>
-        
-                            <div class="modal-footer">
-                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                            <input type="submit" name="add_research_category" class="btn btn-success p-x-md" value="Add"></input>               
-                            </div>
-                        </div><!-- /.modal-content -->
-                    </div>
-                </form>
-            
-            </div>
-
-
         </div>
     </div>
     
@@ -209,4 +155,4 @@
             }
         }
     </script>
-{% endblock manage_research_papers %}
+{% endblock manage_toolkit %}

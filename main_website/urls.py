@@ -21,7 +21,7 @@ urlpatterns = [
     #Achievements
     path('achievements/',views.achievements,name="achievements"),
     path('news/',views.news,name="news"),
-
+    path('news/<int:pk>',views.news_description,name="news_description"),
     #Gallery
     path('gallery/',views.gallery,name="gallery"),
     
@@ -38,10 +38,11 @@ urlpatterns = [
 
     # Publications
     path('blogs',views.blogs,name="blogs"),
-    path('blog_description',views.blog_description, name="blog_description"),
+    path('blogs/<int:pk>',views.blog_description, name="blog_description"),
     path('write_blogs',views.write_blogs,name="write_blogs"),
     path('magazines',views.magazines,name="magazines"),
-    
+    path('research',views.research_Paper,name="research_paper"),
+    path('add_research',views.add_research_form,name="add_research"),
 
     # About
     path('ieee_bangladesh_section',views.ieee_bd_section, name="ieee_bangladesh_section"),
@@ -52,4 +53,6 @@ urlpatterns = [
 
     # Contact
     path('contact',views.contact, name="contact"),
+    # test
+    path('blog_description',views.blog_description, name="blog_description"),
 ]
