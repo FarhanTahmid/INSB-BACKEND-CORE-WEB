@@ -1006,26 +1006,52 @@ def member_profile(request, ieee_id):
         return redirect('main_website:all_members')
 
 def ieee_bd_section(request):
-    return render(request, 'About/IEEE_bangladesh_section.html')
+    #loading all the teams of Branch
+    branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+    ieee_bangladesh_section = IEEE_Bangladesh_Section.objects.get(id=1)
+    page_links = Branch.get_about_page_links(page_title='ieee_bangladesh_section')
+
+    context = {
+        'page_title':'About - IEEE Bangladesh Section',
+        'branch_teams':branch_teams,
+        'ieee_bangladesh_section':ieee_bangladesh_section,
+        'media_url':settings.MEDIA_URL,
+        'page_links':page_links
+    }
+    return render(request, 'About/IEEE_bangladesh_section.html', context)
 
 def ieee_nsu_student_branch(request):
-    return render(request, 'About/IEEE_NSU_student_branch.html')
+    #loading all the teams of Branch
+    branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+    about_ieee_nsu_student_branch = IEEE_NSU_Student_Branch.objects.get(id=1)
+    date_and_event = HomepageItems.get_event_for_calender(request,1)
+
+    context = {
+        'page_title':'About - IEEE NSU Student Branch',
+        'branch_teams':branch_teams,
+        'ieee_nsu_student_branch':about_ieee_nsu_student_branch,
+        'date_and_event':date_and_event,
+        'media_url':settings.MEDIA_URL,
+    }
+
+    return render(request, 'About/IEEE_NSU_student_branch.html', context)
 
 def ieee_region_10(request):
     # template not done yet
     return render(request, 'About/IEEE_region_10.html')
 
 def ieee(request):
-    #working
     #loading all the teams of Branch
     branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
     about_ieee = About_IEEE.objects.get(id=1)
+    page_links = Branch.get_about_page_links(page_title='about_ieee')
     
     context = {
         'page_title':'About - IEEE',
         'branch_teams':branch_teams,
         'about_ieee':about_ieee,
-        'media_url':settings.MEDIA_URL
+        'media_url':settings.MEDIA_URL,
+        'page_links':page_links
     }
 
     return render(request, 'About/About_IEEE.html', context)
