@@ -120,12 +120,19 @@
     }
 
     .mem-vol-pic {
-      width: 430px;
+      width: 100%;
       margin-top: 20px;
       display: flex;
       align-items: center;
+      /* height: 430px; */
+      /* overflow: hidden; */
+      justify-content: center;
     }
-
+    .mem-vol-pic img{
+      width: 430px;
+      height: 430px;
+      object-fit: cover;
+    }
     .ieee-bd-btn a {
       background-color: #002855;
       border: 3px solid #002855;

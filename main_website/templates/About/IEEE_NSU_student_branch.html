@@ -105,7 +105,7 @@
         .chapter-card img {
             width: 100%;
             height: 218px;
-            object-fit: contain;
+            object-fit: cover;
             background-color: #fff;
             transition: all 1s;
         }
@@ -519,7 +519,8 @@
                         <p>{{ieee_nsu_student_branch.mission_description|safe}}</p>
                     </div>
                 </div>
-                <div>
+                <div style="    height: 350px;
+                width: 100%;">
                     <img src="{{media_url}}{{ieee_nsu_student_branch.mission_image}}" alt="">
                 </div>
             </section>
@@ -529,7 +530,8 @@
         <!--vision section-->
         <section class="centering" style="background-color: #f9f9f9; margin: 10px 0;">
             <section class="vision max-width">
-                <div>
+                <div style="    height: 350px;
+                width: 100%;">
                     <img src="{{media_url}}{{ieee_nsu_student_branch.vision_image}}" alt="">
                 </div>
                 <div style="padding: 20px;">
