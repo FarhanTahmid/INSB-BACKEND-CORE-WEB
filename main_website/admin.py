@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from main_website.forms import About_IEEE_Bangladesh_Section_Form, About_IEEE_Form
-from .models import Research_Papers,Blog_Category,Blog,IEEE_Bangladesh_Section,IEEE_Bangladesh_Section_Gallery,HomePage_Thoughts,About_IEEE
+from main_website.forms import About_IEEE_Bangladesh_Section_Form, About_IEEE_Form, About_IEEE_NSU_Student_Branch_Form, About_IEEE_Region_10_Form
+from .models import Research_Papers,Blog_Category,Blog,IEEE_Bangladesh_Section,IEEE_Bangladesh_Section_Gallery,HomePage_Thoughts,About_IEEE,IEEE_NSU_Student_Branch,IEEE_Region_10,Page_Link
 # Register your models here.
 ###Society AGS###
 # RAS
@@ -48,7 +48,7 @@ class Magazines(admin.ModelAdmin):
 @admin.register(IEEE_Bangladesh_Section)
 class IEEE_Bangladesh_Section_Admin(admin.ModelAdmin):
     form=About_IEEE_Bangladesh_Section_Form
-    list_display = ['about_ieee_bangladesh','ieee_bangladesh_logo','member_and_volunteer_description','member_and_volunteer_picture','benefits_description','student_branches_description','affinity_groups_description','community_and_society_description']  
+    list_display = ['id']  
     
 @admin.register(IEEE_Bangladesh_Section_Gallery)
 class IEEE_Bangldesh_Section_Gallery(admin.ModelAdmin):
@@ -68,3 +68,17 @@ from .models import GalleryImages
 @admin.register(GalleryImages)
 class GalleryImages(admin.ModelAdmin):
     list_display=['pk']
+
+@admin.register(Page_Link)
+class Page_Link(admin.ModelAdmin):
+    list_display=['id', 'page_title', 'category', 'title', 'link']
+
+@admin.register(IEEE_NSU_Student_Branch)
+class IEEE_NSU_Student_Branch(admin.ModelAdmin):
+    form=About_IEEE_NSU_Student_Branch_Form
+    list_display = ['id']
+
+@admin.register(IEEE_Region_10)
+class IEEE_Region_10(admin.ModelAdmin):
+    form = About_IEEE_Region_10_Form
+    list_display = ['id']
