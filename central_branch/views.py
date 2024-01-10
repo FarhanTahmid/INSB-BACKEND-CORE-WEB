@@ -751,7 +751,7 @@ def manage_website_homepage(request):
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     '''For top banner picture with Texts and buttons - Tab 1'''
-    topBannerItems=HomePageTopBanner.objects.all()
+    topBannerItems=HomePageTopBanner.objects.all().order_by('pk')
     # get user data
     #Loading current user data from renderData.py
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials

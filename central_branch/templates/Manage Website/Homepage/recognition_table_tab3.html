@@ -155,7 +155,7 @@
             <tbody>
                 {% for i in all_volunteer_of_month %}
                     <tr>
-                        <td><a href="{% url 'central_branch:update_vom' i.pk %}">{{i.ieee_id}}</a></td>
+                        <td><a href="{% url 'central_branch:update_vom' i.pk %}"><span style="color:blue;">{{i.ieee_id}}</span></a></td>
                         <td>{{i.ieee_id.name}}</td>
                         <td>{{i.ieee_id.team}}</td>
                         <td>{{i.ieee_id.position}}</td>
