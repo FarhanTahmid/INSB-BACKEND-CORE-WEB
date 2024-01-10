@@ -1,9 +1,9 @@
 from .models import HomePageTopBanner,BannerPictureWithStat
 from django.http import HttpResponseServerError
-from users.models import Members,User_IP_Address
+from users.models import Members,User_IP_Address,Panel_Members
 from membership_development_team.renderData import MDT_DATA
 from central_events.models import Events,InterBranchCollaborations
-from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position
+from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
 from graphics_team.models import Graphics_Banner_Image
 from media_team.models import Media_Images
 from datetime import datetime
@@ -267,11 +267,17 @@ class HomepageItems:
         '''This function returns the faculty advisor for the particular society otherwise return none''' 
         
         try:
-            #getting the particular society object
-            society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
+            
             try:
-                #getting the faculty advisor of the particular society
-                faculty = SC_AG_Members.objects.get(sc_ag = society,position = Roles_and_Position.objects.get(is_faculty = True,role_of = society))
+                #getting the particular society object
+                society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
+                #getting position
+                position = Roles_and_Position.objects.get(is_faculty = True,role_of = society)
+                #getting current tenure
+                current_tenure = Panels.objects.get(current = True, panel_of = society)
+                #getting the faculty
+                faculty = Panel_Members.objects.get(tenure = current_tenure,position =position)
+
             except:
                 #else returning None
                 faculty = None
@@ -292,18 +298,17 @@ class HomepageItems:
             eb_members=[]
             #getting the particular society object
             society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
-            #getting the list of roles of the eb members which is ordered by roles
-            roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society).order_by('role_of')
-            #for each roles gettiing the corresponding member of that role
+            #getting current tenure
+            current_tenure = Panels.objects.get(current = True, panel_of = society)
+            #getting all th eb roles
+            roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society,is_faculty = False).order_by('role_of')
             for role in roles:
-                    try:
-                        #getting the member of the particular society whose role matches with the role iteration in the list
-                        member = SC_AG_Members.objects.get(sc_ag = society,position = role)
-                    except:
-                        #if no member is found assigning none
-                        member = None
-                    #appending the member found in the list
+                try:
+                    #getting the member of the particular society whose role matches with the role iteration in the list and is if current panel
+                    member = Panel_Members.objects.get(tenure = current_tenure,position = role)
                     eb_members.append(member)
+                except:
+                    pass
             return eb_members
         except Exception as e:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
