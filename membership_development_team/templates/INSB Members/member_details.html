@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="{% static '/assets/font-awesome/css/font-awesome.min.css' %}" type="text/css" />
   <link rel="stylesheet" href="{% static '/assets/material-design-icons/material-design-icons.css' %}" type="text/css" />
   
-
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="{% static '/assets/bootstrap/dist/css/bootstrap.min.css' %}" type="text/css" />
   <!-- build:css ../assets/styles/app.min.css -->
   <link rel="stylesheet" href="{% static '/assets/styles/app.css' %}" type="text/css" />
@@ -44,6 +44,9 @@
       justify-content: center;
       align-items: center;
       height: 100%;
+    }
+    .nav a.active {
+      color: #FFA300;
     }
   </style>
 </head>
@@ -76,6 +79,65 @@
             <div class="mb-0 h5 no-wrap" ng-bind="$state.current.data.title" id="pageTitle"></div>
         
             <!-- navbar collapse -->
+            {% if is_branch %}
+            <div class="collapse navbar-collapse" id="collapse">
+              <!-- link and dropdown -->
+              <ul class="nav navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'central_branch:central_home' %}">
+                  <i class="fa fa-home"></i>
+                  <span>Home</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+              <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'central_branch:event_control' %}">
+                  <i class="fa fa-calendar"></i>
+                  <span>Events</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+              <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'central_branch:members_list' %}">
+                  <i class="fa fa-user"></i>
+                  <span>Members</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+              <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'central_branch:panels' %}">
+                  <i class="fa  fa-graduation-cap"></i>
+                  <span>Panels</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+              <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'central_branch:teams' %}">
+                  <i class="fa fa-group"></i>
+                  <span>Teams</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+              <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'central_branch:manage_website_home' %}">
+                  <i class="material-icons">&#xe894;</i>
+                  <span>Manage Branch Website</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+              <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'central_branch:manage_access' %}">
+                  <i class="fa fa-lock"></i>
+                  <span>Manage View Access</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+              </ul>
+        
+              <div ui-include="'../views/blocks/navbar.form.html'"></div>
+              <!-- / -->
+            </div>
+            {% else %}
             <div class="collapse navbar-collapse" id="collapse">
               <!-- link and dropdown -->
               <ul class="nav navbar-nav mr-auto">
@@ -99,7 +161,7 @@
                     <span>Recruitment</span>
                   </a>
                   <div ui-include="'../views/blocks/dropdown.new.html'"></div>
-                </li>
+              </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link" href="{% url 'membership_development_team:membership_renewal' %}">
                     <i class="fa fa-refresh"></i>
@@ -108,12 +170,12 @@
                     <div ui-include="'../views/blocks/dropdown.new.html'"></div>
                 </li>
                 <li class="nav-item dropdown">
-                  <a class="nav-link" href="{% url 'membership_development_team:site_registration' %}">
-                    <i class="fa fa-reorder"></i>
-                    <span>Portal Registration</span>
-                  </a>
-                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
-                </li>
+                    <a class="nav-link" href="{% url 'membership_development_team:site_registration' %}">
+                      <i class="fa fa-reorder"></i>
+                      <span>Portal Registration</span>
+                    </a>
+                    <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+                  </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link" href="{% url 'membership_development_team:data_access' %}">
                     <i class="fa fa-group"></i>
@@ -126,6 +188,7 @@
               <div ui-include="'../views/blocks/navbar.form.html'"></div>
               <!-- / -->
             </div>
+            {% endif %}
             <!-- / navbar collapse -->
         
             <!-- navbar right -->
@@ -175,7 +238,7 @@
               </div>
               <div class="box-divider m-0"></div>
               <div class="box-body">
-                <form method="POST" autocomplete="off">
+                <form method="POST" autocomplete="off" enctype="multipart/form-data">
                     {% csrf_token %}
                   <div class="form-group">
                     <div class="row m-b">
@@ -197,7 +260,18 @@
                       <label for="exampleInputPassword1">Name</label>
                       <input class="form-control" type="text" required name="name" value="{{ member_data.name }}"/>
                     </div>
-                    
+                    {% if is_branch %}
+                    <div class="row m-b">
+                      <label for="images">Upload/Change Image:</label>
+                      <div class="col-lg-9">
+                        <input
+                        type="file" name="update_picture" accept="image/*" />                      
+                      </div>
+                      
+                      <br>
+                    </div>
+                    <br>
+                    {% endif %}
                     <div class="row m-b">
                       <div class="col-sm-6">
                         <label>Contact No.</label>
