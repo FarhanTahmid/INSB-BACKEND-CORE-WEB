@@ -32,6 +32,9 @@ def homepage(request):
     bannerItems=HomepageItems.getHomepageBannerItems()
     bannerWithStat=HomepageItems.getBannerPictureWithStat()
     HomepageItems.get_ip_address(request)
+    #getting all the thoughts
+    all_thoughts = Branch.get_all_homepage_thoughts()
+
     
     
     # get recent 6 news
@@ -52,6 +55,7 @@ def homepage(request):
         'recent_news':get_recent_news,
         'recent_blogs':get_recent_blogs,
         'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+        'all_thoughts':all_thoughts,
     }
     return render(request,"LandingPage/homepage.html",context)
 
@@ -123,7 +127,7 @@ def event_details(request,event_id):
             event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
             context = {
-                'is_live':True,
+                'is_live':True, #This enables the header and footer along with the wavy
                 'page_title':get_event.event_name,
                 'page_subtitle':get_event.event_organiser,
                 "event":get_event,
@@ -269,7 +273,7 @@ def rasPage(request):
                 
             
         context={
-                
+            'is_live':True, #This enables the header and footer of the page along with wavy   
             'society':society,
             #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'media_url':settings.MEDIA_URL,
@@ -316,7 +320,7 @@ def pesPage(request):
                 return redirect("main_website:pes_home")
                 
         context={
-                
+            'is_live':True, #This enables the header and footer of the page along with wavy    
             'society':society,
             #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'media_url':settings.MEDIA_URL,
@@ -362,7 +366,7 @@ def iasPage(request):
                 return redirect("main_website:ias_home")
                   
         context={
-                
+            'is_live':True, #This enables the header and footer of the page along with wavy    
             'society':society,
             #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'media_url':settings.MEDIA_URL,
@@ -409,7 +413,7 @@ def wiePage(request):
                 
             
         context={
-                
+            'is_live':True, #This enables the header and footer of the page along with wavy    
             'society':society,
             #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'media_url':settings.MEDIA_URL,
@@ -1013,6 +1017,7 @@ def ieee_bd_section(request):
     page_links = Branch.get_about_page_links(page_title='ieee_bangladesh_section')
 
     context = {
+        'is_live':True, #This enables the header and footer of the page along with wavy
         'page_title':'About - IEEE Bangladesh Section',
         'branch_teams':branch_teams,
         'ieee_bangladesh_section':ieee_bangladesh_section,
@@ -1028,6 +1033,7 @@ def ieee_nsu_student_branch(request):
     date_and_event = HomepageItems.get_event_for_calender(request,1)
 
     context = {
+        'is_live':True, #This enables the header and footer of the page along with wavy
         'page_title':'About - IEEE NSU Student Branch',
         'branch_teams':branch_teams,
         'ieee_nsu_student_branch':about_ieee_nsu_student_branch,
@@ -1044,6 +1050,7 @@ def ieee_region_10(request):
     page_links = Branch.get_about_page_links(page_title='ieee_region_10')
 
     context = {
+        'is_live':True, #This enables the header and footer of the page along with wavy
         'page_title':'About - IEEE Region 10',
         'branch_teams':branch_teams,
         'ieee_region_10':about_ieee_region_10,
@@ -1060,6 +1067,7 @@ def ieee(request):
     page_links = Branch.get_about_page_links(page_title='about_ieee')
     
     context = {
+        'is_live':True, #This enables the header and footer of the page along with wavy
         'page_title':'About - IEEE',
         'branch_teams':branch_teams,
         'about_ieee':about_ieee,
@@ -1074,6 +1082,20 @@ def faq(request):
     all_categories = Branch.get_all_category_of_questions()
     saved_question_answers = Branch.get_saved_questions_and_answers()
 
+    if request.method == "POST":
+            #when user hits submit button on main page
+            if request.POST.get('submit'):
+                #getting the user's details
+                name = request.POST.get('user_name')
+                email = request.POST.get('user_email')
+                message = request.POST.get('user_message')
+                #passing them as arguments to the function to save the data
+                if HomepageItems.save_feedback_information(request,1,name,email,message):
+                    messages.success(request,"You have reached us! Thanks for your feedback")  
+                else:
+                    messages.error(request,"Sorry! Try to contact us later") 
+                return redirect("main_website:faq")
+
     context = {
         'all_categories':all_categories,
         'saved_question_answer':saved_question_answers,
@@ -1085,6 +1107,20 @@ def faq(request):
 def contact(request):
     #loading all the teams of Branch
     branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+
+    if request.method == "POST":
+            #when user hits submit button on main page
+            if request.POST.get('submit'):
+                #getting the user's details
+                name = request.POST.get('user_name')
+                email = request.POST.get('user_email')
+                message = request.POST.get('user_message')
+                #passing them as arguments to the function to save the data
+                if HomepageItems.save_feedback_information(request,1,name,email,message):
+                    messages.success(request,"You have reached us! Thanks for your feedback")  
+                else:
+                    messages.error(request,"Sorry! Try to contact us later") 
+                return redirect("main_website:contact")
 
     context = {
         'page_title':'Contact',

@@ -7,14 +7,32 @@ from port.models import Roles_and_Position
 from django.contrib import messages
 from .renderData import WesbiteDevelopmentTeam
 from system_administration.models import WDT_Data_Access
-
+from users import renderData
+from port.renderData import PortData
+from users.renderData import PanelMembersData
 # Create your views here.
 @login_required
 def team_homepage(request):
-    return render(request,"website_development_team/team_homepage.html")
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    # get members
+    get_members=WesbiteDevelopmentTeam.load_team_members_with_positions()
+    context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
+        'co_ordinators':get_members[0],
+        'incharges':get_members[1],
+        'core_volunteers':get_members[2],
+        'team_volunteers':get_members[3],
+    }
+    return render(request,"website_development_team/team_homepage.html",context=context)
 @login_required
 def manage_team(request):
-
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+ 
     '''This function loads the manage team page for website development team and is accessable
     by the co-ordinatior only, unless the co-ordinators gives access to others as well'''
     user = request.user
@@ -24,7 +42,7 @@ def manage_team(request):
     data_access = WesbiteDevelopmentTeam.load_manage_team_access()
     team_members = WesbiteDevelopmentTeam.load_team_members()
     #load all position for insb members
-    position=Branch.load_roles_and_positions()
+    position=PortData.get_all_volunteer_position_with_sc_ag_id(request=request,sc_ag_primary=1)
     #load all insb members
     all_insb_members=Members.objects.all()
 
@@ -41,7 +59,8 @@ def manage_team(request):
         if (request.POST.get('remove_member')):
             '''To remove member from team table'''
             try:
-                Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
+                get_current_panel=Branch.load_current_panel()
+                PanelMembersData.remove_member_from_panel(ieee_id=request.POST['remove_ieee_id'],panel_id=get_current_panel.pk,request=request)
                 try:
                     WDT_Data_Access.objects.filter(ieee_id=request.POST['remove_ieee_id']).delete()
                 except WDT_Data_Access.DoesNotExist:
@@ -86,6 +105,8 @@ def manage_team(request):
                         return redirect('website_development_team:manage_team')
 
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'data_access':data_access,
         'members':team_members,
         'insb_members':all_insb_members,

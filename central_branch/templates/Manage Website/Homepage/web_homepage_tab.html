@@ -7,6 +7,29 @@
     .tabs li:hover{
         transition: all 0.3s ease-in-out;
     }
+    .circle-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 45px; /* Set minimum width */
+        height: 45px; /* Set minimum height */
+        background-color: transparent; /* Set to transparent or any other color for the inside */
+        border: 2px solid #78BE20; /* Border color is green */
+        border-radius: 50%;
+        color: #78BE20; /* Text color is green */
+        font-size: 24px; /* Adjust the font size as needed */
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s; /* Add smooth transition effect */
+    }
+
+    .circle-btn:hover {
+        background-color: #78BE20; /* Hover background color is green */
+        color: #fff; /* Hover text color is white */
+    }
+
+    .plus-sign::before {
+        content: '+';
+    }
 </style>
 <div class="tabs-container" style="    display: flex;
 flex-direction: column;">
@@ -14,6 +37,7 @@ flex-direction: column;">
         <li class="tab active_tab" onclick="showTab('tab1')">Top Banner with Picture & Texts</li>
         <li class="tab" onclick="showTab('tab2')">Middle Banner Picture With Statistics</li>
         <li class="tab" onclick="showTab('tab3')" style="border-right: 1px solid #00629B;">Volunteer Recognition</li>
+        <li class="tab" onclick="showTab('tab4')" style="border-right: 1px solid #00629B;">HomePage Thoughts</li>
     </ul>
     <br>
     {% block banner_picture_text_tab %}
@@ -23,6 +47,10 @@ flex-direction: column;">
     {% block banner_with_numbers %}
         {% include "Manage Website/Homepage/banner_with_numbers_tab2.html" %}
     {% endblock banner_with_numbers %}
+
+    {% block homepage_thoughts_tab%}
+        {% include "Manage Website/Homepage/homepage_thoughts_tab4.html"%}
+    {% endblock homepage_thoughts_tab %}
 
     <div id="tab3" class="tab-content" style="    margin-right: 0px;">
         <h2>Tab 3 Content</h2>
@@ -37,5 +65,11 @@ flex-direction: column;">
             linkels.classList.add('active_tab');
         });
     });
+
+    function openModal(id) {
+        // Set data in the modal
+        var inputElement = document.getElementById('delete_thought');    
+        inputElement.value=id;
+    }
 </script>
 {% endblock web_home_tab %}

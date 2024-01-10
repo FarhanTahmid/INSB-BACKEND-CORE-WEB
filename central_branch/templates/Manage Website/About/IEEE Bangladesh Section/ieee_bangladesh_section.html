@@ -131,7 +131,7 @@
             </div>
             <br>
 
-            <!-- Preview Event Modal -->
+            <!-- Preview Modal -->
             <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" style="z-index: 1500;">
                 <div class="modal-dialog modal-dialog-centered modal-lg preview_modal_box" role="document">
                     <div class="modal-content" style="width: 100%; height: 100%;">
@@ -142,7 +142,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <iframe src="https://ieeensusb.org/ieee/" style="width: 100%; height: 100%;" loading="lazy"></iframe>
+                            <iframe src="{% url 'central_branch:ieee_bangladesh_section_preview' %}" style="width: 100%; height: 100%;" loading="lazy"></iframe>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -469,7 +469,7 @@
                                         <!-- Add input field for links here if needed -->
                                     </div>
                                     <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
+                                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('achievement_link')"></button>
                                     </div>
                                 </div>
                             </div>
@@ -477,56 +477,18 @@
                             <hr>
                             <div id="links-container achievements-container" class="mt-3">
                                 <label class="mb-0">Links (Achievements Read More Link):</label> 
+                                {% for page_link in page_links.achievement_link %}
                                 <div class="achievements-item">
                                     <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                         <div class="col-sm-11">
-                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
                                         </div>
                                         <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks" onclick="openLinkModal('{{page_link.pk}}')">✖</button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="achievements-item">
-                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                        <div class="col-sm-11">
-                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
-                                        </div>
-                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="achievements-item">
-                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                        <div class="col-sm-11">
-                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
-                                        </div>
-                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="achievements-item">
-                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                        <div class="col-sm-11">
-                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
-                                        </div>
-                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="achievements-item">
-                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                        <div class="col-sm-11">
-                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
-                                        </div>
-                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
-                                        </div>
-                                    </div>
-                                </div>
+                                {% endfor %}
                             </div>
 
                             <br>
@@ -1166,7 +1128,7 @@
                             '<!-- Add input field for links here if needed -->' +
                             '</div>' +
                             '<div class="col-sm-2 d-flex align-items-center justify-content-center">' +
-                            '<button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>' +
+                            '<button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal(\'achievement_link\')"></button>' +
                             '</div>' +
                             '<label class="col-sm-12 form-control-label text-left">Allowed Slots: ' + remainingSlots + '</label>' +
                             '</div>';

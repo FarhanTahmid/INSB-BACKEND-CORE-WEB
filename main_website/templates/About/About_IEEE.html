@@ -120,12 +120,19 @@
     }
 
     .mem-vol-pic {
-      width: 430px;
+      width: 100%;
       margin-top: 20px;
       display: flex;
       align-items: center;
+      /* height: 430px; */
+      /* overflow: hidden; */
+      justify-content: center;
     }
-
+    .mem-vol-pic img{
+      width: 430px;
+      height: 430px;
+      object-fit: cover;
+    }
     .ieee-bd-btn a {
       background-color: #002855;
       border: 3px solid #002855;
@@ -419,18 +426,19 @@
 
 <body data-rsssl="1" class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
   <div class="body-wrapper float-menu">
-    {% block header %} 
-      {% include 'header.html' %} 
-    {% endblock header %} 
+    {% if is_live %}
+      {% block header %} 
+        {% include 'header.html' %} 
+      {% endblock header %} 
 
-    {% block wave_design %}
-      {% include 'wave.html' %}
-    {% endblock wave_design %}
+      {% block wave_design %}
+        {% include 'wave.html' %}
+      {% endblock wave_design %}
+    {% endif %}
 
     <section class="centering">
       <section class="about-IEEE max-width">
         <div class="IEEE-bd-section-logo">
-          {% comment %} <img src="https://ieeensusb.org/wp-content/uploads/2021/03/e4c81f5dd1d43164425630c4ab971bd5.jpg" alt="" /> {% endcomment %}
           <img src="{{media_url}}{{about_ieee.about_image}}" alt="" />
         </div>
         <div>
@@ -476,7 +484,6 @@
           </div>
         </div>
         <div class="mem-vol-pic">
-          {% comment %} <img src="https://ieeensusb.org/wp-content/uploads/2021/03/branches.jpg" alt="" /> {% endcomment %}
           <img src="{{media_url}}{{about_ieee.community_image}}" alt="" />
         </div>
       </section>
@@ -581,54 +588,16 @@
           </p>
         </div>
         <div class="achievement-container">
+          {% for page_link in page_links.achievement_link %}
           <div class="achievement-card">
             <div>
               <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
                 alt="" />
-              <h4>List of Achievements Suitable for Milestones</h4>
-              <a href="#">Read More</a>
+              <h4>{{page_link.title}}</h4>
+              <a href="{{page_link.link}}">Read More</a>
             </div>
           </div>
-          <div class="achievement-card">
-            <div>
-              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                alt="" />
-              <h4>IEEE MGA Achievement Awards </h4>
-              <a href="#">Read More</a>
-            </div>
-          </div>
-          <div class="achievement-card">
-            <div>
-              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                alt="" />
-              <h4>IEEE Recognition and Awards</h4>
-              <a href="#">Read More</a>
-            </div>
-          </div>
-          <div class="achievement-card">
-            <div>
-              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                alt="" />
-              <h4>Engineering Achievement Award</h4>
-              <a href="#">Read More</a>
-            </div>
-          </div>
-          <div class="achievement-card">
-            <div>
-              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                alt="" />
-              <h4>View the 2020 IEEE Medal and Recognition Recipients</h4>
-              <a href="#">Read More</a>
-            </div>
-          </div>
-          <div class="achievement-card">
-            <div>
-              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                alt="" />
-              <h4>IEEE Members Affinity Group Achievements and Award</h4>
-              <a href="#">Read More</a>
-            </div>
-          </div>
+          {% endfor %}
         </div>
       </section>
     </section>
@@ -656,7 +625,6 @@
           </div>
         </div>
         <div class="mem-vol-pic">
-          {% comment %} <img src="https://ieeensusb.org/wp-content/uploads/2021/03/112942791_646944699242400_5651045497133643740_o.jpg" alt="" /> {% endcomment %}
           <img src="{{media_url}}{{about_ieee.innovations_and_developments_image}}" alt="" />
         </div>
       </section>
@@ -665,7 +633,6 @@
     <section class="centering" style="background-color: #f9f9f9">
       <section class="members-volunteers max-width">
         <div class="mem-vol-pic">
-          {% comment %} <img src="https://ieeensusb.org/wp-content/uploads/2021/03/illustrated-character-4.png" alt="" /> {% endcomment %}
           <img src="{{media_url}}{{about_ieee.students_and_member_activities_image}}" alt="" />
         </div>
         <div>
@@ -709,7 +676,6 @@
           </div>
         </div>
         <div class="mem-vol-pic">
-          {% comment %} <img src="https://ieeensusb.org/wp-content/uploads/2021/03/image3.png" alt="" /> {% endcomment %}
           <img src="{{media_url}}{{about_ieee.quality_image}}" alt="" />
         </div>
       </section>
@@ -727,7 +693,7 @@
           </div>
         </div>
         <div class="join-btn">
-          <button src="{{about_ieee.join_now_link}}">Join Now</button>
+          <a href="{{about_ieee.join_now_link}}"><button>Join Now</button></a>
         </div>
       </section>
     </section>
@@ -767,10 +733,12 @@
       </section>
     </section>
 
-    <!--Footer-->
-    {% block footer %} 
-      {% include "footer_block.html" %} 
-    {% endblock footer %}
+    {% if is_live %}
+      <!--Footer-->
+      {% block footer %} 
+        {% include "footer_block.html" %} 
+      {% endblock footer %}
+    {% endif %}
 
   </div>
   {% block common_js %} 

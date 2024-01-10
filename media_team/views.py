@@ -19,6 +19,7 @@ import logging
 from django.http import Http404,HttpResponseBadRequest,JsonResponse
 from datetime import datetime
 from port.renderData import PortData
+from users.renderData import PanelMembersData
 from system_administration.system_error_handling import ErrorHandling
 from .manage_access import MediaTeam_Render_Access
 
@@ -26,7 +27,10 @@ logger=logging.getLogger(__name__)
 # Create your views here.
 @login_required
 def team_homepage(request):
-
+    
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     #Loading data of the co-ordinators, co ordinator id is 9,
     co_ordinators=renderData.MediaTeam.get_co_ordinator()
     #Loading data of the incharges, incharge id is 10
@@ -36,6 +40,8 @@ def team_homepage(request):
     # get media volunteers
     volunteers=MediaTeam.get_volunteers()
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'co_ordinators':co_ordinators,
         'incharges':in_charges,
         'media_url':settings.MEDIA_URL,
@@ -49,6 +55,8 @@ def team_homepage(request):
 
 @login_required
 def manage_team(request):
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
 
     '''This function loads the manage team page for media team and is accessable
     by the co-ordinatior only, unless the co-ordinators gives access to others as well'''
@@ -59,12 +67,7 @@ def manage_team(request):
         data_access = MediaTeam.load_data_access()
         team_members = MediaTeam.load_team_members()
         #load all position for insb members
-        position=Branch.load_roles_and_positions()
-
-        # Excluding position of EB, Faculty and SC-AG members
-        for i in position:
-            if(i.is_eb_member or i.is_faculty or i.is_sc_ag_eb_member):
-                position=position.exclude(pk=i.pk)
+        position=PortData.get_all_volunteer_position_with_sc_ag_id(request=request,sc_ag_primary=1)
 
         #load all insb members
         all_insb_members=Members.objects.all()
@@ -84,7 +87,8 @@ def manage_team(request):
             if (request.POST.get('remove_member')):
                 '''To remove member from team table'''
                 try:
-                    Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
+                    load_current_panel=Branch.load_current_panel()
+                    PanelMembersData.remove_member_from_panel(ieee_id=request.POST['remove_ieee_id'],request=request,panel_id=load_current_panel.pk)
                     try:
                         Media_Data_Access.objects.filter(ieee_id=request.POST['remove_ieee_id']).delete()
                     except Media_Data_Access.DoesNotExist:
@@ -131,6 +135,7 @@ def manage_team(request):
                             messages.info(request,f"Member with {ieeeID} was added to the team table!")
                             return redirect('media_team:manage_team')
         context={
+            'user_data':user_data,
             'data_access':data_access,
             'members':team_members,
             'insb_members':all_insb_members,
@@ -144,7 +149,9 @@ def manage_team(request):
 
 @login_required
 def event_page(request):
-
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     '''Only events organised by INSB would be shown on the event page of Media Team
        So, only those events are being retrieved from database'''
     insb_organised_events = Events.objects.filter(event_organiser=5).order_by('-event_date')
@@ -152,6 +159,7 @@ def event_page(request):
     print(insb_organised_events)
 
     context = {
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'events_of_insb_only':insb_organised_events,
     }
@@ -160,7 +168,9 @@ def event_page(request):
 
 @login_required
 def event_form(request,event_id):
-    
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = MediaTeam_Render_Access.access_for_events(request)
@@ -204,6 +214,7 @@ def event_form(request,event_id):
                     return redirect("media_team:event_form",event_id)
         
             context={
+                'user_data':user_data,
                 'media_links' : media_links,
                 'media_images':media_images,
                 'media_url':settings.MEDIA_URL,

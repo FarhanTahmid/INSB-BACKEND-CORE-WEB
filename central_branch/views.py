@@ -42,6 +42,7 @@ from .forms import *
 from .website_render_data import MainWebsiteRenderData
 from django.views.decorators.clickjacking import xframe_options_exempt
 import port.forms as PortForms
+from chapters_and_affinity_group.renderData import Sc_Ag
 
 
 # Create your views here.
@@ -752,7 +753,50 @@ def manage_website_homepage(request):
                 return redirect('central_branch:manage_website_home')    
             except Exception as e:
                 messages.error(request,"Something went wrong! Please try again.")
-                return redirect('central_branch:manage_website_home')    
+                return redirect('central_branch:manage_website_home')  
+
+    '''For Homepage Thoughts'''
+    all_thoughts = Branch.get_all_homepage_thoughts()
+
+    if request.method == "POST":
+        #when user hits save
+        if request.POST.get('save'):
+
+            author_name = request.POST.get('author')
+            thoughts = request.POST.get('your_thoughts')
+
+            #passing them in function to save
+            if Branch.save_homepage_thoughts(author_name,thoughts):
+                messages.success(request,"Thoughts added successfully!")
+            else:
+                messages.error(request,"Error Occured. Please try again later!")
+            return redirect('central_branch:manage_website_home')
+        
+        #when user edits saved thoughts
+        if request.POST.get('update'):
+
+            author_edit = request.POST.get('author_edit')
+            thoughts_edit = request.POST.get('your_thoughts_edit')
+            thoughts_id = request.POST.get('thought_id')
+            #passing them to function to update changes made
+            if Branch.update_saved_thoughts(author_edit,thoughts_edit,thoughts_id):
+                messages.success(request,"Thoughts updated successfully!")
+            else:
+                messages.error(request,"Error Occured. Please try again later!")
+            return redirect('central_branch:manage_website_home')
+        
+        #when user wants to delete a thought
+        if request.POST.get('thought_delete'):
+             
+            id = request.POST.get('delete_thought')
+
+            if Branch.delete_thoughts(id):
+                messages.success(request,"Thoughts deleted successfully!")
+            else:
+                messages.error(request,"Error Occured. Please try again later!")
+            return redirect('central_branch:manage_website_home')
+
+
 
     
     context={
@@ -760,7 +804,8 @@ def manage_website_homepage(request):
         'user_data':user_data,
         'topBannerItems':topBannerItems,
         'bannerPictureWithNumbers':existing_banner_picture_with_numbers,
-        'media_url':settings.MEDIA_URL
+        'media_url':settings.MEDIA_URL,
+        'all_thoughts':all_thoughts,
     }
     return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
 
@@ -795,13 +840,15 @@ def manage_about(request):
                 customer_service_number = request.POST['customer_service_number']
                 presidents_names = request.POST['presidents_names']
                 founders_names = request.POST['founders_names']
-                
+         
                 about_image = request.FILES.get('about_picture')
                 community_image = request.FILES.get('community_picture')
                 innovations_and_developments_image = request.FILES.get('innovations_and_developments_picture')
                 students_and_member_activities_image = request.FILES.get('students_and_member_activities_picture')
                 quality_image = request.FILES.get('quality_picture')
 
+                #checking to see if no picture is uploaded by user, if so then if picture is already present in database
+                #then updating it with saved value to prevent data loss. Otherwise it is None
                 if about_image == None:
                     about_image = about_ieee.about_image
                 if community_image == None:
@@ -813,6 +860,13 @@ def manage_about(request):
                 if quality_image == None:
                     quality_image = about_ieee.quality_image
 
+                #passing the fields data to the function to check length before saving
+                if Branch.checking_length(about_details,community_details,start_with_ieee_details,collaboration_details,publications_details,
+                                          events_and_conferences_details,achievements_details,innovations_and_developments_details,
+                                          students_and_member_activities_details,quality_details):
+                    messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                    return redirect("central_branch:manage_about")
+                #passing the fields data to save the data in the database
                 if(Branch.set_about_ieee_page(about_details, learn_more_link, mission_and_vision_link, community_details, start_with_ieee_details, collaboration_details,
                                         publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
                                         students_and_member_activities_details, quality_details, join_now_link, asia_pacific_link, ieee_computer_organization_link,
@@ -824,8 +878,13 @@ def manage_about(request):
                 
                 return redirect('central_branch:manage_about')
             elif 'remove' in request.POST:
+                #when user wants to remove any picture from the main website of sc_ag through the portal
+                #getting the image path
                 image = request.POST.get('image_delete')
+                #getting the image id
                 image_id = request.POST.get('image_id')
+                #passing them to the delete function, if deleted successfully, success message pops else
+                #error message
                 if Branch.about_ieee_delete_image(image_id,image):
                     messages.success(request,"Deleted Successfully!")
                 else:
@@ -881,104 +940,116 @@ def manage_about(request):
 
 @login_required
 def ieee_region_10(request):
-    sc_ag=PortData.get_all_sc_ag(request=request)
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
 
-    about_ieee_region_10, created = IEEE_Region_10.objects.get_or_create(id=1)
-    page_title = 'ieee_region_10'
+        about_ieee_region_10, created = IEEE_Region_10.objects.get_or_create(id=1)
+        page_title = 'ieee_region_10'
 
-    if request.method == 'POST':
-        if 'save' in request.POST:
-            ieee_region_10_description = request.POST['ieee_region_10_details']
-            ieee_region_10_history_link = request.POST['region_10_history_link']
-            young_professionals_description = request.POST['young_professionals_details']
-            women_in_engineering_ddescription = request.POST['women_in_engineering_details']
-            student_and_member_activities_description = request.POST['student_and_member_activities_details']
-            educational_activities_and_involvements_description = request.POST['educational_activities_and_involvements_details']
-            industry_relations_description = request.POST['industry_relations_details']
-            membership_development_description = request.POST['membership_development_details']
-            events_and_conference_description = request.POST['events_and_conference_details']
-            home_page_link = request.POST['home_page_link']
-            website_link = request.POST['website_link']
-            membership_inquiry_link = request.POST['membership_inquiry_link']
-            for_volunteers_link = request.POST['for_volunteers_link']
-            contact_number = request.POST['contact_number']
+        if request.method == 'POST':
+            if 'save' in request.POST:
+                ieee_region_10_description = request.POST['ieee_region_10_details']
+                ieee_region_10_history_link = request.POST['region_10_history_link']
+                young_professionals_description = request.POST['young_professionals_details']
+                women_in_engineering_ddescription = request.POST['women_in_engineering_details']
+                student_and_member_activities_description = request.POST['student_and_member_activities_details']
+                educational_activities_and_involvements_description = request.POST['educational_activities_and_involvements_details']
+                industry_relations_description = request.POST['industry_relations_details']
+                membership_development_description = request.POST['membership_development_details']
+                events_and_conference_description = request.POST['events_and_conference_details']
+                home_page_link = request.POST['home_page_link']
+                website_link = request.POST['website_link']
+                membership_inquiry_link = request.POST['membership_inquiry_link']
+                for_volunteers_link = request.POST['for_volunteers_link']
+                contact_number = request.POST['contact_number']
 
-            ieee_region_10_image = request.FILES.get('ieee_region_10_picture')
-            young_professionals_image = request.FILES.get('young_professionals_picture')
-            membership_development_image = request.FILES.get('membership_development_picture')
-            background_picture_parallax = request.FILES.get('background_picture')
-            events_and_conference_image = request.FILES.get('events_and_conference_picture')
+                ieee_region_10_image = request.FILES.get('ieee_region_10_picture')
+                young_professionals_image = request.FILES.get('young_professionals_picture')
+                membership_development_image = request.FILES.get('membership_development_picture')
+                background_picture_parallax = request.FILES.get('background_picture')
+                events_and_conference_image = request.FILES.get('events_and_conference_picture')
 
-            if ieee_region_10_image == None:
-                ieee_region_10_image = about_ieee_region_10.ieee_region_10_image
-            if young_professionals_image == None:
-                young_professionals_image = about_ieee_region_10.young_professionals_image
-            if membership_development_image == None:
-                membership_development_image = about_ieee_region_10.membership_development_image
-            if background_picture_parallax == None:
-                background_picture_parallax = about_ieee_region_10.background_picture_parallax
-            if events_and_conference_image == None:
-                events_and_conference_image = about_ieee_region_10.events_and_conference_image
+                if ieee_region_10_image == None:
+                    ieee_region_10_image = about_ieee_region_10.ieee_region_10_image
+                if young_professionals_image == None:
+                    young_professionals_image = about_ieee_region_10.young_professionals_image
+                if membership_development_image == None:
+                    membership_development_image = about_ieee_region_10.membership_development_image
+                if background_picture_parallax == None:
+                    background_picture_parallax = about_ieee_region_10.background_picture_parallax
+                if events_and_conference_image == None:
+                    events_and_conference_image = about_ieee_region_10.events_and_conference_image
 
-            if(Branch.set_ieee_region_10_page(ieee_region_10_description,ieee_region_10_history_link,young_professionals_description,women_in_engineering_ddescription,
-                                              student_and_member_activities_description,educational_activities_and_involvements_description,industry_relations_description,
-                                              membership_development_description,events_and_conference_description,home_page_link,website_link,membership_inquiry_link,
-                                              for_volunteers_link,contact_number,ieee_region_10_image,young_professionals_image,membership_development_image,
-                                              background_picture_parallax,events_and_conference_image)):
-                messages.success(request, "Details Updated Successfully!")
-            else:
-                messages.error(request, "Something went wrong while updating the details!")
+                if Branch.checking_length(ieee_region_10_description,young_professionals_description,women_in_engineering_ddescription,
+                                          student_and_member_activities_description,educational_activities_and_involvements_description,
+                                          industry_relations_description,membership_development_description,events_and_conference_description):
+                    messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                    return redirect("central_branch:ieee_region_10")
+
+                if(Branch.set_ieee_region_10_page(ieee_region_10_description,ieee_region_10_history_link,young_professionals_description,women_in_engineering_ddescription,
+                                                student_and_member_activities_description,educational_activities_and_involvements_description,industry_relations_description,
+                                                membership_development_description,events_and_conference_description,home_page_link,website_link,membership_inquiry_link,
+                                                for_volunteers_link,contact_number,ieee_region_10_image,young_professionals_image,membership_development_image,
+                                                background_picture_parallax,events_and_conference_image)):
+                    messages.success(request, "Details Updated Successfully!")
+                else:
+                    messages.error(request, "Something went wrong while updating the details!")
+                
+                return redirect('central_branch:ieee_region_10')
+            elif 'remove' in request.POST:
+                image = request.POST.get('image_delete')
+                image_id = request.POST.get('image_id')
+                if Branch.ieee_region_10_page_delete_image(image_id,image):
+                    messages.success(request,"Deleted Successfully!")
+                else:
+                    messages.error(request,"Error while deleting picture.")
+                return redirect("central_branch:ieee_region_10")
+            elif 'add_link' in request.POST:
+                category = request.POST.get('link_category')
+                title = request.POST.get('title')
+                link = request.POST.get('form_link_add')
+
+                if(Branch.add_about_page_link(page_title, category, title, link)):
+                    messages.success(request, 'Link added successfully')
+                else:
+                    messages.error(request,'Something went wrong while adding the link')
+
+                return redirect("central_branch:ieee_region_10")
+            elif 'update_link' in request.POST:
+                link_id = request.POST.get('link_id')
+                title = request.POST.get('title')
+                link = request.POST.get('form_link_edit')
+
+                if(Branch.update_about_page_link(link_id, page_title, title, link)):
+                    messages.success(request,'Link updated successfully')
+                else:
+                    messages.error(request,'Something went wrong while updating the link')
+                
+                return redirect("central_branch:ieee_region_10")
+            elif 'remove_form_link' in request.POST:
+                link_id = request.POST.get('link_id')
+
+                if(Branch.remove_about_page_link(link_id, page_title)):
+                    messages.success(request,'Link removed successfully')
+                else:
+                    messages.error(request,'Something went wrong while deleting the link')
+
+                return redirect("central_branch:ieee_region_10")
             
-            return redirect('central_branch:ieee_region_10')
-        elif 'remove' in request.POST:
-            image = request.POST.get('image_delete')
-            image_id = request.POST.get('image_id')
-            if Branch.ieee_region_10_page_delete_image(image_id,image):
-                messages.success(request,"Deleted Successfully!")
-            else:
-                messages.error(request,"Error while deleting picture.")
-            return redirect("central_branch:ieee_region_10")
-        elif 'add_link' in request.POST:
-            category = request.POST.get('link_category')
-            title = request.POST.get('title')
-            link = request.POST.get('form_link_add')
+        page_links = Branch.get_about_page_links(page_title=page_title)
 
-            if(Branch.add_about_page_link(page_title, category, title, link)):
-                messages.success(request, 'Link added successfully')
-            else:
-                messages.error(request,'Something went wrong while adding the link')
-
-            return redirect("central_branch:ieee_region_10")
-        elif 'update_link' in request.POST:
-            link_id = request.POST.get('link_id')
-            title = request.POST.get('title')
-            link = request.POST.get('form_link_edit')
-
-            if(Branch.update_about_page_link(link_id, page_title, title, link)):
-                messages.success(request,'Link updated successfully')
-            else:
-                messages.error(request,'Something went wrong while updating the link')
-            
-            return redirect("central_branch:ieee_region_10")
-        elif 'remove_form_link' in request.POST:
-            link_id = request.POST.get('link_id')
-
-            if(Branch.remove_about_page_link(link_id, page_title)):
-                messages.success(request,'Link removed successfully')
-            else:
-                messages.error(request,'Something went wrong while deleting the link')
-
-            return redirect("central_branch:ieee_region_10")
-        
-    page_links = Branch.get_about_page_links(page_title=page_title)
-
-    context={
-        'all_sc_ag':sc_ag,
-        'ieee_region_10':about_ieee_region_10,
-        'media_url':settings.MEDIA_URL,
-        'page_links':page_links
-    }
-    return render(request,'Manage Website/About/IEEE Region 10/ieee_region_10.html',context=context)
+        context={
+            'all_sc_ag':sc_ag,
+            'ieee_region_10':about_ieee_region_10,
+            'media_url':settings.MEDIA_URL,
+            'page_links':page_links
+        }
+        return render(request,'Manage Website/About/IEEE Region 10/ieee_region_10.html',context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 
 @login_required
@@ -1013,6 +1084,11 @@ def ieee_bangladesh_section(request):
                         about_image = ieee_bangladesh_section.ieee_bangladesh_logo
                 if members_and_volunteers_image == None:
                     members_and_volunteers_image = ieee_bangladesh_section.member_and_volunteer_picture
+
+                if Branch.checking_length(about_details,members_and_volunteers_details,benefits_details,student_branches_details,
+                                          affinity_groups_details,communty_and_society_details,achievements_details):
+                    messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                    return redirect("central_branch:ieee_bangladesh_section")
 
                 if(Branch.set_ieee_bangladesh_section_page(about_details, ieeebd_link, members_and_volunteers_details, benefits_details,
                                                         student_branches_details, affinity_groups_details, communty_and_society_details,
@@ -1122,6 +1198,11 @@ def ieee_nsu_student_branch(request):
                     mission_image = ieee_nsu_student_branch.mission_image
                 if vision_image == None:
                     vision_image = ieee_nsu_student_branch.vision_image
+
+                if Branch.checking_length(about_nsu_student_branch,chapters_description,creative_team_description,mission_description,
+                                          vision_description,events_description,achievements_description):
+                    messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                    return redirect("central_branch:ieee_nsu_student_branch")
                 
                 if(Branch.set_ieee_nsu_student_branch_page(about_nsu_student_branch, chapters_description, ras_read_more_link,
                                                         pes_read_more_link, ias_read_more_link, wie_read_more_link, creative_team_description,
@@ -1147,6 +1228,87 @@ def ieee_nsu_student_branch(request):
             'media_url':settings.MEDIA_URL,
         }
         return render(request,'Manage Website/About/IEEE NSU Student Branch/ieee_nsu_student_branch.html', context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+    
+@login_required
+@xframe_options_exempt
+def manage_about_preview(request):
+    try:
+        about_ieee = About_IEEE.objects.get(id=1)
+        page_title = 'about_ieee'
+        page_links = Branch.get_about_page_links(page_title=page_title)
+            
+        context={
+            'is_live':False, #This disables the header and footer of the page along with wavy for preview
+            'about_ieee':about_ieee,
+            'media_url':settings.MEDIA_URL,
+            'page_links':page_links
+        }
+        return render(request,'About/About_IEEE.html',context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+@login_required
+@xframe_options_exempt
+def ieee_region_10_preview(request):
+    try:
+        ieee_region_10 = IEEE_Region_10.objects.get(id=1)
+        page_title = 'ieee_region_10'
+        page_links = Branch.get_about_page_links(page_title=page_title)
+
+        context = {
+            'is_live':False, #This disables the header and footer of the page along with wavy for preview
+            'ieee_region_10':ieee_region_10,
+            'media_url':settings.MEDIA_URL,
+            'page_links':page_links
+        }
+        return render(request,'About/IEEE_region_10.html',context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+@login_required
+@xframe_options_exempt
+def ieee_bangladesh_section_preview(request):
+    try:
+        ieee_bangladesh_section = IEEE_Bangladesh_Section.objects.get(id=1)
+        page_title = 'ieee_bangladesh_section'
+        page_links = Branch.get_about_page_links(page_title=page_title)
+
+        context={
+            'is_live':False, #This disables the header and footer of the page along with wavy for preview
+            'ieee_bangladesh_section':ieee_bangladesh_section,
+            'page_links':page_links,
+            'media_url':settings.MEDIA_URL,
+        }
+        return render(request,'About/IEEE_bangladesh_section.html',context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+@login_required
+@xframe_options_exempt
+def ieee_nsu_student_branch_preview(request):
+    try:
+        ieee_nsu_student_branch = IEEE_NSU_Student_Branch.objects.get(id=1)
+
+        context={
+            'is_live':False, #This disables the header and footer of the page along with wavy for preview
+            'ieee_nsu_student_branch':ieee_nsu_student_branch,
+            'media_url':settings.MEDIA_URL,
+        }
+        return render(request,'About/IEEE_NSU_student_branch.html',context=context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -2305,3 +2467,46 @@ def update_toolkit(request,pk):
         'form':toolkit_form,
     }
     return render(request,"Manage Website/Publications/Toolkit/update_toolkit.html",context=context)
+
+@login_required
+def feedbacks(request):
+
+    '''This view function loads the feedback page for the particular societies and affinity
+        groups'''
+    
+    try:
+        #rendering all the data to be loaded on the page
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        #getting all the feedbacks for INSB
+        all_feedbacks = Sc_Ag.get_all_feedbacks(request,1)
+        # has_access = Branch.event_page_access(request)
+        
+        if(True):
+
+            if request.method=="POST":
+                #when user hits submit button to changes status of responded fields
+                if request.POST.get('reponded'):
+                    #getting all the list of boolean fields that were changed
+                    respond = request.POST.getlist('responded_id')
+                    #passing the list to the updating funtion to change boolean values
+                    if Sc_Ag.set_feedback_status(respond,1):
+                        messages.success(request,'Feedback status updated successfully.')
+                    else:
+                        messages.error(request,'Feedback status could not be updated.')
+                    return redirect("central_branch:feedbacks")
+        
+            context={
+                    'is_branch' : True,
+                    'all_sc_ag':sc_ag,
+                    'media_url':settings.MEDIA_URL,
+                    'all_feedbacks':all_feedbacks,
+
+            }
+            return render(request,"FeedBack/feedback.html",context)
+        else:
+            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")

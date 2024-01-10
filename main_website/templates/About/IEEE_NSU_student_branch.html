@@ -105,7 +105,7 @@
         .chapter-card img {
             width: 100%;
             height: 218px;
-            object-fit: contain;
+            object-fit: cover;
             background-color: #fff;
             transition: all 1s;
         }
@@ -367,13 +367,15 @@
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
     <div class="body-wrapper  float-menu">
 
-        {% block header %}
-        {% include 'header.html' %}
-        {% endblock header %}
+        {% if is_live %}
+            {% block header %}
+            {% include 'header.html' %}
+            {% endblock header %}
 
-        {% block wave_design %}
-            {% include 'wave.html' %}
-        {% endblock wave_design %}
+            {% block wave_design %}
+                {% include 'wave.html' %}
+            {% endblock wave_design %}
+        {% endif %}
 
         <!--Page start-->
         <!--About INSB section-->
@@ -517,7 +519,8 @@
                         <p>{{ieee_nsu_student_branch.mission_description|safe}}</p>
                     </div>
                 </div>
-                <div>
+                <div style="    height: 350px;
+                width: 100%;">
                     <img src="{{media_url}}{{ieee_nsu_student_branch.mission_image}}" alt="">
                 </div>
             </section>
@@ -527,7 +530,8 @@
         <!--vision section-->
         <section class="centering" style="background-color: #f9f9f9; margin: 10px 0;">
             <section class="vision max-width">
-                <div>
+                <div style="    height: 350px;
+                width: 100%;">
                     <img src="{{media_url}}{{ieee_nsu_student_branch.vision_image}}" alt="">
                 </div>
                 <div style="padding: 20px;">
@@ -555,7 +559,7 @@
                         <p>{{ieee_nsu_student_branch.events_description|safe}}</p>
                     </div>
                     <div class="events-btn">
-                        <button><i class="fa-solid fa-angles-right" style="color: #f9f9f9;"></i> All Events</button>
+                        <a href="{% url 'main_website:event_homepage' %}"><button><i class="fa-solid fa-angles-right" style="color: #f9f9f9;"></i> All Events</button></a>
                     </div>
                 </div>
 
@@ -610,7 +614,7 @@
                     </div>
                 </div>
                 <div class="join-btn">
-                    <button>Join Now</button>
+                    <a href="{{ieee_nsu_student_branch.join_now_link}}"><button>Join Now</button></a>
                 </div>
             </section>
         </section>
@@ -630,10 +634,12 @@
         </section>
 
         
-        <!--Footer-->
-        {% block footer %}
-        {% include "footer_block.html" %}
-        {% endblock footer %}
+        {% if is_live %}
+            <!--Footer-->
+            {% block footer %}
+            {% include "footer_block.html" %}
+            {% endblock footer %}
+        {% endif %}
 
         {% block common_js %}
         {% include "common_js_includes.html" %}

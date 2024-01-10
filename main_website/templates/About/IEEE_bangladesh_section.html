@@ -342,13 +342,15 @@
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
     <div class="body-wrapper  float-menu">
 
-        {% block header %}
-        {% include 'header.html' %}
-        {% endblock header %}
+        {% if is_live %}
+            {% block header %}
+            {% include 'header.html' %}
+            {% endblock header %}
 
-        {% block wave_design %}
-            {% include 'wave.html' %}
-        {% endblock wave_design %}
+            {% block wave_design %}
+                {% include 'wave.html' %}
+            {% endblock wave_design %}
+        {% endif %}
 
         <!--page start-->
         <!--about ieee section-->
@@ -496,51 +498,17 @@
                     <p>{{ieee_bangladesh_section.achievements_description|safe}}</p>
                 </div>
                 <div class="achievement-container">
+                    {% for page_link in page_links.achievement_link %}
                     <div class="achievement-card">
                         <div>
                             <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
                                 alt="">
                                 <!--links-->
-                            <h4>IEEE NSU Achievements</h4>
-                            <a href="#">Read More</a>
+                            <h4>{{page_link.title}}</h4>
+                            <a href="{{page_link.link}}">Read More</a>
                         </div>
                     </div>
-                    <div class="achievement-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                                <!--links-->
-                            <h4>IEEE BUET Achievements</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
-                    <div class="achievement-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                                <!--links-->
-                            <h4>IEEE AIUB Achievements</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
-                    <div class="achievement-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                                <!--links-->
-                            <h4>Achievements of DUET</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
-                    <div class="achievement-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                                <!--links-->
-                            <h4>Achievements of Milestone</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </section>
         </section>
@@ -614,10 +582,12 @@
             </section>
         </section>
 
-        <!--Footer-->
-        {% block footer %}
-        {% include "footer_block.html" %}
-        {% endblock footer %}
+        {% if is_live %}
+            <!--Footer-->
+            {% block footer %}
+            {% include "footer_block.html" %}
+            {% endblock footer %}
+        {% endif %}
 
 
     </div>
