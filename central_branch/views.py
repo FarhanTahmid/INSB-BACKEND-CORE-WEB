@@ -796,13 +796,15 @@ def manage_about(request):
                 customer_service_number = request.POST['customer_service_number']
                 presidents_names = request.POST['presidents_names']
                 founders_names = request.POST['founders_names']
-                
+         
                 about_image = request.FILES.get('about_picture')
                 community_image = request.FILES.get('community_picture')
                 innovations_and_developments_image = request.FILES.get('innovations_and_developments_picture')
                 students_and_member_activities_image = request.FILES.get('students_and_member_activities_picture')
                 quality_image = request.FILES.get('quality_picture')
 
+                #checking to see if no picture is uploaded by user, if so then if picture is already present in database
+                #then updating it with saved value to prevent data loss. Otherwise it is None
                 if about_image == None:
                     about_image = about_ieee.about_image
                 if community_image == None:
@@ -814,6 +816,13 @@ def manage_about(request):
                 if quality_image == None:
                     quality_image = about_ieee.quality_image
 
+                #passing the fields data to the function to check length before saving
+                if Branch.checking_length(about_details,community_details,start_with_ieee_details,collaboration_details,publications_details,
+                                          events_and_conferences_details,achievements_details,innovations_and_developments_details,
+                                          students_and_member_activities_details,quality_details):
+                    messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                    return redirect("central_branch:manage_about")
+                #passing the fields data to save the data in the database
                 if(Branch.set_about_ieee_page(about_details, learn_more_link, mission_and_vision_link, community_details, start_with_ieee_details, collaboration_details,
                                         publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
                                         students_and_member_activities_details, quality_details, join_now_link, asia_pacific_link, ieee_computer_organization_link,
@@ -825,8 +834,13 @@ def manage_about(request):
                 
                 return redirect('central_branch:manage_about')
             elif 'remove' in request.POST:
+                #when user wants to remove any picture from the main website of sc_ag through the portal
+                #getting the image path
                 image = request.POST.get('image_delete')
+                #getting the image id
                 image_id = request.POST.get('image_id')
+                #passing them to the delete function, if deleted successfully, success message pops else
+                #error message
                 if Branch.about_ieee_delete_image(image_id,image):
                     messages.success(request,"Deleted Successfully!")
                 else:
@@ -921,6 +935,12 @@ def ieee_region_10(request):
                     background_picture_parallax = about_ieee_region_10.background_picture_parallax
                 if events_and_conference_image == None:
                     events_and_conference_image = about_ieee_region_10.events_and_conference_image
+
+                if Branch.checking_length(ieee_region_10_description,young_professionals_description,women_in_engineering_ddescription,
+                                          student_and_member_activities_description,educational_activities_and_involvements_description,
+                                          industry_relations_description,membership_development_description,events_and_conference_description):
+                    messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                    return redirect("central_branch:ieee_region_10")
 
                 if(Branch.set_ieee_region_10_page(ieee_region_10_description,ieee_region_10_history_link,young_professionals_description,women_in_engineering_ddescription,
                                                 student_and_member_activities_description,educational_activities_and_involvements_description,industry_relations_description,
@@ -1020,6 +1040,11 @@ def ieee_bangladesh_section(request):
                         about_image = ieee_bangladesh_section.ieee_bangladesh_logo
                 if members_and_volunteers_image == None:
                     members_and_volunteers_image = ieee_bangladesh_section.member_and_volunteer_picture
+
+                if Branch.checking_length(about_details,members_and_volunteers_details,benefits_details,student_branches_details,
+                                          affinity_groups_details,communty_and_society_details,achievements_details):
+                    messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                    return redirect("central_branch:ieee_bangladesh_section")
 
                 if(Branch.set_ieee_bangladesh_section_page(about_details, ieeebd_link, members_and_volunteers_details, benefits_details,
                                                         student_branches_details, affinity_groups_details, communty_and_society_details,
@@ -1129,6 +1154,11 @@ def ieee_nsu_student_branch(request):
                     mission_image = ieee_nsu_student_branch.mission_image
                 if vision_image == None:
                     vision_image = ieee_nsu_student_branch.vision_image
+
+                if Branch.checking_length(about_nsu_student_branch,chapters_description,creative_team_description,mission_description,
+                                          vision_description,events_description,achievements_description):
+                    messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                    return redirect("central_branch:ieee_nsu_student_branch")
                 
                 if(Branch.set_ieee_nsu_student_branch_page(about_nsu_student_branch, chapters_description, ras_read_more_link,
                                                         pes_read_more_link, ias_read_more_link, wie_read_more_link, creative_team_description,

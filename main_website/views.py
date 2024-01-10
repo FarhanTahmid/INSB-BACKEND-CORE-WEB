@@ -269,7 +269,7 @@ def rasPage(request):
                 
             
         context={
-                
+            'is_live':True, #This enables the header and footer of the page along with wavy   
             'society':society,
             #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'media_url':settings.MEDIA_URL,
@@ -316,7 +316,7 @@ def pesPage(request):
                 return redirect("main_website:pes_home")
                 
         context={
-                
+            'is_live':True, #This enables the header and footer of the page along with wavy    
             'society':society,
             #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'media_url':settings.MEDIA_URL,
@@ -362,7 +362,7 @@ def iasPage(request):
                 return redirect("main_website:ias_home")
                   
         context={
-                
+            'is_live':True, #This enables the header and footer of the page along with wavy    
             'society':society,
             #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'media_url':settings.MEDIA_URL,
@@ -409,7 +409,7 @@ def wiePage(request):
                 
             
         context={
-                
+            'is_live':True, #This enables the header and footer of the page along with wavy    
             'society':society,
             #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'media_url':settings.MEDIA_URL,
