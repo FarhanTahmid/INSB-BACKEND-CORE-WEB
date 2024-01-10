@@ -2,7 +2,7 @@ import os
 from bs4 import BeautifulSoup
 from django.http import Http404
 from insb_port import settings
-from main_website.models import About_IEEE, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link,FAQ_Question_Category,FAQ_Questions
+from main_website.models import About_IEEE, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link,FAQ_Question_Category,FAQ_Questions,HomePage_Thoughts
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
@@ -1431,3 +1431,64 @@ class Branch:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
+        
+    def save_homepage_thoughts(author,thought):
+
+        '''This function saves the thoughts that the author gave on portal to display on main
+            web page'''
+        
+        try:
+            #saving them in database
+            homepage_thought = HomePage_Thoughts.objects.create(author = author, quote = thought)
+            homepage_thought.save()
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def get_all_homepage_thoughts():
+
+        '''This function returns all the thoughts registered in database'''
+
+        try:
+            #returning all the thoughts as a list
+            return HomePage_Thoughts.objects.all().order_by('pk')
+        
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def update_saved_thoughts(author,thought,id):
+
+        '''This function updates the registerd thoughts'''
+
+        try:
+            #getting the object from id and updating it with new data
+            homepage_thought = HomePage_Thoughts.objects.get(id=id)
+            homepage_thought.quote = thought
+            homepage_thought.author = author
+            homepage_thought.save()
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def delete_thoughts(id):
+        
+        '''This function deletes the thought from the database'''
+
+        try:
+            #getting the object from id and deleting it
+            homepage_thought = HomePage_Thoughts.objects.get(id=id)
+            homepage_thought.delete()
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False  

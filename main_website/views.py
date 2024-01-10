@@ -32,6 +32,9 @@ def homepage(request):
     bannerItems=HomepageItems.getHomepageBannerItems()
     bannerWithStat=HomepageItems.getBannerPictureWithStat()
     HomepageItems.get_ip_address(request)
+    #getting all the thoughts
+    all_thoughts = Branch.get_all_homepage_thoughts()
+
     
     
     # get recent 6 news
@@ -52,6 +55,7 @@ def homepage(request):
         'recent_news':get_recent_news,
         'recent_blogs':get_recent_blogs,
         'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+        'all_thoughts':all_thoughts,
     }
     return render(request,"LandingPage/homepage.html",context)
 
