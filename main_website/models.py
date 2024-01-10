@@ -301,6 +301,16 @@ class Toolkit(models.Model):
         verbose_name="Toolkit"
     def __str__(self) -> str:
         return self.title
+
+class VolunteerOfTheMonth(models.Model):
+    ieee_id=models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE)
+    contributions=RichTextField(null=True,blank=True,max_length=200)
+    
+    class Meta:
+        verbose_name="Volunteer Of the Month"
+    def __str__(self) -> str:
+        return str(self.ieee_id)
+    
     
 class IEEE_Region_10(models.Model):
     ieee_region_10_description = models.TextField(null=True,blank=True)
