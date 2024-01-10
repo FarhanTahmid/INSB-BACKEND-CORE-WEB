@@ -1095,21 +1095,22 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
-    def checking_length(about_details, community_details, start_with_ieee_details, collaboration_details,
-                        publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
-                        students_and_member_activities_details, quality_details):
+    def checking_length(*descriptions):
+        '''This function checks the length of the description fields. If any one exceed 700 or if any one is
+            empty then data won't be saved.'''
+        
         try:
-            about_details = Branch.process_ckeditor_content(about_details)
+            #assinging checking length
+            max_length = 700
 
+            for description in descriptions:
+                #removing html tags to check true length of each fields
+                filtered_description = Branch.process_ckeditor_content(description)
+                #checking to see the length. Returns true if length is more than 700 or is 0
+                if(len(filtered_description)> max_length or len(filtered_description) == 0):
+                    return True
                 
-            if (len(about_details)> 500 or len(community_details)>500 or len(start_with_ieee_details)>500 
-                or len(collaboration_details)>500 or len(publications_details) > 500 or len(events_and_conferences_details) >500
-                or len(achievements_details)>500 or 
-                len(about_details) == 0 or len(innovations_and_developments_details)==0 or len(students_and_member_activities_details)==0
-                or len(quality_details)==0):
-                return True
-            else:
-                    return False
+            return False
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
