@@ -749,6 +749,8 @@ def current_panel_members(request):
             has_branch_eb=True
         if(len(sc_ag_chair)>0):
             has_sc_ag_chair=True
+        
+               
         context={
             'has_branch_counselor':has_branch_counselor,'has_sc_ag_faculty_advisor':has_sc_ag_faculty_advisor,'has_mentors':has_mentors,'has_branch_chair':has_branch_chair,'has_branch_eb':has_branch_eb,'has_sc_ag_chair':has_sc_ag_chair,
             'has_current_panel':has_current_panel,

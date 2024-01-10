@@ -17,7 +17,7 @@ from main_website.renderData import HomepageItems
 from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
 from system_administration.system_error_handling import ErrorHandling
-from . import renderData
+from users import renderData
 from port.models import Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
 from django.db import DatabaseError
 from central_branch.renderData import Branch
@@ -53,14 +53,17 @@ logger=logging.getLogger(__name__)
 
 def central_home(request):
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
         }
         user=request.user
         # has_access=Access_Render.system_administrator_superuser_access(user.username)
         if (True):
-            #renderData.Branch.test_google_form()'''
+            #Branch.test_google_form()'''
             return render(request,'homepage/branch_homepage.html',context)
             # return render(request,'central_home.html')
 
@@ -75,13 +78,14 @@ def central_home(request):
 
 #Panel and Team Management
 def teams(request):
-    
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     '''
     Loads all the existing teams in the branch
     Gives option to add or delete a team
     '''
     #load panel lists
-    # panels=renderData.Branch.load_ex_com_panel_list()
+    # panels=Branch.load_ex_com_panel_list()
     user = request.user
 
     '''Checking if user is EB/faculty or not, and the calling the function event_page_access
@@ -101,12 +105,13 @@ def teams(request):
             return redirect('central_branch:teams')
     
     #load teams from database
-    teams=renderData.Branch.load_teams()
+    teams=Branch.load_teams()
     team_list=[]
     for team in teams:
         team_list.append(team)
             
     context={
+        'user_data':user_data,
         'team':team_list,
         'all_sc_ag':sc_ag,
     }
@@ -115,21 +120,22 @@ def teams(request):
 
 
 def team_details(request,primary,name):
-    
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
     has_access=Branch_View_Access.get_team_details_view_access(request=request)
     '''Detailed panel for the team'''
     current_panel=Branch.load_current_panel()
     #load data of current team Members
-    team_members=renderData.Branch.load_team_members(primary)
+    team_members=Branch.load_team_members(primary)
     #load all the roles and positions from database
-    positions=renderData.Branch.load_roles_and_positions()
+    positions=Branch.load_roles_and_positions()
     # Excluding position of EB, Faculty and SC-AG members
     for i in positions:
         if(i.is_eb_member or i.is_faculty or i.is_sc_ag_eb_member):
             positions=positions.exclude(pk=i.pk)
     #loading all members of insb
-    insb_members=renderData.Branch.load_all_insb_members()
+    insb_members=Branch.load_all_insb_members()
     members_to_add=[]
     position=12 #assigning default to volunteer
 
@@ -143,13 +149,13 @@ def team_details(request,primary,name):
                 position=request.POST.get('position')
                 #ADDING MEMBER TO TEAM
                 for member in members_to_add:
-                    if(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)):
+                    if(Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)):
                         messages.success(request,"Member Added to the team!")
-                    elif(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)==False):
+                    elif(Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)==False):
                         messages.error(request,"Member couldn't be added!")
-                    elif(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)==DatabaseError):
+                    elif(Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)==DatabaseError):
                         messages.error(request,"An internal Database Error Occured! Please try again!")
-                    elif(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position) is None):
+                    elif(Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position) is None):
                         messages.info(request,"You need to make a Panel that is current to add members to Teams!")
 
                 return redirect('central_branch:team_details',primary,name)
@@ -196,6 +202,7 @@ def team_details(request,primary,name):
         team_update_form=PortForms.TeamForm(instance=team_to_update)
 
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'team_id':primary,
         'team_name':name,
@@ -213,7 +220,12 @@ def team_details(request,primary,name):
 
 @login_required
 def manage_team(request,pk,team_name):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'team_id':pk,
         'team_name':team_name,
     }
@@ -222,7 +234,8 @@ def manage_team(request,pk,team_name):
 #PANEL WORkS
 @login_required
 def panel_home(request):
-    
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # get all panels from database
@@ -238,6 +251,7 @@ def panel_home(request):
             return redirect('central_branch:panels')
         
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'panels':panels,
         'create_panel_access':create_panel_access,
@@ -248,6 +262,8 @@ def panel_home(request):
 
 @login_required
 def branch_panel_details(request,panel_id):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # get panel information
@@ -305,6 +321,7 @@ def branch_panel_details(request,panel_id):
 
         
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'panel_id':panel_id,
         'panel_info':panel_info,
@@ -317,6 +334,8 @@ def branch_panel_details(request,panel_id):
 
 @login_required
 def branch_panel_officers_tab(request,panel_id):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # get panel information
@@ -353,6 +372,7 @@ def branch_panel_officers_tab(request,panel_id):
 
     
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'panel_id':panel_id,
         'panel_info':panel_info,
@@ -366,6 +386,8 @@ def branch_panel_officers_tab(request,panel_id):
 
 @login_required
 def branch_panel_volunteers_tab(request,panel_id):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # get panel information
@@ -403,6 +425,7 @@ def branch_panel_volunteers_tab(request,panel_id):
     
     
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'panel_id':panel_id,
         'panel_info':panel_info,
@@ -417,6 +440,8 @@ def branch_panel_volunteers_tab(request,panel_id):
 
 @login_required
 def branch_panel_alumni_tab(request,panel_id):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # get panel information
@@ -470,6 +495,7 @@ def branch_panel_alumni_tab(request,panel_id):
                 return redirect('central_branch:panel_details_alumni',panel_id)
     
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'panel_id':panel_id,
         'panel_info':panel_info,
@@ -489,7 +515,8 @@ def others(request):
 @login_required
 def manage_research(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
-
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # load all research papers
     researches = Research_Papers.objects.filter(is_requested=False).order_by('-publish_date','publish_research')
     '''function for adding new Research paper'''
@@ -514,6 +541,7 @@ def manage_research(request):
         form=ResearchPaperForm
         form2=ResearchCategoryForm
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'form':form,
         'form2':form2,'all_researches':researches,
@@ -522,19 +550,27 @@ def manage_research(request):
 
 @login_required
 def manage_research_request(request):
-    # get all research requests
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+        # get all research requests
     research_requests=Research_Papers.objects.filter(is_requested=True).order_by('-publish_date')
     if(request.method=="POST"):
         if(request.POST.get('remove_research')):
             MainWebsiteRenderData.delete_research_paper(request=request)
             return redirect('central_branch:manage_research_request')
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'all_research_requests':research_requests
     }
     return render(request,"Manage Website/Publications/Research Paper/manage_paper_request.html",context=context)
 
 @login_required
 def publish_research_request(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get research to publish
     research_to_publish=get_object_or_404(Research_Papers,pk=pk)
     if(request.method=="POST"):
@@ -550,6 +586,8 @@ def publish_research_request(request,pk):
     else:
         research_form=ResearchPaperForm(instance=research_to_publish)            
     context={
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
         'research':research_to_publish,
         'form':research_form,
     }
@@ -557,6 +595,8 @@ def publish_research_request(request,pk):
 
 @login_required
 def update_researches(request,pk):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # get the research and Form
@@ -572,6 +612,7 @@ def update_researches(request,pk):
         form=ResearchPaperForm(instance=research_to_update)
     
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'form':form,
         'research_paper':research_to_update,
@@ -580,6 +621,8 @@ def update_researches(request,pk):
 
 @login_required
 def manage_blogs(request):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # Load all blogs
@@ -607,6 +650,7 @@ def manage_blogs(request):
             return redirect('central_branch:manage_blogs')
 
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         # get form
         'form':form,
@@ -619,6 +663,8 @@ def manage_blogs(request):
 
 @login_required
 def update_blogs(request,pk):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file  
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # get the blog and form
@@ -634,6 +680,7 @@ def update_blogs(request,pk):
         form=BlogsForm(instance=blog_to_update)
     
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'form':form,
         'blog':blog_to_update,
@@ -643,6 +690,9 @@ def update_blogs(request,pk):
 
 @login_required
 def blog_requests(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get all blog requests
     all_requested_blogs=Blog.objects.filter(is_requested=True).order_by('-date')
     
@@ -658,6 +708,8 @@ def blog_requests(request):
             return redirect('central_branch:blog_requests')
     
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'all_requested_blogs':all_requested_blogs
     }
     return render(request,"Manage Website/Publications/Blogs/blog_requests.html",context=context)
@@ -665,7 +717,8 @@ def blog_requests(request):
 @login_required
 def publish_blog_request(request,pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
-
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get the blog and form
     blog_to_publish=get_object_or_404(Blog,pk=pk)
     if(request.method=="POST"):
@@ -687,6 +740,7 @@ def publish_blog_request(request,pk):
         'all_sc_ag':sc_ag,
         'form':form,
         'blog':blog_to_publish,
+        'user_data':user_data,
     }
     return render(request,"Manage Website/Publications/Blogs/publish_blog.html",context=context)
 
@@ -694,7 +748,8 @@ from main_website.models import HomePageTopBanner
 @login_required
 def manage_website_homepage(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
-
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     '''For top banner picture with Texts and buttons - Tab 1'''
     topBannerItems=HomePageTopBanner.objects.all()
     # get user data
@@ -803,6 +858,7 @@ def manage_website_homepage(request):
 
     
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'user_data':user_data,
         'topBannerItems':topBannerItems,
@@ -1413,7 +1469,8 @@ def faq(request):
 @login_required
 def manage_achievements(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
-
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # load the achievement form
     form=AchievementForm
     # load all SC AG And Branch
@@ -1440,13 +1497,15 @@ def manage_achievements(request):
         'form':form,
         'load_all_sc_ag':load_award_of,
         'all_achievements':all_achievements,
+        'user_data':user_data,
     }
     return render(request,'Manage Website/Activities/manage_achievements.html',context=context)
 
 @login_required
 def update_achievements(request,pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
-
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get the achievement and form
     achievement_to_update=get_object_or_404(Achievements,pk=pk)
     if(request.method=="POST"):
@@ -1463,6 +1522,7 @@ def update_achievements(request,pk):
         'all_sc_ag':sc_ag,
         'form':form,
         'achievement':achievement_to_update,
+        'user_data':user_data,
     }
 
     return render(request,"Manage Website/Activities/achievements_update_section.html",context=context)
@@ -1470,7 +1530,8 @@ def update_achievements(request,pk):
 @login_required
 def manage_news(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
-
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     form=NewsForm
     get_all_news=News.objects.all().order_by('-news_date')
     
@@ -1491,6 +1552,7 @@ def manage_news(request):
             return redirect('central_branch:manage_news')
     
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'form':form,
         'all_news':get_all_news
@@ -1500,7 +1562,8 @@ def manage_news(request):
 @login_required
 def update_news(request,pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
-
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get the news instance to update
     news_to_update = get_object_or_404(News, pk=pk)
     if request.method == "POST":
@@ -1512,6 +1575,7 @@ def update_news(request,pk):
     else:
         form = NewsForm(instance=news_to_update)
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'form':form,
         'news':news_to_update,
@@ -1521,6 +1585,9 @@ def update_news(request,pk):
 
 @login_required
 def manage_magazines(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get form
     magazine_form = MagazineForm
     
@@ -1546,6 +1613,8 @@ def manage_magazines(request):
             
                     
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'magazine_form':magazine_form,
         'all_magazines':all_magazines,
     }
@@ -1554,6 +1623,9 @@ def manage_magazines(request):
 
 @login_required
 def update_magazine(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get the magazine to update
     magazine_to_update=get_object_or_404(Magazines,pk=pk)
     
@@ -1566,6 +1638,8 @@ def update_magazine(request,pk):
     else:
         update_form = MagazineForm(instance=magazine_to_update)
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'update_form':update_form,
         'magazine':magazine_to_update,
     }
@@ -1574,7 +1648,9 @@ def update_magazine(request,pk):
 
 @login_required
 def manage_gallery(request):
-    
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get all images of gallery
     all_images = GalleryImages.objects.all().order_by('-pk')
     all_videos=GalleryVideos.objects.all().order_by('-pk')
@@ -1608,6 +1684,8 @@ def manage_gallery(request):
             return redirect('central_branch:manage_gallery')
         
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'image_form':GalleryImageForm,
         'video_form':GalleryVideoForm,
         'all_images':all_images,
@@ -1618,6 +1696,9 @@ def manage_gallery(request):
 
 @login_required
 def update_images(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
      # get the magazine to update
     image_to_update=get_object_or_404(GalleryImages,pk=pk)
     
@@ -1631,6 +1712,8 @@ def update_images(request,pk):
     else:
         update_form = GalleryImageForm(instance=image_to_update)
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'update_form':update_form,
         'image':image_to_update,
     }
@@ -1638,6 +1721,9 @@ def update_images(request,pk):
 
 @login_required
 def update_videos(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
      # get the magazine to update
     video_to_update=get_object_or_404(GalleryVideos,pk=pk)
     
@@ -1651,6 +1737,8 @@ def update_videos(request,pk):
     else:
         update_form = GalleryVideoForm(instance=video_to_update)
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'update_form':update_form,
         'video':video_to_update,
     }
@@ -1658,6 +1746,9 @@ def update_videos(request,pk):
 
 @login_required
 def manage_exemplary_members(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get all exemplary members
     exemplary_members = ExemplaryMembers.objects.all().order_by('rank')
     
@@ -1678,6 +1769,8 @@ def manage_exemplary_members(request):
             return redirect('central_branch:manage_exemplary_members')
         
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'all_exemplary_members':exemplary_members,
         'exemplary_member_form':ExemplaryMembersForm,
     }
@@ -1685,6 +1778,9 @@ def manage_exemplary_members(request):
 
 @login_required
 def update_exemplary_members(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get memeber to update
     member_to_update=ExemplaryMembers.objects.get(pk=pk)
     if request.method=='POST':
@@ -1697,6 +1793,8 @@ def update_exemplary_members(request,pk):
     else:
         member_form=ExemplaryMembersForm(instance=member_to_update)
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'exemplary_member':member_to_update,
         'member_form':member_form
     }
@@ -1704,6 +1802,9 @@ def update_exemplary_members(request,pk):
 
 @login_required
 def manage_view_access(request):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # get access of the page first
@@ -1757,6 +1858,7 @@ def manage_view_access(request):
         
 
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'insb_members':all_insb_members,
         'branch_data_access':branch_data_access,
@@ -1773,16 +1875,17 @@ def manage_view_access(request):
 def event_control_homepage(request):
     # This function loads all events and super events in the event homepage table
     
-        has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
-
-    # try:
+    has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    try:
         is_branch = True
         sc_ag=PortData.get_all_sc_ag(request=request)
         all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(1)
         context={
             'all_sc_ag':sc_ag,
+            'user_data':user_data,
             'events':all_insb_events_with_interbranch_collaborations,
-            # 'sc_ag_info':get_sc_ag_info,
             'has_access_to_create_event':has_access_to_create_event,
             'is_branch':is_branch,
             
@@ -1805,11 +1908,11 @@ def event_control_homepage(request):
                 return redirect('central_branch:event_control')
             
         return render(request,'Events/event_homepage.html',context)
-    # except Exception as e:
-    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-    #     # TODO: Make a good error code showing page and show it upon errror
-    #     return HttpResponseBadRequest("Bad Request")
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
     
 
 @login_required
@@ -1818,6 +1921,8 @@ def super_event_creation(request):
     '''function for creating super event'''
 
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         #calling it regardless to run the page
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,5)
@@ -1840,6 +1945,7 @@ def super_event_creation(request):
                 return redirect('central_branch:event_control')
             
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'is_branch' : is_branch
@@ -1857,6 +1963,8 @@ def event_creation_form_page(request):
     
     #######load data to show in the form boxes#########
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file  
         form = EventForm()
         sc_ag=PortData.get_all_sc_ag(request=request)
         is_branch = True
@@ -1910,6 +2018,7 @@ def event_creation_form_page(request):
                 return redirect('central_branch:event_creation_form1')
         
         context={
+            'user_data':user_data,
             'super_events':super_events,
             'event_types':event_types,
             'is_branch' : is_branch,
@@ -1931,6 +2040,8 @@ def event_creation_form_page2(request,event_id):
     #loading all inter branch collaboration Options
 
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         is_branch=True
         sc_ag=PortData.get_all_sc_ag(request=request)
         inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
@@ -1953,6 +2064,7 @@ def event_creation_form_page2(request,event_id):
                 return redirect('central_branch:event_control')
         
         context={
+            'user_data':user_data,
             'inter_branch_collaboration_options':inter_branch_collaboration_options,
             'all_sc_ag':sc_ag,
             'is_branch' : is_branch,
@@ -1968,6 +2080,8 @@ def event_creation_form_page2(request,event_id):
 @login_required
 def event_creation_form_page3(request,event_id):
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         is_branch=True
         sc_ag=PortData.get_all_sc_ag(request=request)
         #loading all venues from the venue list from event management team database
@@ -1994,6 +2108,7 @@ def event_creation_form_page3(request,event_id):
                     return redirect('central_branch:event_control')
                 
         context={
+            'user_data':user_data,
             'venues':venues,
             'permission_criterias':permission_criterias,
             'all_sc_ag':sc_ag,
@@ -2031,6 +2146,8 @@ def event_edit_form(request, event_id):
 
     ''' This function loads the edit page of events '''
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         # has_access = Branch.event_page_access(request)
         if True:
@@ -2046,7 +2163,7 @@ def event_edit_form(request, event_id):
 
                 if('add_venues' in request.POST):
                     venue = request.POST.get('venue')
-                    if(renderData.Branch.add_event_venue(venue)):
+                    if(Branch.add_event_venue(venue)):
                         messages.success(request, "Venue created successfully")
                     else:
                         messages.error(request, "Something went wrong while creating the venue")
@@ -2082,7 +2199,7 @@ def event_edit_form(request, event_id):
                     else:
                         registration_fee_amount=0
                     #Check if the update request is successful
-                    if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
+                    if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
                                                             flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,form_link = form_link,is_featured_event= is_featured)):
                         messages.success(request,f"EVENT: {event_name} was Updated successfully")
                         return redirect('central_branch:event_edit_form', event_id) 
@@ -2140,7 +2257,8 @@ def event_edit_form(request, event_id):
                 'is_flagship_event':is_flagship_event,
                 'is_registration_fee_required':is_registraion_fee_true,
                 'selected_venues':selected_venues,
-                'is_featured_event':is_featured_event
+                'is_featured_event':is_featured_event,
+                'user_data':user_data,
             }
 
             return render(request, 'Events/event_edit_form.html', context)
@@ -2160,6 +2278,8 @@ def event_edit_media_form_tab(request, event_id):
     ''' This function loads the media tab page of events '''
 
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         # has_access = Branch.event_page_access(request)
         if(True):
@@ -2210,6 +2330,7 @@ def event_edit_media_form_tab(request, event_id):
                 'media_url':settings.MEDIA_URL,
                 'allowed_image_upload':6-number_of_uploaded_images,
                 'all_sc_ag':sc_ag,
+                'user_data':user_data,
             }
             return render(request,"Events/event_edit_media_form_tab.html",context)
         else:
@@ -2230,6 +2351,8 @@ def event_edit_graphics_form_tab(request, event_id):
     #and can be editible
 
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         #Get event details from databse
         # has_access = Branch.event_page_access(request)
@@ -2280,7 +2403,7 @@ def event_edit_graphics_form_tab(request, event_id):
                 'graphics_banner_image':graphic_banner_image,
                 'media_url':settings.MEDIA_URL,
                 'allowed_image_upload':1-image_number,
-
+                'user_data':user_data,
             }
             return render(request,"Events/event_edit_graphics_form_tab.html",context)
         else:
@@ -2300,6 +2423,8 @@ def event_edit_graphics_form_links_sub_tab(request,event_id):
     #and can be editible
 
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         all_graphics_link = GraphicsTeam.get_all_graphics_form_link(event_id)
         #Get event details from databse
@@ -2343,7 +2468,7 @@ def event_edit_graphics_form_links_sub_tab(request,event_id):
                 'event_id' : event_id,
                 'all_sc_ag':sc_ag,
                 'all_graphics_link':all_graphics_link,
-
+                'user_data':user_data,
             }
             return render(request,"Events/event_edit_graphics_form_links_sub_tab.html",context)
         else:
@@ -2361,6 +2486,8 @@ def event_edit_content_form_tab(request,event_id):
     ''' This function loads the content tab page of events '''
 
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         # has_access = Branch.event_page_access(request)
         if(True):
@@ -2405,7 +2532,7 @@ def event_edit_content_form_tab(request,event_id):
                 'form_adding_note':form,
                 'all_notes_content':all_notes_content,
                 'all_sc_ag':sc_ag,
-
+                'user_data':user_data,
             }
             return render(request,"Events/event_edit_content_and_publications_form_tab.html",context)
         else:
@@ -2445,6 +2572,10 @@ def event_preview(request, event_id):
 
 @login_required
 def manage_toolkit(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    
     # get all toolkits
     all_toolkits=Toolkit.objects.all().order_by('-pk')
     if(request.method=="POST"):
@@ -2465,6 +2596,8 @@ def manage_toolkit(request):
     else:
         toolkit_form=ToolkitForm
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'all_toolkits':all_toolkits,
         'form':toolkit_form,
     }
@@ -2472,6 +2605,9 @@ def manage_toolkit(request):
 
 @login_required
 def update_toolkit(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # toolkit to update
     toolkit_to_update=get_object_or_404(Toolkit,pk=pk)
     if(request.method=="POST"):
@@ -2484,6 +2620,8 @@ def update_toolkit(request,pk):
     else:
         toolkit_form=ToolkitForm(instance=toolkit_to_update)
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'toolkit':toolkit_to_update,
         'form':toolkit_form,
     }

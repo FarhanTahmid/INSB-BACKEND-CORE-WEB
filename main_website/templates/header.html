@@ -132,10 +132,9 @@
                             <ul class="dl-submenu">
                                 <li class="menu-item"><a href="{% url 'main_website:panel_members' %}">Panels</a></li>
                                 <li class="menu-item"><a href="{% url 'main_website:officer_page' %}">Officers</a></li>
-                                <li class="menu-item"><a href="{% url 'main_website:volunteers_page' %}">Core
-                                        Volunteers</a></li>
-                                <li class="menu-item menu-item-has-children menu-item-30"><a href="#">Teams</a>
-                                    <ul class="dl-submenu">
+                                <li class="menu-item"><a href="{% url 'main_website:volunteers_page' %}">Core Volunteers</a></li>
+                                <li class="menu-item menu-item-has-children"><a href="#">Teams</a>
+                                    <ul class="sub-menu sub-menu-level-2">
                                         {% for i in branch_teams %}
                                         <li class="menu-item"><a href="{% url 'main_website:team_intro' i.primary %}">{{i.team_name}}</a></li>
                                         {% endfor %}
@@ -146,6 +145,7 @@
                                         Statistics</a></li>
                             </ul>
                         </li>
+                        
                         <li class="menu-item menu-item-has-children menu-item-30"><a href="#">About</a>
                             <ul class="dl-submenu">
                                 <li class="menu-item"><a href="{% url 'main_website:ieee' %}">IEEE</a></li>

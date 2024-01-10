@@ -62,7 +62,7 @@ def manage_team(request):
     by the co-ordinatior only, unless the co-ordinators gives access to others as well'''
     
     sc_ag=PortData.get_all_sc_ag(request=request)
-    has_access=MediaTeam_Render_Access.get_common_access(request)
+    has_access=MediaTeam_Render_Access.access_for_manage_team(request)
     if has_access:
         data_access = MediaTeam.load_data_access()
         team_members = MediaTeam.load_team_members()

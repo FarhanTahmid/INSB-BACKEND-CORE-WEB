@@ -32,17 +32,16 @@
     // Specify the configuration items and data for the chart
     option1 = {
         title: {
-            text: 'Event Type & Statistics of {{page_subtitle}}',
+            text: 'Event Types',
             subtext: 'Based on IEEE NSU SB Portal Data since 2023',
             left: 'center'
         },
         tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-            type: 'shadow'
-            }
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
         },
         legend: {
+          left: 'center',
           top: 'bottom'
         },
         toolbox: {
@@ -80,7 +79,7 @@
     // Specify the configuration items and data for the chart
     option2 = {
       title: {
-        text: 'Event Statistics of {{page_subtitle}}',
+        text: 'Yearly Event Numbers',
         subtext: 'Based on IEEE NSU SB Portal Data since 2023',
         left: 'center'
       },

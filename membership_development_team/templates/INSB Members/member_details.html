@@ -230,7 +230,7 @@
         <div class="row" >
           <div class="col-md-12">
             <div class="logo">
-                <img src="{{media_url}}{{member_data.user_profile_picture}}" alt="picture" style="width:15%;">
+                <img src="{{media_url}}{{member_data.user_profile_picture}}" alt="User Profile Picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" style="width:15%;">
             </div>
             <div class="box">
               <div class="box-header" style="text-align:center;">
