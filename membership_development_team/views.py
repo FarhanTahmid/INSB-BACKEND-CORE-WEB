@@ -28,7 +28,7 @@ from . models import Portal_Joining_Requests
 # Create your views here.
 def md_team_homepage(request):
     '''Loads the data for homepage of MDT TEAM'''
-
+    sc_ag=PortData.get_all_sc_ag(request=request)
     #Loading data of the co-ordinators, co ordinator id is 9,
     co_ordinators=renderData.MDT_DATA.get_member_with_postion(9)
     #Loading data of the incharges, incharge id is 10
@@ -41,6 +41,7 @@ def md_team_homepage(request):
     user_data=current_user.getUserData() #getting user data as dictionary file
     
     context={
+        'all_sc_ag':sc_ag,
         'co_ordinators':co_ordinators,
         'incharges':in_charges,
         'core_volunteers':core_volunteers,
@@ -936,12 +937,14 @@ def data_access(request):
 def site_registration_request_home(request):
     
     '''This loads data for site joining request'''
+    sc_ag=PortData.get_all_sc_ag(request=request)
     # Getting all the requests for portal site
     get_requests=Portal_Joining_Requests.objects.all().order_by('application_status','-pk')
     #form link for site registration
     form_link=f"{request.META['HTTP_HOST']}/portal/membership_development_team/insb_site_registration_form"
     form_link_faculty=f"{request.META['HTTP_HOST']}/portal/membership_development_team/insb_site_registration_form/faculty"
     context={
+        'all_sc_ag':sc_ag,
         'requests':get_requests,
         'form_link':form_link,
         'form_link_faculty':form_link_faculty,

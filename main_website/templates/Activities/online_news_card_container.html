@@ -54,10 +54,17 @@
                                                 </header>
                                                 <!-- entry-header -->
 
-                                                <div class="gdlr-blog-content">{{i.article_description}}
-                                                    <div class="clear"></div><a href="{{i.article_link}}"
+                                                <div class="gdlr-blog-content" style="display: -webkit-box;
+                                                overflow: hidden;
+                                                -webkit-box-orient: vertical;
+                                                text-overflow: ellipsis;
+                                                -webkit-line-clamp: 2;">{{i.article_description}}</div>
+
+                                                    <div class="clear">
+
+                                                    </div>
+                                                    <a href="{{i.article_link}}"
                                                         class="excerpt-read-more">Read More</a>
-                                                </div>
                                             </div>
                                         </div>
                                     </article>

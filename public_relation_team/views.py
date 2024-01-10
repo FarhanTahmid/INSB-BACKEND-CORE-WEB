@@ -28,12 +28,13 @@ from users.renderData import PanelMembersData
 # Create your views here.
 
 def team_home_page(request):
-    
+    sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     # get team members
     get_team_members=PRT_Data.get_team_members_with_position()
     context={
+        'all_sc_ag':sc_ag,
         'co_ordinators':get_team_members[0],
         'incharges':get_team_members[1],
         'core_volunteers':get_team_members[2],
@@ -240,6 +241,7 @@ def manage_team(request):
 
     '''This function loads the manage team page for public relations and is accessable
     by the co-ordinatior only, unless the co-ordinators gives access to others as well'''
+    sc_ag=PortData.get_all_sc_ag(request=request)
     user = request.user
     has_access=(Access_Render.team_co_ordinator_access(team_id=PRT_Data.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username)
                 or PRT_Data.prt_manage_team_access(user.username))
@@ -311,6 +313,7 @@ def manage_team(request):
                         messages.info(request,f"Member with {ieeeID} was added to the team table!")
                         return redirect('public_relation_team:manage_team')
     context={
+        'all_sc_ag':sc_ag,
         'data_access':data_access,
         'members':team_members,
         'insb_members':all_insb_members,
@@ -332,7 +335,7 @@ def manageWebsiteHome(request):
 
 @login_required
 def send_email(request):
-    
+    sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     recruitment_sessions=PRT_Data.getAllRecruitmentSessions()
@@ -423,6 +426,7 @@ def send_email(request):
                     
         
     context={
+        'all_sc_ag':sc_ag,
         'user_data':user_data,
         'media_url':settings.MEDIA_URL,
         'recruitment_sessions':recruitment_sessions,
