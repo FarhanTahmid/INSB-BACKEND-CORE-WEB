@@ -876,6 +876,7 @@ def manage_about(request):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
 
+        # has_access = MainWebsiteRenderData.
         about_ieee, created = About_IEEE.objects.get_or_create(id=1)
         page_title = 'about_ieee'
 
