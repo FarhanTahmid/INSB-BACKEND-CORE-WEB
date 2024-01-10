@@ -306,8 +306,14 @@
                 </div>
                 <!-- Upcoming Event Banner -->
                 <div class="upcoming_event_image_banner">
-                    <div class="upcoming_event_image">
-                        <img src="{{media_url}}{{upcoming_event_banner_picture}}"
+                    <div class="upcoming_event_image" style="
+                    height: 100%;
+                    overflow: hidden;
+                    width: 100%;">
+                        <img src="{{media_url}}{{upcoming_event_banner_picture}}" style="    object-fit: cover;
+                        width: 100%;
+                        height: 100%;
+                        color: 	#75787B"
                             alt="upcoming_event_banner">
                     </div>
                 </div>
