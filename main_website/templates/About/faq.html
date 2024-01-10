@@ -488,17 +488,17 @@
             <section class="faq_list">
                 <ul class="faq_q">
                     {% for category in all_categories %}
-                    <li class="list {% if forloop.counter == 1 %} active {% endif %}" onclick="faq_id{{forloop.counter}}()">{{category.title}}</li>
+                    <li id="category_{{forloop.counter}}" class="list category {% if forloop.counter == 1 %}active{% endif %}" onclick="showCategory('{{forloop.counter}}')">{{category.title}}</li>
                     {% endfor %}
                 </ul>
             </section>
             <section class="accordion_list">
                 {% for key,value in saved_question_answer.items %}
-                <ul class="accordion {% if forloop.counter == 1 %} active {% endif %}" id="faq_id{{forloop.counter}}">
+                <ul class="accordion {% if forloop.counter == 1 %}active{% endif %}" id="{{forloop.counter}}">
                     {% for question_answer in value %}
                     <li class="list">
-                        <input type="checkbox" name="accordion" id="first_{{forloop.counter}}">
-                        <label for="first_{{forloop.counter}}">{{question_answer.question}}</label>
+                        <input type="checkbox" name="accordion" id="{{forloop.parentloop.counter}}_{{forloop.counter}}">
+                        <label for="{{forloop.parentloop.counter}}_{{forloop.counter}}">{{question_answer.question}}</label>
                         <div class="content">
                             <p>
                             {{question_answer.answer}}
@@ -550,70 +550,25 @@
 
 
     </div>
-    <!-- Faq -->
-    <script type="text/javascript">
-        const faqlink = document.querySelectorAll('.body-wrapper.float-menu .faq .faq_list .faq_q .list');
 
-        faqlink.forEach(e => {
-            e.addEventListener('click', () => {
-                document.querySelector('.active')?.classList.remove('active');
-                e.classList.add('active');
-
-
+    <script>
+        function showCategory(categoryId) {
+            const allCategories = document.querySelectorAll('.category');
+            const allQAs = document.querySelectorAll('.accordion');
+            allCategories.forEach(category => {
+                category.classList.remove('active')
             });
-        });
-        {% for category in all_categories %}
-        function faq_id{{forloop.counter}}() {
-            const faqid = [...document.querySelectorAll('.body-wrapper.float-menu .faq .accordion_list .accordion')];
-
-            for (let i = 0; i < faqid.length; i++) {
-                if (i === 0) {
-                    faqid[i].classList.add('active');
-                } else {
-                    faqid[i].classList.remove('active');
-                }
-            }
-
+            allQAs.forEach(category => {
+                category.classList.remove('active')
+            });
+    
+            const selectedCategory = document.getElementById("category_"+categoryId);
+            const qaForSelectedCategory = document.getElementById(categoryId);
+            selectedCategory.classList.add('active');
+            qaForSelectedCategory.classList.add('active');
         }
-        {% endfor %}
+    </script>
 
-    </script>
-    <script>var ms_grabbing_curosr = 'images/grabbing.cur', ms_grab_curosr = 'images/grab.cur';</script>
-    <script type="text/javascript">
-        (function (url) {
-            if (/(?:Chrome\/26\.0\.1410\.63 Safari\/537\.31|WordfenceTestMonBot)/.test(navigator.userAgent)) { return; }
-            var addEvent = function (evt, handler) {
-                if (window.addEventListener) {
-                    document.addEventListener(evt, handler, false);
-                } else if (window.attachEvent) {
-                    document.attachEvent('on' + evt, handler);
-                }
-            };
-            var removeEvent = function (evt, handler) {
-                if (window.removeEventListener) {
-                    document.removeEventListener(evt, handler, false);
-                } else if (window.detachEvent) {
-                    document.detachEvent('on' + evt, handler);
-                }
-            };
-            var evts = 'contextmenu dblclick drag dragend dragenter dragleave dragover dragstart drop keydown keypress keyup mousedown mousemove mouseout mouseover mouseup mousewheel scroll'.split(' ');
-            var logHuman = function () {
-                if (window.wfLogHumanRan) { return; }
-                window.wfLogHumanRan = true;
-                var wfscr = document.createElement('script');
-                wfscr.type = 'text/javascript';
-                wfscr.async = true;
-                wfscr.src = url + '&r=' + Math.random();
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(wfscr);
-                for (var i = 0; i < evts.length; i++) {
-                    removeEvent(evts[i], logHuman);
-                }
-            };
-            for (var i = 0; i < evts.length; i++) {
-                addEvent(evts[i], logHuman);
-            }
-        });
-    </script>
     <script>
         (window.MSReady = window.MSReady || []).push(function ($) {
 
@@ -670,79 +625,8 @@
         });
     </script>
 
-    <!-- event load more button -->
-    <script>
-        const loadMore = document.querySelector('.load-more');
-        let currentItem = 3;
-
-        loadMore.addEventListener('click', (e) => {
-            const elementList = [...document.querySelectorAll('.event-container .box-container .gdlr-item.gdlr-blog-grid.gdlr-skin-box')];
-            for (let i = currentItem; i < currentItem + 3; i++) {
-                if (elementList[i]) {
-                    elementList[i].style.display = 'flex';
-                }
-            }
-            currentItem += 3;
-
-            //hide load more button after fully loaded
-            if (currentItem >= elementList.length) {
-                loadMore.style.display = 'none';
-            }
-        })
-
-
-        function searchfunction() {
-            let input, filter, table, tr, td, j;
-            input = document.getElementById("search");
-            filter = input.value.toUpperCase();
-            table = document.querySelector(".box-container");
-            tr = table.querySelector(".box");
-
-            for (j = 0; j < tr.length; j++) {
-                td = tr[j].getElementsByTagName("div");
-                message = document.getElementById("no_data");
-
-                if (td.length > 0) {
-                    if (td[2].innerHTML.toUpperCase().indexOf(filter) > -1) {
-                        tr[j].style.display = "";
-                        message.innerHTML = "";
-                    }
-                    else {
-                        tr[j].style.display = "none";
-                    }
-
-                }
-                if (td.length == 0) {
-                    message.innerHTML = "Event not found!";
-                }
-            }
-        }
-    </script>
+    
     <script type='text/javascript' src='masterslider/public/assets/js/masterslider.min.js'></script>
-    <script src="./js/event_script.js"></script>
-    <script src="{% static '/js/event_script.js'%}"></script>
-
-    <script>
-        // Function to display the modal
-        function openModal() {
-            document.getElementById('myModal').style.display = 'flex';
-        }
-
-        // Function to close the modal
-        function closeModal() {
-            document.getElementById('myModal').style.display = 'none';
-        }
-
-        // Close the modal when clicking outside the modal content
-        window.onclick = function(event) {
-            var modal = document.getElementById('myModal');
-            if (event.target == modal) {
-                closeModal();
-            }
-        };
-        // Open the modal when the page loads (you can trigger this in your JavaScript when you want to show the modal)
-        openModal();
-    </script>
     
 
     {% block common_js %}
