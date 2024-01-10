@@ -96,7 +96,8 @@
         }
 
         .mission-vision-image {
-            min-height: 100%;
+            height: 100%;
+            width: 100%;
             object-fit: cover;
 
         }
@@ -119,6 +120,8 @@
             left: 50%;
             transform: translateX(-50%);
             border-radius: 50%;
+            border: 1px solid #000;
+            overflow: hidden;
             width: 150px;
             /* Adjust the size of the circle as needed */
             height: 150px;
@@ -128,7 +131,8 @@
         .executive-body-profile-images {
             width: 100%;
             height: 100%;
-            border-radius: 50%;
+            object-fit: cover;
+            background: #002855;
         }
 
         .executive-body-profile-content {
@@ -291,6 +295,21 @@
                 opacity: 1;
             }
         }
+        .w-100{
+            width: 350px!important;
+            height: 350px;
+        }
+        .col-md-6.order-md-1.p-0{
+            height: 370px;
+            width: 100%;
+            overflow: hidden;
+        }
+        @media screen and (max-width: 400px){
+            .w-100 {
+                width: 100%!important;
+                height: 100%;
+            }
+        }
     </style>
 </head>
 
@@ -333,11 +352,11 @@
                         <div class="m-3">
                             <h2><b>ABOUT {{society.short_form_2|upper}}</b></h2>
                             <div class="bar"></div>
-                            <p class="justify-pagragraph-content">{{society.about_description|safe}}</p>
+                            <div class="justify-pagragraph-content" style="text-align: justify; color: #000;">{{society.about_description|safe}}</div>
 
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" style="text-align: center;">
                         <img class="img-fluid w-100"
                             src="{{media_url}}{{society.sc_ag_logo}}" alt="">
                     </div>
@@ -439,9 +458,9 @@
                         <div class="mx-3 my-4">
                             <h1 style="color: var(--text-color);"><b>Mission</b></h1>
                             <br>
-                            <p class="justify-pagragraph-content" style="color: #fff;">
+                            <div class="justify-pagragraph-content" style="text-align: justify; color: #fff;">
                                 {{society.mission_description|safe}}
-                            </p>
+                            </div>
                             <br>
                         </div>
                     </div>
@@ -461,9 +480,9 @@
                         <div class="mx-3 my-4">
                             <h1 style="color: var(--text-color);"><b>Vision</b></h1>
                             <br>
-                            <p class="justify-pagragraph-content" style="color: #fff;">
+                            <div class="justify-pagragraph-content" style="text-align: justify; color: #fff;">
                                 {{society.vision_description|safe}}
-                            </p>
+                            </div>
                             <br>
                         </div>
                     </div>
@@ -557,12 +576,12 @@
                 <div class="row">
                     <div class="col-md-6 p-md-5 pt-5 px-4 what-why-who-section-partition">
                         <h3 style="color: var(--secondary-color);"><b>What is {{society.short_form_2|upper}}?</b></h3>
-                        <p class="justify-pagragraph-content" id="pid">{{society.what_is_this_description|safe}}</p>
+                        <div class="justify-pagragraph-content" style="text-align: justify; color: #fff;" id="pid">{{society.what_is_this_description|safe}}</div>
                     </div>
                     <div class="col-md-6 p-md-5 pt-5 px-4 what-why-who-section-partition"
                         style="border-left: 1px solid rgb(255, 255, 255);">
                         <h3 style="color: var(--secondary-color);"><b>Why join {{society.short_form_2|upper}}?</b></h3>
-                        <p class="justify-pagragraph-content" id="pid">{{society.why_join_it|safe}}</p>
+                        <div class="justify-pagragraph-content" style="text-align: justify; color: #fff;" id="pid">{{society.why_join_it|safe}}</div>
                     </div>
                 </div>
             </div>
@@ -571,12 +590,12 @@
                 <div class="row">
                     <div class="col-md-6 p-md-5 pt-5 px-4 what-why-who-section-partition">
                         <h3 style="color:var(--secondary-color);"><b>What activities do we usually do?</b></h3>
-                        <p class="justify-pagragraph-content" id="pid">{{society.what_activites_it_has|safe}}</p>
+                        <div class="justify-pagragraph-content" style="text-align: justify; color: #fff;" id="pid">{{society.what_activites_it_has|safe}}</div>
                     </div>
                     <div class="col-md-6 p-md-5 py-5 px-4 what-why-who-section-partition"
                         style="border-left: 1px solid rgb(255, 255, 255);">
                         <h3 style="color:var(--secondary-color);"><b>How to join {{society.short_form|upper}}?</b></h3>
-                        <p class="justify-pagragraph-content" id="pid">{{society.how_to_join|safe}}</p>
+                        <div class="justify-pagragraph-content" style="text-align: justify; color: #fff;" id="pid">{{society.how_to_join|safe}}</div>
                     </div>
                 </div>
             </div>

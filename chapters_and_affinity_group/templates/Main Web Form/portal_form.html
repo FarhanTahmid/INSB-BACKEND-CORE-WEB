@@ -155,7 +155,7 @@
                     <li>You can view the image by clicking on it  </li>
                     <li>For color scheme, use hexcodes (e.g. "#002855").</li>
                     <li>You can see your changes by clicking the preview button </li>
-                    <li><b>Don’t forget to save the changes by clicking save button, before deleting images or changing page!</b> </li>
+                    <li>Don’t forget to save the changes by clicking save button, even before deleting or uploading picture and changing page! </li>
                 </ol></b>
 
 
@@ -176,7 +176,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <iframe src="{% url 'chapters_and_affinity_group:manage_main_website_preview' primary %}" style="width: 100%; height: 100%;" loading="lazy"></iframe>
+                                <iframe src="https://ieeensusb.org/ieee/" style="width: 100%; height: 100%;" loading="lazy"></iframe>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -230,7 +230,7 @@
                                 name="pageTitle" 
                                 placeholder="Enter your page title" 
                                 maxlength="100"
-                                value="{{sc_ag_info.page_title}}">
+                                value="{{sc_ag_info.page_title|default:""}}">
                             </div>
                             <br>
                         
@@ -242,7 +242,7 @@
                                 name="secondParagraph_details"
                                 placeholder="Enter your page subtitle" 
                                 maxlength="100" 
-                                value="{{sc_ag_info.secondary_paragraph}}"
+                                value="{{sc_ag_info.secondary_paragraph|default:""}}"
                                 >
                             </div>
 
