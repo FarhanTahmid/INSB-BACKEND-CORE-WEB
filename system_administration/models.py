@@ -43,7 +43,6 @@ class Branch_Data_Access(models.Model):
     panel_memeber_add_remove_access=models.BooleanField(null=False,blank=False,default=False)
     team_details_page=models.BooleanField(null=False,blank=False,default=False)
     manage_web_access=models.BooleanField(null=False,blank=False,default=False)
-    manage_web_home_access=models.BooleanField(null=False,blank=False,default=False)
 
     class Meta:
         verbose_name="Branch Data Access"

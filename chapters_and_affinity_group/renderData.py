@@ -513,7 +513,7 @@ class Sc_Ag:
             what_activites_it_has = Sc_Ag.process_ckeditor_content(what_activites_it_has)
             how_to_join = Sc_Ag.process_ckeditor_content(how_to_join)
             #assinging checking length
-            length = 700
+            length = 2000
 
             #checking to see the length. Returns true if length is more than 700 or is 0
             if (len(about_details)> length or len(mission_description)>length or len(vision_description)> length
