@@ -92,5 +92,9 @@ urlpatterns = [
     path('events/create_super_event/',views.super_event_creation,name="super_event_creation"), 
     #Event preview
     path('event_details/<int:event_id>/preview/',views.event_preview,name='event_preview'),  
+    #Members list
+    path('members/',views.insb_members_list,name="members_list"),
+    #Members details list
+    path('member_details/<int:ieee_id>',views.member_details,name="member_details")
 
 ]

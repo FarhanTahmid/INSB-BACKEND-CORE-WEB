@@ -43,6 +43,9 @@ from .website_render_data import MainWebsiteRenderData
 from django.views.decorators.clickjacking import xframe_options_exempt
 import port.forms as PortForms
 from chapters_and_affinity_group.renderData import Sc_Ag
+from recruitment.models import recruitment_session
+from membership_development_team.models import Renewal_Sessions,Renewal_requests
+from system_administration.render_access import Access_Render
 
 
 # Create your views here.
@@ -2503,8 +2506,224 @@ def feedbacks(request):
 
             }
             return render(request,"FeedBack/feedback.html",context)
+        return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+@login_required
+def insb_members_list(request):
+    
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+
+        '''This function is responsible to display all the member data in the page'''
+        if request.method=="POST":
+            if request.POST.get("site_register"):
+                
+                return redirect('membership_development_team:site_registration')
+            
+        members=Members.objects.order_by('position')
+        totalNumber=Members.objects.all().count()
+        has_view_permission=True
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        context={
+            'is_branch':True,
+            'all_sc_ag':sc_ag,
+            'members':members,
+            'totalNumber':totalNumber,
+            'has_view_permission':has_view_permission,
+            'user_data':user_data
+        }
+        
+        return render(request,'INSB Members/members_list.html',context=context)
+    
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+    
+@login_required
+def member_details(request,ieee_id):
+    '''This function loads an editable member details view for particular IEEE ID'''
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        '''This has some views restrictions'''
+        #Loading Access Permission
+        user=request.user
+        
+        has_access=(renderData.MDT_DATA.insb_member_details_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
+        
+        member_data=renderData.MDT_DATA.get_member_data(ieee_id=ieee_id)
+        try:
+            dob = datetime.strptime(str(
+                member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
+        except:
+            dob=None
+        sessions=recruitment_session.objects.all().order_by('-id')
+        #getting the ieee account active status of the member
+        active_status=renderData.MDT_DATA.get_member_account_status(ieee_id=ieee_id)
+            
+        renewal_session=Renewal_Sessions.objects.all().order_by('-id')
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        
+        context={
+            'is_branch':True,
+            'all_sc_ag':sc_ag,
+            'member_data':member_data,
+            'dob':dob,
+            'sessions':sessions,
+            'renewal_session':renewal_session,
+            'media_url':settings.MEDIA_URL,
+            'active_status':active_status,
+            'user_data':user_data,
+        }
+        if request.method=="POST":
+            if request.POST.get('save_edit'):
+                nsu_id=request.POST['nsu_id']
+                ieee_id=request.POST['ieee_id']
+                name=request.POST['name']
+                contact_no=request.POST['contact_no']
+                date_of_birth=request.POST['date_of_birth']
+                email_ieee=request.POST['email_ieee']
+                email_personal=request.POST['email_personal']
+                email_nsu=request.POST['email_nsu']
+                facebook_url=request.POST['facebook_url']
+                home_address=request.POST['home_address']
+                major=request.POST['major_label']
+                recruitment_session_value=request.POST['recruitment']
+                renewal_session_value=request.POST['renewal']
+                profile_picture = request.FILES.get('update_picture')
+                
+                #checking if the recruitment and renewal session exists
+                try:
+                    recruitment_session.objects.get(id=recruitment_session_value)
+                    
+                except:
+                    recruitment_session_value=None          
+                try:
+                    Renewal_Sessions.objects.get(id=renewal_session_value)
+                    
+                except:
+                    renewal_session_value=None 
+                
+                #updating member Details
+                if (recruitment_session_value==None and renewal_session_value==None):
+                    try:
+                        Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+                                                                name=name,
+                                                                contact_no=contact_no,
+                                                                date_of_birth=date_of_birth,
+                                                                email_ieee=email_ieee,
+                                                                email_personal=email_personal,
+                                                                email_nsu=email_nsu,
+                                                                facebook_url=facebook_url,
+                                                                home_address=home_address,
+                                                                major=major,
+                                                                session=None,
+                                                                last_renewal_session=None 
+                                                                )
+                        #checking to see if user wants to update picture or not
+                        if profile_picture == None:
+                            pass
+                        else:
+                            Branch.update_profile_picture(profile_picture,nsu_id)
+                        messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                        return redirect('central_branch:member_details',ieee_id)
+                    except Members.DoesNotExist:
+                        messages.info(request,"Sorry! Something went wrong! Try Again.")
+                elif renewal_session_value==None:
+                    try:
+                        Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+                                                                name=name,
+                                                                contact_no=contact_no,
+                                                                date_of_birth=date_of_birth,
+                                                                email_ieee=email_ieee,
+                                                                email_personal=email_personal,
+                                                                email_nsu=email_nsu,
+                                                                facebook_url=facebook_url,
+                                                                home_address=home_address,
+                                                                major=major,
+                                                                session=recruitment_session.objects.get(id=recruitment_session_value),
+                                                                last_renewal_session=None 
+                                                                )
+                        #checking to see if user wants to update picture or not
+                        if profile_picture == None:
+                            pass
+                        else:
+                            Branch.update_profile_picture(profile_picture,nsu_id)
+                        messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                        return redirect('central_branch:member_details',ieee_id)
+                    except Members.DoesNotExist:
+                        messages.info(request,"Sorry! Something went wrong! Try Again.")
+                
+                elif(recruitment_session_value==None):
+                    try:
+                        Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+                                                                name=name,
+                                                                contact_no=contact_no,
+                                                                date_of_birth=date_of_birth,
+                                                                email_ieee=email_ieee,
+                                                                email_personal=email_personal,
+                                                                email_nsu=email_nsu,
+                                                                facebook_url=facebook_url,
+                                                                home_address=home_address,
+                                                                major=major,
+                                                                session=None,
+                                                                last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value) 
+                                                                )
+                        #checking to see if user wants to update picture or not
+                        if profile_picture == None:
+                            pass
+                        else:
+                            Branch.update_profile_picture(profile_picture,nsu_id)
+                        messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                        return redirect('central_branch:member_details',ieee_id)
+                    except Members.DoesNotExist:
+                        messages.info(request,"Sorry! Something went wrong! Try Again.")
+                else:
+                    try:
+                        Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+                                                                name=name,
+                                                                contact_no=contact_no,
+                                                                date_of_birth=date_of_birth,
+                                                                email_ieee=email_ieee,
+                                                                email_personal=email_personal,
+                                                                email_nsu=email_nsu,
+                                                                facebook_url=facebook_url,
+                                                                home_address=home_address,
+                                                                major=major,
+                                                                session=recruitment_session.objects.get(id=recruitment_session_value),
+                                                                last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value) 
+                                                                )
+                        #checking to see if user wants to update picture or not
+                        if profile_picture == None:
+                            pass
+                        else:
+                            Branch.update_profile_picture(profile_picture,nsu_id)
+                        messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                        return redirect('central_branch:member_details',ieee_id)
+                    except Members.DoesNotExist:
+                        messages.info(request,"Sorry! Something went wrong! Try Again.")
+                            
+            if request.POST.get('delete_member'):
+                #Deleting a member from database
+                member_to_delete=Members.objects.get(ieee_id=ieee_id)
+                messages.error(request,f"{member_to_delete.ieee_id} was deleted from the INSB Registered Members Database.")
+                member_to_delete.delete()
+                return redirect('membership_development_team:members_list')
+                
+                
+        if(has_access):
+            return render(request,'INSB Members/member_details.html',context=context)
         else:
-            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
+            return render(request,'access_denied.html',context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
