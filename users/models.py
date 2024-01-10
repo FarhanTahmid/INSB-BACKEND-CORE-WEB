@@ -24,7 +24,7 @@ class Members(models.Model):
     
     ieee_id=models.BigIntegerField(primary_key=True,blank=False,null=False)
     name=models.CharField(null=False,blank=False,max_length=100)
-    nsu_id=models.BigIntegerField(null=False, blank=False)
+    nsu_id=models.BigIntegerField(null=True, blank=True)
     email_ieee=models.EmailField(null=True,blank=True)
     email_personal=models.EmailField(null=True,blank=True)
     email_nsu=models.EmailField(null=True,blank=True)
@@ -40,7 +40,7 @@ class Members(models.Model):
     position=models.ForeignKey(Roles_and_Position,default=13,on_delete=models.CASCADE) #Default=13 means the position of a general member, check roles and positions table
     session=models.ForeignKey(recruitment_session,null=True,blank=True,on_delete=models.CASCADE) #recruitment session
     last_renewal_session=models.ForeignKey(Renewal_Sessions,null=True,blank=True,on_delete=models.CASCADE) #last renewal session    
-    is_active_member = models.BooleanField(null=False,blank=False,default=False)
+    is_active_member = models.BooleanField(null=False,blank=False,default=True)
     class Meta:
         verbose_name='INSB Registered Members'
     

@@ -165,7 +165,7 @@
                 </div>
                 <br>
     
-                <!-- Preview Event Modal -->
+                <!-- Preview Modal -->
                 <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" style="z-index: 1500;">
                     <div class="modal-dialog modal-dialog-centered modal-lg preview_modal_box" role="document">
                         <div class="modal-content" style="width: 100%; height: 100%;">
@@ -176,7 +176,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <iframe src="https://ieeensusb.org/ieee/" style="width: 100%; height: 100%;" loading="lazy"></iframe>
+                                <iframe src="{% url 'chapters_and_affinity_group:manage_main_website_preview' primary %}" style="width: 100%; height: 100%;" loading="lazy"></iframe>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-secondary" data-dismiss="modal">Close</button>
