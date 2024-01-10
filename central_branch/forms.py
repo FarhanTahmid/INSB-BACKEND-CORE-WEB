@@ -274,3 +274,8 @@ class ToolkitForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+class VolunteerOftheMonthForm(forms.ModelForm):
+    class Meta:
+        model=VolunteerOfTheMonth
+        fields=['contributions']

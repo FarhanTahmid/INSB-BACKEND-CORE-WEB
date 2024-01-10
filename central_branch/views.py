@@ -751,7 +751,7 @@ def manage_website_homepage(request):
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     '''For top banner picture with Texts and buttons - Tab 1'''
-    topBannerItems=HomePageTopBanner.objects.all()
+    topBannerItems=HomePageTopBanner.objects.all().order_by('pk')
     # get user data
     #Loading current user data from renderData.py
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -854,9 +854,32 @@ def manage_website_homepage(request):
                 messages.error(request,"Error Occured. Please try again later!")
             return redirect('central_branch:manage_website_home')
 
+    '''For Volunteer Recognition'''
+    # get all insb members
+    get_all_insb_members=Members.objects.all()
+    if(request.method=="POST"):
+        volunteer_of_the_month_form=VolunteerOftheMonthForm(request.POST)
+        if(request.POST.get('add_volunteer_of_month')):
+            ieee_id=request.POST.get('member_select1')
+            if(volunteer_of_the_month_form.is_valid()):
+                new_volunteer_of_the_month=VolunteerOfTheMonth.objects.create(
+                    ieee_id=Members.objects.get(ieee_id=ieee_id)
+                )
+                new_volunteer_of_the_month.contributions=request.POST['contributions']
+                new_volunteer_of_the_month.save()
+                messages.success(request,"A new Volunteer of the month was added!")
+                return redirect('central_branch:manage_website_home')
+        if(request.POST.get('delete_volunteer_of_month')):
+            volunteer_to_delete=VolunteerOfTheMonth.objects.get(ieee_id=request.POST['get_volunteer'])
+            volunteer_to_delete.delete()
+            messages.warning(request,'Member has been removed from the list of Volunteers of the Month')
+            return redirect('central_branch:manage_website_home')
 
-
+    else:
+        volunteer_of_the_month_form=VolunteerOftheMonthForm
     
+    # getall volunteers of the month
+    volunteers_of_the_month=VolunteerOfTheMonth.objects.all().order_by('-pk')
     context={
         'user_data':user_data,
         'all_sc_ag':sc_ag,
@@ -865,9 +888,30 @@ def manage_website_homepage(request):
         'bannerPictureWithNumbers':existing_banner_picture_with_numbers,
         'media_url':settings.MEDIA_URL,
         'all_thoughts':all_thoughts,
+        'insb_members':get_all_insb_members,
+        'volunteer_of_the_month_form':volunteer_of_the_month_form,
+        'all_volunteer_of_month':volunteers_of_the_month,
     }
     return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
 
+@login_required
+def update_volunteer_of_month(request,pk):
+    volunteer_to_be_updated=VolunteerOfTheMonth.objects.get(pk=pk)
+    if(request.method=="POST"):
+        volunteer_update_form=VolunteerOftheMonthForm(request.POST,instance=volunteer_to_be_updated)
+        if(request.POST.get('update_vom')):
+            if(volunteer_update_form.is_valid()):
+                volunteer_update_form.save()
+                messages.success(request,"Volunteer Information was updated!")
+                return redirect('central_branch:manage_website_home')
+    else:
+        volunteer_update_form=VolunteerOftheMonthForm(instance=volunteer_to_be_updated)
+    
+    context={
+        'volunteer':volunteer_to_be_updated,
+        'form':volunteer_update_form
+    }
+    return render(request,'Manage Website/Homepage/update_volunteer_of_the_month.html',context)
 
 
 @login_required
@@ -2940,3 +2984,7 @@ def member_details(request,ieee_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
+
+# @login_required
+# def volunteer_recognition(request):
+#     return render(request,"Manage Website\Homepage\Volunteer Recognition\recognition_table.html")

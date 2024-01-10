@@ -43,6 +43,8 @@ def homepage(request):
     get_recent_blogs=Blog.objects.filter(publish_blog=True).order_by('-date')[:6]
     # get featured events of branch
     get_featured_events=HomepageItems.load_featured_events(sc_ag_primary=1)
+    # get volunteer of the months
+    get_volunteers_of_the_month=VolunteerOfTheMonth.objects.all().order_by('-pk')
     
     
     context={
@@ -56,6 +58,7 @@ def homepage(request):
         'recent_blogs':get_recent_blogs,
         'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         'all_thoughts':all_thoughts,
+        'all_vom':get_volunteers_of_the_month,
     }
     return render(request,"LandingPage/homepage.html",context)
 
