@@ -1921,37 +1921,41 @@ def super_event_creation(request):
     '''function for creating super event'''
 
     try:
-        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-        user_data=current_user.getUserData() #getting user data as dictionary file
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        #calling it regardless to run the page
-        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,5)
-        is_branch = True
+        has_access = Branch_View_Access.get_create_event_access(request)
+        if has_access:
+            current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+            user_data=current_user.getUserData() #getting user data as dictionary file
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            #calling it regardless to run the page
+            get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,5)
+            is_branch = True
 
-        if request.method == "POST":
+            if request.method == "POST":
 
-            '''Checking to see if either of the submit or cancelled button has been clicked'''
+                '''Checking to see if either of the submit or cancelled button has been clicked'''
 
-            if (request.POST.get('Submit')):
+                if (request.POST.get('Submit')):
 
-                '''Getting data from page and saving them in database'''
+                    '''Getting data from page and saving them in database'''
 
-                super_event_name = request.POST.get('super_event_name')
-                super_event_description = request.POST.get('super_event_description')
-                start_date = request.POST.get('probable_date')
-                end_date = request.POST.get('final_date')
-                Branch.register_super_events(super_event_name,super_event_description,start_date,end_date)
-                messages.success(request,"New Super Event Added Successfully")
-                return redirect('central_branch:event_control')
-            
-        context={
-            'user_data':user_data,
-            'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info,
-            'is_branch' : is_branch
-        }
-                        
-        return render(request,"Events/Super Event/super_event_creation_form.html", context)
+                    super_event_name = request.POST.get('super_event_name')
+                    super_event_description = request.POST.get('super_event_description')
+                    start_date = request.POST.get('probable_date')
+                    end_date = request.POST.get('final_date')
+                    Branch.register_super_events(super_event_name,super_event_description,start_date,end_date)
+                    messages.success(request,"New Super Event Added Successfully")
+                    return redirect('central_branch:event_control')
+                
+            context={
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'is_branch' : is_branch
+            }
+                            
+            return render(request,"Events/Super Event/super_event_creation_form.html", context)
+        else:
+            return redirect('central_branch:event_control')
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1963,71 +1967,75 @@ def event_creation_form_page(request):
     
     #######load data to show in the form boxes#########
     try:
-        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-        user_data=current_user.getUserData() #getting user data as dictionary file  
-        form = EventForm()
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        is_branch = True
+        has_access = Branch_View_Access.get_create_event_access(request)
+        if has_access:
+            current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+            user_data=current_user.getUserData() #getting user data as dictionary file  
+            form = EventForm()
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            is_branch = True
 
-        #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
-        super_events=Branch.load_all_mother_events()
-        event_types=Branch.load_all_event_type_for_groups(1)
-        
-        '''function for creating event'''
+            #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
+            super_events=Branch.load_all_mother_events()
+            event_types=Branch.load_all_event_type_for_groups(1)
+            
+            '''function for creating event'''
 
-        if(request.method=="POST"):
+            if(request.method=="POST"):
 
-            ''' Checking to see if the next button is clicked '''
+                ''' Checking to see if the next button is clicked '''
 
-            if(request.POST.get('next')):
+                if(request.POST.get('next')):
 
 
 
-                '''Getting data from page and calling the register_event_page1 function to save the event page 1 to database'''
+                    '''Getting data from page and calling the register_event_page1 function to save the event page 1 to database'''
 
-                event_name=request.POST['event_name']
-                event_description=request.POST['event_description']
-                super_event_id=request.POST.get('super_event')
-                event_type_list = request.POST.getlist('event_type')
-                event_date=request.POST['event_date']
+                    event_name=request.POST['event_name']
+                    event_description=request.POST['event_description']
+                    super_event_id=request.POST.get('super_event')
+                    event_type_list = request.POST.getlist('event_type')
+                    event_date=request.POST['event_date']
 
-                #It will return True if register event page 1 is success
-                get_event=Branch.register_event_page1(
-                    super_event_id=super_event_id,
-                    event_name=event_name,
-                    event_type_list=event_type_list,
-                    event_description=event_description,
-                    event_date=event_date
-                )
-                
-                if(get_event)==False:
-                    messages.error(request,"Database Error Occured! Please try again later.")
-                else:
-                    #if the method returns true, it will redirect to the new page
-                    return redirect('central_branch:event_creation_form2',get_event)
-            elif(request.POST.get('add_event_type')):
-                ''' Adding a new event type '''
-                event_type = request.POST.get('event_type')
-                created_event_type = Branch.add_event_type_for_group(event_type,1)
-                if created_event_type:
-                    print("Event type did not exists, so new event was created")
-                    messages.success(request,"New Event Type Added Successfully")
-                else:
-                    print("Event type already existed")
-                    messages.info(request,"Event Type Already Exists")
-                return redirect('central_branch:event_creation_form1')
-        
-        context={
-            'user_data':user_data,
-            'super_events':super_events,
-            'event_types':event_types,
-            'is_branch' : is_branch,
-            'all_sc_ag':sc_ag,
-            'form':form,
-            'is_branch':is_branch,
-        }
-                
-        return render(request,'Events/event_creation_form.html',context)
+                    #It will return True if register event page 1 is success
+                    get_event=Branch.register_event_page1(
+                        super_event_id=super_event_id,
+                        event_name=event_name,
+                        event_type_list=event_type_list,
+                        event_description=event_description,
+                        event_date=event_date
+                    )
+                    
+                    if(get_event)==False:
+                        messages.error(request,"Database Error Occured! Please try again later.")
+                    else:
+                        #if the method returns true, it will redirect to the new page
+                        return redirect('central_branch:event_creation_form2',get_event)
+                elif(request.POST.get('add_event_type')):
+                    ''' Adding a new event type '''
+                    event_type = request.POST.get('event_type')
+                    created_event_type = Branch.add_event_type_for_group(event_type,1)
+                    if created_event_type:
+                        print("Event type did not exists, so new event was created")
+                        messages.success(request,"New Event Type Added Successfully")
+                    else:
+                        print("Event type already existed")
+                        messages.info(request,"Event Type Already Exists")
+                    return redirect('central_branch:event_creation_form1')
+            
+            context={
+                'user_data':user_data,
+                'super_events':super_events,
+                'event_types':event_types,
+                'is_branch' : is_branch,
+                'all_sc_ag':sc_ag,
+                'form':form,
+                'is_branch':is_branch,
+            }
+                    
+            return render(request,'Events/event_creation_form.html',context)
+        else:
+            return redirect('central_branch:event_control')
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -2040,37 +2048,41 @@ def event_creation_form_page2(request,event_id):
     #loading all inter branch collaboration Options
 
     try:
-        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-        user_data=current_user.getUserData() #getting user data as dictionary file
-        is_branch=True
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
-        is_branch = True
-        
-        if request.method=="POST":
-            if(request.POST.get('next')):
-                inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
-                intra_branch_collaboration=request.POST['intra_branch_collaboration']
-                
-                if(Branch.register_event_page2(
-                    inter_branch_collaboration_list=inter_branch_collaboration_list,
-                    intra_branch_collaboration=intra_branch_collaboration,
-                    event_id=event_id)):
-                    return redirect('central_branch:event_creation_form3',event_id)
-                else:
-                    messages.error(request,"Database Error Occured! Please try again later.")
+        has_access = Branch_View_Access.get_create_event_access(request)
+        if has_access:
+            current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+            user_data=current_user.getUserData() #getting user data as dictionary file
+            is_branch=True
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+            is_branch = True
+            
+            if request.method=="POST":
+                if(request.POST.get('next')):
+                    inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
+                    intra_branch_collaboration=request.POST['intra_branch_collaboration']
+                    
+                    if(Branch.register_event_page2(
+                        inter_branch_collaboration_list=inter_branch_collaboration_list,
+                        intra_branch_collaboration=intra_branch_collaboration,
+                        event_id=event_id)):
+                        return redirect('central_branch:event_creation_form3',event_id)
+                    else:
+                        messages.error(request,"Database Error Occured! Please try again later.")
 
-            elif(request.POST.get('cancel')):
-                return redirect('central_branch:event_control')
-        
-        context={
-            'user_data':user_data,
-            'inter_branch_collaboration_options':inter_branch_collaboration_options,
-            'all_sc_ag':sc_ag,
-            'is_branch' : is_branch,
-        }
+                elif(request.POST.get('cancel')):
+                    return redirect('central_branch:event_control')
+            
+            context={
+                'user_data':user_data,
+                'inter_branch_collaboration_options':inter_branch_collaboration_options,
+                'all_sc_ag':sc_ag,
+                'is_branch' : is_branch,
+            }
 
-        return render(request,'Events/event_creation_form2.html',context)
+            return render(request,'Events/event_creation_form2.html',context)
+        else:
+            return redirect('central_branch:event_control')
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -2080,42 +2092,46 @@ def event_creation_form_page2(request,event_id):
 @login_required
 def event_creation_form_page3(request,event_id):
     try:
-        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-        user_data=current_user.getUserData() #getting user data as dictionary file
-        is_branch=True
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        #loading all venues from the venue list from event management team database
-        venues=Events_And_Management_Team.getVenues()
-        #loading all the permission criterias from event management team database
-        permission_criterias=Events_And_Management_Team.getPermissionCriterias()
+        has_access = Branch_View_Access.get_create_event_access(request)
+        if has_access:
+            current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+            user_data=current_user.getUserData() #getting user data as dictionary file
+            is_branch=True
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            #loading all venues from the venue list from event management team database
+            venues=Events_And_Management_Team.getVenues()
+            #loading all the permission criterias from event management team database
+            permission_criterias=Events_And_Management_Team.getPermissionCriterias()
 
-        is_branch = True
+            is_branch = True
 
-        if request.method=="POST":
-            if request.POST.get('create_event'):
-                #getting the venues for the event
-                venue_list_for_event=request.POST.getlist('event_venues')
-                #getting the permission criterias for the event
-                permission_criterias_list_for_event=request.POST.getlist('permission_criteria')
-                
-                #updating data collected from part3 for the event
-                update_event_details=Branch.register_event_page3(venue_list=venue_list_for_event,permission_criteria_list=permission_criterias_list_for_event,event_id=event_id)
-                #if return value is false show an error message
-                if(update_event_details==False):
-                    messages.error(request, "An error Occured! Please Try again!")
-                else:
-                    messages.success(request, "New Event Added Succesfully")
-                    return redirect('central_branch:event_control')
-                
-        context={
-            'user_data':user_data,
-            'venues':venues,
-            'permission_criterias':permission_criterias,
-            'all_sc_ag':sc_ag,
-            'is_branch' : is_branch,
-        }
+            if request.method=="POST":
+                if request.POST.get('create_event'):
+                    #getting the venues for the event
+                    venue_list_for_event=request.POST.getlist('event_venues')
+                    #getting the permission criterias for the event
+                    permission_criterias_list_for_event=request.POST.getlist('permission_criteria')
+                    
+                    #updating data collected from part3 for the event
+                    update_event_details=Branch.register_event_page3(venue_list=venue_list_for_event,permission_criteria_list=permission_criterias_list_for_event,event_id=event_id)
+                    #if return value is false show an error message
+                    if(update_event_details==False):
+                        messages.error(request, "An error Occured! Please Try again!")
+                    else:
+                        messages.success(request, "New Event Added Succesfully")
+                        return redirect('central_branch:event_control')
+                    
+            context={
+                'user_data':user_data,
+                'venues':venues,
+                'permission_criterias':permission_criterias,
+                'all_sc_ag':sc_ag,
+                'is_branch' : is_branch,
+            }
 
-        return render(request,'Events/event_creation_form3.html',context)
+            return render(request,'Events/event_creation_form3.html',context)
+        else:
+            return redirect('central_branch:event_control')
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -2149,8 +2165,8 @@ def event_edit_form(request, event_id):
         current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
-        # has_access = Branch.event_page_access(request)
-        if True:
+        has_access = Branch_View_Access.get_event_edit_access(request)
+        if has_access:
             is_branch = True
             is_event_published = Branch.load_event_published(event_id)
             is_flagship_event = Branch.is_flagship_event(event_id)
@@ -2281,8 +2297,8 @@ def event_edit_media_form_tab(request, event_id):
         current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
-        # has_access = Branch.event_page_access(request)
-        if(True):
+        has_access = Branch_View_Access.get_event_edit_access(request)
+        if(has_access):
             #Getting media links and images from database. If does not exist then they are set to none
 
             event_details = Events.objects.get(pk=event_id)
@@ -2355,8 +2371,8 @@ def event_edit_graphics_form_tab(request, event_id):
         user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         #Get event details from databse
-        # has_access = Branch.event_page_access(request)
-        if(True):
+        has_access = Branch_View_Access.get_event_edit_access(request)
+        if(has_access):
             #Getting media links and images from database. If does not exist then they are set to none
             event_details = Events.objects.get(pk=event_id)
             try:
@@ -2427,10 +2443,8 @@ def event_edit_graphics_form_links_sub_tab(request,event_id):
         user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         all_graphics_link = GraphicsTeam.get_all_graphics_form_link(event_id)
-        #Get event details from databse
-        # event_details = Events.objects.get(pk=event_id)
-        # has_access = Branch.event_page_access(request)
-        if(True):
+        has_access = Branch_View_Access.get_event_edit_access(request)
+        if(has_access):
 
             if request.POST.get('add_link'):
 
@@ -2489,8 +2503,8 @@ def event_edit_content_form_tab(request,event_id):
         current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
-        # has_access = Branch.event_page_access(request)
-        if(True):
+        has_access = Branch_View_Access.get_event_edit_access(request)
+        if(has_access):
             all_notes_content = ContentWritingTeam.load_note_content(event_id)
             form = Content_Form()
             if(request.method == "POST"):               
@@ -2550,19 +2564,23 @@ def event_preview(request, event_id):
     ''' This function displays a preview of an event regardless of it's published status '''
 
     try:
-        event = Events.objects.get(id=event_id)
-        event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
-        event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
+        has_access = Branch_View_Access.get_event_edit_access(request)
+        if(has_access):
+            event = Events.objects.get(id=event_id)
+            event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
+            event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
-        context = {
-            'is_branch' : True,
-            'event' : event,
-            'media_url':settings.MEDIA_URL,
-            'event_banner_image' : event_banner_image,
-            'event_gallery_images' : event_gallery_images
-        }
+            context = {
+                'is_branch' : True,
+                'event' : event,
+                'media_url':settings.MEDIA_URL,
+                'event_banner_image' : event_banner_image,
+                'event_gallery_images' : event_gallery_images
+            }
 
-        return render(request, 'Events/event_description_main.html', context)
+            return render(request, 'Events/event_description_main.html', context)
+        else:
+            return render(request, 'access_denied2.html')
     
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
