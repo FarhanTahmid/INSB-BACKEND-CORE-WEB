@@ -208,7 +208,7 @@ class IEEE_Bangladesh_Section_Gallery(models.Model):
 class HomePage_Thoughts(models.Model):
 
     quote = models.TextField(null=False,blank=False)
-    author = models.CharField(null=False,blank=False,max_length=500)#can be a foreign key to a faculty
+    author = models.CharField(null=False,blank=False,max_length=500)
     
     class Meta:
         verbose_name="HomePage Thoughts"

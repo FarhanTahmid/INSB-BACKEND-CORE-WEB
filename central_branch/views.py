@@ -753,7 +753,50 @@ def manage_website_homepage(request):
                 return redirect('central_branch:manage_website_home')    
             except Exception as e:
                 messages.error(request,"Something went wrong! Please try again.")
-                return redirect('central_branch:manage_website_home')    
+                return redirect('central_branch:manage_website_home')  
+
+    '''For Homepage Thoughts'''
+    all_thoughts = Branch.get_all_homepage_thoughts()
+
+    if request.method == "POST":
+        #when user hits save
+        if request.POST.get('save'):
+
+            author_name = request.POST.get('author')
+            thoughts = request.POST.get('your_thoughts')
+
+            #passing them in function to save
+            if Branch.save_homepage_thoughts(author_name,thoughts):
+                messages.success(request,"Thoughts added successfully!")
+            else:
+                messages.error(request,"Error Occured. Please try again later!")
+            return redirect('central_branch:manage_website_home')
+        
+        #when user edits saved thoughts
+        if request.POST.get('update'):
+
+            author_edit = request.POST.get('author_edit')
+            thoughts_edit = request.POST.get('your_thoughts_edit')
+            thoughts_id = request.POST.get('thought_id')
+            #passing them to function to update changes made
+            if Branch.update_saved_thoughts(author_edit,thoughts_edit,thoughts_id):
+                messages.success(request,"Thoughts updated successfully!")
+            else:
+                messages.error(request,"Error Occured. Please try again later!")
+            return redirect('central_branch:manage_website_home')
+        
+        #when user wants to delete a thought
+        if request.POST.get('thought_delete'):
+             
+            id = request.POST.get('delete_thought')
+
+            if Branch.delete_thoughts(id):
+                messages.success(request,"Thoughts deleted successfully!")
+            else:
+                messages.error(request,"Error Occured. Please try again later!")
+            return redirect('central_branch:manage_website_home')
+
+
 
     
     context={
@@ -761,7 +804,8 @@ def manage_website_homepage(request):
         'user_data':user_data,
         'topBannerItems':topBannerItems,
         'bannerPictureWithNumbers':existing_banner_picture_with_numbers,
-        'media_url':settings.MEDIA_URL
+        'media_url':settings.MEDIA_URL,
+        'all_thoughts':all_thoughts,
     }
     return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
 
