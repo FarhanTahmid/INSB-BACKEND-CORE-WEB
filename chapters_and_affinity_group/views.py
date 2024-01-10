@@ -1421,13 +1421,45 @@ def manage_main_website(request, primary):
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
                 'media_url':settings.MEDIA_URL,
-
             }
 
             return render(request,"Main Web Form/portal_form.html",context)
         else:
             return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
 
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+    
+@login_required
+@xframe_options_exempt
+def manage_main_website_preview(request,primary):
+    try:
+        #getting object of the particular society/affinity
+        society = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
+        #getting featured events of the particular society/affinity 
+        featured_events = HomepageItems.get_featured_events_for_societies(primary)
+
+        #getting faculty member
+        faculty_advisor = HomepageItems.get_faculty_advisor_for_society(request,primary)
+        #getting eb members for the particular society/affinity
+        eb_members = HomepageItems.get_eb_members_for_society(request,primary)
+
+        context={
+            'is_live':False, #This disable the header and footer of the page along with wavy for previewing
+            'society':society,
+            #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+            'media_url':settings.MEDIA_URL,
+            'featured_events':featured_events,
+            'faculty_advisor':faculty_advisor,
+            'eb_members':eb_members,
+            'page_title':society.page_title,
+            'page_subtitle':society.secondary_paragraph
+        }
+
+        return render(request,'Society_AG/sc_ag.html',context=context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
