@@ -752,7 +752,7 @@ def event_creation_form_page(request,primary):
 
             return render(request,'Events/event_creation_form.html',context)
         else:
-            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
+            return redirect('chapters_and_affinity_group:event_control_homepage', primary)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

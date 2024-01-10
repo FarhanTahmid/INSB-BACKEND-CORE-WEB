@@ -1100,7 +1100,7 @@ class Branch:
         
         try:
             #assinging checking length
-            max_length = 700
+            max_length = 2000
 
             for description in descriptions:
                 #removing html tags to check true length of each fields

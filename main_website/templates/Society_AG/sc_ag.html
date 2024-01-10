@@ -6,7 +6,7 @@
 
 
     <title>{{society.short_form}} - IEEE NSU SB</title>
-    <link rel="icon" href= "{{media_url}}{{society.sc_ag_logo}}" />
+    <link rel="icon" href= "{{media_url}}{{society.sc_ag_logo}}"/>
 
 
     {% block common_css %}
@@ -503,6 +503,7 @@
             <div class="container">
                 <h2 style="font-weight: bold;">MEET OUR EXECUTIVE BODY</h2>
                 <div class="bar"></div>
+                {% if faculty_advisor %}
                 <div class="row justify-content-center">
                     <div class="col-lg-3 col-md-6 col-sm-12 my-2">
                         <div class="card executive-body-profile text-center">
@@ -534,7 +535,7 @@
                         </div>
                     </div>
                 </div>
-
+                {% endif %}
                 <div class="row justify-content-center">
                     {% for members in eb_members %}
                     <div class="col-lg-3 col-md-6 col-sm-12 my-2">

@@ -37,6 +37,7 @@ def emt_data_access(request):
 
     # '''This function mantains all the data access works'''
     #Only sub eb of that team can access the page
+    sc_ag=PortData.get_all_sc_ag(request=request)
     user = request.user
     has_access=(Access_Render.team_co_ordinator_access(team_id=renderData.Events_And_Management_Team.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
     
@@ -117,6 +118,7 @@ def emt_data_access(request):
             return redirect('events_and_management_team:emt_data_access')
             
     context={
+        'all_sc_ag':sc_ag,
         'data_access':data_access,
         'members':team_members,
         'insb_members':all_insb_members,
