@@ -17,7 +17,7 @@ from main_website.renderData import HomepageItems
 from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
 from system_administration.system_error_handling import ErrorHandling
-from . import renderData
+from users import renderData
 from port.models import Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
 from django.db import DatabaseError
 from central_branch.renderData import Branch
@@ -42,6 +42,10 @@ from .forms import *
 from .website_render_data import MainWebsiteRenderData
 from django.views.decorators.clickjacking import xframe_options_exempt
 import port.forms as PortForms
+from chapters_and_affinity_group.renderData import Sc_Ag
+from recruitment.models import recruitment_session
+from membership_development_team.models import Renewal_Sessions,Renewal_requests
+from system_administration.render_access import Access_Render
 
 
 # Create your views here.
@@ -49,14 +53,17 @@ logger=logging.getLogger(__name__)
 
 def central_home(request):
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
         }
         user=request.user
         # has_access=Access_Render.system_administrator_superuser_access(user.username)
         if (True):
-            #renderData.Branch.test_google_form()'''
+            #Branch.test_google_form()'''
             return render(request,'homepage/branch_homepage.html',context)
             # return render(request,'central_home.html')
 
@@ -71,13 +78,14 @@ def central_home(request):
 
 #Panel and Team Management
 def teams(request):
-    
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     '''
     Loads all the existing teams in the branch
     Gives option to add or delete a team
     '''
     #load panel lists
-    # panels=renderData.Branch.load_ex_com_panel_list()
+    # panels=Branch.load_ex_com_panel_list()
     user = request.user
 
     '''Checking if user is EB/faculty or not, and the calling the function event_page_access
@@ -97,12 +105,13 @@ def teams(request):
             return redirect('central_branch:teams')
     
     #load teams from database
-    teams=renderData.Branch.load_teams()
+    teams=Branch.load_teams()
     team_list=[]
     for team in teams:
         team_list.append(team)
             
     context={
+        'user_data':user_data,
         'team':team_list,
         'all_sc_ag':sc_ag,
     }
@@ -111,21 +120,22 @@ def teams(request):
 
 
 def team_details(request,primary,name):
-    
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
     has_access=Branch_View_Access.get_team_details_view_access(request=request)
     '''Detailed panel for the team'''
     current_panel=Branch.load_current_panel()
     #load data of current team Members
-    team_members=renderData.Branch.load_team_members(primary)
+    team_members=Branch.load_team_members(primary)
     #load all the roles and positions from database
-    positions=renderData.Branch.load_roles_and_positions()
+    positions=Branch.load_roles_and_positions()
     # Excluding position of EB, Faculty and SC-AG members
     for i in positions:
         if(i.is_eb_member or i.is_faculty or i.is_sc_ag_eb_member):
             positions=positions.exclude(pk=i.pk)
     #loading all members of insb
-    insb_members=renderData.Branch.load_all_insb_members()
+    insb_members=Branch.load_all_insb_members()
     members_to_add=[]
     position=12 #assigning default to volunteer
 
@@ -139,13 +149,13 @@ def team_details(request,primary,name):
                 position=request.POST.get('position')
                 #ADDING MEMBER TO TEAM
                 for member in members_to_add:
-                    if(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)):
+                    if(Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)):
                         messages.success(request,"Member Added to the team!")
-                    elif(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)==False):
+                    elif(Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)==False):
                         messages.error(request,"Member couldn't be added!")
-                    elif(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)==DatabaseError):
+                    elif(Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position)==DatabaseError):
                         messages.error(request,"An internal Database Error Occured! Please try again!")
-                    elif(renderData.Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position) is None):
+                    elif(Branch.add_member_to_team(ieee_id=member,team_primary=primary,position=position) is None):
                         messages.info(request,"You need to make a Panel that is current to add members to Teams!")
 
                 return redirect('central_branch:team_details',primary,name)
@@ -192,6 +202,7 @@ def team_details(request,primary,name):
         team_update_form=PortForms.TeamForm(instance=team_to_update)
 
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'team_id':primary,
         'team_name':name,
@@ -209,7 +220,12 @@ def team_details(request,primary,name):
 
 @login_required
 def manage_team(request,pk,team_name):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'team_id':pk,
         'team_name':team_name,
     }
@@ -218,7 +234,8 @@ def manage_team(request,pk,team_name):
 #PANEL WORkS
 @login_required
 def panel_home(request):
-    
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # get all panels from database
@@ -234,6 +251,7 @@ def panel_home(request):
             return redirect('central_branch:panels')
         
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'panels':panels,
         'create_panel_access':create_panel_access,
@@ -244,6 +262,8 @@ def panel_home(request):
 
 @login_required
 def branch_panel_details(request,panel_id):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # get panel information
@@ -301,6 +321,7 @@ def branch_panel_details(request,panel_id):
 
         
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'panel_id':panel_id,
         'panel_info':panel_info,
@@ -313,6 +334,8 @@ def branch_panel_details(request,panel_id):
 
 @login_required
 def branch_panel_officers_tab(request,panel_id):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # get panel information
@@ -349,6 +372,7 @@ def branch_panel_officers_tab(request,panel_id):
 
     
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'panel_id':panel_id,
         'panel_info':panel_info,
@@ -362,6 +386,8 @@ def branch_panel_officers_tab(request,panel_id):
 
 @login_required
 def branch_panel_volunteers_tab(request,panel_id):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # get panel information
@@ -399,6 +425,7 @@ def branch_panel_volunteers_tab(request,panel_id):
     
     
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'panel_id':panel_id,
         'panel_info':panel_info,
@@ -413,6 +440,8 @@ def branch_panel_volunteers_tab(request,panel_id):
 
 @login_required
 def branch_panel_alumni_tab(request,panel_id):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # get panel information
@@ -466,6 +495,7 @@ def branch_panel_alumni_tab(request,panel_id):
                 return redirect('central_branch:panel_details_alumni',panel_id)
     
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'panel_id':panel_id,
         'panel_info':panel_info,
@@ -485,7 +515,8 @@ def others(request):
 @login_required
 def manage_research(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
-
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # load all research papers
     researches = Research_Papers.objects.filter(is_requested=False).order_by('-publish_date','publish_research')
     '''function for adding new Research paper'''
@@ -510,6 +541,7 @@ def manage_research(request):
         form=ResearchPaperForm
         form2=ResearchCategoryForm
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'form':form,
         'form2':form2,'all_researches':researches,
@@ -518,19 +550,27 @@ def manage_research(request):
 
 @login_required
 def manage_research_request(request):
-    # get all research requests
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+        # get all research requests
     research_requests=Research_Papers.objects.filter(is_requested=True).order_by('-publish_date')
     if(request.method=="POST"):
         if(request.POST.get('remove_research')):
             MainWebsiteRenderData.delete_research_paper(request=request)
             return redirect('central_branch:manage_research_request')
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'all_research_requests':research_requests
     }
     return render(request,"Manage Website/Publications/Research Paper/manage_paper_request.html",context=context)
 
 @login_required
 def publish_research_request(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get research to publish
     research_to_publish=get_object_or_404(Research_Papers,pk=pk)
     if(request.method=="POST"):
@@ -546,6 +586,8 @@ def publish_research_request(request,pk):
     else:
         research_form=ResearchPaperForm(instance=research_to_publish)            
     context={
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
         'research':research_to_publish,
         'form':research_form,
     }
@@ -553,6 +595,8 @@ def publish_research_request(request,pk):
 
 @login_required
 def update_researches(request,pk):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # get the research and Form
@@ -568,6 +612,7 @@ def update_researches(request,pk):
         form=ResearchPaperForm(instance=research_to_update)
     
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'form':form,
         'research_paper':research_to_update,
@@ -576,6 +621,8 @@ def update_researches(request,pk):
 
 @login_required
 def manage_blogs(request):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # Load all blogs
@@ -603,6 +650,7 @@ def manage_blogs(request):
             return redirect('central_branch:manage_blogs')
 
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         # get form
         'form':form,
@@ -615,6 +663,8 @@ def manage_blogs(request):
 
 @login_required
 def update_blogs(request,pk):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file  
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # get the blog and form
@@ -630,6 +680,7 @@ def update_blogs(request,pk):
         form=BlogsForm(instance=blog_to_update)
     
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'form':form,
         'blog':blog_to_update,
@@ -639,6 +690,9 @@ def update_blogs(request,pk):
 
 @login_required
 def blog_requests(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get all blog requests
     all_requested_blogs=Blog.objects.filter(is_requested=True).order_by('-date')
     
@@ -654,6 +708,8 @@ def blog_requests(request):
             return redirect('central_branch:blog_requests')
     
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'all_requested_blogs':all_requested_blogs
     }
     return render(request,"Manage Website/Publications/Blogs/blog_requests.html",context=context)
@@ -661,7 +717,8 @@ def blog_requests(request):
 @login_required
 def publish_blog_request(request,pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
-
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get the blog and form
     blog_to_publish=get_object_or_404(Blog,pk=pk)
     if(request.method=="POST"):
@@ -683,6 +740,7 @@ def publish_blog_request(request,pk):
         'all_sc_ag':sc_ag,
         'form':form,
         'blog':blog_to_publish,
+        'user_data':user_data,
     }
     return render(request,"Manage Website/Publications/Blogs/publish_blog.html",context=context)
 
@@ -690,7 +748,8 @@ from main_website.models import HomePageTopBanner
 @login_required
 def manage_website_homepage(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
-
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     '''For top banner picture with Texts and buttons - Tab 1'''
     topBannerItems=HomePageTopBanner.objects.all()
     # get user data
@@ -752,15 +811,60 @@ def manage_website_homepage(request):
                 return redirect('central_branch:manage_website_home')    
             except Exception as e:
                 messages.error(request,"Something went wrong! Please try again.")
-                return redirect('central_branch:manage_website_home')    
+                return redirect('central_branch:manage_website_home')  
+
+    '''For Homepage Thoughts'''
+    all_thoughts = Branch.get_all_homepage_thoughts()
+
+    if request.method == "POST":
+        #when user hits save
+        if request.POST.get('save'):
+
+            author_name = request.POST.get('author')
+            thoughts = request.POST.get('your_thoughts')
+
+            #passing them in function to save
+            if Branch.save_homepage_thoughts(author_name,thoughts):
+                messages.success(request,"Thoughts added successfully!")
+            else:
+                messages.error(request,"Error Occured. Please try again later!")
+            return redirect('central_branch:manage_website_home')
+        
+        #when user edits saved thoughts
+        if request.POST.get('update'):
+
+            author_edit = request.POST.get('author_edit')
+            thoughts_edit = request.POST.get('your_thoughts_edit')
+            thoughts_id = request.POST.get('thought_id')
+            #passing them to function to update changes made
+            if Branch.update_saved_thoughts(author_edit,thoughts_edit,thoughts_id):
+                messages.success(request,"Thoughts updated successfully!")
+            else:
+                messages.error(request,"Error Occured. Please try again later!")
+            return redirect('central_branch:manage_website_home')
+        
+        #when user wants to delete a thought
+        if request.POST.get('thought_delete'):
+             
+            id = request.POST.get('delete_thought')
+
+            if Branch.delete_thoughts(id):
+                messages.success(request,"Thoughts deleted successfully!")
+            else:
+                messages.error(request,"Error Occured. Please try again later!")
+            return redirect('central_branch:manage_website_home')
+
+
 
     
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'user_data':user_data,
         'topBannerItems':topBannerItems,
         'bannerPictureWithNumbers':existing_banner_picture_with_numbers,
-        'media_url':settings.MEDIA_URL
+        'media_url':settings.MEDIA_URL,
+        'all_thoughts':all_thoughts,
     }
     return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
 
@@ -772,11 +876,15 @@ def manage_about(request):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
 
+        # has_access = MainWebsiteRenderData.
         about_ieee, created = About_IEEE.objects.get_or_create(id=1)
+        page_title = 'about_ieee'
 
         if request.method == "POST":
             if 'save' in request.POST:
                 about_details = request.POST['about_details']
+                learn_more_link = request.POST['learn_more_link']
+                mission_and_vision_link = request.POST['mission_and_vision_link']
                 community_details = request.POST['community_details']
                 start_with_ieee_details = request.POST['start_with_ieee_details']
                 collaboration_details = request.POST['collaboration_details']
@@ -786,13 +894,21 @@ def manage_about(request):
                 innovations_and_developments_details = request.POST['innovations_and_developments_details']
                 students_and_member_activities_details = request.POST['students_and_member_activities_details']
                 quality_details = request.POST['quality_details']
-                
+                join_now_link = request.POST['join_now_link']
+                asia_pacific_link = request.POST['asia_pacific_link']
+                ieee_computer_organization_link = request.POST['ieee_computer_organization_link']
+                customer_service_number = request.POST['customer_service_number']
+                presidents_names = request.POST['presidents_names']
+                founders_names = request.POST['founders_names']
+         
                 about_image = request.FILES.get('about_picture')
                 community_image = request.FILES.get('community_picture')
                 innovations_and_developments_image = request.FILES.get('innovations_and_developments_picture')
                 students_and_member_activities_image = request.FILES.get('students_and_member_activities_picture')
                 quality_image = request.FILES.get('quality_picture')
 
+                #checking to see if no picture is uploaded by user, if so then if picture is already present in database
+                #then updating it with saved value to prevent data loss. Otherwise it is None
                 if about_image == None:
                     about_image = about_ieee.about_image
                 if community_image == None:
@@ -804,9 +920,17 @@ def manage_about(request):
                 if quality_image == None:
                     quality_image = about_ieee.quality_image
 
-                if(Branch.set_about_ieee_page(about_details, community_details, start_with_ieee_details, collaboration_details,
+                #passing the fields data to the function to check length before saving
+                if Branch.checking_length(about_details,community_details,start_with_ieee_details,collaboration_details,publications_details,
+                                          events_and_conferences_details,achievements_details,innovations_and_developments_details,
+                                          students_and_member_activities_details,quality_details):
+                    messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                    return redirect("central_branch:manage_about")
+                #passing the fields data to save the data in the database
+                if(Branch.set_about_ieee_page(about_details, learn_more_link, mission_and_vision_link, community_details, start_with_ieee_details, collaboration_details,
                                         publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
-                                        students_and_member_activities_details, quality_details, about_image, community_image,
+                                        students_and_member_activities_details, quality_details, join_now_link, asia_pacific_link, ieee_computer_organization_link,
+                                        customer_service_number, presidents_names, founders_names, about_image, community_image,
                                         innovations_and_developments_image, students_and_member_activities_image, quality_image)):
                     messages.success(request, "Details Updated Successfully!")
                 else:
@@ -814,19 +938,57 @@ def manage_about(request):
                 
                 return redirect('central_branch:manage_about')
             elif 'remove' in request.POST:
+                #when user wants to remove any picture from the main website of sc_ag through the portal
+                #getting the image path
                 image = request.POST.get('image_delete')
+                #getting the image id
                 image_id = request.POST.get('image_id')
-                if Branch.delete_image(image_id,image):
+                #passing them to the delete function, if deleted successfully, success message pops else
+                #error message
+                if Branch.about_ieee_delete_image(image_id,image):
                     messages.success(request,"Deleted Successfully!")
                 else:
                     messages.error(request,"Error while deleting picture.")
                 return redirect("central_branch:manage_about")
+            elif 'add_link' in request.POST:
+                category = request.POST.get('link_category')
+                title = request.POST.get('title')
+                link = request.POST.get('form_link_add')
 
+                if(Branch.add_about_page_link(page_title, category, title, link)):
+                    messages.success(request, 'Link added successfully')
+                else:
+                    messages.error(request,'Something went wrong while adding the link')
 
+                return redirect("central_branch:manage_about")
+            elif 'update_link' in request.POST:
+                link_id = request.POST.get('link_id')
+                title = request.POST.get('title')
+                link = request.POST.get('form_link_edit')
+
+                if(Branch.update_about_page_link(link_id, page_title, title, link)):
+                    messages.success(request,'Link updated successfully')
+                else:
+                    messages.error(request,'Something went wrong while updating the link')
+                
+                return redirect("central_branch:manage_about")
+            elif 'remove_form_link' in request.POST:
+                link_id = request.POST.get('link_id')
+
+                if(Branch.remove_about_page_link(link_id, page_title)):
+                    messages.success(request,'Link removed successfully')
+                else:
+                    messages.error(request,'Something went wrong while deleting the link')
+
+                return redirect("central_branch:manage_about")
+
+        page_links = Branch.get_about_page_links(page_title=page_title)
+        
         context={
             'all_sc_ag':sc_ag,
             'about_ieee':about_ieee,
-            'media_url':settings.MEDIA_URL
+            'media_url':settings.MEDIA_URL,
+            'page_links':page_links
         }
         return render(request,'Manage Website/About/About IEEE/manage_ieee.html',context=context)
     except Exception as e:
@@ -838,37 +1000,406 @@ def manage_about(request):
 
 @login_required
 def ieee_region_10(request):
-    sc_ag=PortData.get_all_sc_ag(request=request)
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
 
-    context={
-        'all_sc_ag':sc_ag,
-    }
-    return render(request,'Manage Website/About/IEEE Region 10/ieee_region_10.html',context=context)
+        about_ieee_region_10, created = IEEE_Region_10.objects.get_or_create(id=1)
+        page_title = 'ieee_region_10'
+
+        if request.method == 'POST':
+            if 'save' in request.POST:
+                ieee_region_10_description = request.POST['ieee_region_10_details']
+                ieee_region_10_history_link = request.POST['region_10_history_link']
+                young_professionals_description = request.POST['young_professionals_details']
+                women_in_engineering_ddescription = request.POST['women_in_engineering_details']
+                student_and_member_activities_description = request.POST['student_and_member_activities_details']
+                educational_activities_and_involvements_description = request.POST['educational_activities_and_involvements_details']
+                industry_relations_description = request.POST['industry_relations_details']
+                membership_development_description = request.POST['membership_development_details']
+                events_and_conference_description = request.POST['events_and_conference_details']
+                home_page_link = request.POST['home_page_link']
+                website_link = request.POST['website_link']
+                membership_inquiry_link = request.POST['membership_inquiry_link']
+                for_volunteers_link = request.POST['for_volunteers_link']
+                contact_number = request.POST['contact_number']
+
+                ieee_region_10_image = request.FILES.get('ieee_region_10_picture')
+                young_professionals_image = request.FILES.get('young_professionals_picture')
+                membership_development_image = request.FILES.get('membership_development_picture')
+                background_picture_parallax = request.FILES.get('background_picture')
+                events_and_conference_image = request.FILES.get('events_and_conference_picture')
+
+                if ieee_region_10_image == None:
+                    ieee_region_10_image = about_ieee_region_10.ieee_region_10_image
+                if young_professionals_image == None:
+                    young_professionals_image = about_ieee_region_10.young_professionals_image
+                if membership_development_image == None:
+                    membership_development_image = about_ieee_region_10.membership_development_image
+                if background_picture_parallax == None:
+                    background_picture_parallax = about_ieee_region_10.background_picture_parallax
+                if events_and_conference_image == None:
+                    events_and_conference_image = about_ieee_region_10.events_and_conference_image
+
+                if Branch.checking_length(ieee_region_10_description,young_professionals_description,women_in_engineering_ddescription,
+                                          student_and_member_activities_description,educational_activities_and_involvements_description,
+                                          industry_relations_description,membership_development_description,events_and_conference_description):
+                    messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                    return redirect("central_branch:ieee_region_10")
+
+                if(Branch.set_ieee_region_10_page(ieee_region_10_description,ieee_region_10_history_link,young_professionals_description,women_in_engineering_ddescription,
+                                                student_and_member_activities_description,educational_activities_and_involvements_description,industry_relations_description,
+                                                membership_development_description,events_and_conference_description,home_page_link,website_link,membership_inquiry_link,
+                                                for_volunteers_link,contact_number,ieee_region_10_image,young_professionals_image,membership_development_image,
+                                                background_picture_parallax,events_and_conference_image)):
+                    messages.success(request, "Details Updated Successfully!")
+                else:
+                    messages.error(request, "Something went wrong while updating the details!")
+                
+                return redirect('central_branch:ieee_region_10')
+            elif 'remove' in request.POST:
+                image = request.POST.get('image_delete')
+                image_id = request.POST.get('image_id')
+                if Branch.ieee_region_10_page_delete_image(image_id,image):
+                    messages.success(request,"Deleted Successfully!")
+                else:
+                    messages.error(request,"Error while deleting picture.")
+                return redirect("central_branch:ieee_region_10")
+            elif 'add_link' in request.POST:
+                category = request.POST.get('link_category')
+                title = request.POST.get('title')
+                link = request.POST.get('form_link_add')
+
+                if(Branch.add_about_page_link(page_title, category, title, link)):
+                    messages.success(request, 'Link added successfully')
+                else:
+                    messages.error(request,'Something went wrong while adding the link')
+
+                return redirect("central_branch:ieee_region_10")
+            elif 'update_link' in request.POST:
+                link_id = request.POST.get('link_id')
+                title = request.POST.get('title')
+                link = request.POST.get('form_link_edit')
+
+                if(Branch.update_about_page_link(link_id, page_title, title, link)):
+                    messages.success(request,'Link updated successfully')
+                else:
+                    messages.error(request,'Something went wrong while updating the link')
+                
+                return redirect("central_branch:ieee_region_10")
+            elif 'remove_form_link' in request.POST:
+                link_id = request.POST.get('link_id')
+
+                if(Branch.remove_about_page_link(link_id, page_title)):
+                    messages.success(request,'Link removed successfully')
+                else:
+                    messages.error(request,'Something went wrong while deleting the link')
+
+                return redirect("central_branch:ieee_region_10")
+            
+        page_links = Branch.get_about_page_links(page_title=page_title)
+
+        context={
+            'all_sc_ag':sc_ag,
+            'ieee_region_10':about_ieee_region_10,
+            'media_url':settings.MEDIA_URL,
+            'page_links':page_links
+        }
+        return render(request,'Manage Website/About/IEEE Region 10/ieee_region_10.html',context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 
 @login_required
 def ieee_bangladesh_section(request):
-    sc_ag=PortData.get_all_sc_ag(request=request)
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        #getting the ieee bangladesh section gallery images if any
+        ieee_bangladesh_section_gallery = Branch.get_all_ieee_bangladesh_section_images()
+        ieee_bangladesh_section, created = IEEE_Bangladesh_Section.objects.get_or_create(id=1)
+        page_title = 'ieee_bangladesh_section'
 
-    context={
-        'all_sc_ag':sc_ag,
-    }
-    return render(request,'Manage Website/About/IEEE Bangladesh Section/ieee_bangladesh_section.html',context=context)
+        if request.method == 'POST':
+            if 'save' in request.POST:
+                about_details = request.POST['about_details']
+                ieeebd_link = request.POST['ieeebd_link']
+                members_and_volunteers_details = request.POST['members_and_volunteers_details']
+                benefits_details = request.POST['benefits_details']
+                student_branches_details = request.POST['student_branches_details']
+                affinity_groups_details = request.POST['affinity_groups_details']
+                communty_and_society_details = request.POST['communty_and_society_details']
+                achievements_details = request.POST['achievements_details']
+                chair_name = request.POST['chair_name']
+                chair_email = request.POST['chair_email']
+                secretary_name = request.POST['secretary_name']
+                secretary_email = request.POST['secretary_email']
+                office_secretary_name = request.POST['office_secretary_name']
+                office_secretary_number = request.POST['office_secretary_number']
+                gallery_images = request.FILES.getlist('gallery_img')
+
+                #passing the gallery images to function for saving them in database
+                Branch.save_ieee_bangladesh_section_images(gallery_images)
+
+                about_image = request.FILES.get('about_image')
+                members_and_volunteers_image = request.FILES.get('members_and_volunteers_image')
+
+                if about_image == None:
+                        about_image = ieee_bangladesh_section.ieee_bangladesh_logo
+                if members_and_volunteers_image == None:
+                    members_and_volunteers_image = ieee_bangladesh_section.member_and_volunteer_picture
+
+                if Branch.checking_length(about_details,members_and_volunteers_details,benefits_details,student_branches_details,
+                                          affinity_groups_details,communty_and_society_details,achievements_details):
+                    messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                    return redirect("central_branch:ieee_bangladesh_section")
+
+                if(Branch.set_ieee_bangladesh_section_page(about_details, ieeebd_link, members_and_volunteers_details, benefits_details,
+                                                        student_branches_details, affinity_groups_details, communty_and_society_details,
+                                                        achievements_details, chair_name, chair_email, secretary_name,
+                                                        secretary_email, office_secretary_name, office_secretary_number, about_image, members_and_volunteers_image)):
+                    messages.success(request, "Details Updated Successfully!")
+                else:
+                    messages.error(request, "Something went wrong while updating the details!")
+
+                return redirect('central_branch:ieee_bangladesh_section')
+            elif 'remove' in request.POST:
+                image = request.POST.get('image_delete')
+                image_id = request.POST.get('image_id')
+                if Branch.ieee_bangladesh_section_page_delete_image(image_id,image):
+                    messages.success(request,"Deleted Successfully!")
+                else:
+                    messages.error(request,"Error while deleting picture.")
+                return redirect("central_branch:ieee_bangladesh_section")
+            elif 'add_link' in request.POST:
+                category = request.POST.get('link_category')
+                title = request.POST.get('title')
+                link = request.POST.get('form_link_add')
+
+                if(Branch.add_about_page_link(page_title, category, title, link)):
+                    messages.success(request, 'Link added successfully')
+                else:
+                    messages.error(request,'Something went wrong while adding the link')
+
+                return redirect("central_branch:ieee_bangladesh_section")
+            elif 'update_link' in request.POST:
+                link_id = request.POST.get('link_id')
+                title = request.POST.get('title')
+                link = request.POST.get('form_link_edit')
+
+                if(Branch.update_about_page_link(link_id, page_title, title, link)):
+                    messages.success(request,'Link updated successfully')
+                else:
+                    messages.error(request,'Something went wrong while updating the link')
+                
+                return redirect("central_branch:ieee_bangladesh_section")
+            elif 'remove_form_link' in request.POST:
+                link_id = request.POST.get('link_id')
+
+                if(Branch.remove_about_page_link(link_id, page_title)):
+                    messages.success(request,'Link removed successfully')
+                else:
+                    messages.error(request,'Something went wrong while deleting the link')
+
+                return redirect("central_branch:ieee_bangladesh_section")
+            
+            if request.POST.get('delete_image_gallery'):
+
+                #getting id of image that needs to be deleted
+                img_id = request.POST.get('remove_image')
+                #passing the id to function for the image to be deleted
+                if Branch.delete_ieee_bangladesh_section_gallery_image(img_id):
+                    messages.success(request,'Image removed successfully')
+                else:
+                    messages.error(request,'Something went wrong while deleting the image')
+                return redirect("central_branch:ieee_bangladesh_section")
+            
+        page_links = Branch.get_about_page_links(page_title=page_title)
+
+        context={
+            'all_sc_ag':sc_ag,
+            'ieee_bangladesh_section':ieee_bangladesh_section,
+            'page_links':page_links,
+            'media_url':settings.MEDIA_URL,
+            'allowed_image_upload':6-len(ieee_bangladesh_section_gallery),
+            'all_images':ieee_bangladesh_section_gallery
+        }
+        return render(request,'Manage Website/About/IEEE Bangladesh Section/ieee_bangladesh_section.html',context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 @login_required
 def ieee_nsu_student_branch(request):
-    sc_ag=PortData.get_all_sc_ag(request=request)
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
 
-    context={
-        'all_sc_ag':sc_ag,
-    }
-    return render(request,'Manage Website/About/IEEE NSU Student Branch/ieee_nsu_student_branch.html', context)
+        ieee_nsu_student_branch, created = IEEE_NSU_Student_Branch.objects.get_or_create(id=1)
+
+        if request.method == 'POST':
+            if 'save' in request.POST:
+                about_nsu_student_branch = request.POST['about_details']
+                chapters_description = request.POST['chapters_details']
+                ras_read_more_link = request.POST['ras_read_more_link']
+                pes_read_more_link = request.POST['pes_read_more_link']
+                ias_read_more_link = request.POST['ias_read_more_link']
+                wie_read_more_link = request.POST['wie_read_more_link']
+                creative_team_description = request.POST['creative_team_details']
+                mission_description = request.POST['mission_details']
+                vision_description = request.POST['vision_details']
+                events_description = request.POST['events_details']
+                join_now_link = request.POST['join_now_link']
+                achievements_description = request.POST['achievements_details']
+
+                about_image = request.FILES.get('about_image')
+                ras_image = request.FILES.get('ras_image')
+                pes_image = request.FILES.get('pes_image')
+                ias_image = request.FILES.get('ias_image')
+                wie_image = request.FILES.get('wie_image')
+                mission_image = request.FILES.get('mission_image')
+                vision_image = request.FILES.get('vision_image')
+
+                if about_image == None:
+                    about_image = ieee_nsu_student_branch.about_image
+                if ras_image == None:
+                    ras_image = ieee_nsu_student_branch.ras_image
+                if pes_image == None:
+                    pes_image = ieee_nsu_student_branch.pes_image
+                if ias_image == None:
+                    ias_image = ieee_nsu_student_branch.ias_image
+                if wie_image == None:
+                    wie_image = ieee_nsu_student_branch.wie_image
+                if mission_image == None:
+                    mission_image = ieee_nsu_student_branch.mission_image
+                if vision_image == None:
+                    vision_image = ieee_nsu_student_branch.vision_image
+
+                if Branch.checking_length(about_nsu_student_branch,chapters_description,creative_team_description,mission_description,
+                                          vision_description,events_description,achievements_description):
+                    messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                    return redirect("central_branch:ieee_nsu_student_branch")
+                
+                if(Branch.set_ieee_nsu_student_branch_page(about_nsu_student_branch, chapters_description, ras_read_more_link,
+                                                        pes_read_more_link, ias_read_more_link, wie_read_more_link, creative_team_description,
+                                                        mission_description, vision_description, events_description, join_now_link, achievements_description,
+                                                        about_image,ras_image,pes_image,ias_image,wie_image,mission_image,vision_image)):
+                    messages.success(request, "Details Updated Successfully!")
+                else:
+                    messages.error(request, "Something went wrong while updating the details!")
+
+                return redirect('central_branch:ieee_nsu_student_branch')
+            elif 'remove' in request.POST:
+                image = request.POST.get('image_delete')
+                image_id = request.POST.get('image_id')
+                if Branch.ieee_nsu_student_branch_page_delete_image(image_id,image):
+                    messages.success(request,"Deleted Successfully!")
+                else:
+                    messages.error(request,"Error while deleting picture.")
+                return redirect("central_branch:ieee_nsu_student_branch")
+
+        context={
+            'all_sc_ag':sc_ag,
+            'ieee_nsu_student_branch':ieee_nsu_student_branch,
+            'media_url':settings.MEDIA_URL,
+        }
+        return render(request,'Manage Website/About/IEEE NSU Student Branch/ieee_nsu_student_branch.html', context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+    
+@login_required
+@xframe_options_exempt
+def manage_about_preview(request):
+    try:
+        about_ieee = About_IEEE.objects.get(id=1)
+        page_title = 'about_ieee'
+        page_links = Branch.get_about_page_links(page_title=page_title)
+            
+        context={
+            'is_live':False, #This disables the header and footer of the page along with wavy for preview
+            'about_ieee':about_ieee,
+            'media_url':settings.MEDIA_URL,
+            'page_links':page_links
+        }
+        return render(request,'About/About_IEEE.html',context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+@login_required
+@xframe_options_exempt
+def ieee_region_10_preview(request):
+    try:
+        ieee_region_10 = IEEE_Region_10.objects.get(id=1)
+        page_title = 'ieee_region_10'
+        page_links = Branch.get_about_page_links(page_title=page_title)
+
+        context = {
+            'is_live':False, #This disables the header and footer of the page along with wavy for preview
+            'ieee_region_10':ieee_region_10,
+            'media_url':settings.MEDIA_URL,
+            'page_links':page_links
+        }
+        return render(request,'About/IEEE_region_10.html',context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+@login_required
+@xframe_options_exempt
+def ieee_bangladesh_section_preview(request):
+    try:
+        ieee_bangladesh_section = IEEE_Bangladesh_Section.objects.get(id=1)
+        page_title = 'ieee_bangladesh_section'
+        page_links = Branch.get_about_page_links(page_title=page_title)
+
+        context={
+            'is_live':False, #This disables the header and footer of the page along with wavy for preview
+            'ieee_bangladesh_section':ieee_bangladesh_section,
+            'page_links':page_links,
+            'media_url':settings.MEDIA_URL,
+        }
+        return render(request,'About/IEEE_bangladesh_section.html',context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+@login_required
+@xframe_options_exempt
+def ieee_nsu_student_branch_preview(request):
+    try:
+        ieee_nsu_student_branch = IEEE_NSU_Student_Branch.objects.get(id=1)
+
+        context={
+            'is_live':False, #This disables the header and footer of the page along with wavy for preview
+            'ieee_nsu_student_branch':ieee_nsu_student_branch,
+            'media_url':settings.MEDIA_URL,
+        }
+        return render(request,'About/IEEE_NSU_student_branch.html',context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
 
 @login_required
 def faq(request):
 
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
+        all_categories_of_faq = Branch.get_all_category_of_questions()
+        saved_questions_answers = Branch.get_saved_questions_and_answers()
 
 
         if request.method == "POST":
@@ -876,19 +1407,55 @@ def faq(request):
             if request.POST.get('add_category'):
                 #getting the new title for the category
                 category_title = request.POST.get('category_title')
+                #passing the title to the function to save in databse
+                if Branch.save_category_of_faq(category_title):
+                    messages.success(request,"New Category Added Successfully!")
+                else:
+                    messages.error(request,"Error Occured! Could not add the new category")
+                return redirect("central_branch:faq")
             
             if request.POST.get('update_faq'):
-
+                #when user wants to update the exisitng question answers by clicking update
+                #getting them from the page
                 questions = request.POST.getlist('faq_question')
                 answers = request.POST.getlist('faq_question_answer')
+                category_id = request.POST.get('category_id')
+                title = request.POST.get('saved_title')
 
-                print(questions)
-                print(answers)
-                
+                #passing them in function
+                if Branch.update_question_answer(category_id,title,questions,answers):
+                    messages.success(request,"Updated Successfully!")
+                else:
+                    messages.error(request,"Error Occured! Could not update")
+                return redirect("central_branch:faq")
 
+            if request.POST.get('faq_question_answer_delete'):
+
+                #when user clicks delete button
+                #getting the id of title and of the question they want to delete
+                cat_id = request.POST.get('category_id_delete')
+                question_id = request.POST.get('question_answer_id_delete')
+
+                if Branch.delete_question_answer(cat_id,question_id):
+                    messages.success(request,"Deleted Successfully!")
+                else:
+                    messages.error(request,"Error Occured! Could not delete")
+                return redirect("central_branch:faq")
+            
+            if request.POST.get('category_delete'):
+                #if user wants to delete an entire category of FAQ
+
+                id = request.POST.get('delete_category')
+                if Branch.delete_faq_category(id):
+                    messages.success(request,"Deleted Successfully!")
+                else:
+                    messages.error(request,"Error Occured! Could not delete")
+                return redirect("central_branch:faq")
 
         context={
             'all_sc_ag':sc_ag,
+            'all_titles':all_categories_of_faq,
+            'saved_question_answers':saved_questions_answers,
         }
         return render(request,'Manage Website/About/FAQ/portal_faq.html', context)
     
@@ -903,7 +1470,8 @@ def faq(request):
 @login_required
 def manage_achievements(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
-
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # load the achievement form
     form=AchievementForm
     # load all SC AG And Branch
@@ -930,13 +1498,15 @@ def manage_achievements(request):
         'form':form,
         'load_all_sc_ag':load_award_of,
         'all_achievements':all_achievements,
+        'user_data':user_data,
     }
     return render(request,'Manage Website/Activities/manage_achievements.html',context=context)
 
 @login_required
 def update_achievements(request,pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
-
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get the achievement and form
     achievement_to_update=get_object_or_404(Achievements,pk=pk)
     if(request.method=="POST"):
@@ -953,6 +1523,7 @@ def update_achievements(request,pk):
         'all_sc_ag':sc_ag,
         'form':form,
         'achievement':achievement_to_update,
+        'user_data':user_data,
     }
 
     return render(request,"Manage Website/Activities/achievements_update_section.html",context=context)
@@ -960,7 +1531,8 @@ def update_achievements(request,pk):
 @login_required
 def manage_news(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
-
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     form=NewsForm
     get_all_news=News.objects.all().order_by('-news_date')
     
@@ -981,6 +1553,7 @@ def manage_news(request):
             return redirect('central_branch:manage_news')
     
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'form':form,
         'all_news':get_all_news
@@ -990,7 +1563,8 @@ def manage_news(request):
 @login_required
 def update_news(request,pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
-
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get the news instance to update
     news_to_update = get_object_or_404(News, pk=pk)
     if request.method == "POST":
@@ -1002,6 +1576,7 @@ def update_news(request,pk):
     else:
         form = NewsForm(instance=news_to_update)
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'form':form,
         'news':news_to_update,
@@ -1011,6 +1586,9 @@ def update_news(request,pk):
 
 @login_required
 def manage_magazines(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get form
     magazine_form = MagazineForm
     
@@ -1036,6 +1614,8 @@ def manage_magazines(request):
             
                     
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'magazine_form':magazine_form,
         'all_magazines':all_magazines,
     }
@@ -1044,6 +1624,9 @@ def manage_magazines(request):
 
 @login_required
 def update_magazine(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get the magazine to update
     magazine_to_update=get_object_or_404(Magazines,pk=pk)
     
@@ -1056,6 +1639,8 @@ def update_magazine(request,pk):
     else:
         update_form = MagazineForm(instance=magazine_to_update)
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'update_form':update_form,
         'magazine':magazine_to_update,
     }
@@ -1064,7 +1649,9 @@ def update_magazine(request,pk):
 
 @login_required
 def manage_gallery(request):
-    
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get all images of gallery
     all_images = GalleryImages.objects.all().order_by('-pk')
     all_videos=GalleryVideos.objects.all().order_by('-pk')
@@ -1098,6 +1685,8 @@ def manage_gallery(request):
             return redirect('central_branch:manage_gallery')
         
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'image_form':GalleryImageForm,
         'video_form':GalleryVideoForm,
         'all_images':all_images,
@@ -1108,6 +1697,9 @@ def manage_gallery(request):
 
 @login_required
 def update_images(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
      # get the magazine to update
     image_to_update=get_object_or_404(GalleryImages,pk=pk)
     
@@ -1121,6 +1713,8 @@ def update_images(request,pk):
     else:
         update_form = GalleryImageForm(instance=image_to_update)
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'update_form':update_form,
         'image':image_to_update,
     }
@@ -1128,6 +1722,9 @@ def update_images(request,pk):
 
 @login_required
 def update_videos(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
      # get the magazine to update
     video_to_update=get_object_or_404(GalleryVideos,pk=pk)
     
@@ -1141,6 +1738,8 @@ def update_videos(request,pk):
     else:
         update_form = GalleryVideoForm(instance=video_to_update)
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'update_form':update_form,
         'video':video_to_update,
     }
@@ -1148,6 +1747,9 @@ def update_videos(request,pk):
 
 @login_required
 def manage_exemplary_members(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get all exemplary members
     exemplary_members = ExemplaryMembers.objects.all().order_by('rank')
     
@@ -1168,6 +1770,8 @@ def manage_exemplary_members(request):
             return redirect('central_branch:manage_exemplary_members')
         
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'all_exemplary_members':exemplary_members,
         'exemplary_member_form':ExemplaryMembersForm,
     }
@@ -1175,6 +1779,9 @@ def manage_exemplary_members(request):
 
 @login_required
 def update_exemplary_members(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get memeber to update
     member_to_update=ExemplaryMembers.objects.get(pk=pk)
     if request.method=='POST':
@@ -1187,6 +1794,8 @@ def update_exemplary_members(request,pk):
     else:
         member_form=ExemplaryMembersForm(instance=member_to_update)
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'exemplary_member':member_to_update,
         'member_form':member_form
     }
@@ -1194,6 +1803,9 @@ def update_exemplary_members(request,pk):
 
 @login_required
 def manage_view_access(request):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # get access of the page first
@@ -1247,6 +1859,7 @@ def manage_view_access(request):
         
 
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'insb_members':all_insb_members,
         'branch_data_access':branch_data_access,
@@ -1263,16 +1876,17 @@ def manage_view_access(request):
 def event_control_homepage(request):
     # This function loads all events and super events in the event homepage table
     
-        has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
-
-    # try:
+    has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    try:
         is_branch = True
         sc_ag=PortData.get_all_sc_ag(request=request)
         all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(1)
         context={
             'all_sc_ag':sc_ag,
+            'user_data':user_data,
             'events':all_insb_events_with_interbranch_collaborations,
-            # 'sc_ag_info':get_sc_ag_info,
             'has_access_to_create_event':has_access_to_create_event,
             'is_branch':is_branch,
             
@@ -1295,11 +1909,11 @@ def event_control_homepage(request):
                 return redirect('central_branch:event_control')
             
         return render(request,'Events/event_homepage.html',context)
-    # except Exception as e:
-    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-    #     # TODO: Make a good error code showing page and show it upon errror
-    #     return HttpResponseBadRequest("Bad Request")
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
     
 
 @login_required
@@ -1308,34 +1922,41 @@ def super_event_creation(request):
     '''function for creating super event'''
 
     try:
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        #calling it regardless to run the page
-        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,5)
-        is_branch = True
+        has_access = Branch_View_Access.get_create_event_access(request)
+        if has_access:
+            current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+            user_data=current_user.getUserData() #getting user data as dictionary file
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            #calling it regardless to run the page
+            get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,5)
+            is_branch = True
 
-        if request.method == "POST":
+            if request.method == "POST":
 
-            '''Checking to see if either of the submit or cancelled button has been clicked'''
+                '''Checking to see if either of the submit or cancelled button has been clicked'''
 
-            if (request.POST.get('Submit')):
+                if (request.POST.get('Submit')):
 
-                '''Getting data from page and saving them in database'''
+                    '''Getting data from page and saving them in database'''
 
-                super_event_name = request.POST.get('super_event_name')
-                super_event_description = request.POST.get('super_event_description')
-                start_date = request.POST.get('probable_date')
-                end_date = request.POST.get('final_date')
-                Branch.register_super_events(super_event_name,super_event_description,start_date,end_date)
-                messages.success(request,"New Super Event Added Successfully")
-                return redirect('central_branch:event_control')
-            
-        context={
-            'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info,
-            'is_branch' : is_branch
-        }
-                        
-        return render(request,"Events/Super Event/super_event_creation_form.html", context)
+                    super_event_name = request.POST.get('super_event_name')
+                    super_event_description = request.POST.get('super_event_description')
+                    start_date = request.POST.get('probable_date')
+                    end_date = request.POST.get('final_date')
+                    Branch.register_super_events(super_event_name,super_event_description,start_date,end_date)
+                    messages.success(request,"New Super Event Added Successfully")
+                    return redirect('central_branch:event_control')
+                
+            context={
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'is_branch' : is_branch
+            }
+                            
+            return render(request,"Events/Super Event/super_event_creation_form.html", context)
+        else:
+            return redirect('central_branch:event_control')
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1347,68 +1968,75 @@ def event_creation_form_page(request):
     
     #######load data to show in the form boxes#########
     try:
-        form = EventForm()
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        is_branch = True
+        has_access = Branch_View_Access.get_create_event_access(request)
+        if has_access:
+            current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+            user_data=current_user.getUserData() #getting user data as dictionary file  
+            form = EventForm()
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            is_branch = True
 
-        #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
-        super_events=Branch.load_all_mother_events()
-        event_types=Branch.load_all_event_type_for_groups(1)
-        
-        '''function for creating event'''
+            #loading super/mother event at first and event categories for Group 1 only (IEEE NSU Student Branch)
+            super_events=Branch.load_all_mother_events()
+            event_types=Branch.load_all_event_type_for_groups(1)
+            
+            '''function for creating event'''
 
-        if(request.method=="POST"):
+            if(request.method=="POST"):
 
-            ''' Checking to see if the next button is clicked '''
+                ''' Checking to see if the next button is clicked '''
 
-            if(request.POST.get('next')):
+                if(request.POST.get('next')):
 
 
 
-                '''Getting data from page and calling the register_event_page1 function to save the event page 1 to database'''
+                    '''Getting data from page and calling the register_event_page1 function to save the event page 1 to database'''
 
-                event_name=request.POST['event_name']
-                event_description=request.POST['event_description']
-                super_event_id=request.POST.get('super_event')
-                event_type_list = request.POST.getlist('event_type')
-                event_date=request.POST['event_date']
+                    event_name=request.POST['event_name']
+                    event_description=request.POST['event_description']
+                    super_event_id=request.POST.get('super_event')
+                    event_type_list = request.POST.getlist('event_type')
+                    event_date=request.POST['event_date']
 
-                #It will return True if register event page 1 is success
-                get_event=Branch.register_event_page1(
-                    super_event_id=super_event_id,
-                    event_name=event_name,
-                    event_type_list=event_type_list,
-                    event_description=event_description,
-                    event_date=event_date
-                )
-                
-                if(get_event)==False:
-                    messages.error(request,"Database Error Occured! Please try again later.")
-                else:
-                    #if the method returns true, it will redirect to the new page
-                    return redirect('central_branch:event_creation_form2',get_event)
-            elif(request.POST.get('add_event_type')):
-                ''' Adding a new event type '''
-                event_type = request.POST.get('event_type')
-                created_event_type = Branch.add_event_type_for_group(event_type,1)
-                if created_event_type:
-                    print("Event type did not exists, so new event was created")
-                    messages.success(request,"New Event Type Added Successfully")
-                else:
-                    print("Event type already existed")
-                    messages.info(request,"Event Type Already Exists")
-                return redirect('central_branch:event_creation_form1')
-        
-        context={
-            'super_events':super_events,
-            'event_types':event_types,
-            'is_branch' : is_branch,
-            'all_sc_ag':sc_ag,
-            'form':form,
-            'is_branch':is_branch,
-        }
-                
-        return render(request,'Events/event_creation_form.html',context)
+                    #It will return True if register event page 1 is success
+                    get_event=Branch.register_event_page1(
+                        super_event_id=super_event_id,
+                        event_name=event_name,
+                        event_type_list=event_type_list,
+                        event_description=event_description,
+                        event_date=event_date
+                    )
+                    
+                    if(get_event)==False:
+                        messages.error(request,"Database Error Occured! Please try again later.")
+                    else:
+                        #if the method returns true, it will redirect to the new page
+                        return redirect('central_branch:event_creation_form2',get_event)
+                elif(request.POST.get('add_event_type')):
+                    ''' Adding a new event type '''
+                    event_type = request.POST.get('event_type')
+                    created_event_type = Branch.add_event_type_for_group(event_type,1)
+                    if created_event_type:
+                        print("Event type did not exists, so new event was created")
+                        messages.success(request,"New Event Type Added Successfully")
+                    else:
+                        print("Event type already existed")
+                        messages.info(request,"Event Type Already Exists")
+                    return redirect('central_branch:event_creation_form1')
+            
+            context={
+                'user_data':user_data,
+                'super_events':super_events,
+                'event_types':event_types,
+                'is_branch' : is_branch,
+                'all_sc_ag':sc_ag,
+                'form':form,
+                'is_branch':is_branch,
+            }
+                    
+            return render(request,'Events/event_creation_form.html',context)
+        else:
+            return redirect('central_branch:event_control')
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1421,34 +2049,41 @@ def event_creation_form_page2(request,event_id):
     #loading all inter branch collaboration Options
 
     try:
-        is_branch=True
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
-        is_branch = True
-        
-        if request.method=="POST":
-            if(request.POST.get('next')):
-                inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
-                intra_branch_collaboration=request.POST['intra_branch_collaboration']
-                
-                if(Branch.register_event_page2(
-                    inter_branch_collaboration_list=inter_branch_collaboration_list,
-                    intra_branch_collaboration=intra_branch_collaboration,
-                    event_id=event_id)):
-                    return redirect('central_branch:event_creation_form3',event_id)
-                else:
-                    messages.error(request,"Database Error Occured! Please try again later.")
+        has_access = Branch_View_Access.get_create_event_access(request)
+        if has_access:
+            current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+            user_data=current_user.getUserData() #getting user data as dictionary file
+            is_branch=True
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
+            is_branch = True
+            
+            if request.method=="POST":
+                if(request.POST.get('next')):
+                    inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
+                    intra_branch_collaboration=request.POST['intra_branch_collaboration']
+                    
+                    if(Branch.register_event_page2(
+                        inter_branch_collaboration_list=inter_branch_collaboration_list,
+                        intra_branch_collaboration=intra_branch_collaboration,
+                        event_id=event_id)):
+                        return redirect('central_branch:event_creation_form3',event_id)
+                    else:
+                        messages.error(request,"Database Error Occured! Please try again later.")
 
-            elif(request.POST.get('cancel')):
-                return redirect('central_branch:event_control')
-        
-        context={
-            'inter_branch_collaboration_options':inter_branch_collaboration_options,
-            'all_sc_ag':sc_ag,
-            'is_branch' : is_branch,
-        }
+                elif(request.POST.get('cancel')):
+                    return redirect('central_branch:event_control')
+            
+            context={
+                'user_data':user_data,
+                'inter_branch_collaboration_options':inter_branch_collaboration_options,
+                'all_sc_ag':sc_ag,
+                'is_branch' : is_branch,
+            }
 
-        return render(request,'Events/event_creation_form2.html',context)
+            return render(request,'Events/event_creation_form2.html',context)
+        else:
+            return redirect('central_branch:event_control')
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1458,39 +2093,46 @@ def event_creation_form_page2(request,event_id):
 @login_required
 def event_creation_form_page3(request,event_id):
     try:
-        is_branch=True
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        #loading all venues from the venue list from event management team database
-        venues=Events_And_Management_Team.getVenues()
-        #loading all the permission criterias from event management team database
-        permission_criterias=Events_And_Management_Team.getPermissionCriterias()
+        has_access = Branch_View_Access.get_create_event_access(request)
+        if has_access:
+            current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+            user_data=current_user.getUserData() #getting user data as dictionary file
+            is_branch=True
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            #loading all venues from the venue list from event management team database
+            venues=Events_And_Management_Team.getVenues()
+            #loading all the permission criterias from event management team database
+            permission_criterias=Events_And_Management_Team.getPermissionCriterias()
 
-        is_branch = True
+            is_branch = True
 
-        if request.method=="POST":
-            if request.POST.get('create_event'):
-                #getting the venues for the event
-                venue_list_for_event=request.POST.getlist('event_venues')
-                #getting the permission criterias for the event
-                permission_criterias_list_for_event=request.POST.getlist('permission_criteria')
-                
-                #updating data collected from part3 for the event
-                update_event_details=Branch.register_event_page3(venue_list=venue_list_for_event,permission_criteria_list=permission_criterias_list_for_event,event_id=event_id)
-                #if return value is false show an error message
-                if(update_event_details==False):
-                    messages.error(request, "An error Occured! Please Try again!")
-                else:
-                    messages.success(request, "New Event Added Succesfully")
-                    return redirect('central_branch:event_control')
-                
-        context={
-            'venues':venues,
-            'permission_criterias':permission_criterias,
-            'all_sc_ag':sc_ag,
-            'is_branch' : is_branch,
-        }
+            if request.method=="POST":
+                if request.POST.get('create_event'):
+                    #getting the venues for the event
+                    venue_list_for_event=request.POST.getlist('event_venues')
+                    #getting the permission criterias for the event
+                    permission_criterias_list_for_event=request.POST.getlist('permission_criteria')
+                    
+                    #updating data collected from part3 for the event
+                    update_event_details=Branch.register_event_page3(venue_list=venue_list_for_event,permission_criteria_list=permission_criterias_list_for_event,event_id=event_id)
+                    #if return value is false show an error message
+                    if(update_event_details==False):
+                        messages.error(request, "An error Occured! Please Try again!")
+                    else:
+                        messages.success(request, "New Event Added Succesfully")
+                        return redirect('central_branch:event_control')
+                    
+            context={
+                'user_data':user_data,
+                'venues':venues,
+                'permission_criterias':permission_criterias,
+                'all_sc_ag':sc_ag,
+                'is_branch' : is_branch,
+            }
 
-        return render(request,'Events/event_creation_form3.html',context)
+            return render(request,'Events/event_creation_form3.html',context)
+        else:
+            return redirect('central_branch:event_control')
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1521,9 +2163,11 @@ def event_edit_form(request, event_id):
 
     ''' This function loads the edit page of events '''
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
-        # has_access = Branch.event_page_access(request)
-        if True:
+        has_access = Branch_View_Access.get_event_edit_access(request)
+        if has_access:
             is_branch = True
             is_event_published = Branch.load_event_published(event_id)
             is_flagship_event = Branch.is_flagship_event(event_id)
@@ -1536,7 +2180,7 @@ def event_edit_form(request, event_id):
 
                 if('add_venues' in request.POST):
                     venue = request.POST.get('venue')
-                    if(renderData.Branch.add_event_venue(venue)):
+                    if(Branch.add_event_venue(venue)):
                         messages.success(request, "Venue created successfully")
                     else:
                         messages.error(request, "Something went wrong while creating the venue")
@@ -1572,7 +2216,7 @@ def event_edit_form(request, event_id):
                     else:
                         registration_fee_amount=0
                     #Check if the update request is successful
-                    if(renderData.Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
+                    if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
                                                             flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,form_link = form_link,is_featured_event= is_featured)):
                         messages.success(request,f"EVENT: {event_name} was Updated successfully")
                         return redirect('central_branch:event_edit_form', event_id) 
@@ -1630,7 +2274,8 @@ def event_edit_form(request, event_id):
                 'is_flagship_event':is_flagship_event,
                 'is_registration_fee_required':is_registraion_fee_true,
                 'selected_venues':selected_venues,
-                'is_featured_event':is_featured_event
+                'is_featured_event':is_featured_event,
+                'user_data':user_data,
             }
 
             return render(request, 'Events/event_edit_form.html', context)
@@ -1650,9 +2295,11 @@ def event_edit_media_form_tab(request, event_id):
     ''' This function loads the media tab page of events '''
 
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
-        # has_access = Branch.event_page_access(request)
-        if(True):
+        has_access = Branch_View_Access.get_event_edit_access(request)
+        if(has_access):
             #Getting media links and images from database. If does not exist then they are set to none
 
             event_details = Events.objects.get(pk=event_id)
@@ -1700,6 +2347,7 @@ def event_edit_media_form_tab(request, event_id):
                 'media_url':settings.MEDIA_URL,
                 'allowed_image_upload':6-number_of_uploaded_images,
                 'all_sc_ag':sc_ag,
+                'user_data':user_data,
             }
             return render(request,"Events/event_edit_media_form_tab.html",context)
         else:
@@ -1720,10 +2368,12 @@ def event_edit_graphics_form_tab(request, event_id):
     #and can be editible
 
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         #Get event details from databse
-        # has_access = Branch.event_page_access(request)
-        if(True):
+        has_access = Branch_View_Access.get_event_edit_access(request)
+        if(has_access):
             #Getting media links and images from database. If does not exist then they are set to none
             event_details = Events.objects.get(pk=event_id)
             try:
@@ -1770,7 +2420,7 @@ def event_edit_graphics_form_tab(request, event_id):
                 'graphics_banner_image':graphic_banner_image,
                 'media_url':settings.MEDIA_URL,
                 'allowed_image_upload':1-image_number,
-
+                'user_data':user_data,
             }
             return render(request,"Events/event_edit_graphics_form_tab.html",context)
         else:
@@ -1790,12 +2440,12 @@ def event_edit_graphics_form_links_sub_tab(request,event_id):
     #and can be editible
 
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         all_graphics_link = GraphicsTeam.get_all_graphics_form_link(event_id)
-        #Get event details from databse
-        # event_details = Events.objects.get(pk=event_id)
-        # has_access = Branch.event_page_access(request)
-        if(True):
+        has_access = Branch_View_Access.get_event_edit_access(request)
+        if(has_access):
 
             if request.POST.get('add_link'):
 
@@ -1833,7 +2483,7 @@ def event_edit_graphics_form_links_sub_tab(request,event_id):
                 'event_id' : event_id,
                 'all_sc_ag':sc_ag,
                 'all_graphics_link':all_graphics_link,
-
+                'user_data':user_data,
             }
             return render(request,"Events/event_edit_graphics_form_links_sub_tab.html",context)
         else:
@@ -1851,9 +2501,11 @@ def event_edit_content_form_tab(request,event_id):
     ''' This function loads the content tab page of events '''
 
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
-        # has_access = Branch.event_page_access(request)
-        if(True):
+        has_access = Branch_View_Access.get_event_edit_access(request)
+        if(has_access):
             all_notes_content = ContentWritingTeam.load_note_content(event_id)
             form = Content_Form()
             if(request.method == "POST"):               
@@ -1895,7 +2547,7 @@ def event_edit_content_form_tab(request,event_id):
                 'form_adding_note':form,
                 'all_notes_content':all_notes_content,
                 'all_sc_ag':sc_ag,
-
+                'user_data':user_data,
             }
             return render(request,"Events/event_edit_content_and_publications_form_tab.html",context)
         else:
@@ -1913,20 +2565,340 @@ def event_preview(request, event_id):
     ''' This function displays a preview of an event regardless of it's published status '''
 
     try:
-        event = Events.objects.get(id=event_id)
-        event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
-        event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
+        has_access = Branch_View_Access.get_event_edit_access(request)
+        if(has_access):
+            event = Events.objects.get(id=event_id)
+            event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
+            event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
-        context = {
-            'is_branch' : True,
-            'event' : event,
-            'media_url':settings.MEDIA_URL,
-            'event_banner_image' : event_banner_image,
-            'event_gallery_images' : event_gallery_images
-        }
+            context = {
+                'is_branch' : True,
+                'event' : event,
+                'media_url':settings.MEDIA_URL,
+                'event_banner_image' : event_banner_image,
+                'event_gallery_images' : event_gallery_images
+            }
 
-        return render(request, 'Events/event_description_main.html', context)
+            return render(request, 'Events/event_description_main.html', context)
+        else:
+            return render(request, 'access_denied2.html')
     
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+@login_required
+def manage_toolkit(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    
+    # get all toolkits
+    all_toolkits=Toolkit.objects.all().order_by('-pk')
+    if(request.method=="POST"):
+        toolkit_form=ToolkitForm(request.POST,request.FILES)
+        if(request.POST.get('add_item')):
+            if(toolkit_form.is_valid()):
+                toolkit_form.save()
+                messages.success(request,"A new Toolkit Item was added!")
+                return redirect('central_branch:manage_toolkit')
+        if(request.POST.get('remove_toolkit')):
+            item_to_delete=Toolkit.objects.get(pk=request.POST['toolkit_pk'])
+            # first delete the picture from the filesystem
+            if(os.path.isfile(item_to_delete.picture.path)):
+                os.remove(item_to_delete.picture.path)
+            item_to_delete.delete()
+            messages.warning(request,"A Toolkit Item was deleted!")
+            return redirect('central_branch:manage_toolkit')
+    else:
+        toolkit_form=ToolkitForm
+    context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
+        'all_toolkits':all_toolkits,
+        'form':toolkit_form,
+    }
+    return render(request,"Manage Website/Publications/Toolkit/manage_toolkit.html",context=context)
+
+@login_required
+def update_toolkit(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    # toolkit to update
+    toolkit_to_update=get_object_or_404(Toolkit,pk=pk)
+    if(request.method=="POST"):
+        toolkit_form=ToolkitForm(request.POST,request.FILES,instance=toolkit_to_update)
+        if(request.POST.get('update_toolkit_item')):
+            if(toolkit_form.is_valid()):
+                toolkit_form.save()
+                messages.success(request,"Toolkit Item was updated!")
+                return redirect('central_branch:manage_toolkit')
+    else:
+        toolkit_form=ToolkitForm(instance=toolkit_to_update)
+    context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
+        'toolkit':toolkit_to_update,
+        'form':toolkit_form,
+    }
+    return render(request,"Manage Website/Publications/Toolkit/update_toolkit.html",context=context)
+
+@login_required
+def feedbacks(request):
+
+    '''This view function loads the feedback page for the particular societies and affinity
+        groups'''
+    
+    try:
+        #rendering all the data to be loaded on the page
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        #getting all the feedbacks for INSB
+        all_feedbacks = Sc_Ag.get_all_feedbacks(request,1)
+        # has_access = Branch.event_page_access(request)
+        
+        if(True):
+
+            if request.method=="POST":
+                #when user hits submit button to changes status of responded fields
+                if request.POST.get('reponded'):
+                    #getting all the list of boolean fields that were changed
+                    respond = request.POST.getlist('responded_id')
+                    #passing the list to the updating funtion to change boolean values
+                    if Sc_Ag.set_feedback_status(respond,1):
+                        messages.success(request,'Feedback status updated successfully.')
+                    else:
+                        messages.error(request,'Feedback status could not be updated.')
+                    return redirect("central_branch:feedbacks")
+        
+            context={
+                    'is_branch' : True,
+                    'all_sc_ag':sc_ag,
+                    'media_url':settings.MEDIA_URL,
+                    'all_feedbacks':all_feedbacks,
+
+            }
+            return render(request,"FeedBack/feedback.html",context)
+        return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+
+@login_required
+def insb_members_list(request):
+    
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+
+        '''This function is responsible to display all the member data in the page'''
+        if request.method=="POST":
+            if request.POST.get("site_register"):
+                
+                return redirect('membership_development_team:site_registration')
+            
+        members=Members.objects.order_by('position')
+        totalNumber=Members.objects.all().count()
+        has_view_permission=True
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        context={
+            'is_branch':True,
+            'all_sc_ag':sc_ag,
+            'members':members,
+            'totalNumber':totalNumber,
+            'has_view_permission':has_view_permission,
+            'user_data':user_data
+        }
+        
+        return render(request,'INSB Members/members_list.html',context=context)
+    
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
+    
+@login_required
+def member_details(request,ieee_id):
+    '''This function loads an editable member details view for particular IEEE ID'''
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        '''This has some views restrictions'''
+        #Loading Access Permission
+        user=request.user
+        
+        has_access=(renderData.MDT_DATA.insb_member_details_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
+        
+        member_data=renderData.MDT_DATA.get_member_data(ieee_id=ieee_id)
+        try:
+            dob = datetime.strptime(str(
+                member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
+        except:
+            dob=None
+        sessions=recruitment_session.objects.all().order_by('-id')
+        #getting the ieee account active status of the member
+        active_status=renderData.MDT_DATA.get_member_account_status(ieee_id=ieee_id)
+            
+        renewal_session=Renewal_Sessions.objects.all().order_by('-id')
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        
+        context={
+            'is_branch':True,
+            'all_sc_ag':sc_ag,
+            'member_data':member_data,
+            'dob':dob,
+            'sessions':sessions,
+            'renewal_session':renewal_session,
+            'media_url':settings.MEDIA_URL,
+            'active_status':active_status,
+            'user_data':user_data,
+        }
+        if request.method=="POST":
+            if request.POST.get('save_edit'):
+                nsu_id=request.POST['nsu_id']
+                ieee_id=request.POST['ieee_id']
+                name=request.POST['name']
+                contact_no=request.POST['contact_no']
+                date_of_birth=request.POST['date_of_birth']
+                email_ieee=request.POST['email_ieee']
+                email_personal=request.POST['email_personal']
+                email_nsu=request.POST['email_nsu']
+                facebook_url=request.POST['facebook_url']
+                home_address=request.POST['home_address']
+                major=request.POST['major_label']
+                recruitment_session_value=request.POST['recruitment']
+                renewal_session_value=request.POST['renewal']
+                profile_picture = request.FILES.get('update_picture')
+                
+                #checking if the recruitment and renewal session exists
+                try:
+                    recruitment_session.objects.get(id=recruitment_session_value)
+                    
+                except:
+                    recruitment_session_value=None          
+                try:
+                    Renewal_Sessions.objects.get(id=renewal_session_value)
+                    
+                except:
+                    renewal_session_value=None 
+                
+                #updating member Details
+                if (recruitment_session_value==None and renewal_session_value==None):
+                    try:
+                        Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+                                                                name=name,
+                                                                contact_no=contact_no,
+                                                                date_of_birth=date_of_birth,
+                                                                email_ieee=email_ieee,
+                                                                email_personal=email_personal,
+                                                                email_nsu=email_nsu,
+                                                                facebook_url=facebook_url,
+                                                                home_address=home_address,
+                                                                major=major,
+                                                                session=None,
+                                                                last_renewal_session=None 
+                                                                )
+                        #checking to see if user wants to update picture or not
+                        if profile_picture == None:
+                            pass
+                        else:
+                            Branch.update_profile_picture(profile_picture,ieee_id)
+                        messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                        return redirect('central_branch:member_details',ieee_id)
+                    except Members.DoesNotExist:
+                        messages.info(request,"Sorry! Something went wrong! Try Again.")
+                elif renewal_session_value==None:
+                    try:
+                        Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+                                                                name=name,
+                                                                contact_no=contact_no,
+                                                                date_of_birth=date_of_birth,
+                                                                email_ieee=email_ieee,
+                                                                email_personal=email_personal,
+                                                                email_nsu=email_nsu,
+                                                                facebook_url=facebook_url,
+                                                                home_address=home_address,
+                                                                major=major,
+                                                                session=recruitment_session.objects.get(id=recruitment_session_value),
+                                                                last_renewal_session=None 
+                                                                )
+                        #checking to see if user wants to update picture or not
+                        if profile_picture == None:
+                            pass
+                        else:
+                            Branch.update_profile_picture(profile_picture,ieee_id)
+                        messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                        return redirect('central_branch:member_details',ieee_id)
+                    except Members.DoesNotExist:
+                        messages.info(request,"Sorry! Something went wrong! Try Again.")
+                
+                elif(recruitment_session_value==None):
+                    try:
+                        Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+                                                                name=name,
+                                                                contact_no=contact_no,
+                                                                date_of_birth=date_of_birth,
+                                                                email_ieee=email_ieee,
+                                                                email_personal=email_personal,
+                                                                email_nsu=email_nsu,
+                                                                facebook_url=facebook_url,
+                                                                home_address=home_address,
+                                                                major=major,
+                                                                session=None,
+                                                                last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value) 
+                                                                )
+                        #checking to see if user wants to update picture or not
+                        if profile_picture == None:
+                            pass
+                        else:
+                            Branch.update_profile_picture(profile_picture,ieee_id)
+                        messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                        return redirect('central_branch:member_details',ieee_id)
+                    except Members.DoesNotExist:
+                        messages.info(request,"Sorry! Something went wrong! Try Again.")
+                else:
+                    try:
+                        Members.objects.filter(ieee_id=ieee_id).update(nsu_id=nsu_id,
+                                                                name=name,
+                                                                contact_no=contact_no,
+                                                                date_of_birth=date_of_birth,
+                                                                email_ieee=email_ieee,
+                                                                email_personal=email_personal,
+                                                                email_nsu=email_nsu,
+                                                                facebook_url=facebook_url,
+                                                                home_address=home_address,
+                                                                major=major,
+                                                                session=recruitment_session.objects.get(id=recruitment_session_value),
+                                                                last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value) 
+                                                                )
+                        #checking to see if user wants to update picture or not
+                        if profile_picture == None:
+                            pass
+                        else:
+                            Branch.update_profile_picture(profile_picture,ieee_id)
+                        messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
+                        return redirect('central_branch:member_details',ieee_id)
+                    except Members.DoesNotExist:
+                        messages.info(request,"Sorry! Something went wrong! Try Again.")
+                            
+            if request.POST.get('delete_member'):
+                #Deleting a member from database
+                member_to_delete=Members.objects.get(ieee_id=ieee_id)
+                messages.error(request,f"{member_to_delete.ieee_id} was deleted from the INSB Registered Members Database.")
+                member_to_delete.delete()
+                return redirect('membership_development_team:members_list')
+                
+                
+        if(has_access):
+            return render(request,'INSB Members/member_details.html',context=context)
+        else:
+            return render(request,'access_denied.html',context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

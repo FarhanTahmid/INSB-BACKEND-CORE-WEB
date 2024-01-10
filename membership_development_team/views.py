@@ -21,14 +21,14 @@ from system_administration.render_access import Access_Render
 from django.core.mail import send_mail
 from . import email_sending
 from central_branch.renderData import Branch
-from users.renderData import LoggedinUser
+from users.renderData import LoggedinUser,PanelMembersData
 from port.renderData import PortData
-
+from . models import Portal_Joining_Requests
 
 # Create your views here.
 def md_team_homepage(request):
     '''Loads the data for homepage of MDT TEAM'''
-
+    sc_ag=PortData.get_all_sc_ag(request=request)
     #Loading data of the co-ordinators, co ordinator id is 9,
     co_ordinators=renderData.MDT_DATA.get_member_with_postion(9)
     #Loading data of the incharges, incharge id is 10
@@ -41,10 +41,11 @@ def md_team_homepage(request):
     user_data=current_user.getUserData() #getting user data as dictionary file
     
     context={
+        'all_sc_ag':sc_ag,
         'co_ordinators':co_ordinators,
         'incharges':in_charges,
         'core_volunteers':core_volunteers,
-        'volunteers':volunteers,
+        'team_volunteers':volunteers,
         'media_url':settings.MEDIA_URL,
         'user_data':user_data,
     }
@@ -67,6 +68,7 @@ def insb_members_list(request):
     user_data=current_user.getUserData() #getting user data as dictionary file
 
     context={
+        'is_branch':False,
         'all_sc_ag':sc_ag,
         'members':members,
         'totalNumber':totalNumber,
@@ -102,6 +104,7 @@ def member_details(request,ieee_id):
     user_data=current_user.getUserData() #getting user data as dictionary file
     
     context={
+        'is_branch':False,
         'all_sc_ag':sc_ag,
         'member_data':member_data,
         'dob':dob,
@@ -818,7 +821,7 @@ def data_access(request):
     data_access=renderData.MDT_DATA.load_mdt_data_access()
     team_members=renderData.MDT_DATA.load_team_members()
     #load all position for insb members
-    position=Branch.load_roles_and_positions()
+    position=PortData.get_all_volunteer_position_with_sc_ag_id(request=request,sc_ag_primary=1)
     
     # Excluding position of EB, Faculty and SC-AG members
     for i in position:
@@ -860,7 +863,6 @@ def data_access(request):
         
         if request.POST.get('access_remove'):
             '''To remove record from data access table'''
-            
             ieeeId=request.POST['access_ieee_id']
             if(renderData.MDT_DATA.remove_member_from_data_access(ieee_id=ieeeId)):
                 messages.info(request,"Removed member from View Permission Controls")
@@ -873,10 +875,12 @@ def data_access(request):
         if request.POST.get('remove_member'):
             '''To remove member from team table'''
             try:
+                get_current_panel=Branch.load_current_panel()
+                PanelMembersData.remove_member_from_panel(request=request,ieee_id=request.POST['remove_ieee_id'],panel_id=get_current_panel.pk)
                 Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
                 try:
                     MDT_Data_Access.objects.filter(ieee_id=request.POST['remove_ieee_id']).delete()
-                    messages.error(request,f"A Member with IEEE ID {request.POST['remove_ieee_id']} was Removed Successfully From Team")
+                    messages.warning(request,f"A Member with IEEE ID {request.POST['remove_ieee_id']} was Removed Successfully From Team")
                 except MDT_Data_Access.DoesNotExist:
                     messages.error(request,"Something went wrong! Please, try again!")
                     return redirect('membership_development_team:data_access')
@@ -933,14 +937,17 @@ def data_access(request):
 def site_registration_request_home(request):
     
     '''This loads data for site joining request'''
+    sc_ag=PortData.get_all_sc_ag(request=request)
     # Getting all the requests for portal site
-    get_requests=Portal_Joining_Requests.objects.all().order_by('application_status')
+    get_requests=Portal_Joining_Requests.objects.all().order_by('application_status','-pk')
     #form link for site registration
     form_link=f"{request.META['HTTP_HOST']}/portal/membership_development_team/insb_site_registration_form"
-    
+    form_link_faculty=f"{request.META['HTTP_HOST']}/portal/membership_development_team/insb_site_registration_form/faculty"
     context={
+        'all_sc_ag':sc_ag,
         'requests':get_requests,
-        'form_link':form_link
+        'form_link':form_link,
+        'form_link_faculty':form_link_faculty,
     }
     
     return render(request,'Site Registration/site_registration_home.html',context)
@@ -988,7 +995,6 @@ def site_registration_request_details(request,ieee_id):
     else:
         next_application_id=None
         has_next_request=False
-    
     context={
         'request':get_request,
         'dob':dob,
@@ -1001,25 +1007,25 @@ def site_registration_request_details(request,ieee_id):
                 #Creating record for the new Member. If the IEEE already exists in the database it will already update that particualr record with new Information
                 if(get_request.team==None):
                     new_member=Members(
-                    ieee_id=get_request.ieee_id,
-                    name=get_request.name,
-                    nsu_id=get_request.nsu_id,
-                    email_ieee=get_request.email_ieee,
-                    email_nsu=get_request.email_nsu,
-                    email_personal=get_request.email_personal,
-                    major=get_request.major,
-                    contact_no=get_request.contact_no,
-                    home_address=get_request.home_address,
-                    date_of_birth=get_request.date_of_birth,
-                    gender=get_request.gender,
-                    facebook_url=get_request.facebook_url,
-                    linkedin_url=get_request.linkedin_url,
-                    #if team=None then it will not create the record
-                    position=Roles_and_Position.objects.get(id=get_request.position.id)
-
+                        ieee_id=get_request.ieee_id,
+                        name=get_request.name,
+                        nsu_id=get_request.nsu_id,
+                        email_ieee=get_request.email_ieee,
+                        email_nsu=get_request.email_nsu,
+                        email_personal=get_request.email_personal,
+                        major=get_request.major,
+                        contact_no=get_request.contact_no,
+                        home_address=get_request.home_address,
+                        date_of_birth=get_request.date_of_birth,
+                        gender=get_request.gender,
+                        facebook_url=get_request.facebook_url,
+                        linkedin_url=get_request.linkedin_url,
+                        #if team=None then it will not create the record
+                        position=Roles_and_Position.objects.get(id=get_request.position.id),
+                        user_profile_picture=get_request.user_profile_picture,
                     )
                     new_member.save()
-                    #sending mails to MDT team officials to verify the request, primarily sent to their ieee mail
+                    # sends email to personal mail
                     if(email_sending.send_email_on_site_registration_verification_to_user(request,new_member.name,new_member.email_personal)==False):
                         messages.info(request,"Couldn't Send Verification Email")
                         return redirect('membership_development_team:site_registration')
@@ -1049,8 +1055,8 @@ def site_registration_request_details(request,ieee_id):
                         facebook_url=get_request.facebook_url,
                         linkedin_url=get_request.linkedin_url,
                         team=Teams.objects.get(id=get_request.team.id),
-                        position=Roles_and_Position.objects.get(id=get_request.position.id)
-
+                        position=Roles_and_Position.objects.get(id=get_request.position.id),
+                        user_profile_picture=get_request.user_profile_picture,
                     )
                     new_member.save()
 
@@ -1080,9 +1086,6 @@ def site_registration_request_details(request,ieee_id):
         return render(request,"access_denied.html")
 
 
-
-
-from . models import Portal_Joining_Requests
 
 def site_registration_form(request):
     load_all_teams=Teams.objects.all()
@@ -1163,3 +1166,33 @@ def site_registration_form(request):
     return render(request,'Site Registration/site_registration_form.html',context)
 def confirmation_of_form_submission(request):
     return render(request,'confirmation.html')
+
+
+def site_registration_faculty(request):
+    '''This form works only for Faculty Members'''
+    if(request.method=="POST"):
+        if(request.POST.get('apply')):
+            try: 
+                new_faculty_registration_request=Portal_Joining_Requests.objects.create(
+                    name=request.POST['name'],ieee_id=request.POST['ieee_id'],email_personal=request.POST['email_personal'],
+                    email_nsu=request.POST['email_nsu'],email_ieee=request.POST['email_ieee'],home_address=request.POST['home_address'],
+                    major=request.POST['major'],contact_no=request.POST['contact_no'],date_of_birth=request.POST['date_of_birth'],
+                    facebook_url=request.POST['facebook_url'],linkedin_url=request.POST['linkedin_url'],gender=request.POST['gender'],
+                    user_profile_picture=request.FILES['user_picture']
+                )
+                new_faculty_registration_request.save()
+                mdt_officials = renderData.MDT_DATA.load_officials_of_MDT()
+                for official in mdt_officials:
+                    #sending mails to MDT team officials to verify the request, primarily sent to their personal mail
+                    if(email_sending.send_emails_to_officials_upon_site_registration_request(request,new_faculty_registration_request.name,new_faculty_registration_request.ieee_id,None,None,official.name,official.email_personal)==False):
+                        print("Email couldn't be sent")
+                    else:
+                        print(f"Email sent to {official.email_personal}")
+                return redirect('membership_development_team:site_registration_faculty_confirmation')
+            except Exception as e:
+                print(e)
+                messages.warning(request,"Something went wrong! Please Try again!")
+    return render(request,"Site Registration\site_registration_faculty.html")
+
+def site_registration_faculty_confirmation(request):
+    return render(request,"faculty_registration_confirmation.html")

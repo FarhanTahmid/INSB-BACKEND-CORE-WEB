@@ -1,9 +1,9 @@
 from .models import HomePageTopBanner,BannerPictureWithStat
 from django.http import HttpResponseServerError
-from users.models import Members,User_IP_Address
+from users.models import Members,User_IP_Address,Panel_Members
 from membership_development_team.renderData import MDT_DATA
 from central_events.models import Events,InterBranchCollaborations
-from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position
+from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
 from graphics_team.models import Graphics_Banner_Image
 from media_team.models import Media_Images
 from datetime import datetime
@@ -42,7 +42,7 @@ class HomepageItems:
                     ####getting collaborated events###if dont want collaborated event remove bottom section
                     collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
                     #joining both the events list of collbarated and their own organised events
-                    events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('event_date') 
+                    events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('-event_date') 
                     ####################################################################################################################
             else:
                 if primary == 1:
@@ -72,35 +72,20 @@ class HomepageItems:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
-        
-    def load_all_sc_ag_events(flag,primary):
-        try:
-            current_datetime = timezone.now()
-            dic = {}
-            if flag:
-                events =  Events.objects.filter(publish_in_main_web= True,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)).order_by('-event_date')
-            else:
-                events =  Events.objects.filter(publish_in_main_web= True,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary),event_date__gt=current_datetime).order_by('event_date')[:5]
-                print(events)
-            for i in events:
-                try:
-                    event = Graphics_Banner_Image.objects.get(event_id = i.pk)
-                    dic[i]=event.selected_image
-                except:
-                    dic[i] = "#"
-            return dic
-        except Exception as e:
-            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            return False
     
     def load_event_banner_image(event_id):
-            try:
-                return Graphics_Banner_Image.objects.get(event_id = event_id).selected_image
-            except:
-                return None
+            
+        '''This function returns the banner_image for the particular event'''
+        try:
+            #getting the banner image using the event id sent as parameter
+            return Graphics_Banner_Image.objects.get(event_id = event_id).selected_image
+        except:
+            #if not found any image returning none
+            return None
     
     def load_event_gallery_images(event_id):
+
+        '''This function loads all the media images for the particular event'''
 
         return Media_Images.objects.filter(event_id = event_id)
 
@@ -179,7 +164,7 @@ class HomepageItems:
                 collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
                 events = Events.objects.filter(publish_in_main_web= True,event_organiser = society).order_by('-event_date')
                 #joining both the events list of collbarated and their own organised events
-                all_events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('event_date')   
+                all_events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('-event_date')   
             #decalring empty dictionary for getting the event date and event
             #key is the date and event object is the value
             date_and_events = {}
@@ -226,31 +211,31 @@ class HomepageItems:
         except:
             return None 
     
-    def get_upcoming_event_banner_picture(event):
-
-        try:
-            return Graphics_Banner_Image.objects.get(event_id = event)
-        except:
-            return None
-    
     def get_ip_address(request):
+
+        '''This function saves the ip address every day. So if same user visits the page everyday,
+            then each day his ip address will counted only once'''
         
-        address = request.META.get('HTTP_X_FORWARDED_FOR')
-        print(address)
-        if address:
-            ip = address.split(',')[-1].strip()
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        
-        user =User_IP_Address(ip_address = ip)
-        print(datetime.today())
-        print(f"Current user ip address {user}")
-        result = User_IP_Address.objects.filter(ip_address = ip,created_at = datetime.today())
-        print(f"User exists in database {result}")
-        if len(result)>=1:
-            pass
-        else:
-            user.save()
+        try:
+            address = request.META.get('HTTP_X_FORWARDED_FOR')
+            print(address)
+            if address:
+                ip = address.split(',')[-1].strip()
+            else:
+                ip = request.META.get('REMOTE_ADDR')
+            #creating user IP address model with auto saved date
+            user =User_IP_Address(ip_address = ip)
+            #checking if this user already exists today or not. If yes the length of result is more than 1
+            #and his ip wont be saved
+            result = User_IP_Address.objects.filter(ip_address = ip,created_at = datetime.today())
+            if len(result)>=1:
+                pass
+            else:
+                user.save()
+        except Exception as e:
+            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
 
     def get_featured_events_for_societies(primary):
 
@@ -280,11 +265,21 @@ class HomepageItems:
     def get_faculty_advisor_for_society(request,primary):
 
         '''This function returns the faculty advisor for the particular society otherwise return none''' 
+        
         try:
-            society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
+            
             try:
-                faculty = SC_AG_Members.objects.get(sc_ag = society,position = Roles_and_Position.objects.get(is_faculty = True,role_of = society))
+                #getting the particular society object
+                society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
+                #getting position
+                position = Roles_and_Position.objects.get(is_faculty = True,role_of = society)
+                #getting current tenure
+                current_tenure = Panels.objects.get(current = True, panel_of = society)
+                #getting the faculty
+                faculty = Panel_Members.objects.get(tenure = current_tenure,position =position)
+
             except:
+                #else returning None
                 faculty = None
 
             return faculty
@@ -299,15 +294,21 @@ class HomepageItems:
         '''This function returns a list of eb memebers for the particular society'''
         
         try:
+            #assingning empty eb_member list
             eb_members=[]
+            #getting the particular society object
             society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
-            roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society).order_by('role_of')
+            #getting current tenure
+            current_tenure = Panels.objects.get(current = True, panel_of = society)
+            #getting all th eb roles
+            roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society,is_faculty = False).order_by('role_of')
             for role in roles:
-                    try:
-                        member = SC_AG_Members.objects.get(sc_ag = society,position = role)
-                    except:
-                        member = None
+                try:
+                    #getting the member of the particular society whose role matches with the role iteration in the list and is if current panel
+                    member = Panel_Members.objects.get(tenure = current_tenure,position = role)
                     eb_members.append(member)
+                except:
+                    pass
             return eb_members
         except Exception as e:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)

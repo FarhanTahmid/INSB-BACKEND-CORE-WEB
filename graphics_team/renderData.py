@@ -27,6 +27,17 @@ class GraphicsTeam:
         print(roles,members)
         return members
 
+    def get_volunteers():
+        team_members=GraphicsTeam.load_team_members()
+        core_volunteer=[]
+        team_volunteer=[]
+        for i in team_members:
+            if(i.position.is_volunteer):
+                if(i.position.is_core_volunteer):
+                    core_volunteer.append(i)
+                else:
+                    team_volunteer.append(i)
+        return core_volunteer,team_volunteer
 
     def get_member_with_postion(position):
         '''Returns Graphics Team Members with positions'''
@@ -62,9 +73,8 @@ class GraphicsTeam:
         return team
 
     def add_member_to_team(ieee_id,position):
-        team_id=GraphicsTeam.get_team_id().id
-        Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
-
+        Branch.add_member_to_team(ieee_id=ieee_id,position=position,team_primary=10)
+        
     def graphics_manage_team_access_modifications(manage_team_access, event_access, ieee_id):
         try:
             Graphics_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access, event_access=event_access)

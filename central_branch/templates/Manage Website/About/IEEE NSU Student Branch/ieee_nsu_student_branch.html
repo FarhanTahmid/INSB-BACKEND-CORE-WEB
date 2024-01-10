@@ -47,7 +47,7 @@
             </div>
             <br>
 
-            <!-- Preview Event Modal -->
+            <!-- Preview Modal -->
             <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" style="z-index: 1500;">
                 <div class="modal-dialog modal-dialog-centered modal-lg preview_modal_box" role="document">
                     <div class="modal-content" style="width: 100%; height: 100%;">
@@ -58,7 +58,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <iframe src="https://ieeensusb.org/ieee/" style="width: 100%; height: 100%;" loading="lazy"></iframe>
+                            <iframe src="{% url 'central_branch:ieee_nsu_student_branch_preview' %}" style="width: 100%; height: 100%;" loading="lazy"></iframe>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -78,7 +78,6 @@
                             </button>
                         </div>
                     </p>
-                    <br>
                 {% endfor %}
             </div>
             <!--Messages End-->
@@ -108,7 +107,7 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="about_details"></textarea>
+                                name="about_details">{{ieee_nsu_student_branch.about_nsu_student_branch}}</textarea>
                                 <p id="aboutCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
@@ -116,19 +115,21 @@
                             <div class="form-group">
                                 <label for="images">About Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="about-image-input" name="image" accept="image/*">
+                                    <input type="file" class="custom-file-input" id="about-image-input" name="about_image" accept="image/*">
                                     <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
                                 </div>
                                 <br>
 
+                                {% if ieee_nsu_student_branch.about_image %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.about_image}}')">About Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.about_image}}', 'about_image')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>  
 
                             <br>
@@ -143,7 +144,7 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="chapters_details"></textarea>
+                                name="chapters_details">{{ieee_nsu_student_branch.chapters_description}}</textarea>
                                 <p id="chaptersCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
@@ -152,19 +153,21 @@
                             <div class="form-group">
                                 <label for="images">RAS Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="ras-image-input" name="image" accept="image/*">
+                                    <input type="file" class="custom-file-input" id="ras-image-input" name="ras_image" accept="image/*">
                                     <label class="custom-file-label bg-light" for="ras-image-input">Choose file</label>
                                 </div>
                                 
                                 <br>
+                                {% if ieee_nsu_student_branch.ras_image %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.ras_image}}')">RAS Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.ras_image}}', 'ras_image')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                                 <br>
 
                                 <label>RAS Read More Link <span style="color:red">*<span></label> 
@@ -174,7 +177,8 @@
                                 type="text"
                                 autocomplete="off"
                                 required
-                                name="ras_read_more_link"/>
+                                name="ras_read_more_link"
+                                value="{{ieee_nsu_student_branch.ras_read_more_link}}"/>
                             </div>
                             <br> 
 
@@ -182,19 +186,21 @@
                             <div class="form-group">
                                 <label for="images">PES Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="pes-image-input" name="image" accept="image/*">
+                                    <input type="file" class="custom-file-input" id="pes-image-input" name="pes_image" accept="image/*">
                                     <label class="custom-file-label bg-light" for="pes-image-input">Choose file</label>
                                 </div>
                                 
                                 <br>
+                                {% if ieee_nsu_student_branch.pes_image %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.pes_image}}')">PES Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.pes_image}}', 'pes_image')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                                 <br>
 
                                 <label>PES Read More Link <span style="color:red">*<span></label> 
@@ -204,7 +210,8 @@
                                 type="text"
                                 autocomplete="off"
                                 required
-                                name="pes_read_more_link"/>
+                                name="pes_read_more_link"
+                                value="{{ieee_nsu_student_branch.pes_read_more_link}}"/>
                             </div> 
                             <br>
 
@@ -212,19 +219,21 @@
                             <div class="form-group">
                                 <label for="images">IAS Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="ias-image-input" name="image" accept="image/*">
+                                    <input type="file" class="custom-file-input" id="ias-image-input" name="ias_image" accept="image/*">
                                     <label class="custom-file-label bg-light" for="ias-image-input">Choose file</label>
                                 </div>
                                 
                                 <br>
+                                {% if ieee_nsu_student_branch.ias_image %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.ias_image}}')">IAS Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.ias_image}}', 'ias_image')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                                 <br>
 
                                 <label>IAS Read More Link <span style="color:red">*<span></label> 
@@ -234,7 +243,8 @@
                                 type="text"
                                 autocomplete="off"
                                 required
-                                name="ias_read_more_link"/>
+                                name="ias_read_more_link"
+                                value="{{ieee_nsu_student_branch.ias_read_more_link}}"/>
                             </div> 
                             <br>
 
@@ -242,19 +252,21 @@
                             <div class="form-group">
                                 <label for="images">WIE Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="wie-image-input" name="image" accept="image/*">
+                                    <input type="file" class="custom-file-input" id="wie-image-input" name="wie_image" accept="image/*">
                                     <label class="custom-file-label bg-light" for="wie-image-input">Choose file</label>
                                 </div>
                                 
                                 <br>
+                                {% if ieee_nsu_student_branch.wie_image %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.wie_image}}')">WIE Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.wie_image}}', 'wie_image')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                                 <br>
 
                                 <label>WIE Read More Link <span style="color:red">*<span></label> 
@@ -264,7 +276,8 @@
                                 type="text"
                                 autocomplete="off"
                                 required
-                                name="wie_read_more_link"/>
+                                name="wie_read_more_link"
+                                value="{{ieee_nsu_student_branch.wie_read_more_link}}"/>
                             </div> 
 
 
@@ -280,7 +293,7 @@
                                 <textarea 
                                 class="form-control" 
                                 type="text"
-                                name="creative_team_details"></textarea>
+                                name="creative_team_details">{{ieee_nsu_student_branch.creative_team_description}}</textarea>
                                 <p id="creativeTeamCharacterCount" style="color: red;">Required</p>
 
                             </div>
@@ -297,7 +310,7 @@
                                 <textarea  
                                 class="form-control" 
                                 type="text"
-                                name="mission_details"></textarea>
+                                name="mission_details">{{ieee_nsu_student_branch.mission_description}}</textarea>
                                 <p id="missionCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
@@ -305,19 +318,21 @@
                             <div class="form-group">
                                 <label for="images">Mission Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="mission-image-input" name="image" accept="image/*">
+                                    <input type="file" class="custom-file-input" id="mission-image-input" name="mission_image" accept="image/*">
                                     <label class="custom-file-label bg-light" for="mission-image-input">Choose file</label>
                                 </div>
                                 
                                 <br>
+                                {% if ieee_nsu_student_branch.mission_image %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.mission_image}}')">Mission Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.mission_image}}', 'mission_image')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div> 
 
                             <br>
@@ -328,11 +343,11 @@
                             <br>
 
                             <div class="form-group">
-                                <label>Mission Details <span style="color:red">*<span></label> 
+                                <label>Vision Details <span style="color:red">*<span></label> 
                                 <textarea  
                                 class="form-control" 
                                 type="text"
-                                name="vision_details"></textarea>
+                                name="vision_details">{{ieee_nsu_student_branch.vision_description}}</textarea>
                                 <p id="visionCharacterCount" style="color: red;">Required</p>
                             </div>
                             <br>
@@ -340,19 +355,21 @@
                             <div class="form-group">
                                 <label for="images">Vision Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="vision-image-input" name="image" accept="image/*">
+                                    <input type="file" class="custom-file-input" id="vision-image-input" name="vision_image" accept="image/*">
                                     <label class="custom-file-label bg-light" for="vision-image-input">Choose file</label>
                                 </div>
                                 
                                 <br>
+                                {% if ieee_nsu_student_branch.vision_image %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.vision_image}}')">Vision Image</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.vision_image}}', 'vision_image')">✖</button>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div> 
 
                             <br>
@@ -367,9 +384,9 @@
                                 <textarea  
                                 class="form-control" 
                                 type="text"
-                                name="events_details"></textarea>
+                                name="events_details">{{ieee_nsu_student_branch.events_description}}</textarea>
                                 <p id="eventsCharacterCount" style="color: red;">Required</p>
-                                <br>
+                                {% comment %} <br>
 
                                 <label>All Events Link <span style="color:red">*<span></label> 
                                 <input
@@ -378,7 +395,7 @@
                                 type="text"
                                 autocomplete="off"
                                 required
-                                name="all_events_link"/>
+                                name="all_events_link"/> {% endcomment %}
                             </div>
 
                             <br>
@@ -396,7 +413,8 @@
                                 type="text"
                                 autocomplete="off"
                                 required
-                                name="join_now_link"/>
+                                name="join_now_link"
+                                value="{{ieee_nsu_student_branch.join_now_link}}"/>
                             </div>
 
                             <br>
@@ -411,7 +429,7 @@
                                 <textarea  
                                 class="form-control" 
                                 type="text"
-                                name="achievements_details"></textarea>
+                                name="achievements_details">{{ieee_nsu_student_branch.achievements_description}}</textarea>
                                 <p id="achievementsCharacterCount" style="color: red;">Required</p>
                             </div>
 
@@ -435,9 +453,7 @@
                 <div>
             </div>
 
-
-
-            <!-- for showing image except for gallery -->
+            <!-- for showing image -->
             <div class="modal fade" id="showImageModal" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
@@ -448,7 +464,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <img src="https://images.unsplash.com/photo-1549558549-415fe4c37b60?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8M3x8fGVufDB8fHx8fA%3D%3D" class="img-fluid w-100" alt="Image">
+                            <img id="modal_image" src="" class="img-fluid w-100" alt="Image">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
@@ -459,130 +475,34 @@
             </div>
 
 
-            <!-- Confirmation modal for deleting images-->
-            <div class="modal fade" id="ConfirmDeleteModalForImages" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForImagesLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-top" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="ConfirmDeleteModalForImagesLabel">Confirm Delete</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="POST">
-                                {% csrf_token %}
-                                <p><input id="image_delete" name= "image_delete" type="hidden">
-                                    <input id="image_id" name= "image_id" type="hidden" ></p>
-                            Are you sure you want to delete the Image?
-                        </div>
-                        <div class="modal-footer">
-                            <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
-                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                        </div>
-                        </form>
+            <!-- Confirmation modal for deleting images -->
+            <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForImagesLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-top" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ConfirmDeleteModalForImagesLabel">Confirm Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
+                    <div class="modal-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                        <p><input id="image_delete" name= "image_delete" type="hidden">
+                            <input id="image_id" name= "image_id" type="hidden" ></p>
+                        Are you sure you want to delete the Image?
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                    </form>
                 </div>
-                </div>
+            </div>
+            </div>
 
         </div>
     </div>
-
-
-
-    <!--Scripts for Gallery Start-->
-    <script>
-        $(document).ready(function () {
-        $('#gallery-image-input').on('change', function () {
-            var container = $('#gallery-selected-images-container');
-            container.empty();
-    
-            var input = $(this)[0];
-            var files = input.files;
-    
-            var rowContainer;
-    
-            for (var i = 0; i < files.length; i++) {
-                var file = files[i];
-                var reader = new FileReader();
-    
-                (function (index) {
-                    reader.onload = function (e) {
-                        if (index % 3 === 0) {
-                            rowContainer = $('<div class="row"></div>'); // Start a new row for every three images
-                        }
-    
-                        var imageContainer = $('<div class="gallery-selected-image-container"></div>');
-                        var image = $('<img class="gallery-selected-image" src="' + e.target.result + '"  style="width: auto; height: 100px; margin: 5px 10px;">');
-    
-                        imageContainer.append(image);
-                        rowContainer.append(imageContainer);
-    
-                        if ((index + 1) % 3 === 0 || index === files.length - 1) {
-                            container.append(rowContainer); // Append the row when it's full or it's the last image
-                        }
-                    };
-                })(i);
-    
-                reader.readAsDataURL(file);
-            }
-        });
-        });
-        
-
-        document.addEventListener("DOMContentLoaded", function () {
-        const fileInput = document.getElementById("gallery-image-input");
-
-        fileInput.addEventListener("change", function () {
-            const selectedFiles = this.files;
-            const maxAllowedFiles = {{allowed_image_upload}};
-
-            if (selectedFiles.length > maxAllowedFiles) {
-            
-            alert("You can upload a maximum of "+maxAllowedFiles+" images.");
-            // Clear the file input or handle it based on your requirements
-            this.value = null;
-            }
-
-            // Update the selected images container or perform other actions as needed
-            updateSelectedImagesContainer(selectedFiles);
-        });
-
-        function updateSelectedImagesContainer(files) {
-            const container = document.getElementById("gallery-selected-images-container");
-            container.innerHTML = ""; // Clear existing content
-
-            for (const file of files) {
-            const fileName = file.name;
-            const listItem = document.createElement("div");
-            listItem.textContent = fileName;
-            container.appendChild(listItem);
-            }
-
-            // Update the hidden input with selected images' information
-            updateHiddenInput(files);
-        }
-
-        function updateHiddenInput(files) {
-            const hiddenInput = document.getElementById("gallery-selected-images");
-            const fileNames = Array.from(files).map((file) => file.name);
-            hiddenInput.value = fileNames.join(", ");
-        }
-        });
-
-        function openModal(gallery_image_id) {
-        // Set data in the modal
-        var inputElement = document.getElementById('gallery_image_id');
-        inputElement.value=gallery_image_id;
-
-        }
-    
-    </script>
-    <!--Scripts for Gallery End-->
-
-
-
-
 
       <!--Script for CKEditor Control-->
       <script>
@@ -590,9 +510,7 @@
             // Replace the textareas with CKEditor instances
             CKEDITOR.replace('about_details');
             CKEDITOR.replace('chapters_details');
-            CKEDITOR.replace('creative_team_details');
-            
-                   
+            CKEDITOR.replace('creative_team_details');           
             CKEDITOR.replace('mission_details');
             CKEDITOR.replace('vision_details');
             CKEDITOR.replace('events_details');
@@ -653,6 +571,36 @@
     </script>
 
 
+    <!--script to prevent user from selecting image is image already selected-->
+    <script>
+        // Function to check and disable file input if an image is already saved
+        function checkSavedImage(inputId, savedImageUrl) {
+            var fileInput = document.getElementById(inputId);
+
+            if (savedImageUrl) {
+                // If an image is already saved, disable the file input
+                fileInput.disabled = true;
+                fileInput.classList.add("disabled");
+
+                // Change the placeholder text
+                var fileLabel = fileInput.nextElementSibling;
+                fileLabel.innerText = "Delete existing file to Choose image.";
+            }
+        }
+
+        // Call the function for each image section when the page loads
+        window.onload = function () {
+            checkSavedImage("about-image-input", "{{ ieee_nsu_student_branch.about_image }}");
+            checkSavedImage("ras-image-input", "{{ ieee_nsu_student_branch.ras_image }}");
+            checkSavedImage("pes-image-input", "{{ ieee_nsu_student_branch.pes_image }}");
+            checkSavedImage("ias-image-input", "{{ ieee_nsu_student_branch.ias_image }}");
+            checkSavedImage("wie-image-input", "{{ ieee_nsu_student_branch.wie_image }}");
+            checkSavedImage("mission-image-input", "{{ ieee_nsu_student_branch.mission_image }}");
+            checkSavedImage("vision-image-input", "{{ ieee_nsu_student_branch.vision_image }}");
+            // Add more calls for other image sections if needed
+        };
+    </script>
+
     <script>
         //Delete logic for image
         function openModal(image_delete, image_id) {
@@ -667,13 +615,6 @@
         function openImageModal(image_path){
             var inputElement = document.getElementById('modal_image');
             inputElement.src = image_path
-        }
-
-        //Delete logic for Link
-        function openLinkModal(id) {
-            // Set data in the modal
-            var inputElement = document.getElementById('remove_link');    
-            inputElement.value=id;
         }
     </script>
  

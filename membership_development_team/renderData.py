@@ -6,6 +6,7 @@ from system_administration.models import MDT_Data_Access
 from system_administration.render_access import Access_Render
 from datetime import date
 from datetime import datetime
+from central_branch import renderData
 
 
 
@@ -134,7 +135,7 @@ class MDT_DATA:
         
         '''This function loads all the team members for membership development team'''
 
-        load_team_members=Members.objects.filter(team=MDT_DATA.get_team_id()).order_by('position')
+        load_team_members=renderData.Branch.load_team_members(team_primary=7)
         team_members=[]
         for i in range(len(load_team_members)):
             team_members.append(load_team_members[i])
@@ -334,9 +335,8 @@ class MDT_DATA:
         except:
             return False
     def add_member_to_team(ieee_id,position):
-        team_id=MDT_DATA.get_team_id()
         try:
-            Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
+            renderData.Branch.add_member_to_team(ieee_id=ieee_id,position=position,team_primary=7)
             return True
         except:
             return False
@@ -388,11 +388,14 @@ class MDT_DATA:
     def check_active_members(self):
         
         all_users = Members.objects.all()
-        for member in all_users:
-            is_active = MDT_DATA.get_member_account_status(member.ieee_id)
+        if len(all_users) == 0:
+            pass
+        else:
+            for member in all_users:
+                is_active = MDT_DATA.get_member_account_status(member.ieee_id)
 
-            if is_active:
-                member.is_active_member = True
-                member.save()
+                if is_active:
+                    member.is_active_member = True
+                    member.save()
             
 

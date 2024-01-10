@@ -128,12 +128,20 @@ class Magazines(models.Model):
 class IEEE_Bangladesh_Section(models.Model):
     about_ieee_bangladesh = models.TextField(null=True,blank=True)
     ieee_bangladesh_logo = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Bangladesh Section/logo/")
+    ieee_bd_link = models.URLField(null=True,blank=True,max_length=200)
     member_and_volunteer_description = models.TextField(null=True,blank=True)
     member_and_volunteer_picture = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Bangladesh Section/member_volunteer_picture/")
     benefits_description = models.TextField(null=True,blank=True)
     student_branches_description = models.TextField(null=True,blank=True)
     affinity_groups_description = models.TextField(null=True,blank=True)
     community_and_society_description = models.TextField(null=True,blank=True)
+    achievements_description = models.TextField(null=True,blank=True)
+    chair_name = models.CharField(null=True,blank=True,max_length=150)
+    chair_email = models.CharField(null=True,blank=True,max_length=200)
+    secretary_name = models.CharField(null=True,blank=True,max_length=150)
+    secretary_email = models.CharField(null=True,blank=True,max_length=200)
+    office_secretary_name = models.CharField(null=True,blank=True,max_length=150)
+    office_secretary_number = models.CharField(null=True,blank=True,max_length=200)
 
     class Meta:
         verbose_name="IEEE Bangladesh Section"
@@ -147,6 +155,8 @@ class IEEE_Bangladesh_Section(models.Model):
 class About_IEEE(models.Model):
     about_ieee = models.TextField(null=True,blank=True)
     about_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/About Image/")
+    learn_more_link = models.URLField(null=True,blank=True,max_length=200)
+    mission_and_vision_link = models.URLField(null=True,blank=True,max_length=200)
     community_description = models.TextField(null=True,blank=True)
     community_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Community Image/")
     start_with_ieee_description = models.TextField(null=True,blank=True)
@@ -160,6 +170,13 @@ class About_IEEE(models.Model):
     students_and_member_activities_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Student Member Activity Image/")
     quality_description = models.TextField(null=True,blank=True)
     quality_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Quality Image/")
+    join_now_link = models.URLField(null=True,blank=True,max_length=200)
+    asia_pacific_link = models.URLField(null=True,blank=True,max_length=200)
+    ieee_computer_organization_link = models.URLField(null=True,blank=True,max_length=200)
+    customer_service_number = models.CharField(null=True,blank=True,max_length=100)
+    presidents_names = models.CharField(null=True,blank=True,max_length=150)
+    founders_names = models.CharField(null=True,blank=True,max_length=150)
+
 
     class Meta:
         verbose_name="About IEEE"
@@ -191,7 +208,7 @@ class IEEE_Bangladesh_Section_Gallery(models.Model):
 class HomePage_Thoughts(models.Model):
 
     quote = models.TextField(null=False,blank=False)
-    author = models.CharField(null=False,blank=False,max_length=500)#can be a foreign key to a faculty
+    author = models.CharField(null=False,blank=False,max_length=500)
     
     class Meta:
         verbose_name="HomePage Thoughts"
@@ -232,4 +249,121 @@ class ExemplaryMembers(models.Model):
 
     def __str__(self) -> str:
         return self.member_name
+
+class Page_Link(models.Model):
+    page_title = models.CharField(null=False,blank=False,max_length=120)
+    category = models.CharField(null=False,blank=False,max_length=120)
+    title = models.CharField(null=False,blank=False,max_length=120)
+    link = models.URLField(null=False,blank=False,max_length=250)
+
+    class Meta:
+        verbose_name="Page Link"
+
+    def __str__(self) -> str:
+        return str(self.pk)
+    
+class IEEE_NSU_Student_Branch(models.Model):
+    about_nsu_student_branch = models.TextField(null=True,blank=True)
+    about_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/About Image/")
+    chapters_description = models.TextField(null=True,blank=True)
+    ras_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/RAS Image/")
+    ras_read_more_link = models.CharField(null=True,blank=True,max_length=200)
+    pes_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/PES Image/")
+    pes_read_more_link = models.CharField(null=True,blank=True,max_length=200)
+    ias_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/IAS Image/")
+    ias_read_more_link = models.CharField(null=True,blank=True,max_length=200)
+    wie_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/WIE Image/")
+    wie_read_more_link = models.CharField(null=True,blank=True,max_length=200)
+    creative_team_description = models.TextField(null=True,blank=True)
+    mission_description = models.TextField(null=True,blank=True)
+    mission_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/Mission Image/")
+    vision_description = models.TextField(null=True,blank=True)
+    vision_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/Vision Image/")
+    events_description = models.TextField(null=True,blank=True)
+    join_now_link = models.CharField(null=True,blank=True,max_length=200)
+    achievements_description = models.TextField(null=True,blank=True)
+
+    class Meta:
+        verbose_name="IEEE NSU Student Branch"
+    def save(self, *args, **kwargs):
+        # Override the save method to ensure only one instance exists
+        self.id = 1  # Set the primary key to 1 to always update the same row
+        super(IEEE_NSU_Student_Branch, self).save(*args, **kwargs)
+    def __str__(self) -> str:
+        return str(self.pk)
+    
+class Toolkit(models.Model):
+    title=models.CharField(null=False,blank=False,max_length=100)
+    picture=ResizedImageField(null=True,blank=True,upload_to='main_website_files/toolkit_pictures/')
+    color_codes=RichTextField(null=True,blank=True,max_length=500)
+    
+    class Meta:
+        verbose_name="Toolkit"
+    def __str__(self) -> str:
+        return self.title
+
+class VolunteerOfTheMonth(models.Model):
+    ieee_id=models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE)
+    contributions=RichTextField(null=True,blank=True,max_length=200)
+    
+    class Meta:
+        verbose_name="Volunteer Of the Month"
+    def __str__(self) -> str:
+        return str(self.ieee_id)
+    
+    
+class IEEE_Region_10(models.Model):
+    ieee_region_10_description = models.TextField(null=True,blank=True)
+    ieee_region_10_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Region 10/Region 10 Image/")
+    ieee_region_10_history_link = models.CharField(null=True,blank=True,max_length=200)
+    young_professionals_description = models.TextField(null=True,blank=True)
+    young_professionals_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Region 10/Young Professionals Image/")
+    women_in_engineering_ddescription = models.TextField(null=True,blank=True)
+    student_and_member_activities_description = models.TextField(null=True,blank=True)
+    educational_activities_and_involvements_description = models.TextField(null=True,blank=True)
+    industry_relations_description = models.TextField(null=True,blank=True)
+    membership_development_description = models.TextField(null=True,blank=True)
+    membership_development_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Region 10/Membership Development Image/")
+    background_picture_parallax = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Region 10/Parallax Background Image/")
+    events_and_conference_description = models.TextField(null=True,blank=True)
+    events_and_conference_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Region 10/Events and Conference Image/")
+    home_page_link = models.CharField(null=True,blank=True,max_length=200)
+    website_link = models.CharField(null=True,blank=True,max_length=200)
+    membership_inquiry_link = models.CharField(null=True,blank=True,max_length=200)
+    for_volunteers_link = models.CharField(null=True,blank=True,max_length=200)
+    contact_number = models.CharField(null=True,blank=True,max_length=150)
+
+    class Meta:
+        verbose_name="IEEE Region 10"
+    def save(self, *args, **kwargs):
+        # Override the save method to ensure only one instance exists
+        self.id = 1  # Set the primary key to 1 to always update the same row
+        super(IEEE_Region_10, self).save(*args, **kwargs)
+    def __str__(self) -> str:
+        return str(self.pk)
+    
+
+class FAQ_Question_Category(models.Model):
+
+    '''This model is for storing all the category of questions'''
+    
+    title = models.CharField(null=True,blank=True,max_length=150)
+
+    class Meta:
+        verbose_name="FAQ Category"
+    def __str__(self) -> str:
+        return self.title
+    
+class FAQ_Questions(models.Model):
+
+    '''This model is for storing the Question and Answers for a category '''
+
+    title = models.ForeignKey(FAQ_Question_Category,null=True,blank=True,on_delete=models.CASCADE)
+    question =  models.TextField(null=True,blank=True)
+    answer =   models.TextField(null=True,blank=True)
+
+    class Meta:
+        verbose_name="FAQ Questions"
+    def __str__(self) -> str:
+        return self.title.title
 

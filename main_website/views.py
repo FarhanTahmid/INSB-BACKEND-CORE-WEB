@@ -23,6 +23,7 @@ import json,requests
 from insb_port import settings
 from .models import *
 from django.contrib import messages
+from central_branch.renderData import Branch
 
 logger=logging.getLogger(__name__)
 
@@ -31,6 +32,9 @@ def homepage(request):
     bannerItems=HomepageItems.getHomepageBannerItems()
     bannerWithStat=HomepageItems.getBannerPictureWithStat()
     HomepageItems.get_ip_address(request)
+    #getting all the thoughts
+    all_thoughts = Branch.get_all_homepage_thoughts()
+
     
     
     # get recent 6 news
@@ -51,6 +55,7 @@ def homepage(request):
         'recent_news':get_recent_news,
         'recent_blogs':get_recent_blogs,
         'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+        'all_thoughts':all_thoughts,
     }
     return render(request,"LandingPage/homepage.html",context)
 
@@ -122,7 +127,7 @@ def event_details(request,event_id):
             event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
             context = {
-                'is_live':True,
+                'is_live':True, #This enables the header and footer along with the wavy
                 'page_title':get_event.event_name,
                 'page_subtitle':get_event.event_organiser,
                 "event":get_event,
@@ -268,7 +273,7 @@ def rasPage(request):
                 
             
         context={
-                
+            'is_live':True, #This enables the header and footer of the page along with wavy   
             'society':society,
             #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'media_url':settings.MEDIA_URL,
@@ -315,7 +320,7 @@ def pesPage(request):
                 return redirect("main_website:pes_home")
                 
         context={
-                
+            'is_live':True, #This enables the header and footer of the page along with wavy    
             'society':society,
             #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'media_url':settings.MEDIA_URL,
@@ -361,7 +366,7 @@ def iasPage(request):
                 return redirect("main_website:ias_home")
                   
         context={
-                
+            'is_live':True, #This enables the header and footer of the page along with wavy    
             'society':society,
             #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'media_url':settings.MEDIA_URL,
@@ -408,7 +413,7 @@ def wiePage(request):
                 
             
         context={
-                
+            'is_live':True, #This enables the header and footer of the page along with wavy    
             'society':society,
             #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'media_url':settings.MEDIA_URL,
@@ -500,11 +505,6 @@ def blogs(request):
     }
     return render(request,"Publications/Blog/blog.html",context=context)
 
-def blog_Description(request,blog_id):
-    load_specific_blog = Blog.objects.get(id=blog_id)
-    return render(request,"Blog_Details.html",{
-        "blog_details":load_specific_blog
-    })
 
 def write_blogs(request):
     '''Creates a form and allows user to give a request to publish their blogs in the site'''
@@ -596,9 +596,7 @@ def blog_description(request,pk):
     get_recent_blogs=Blog.objects.filter(publish_blog=True).order_by('-date').exclude(pk=pk)[:3]
     # get recent news
     get_recent_news=News.objects.all().order_by('-news_date')[:5]
-    
-    print(get_recent_blogs)
-    
+        
     context={
         'page_title':get_blog.title,
         'page_subtitle':society_name,
@@ -611,15 +609,17 @@ def blog_description(request,pk):
 
 ######################### RESEARCH PAPER WORKS ###########################
 
-def Research_Paper(request):
+def research_Paper(request):
 
     '''Loads all research papers for the corresponding page'''
-
-
-    get_all_research_papers = Research_Papers.objects.all() 
-    return render(request,"All_Research_Papers.html",{
-        "research_paper":get_all_research_papers
-    })
+    get_all_research_papers = Research_Papers.objects.filter(publish_research=True).order_by('-publish_date')
+    
+    context={
+        'page_title':"Research Papers",
+        'page_subtitle':"IEEE NSU Student Branch",
+        "all_research_papers":get_all_research_papers
+    } 
+    return render(request,"Publications/Research Paper/research_paper.html",context=context)
 
 def add_research_form(request):
     '''Handles form responses for add research paper form'''
@@ -749,6 +749,8 @@ def current_panel_members(request):
             has_branch_eb=True
         if(len(sc_ag_chair)>0):
             has_sc_ag_chair=True
+        
+               
         context={
             'has_branch_counselor':has_branch_counselor,'has_sc_ag_faculty_advisor':has_sc_ag_faculty_advisor,'has_mentors':has_mentors,'has_branch_chair':has_branch_chair,'has_branch_eb':has_branch_eb,'has_sc_ag_chair':has_sc_ag_chair,
             'has_current_panel':has_current_panel,
@@ -935,6 +937,7 @@ def exemplary_members(request):
         
     context={
         'page_title':"Exemplary Members",
+        'page_subtitle':"IEEE NSU Student Branch",
         'exemplary_members':all_exemplary_members,
     }
     return render(request,"Members/Exemplary Members/exemplary_members.html",context=context)
@@ -1010,36 +1013,119 @@ def member_profile(request, ieee_id):
         return redirect('main_website:all_members')
 
 def ieee_bd_section(request):
-    return render(request, 'About/IEEE_bangladesh_section.html')
+    #loading all the teams of Branch
+    branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+    ieee_bangladesh_section = IEEE_Bangladesh_Section.objects.get(id=1)
+    page_links = Branch.get_about_page_links(page_title='ieee_bangladesh_section')
+    #getting all ieee bangladesh section gallery images
+    all_images = Branch.get_all_ieee_bangladesh_section_images()
+
+    context = {
+        'is_live':True, #This enables the header and footer of the page along with wavy
+        'page_title':'About - IEEE Bangladesh Section',
+        'branch_teams':branch_teams,
+        'ieee_bangladesh_section':ieee_bangladesh_section,
+        'media_url':settings.MEDIA_URL,
+        'page_links':page_links,
+        'all_images':all_images,
+    }
+    return render(request, 'About/IEEE_bangladesh_section.html', context)
 
 def ieee_nsu_student_branch(request):
-    return render(request, 'About/IEEE_NSU_student_branch.html')
+    #loading all the teams of Branch
+    branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+    about_ieee_nsu_student_branch = IEEE_NSU_Student_Branch.objects.get(id=1)
+    date_and_event = HomepageItems.get_event_for_calender(request,1)
+
+    context = {
+        'is_live':True, #This enables the header and footer of the page along with wavy
+        'page_title':'About - IEEE NSU Student Branch',
+        'branch_teams':branch_teams,
+        'ieee_nsu_student_branch':about_ieee_nsu_student_branch,
+        'date_and_event':date_and_event,
+        'media_url':settings.MEDIA_URL,
+    }
+
+    return render(request, 'About/IEEE_NSU_student_branch.html', context)
 
 def ieee_region_10(request):
-    # template not done yet
-    return render(request, 'About/IEEE_region_10.html')
+    #loading all the teams of Branch
+    branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+    about_ieee_region_10 = IEEE_Region_10.objects.get(id=1)
+    page_links = Branch.get_about_page_links(page_title='ieee_region_10')
+
+    context = {
+        'is_live':True, #This enables the header and footer of the page along with wavy
+        'page_title':'About - IEEE Region 10',
+        'branch_teams':branch_teams,
+        'ieee_region_10':about_ieee_region_10,
+        'media_url':settings.MEDIA_URL,
+        'page_links':page_links
+    }
+
+    return render(request, 'About/IEEE_region_10.html', context)
 
 def ieee(request):
-    #working
     #loading all the teams of Branch
     branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
     about_ieee = About_IEEE.objects.get(id=1)
+    page_links = Branch.get_about_page_links(page_title='about_ieee')
     
     context = {
+        'is_live':True, #This enables the header and footer of the page along with wavy
         'page_title':'About - IEEE',
         'branch_teams':branch_teams,
         'about_ieee':about_ieee,
-        'media_url':settings.MEDIA_URL
+        'media_url':settings.MEDIA_URL,
+        'page_links':page_links
     }
 
     return render(request, 'About/About_IEEE.html', context)
 
 def faq(request):
-    return render(request, 'About/faq.html')
+
+    all_categories = Branch.get_all_category_of_questions()
+    saved_question_answers = Branch.get_saved_questions_and_answers()
+
+    if request.method == "POST":
+            #when user hits submit button on main page
+            if request.POST.get('submit'):
+                #getting the user's details
+                name = request.POST.get('user_name')
+                email = request.POST.get('user_email')
+                message = request.POST.get('user_message')
+                #passing them as arguments to the function to save the data
+                if HomepageItems.save_feedback_information(request,1,name,email,message):
+                    messages.success(request,"You have reached us! Thanks for your feedback")  
+                else:
+                    messages.error(request,"Sorry! Try to contact us later") 
+                return redirect("main_website:faq")
+
+    context = {
+        'all_categories':all_categories,
+        'saved_question_answer':saved_question_answers,
+        'page_title':'FAQ'
+    }
+
+    return render(request, 'About/faq.html',context)
 
 def contact(request):
     #loading all the teams of Branch
     branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+
+    if request.method == "POST":
+            #when user hits submit button on main page
+            if request.POST.get('submit'):
+                #getting the user's details
+                name = request.POST.get('user_name')
+                email = request.POST.get('user_email')
+                message = request.POST.get('user_message')
+                #passing them as arguments to the function to save the data
+                if HomepageItems.save_feedback_information(request,1,name,email,message):
+                    messages.success(request,"You have reached us! Thanks for your feedback")  
+                else:
+                    messages.error(request,"Sorry! Try to contact us later") 
+                return redirect("main_website:contact")
 
     context = {
         'page_title':'Contact',

@@ -1,0 +1,92 @@
+{% load static %}
+
+{% block research_card_container %}
+
+<style>
+
+    {% comment %} .achievement_card{
+        height: 425px;
+    } {% endcomment %}
+
+    .card-img-top {
+        object-fit: cover;
+        height: 250px; /* Set a fixed height for the image */
+    }
+
+    .card-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Show 2 lines of text */
+        -webkit-box-orient: vertical;
+    }
+
+    .description-container {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+    }
+
+    .description-container.collapsed,
+    .card-title.collapsed {
+        -webkit-line-clamp: unset;
+    }
+</style>
+<div class="container">
+    <div class="row m-0">
+
+        <!-- Repeat the card -->
+        {% for i in all_research_papers %}
+        <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
+            <div class="card shadow achievement_card">
+                <img class="card-img-top" src="/media_files/{{i.research_banner_picture}}" alt="">
+
+                <div class="position-absolute">
+                    <span style="background-color: {{i.primary_color_code}};" class=" text-white px-3 py-2 rounded h6">{{i.group.short_form}}</span>
+                </div>
+
+                <div class="card-body">
+                    <a href="{{i.publication_link}}"><h5 class="card-title fw-bold mt-2">{{i.title}}</h5></a>-<span> <b> {{i.category}}</b></span>
+                    <div class="description-container">
+                        <p class="card-text">{{i.short_description|safe}}</p>
+                    </div>
+                    <a href="#" class="read-more-link" >Read More</a>
+
+                    
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<br><br>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".read-more-link").click(function (event) {
+            event.preventDefault();
+
+            var cardBody = $(this).closest(".card-body");
+            var cardText = cardBody.find(".description-container");
+            var cardTitle = cardBody.find(".card-title");
+            var card = cardBody.closest(".card");
+
+            cardText.toggleClass("collapsed");
+            cardTitle.toggleClass("collapsed");
+
+            // Check if any card text is collapsed
+            var isCollapsed = card.find(".description-container.collapsed").length > 0;
+
+            // Set card height based on collapsed state
+            card.css("height", isCollapsed ? "auto" : "425px");
+
+            // Change the link text based on collapsed state
+            var linkText = isCollapsed ? "Read Less" : "Read More";
+            $(this).text(linkText);
+        });
+    });
+</script>
+
+{% endblock research_card_container %}

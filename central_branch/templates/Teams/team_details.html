@@ -241,7 +241,7 @@
                             <td>{{ member.email_ieee }}</td>
                             <td>
                                 <select id="position" name="position">
-                                    <option selected>{{member.position.role}}</option>
+                                    <option value={{member.position.id}} selected>{{member.position.role}}</option>
                                     {% for position in positions %}
                                         <option value={{position.id}}>{{ position.role }}</option>
                                     {% endfor %} 

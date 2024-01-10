@@ -6,29 +6,45 @@ from central_branch.renderData import Branch
 from users.models import Members
 from django.contrib import messages
 from port.models import Roles_and_Position
+from port.renderData import PortData
 from system_administration.models import EMT_Data_Access
-
+from .renderData import Events_And_Management_Team
+from users.renderData import PanelMembersData
 # Create your views here.
 @login_required
 def em_team_homepage(request):
 
     '''This function is responsible to load the main home page
     for the events and management team'''
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    
+    # get team members
+    get_officers=Events_And_Management_Team.get_officers()
+    get_volunteers=Events_And_Management_Team.get_volunteers()
+    
+    context={
+        'all_sc_ag':sc_ag,
+        'co_ordinators':get_officers[0],
+        'incharges':get_officers[1],
+        'core_volunteers':get_volunteers[0],
+        'team_volunteers':get_volunteers[1],
+    }
 
-    return render(request,"em_team_homepage.html")
+    return render(request,"Homepage/em_team_homepage.html",context)
 
 @login_required
 def emt_data_access(request):
 
     # '''This function mantains all the data access works'''
     #Only sub eb of that team can access the page
+    sc_ag=PortData.get_all_sc_ag(request=request)
     user = request.user
     has_access=(Access_Render.team_co_ordinator_access(team_id=renderData.Events_And_Management_Team.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
     
     data_access = renderData.Events_And_Management_Team.load_emt_data_access()
     team_members=renderData.Events_And_Management_Team.load_team_members()
     #load all position for insb members
-    position=Branch.load_roles_and_positions()
+    position=PortData.get_all_volunteer_position_with_sc_ag_id(request=request,sc_ag_primary=1)
     #load all insb members
     all_insb_members=Members.objects.all()
 
@@ -68,7 +84,8 @@ def emt_data_access(request):
         if request.POST.get('remove_member'):
             '''To remove member from team table'''
             try:
-                Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
+                get_current_panel=Branch.load_current_panel()
+                PanelMembersData.remove_member_from_panel(ieee_id=request.POST['remove_ieee_id'],panel_id=get_current_panel.pk,request=request)
                 try:
                     EMT_Data_Access.objects.filter(ieee_id=request.POST['remove_ieee_id']).delete()
                 except EMT_Data_Access.DoesNotExist:
@@ -101,6 +118,7 @@ def emt_data_access(request):
             return redirect('events_and_management_team:emt_data_access')
             
     context={
+        'all_sc_ag':sc_ag,
         'data_access':data_access,
         'members':team_members,
         'insb_members':all_insb_members,
@@ -109,7 +127,7 @@ def emt_data_access(request):
     }
 
     if(has_access):
-        return render(request,'emt_data_access_table.html',context=context)
+        return render(request,'Manage Team\emt_manage_team.html',context=context)
     else:
         return render(request,"emt_access_denied.html")
     

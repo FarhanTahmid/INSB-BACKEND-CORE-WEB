@@ -16,14 +16,11 @@ class MediaTeam:
     def get_co_ordinator():
         roles = Roles_and_Position.objects.get(is_co_ordinator=True)
         members = Members.objects.filter(position=roles,team=MediaTeam.get_team_id())
-        print(members)
         return members
 
     def get_officer():
         roles = Roles_and_Position.objects.get(is_officer = True,is_co_ordinator=False)
         members = Members.objects.filter(position = roles,team=MediaTeam.get_team_id())
-        
-        print(roles,members)
         return members
 
     def get_member_with_postion(position):
@@ -35,7 +32,7 @@ class MediaTeam:
         
         '''Gets the team id from the database only for Media Team. Not the right approach'''
         
-        team=Teams.objects.get(team_name="Media")
+        team=Teams.objects.get(primary=9)
         return team
     
     def load_manage_team_access():
@@ -52,8 +49,7 @@ class MediaTeam:
     #     return team_members
     
     def add_member_to_team(ieee_id,position):
-        team_id=MediaTeam.get_team_id().id
-        Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
+        Branch.add_member_to_team(ieee_id=ieee_id,position=position,team_primary=9)
 
     def media_manage_team_access_modifications(manage_team_access, event_access, ieee_id):
         try:
@@ -162,6 +158,19 @@ class MediaTeam:
         for i in range(len(load_team_members)):
             team_members.append(load_team_members[i])
         return team_members
+    
+    
+    def get_volunteers():
+        team_members=MediaTeam.load_team_members()
+        core_volunteer=[]
+        team_volunteer=[]
+        for i in team_members:
+            if(i.position.is_volunteer):
+                if(i.position.is_core_volunteer):
+                    core_volunteer.append(i)
+                else:
+                    team_volunteer.append(i)
+        return core_volunteer,team_volunteer    
     
     def media_manage_team_access_modifications(manage_team_access, event_access, ieee_id):
         try:

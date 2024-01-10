@@ -4,7 +4,7 @@ from . models import Members,Alumni_Members,ResetPasswordTokenTable,User_IP_Addr
 # Register your models here.
 @admin.register(Members)
 class Members(admin.ModelAdmin):
-    list_display=['ieee_id','name','gender','email_ieee','team','position','facebook_url','email_nsu','is_active_member']
+    list_display=['ieee_id','name','gender','email_ieee','team','position','facebook_url','email_nsu','is_active_member','user_profile_picture']
 
 @admin.register(Alumni_Members)
 class Alumni_Members(admin.ModelAdmin):

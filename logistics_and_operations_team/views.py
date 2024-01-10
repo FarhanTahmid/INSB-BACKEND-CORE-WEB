@@ -7,16 +7,32 @@ from central_branch.renderData import Branch
 from system_administration.models import LAO_Data_Access
 from port.models import Roles_and_Position
 from django.contrib import messages
-
-
+from port.renderData import PortData
+from users.renderData import PanelMembersData
 # Create your views here.
 @login_required
 def team_homepage(request):
-    return render(request,"logistics_and_operations_team/team_homepage.html")
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
+    # get all members of the team
+    
+    get_officers=LogisticsTeam.load_officers()
+    get_volunteers=LogisticsTeam.load_volunteers()
+    
+    context={
+        'all_sc_ag':sc_ag,
+        'co_ordinators':get_officers[0],
+        'incharges':get_officers[1],
+        'core_volunteers':get_volunteers[0],
+        'team_volunteers':get_volunteers[1],
+    }
+    return render(request,"Homepage/team_homepage.html",context=context)
 @login_required
 def manage_team(request):
     '''This function loads the manage team page for logistics and operations team and is accessable
     by the co-ordinatior only, unless the co-ordinators gives access to others as well'''
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    
     user = request.user
     has_access=(Access_Render.team_co_ordinator_access(team_id=LogisticsTeam.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username)
     or LogisticsTeam.lao_manage_team_access(user.username))
@@ -24,7 +40,7 @@ def manage_team(request):
     data_access = LogisticsTeam.load_manage_team_access()
     team_members = LogisticsTeam.load_team_members()
     #load all position for insb members
-    position=Branch.load_roles_and_positions()
+    position=PortData.get_all_volunteer_position_with_sc_ag_id(request=request,sc_ag_primary=1)
     #load all insb members
     all_insb_members=Members.objects.all()
 
@@ -41,7 +57,8 @@ def manage_team(request):
         if (request.POST.get('remove_member')):
             '''To remove member from team table'''
             try:
-                Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
+                current_panel=Branch.load_current_panel()
+                PanelMembersData.remove_member_from_panel(request=request,panel_id=current_panel.pk,ieee_id=request.POST['remove_ieee_id'])
                 try:
                     LAO_Data_Access.objects.filter(ieee_id=request.POST['remove_ieee_id']).delete()
                 except LAO_Data_Access.DoesNotExist:
@@ -87,6 +104,7 @@ def manage_team(request):
 
         
     context={
+        'all_sc_ag':sc_ag,
         'data_access':data_access,
         'members':team_members,
         'insb_members':all_insb_members,
@@ -94,6 +112,6 @@ def manage_team(request):
         
     }
     if(has_access):
-        return render(request,"logistics_and_operations_team/manage_team.html",context=context)
+        return render(request,"logistics_and_operations_team\Manage Team\manage_team.html",context=context)
     else:
-        return render(request,"logistics_and_operations_team/access_denied.html")
+        return render(request,"logistics_and_operations_team/access_denied.html",context=context)

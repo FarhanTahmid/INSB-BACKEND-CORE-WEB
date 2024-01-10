@@ -6,13 +6,13 @@
 
     
 
-    .card_container{
-            display: flex;
+        .card_container{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
             justify-content: center;
-            flex-wrap: wrap;
+            /* flex-wrap: wrap; */
             margin-top: 20px;
             margin-bottom: 50px;
-
             vertical-align: baseline;
             font-family: inherit;
             font-size: 100%;
@@ -35,9 +35,17 @@
             box-shadow: 0px 8px 16px rgba(0,0,0,0.3);
         }
 
+        .card .image{
+            background-color: #002855;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+        }
+
         .card img {
             width: 100%;
-            height: auto;
+            height: 100%;
+            object-fit: cover;
             transition: transform 0.3s ease-in-out;
         }
 
@@ -65,41 +73,160 @@
         }
 
         .card_content a {
-            color: #007bff;
+            color: #fecd13;
             text-decoration: none;
             transition: color 0.3s ease-in-out;
         }
 
         .card_content a:hover {
-            color: #0056b3;
+            color: #002855;
         }
-        
+        .search_blog{
+            width: 100%;
+            max-width: 1140px;
+            margin: 60px auto 30px auto;
+            border: 2px solid #fecd13;
+            border-radius: 10px;
+            padding: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+          }
+          .search_blog input{
+        width: 100%;
+        height: 60px;
+        padding: 0 10px;
+        font-size: 18px;
+        background-color: #fff;
+        color: #000;
+        transition: all 0.3s;
+        border-radius: 10px;
+      }
+      .search_blog input:hover{
+        background-color: #75787b25;
+      }
+      @media screen and (max-width: 1200px) {
+        .search_blog {
+            width: 90%;
+            max-width: 960px;
+        }
+        .card_container{
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+    
+    @media screen and (max-width: 770px) {
+        .card_container{
+            grid-template-columns: 1fr;
+        }
+    }
+    @media screen and (max-width: 370px) {
+        .card{
+            width: 300px;
+        }
+    }
+    
 
 </style>
-
-<!-- Cards starts here -->
-<div class="card_container">
-    {% for i in blogs %}
-    <div class="card">
-        <img src="media_files/{{i.blog_banner_picture}}" alt="Sample photo">
-        <div class="card_content">
-            <a href="{% url 'main_website:blog_description' i.pk %}"><h5>{{i.title}}</h5></a>
-            <i class="fa-regular fa-clock"></i>
-            <span>{{i.date}}</span>
-            <i class="fa-solid fa-align-left"></i><span> Category-{{i.category}} •</span><br>
-            <p>{{i.short_description | safe}}</p>
-            <a href="{% url 'main_website:blog_description' i.pk %}">Read More</a>
-
-        </div>
-    </div>
-    {% endfor %}
+<!-- Search Section -->
+<div class="search_blog">
     
-
-    
+    <input
+    type="text"
+    id="blogFilter"
+    onkeyup="blogFilterFunction()"
+    placeholder="Search Blogs.."
+    title="Type in a name"
+    />
 </div>
 
-<!-- Add more cards as needed -->
+<!-- Cards starts here -->
+<section style="display: flex; justify-content: center;">
+    <div>
+        <div class="card_container">
+            {% for i in blogs %}
+            <div class="card">
+                <div class="image">
+                    <img src="media_files/{{i.blog_banner_picture}}" alt="Sample photo">
+                </div>
+                <div class="card_content">
+                    <a href="{% url 'main_website:blog_description' i.pk %}"><h5>{{i.title}}</h5></a>
+                    <i class="fa-regular fa-clock"></i>
+                    <span>{{i.date}}</span>
+                    <i class="fa-solid fa-align-left"></i><span> {{i.writer_name}} •</span><br>
+                    <p>{{i.short_description | safe}}</p>
+                    <a href="{% url 'main_website:blog_description' i.pk %}">Read More</a>
+        
+                </div>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <img src="media_files/{{i.blog_banner_picture}}" alt="Sample photo">
+                </div>
+                <div class="card_content">
+                    <a href="{% url 'main_website:blog_description' i.pk %}"><h5>{{i.title}}</h5></a>
+                    <i class="fa-regular fa-clock"></i>
+                    <span>{{i.date}}</span>
+                    <i class="fa-solid fa-align-left"></i><span> {{i.writer_name}} •</span><br>
+                    <p>{{i.short_description | safe}}</p>
+                    <a href="{% url 'main_website:blog_description' i.pk %}">Read More</a>
+        
+                </div>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <img src="media_files/{{i.blog_banner_picture}}" alt="Sample photo">
+                </div>
+                <div class="card_content">
+                    <a href="{% url 'main_website:blog_description' i.pk %}"><h5>{{i.title}}</h5></a>
+                    <i class="fa-regular fa-clock"></i>
+                    <span>{{i.date}}</span>
+                    <i class="fa-solid fa-align-left"></i><span> {{i.writer_name}} •</span><br>
+                    <p>{{i.short_description | safe}}</p>
+                    <a href="{% url 'main_website:blog_description' i.pk %}">Read More</a>
+        
+                </div>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <img src="media_files/{{i.blog_banner_picture}}" alt="Sample photo">
+                </div>
+                <div class="card_content">
+                    <a href="{% url 'main_website:blog_description' i.pk %}"><h5>{{i.title}}</h5></a>
+                    <i class="fa-regular fa-clock"></i>
+                    <span>{{i.date}}</span>
+                    <i class="fa-solid fa-align-left"></i><span> {{i.writer_name}} •</span><br>
+                    <p>{{i.short_description | safe}}</p>
+                    <a href="{% url 'main_website:blog_description' i.pk %}">Read More</a>
+        
+                </div>
+            </div>
+            {% endfor %}
+            
+        </div>
+    </div>
+</section>
 
+
+
+<script>
+    function blogFilterFunction() {
+        var input, filter, cardContainer, cards, card, title, writer;
+        input = document.getElementById("blogFilter");
+        filter = input.value.toUpperCase();
+        cardContainer = document.querySelector(".card_container");
+        cards = cardContainer.getElementsByClassName("card");
+
+        for (var i = 0; i < cards.length; i++) {
+            card = cards[i];
+            title = card.getElementsByTagName("h5")[0].innerText;
+
+            if (title.toUpperCase().indexOf(filter) > -1) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
+        }
+    }
+</script>
 
 
 {% endblock blog_card_container %}
