@@ -388,11 +388,14 @@ class MDT_DATA:
     def check_active_members(self):
         
         all_users = Members.objects.all()
-        for member in all_users:
-            is_active = MDT_DATA.get_member_account_status(member.ieee_id)
+        if len(all_users) == 0:
+            pass
+        else:
+            for member in all_users:
+                is_active = MDT_DATA.get_member_account_status(member.ieee_id)
 
-            if is_active:
-                member.is_active_member = True
-                member.save()
+                if is_active:
+                    member.is_active_member = True
+                    member.save()
             
 
