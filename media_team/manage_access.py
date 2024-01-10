@@ -48,6 +48,7 @@ class MediaTeam_Render_Access:
             return False
         
     def access_for_manage_team(request):
+        ''' This function checks if the requested user has access to manage team. Will return True if it has access permission '''
         try:
             # get the user and username. Username will work as IEEE ID and Developer username both
             user=request.user
@@ -74,7 +75,7 @@ class MediaTeam_Render_Access:
                 return False
 
     def access_for_events(request):
-        ''' This function checks if the requested user has access to manage team. Will return True if it has access permission '''
+        ''' This function checks if the requested user has access for events. Will return True if it has access permission '''
         try:
             # get the user and username. Username will work as IEEE ID and Developer username both
             user=request.user
