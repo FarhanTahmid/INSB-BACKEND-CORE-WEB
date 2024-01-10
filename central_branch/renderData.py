@@ -107,12 +107,11 @@ class Branch:
         
         '''This function returns all the teams in the database'''
         try:
-            teams=Teams.objects.all().values('primary','team_name') #returns a list of dictionaryies with the id and team name
+            teams=Teams.objects.filter(team_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1)).values('primary','team_name') #returns a list of dictionaryies with the id and team name
             return teams
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error("Can not return all teams. Something went wrong!")
             return False
     
     def load_team_members(team_primary):

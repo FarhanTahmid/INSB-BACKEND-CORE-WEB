@@ -5,7 +5,7 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>IEEE NSU Student Branch | Site Registration Form</title>
+        <title>IEEE NSU Student Branch | Site Registration Form - Faculty</title>
         <script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
@@ -37,7 +37,7 @@
                 
                 <div class="row">
                     
-                    <form method="POST" action="">
+                    <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                     <div class="container p-2 bg-white my-5 rounded">
                         <div class="logo">
@@ -47,7 +47,7 @@
                             <h1
                                 class="text-center fw-bold mt-3 text-uppercase text-black"
                             >
-                                IEEE NSU SB Portal Website Registration Form <br> (Executives & Officers Only)
+                                IEEE NSU SB Portal Website Registration Form<br> (Faculty Only)
                             </h1>
                         </div>
                 
@@ -59,7 +59,7 @@
                                 Read the instructions given below carefully Before you submit your Registration Request:
                             </h3>
                             <ul>
-                                <li style="font-size:15px">To apply for the site registration please fill this form up only if you are an Executive-Body Member, Co-ordinator, Incharge, Core Volunteer!</li>
+                                <li style="font-size:15px">To apply for the site registration please fill this form up only if you are a Faculty Member Affiliated with IEEE NSU Student Branch</li>
                                 <li style="font-size:15px">These datas are being collected to set you up for the upcoming INSB Portal Website.</li>
                                 <li style="font-size:15px">Do not share any critical information or Passwords here.</li>
                                 <li style="font-size:15px">If you have any further queries, please contact the System Administrators</li>
@@ -94,19 +94,6 @@
                                         />
                                     </div>
                                 </div>
-                                <div class="row my-3">
-                                    <div class="col-md-2 mt-1">NSU ID: <span style="color:red">*</span></div>
-                                    <div class="col-md-8">
-                                        <input
-                                            placeholder="Enter Your NSU ID/ Enter Random Digits if you are a Faculty"
-                                            class="form-control w-50"
-                                            type="number"
-                                            autocomplete="off"
-                                            required
-                                            name="nsu_id" 
-                                        />
-                                    </div>
-                                </div>
 
                                 <div class="row my-3">
                                     <div class="row my-3">
@@ -135,7 +122,7 @@
                                     </div>
 
                                     <div class="row my-3">
-                                        <div class="col-md-2 mt-1">Email (IEEE): <span style="color:red">*</span></div>
+                                        <div class="col-md-2 mt-1">Email (IEEE):</div>
                                         <div class="col-md-8">
                                             <input
                                                 class="form-control w-75"
@@ -150,6 +137,7 @@
                                         <div class="col-md-2 mt-1">Home Address: <span style="color:red">*</span></div>
                                         <div class="col-md-8">
                                             <input
+                                                required
                                                 class="form-control w-75"
                                                 type="text"
                                                 autocomplete="on"
@@ -158,28 +146,28 @@
                                         </div>
                                     </div>
                                     <div class="row my-3">
-                                        <div class="col-md-2 mt-1">Major / Department: <span style="color:red">*</span></div>
+                                        <div class="col-md-2 mt-1">Department: <span style="color:red">*</span></div>
                                         <div class="col-md-8">
                                             <input
+                                                required
                                                 class="form-control w-50"
                                                 type="text"
                                                 autocomplete="on"
-                                                id="major" name="major" placeholder="Enter Your Major / Department" 
+                                                id="major" name="major" placeholder="Department" 
                                             />
                                         </div>
                                     </div>
-
-
                                 </div>
 
                                 <div class="row my-3">
                                     <div class="col-md-6">
                                         <div class="row">
                                             <div class="col-md-4 mt-1">
-                                                Contact No:
+                                                Contact No:<span style="color:red">*</span>
                                             </div>
                                             <div class="col-md-8">
                                                 <input
+                                                    required
                                                     class="form-control w-80"
                                                     type="text"
                                                     name="contact_no" autocomplete="off" placeholder="Enter your Contact no"
@@ -187,20 +175,40 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
                                     <div class="col-md-6">
                                         <div class="row">
                                             <div class="col-md-4 mt-1">
-                                                Date of Birth:
+                                                Date of Birth:<span style="color:red">*</span>
                                             </div>
                                             <div class="col-md-8">
                                                 <input
+                                                    required
                                                     class="form-control w-80"
                                                     type="date"
                                                     name="date_of_birth" autocomplete="off"
                                                 />
                                             </div>
                                         </div>
-                                </div>
+                                    </div>
+                                    <br>
+                                    <div class="row-my-3" style="margin-top:20px;">
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-4 mt-1">
+                                                    Profile Picture:<span style="color:red">*</span>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <input
+                                                        required
+                                                        class="form-control w-80"
+                                                        type="file"
+                                                        name="user_picture" autocomplete="off"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     
                                     <div class="row my-3">
                                         <div class="col-md-6">
@@ -229,6 +237,7 @@
                                                         class="form-control w-80"
                                                         type="url"
                                                         name="linkedin_url" autocomplete="off" placeholder="Enter URL to Your Linkedin Account"
+                                                    
                                                     />
                                                 </div>
                                             </div>
@@ -270,33 +279,6 @@
                                             <label for="other">Other</label>
                                         </div>
                                     </div>
-
-                                    <div class="form-group">
-                                        <label for="team">Select Your Team</label>
-                                        <br>
-                                        <select class="form-control w-50" id="team" name="team">
-                                            <option value="null" selected>-------</option>
-                                            {% for team in team_data %}
-                                            <option value={{team.id}}>{{team.team_name}}</option>
-                                            {% endfor %}
-                                            
-                                        </select>
-                                        <br><br>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="position">Select Your Current Designation in the Branch</label>
-                                        <br>
-                                        <select class="form-control w-50" id="position" name="position">
-                                            <option value=13 selected>General Member</option>
-                                            {% for position in positions %}
-                                            <option value={{position.id}}>{{position.role}}</option>
-                                            {% endfor %}
-                                            
-                                          
-                                        </select>
-                                    </div>
-
                                 </div>
 
                         <div class="p-2 mb-4">
