@@ -135,7 +135,7 @@
 
     .links {
         position: relative;
-        width: 200px;
+        width: calc(var(--width) + 140px);
         height: 60px;
         font-family: 'Poppins', sans-serif;
         border-radius: 60px;
@@ -184,12 +184,12 @@
         height: 100%;
         z-index: 1;
         background: rgba(255, 255, 255, 0.25);
-        transform: translateX(-200px) skewX(30deg);
+        transform: translateX(calc(var(--width) - var(--width) - 350px)) skewX(30deg);
         transition: 0.75s ease-in-out;
     }
 
     .links:hover:after {
-        transform: translateX(170px) skewX(30deg);
+        transform: translateX(calc(var(--width) + 110px)) skewX(30deg);
     }
 
     @media screen and (max-width: 900px) {
@@ -198,7 +198,7 @@
         }
 
         .slider-content .paragraph {
-            width: 100%;
+            width: 90%;
         }
     }
 </style>
@@ -207,13 +207,13 @@
     <button id="next-btn" class="slider-btn" onclick="nextSlide()">❯</button>
     <div id="image-slider">
         {% for i in banner_item %}
-        <div class="slide"
-            style="background-image: url('{{media_url}}{{i.banner_picture}}');">
+        <div class="slide" style="background-image: url('{{media_url}}{{i.banner_picture}}');">
             <div class="overlay"></div>
             <div class="slider-content">
                 <div class="title">{{i.first_layer_text}} <span>{{i.first_layer_text_colored}}</span></div>
                 <div class="paragraph">{{i.third_layer_text}}</div>
-                <a href="{{i.button_url}}" class="links">{{i.button_text}} <span><ion-icon name="arrow-forward-outline"></ion-icon></span></a>
+                <a href="{{i.button_url}}" class="links">{{i.button_text}} <span><ion-icon
+                            name="arrow-forward-outline"></ion-icon></span></a>
             </div>
         </div>
         {% endfor %}
@@ -223,10 +223,24 @@
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var links = document.querySelectorAll('.links');
+
+        links.forEach(function (link) {
+            var textLength = link.textContent.trim().length;
+            var minWidth = 10; 
+            var width = Math.max(textLength * 10, minWidth);
+            console.log(width);
+            link.style.setProperty('--width', width + 'px');
+        });
+    });
+</script>
+<script>
     let currentSlide = 0;
     const totalSlides = document.querySelectorAll('.slide').length;
     const imageSlider = document.getElementById('image-slider');
     let mouseDownX = 0;
+    let autoSwipeInterval;
 
     function showSlide() {
         imageSlider.style.transform = `translateX(${-currentSlide * 100}%)`;
@@ -253,6 +267,16 @@
     function prevSlide() {
         currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
         showSlide();
+    }
+
+    function startAutoSwipe() {
+        autoSwipeInterval = setInterval(() => {
+            nextSlide();
+        }, 10000); // Adjust the interval as needed (milliseconds)
+    }
+
+    function stopAutoSwipe() {
+        clearInterval(autoSwipeInterval);
     }
 
     // Touch and Mouse Events
@@ -311,5 +335,6 @@
     // Initialize indicators
     createIndicators();
     updateIndicators();
+    startAutoSwipe();
 </script>
 {% endblock image_slider %}
