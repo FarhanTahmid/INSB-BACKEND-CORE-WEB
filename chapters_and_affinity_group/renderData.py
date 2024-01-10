@@ -500,7 +500,7 @@ class Sc_Ag:
     def checking_length(request,about_details,mission_description,vision_description,
                         what_is_this_description,why_join_it,what_activites_it_has,how_to_join):
         
-        '''This function checks the length of the description fields. If any one exceed 500 or if any one is
+        '''This function checks the length of the description fields. If any one exceed 700 or if any one is
             empty then data won't be saved.'''
         
         try:

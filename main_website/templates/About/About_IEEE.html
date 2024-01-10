@@ -581,54 +581,16 @@
           </p>
         </div>
         <div class="achievement-container">
+          {% for page_link in page_links.achievement_link %}
           <div class="achievement-card">
             <div>
               <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
                 alt="" />
-              <h4>List of Achievements Suitable for Milestones</h4>
-              <a href="#">Read More</a>
+              <h4>{{page_link.title}}</h4>
+              <a href="{{page_link.link}}">Read More</a>
             </div>
           </div>
-          <div class="achievement-card">
-            <div>
-              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                alt="" />
-              <h4>IEEE MGA Achievement Awards </h4>
-              <a href="#">Read More</a>
-            </div>
-          </div>
-          <div class="achievement-card">
-            <div>
-              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                alt="" />
-              <h4>IEEE Recognition and Awards</h4>
-              <a href="#">Read More</a>
-            </div>
-          </div>
-          <div class="achievement-card">
-            <div>
-              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                alt="" />
-              <h4>Engineering Achievement Award</h4>
-              <a href="#">Read More</a>
-            </div>
-          </div>
-          <div class="achievement-card">
-            <div>
-              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                alt="" />
-              <h4>View the 2020 IEEE Medal and Recognition Recipients</h4>
-              <a href="#">Read More</a>
-            </div>
-          </div>
-          <div class="achievement-card">
-            <div>
-              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                alt="" />
-              <h4>IEEE Members Affinity Group Achievements and Award</h4>
-              <a href="#">Read More</a>
-            </div>
-          </div>
+          {% endfor %}
         </div>
       </section>
     </section>
@@ -724,7 +686,7 @@
           </div>
         </div>
         <div class="join-btn">
-          <button src="{{about_ieee.join_now_link}}">Join Now</button>
+          <a href="{{about_ieee.join_now_link}}"><button>Join Now</button></a>
         </div>
       </section>
     </section>
