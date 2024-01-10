@@ -29,7 +29,7 @@ def manage_team(request):
 
     '''This function loads the manage team page for promotions team and is accessable
     by the co-ordinatior only, unless the co-ordinators gives access to others as well'''
-
+    sc_ag=PortData.get_all_sc_ag(request=request)
     user = request.user
     has_access=(Access_Render.team_co_ordinator_access(team_id=PromotionTeam.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username)
     or PromotionTeam.promotions_manage_team_access(user.username))
@@ -99,6 +99,7 @@ def manage_team(request):
                         messages.info(request,f"Member with {ieeeID} was added to the team table!")
                         return redirect('promotions_team:manage_team')
     context={
+        'all_sc_ag':sc_ag,
         'data_access':data_access,
         'members':team_members,
         'insb_members':all_insb_members,
