@@ -294,22 +294,26 @@ class HomepageItems:
         '''This function returns a list of eb memebers for the particular society'''
         
         try:
-            #assingning empty eb_member list
-            eb_members=[]
-            #getting the particular society object
-            society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
-            #getting current tenure
-            current_tenure = Panels.objects.get(current = True, panel_of = society)
-            #getting all th eb roles
-            roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society,is_faculty = False).order_by('role_of')
-            for role in roles:
-                try:
-                    #getting the member of the particular society whose role matches with the role iteration in the list and is if current panel
-                    member = Panel_Members.objects.get(tenure = current_tenure,position = role)
-                    eb_members.append(member)
-                except:
-                    pass
-            return eb_members
+            try:
+                #assingning empty eb_member list
+                eb_members=[]
+                #getting the particular society object
+                society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
+                #getting current tenure
+                current_tenure = Panels.objects.get(current = True, panel_of = society)
+                #getting all th eb roles
+                roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society,is_faculty = False).order_by('role_of')
+                for role in roles:
+                    try:
+                        #getting the member of the particular society whose role matches with the role iteration in the list and is if current panel
+                        member = Panel_Members.objects.get(tenure = current_tenure,position = role)
+                        eb_members.append(member)
+                    except:
+                        pass
+                return eb_members
+            except:
+                #returning empty list
+                return eb_members
         except Exception as e:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
