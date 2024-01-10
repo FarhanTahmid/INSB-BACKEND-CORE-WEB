@@ -1493,11 +1493,11 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False  
         
-    def update_profile_picture(picture,nsu_id):
+    def update_profile_picture(picture,ieee_id):
 
         '''This function updates the profile picture of user'''
         try:
-            get_user=Members.objects.get(nsu_id = nsu_id)
+            get_user=Members.objects.get(ieee_id = ieee_id)
             #get the previous profile picture of the user to delete it
             previous_profile_picture=settings.MEDIA_ROOT+str(get_user.user_profile_picture)
             if(previous_profile_picture!=(settings.MEDIA_ROOT+'user_profile_pictures/default_profile_picture.png')):

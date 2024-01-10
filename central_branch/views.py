@@ -2633,7 +2633,7 @@ def member_details(request,ieee_id):
                         if profile_picture == None:
                             pass
                         else:
-                            Branch.update_profile_picture(profile_picture,nsu_id)
+                            Branch.update_profile_picture(profile_picture,ieee_id)
                         messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
                         return redirect('central_branch:member_details',ieee_id)
                     except Members.DoesNotExist:
@@ -2657,7 +2657,7 @@ def member_details(request,ieee_id):
                         if profile_picture == None:
                             pass
                         else:
-                            Branch.update_profile_picture(profile_picture,nsu_id)
+                            Branch.update_profile_picture(profile_picture,ieee_id)
                         messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
                         return redirect('central_branch:member_details',ieee_id)
                     except Members.DoesNotExist:
@@ -2682,7 +2682,7 @@ def member_details(request,ieee_id):
                         if profile_picture == None:
                             pass
                         else:
-                            Branch.update_profile_picture(profile_picture,nsu_id)
+                            Branch.update_profile_picture(profile_picture,ieee_id)
                         messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
                         return redirect('central_branch:member_details',ieee_id)
                     except Members.DoesNotExist:
@@ -2706,7 +2706,7 @@ def member_details(request,ieee_id):
                         if profile_picture == None:
                             pass
                         else:
-                            Branch.update_profile_picture(profile_picture,nsu_id)
+                            Branch.update_profile_picture(profile_picture,ieee_id)
                         messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
                         return redirect('central_branch:member_details',ieee_id)
                     except Members.DoesNotExist:
