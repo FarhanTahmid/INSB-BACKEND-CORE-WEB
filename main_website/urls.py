@@ -55,4 +55,6 @@ urlpatterns = [
     path('contact',views.contact, name="contact"),
     # Toolkit
     path('toolkit',views.toolkit, name="toolkit"),
+    
+    path('hello',views.test_view,name="404"),
 ]
