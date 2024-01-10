@@ -1169,12 +1169,11 @@ def toolkit(request):
     }
     return render(request, 'Publications/Toolkit/toolkit.html',context=context)
 
-def test_view(request):
+def custom_404(request, exception):
     #loading all the teams of Branch
     branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
     context={
             'page_title':"Lost?!",
             'branch_teams':branch_teams,
-        }
- 
-    return render(request,"test.html",context=context)
+    }
+    return render(request,"404.html",context=context,status=404)
