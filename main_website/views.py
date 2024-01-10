@@ -984,12 +984,13 @@ def all_members(request):
     get_all_members = userData.get_all_registered_members(request=request)
     recruitment_stat=userData.getRecruitmentStats()
     
-    
     context={
         'page_title':"All Registered Members & Member Statistics of IEEE NSU SB",
         'members':get_all_members,
         'male_count':Members.objects.filter(gender="Male").count(),
         'female_count':Members.objects.filter(gender="Female").count(),
+        'active_count':Members.objects.filter(is_active_member=True).count(),
+        'inactive_count':Members.objects.filter(is_active_member=False).count(),
         'session_name':recruitment_stat[0],
         'session_recruitee':recruitment_stat[1],
         'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
@@ -1145,6 +1146,7 @@ def toolkit(request):
     toolkit_items = Toolkit.objects.all().order_by('pk')
     
     context={
+        'page_title':"Toolkit",
         'branch_teams':branch_teams,
         'all_toolkits':toolkit_items,
     }
