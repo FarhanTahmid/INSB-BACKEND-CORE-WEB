@@ -67,6 +67,7 @@ def insb_members_list(request):
     user_data=current_user.getUserData() #getting user data as dictionary file
 
     context={
+        'is_branch':False,
         'all_sc_ag':sc_ag,
         'members':members,
         'totalNumber':totalNumber,
@@ -102,6 +103,7 @@ def member_details(request,ieee_id):
     user_data=current_user.getUserData() #getting user data as dictionary file
     
     context={
+        'is_branch':False,
         'all_sc_ag':sc_ag,
         'member_data':member_data,
         'dob':dob,

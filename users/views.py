@@ -131,7 +131,14 @@ def dashboard(request):
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     if(user_data==False):
-        return DatabaseError
+
+        if request.method == "POST":
+            
+            if request.POST.get('Logout'):
+                auth.logout(request)
+                return redirect('users:login')
+
+        return render(request,"users/access_denied_user.html") 
     context={
         'user_data':user_data,
         'eb_member':is_eb_or_admin,

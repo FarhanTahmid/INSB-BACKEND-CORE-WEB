@@ -1015,6 +1015,8 @@ def ieee_bd_section(request):
     branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
     ieee_bangladesh_section = IEEE_Bangladesh_Section.objects.get(id=1)
     page_links = Branch.get_about_page_links(page_title='ieee_bangladesh_section')
+    #getting all ieee bangladesh section gallery images
+    all_images = Branch.get_all_ieee_bangladesh_section_images()
 
     context = {
         'is_live':True, #This enables the header and footer of the page along with wavy
@@ -1022,7 +1024,8 @@ def ieee_bd_section(request):
         'branch_teams':branch_teams,
         'ieee_bangladesh_section':ieee_bangladesh_section,
         'media_url':settings.MEDIA_URL,
-        'page_links':page_links
+        'page_links':page_links,
+        'all_images':all_images,
     }
     return render(request, 'About/IEEE_bangladesh_section.html', context)
 
