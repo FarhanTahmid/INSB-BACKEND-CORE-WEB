@@ -690,6 +690,7 @@ def update_blogs(request,pk):
 
 @login_required
 def blog_requests(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     # get all blog requests
