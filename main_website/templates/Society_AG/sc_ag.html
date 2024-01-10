@@ -331,6 +331,19 @@
 
         <!-- end of wAVE PART  -->
 
+        <!--Messages-->
+        {% for message in messages  %}
+            <div id="myMessageModal{{ loop.index }}" class="modal message-modal">
+                <div class="modal-content message-modal-content">
+                    <div class="modal-content-items message-modal-content-items">
+                        <span class="close message-close" onclick="closeModal({{ loop.index }})">&times;</span>
+                        <p class="message">{{ message }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <!--Messages End-->
+
 
         <!-- about Ras and logo starts  -->
 
@@ -338,17 +351,7 @@
         <section class="societies_about_section">
             <div class="container">
 
-                {% for message in messages  %}
-                    <div id="myMessageModal{{ loop.index }}" class="modal message-modal">
-                        <div class="modal-content message-modal-content">
-                            <div class="modal-content-items message-modal-content-items">
-                                <span class="close message-close" onclick="closeModal({{ loop.index }})">&times;</span>
-                                <p class="message">{{ message }}</p>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-                
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="m-3">

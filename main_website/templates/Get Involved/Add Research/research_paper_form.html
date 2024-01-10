@@ -198,32 +198,31 @@
         </section>
 
 
-        {% comment %} <!--Messages-->
-        <div style="justify-content:center; text-align:center;">
+        <!--Messages-->
+        {% comment %} <div style="justify-content:center; text-align:center;">
             {% if messages %}
                 {% for message in messages %}
                     <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
                 {% endfor %}
             {% endif %}
-        </div>
-        <!--Messages End--> {% endcomment %}
+        </div> {% endcomment %}
+
+        {% for message in messages  %}
+            <div id="myMessageModal{{ loop.index }}" class="modal message-modal">
+                <div class="modal-content message-modal-content">
+                    <div class="modal-content-items message-modal-content-items">
+                        <span class="close message-close" onclick="closeModal({{ loop.index }})">&times;</span>
+                        <p class="message">{{ message }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <!--Messages End-->
 
 
         <section style="margin-top:3%">
             <div class="col-md-6 mx-auto">
-
-                {% for message in messages  %}
-                    <div id="myMessageModal{{ loop.index }}" class="modal message-modal">
-                        <div class="modal-content message-modal-content">
-                            <div class="modal-content-items message-modal-content-items">
-                                <span class="close message-close" onclick="closeModal({{ loop.index }})">&times;</span>
-                                <p class="message">{{ message }}</p>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-
-
+                
                 <h1>Add Research Paper</h1>
                 <br>
                 <br>
