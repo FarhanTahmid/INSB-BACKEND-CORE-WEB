@@ -2,7 +2,7 @@ import os
 from bs4 import BeautifulSoup
 from django.http import Http404
 from insb_port import settings
-from main_website.models import About_IEEE, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link,FAQ_Question_Category,FAQ_Questions,HomePage_Thoughts
+from main_website.models import About_IEEE, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link,FAQ_Question_Category,FAQ_Questions,HomePage_Thoughts,IEEE_Bangladesh_Section_Gallery
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
@@ -1510,6 +1510,50 @@ class Branch:
                 get_user.user_profile_picture = picture
                 get_user.save()
 
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def save_ieee_bangladesh_section_images(image_list):
+
+        '''This function saves the images to the database'''
+
+        try:
+            #iterating through image list and saving them
+            for image in image_list:
+
+                #creating image object and saving one image at a time
+                Image = IEEE_Bangladesh_Section_Gallery.objects.create(picture = image)
+                Image.save()
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def get_all_ieee_bangladesh_section_images():
+
+        '''This function returns all images of IEEE Bangladesh Section as list if there is any'''
+        try:
+            return IEEE_Bangladesh_Section_Gallery.objects.all()
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def delete_ieee_bangladesh_section_gallery_image(id):
+
+        '''This function deletes the image from the database and os'''
+
+        try:
+            #deleting the file from the system and the model 
+            image = IEEE_Bangladesh_Section_Gallery.objects.get(id=id)
+            path = settings.MEDIA_ROOT+str(image.picture)
+            os.remove(path)
+            image.delete()
+
+            return True
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

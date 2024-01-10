@@ -501,7 +501,7 @@
                             <div class="form-group">
                                 <label for="images">Upload Images:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="gallery-image-input" name="image" accept="image/*" multiple>
+                                    <input type="file" class="custom-file-input" id="gallery-image-input" name="gallery_img" accept="image/*" multiple>
                                     <label class="custom-file-label bg-light" for="gallery-image-input">Choose files</label>
                                 </div>
                                 
@@ -514,12 +514,12 @@
                                 
                         
                             <div id="image-container" class="row text-center">
-                            {% for image_url in gallery_images %}
+                            {% for image_url in all_images %}
                                 <hr>
                                 <div class="col-lg-4 col-md-6 my-3">
                                     <div class="image-container">
                                         <img
-                                        src="{{ gallery_url }}{{ image_url.selected_images }}"
+                                        src="{{ media_url }}{{ image_url.picture }}"
                                         alt="Image"
                                         class="img-fluid image-container-item"
                                         data-toggle="modal"
@@ -545,7 +545,7 @@
                                                     </div>
                                                     <div class="modal-body">
                                                         <img
-                                                            src="{{ gallery_url }}{{ image_url.selected_images }}"
+                                                            src="{{ media_url }}{{ image_url.picture }}"
                                                             alt="Image"
                                                             class="img-fluid"
                                                             style="width: 100%; height: auto; margin: 0 auto; display: block;"
@@ -557,7 +557,7 @@
                     
                                     
                                         <!-- Cross button to trigger modal -->
-                                        <button type="button" class="cross-button" data-toggle="modal" data-target="#ConfirmDeleteModalForGallery" onclick="openModal('{{image_url.selected_images}}')">
+                                        <button type="button" class="cross-button" data-toggle="modal" data-target="#ConfirmDeleteModalForGallery" onclick="openModal2('{{image_url.pk}}')">
                                             &times; <!-- Use the "times" symbol (X) as a close icon -->
                                         </button>
                     
@@ -582,7 +582,7 @@
                                                     <p>Are you sure you want to delete this image?</p>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <input type="submit" class="btn btn-outline-danger buttons" value="Delete" name="delete_image">
+                                                    <input type="submit" class="btn btn-outline-danger buttons" value="Delete" name="delete_image_gallery">
                                                     <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                                 </div>
                                             </form>
@@ -954,6 +954,12 @@
 
         //Delete logic for gallery
         function openModal(gallery_image_id) {
+            // Set data in the modal
+            var inputElement = document.getElementById('gallery_image_id');
+            inputElement.value=gallery_image_id;
+
+        }
+        function openModal2(gallery_image_id) {
             // Set data in the modal
             var inputElement = document.getElementById('gallery_image_id');
             inputElement.value=gallery_image_id;
