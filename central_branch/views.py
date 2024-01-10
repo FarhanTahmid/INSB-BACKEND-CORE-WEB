@@ -17,7 +17,7 @@ from main_website.renderData import HomepageItems
 from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
 from system_administration.system_error_handling import ErrorHandling
-from . import renderData
+from users import renderData
 from port.models import Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
 from django.db import DatabaseError
 from central_branch.renderData import Branch
@@ -1175,6 +1175,9 @@ def manage_exemplary_members(request):
 
 @login_required
 def update_exemplary_members(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get memeber to update
     member_to_update=ExemplaryMembers.objects.get(pk=pk)
     if request.method=='POST':
@@ -1187,6 +1190,8 @@ def update_exemplary_members(request,pk):
     else:
         member_form=ExemplaryMembersForm(instance=member_to_update)
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'exemplary_member':member_to_update,
         'member_form':member_form
     }
@@ -1194,6 +1199,9 @@ def update_exemplary_members(request,pk):
 
 @login_required
 def manage_view_access(request):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     # get access of the page first
@@ -1247,6 +1255,7 @@ def manage_view_access(request):
         
 
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'insb_members':all_insb_members,
         'branch_data_access':branch_data_access,
@@ -1263,16 +1272,17 @@ def manage_view_access(request):
 def event_control_homepage(request):
     # This function loads all events and super events in the event homepage table
     
-        has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
-
-    # try:
+    has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    try:
         is_branch = True
         sc_ag=PortData.get_all_sc_ag(request=request)
         all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(1)
         context={
             'all_sc_ag':sc_ag,
+            'user_data':user_data,
             'events':all_insb_events_with_interbranch_collaborations,
-            # 'sc_ag_info':get_sc_ag_info,
             'has_access_to_create_event':has_access_to_create_event,
             'is_branch':is_branch,
             
@@ -1295,11 +1305,11 @@ def event_control_homepage(request):
                 return redirect('central_branch:event_control')
             
         return render(request,'Events/event_homepage.html',context)
-    # except Exception as e:
-    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-    #     # TODO: Make a good error code showing page and show it upon errror
-    #     return HttpResponseBadRequest("Bad Request")
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        # TODO: Make a good error code showing page and show it upon errror
+        return HttpResponseBadRequest("Bad Request")
     
 
 @login_required
@@ -1308,6 +1318,8 @@ def super_event_creation(request):
     '''function for creating super event'''
 
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         #calling it regardless to run the page
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,5)
@@ -1330,6 +1342,7 @@ def super_event_creation(request):
                 return redirect('central_branch:event_control')
             
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'is_branch' : is_branch
@@ -1347,6 +1360,8 @@ def event_creation_form_page(request):
     
     #######load data to show in the form boxes#########
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file  
         form = EventForm()
         sc_ag=PortData.get_all_sc_ag(request=request)
         is_branch = True
@@ -1400,6 +1415,7 @@ def event_creation_form_page(request):
                 return redirect('central_branch:event_creation_form1')
         
         context={
+            'user_data':user_data,
             'super_events':super_events,
             'event_types':event_types,
             'is_branch' : is_branch,
@@ -1421,6 +1437,8 @@ def event_creation_form_page2(request,event_id):
     #loading all inter branch collaboration Options
 
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         is_branch=True
         sc_ag=PortData.get_all_sc_ag(request=request)
         inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
@@ -1443,6 +1461,7 @@ def event_creation_form_page2(request,event_id):
                 return redirect('central_branch:event_control')
         
         context={
+            'user_data':user_data,
             'inter_branch_collaboration_options':inter_branch_collaboration_options,
             'all_sc_ag':sc_ag,
             'is_branch' : is_branch,
@@ -1458,6 +1477,8 @@ def event_creation_form_page2(request,event_id):
 @login_required
 def event_creation_form_page3(request,event_id):
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         is_branch=True
         sc_ag=PortData.get_all_sc_ag(request=request)
         #loading all venues from the venue list from event management team database
@@ -1484,6 +1505,7 @@ def event_creation_form_page3(request,event_id):
                     return redirect('central_branch:event_control')
                 
         context={
+            'user_data':user_data,
             'venues':venues,
             'permission_criterias':permission_criterias,
             'all_sc_ag':sc_ag,
@@ -1521,6 +1543,8 @@ def event_edit_form(request, event_id):
 
     ''' This function loads the edit page of events '''
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         # has_access = Branch.event_page_access(request)
         if True:
@@ -1630,7 +1654,8 @@ def event_edit_form(request, event_id):
                 'is_flagship_event':is_flagship_event,
                 'is_registration_fee_required':is_registraion_fee_true,
                 'selected_venues':selected_venues,
-                'is_featured_event':is_featured_event
+                'is_featured_event':is_featured_event,
+                'user_data':user_data,
             }
 
             return render(request, 'Events/event_edit_form.html', context)
@@ -1650,6 +1675,8 @@ def event_edit_media_form_tab(request, event_id):
     ''' This function loads the media tab page of events '''
 
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         # has_access = Branch.event_page_access(request)
         if(True):
@@ -1700,6 +1727,7 @@ def event_edit_media_form_tab(request, event_id):
                 'media_url':settings.MEDIA_URL,
                 'allowed_image_upload':6-number_of_uploaded_images,
                 'all_sc_ag':sc_ag,
+                'user_data':user_data,
             }
             return render(request,"Events/event_edit_media_form_tab.html",context)
         else:
@@ -1720,6 +1748,8 @@ def event_edit_graphics_form_tab(request, event_id):
     #and can be editible
 
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         #Get event details from databse
         # has_access = Branch.event_page_access(request)
@@ -1770,7 +1800,7 @@ def event_edit_graphics_form_tab(request, event_id):
                 'graphics_banner_image':graphic_banner_image,
                 'media_url':settings.MEDIA_URL,
                 'allowed_image_upload':1-image_number,
-
+                'user_data':user_data,
             }
             return render(request,"Events/event_edit_graphics_form_tab.html",context)
         else:
@@ -1790,6 +1820,8 @@ def event_edit_graphics_form_links_sub_tab(request,event_id):
     #and can be editible
 
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         all_graphics_link = GraphicsTeam.get_all_graphics_form_link(event_id)
         #Get event details from databse
@@ -1833,7 +1865,7 @@ def event_edit_graphics_form_links_sub_tab(request,event_id):
                 'event_id' : event_id,
                 'all_sc_ag':sc_ag,
                 'all_graphics_link':all_graphics_link,
-
+                'user_data':user_data,
             }
             return render(request,"Events/event_edit_graphics_form_links_sub_tab.html",context)
         else:
@@ -1851,6 +1883,8 @@ def event_edit_content_form_tab(request,event_id):
     ''' This function loads the content tab page of events '''
 
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         # has_access = Branch.event_page_access(request)
         if(True):
@@ -1895,7 +1929,7 @@ def event_edit_content_form_tab(request,event_id):
                 'form_adding_note':form,
                 'all_notes_content':all_notes_content,
                 'all_sc_ag':sc_ag,
-
+                'user_data':user_data,
             }
             return render(request,"Events/event_edit_content_and_publications_form_tab.html",context)
         else:
@@ -1935,6 +1969,10 @@ def event_preview(request, event_id):
 
 @login_required
 def manage_toolkit(request):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    
     # get all toolkits
     all_toolkits=Toolkit.objects.all().order_by('-pk')
     if(request.method=="POST"):
@@ -1955,6 +1993,8 @@ def manage_toolkit(request):
     else:
         toolkit_form=ToolkitForm
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'all_toolkits':all_toolkits,
         'form':toolkit_form,
     }
@@ -1962,6 +2002,9 @@ def manage_toolkit(request):
 
 @login_required
 def update_toolkit(request,pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # toolkit to update
     toolkit_to_update=get_object_or_404(Toolkit,pk=pk)
     if(request.method=="POST"):
@@ -1974,6 +2017,8 @@ def update_toolkit(request,pk):
     else:
         toolkit_form=ToolkitForm(instance=toolkit_to_update)
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'toolkit':toolkit_to_update,
         'form':toolkit_form,
     }
