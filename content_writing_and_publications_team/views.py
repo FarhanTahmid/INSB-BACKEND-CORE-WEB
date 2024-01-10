@@ -47,7 +47,7 @@ def manage_team(request):
     by the co-ordinatior only, unless the co-ordinators gives access to others as well'''
 
     sc_ag=PortData.get_all_sc_ag(request=request)
-    has_access = CWPTeam_Render_Access.get_common_access(request)
+    has_access = CWPTeam_Render_Access.access_for_manage_team(request)
     if has_access:
         data_access = ContentWritingTeam.load_manage_team_access()
         team_members = ContentWritingTeam.load_team_members()

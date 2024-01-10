@@ -2,7 +2,7 @@ import os
 from bs4 import BeautifulSoup
 from django.http import Http404
 from insb_port import settings
-from main_website.models import About_IEEE
+from main_website.models import About_IEEE, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link,FAQ_Question_Category,FAQ_Questions,HomePage_Thoughts,IEEE_Bangladesh_Section_Gallery
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
@@ -951,13 +951,18 @@ class Branch:
         except:
             return False
         
-    def set_about_ieee_page(about_details, community_details, start_with_ieee_details, collaboration_details,
-                                   publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
-                                   students_and_member_activities_details, quality_details, about_image, community_image,
-                                    innovations_and_developments_image, students_and_member_activities_image, quality_image):
+    def set_about_ieee_page(about_details, learn_more_link, mission_and_vision_link, community_details, start_with_ieee_details, collaboration_details,
+                                publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
+                                students_and_member_activities_details, quality_details, join_now_link, asia_pacific_link, ieee_computer_organization_link,
+                                customer_service_number, presidents_names, founders_names, about_image, community_image,
+                                innovations_and_developments_image, students_and_member_activities_image, quality_image):
+        ''' This function saves all data for about_ieee page to database, except for external links added through '+' button '''
+        
         try:
             about_ieee, created = About_IEEE.objects.get_or_create(id=1)
             about_ieee.about_ieee=about_details
+            about_ieee.learn_more_link=learn_more_link
+            about_ieee.mission_and_vision_link=mission_and_vision_link
             about_ieee.community_description=community_details
             about_ieee.start_with_ieee_description=start_with_ieee_details
             about_ieee.collaboration_description=collaboration_details
@@ -972,6 +977,12 @@ class Branch:
             about_ieee.innovations_and_developments_image=innovations_and_developments_image
             about_ieee.students_and_member_activities_image=students_and_member_activities_image
             about_ieee.quality_image=quality_image
+            about_ieee.join_now_link=join_now_link
+            about_ieee.asia_pacific_link=asia_pacific_link
+            about_ieee.ieee_computer_organization_link=ieee_computer_organization_link
+            about_ieee.customer_service_number=customer_service_number
+            about_ieee.presidents_names=presidents_names
+            about_ieee.founders_names=founders_names
 
             about_ieee.save()
             return True
@@ -980,27 +991,132 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
-    def checking_length(about_details, community_details, start_with_ieee_details, collaboration_details,
-                        publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
-                        students_and_member_activities_details, quality_details):
-        try:
-            about_details = Branch.process_ckeditor_content(about_details)
+    def set_ieee_bangladesh_section_page(about_details, ieeebd_link, members_and_volunteers_details, benefits_details,
+                                            student_branches_details, affinity_groups_details, communty_and_society_details,
+                                            achievements_details, chair_name, chair_email, secretary_name,
+                                            secretary_email, office_secretary_name, office_secretary_number, about_image, members_and_volunteers_image):
+        ''' This function saves all data for about_ieee_bangladesh_section page to database, except for external links added through '+' button '''
 
-                
-            if (len(about_details)> 500 or len(community_details)>500 or len(start_with_ieee_details)>500 
-                or len(collaboration_details)>500 or len(publications_details) > 500 or len(events_and_conferences_details) >500
-                or len(achievements_details)>500 or 
-                len(about_details) == 0 or len(innovations_and_developments_details)==0 or len(students_and_member_activities_details)==0
-                or len(quality_details)==0):
-                return True
-            else:
-                    return False
+        try:
+            ieee_bangladesh_section, created = IEEE_Bangladesh_Section.objects.get_or_create(id=1)
+            ieee_bangladesh_section.about_ieee_bangladesh = about_details
+            ieee_bangladesh_section.ieee_bangladesh_logo = about_image
+            ieee_bangladesh_section.ieee_bd_link = ieeebd_link
+            ieee_bangladesh_section.member_and_volunteer_description = members_and_volunteers_details
+            ieee_bangladesh_section.member_and_volunteer_picture = members_and_volunteers_image
+            ieee_bangladesh_section.benefits_description = benefits_details
+            ieee_bangladesh_section.student_branches_description = student_branches_details
+            ieee_bangladesh_section.affinity_groups_description = affinity_groups_details
+            ieee_bangladesh_section.community_and_society_description = communty_and_society_details
+            ieee_bangladesh_section.achievements_description = achievements_details
+            ieee_bangladesh_section.chair_name = chair_name
+            ieee_bangladesh_section.chair_email = chair_email
+            ieee_bangladesh_section.secretary_name = secretary_name
+            ieee_bangladesh_section.secretary_email = secretary_email
+            ieee_bangladesh_section.office_secretary_name = office_secretary_name
+            ieee_bangladesh_section.office_secretary_number = office_secretary_number
+
+            ieee_bangladesh_section.save()
+            return True
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
-    def delete_image(image_id,image_path):
+    def set_ieee_nsu_student_branch_page(about_nsu_student_branch, chapters_description, ras_read_more_link,
+                                            pes_read_more_link, ias_read_more_link, wie_read_more_link, creative_team_description,
+                                            mission_description, vision_description, events_description, join_now_link, achievements_description,
+                                            about_image,ras_image,pes_image,ias_image,wie_image,mission_image,vision_image):
+        ''' This function saves all data for about_ieee_nsu_student_branch page to database, except for external links added through '+' button '''        
+        
+        try:
+            ieee_nsu_student_branch, created = IEEE_NSU_Student_Branch.objects.get_or_create(id=1)
+            ieee_nsu_student_branch.about_nsu_student_branch = about_nsu_student_branch
+            ieee_nsu_student_branch.about_image = about_image
+            ieee_nsu_student_branch.chapters_description = chapters_description
+            ieee_nsu_student_branch.ras_read_more_link = ras_read_more_link
+            ieee_nsu_student_branch.ras_image = ras_image
+            ieee_nsu_student_branch.pes_read_more_link = pes_read_more_link
+            ieee_nsu_student_branch.pes_image = pes_image
+            ieee_nsu_student_branch.ias_read_more_link = ias_read_more_link
+            ieee_nsu_student_branch.ias_image = ias_image
+            ieee_nsu_student_branch.wie_read_more_link = wie_read_more_link
+            ieee_nsu_student_branch.wie_image = wie_image
+            ieee_nsu_student_branch.creative_team_description = creative_team_description
+            ieee_nsu_student_branch.mission_description = mission_description
+            ieee_nsu_student_branch.mission_image = mission_image
+            ieee_nsu_student_branch.vision_description = vision_description
+            ieee_nsu_student_branch.vision_image = vision_image
+            ieee_nsu_student_branch.events_description = events_description
+            ieee_nsu_student_branch.join_now_link = join_now_link
+            ieee_nsu_student_branch.achievements_description = achievements_description
+
+            ieee_nsu_student_branch.save()
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def set_ieee_region_10_page(ieee_region_10_description,ieee_region_10_history_link,young_professionals_description,women_in_engineering_ddescription,
+                                    student_and_member_activities_description,educational_activities_and_involvements_description,industry_relations_description,
+                                    membership_development_description,events_and_conference_description,home_page_link,website_link,membership_inquiry_link,
+                                    for_volunteers_link,contact_number,ieee_region_10_image,young_professionals_image,membership_development_image,
+                                    background_picture_parallax,events_and_conference_image):
+        ''' This function saves all data for about_ieee_region_10 page to database, except for external links added through '+' button '''
+        
+        try:
+            ieee_region_10, created = IEEE_Region_10.objects.get_or_create(id=1)
+            ieee_region_10.ieee_region_10_description = ieee_region_10_description
+            ieee_region_10.ieee_region_10_history_link = ieee_region_10_history_link
+            ieee_region_10.young_professionals_description = young_professionals_description
+            ieee_region_10.women_in_engineering_ddescription = women_in_engineering_ddescription
+            ieee_region_10.student_and_member_activities_description =student_and_member_activities_description
+            ieee_region_10.educational_activities_and_involvements_description = educational_activities_and_involvements_description
+            ieee_region_10.industry_relations_description = industry_relations_description
+            ieee_region_10.membership_development_description = membership_development_description
+            ieee_region_10.events_and_conference_description = events_and_conference_description
+            ieee_region_10.home_page_link = home_page_link
+            ieee_region_10.website_link = website_link
+            ieee_region_10.membership_inquiry_link = membership_inquiry_link
+            ieee_region_10.for_volunteers_link = for_volunteers_link
+            ieee_region_10.contact_number = contact_number
+            ieee_region_10.ieee_region_10_image = ieee_region_10_image
+            ieee_region_10.young_professionals_image = young_professionals_image
+            ieee_region_10.membership_development_image = membership_development_image
+            ieee_region_10.background_picture_parallax = background_picture_parallax
+            ieee_region_10.events_and_conference_image = events_and_conference_image
+
+            ieee_region_10.save()
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def checking_length(*descriptions):
+        '''This function checks the length of the description fields. If any one exceed 700 or if any one is
+            empty then data won't be saved.'''
+        
+        try:
+            #assinging checking length
+            max_length = 700
+
+            for description in descriptions:
+                #removing html tags to check true length of each fields
+                filtered_description = Branch.process_ckeditor_content(description)
+                #checking to see the length. Returns true if length is more than 700 or is 0
+                if(len(filtered_description)> max_length or len(filtered_description) == 0):
+                    return True
+                
+            return False
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def about_ieee_delete_image(image_id,image_path):
+        ''' This function deletes an image from the about_ieee database. It takes an image_id(category) and image_path as parameter '''
 
         try:
             about_ieee = About_IEEE.objects.get(id=1)
@@ -1030,6 +1146,93 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
+    def ieee_bangladesh_section_page_delete_image(image_id,image_path):
+        ''' This function deletes an image from the ieee_bangladesh_section database. It takes an image_id(category) and image_path as parameter '''
+
+        try:
+            ieee_bangladesh_section = IEEE_Bangladesh_Section.objects.get(id=1)
+            path = settings.MEDIA_ROOT+str(image_path)
+
+            if(image_id == 'ieee_bangladesh_logo'):
+                ieee_bangladesh_section.ieee_bangladesh_logo = None
+                os.remove(path)
+            elif(image_id == 'member_and_volunteer_picture'):
+                ieee_bangladesh_section.member_and_volunteer_picture = None
+                os.remove(path)
+            
+            ieee_bangladesh_section.save()
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def ieee_nsu_student_branch_page_delete_image(image_id,image_path):
+        ''' This function deletes an image from the ieee_nsu_student_branch database. It takes an image_id(category) and image_path as parameter '''
+
+        try:
+            ieee_nsu_student_branch = IEEE_NSU_Student_Branch.objects.get(id=1)
+            path = settings.MEDIA_ROOT+str(image_path)
+
+            if(image_id == 'about_image'):
+                ieee_nsu_student_branch.about_image = None
+                os.remove(path)
+            elif(image_id == 'ras_image'):
+                ieee_nsu_student_branch.ras_image = None
+                os.remove(path)
+            elif(image_id == 'pes_image'):
+                ieee_nsu_student_branch.pes_image = None
+                os.remove(path)
+            elif(image_id == 'ias_image'):
+                ieee_nsu_student_branch.ias_image = None
+                os.remove(path)
+            elif(image_id == 'wie_image'):
+                ieee_nsu_student_branch.wie_image = None
+                os.remove(path)
+            elif(image_id == 'mission_image'):
+                ieee_nsu_student_branch.mission_image = None
+                os.remove(path)
+            elif(image_id == 'vision_image'):
+                ieee_nsu_student_branch.ras_image = None
+                os.remove(path)
+            
+            ieee_nsu_student_branch.save()
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def ieee_region_10_page_delete_image(image_id,image_path):
+        ''' This function deletes an image from the ieee_region_10 database. It takes an image_id(category) and image_path as parameter '''
+
+        try:
+            ieee_region_10 = IEEE_Region_10.objects.get(id=1)
+            path = settings.MEDIA_ROOT+str(image_path)
+
+            if(image_id == 'ieee_region_10_picture'):
+                ieee_region_10.ieee_region_10_image = None
+                os.remove(path)
+            elif(image_id == 'young_professionals_picture'):
+                ieee_region_10.young_professionals_image = None
+                os.remove(path)
+            elif(image_id == 'membership_development_picture'):
+                ieee_region_10.membership_development_image = None
+                os.remove(path)
+            elif(image_id == 'background_picture'):
+                ieee_region_10.background_picture_parallax = None
+                os.remove(path)
+            elif(image_id == 'events_and_conference_picture'):
+                ieee_region_10.events_and_conference_image = None
+                os.remove(path)
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
     def process_ckeditor_content(ckeditor_html):
         # Parse the HTML content with Beautiful Soup
         soup = BeautifulSoup(ckeditor_html, 'html.parser')
@@ -1039,3 +1242,320 @@ class Branch:
 
         # Now, 'text_content' contains only the actual content without HTML tags
         return text_content
+    
+    def add_about_page_link(page_title, category, title, link):
+        ''' This function adds a new page link. Used in About pages. It takes a page_title, category, title and link as parameter '''
+
+        try:
+            page_link = Page_Link.objects.create(page_title=page_title, category=category, title=title, link=link)
+            page_link.save()
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def update_about_page_link(link_id, page_title, title, link):
+        ''' This function updates a page link. Used in About pages. It takes a link_id, page_title, category, title and link as parameter '''
+
+        try:
+            page_link = Page_Link.objects.get(id=link_id, page_title=page_title)
+            page_link.title = title
+            page_link.link = link
+            page_link.save()
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+    
+    def remove_about_page_link(link_id, page_title):
+        ''' This function deletes a page link. Used in About pages. It takes a link_id and page_title as parameter '''
+
+        try:
+            Page_Link.objects.get(id=link_id, page_title=page_title).delete()
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+    
+    def get_about_page_links(page_title):
+        ''' This function returns all page links for a specific page. Used in About pages. It takes a page_title as parameter.
+            It returns a dictionary where category is the key and value is an array of page_link '''
+
+        try:
+            #Getting all links for a specific page and ordering by primary key
+            page_links_all = Page_Link.objects.filter(page_title=page_title).order_by('pk')
+            page_links_dict = {}
+            categories = []
+
+            #Find all the categories and put them in the categories array
+            for page_link in page_links_all:
+                #Checking for duplicate entry
+                if(page_link.category not in categories):
+                    categories.append(page_link.category)
+            
+            #For each category in the categories array, find all the page links it contains
+            for category in categories:
+                values = []
+                for page_link in page_links_all:
+                    #If the category matches
+                    if page_link.category == category:
+                        #Add the page_link to the values array
+                        values.append(page_link)
+                #After finding all page_links for a category, create a new key(category) and value(page_link array) and add them to the dictionary
+                page_links_dict.update({category : values})
+            return page_links_dict
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def save_category_of_faq(title):
+        
+        '''This function saves the title of the new category FAQ in the database'''
+
+        try:
+            #creating the title object
+            save_title = FAQ_Question_Category.objects.create(title = title)
+            #saving it in database
+            save_title.save()
+
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def get_all_category_of_questions():
+
+        '''This function returns all the titles registered in database for FAW'''
+
+        try:
+            #getting all the titles and returning them
+            return FAQ_Question_Category.objects.all().order_by('id')
+        
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+
+    def get_saved_questions_and_answers():
+        
+        '''This function returns a dictionary of all categories of question as key and
+            the value containts the list of that categories question and answer objects'''
+        
+        try:
+            #initiazlizing empty dictionary
+            dic={}
+            #getting all the categories of question using function
+            all_categories = Branch.get_all_category_of_questions()
+            #iterating over each category 
+            for category in all_categories:
+                #getting the question and answers of that particular category
+                question_answer_list = FAQ_Questions.objects.filter(title = category).order_by('pk')
+                #updating dictionart
+                #checking if list length is 0 
+                if len(question_answer_list) == 0:
+                    dic[category] = None
+                else:
+                    dic[category] = question_answer_list
+            #returning the dictionary
+            return dic
+        
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def update_question_answer(id,title,question_list,answer_list):
+
+        '''This function updates the question and answer for the specified category'''
+
+        try:
+            #getting the question category
+            cat_obj = FAQ_Question_Category.objects.get(pk=id)
+            #getting all titles 
+            all_faq = FAQ_Questions.objects.filter(title = cat_obj)
+            #deleting all the questions under this category from database
+            for i in all_faq:
+                i.delete()
+            #updating title if changed
+            cat_obj.title = title
+            cat_obj.save()
+            #saving them again in database with updated values and new ones
+            for i in range(len(question_list)):
+                faq = FAQ_Questions.objects.create(title = cat_obj,question = question_list[i],
+                                                   answer = answer_list[i])
+                #saving it
+                faq.save()
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def delete_question_answer(id,q_id):
+
+        '''this function removes the specific question and answer that the user requested for
+            a category'''
+        
+        try:
+            #getting the question category
+            cat_obj = FAQ_Question_Category.objects.get(pk=id)
+            #getting the question and answer
+            q_answer = FAQ_Questions.objects.get(title = cat_obj,id = q_id)
+            q_answer.delete()
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def delete_faq_category(id):
+
+        '''This function deletes the entire category of FAQ'''
+
+        try:
+            #getting the object of particular category and deleting it
+            faq = FAQ_Question_Category.objects.get(id=id)
+            faq.delete()
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def save_homepage_thoughts(author,thought):
+
+        '''This function saves the thoughts that the author gave on portal to display on main
+            web page'''
+        
+        try:
+            #saving them in database
+            homepage_thought = HomePage_Thoughts.objects.create(author = author, quote = thought)
+            homepage_thought.save()
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def get_all_homepage_thoughts():
+
+        '''This function returns all the thoughts registered in database'''
+
+        try:
+            #returning all the thoughts as a list
+            return HomePage_Thoughts.objects.all().order_by('pk')
+        
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def update_saved_thoughts(author,thought,id):
+
+        '''This function updates the registerd thoughts'''
+
+        try:
+            #getting the object from id and updating it with new data
+            homepage_thought = HomePage_Thoughts.objects.get(id=id)
+            homepage_thought.quote = thought
+            homepage_thought.author = author
+            homepage_thought.save()
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def delete_thoughts(id):
+        
+        '''This function deletes the thought from the database'''
+
+        try:
+            #getting the object from id and deleting it
+            homepage_thought = HomePage_Thoughts.objects.get(id=id)
+            homepage_thought.delete()
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False  
+        
+    def update_profile_picture(picture,ieee_id):
+
+        '''This function updates the profile picture of user'''
+        try:
+            get_user=Members.objects.get(ieee_id = ieee_id)
+            #get the previous profile picture of the user to delete it
+            previous_profile_picture=settings.MEDIA_ROOT+str(get_user.user_profile_picture)
+            if(previous_profile_picture!=(settings.MEDIA_ROOT+'user_profile_pictures/default_profile_picture.png')):
+                #removing previous one from system
+                os.remove(previous_profile_picture)
+                #saving new one
+                get_user.user_profile_picture = picture
+                get_user.save()
+            else:
+                get_user.user_profile_picture = picture
+                get_user.save()
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def save_ieee_bangladesh_section_images(image_list):
+
+        '''This function saves the images to the database'''
+
+        try:
+            #iterating through image list and saving them
+            for image in image_list:
+
+                #creating image object and saving one image at a time
+                Image = IEEE_Bangladesh_Section_Gallery.objects.create(picture = image)
+                Image.save()
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def get_all_ieee_bangladesh_section_images():
+
+        '''This function returns all images of IEEE Bangladesh Section as list if there is any'''
+        try:
+            return IEEE_Bangladesh_Section_Gallery.objects.all()
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def delete_ieee_bangladesh_section_gallery_image(id):
+
+        '''This function deletes the image from the database and os'''
+
+        try:
+            #deleting the file from the system and the model 
+            image = IEEE_Bangladesh_Section_Gallery.objects.get(id=id)
+            path = settings.MEDIA_ROOT+str(image.picture)
+            os.remove(path)
+            image.delete()
+
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+
+

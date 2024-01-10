@@ -500,7 +500,7 @@ class Sc_Ag:
     def checking_length(request,about_details,mission_description,vision_description,
                         what_is_this_description,why_join_it,what_activites_it_has,how_to_join):
         
-        '''This function checks the length of the description fields. If any one exceed 500 or if any one is
+        '''This function checks the length of the description fields. If any one exceed 700 or if any one is
             empty then data won't be saved.'''
         
         try:
@@ -512,11 +512,13 @@ class Sc_Ag:
             why_join_it = Sc_Ag.process_ckeditor_content(why_join_it)
             what_activites_it_has = Sc_Ag.process_ckeditor_content(what_activites_it_has)
             how_to_join = Sc_Ag.process_ckeditor_content(how_to_join)
+            #assinging checking length
+            length = 700
 
-            #checking to see the length. Returns true if length is more than 500 or is 0
-            if (len(about_details)> 500 or len(mission_description)>500 or len(vision_description)>500 
-                or len(what_is_this_description)>500 or len(why_join_it) > 500 or len(what_activites_it_has) >500
-                or len(how_to_join)>500 or 
+            #checking to see the length. Returns true if length is more than 700 or is 0
+            if (len(about_details)> length or len(mission_description)>length or len(vision_description)> length
+                or len(what_is_this_description)>length or len(why_join_it) > length or len(what_activites_it_has) >length
+                or len(how_to_join)>length or 
                 len(about_details) == 0 or len(mission_description)==0 or len(vision_description)==0
                 or len(what_is_this_description)==0 or len(why_join_it)==0 or len(what_activites_it_has)==0
                 or len(how_to_join)==0):

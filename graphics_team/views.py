@@ -27,8 +27,8 @@ logger=logging.getLogger(__name__)
 @login_required
 def team_homepage(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
-    co_ordinators=renderData.GraphicsTeam.get_co_ordinator()
-    in_charges=renderData.GraphicsTeam.get_officer()
+    co_ordinators=GraphicsTeam.get_co_ordinator()
+    in_charges=GraphicsTeam.get_officer()
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     volunteers=GraphicsTeam.get_volunteers()
@@ -53,7 +53,7 @@ def manage_team(request):
     by the co-ordinatiors and other admin users only, unless the co-ordinators gives access to others as well'''
     
     sc_ag=PortData.get_all_sc_ag(request=request)
-    has_access = GraphicsTeam_Render_Access.get_common_access(request)
+    has_access = GraphicsTeam_Render_Access.access_for_manage_team(request)
     if has_access:
         data_access = GraphicsTeam.load_data_access()
         team_members = GraphicsTeam.load_team_members()

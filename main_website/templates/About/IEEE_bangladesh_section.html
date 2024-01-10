@@ -342,21 +342,22 @@
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
     <div class="body-wrapper  float-menu">
 
-        {% block header %}
-        {% include 'header.html' %}
-        {% endblock header %}
+        {% if is_live %}
+            {% block header %}
+            {% include 'header.html' %}
+            {% endblock header %}
 
-        {% block wave_design %}
-            {% include 'wave.html' %}
-        {% endblock wave_design %}
+            {% block wave_design %}
+                {% include 'wave.html' %}
+            {% endblock wave_design %}
+        {% endif %}
 
         <!--page start-->
         <!--about ieee section-->
         <section class="centering">
             <section class="about-IEEE max-width">
                 <div class="IEEE-bd-section-logo">
-                    <!--logo-->
-                    <img src="https://ieeensusb.org/wp-content/uploads/2021/03/IEEE-BDS-Logo-800x326-2-400x163-1-300x122.png"
+                    <img src="{{media_url}}{{ieee_bangladesh_section.ieee_bangladesh_logo}}"
                         alt="">
                 </div>
                 <div>
@@ -365,16 +366,11 @@
                     </div>
                     <div class="bar"></div>
                     <div>
-                        <p>Institute of Electrical and Electronics Engineers(IEEE) Bangladesh Section was formed in
-                            November 1993 with just 54 members. But now the Institute of Electrical and Electronics
-                            Engineers(IEEE) Bangladesh Section has gained a huge community with a lot of members from
-                            different countries. Recently IEEE Bangladesh Community is holding the position right after
-                            India, USA, China and Canada. Bangladesh Section is maintaining the 5th ranking among 342
-                            sections all over 160 countries in the world</p>
+                        <p>{{ieee_bangladesh_section.about_ieee_bangladesh|safe}}</p>
                     </div>
                     <!--links-->
                     <div class="ieee-bd-btn">
-                        <a href="#">IEEEBD.net</a>
+                        <a href="{{ieee_bangladesh_section.ieee_bd_link}}">IEEEBD.net</a>
                     </div>
                 </div>
             </section>
@@ -390,29 +386,19 @@
                     </div>
                     <div class="bar"></div>
                     <div>
-                        <p>Members of the Institute of Electrical and Electronics Engineers (IEEE) Bangladesh Section
-                            are very involved, and they are perfecting their initiative work and forming connections
-                            with electrical engineering sides all over the world. Prof. Celia Shahnaz , Chair of the
-                            Institute of Electrical and Electronics Engineers (IEEE) Bangladesh Section, organizes
-                            year-round productive student events and congratulates all student participants.Institute of
-                            Electrical and Electronics Engineers (IEEE) Bangladesh Section is receiving overwhelming
-                            response from Institute of Electrical and Electronics Engineers (IEEE) members and
-                            volunteers all over the world
-                            Please go through this links:</p>
+                        <p>{{ieee_bangladesh_section.member_and_volunteer_description|safe}}</p>
                     </div>
                     <div>
-                        <!--links-->
-                        <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square "></i> WEB
-                                Team</a></div>
-                        <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square "></i> Vice Chair
-                                Technical</a></div>
-                        <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square "></i> Secretary
-                                Candidates</a></div>
+                        {% for page_link in page_links.members_and_volunteers_link %}
+                        <div>
+                            <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square "></i>{{page_link.title}}</a>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
                 <!--pic-->
                 <div class="mem-vol-pic">
-                    <img src="https://ieeensusb.org/wp-content/uploads/2021/03/celia.jpg" alt="">
+                    <img src="{{media_url}}{{ieee_bangladesh_section.member_and_volunteer_picture}}" alt="">
                 </div>
             </section>
         </section>
@@ -427,19 +413,14 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>Institute of Electrical and Electronics Engineers(IEEE) Bangladesh Section section is
-                            expanding at a rapid pace. It is assisting by keeping up with the fast-changing world of
-                            technology and science with the Institute of Electrical and Electronics Engineers(IEEE)
-                            worldwide technical societies. Institute of Electrical and Electronics Engineers(IEEE) books
-                            and eBooks, journals and papers, conferences and proceedings, and manifold other resources
-                            are available. IEEE BD Section is going ahead with a mission of ensuring benefits of the
-                            students properly</p>
+                        <p>{{ieee_bangladesh_section.benefits_description|safe}}</p>
                     </div>
                     <div>
-                        <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE BDS</a>
+                        {% for page_link in page_links.benefits_link %}
+                        <div>
+                            <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
                         </div>
-                        <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE BDS
-                                LIST</a></div>
+                        {% endfor %}
                     </div>
                 </div>
                 <div style="border-left: 1px solid rgb(255, 255, 255);"></div>
@@ -449,17 +430,14 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>IEEE Bangladesh Student Branches are taking the unprecedented steps day by day and going
-                            ahead as a big ripple in the whole world. In Bangladesh there are 1500+ students including
-                            graduate and non-graduate students. Here is the student branch details and the list of
-                            student branches link bellow</p>
+                        <p>{{ieee_bangladesh_section.student_branches_description|safe}}</p>
                     </div>
                     <div>
-                        <!--links-->
-                        <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE BDS</a>
+                        {% for page_link in page_links.student_branches_link %}
+                        <div>
+                            <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
                         </div>
-                        <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE BDS
-                                LIST</a></div>
+                        {% endfor %}
                     </div>
                 </div>
             </section>
@@ -478,16 +456,14 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>Institute of Electrical and Electronics Engineers (IEEE) Bangladesh Section is involving in
-                            many kinds of industrial sectors and developing the skills of the members in BDS. Day by day
-                            the rates of seminars, tours and conferences are increasing and the focus of these events
-                            and seminars are getting close to professionalism and industrial approaches
-                            Affinity groups in IEEE Bangladesh Section</p>
+                        <p>{{ieee_bangladesh_section.affinity_groups_description|safe}}</p>
                     </div>
                     <div>
-                        <!--links-->
-                        <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Visit
-                                Now</a></div>
+                        {% for page_link in page_links.affinity_groups_link %}
+                        <div>
+                            <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
                 <div style="border-left: 1px solid rgb(255, 255, 255);"></div>
@@ -497,16 +473,14 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>Institute of Electrical and Electronics Engineers (IEEE) has a huge Community with many
-                            Associations. Like- WIE(women in Engineering), IAS(Industry Application Society), PES(Power
-                            and Energy Society), YP(Young Professionals) etc.</p>
+                        <p>{{ieee_bangladesh_section.community_and_society_description|safe}}</p>
                     </div>
                     <div>
-                        <!--links-->
-                        <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Community
-                                and Society</a></div>
-                        <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Other
-                                Sites</a></div>
+                        {% for page_link in page_links.community_and_society_link %}
+                        <div>
+                            <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </section>
@@ -521,56 +495,20 @@
                 </div>
                 <div class="bar"></div>
                 <div>
-                    <p>The imaginative and hardworking founders, student members, and volunteers of the Institute of
-                        Electrical and Electronics Engineers (IEEE) Bangladesh Section are achieving more and more.There
-                        are many achievements in Bangladesh Section. Here is some popular achievements list below</p>
+                    <p>{{ieee_bangladesh_section.achievements_description|safe}}</p>
                 </div>
                 <div class="achievement-container">
+                    {% for page_link in page_links.achievement_link %}
                     <div class="achievement-card">
                         <div>
                             <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
                                 alt="">
                                 <!--links-->
-                            <h4>IEEE NSU Achievements</h4>
-                            <a href="#">Read More</a>
+                            <h4>{{page_link.title}}</h4>
+                            <a href="{{page_link.link}}">Read More</a>
                         </div>
                     </div>
-                    <div class="achievement-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                                <!--links-->
-                            <h4>IEEE BUET Achievements</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
-                    <div class="achievement-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                                <!--links-->
-                            <h4>IEEE AIUB Achievements</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
-                    <div class="achievement-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                                <!--links-->
-                            <h4>Achievements of DUET</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
-                    <div class="achievement-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                                <!--links-->
-                            <h4>Achievements of Milestone</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </section>
         </section>
@@ -584,24 +522,11 @@
                 </div>
                 <div class="bar"></div>
                 <div class="pic-container">
+                    {% for image in all_images %}
                     <div class="pic-box">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2021/03/group.jpg" style="width:100%" alt="">
-                        {% comment %} <a href="https://ieeensusb.org/wp-content/uploads/2021/03/group.jpg"
-                            data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img
-                                src="https://ieeensusb.org/wp-content/uploads/2021/03/group.jpg" alt="" /></a> {% endcomment %}
+                        <img src="{{media_url}}{{image.picture}}" style="width:100%" alt="Gallery Image">
                     </div>
-                    <div class="pic-box">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2021/03/group-2.jpg" style="width:100%" alt="">
-                        {% comment %} <a href="https://ieeensusb.org/wp-content/uploads/2021/03/group-2.jpg"
-                            data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img
-                                src="https://ieeensusb.org/wp-content/uploads/2021/03/group-2.jpg" alt="" /></a> {% endcomment %}
-                    </div>
-                    <div class="pic-box">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2021/03/group-3.jpg" style="width:100%" alt="">
-                        {% comment %} <a href="https://ieeensusb.org/wp-content/uploads/2021/03/group-3.jpg"
-                            data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img
-                                src="https://ieeensusb.org/wp-content/uploads/2021/03/group-3.jpg" alt="" /></a> {% endcomment %}
-                    </div>
+                    {% endfor %}
                 </div>
                 <div id="myModal" class="modal">
                     <span class="close" onclick="closeModal()">&times;</span>
@@ -622,32 +547,34 @@
                     <div class="contact-details">
                         <div>
                             <p>Chair</p>
-                            <p>: Prof. Dr. Celia Shahnaz</p>
+                            <p>: {{ieee_bangladesh_section.chair_name}}</p>
                          </div>
                         <div>
                             <p>Email</p>
-                            <p>: celia.shahnaz@ieee.org |  celia.shahnaz@gmail.com</p>
+                            <p>: {{ieee_bangladesh_section.chair_email}}</p>
                         </div>
                         <div>
                             <p>Secretary</p>
-                            <p>: Raihan Razeen</p>
+                            <p>: {{ieee_bangladesh_section.secretary_name}}</p>
                         </div>
                         <div>
                             <p>Email</p>
-                            <p>: raihan.razeen@gmail.comMs. Salma [Office Secretary]</p>
+                            <p>: {{ieee_bangladesh_section.secretary_email}}</p>
                         </div>
                         <div>
-                            <p>Ms. Salma [Office Secretary] </p>
-                            <p> :  +88- 01992-30 06 79</p>
+                            <p>{{ieee_bangladesh_section.office_secretary_name}}</p>
+                            <p> :  {{ieee_bangladesh_section.office_secretary_number}}</p>
                         </div>
                     </div>
             </section>
         </section>
 
-        <!--Footer-->
-        {% block footer %}
-        {% include "footer_block.html" %}
-        {% endblock footer %}
+        {% if is_live %}
+            <!--Footer-->
+            {% block footer %}
+            {% include "footer_block.html" %}
+            {% endblock footer %}
+        {% endif %}
 
 
     </div>

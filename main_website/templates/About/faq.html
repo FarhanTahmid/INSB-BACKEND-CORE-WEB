@@ -382,6 +382,79 @@
                 margin-left: 30%;
             }
         }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #fff;
+            width: 450px;
+            height: 115px;
+            position: relative;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+            animation: unfold 1.25s ease-in-out forwards;
+        }
+        
+        .modal-content-items {
+            opacity: 0;
+            animation: fadeIn 1.25s 1s ease-in-out forwards;
+        }
+        
+        .message {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        
+        /* Media query for screens below 360px */
+        @media screen and (max-width: 360px) {
+            .message {
+                font-size: 14px; /* Adjust the font size as needed */
+            }
+        }
+        
+        /* Styling for the close button */
+        .close {
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        
+        @keyframes unfold {
+            0% {
+                width: 0;
+                height: 5px;
+            }
+            50% {
+                width: 450px;
+                height: 5px;
+            }
+            100% {
+                width: 450px;
+                height: 115px;
+            }
+        }
+        
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
     </style>
 
 </head>
@@ -397,468 +470,44 @@
         {% include 'wave.html' %}
         {% endblock wave_design %}
 
+        <div class="container">
 
+            {% for message in messages  %}
+                <div id="myModal{{ loop.index }}" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-content-items">
+                            <span class="close" onclick="closeModal({{ loop.index }})">&times;</span>
+                            <p class="message">{{ message }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
         <!-- About FAQ -->
         <section class="faq">
             <section class="faq_list">
                 <ul class="faq_q">
-                    <li class="list active" onclick="faq_id1()">About IEEE</li>
-                    <li class="list" onclick="faq_id2()">Benefit of IEEE membership</li>
-                    <li class="list" onclick="faq_id3()">About INSB</li>
-                    <li class="list" onclick="faq_id4()">Societies of INSB</li>
-                    <li class="list" onclick="faq_id5()">How to join with us</li>
+                    {% for category in all_categories %}
+                    <li class="list {% if forloop.counter == 1 %} active {% endif %}" onclick="faq_id{{forloop.counter}}()">{{category.title}}</li>
+                    {% endfor %}
                 </ul>
             </section>
             <section class="accordion_list">
-                <ul class="accordion active" id="faq_id1">
+                {% for key,value in saved_question_answer.items %}
+                <ul class="accordion {% if forloop.counter == 1 %} active {% endif %}" id="faq_id{{forloop.counter}}">
+                    {% for question_answer in value %}
                     <li class="list">
-                        <input type="checkbox" name="accordion" id="first_1">
-                        <label for="first_1">What is IEEE?</label>
+                        <input type="checkbox" name="accordion" id="first_{{forloop.counter}}">
+                        <label for="first_{{forloop.counter}}">{{question_answer.question}}</label>
                         <div class="content">
-                            <p>IEEE stands for Institute of Electrical and Electronics Engineers. It is a professional
-                                association for electronic engineering and electrical engineering. IEEE is currently the
-                                world's largest technical professional organization dedicated to advancing technology
-                                for
-                                the benefit of humanity.It was formed in 1963 from the combination of the American
-                                Institute
-                                of Electrical Engineers and the Institute of Radio Engineers.Due to its expansion of
-                                scope
-                                into so many related fields, it is simply referred to by the letters I-E-E-E (pronounced
-                                I-triple-E).Its objectives are the educational and technical advancement of electrical
-                                and
-                                electronic engineering, telecommunications, computer engineering and allied disciplines.
-                            </p>
-                        </div>
-                    </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="second_1">
-                        <label for="second_1">Vision and mission of IEEE</label>
-                        <div class="content">
-                            <p>IEEE from its inception has worked with a vision to leverage science, technology and
-                                engineering to benefit human welfare by promoting public awareness and understanding of
-                                the
-                                engineering profession, worked to promote a culture of respect for the employee and
-                                volunteer, valuing contributions at all levels of the organization, investing in
-                                training
-                                and development to enhance capabilities, empowering individuals to make a positive
-                                difference, and building a membership organization based on a strong volunteer-staff
-                                partnership to serve the profession.</p>
                             <p>
-                                IEEE has now become a trusted and unbiased source of technical information, and forums,
-                                for
-                                technical dialog and collaboration.
+                            {{question_answer.answer}}
                             </p>
-                            <p>
-                                IEEE is now essential to the global technical community and to technical professionals
-                                everywhere, and is universally recognized for the contributions of technology and of
-                                technical professionals in improving global conditions.</p>
                         </div>
                     </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="third_1">
-                        <label for="third_1">Globalization of IEEE</label>
-                        <div class="content">
-                            <p>In this digital world as globalization emerged technologies and the industries that
-                                developed
-                                them increasingly transcended national boundaries, IEEE has kept pace. It is now a
-                                global
-                                institution that uses the innovations of the practitioners it represents to enhance
-                                IEEE's
-                                excellence in delivering products and services to members, industries, and the public at
-                                large. Publications and educational programs are delivered online, as are member
-                                services
-                                such as renewal and elections.</p>
-                            <p>By 2010, IEEE comprised over 395,000 members in 160 countries. Through its global network
-                                of
-                                geographical units, publications, web services, and conferences, IEEE remain the world's
-                                largest technical professional association.</p>
-                        </div>
-                    </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="fourth_1">
-                        <label for="fourth_1">Advantages and resources of IEEE</label>
-                        <div class="content">
-                            <p>IEEE delivers access to the industry's most essential technical information, networking
-                                opportunities, career development tools, and many other exclusive benefits to its
-                                members.Members of IEEE have access to new resources, valuable opportunities, discounts
-                                and
-                                value added member exclusive benefits and services that will help you advance your
-                                career.
-                                IEEE delivers access to the industry's most essential technical information, networking
-                                opportunities and career development tools.Some of the benefits members receive include:
-                            </p>
-                            <ul>
-                                <li>IEEE Spectrum Magazine subscription</li>
-                                <li>IEEE Collabratec</li>
-                                <li>IEEE Technical Navigator</li>
-                                <li>IEEE Xplore Digital Library discounts</li>
-                                <li>IEEE Mentoring Program</li>
-                                <li>IEEE Jobsite</li>
-                                <li>IEEE Learning Network</li>
-                            </ul>
-                        </div>
-                    </li>
+                    {% endfor %}
                 </ul>
-
-                <ul class="accordion" id="faq_id2">
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="first_2">
-                        <label for="first_2">Training for Student Branch Development</label>
-                        <div class="content">
-                            <p>IEEE delivers access to the industry's most essential technical information, networking
-                                opportunities, career development tools, and many other exclusive benefits to its
-                                members. Through memberships, you can keep current in your chosen technology profession,
-                                connect with peers, and invest in your career advancement.IEEE members get exclusive
-                                access to the largest library of electrical engineering, computer science, and
-                                electronics technical literature.
-                            </p>
-                        </div>
-                    </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="second_2">
-                        <label for="second_2">Membership resources</label>
-                        <div class="content">
-                            <p>IEEE membership offers access to technical innovation, cutting-edge information,
-                                networking opportunities, and exclusive member benefits. Members support IEEE's mission
-                                to advance technology for humanity and the profession, while memberships build a
-                                platform to introduce careers in technology to students around the world.IEEE
-                                memberships support technical innovation for humanity and the profession. Access to
-                                cutting-edge information, networking opportunities, career enhancement, and many other
-                                exclusive member benefits are the key values of IEEE membership.</p>
-                            <ul>
-                                <li>Access to cutting-edge knowledge</li>
-                                <li>Networking opportunities</li>
-                                <li>Profession</li>
-                                <li>Member Discounts</li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="third_2">
-                        <label for="third_2">IEEE membership all across the world</label>
-                        <div class="content">
-                            <p>IEEE has the means for you to remain technically current through award winning
-                                publications, and technical societies. Using IEEE membership you can get;</p>
-                            <ul>
-                                <li><span style="font-weight: bold;">Career Resources and recognition:</span> Leadership
-                                    is a skill that must be crafted over time. Keep your career moving in the right
-                                    direction with IEEE career benefits and resources.</li>
-                                <li><span style="font-weight: bold;">Professional Networking:</span> With other IEEE
-                                    members who share similar interests, you can build a network revolving around your
-                                    profession, industry, or projects.</li>
-                                <li><span style="font-weight: bold;">Education:</span> Keep growing with IEEE continuing
-                                    education benefits and other educational opportunities available to IEEE members.
-                                    These resources allow you to acquire new skills and advance your professional
-                                    development.</li>
-                                <li><span style="font-weight: bold;">Discounts:</span> EEE members enjoy reduced rates
-                                    on many proprietary products and services including IEEE books and eBooks, journals
-                                    and articles, conferences and proceedings, standards, society memberships, and
-                                    continuing education courses. In addition, members have access to a variety of
-                                    affinity programs that offer savings.</li>
-                                <li><span style="font-weight: bold;">Humanitarian Programs:</span> Volunteering is a
-                                    rewarding way to develop interpersonal skills, create new professional
-                                    relationships, and apply your expertise to help others. IEEE members can access
-                                    information on local events and activities by signing in to IEEE Collabratec®, an
-                                    integrated multi-functional platform and global network of technology-focused
-                                    professionals, leveraging IEEE's extensive knowledge base and community of
-                                    thought-leaders. Once signed in, users can:</li>
-                                <li>Network with other technology professionals</li>
-                                <li>Establish a professional profile highlighting your accomplishments</li>
-                                <li>Join and participate in discussions on various technical interests</li>
-                                <li>Create a group to share and collaborate on projects</li>
-                                <li>Discover IEEE events and activities throughout the world</li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="fourth_2">
-                        <label for="fourth_2">Volunteer Development and resources</label>
-                        <div class="content">
-                            <p>IEEE membership helps the student to learn, and gain skills by:
-                            </p>
-                            <ul>
-                                <li><span style="font-weight: bold;">Career Resources and recognition:</span> Leadership
-                                    is a skill that must be crafted over time. Keep your career moving in the right
-                                    direction with IEEE career benefits and resources.</li>
-                                <li><span style="font-weight: bold;">Professional Networking:</span> With other IEEE
-                                    members who share similar interests, you can build a network revolving around your
-                                    profession, industry, or projects.</li>
-                                <li><span style="font-weight: bold;">Humanitarian Programs:</span> Volunteering is a
-                                    rewarding way to develop interpersonal skills, create new professional
-                                    relationships, and apply your expertise to help others.</li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="accordion" id="faq_id3">
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="first_3">
-                        <label for="first_3">What is INSB?</label>
-                        <div class="content">
-                            <p>IEEE NSU Student Branch (INSB) is a technical subunit of IEEE societies that associates
-                                with valuable resources available from IEEE.INSB is the biggest and the most renowned
-                                IEEE branch in Bangladesh. The high number of members and cooperative environment ensure
-                                INSB is the melting pot of technical brilliance and excellence.INSB is basically here to
-                                fulfill the needs of members and the mission of IEEE. It provides an opportunity for
-                                student members to begin networking in their areas of interest, and future professions
-                                as well as enjoy all the benefits and facilities of being an IEEE member.</p>
-                            <p>IEEE INSB offers 3 chapters,</p>
-
-                            <ol>
-                                <li>IEEE NSU PES Student Branch Chapter</li>
-                                <li>IEEE NSU RAS Student Branch Chapter</li>
-                                <li>IEEE NSU IAS Student Branch Chapter</li>
-                            </ol>
-
-                            <p>and 1 Affinity Group</p>
-                            <ol>
-                                <li>IEEE NSU WIE Affinity Group</li>
-                            </ol>
-                        </div>
-                    </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="second_3">
-                        <label for="second_3">Purpose and Objective of INSB</label>
-                        <div class="content">
-                            <p>INSB envision serving, inspiring, and getting inspired to change our community and
-                                cultivate our fellow engineers in their relative engineering fields through interactive
-                                learning, various projects/workshops, technical visits, and field trips that will help
-                                them to gain a better understanding of the professional environment and technical
-                                progress and enable their careers. To achieve excellence INSB provides extensive and
-                                informative seminars which are hosted by the brightest minds in the world.</p>
-                            <p>IEEE INSB provides you with a wonderful opportunity to meet diverse people and make
-                                friends which helps to develop your communication skills and helps to make business
-                                contacts. IEEE helps you develop a research mindset, helps to make business contacts,
-                                and gets access to the rich literature content available on IEEE Xplore. IEEE helps to
-                                earn skills like Web development, Graphic Design, Content Writing, Social Media
-                                Management, and User Interface Design. It also helps in choosing your field of interest
-                                and research(scientific articles) and helps to locate career opportunities easily.</p>
-
-                        </div>
-                    </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="third_3">
-                        <label for="third_3">Member opportunities of INSB</label>
-                        <div class="content">
-                            <p>IEEE is a member-run and organized platform. INSB is the biggest and the most renowned
-                                IEEE branch in Bangladesh. The high number of members and cooperative environment ensure
-                                INSB is the melting pot of technical brilliance and excellence. IEEE always has been and
-                                still is a breeding ground for new and improved ideas that have been changing the world
-                                in a positive way. To achieve excellence INSB provides extensive and informative
-                                seminars and events, programs which are hosted by the brightest minds of the world of
-                                different categories like:</p>
-                            <ul>
-                                <li>INSB organizes and hosts competitions and group projects which are sponsored by big
-                                    companies like “Robi” or “Grey”. These are great platforms to get a reputation that
-                                    will aid the members in their careers.</li>
-                                <li>INSB has also worked hard for women's betterment. IEEE affinity group WIE(Women in
-                                    Engineering) is currently the biggest organization for women in engineering.</li>
-                                <li>Well-educated, highly qualified, and skilled professionals from esteemed
-                                    institutions such as “Shikhbe Shobai” also host comprehensive workshops where the
-                                    INSB members can learn new traits straight from the veteran engineers.</li>
-                                <li>INSB also organizes many Alumni events. Where the current members of INSB can mix
-                                    with the ex-members and get a proper view of their career and corporate life.</li>
-                                <li>INSB also hosts many different life skill development events. These can be
-                                    educational or not. Their main purpose is to serve in real-life situations for the
-                                    members.</li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="fourth_3">
-                        <label for="fourth_3">Executive body of INSB</label>
-                        <div class="content">
-                            <p>They are the governing body that will conduct all the activities of the Student Branch.
-                            </p>
-                            <p>This includes decisions related to direction, communication with IEEE, proposals, event
-                                organizations, expenditures, recruitment, member discipline, member benefits, and
-                                administrative duties related to the Student Branch.</p>
-                            <p>Executive Body 2022-2023</p>
-                            <ul>
-                                <li>Branch Counselor - Tanjila Farah</li>
-                                <li>Chair - Mahi Barkatullah</li>
-                                <li>Vice Chair - Faiza Zabin Fiza</li>
-                                <li>Treasurer - Fahim Istiak </li>
-                                <li>Webmaster - Mahbubul Kabir Farajee</li>
-                                <li>Secretary(Activity) - Omar Hasan Rumi</li>
-                                <li>Secretary(Technical) - Ashrin Mobashira Shifa</li>
-                                <li>Chair, RAS Student Chapter - Zahid Hasan</li>
-                                <li>Chair, PES Student Chapter - Syed Redwan Md Hassan</li>
-                                <li>Chair, IAS Student Chapter - Rezaur Rahman Sabbir</li>
-                                <li>Chair, WIE Affinity Group - Samiha Tasnim</li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="fifth_3">
-                        <label for="fifth_3">How to connect with INSB</label>
-                        <div class="content">
-                            <p>IEEE official website - <a href="https://www.ieee.org/">https://www.ieee.org/</a></p>
-                            <p>INSB website - <a href="https://ieeensusb.org/">https://ieeensusb.org/</a></p>
-                            <p>INSB Facebook page - <a
-                                    href="https://www.facebook.com/ieeensusb">https://www.facebook.com/ieeensusb</a></p>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="accordion" id="faq_id4">
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="first_4">
-                        <label for="first_4">Chapter and Affinity Group of INSB</label>
-                        <div class="content">
-                            <p>IEEE Society focuses on bringing together practicing technologists and researchers to
-                                facilitate understanding of the complex interaction between technology, science, and
-                                society, its impact on individuals and society in general, as well as professional and
-                                social responsibility in the practice of engineering, science, and technology, and open
-                                discussion on the resulting issues.</p>
-                            <p>IEEE NSU Student Branch (INSB) is a technical subunit of IEEE societies that associates
-                                with valuable resources available from IEEE.INSB is the biggest and the most renowned
-                                IEEE branch in Bangladesh.</p>
-                            <p>IEEE INSB offers 3 chapters,</p>
-                            <ol>
-                                <li>IEEE NSU PES Student Branch Chapter</li>
-                                <li>IEEE NSU RAS Student Branch Chapter</li>
-                                <li>IEEE NSU IAS Student Branch Chapter</li>
-                            </ol>
-                            <p>and 1 Affinity Group</p>
-                            <ol>
-                                <li>IEEE NSU WIE Affinity Group</li>
-                            </ol>
-                        </div>
-                    </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="second_4">
-                        <label for="second_4">IEEE NSU PES Student Branch Chapter</label>
-                        <div class="content">
-                            <p>The IEEE Power & Energy Society (PES), formerly the IEEE Power Engineering Society, is
-                                the oldest society of the Institute of Electrical and Electronics Engineers (IEEE)
-                                focused on scientific and engineering knowledge about electric power and energy.</p>
-                            <p>IEEE NSU PES Student Branch Chapter is a technical sub-unit of one or more IEEE
-                                Societies. It thrives to provide scientific and engineering information on electric
-                                power and energy for the betterment of society and preferred professional development
-                                source of its members. Its vision is to implement a smart grid in Bangladesh using our
-                                own innovation and technology.</p>
-                        </div>
-                    </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="third_4">
-                        <label for="third_4">IEEE NSU RAS Student Branch Chapter</label>
-                        <div class="content">
-                            <p>IEEE North South University Student Branch, Robotics and Automation Society (RAS) was
-                                established on the 5th January 2017.</p>
-                            <p>It is the first Robotics and Automation Society Student Chapter in Bangladesh. From its
-                                beginning, it has been working for the development and facilitating the exchange of
-                                scientific and technological knowledge in Robotics and Automation that benefits members,
-                                the profession, and humanity among students.</p>
-                        </div>
-                    </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="fourth_4">
-                        <label for="fourth_4">IEEE NSU IAS Student Branch Chapter</label>
-                        <div class="content">
-                            <p>IEEE NSU IAS SBC from its initial work to build a network of professional connections is
-                                a part of it, as is staying on the inside track on happenings in the field which enables
-                                the advancement of theory and practice in the design, development, manufacturing, and
-                                application of safe, sustainable, reliable, smart electrical systems, equipment, and
-                                services.</p>
-                            <p>One of the largest special interest societies within the Institute of Electrical and
-                                Electronics Engineers (IEEE), the IAS focuses specifically on the unique needs of
-                                industry and commerce. It focuses on creating a bridge between theoretical study and the
-                                field of work in the application of electrical and electronic systems.</p>
-                        </div>
-                    </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="fifth_4">
-                        <label for="fifth_4">IEEE NSU WIE Affinity Group</label>
-                        <div class="content">
-                            <p>IEEE WIE is led by a diverse body of elected and appointed volunteer members. The
-                                governance structure includes boards for operational areas as well as bodies
-                                representing members in the 45 Societies and technical Councils and ten worldwide
-                                geographic regions.</p>
-                            <p>IEEE WIE NSU, an Affinity Group from NSU Student Branch, is dedicated to promoting women
-                                and inspiring girls from North South University and around the world to follow their
-                                academic interests to a career in IT and engineering. This affinity group was
-                                established on 20th June 2016 and since then its members have been actively working on
-                                their events and projects.</p>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="accordion" id="faq_id5">
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="first_5">
-                        <label for="first_5">Join INSB</label>
-                        <div class="content">
-                            <p>Every semester, the IEEE NSU Student Branch organizes a recruitment session. From the NSU
-                                students, we always receive a large number of outstanding responses and enthusiasm. We
-                                want to receive more responses like this and work together to achieve a higher goal.</p>
-                            <p>Any student of the ECE department of NSU can get membership in IEEE while we are
-                                recruiting. During the first months of every semester, the recruitment session takes
-                                place before in the recreation center of NSU.</p>
-                            <p>We have successfully completed our last day of recruitment for Summer 2022, and the
-                                enormous response from the participants was pretty overwhelming.</p>
-                            <p>Join us in our recruitment session in <span style="font-weight: bold;">Fall 2022</span>!
-                            </p>
-                        </div>
-                    </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="second_5">
-                        <label for="second_5">How to join a chapter of IEEE</label>
-                        <div class="content">
-                            <p>Every semester the chapters and affinity groups recruit our enthusiastic INSB volunteers.
-                            </p>
-                            <p>The details and recruitment session notices can be found on their Facebook pages.</p>
-                            <p>IEEE NSU PES SBC - https://www.facebook.com/ieeensupes/</p>
-                            <p>IEEE NSU RAS SBC- https://www.facebook.com/ieeensu.ras</p>
-                            <p>IEEE NSU IAS SBC- https://www.facebook.com/ieeensuiassbc</p>
-                            <p>IEEE NSU WIE AE- https://www.facebook.com/ieeewiensu</p>
-                        </div>
-                    </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="third_5">
-                        <label for="third_5">How much to pay for IEEE membership?</label>
-                        <div class="content">
-                            <p>In order to get any chapter or affinity group membership, you must have an IEEE
-                                membership first. One can get a half-year or full-year membership.</p>
-                            <p>For IEEE membership:</p>
-                            <ul>
-                                <li>For 1 year: 28$ or TK2850(in SPRING, FALL)*</li>
-                                <li>For half-year: 14$ or TK 1720(in SUMMER)</li>
-                            </ul>
-                            <p>For Society membership:</p>
-                            <ul>
-                                <li>PES: 7.5$ or TK930*</li>
-                                <li>IAS: 9.5$ or TK 1180*</li>
-                                <li>RAS: 4.75$ or TK590*</li>
-                            </ul>
-                            <p>For Affinity group membership:</p>
-                            <ul>
-                                <li>WIE: membership free</li>
-                            </ul>
-                            <p>**Sometimes IEEE or society provides up to 50% offer</p>
-                        </div>
-                    </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="fourth_5">
-                        <label for="fourth_5">Renewal Fee</label>
-                        <div class="content">
-                            <p>In order to renew IEEE and society membership the renewal fees in BDT:</p>
-                            <p>IEEE membership: TK 1720($14)</p>
-                            <p>IEEE RAS: TK 590($4.75)</p>
-                            <p>IEEE PES: TK 465($3.75)</p>
-                            <p>IEEE IAS: TK 1180($9.5)</p>
-                            <p>IEEE WIE: Free</p>
-                        </div>
-                    </li>
-                    <li class="list">
-                        <input type="checkbox" name="accordion" id="fifth_5">
-                        <label for="fifth_5">How to connect with IEEE and INSB</label>
-                        <div class="content">
-                            <p>IEEE official website - <a href="https://www.ieee.org/">https://www.ieee.org/</a></p>
-                            <p>INSB website - <a href="https://ieeensusb.org/">https://ieeensusb.org/</a></p>
-                            <p>INSB Facebook page - <a
-                                    href="https://www.facebook.com/ieeensusb">https://www.facebook.com/ieeensusb</a></p>
-                        </div>
-                    </li>
-                </ul>
+                {% endfor %}
             </section>
         </section>
 
@@ -881,13 +530,14 @@
                 </div>
                 <div class="form">
                     <form action="" method="post">
-                        <label for="name">Your name</label>
-                        <input type="text" name="name" class="input" required>
-                        <label for="email">Your email</label>
-                        <input type="email" name="email" class="input" required>
-                        <label for="message">Your message</label>
-                        <textarea type="text" name="message" required></textarea>
-                        <input type="submit" value="Submit">
+                        {% csrf_token %}
+                        <label for="user_name">Your name</label>
+                        <input type="text" name="user_name" class="input" required>
+                        <label for="user_email">Your email</label>
+                        <input type="email" name="user_email" class="input" required>
+                        <label for="user_message">Your message</label>
+                        <textarea type="text" name="user_message" required></textarea>
+                        <input type="submit" value="Submit" name="submit">
                     </form>
                 </div>
             </div>
@@ -912,8 +562,8 @@
 
             });
         });
-
-        function faq_id1() {
+        {% for category in all_categories %}
+        function faq_id{{forloop.counter}}() {
             const faqid = [...document.querySelectorAll('.body-wrapper.float-menu .faq .accordion_list .accordion')];
 
             for (let i = 0; i < faqid.length; i++) {
@@ -925,56 +575,7 @@
             }
 
         }
-        function faq_id2() {
-            const faqid = [...document.querySelectorAll('.body-wrapper.float-menu .faq .accordion_list .accordion')];
-
-            for (let i = 0; i < faqid.length; i++) {
-                if (i === 1) {
-                    faqid[i].classList.add('active');
-                } else {
-                    faqid[i].classList.remove('active');
-                }
-            }
-
-        }
-        function faq_id3() {
-            const faqid = [...document.querySelectorAll('.body-wrapper.float-menu .faq .accordion_list .accordion')];
-
-            for (let i = 0; i < faqid.length; i++) {
-                if (i === 2) {
-                    faqid[i].classList.add('active');
-                } else {
-                    faqid[i].classList.remove('active');
-                }
-            }
-
-        }
-        function faq_id4() {
-            const faqid = [...document.querySelectorAll('.body-wrapper.float-menu .faq .accordion_list .accordion')];
-
-            for (let i = 0; i < faqid.length; i++) {
-                if (i === 3) {
-                    faqid[i].classList.add('active');
-                } else {
-                    faqid[i].classList.remove('active');
-                }
-            }
-
-        }
-        function faq_id5() {
-            const faqid = [...document.querySelectorAll('.body-wrapper.float-menu .faq .accordion_list .accordion')];
-
-            for (let i = 0; i < faqid.length; i++) {
-                if (i === 4) {
-                    faqid[i].classList.add('active');
-                } else {
-                    faqid[i].classList.remove('active');
-                }
-            }
-
-        }
-
-
+        {% endfor %}
 
     </script>
     <script>var ms_grabbing_curosr = 'images/grabbing.cur', ms_grab_curosr = 'images/grab.cur';</script>
@@ -1119,6 +720,29 @@
     </script>
     <script type='text/javascript' src='masterslider/public/assets/js/masterslider.min.js'></script>
     <script src="./js/event_script.js"></script>
+    <script src="{% static '/js/event_script.js'%}"></script>
+
+    <script>
+        // Function to display the modal
+        function openModal() {
+            document.getElementById('myModal').style.display = 'flex';
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+
+        // Close the modal when clicking outside the modal content
+        window.onclick = function(event) {
+            var modal = document.getElementById('myModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        };
+        // Open the modal when the page loads (you can trigger this in your JavaScript when you want to show the modal)
+        openModal();
+    </script>
     
 
     {% block common_js %}

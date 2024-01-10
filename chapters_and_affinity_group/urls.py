@@ -43,7 +43,9 @@ urlpatterns = [
     #Event preview
     path('<str:primary>/event_details/<int:event_id>/preview/',views.event_preview,name='event_preview'),
     #Manage Main Website
-    path('<str:primary>/manage_main_website',views.manage_main_website,name="manage_main_website"), 
+    path('<str:primary>/manage_main_website',views.manage_main_website,name="manage_main_website"),
+    #Manage Main Website Preview
+    path('<str:primary>/manage_main_website/preview',views.manage_main_website_preview,name="manage_main_website_preview"), 
     #Feed Back
     path('<str:primary>/feedbacks',views.feedbacks,name="feedbacks")
 ]

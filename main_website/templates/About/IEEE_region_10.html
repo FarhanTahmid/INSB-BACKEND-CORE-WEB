@@ -219,14 +219,16 @@
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
     <div class="body-wrapper  float-menu">
 
-        {% block header %}
-        {% include 'header.html' %}
-        {% endblock header %}
+        {% if is_live %}
+            {% block header %}
+            {% include 'header.html' %}
+            {% endblock header %}
 
 
-        {% block wave_design %}
-        {% include 'wave.html' %}
-        {% endblock wave_design %}
+            {% block wave_design %}
+            {% include 'wave.html' %}
+            {% endblock wave_design %}
+        {% endif %}
 
 
         <!--Page Start-->
@@ -235,21 +237,17 @@
             <section class="max-width">
                 <div class="IEEE-Region-10">
                     <!--IEEE Region 10 pic-->
-                    <div class="IEEE-Region-10-pic"><img src="https://ieeensusb.org/wp-content/uploads/2021/03/R10-Logo-768x310.png" alt=""></div>
+                    <div class="IEEE-Region-10-pic"><img src="{{media_url}}{{ieee_region_10.ieee_region_10_image}}" alt=""></div>
                     <div>
                         <div>
                             <h2>IEEE REGION 10</h2>
                         </div>
                         <div class="bar"></div>
                         <div>
-                            <p>In the Institute of Electrical and Electronics Engineers (IEEE) there are 422,000 members
-                                from 160 countries. The Asia-Pacific region (also known as IEEE Region 10) is the
-                                largest, with over 130,000 members. This is the most cohesive community with everyone
-                                tied together like a family. This is most certainly the base for all Asian-Pacific
-                                organizational units.</p>
+                            <p>{{ieee_region_10.ieee_region_10_description|safe}}</p>
                         </div>
                         <!--IEEE Region 10 history button-->
-                        <div><a href="#">Region 10 History</a></div>
+                        <div><a href="{{ieee_region_10.ieee_region_10_history_link}}">Region 10 History</a></div>
                     </div>
             </section>
         </section>
@@ -265,18 +263,17 @@
                         </div>
                         <div class="bar"></div>
                         <div>
-                            <p> Institute of Electrical and Electronics Engineers(IEEE) Region 10 Young
-                                Professionals(YP) is a community of imaginative and creative members and volunteers
-                                across Asia Pacific. The Institute of Electrical and Electronics Engineers (IEEE) was
-                                established to assist young professionals in achieving their career goals, cultivating a
-                                dazzling professional image, and establishing a high profile in a variety of fields</p>
+                            <p>{{ieee_region_10.young_professionals_description|safe}}</p>
                         </div>
                         <!--Links-->
-                        <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square "></i>IEEE R10
-                                YP</a></div>
+                        {% for page_link in page_links.young_professionals_link %}
+                        <div>
+                            <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square "></i>{{page_link.title}}</a>
+                        </div>
+                        {% endfor %}
                     </div>
                     <!--Young Professionals pic-->
-                    <div class="young-professionals-pic"><img src="https://ieeensusb.org/wp-content/uploads/2021/03/achivement-2.jpg"></div>
+                    <div class="young-professionals-pic"><img src="{{media_url}}{{ieee_region_10.young_professionals_image}}"></div>
                 </div>
             </section>
         </section>
@@ -292,18 +289,14 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>Institute of Electrical and Electronics Engineers(IEEE) Region 10 Women in Engineering (WIE)
-                            is one of the largest international technical organizations dedicated for supporting women
-                            engineers and scientists and encouraging girls around the world to pursue a career in
-                            engineering. With 20,000 members from various countries, we are here to shine with the power
-                            of women.
-                            Please go through this link for more information :
-
-                        </p>
+                        <p>{{ieee_region_10.women_in_engineering_ddescription|safe}}</p>
                     </div>
                     <!--links-->
-                    <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE R10
-                            WIE</a></div>
+                    {% for page_link in page_links.women_in_engineering_link %}
+                    <div>
+                        <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
+                    </div>
+                    {% endfor %}
                 </div>
                 <div style="border-left: 1px solid rgb(255, 255, 255);"></div>
                 <!--Student and member activities section-->
@@ -313,17 +306,14 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>The Institute of Electrical and Electronics Engineers (IEEE) Region 10 Student Activities
-                            Committee is responsible for the needs of students from different student divisions in
-                            Asia-Pacific. They are very involved with all of their projects and respond quickly to
-                            IEEE-related questions. This group is very welcoming to newcomers and volunteers, and they
-                            are quick to inform them of their opportunities.
-                            Further details please go through this link:</p>
+                        <p>{{ieee_region_10.student_and_member_activities_description|safe}}</p>
                     </div>
                     <!--links-->
-                    <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE R10
-                            SAC</a>
+                    {% for page_link in page_links.student_and_member_activities_link %}
+                    <div>
+                        <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
                     </div>
+                    {% endfor %}
                 </div>
             </section>
         </section>
@@ -344,16 +334,14 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>Institute of Electrical and Electronics Engineers(IEEE) Region 10 is very interested in
-                            educational websites. The bulk of the events here are related to education and edification.
-                            Every aspect of educational advancement is addressed here in order to make student
-                            participants as effective as professionals
-                            Further details please go through this link:</p>
+                        <p>{{ieee_region_10.educational_activities_and_involvements_description|safe}}</p>
                     </div>
                     <!--links-->
-                    <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>Region 10
-                            Educational Involvements
-                        </a></div>
+                    {% for page_link in page_links.educational_activities_and_involvements_link %}
+                    <div>
+                        <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
+                    </div>
+                    {% endfor %}
                 </div>
                 <div style="border-left: 1px solid rgb(255, 255, 255);"></div>
                 
@@ -364,16 +352,14 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>Institute of Electrical and Electronics Engineers(IEEE) Region 10 Industry Relations
-                            Committee (IRC) is very important and effective community for R10. Now a days Students and
-                            Early Researcher Conference fund (SERCF) is willing to offer financial assistance to IEEE
-                            Student members and other members to enrich their exposure and experience. This community is
-                            working hard to incorporate the industry members
-                            Further details please go through this link:</p>
+                        <p>{{ieee_region_10.industry_relations_description|safe}}</p>
                     </div>
                     <!--links-->
-                    <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>R10 Industry
-                            Relations</a></div>
+                    {% for page_link in page_links.industry_relations_link %}
+                    <div>
+                        <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
+                    </div>
+                    {% endfor %}
                 </div>
             </section>
         </section>
@@ -384,7 +370,7 @@
         <section class="centering" style="background-color: #ffffff;">
             <section class="max-width">
                 <div class="young-professionals">
-                    <div><img src="https://ieeensusb.org/wp-content/uploads/2021/03/illustrated-character-4.png" alt="">
+                    <div><img src="{{media_url}}{{ieee_region_10.membership_development_image}}" alt="">
                     </div>
                     <div>
                         <div>
@@ -392,23 +378,21 @@
                         </div>
                         <div class="bar"></div>
                         <div>
-                            <p>The Membership Development and Leadership Training (MDLT) Fund of the Institute of
-                                Electrical and Electronics Engineers (IEEE) Region 10 Student Activities Committee (SAC)
-                                was established to persuade sections/student divisions to arrange events for the
-                                training of professionalism and growing up with leadership experience.</p>
+                            <p>{{ieee_region_10.membership_development_description|safe}}</p>
                         </div>
                         <!--links-->
-                        <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>Membership
-                                Development</a></div>
-                        <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>Membership
-                                Activites</a></div>
+                        {% for page_link in page_links.membership_development_link %}
+                        <div>
+                            <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
+                        </div>
+                        {% endfor %}
                     </div>
             </section>
         </section>
 
         <!--parallax-->
         <div class="parallax">
-            <img src="https://ieeensusb.org/wp-content/uploads/2021/03/region-10-events-1-1024x270.jpg" alt="Your Image Description">
+            <img src="{{media_url}}{{ieee_region_10.background_picture_parallax}}" alt="">
          </div>
 
         <!--Events and Conference section-->
@@ -419,13 +403,14 @@
                 </div>
                 <div class="bar"></div>
                 <div>
-                    <p>TENCON is the flagship premier international technical conference of IEEE Region 10.IEEE sponsors
-                        more than 1,900 annual conferences and events worldwide, curating cutting-edge content for all
-                        of the technical fields of interest within IEEE.</p>
+                    <p>{{ieee_region_10.events_and_conference_description|safe}}</p>
                 </div>
                 <!--links-->
-                <div><a href="#" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>Events List</a>
+                {% for page_link in page_links.events_and_conference_link %}
+                <div>
+                    <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
                 </div>
+                {% endfor %}
             </section>
         </section>
 
@@ -446,26 +431,26 @@
                         <div>
                             <p>Home page</p>
                             <!--links-->
-                            <p><a href="#" class="link">: http://www.ieeer10.org/</a></p>
+                            <p><a href="{{ieee_region_10.home_page_link}}" class="link">: http://www.ieeer10.org/</a></p>
                         </div>
                         <div>
                             <p>Website</p>
                             <!--links-->
-                            <p><a href="#" class="link">: IEEE Asia Pacific Region 10</a></p>
+                            <p><a href="{{ieee_region_10.website_link}}" class="link">: IEEE Asia Pacific Region 10</a></p>
                         </div>
                         <div>
                             <p>For membership enquiry</p>
                             <!--links-->
-                            <p><a href="#" class="link">: IEEE Support Center</a></p>
+                            <p><a href="{{ieee_region_10.membership_inquiry_link}}" class="link">: IEEE Support Center</a></p>
                         </div>
                         <div>
                             <p>For Volunteers</p>
                             <!--links-->
-                            <p><a href="#" class="link">: Ewell Tan</a></p>
+                            <p><a href="{{ieee_region_10.for_volunteers_link}}" class="link">: Ewell Tan</a></p>
                         </div>
                         <div>
                             <p>Contact number</p>
-                            <p>+65 6778 2873 +65 6778 9723</p>
+                            <p>{{ieee_region_10.contact_number}}</p>
                         </div>
                     </div>
             </section>
@@ -473,10 +458,12 @@
         <!--Page End-->
 
 
-        <!--Footer-->
-        {% block footer %}
-        {% include "footer_block.html" %}
-        {% endblock footer %}
+        {% if is_live %}
+            <!--Footer-->
+            {% block footer %}
+            {% include "footer_block.html" %}
+            {% endblock footer %}
+        {% endif %}
 
 
 

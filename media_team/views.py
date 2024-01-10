@@ -29,12 +29,12 @@ logger=logging.getLogger(__name__)
 def team_homepage(request):
     
     sc_ag=PortData.get_all_sc_ag(request=request)
-    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     #Loading data of the co-ordinators, co ordinator id is 9,
-    co_ordinators=renderData.MediaTeam.get_co_ordinator()
+    co_ordinators=MediaTeam.get_co_ordinator()
     #Loading data of the incharges, incharge id is 10
-    in_charges=renderData.MediaTeam.get_officer()
+    in_charges=MediaTeam.get_officer()
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     # get media volunteers
@@ -62,7 +62,7 @@ def manage_team(request):
     by the co-ordinatior only, unless the co-ordinators gives access to others as well'''
     
     sc_ag=PortData.get_all_sc_ag(request=request)
-    has_access=MediaTeam_Render_Access.get_common_access(request)
+    has_access=MediaTeam_Render_Access.access_for_manage_team(request)
     if has_access:
         data_access = MediaTeam.load_data_access()
         team_members = MediaTeam.load_team_members()
@@ -150,7 +150,7 @@ def manage_team(request):
 @login_required
 def event_page(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
-    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     '''Only events organised by INSB would be shown on the event page of Media Team
        So, only those events are being retrieved from database'''

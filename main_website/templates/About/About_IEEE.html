@@ -120,12 +120,19 @@
     }
 
     .mem-vol-pic {
-      width: 430px;
+      width: 100%;
       margin-top: 20px;
       display: flex;
       align-items: center;
+      /* height: 430px; */
+      /* overflow: hidden; */
+      justify-content: center;
     }
-
+    .mem-vol-pic img{
+      width: 430px;
+      height: 430px;
+      object-fit: cover;
+    }
     .ieee-bd-btn a {
       background-color: #002855;
       border: 3px solid #002855;
@@ -419,18 +426,19 @@
 
 <body data-rsssl="1" class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
   <div class="body-wrapper float-menu">
-    {% block header %} 
-      {% include 'header.html' %} 
-    {% endblock header %} 
+    {% if is_live %}
+      {% block header %} 
+        {% include 'header.html' %} 
+      {% endblock header %} 
 
-    {% block wave_design %}
-      {% include 'wave.html' %}
-    {% endblock wave_design %}
+      {% block wave_design %}
+        {% include 'wave.html' %}
+      {% endblock wave_design %}
+    {% endif %}
 
     <section class="centering">
       <section class="about-IEEE max-width">
         <div class="IEEE-bd-section-logo">
-          {% comment %} <img src="https://ieeensusb.org/wp-content/uploads/2021/03/e4c81f5dd1d43164425630c4ab971bd5.jpg" alt="" /> {% endcomment %}
           <img src="{{media_url}}{{about_ieee.about_image}}" alt="" />
         </div>
         <div>
@@ -445,10 +453,10 @@
           </div>
           <div class="first_buttons">
             <div class="ieee-bd-btn">
-              <a href="#">Learn More</a>
+              <a href="{{about_ieee.learn_more_link}}">Learn More</a>
             </div>
             <div class="mission-btn">
-              <a href="#">Mission and Vision</a>
+              <a href="{{about_ieee.mission_and_vision_link}}">Mission and Vision</a>
             </div>
           </div>
         </div>
@@ -468,22 +476,14 @@
             </p>
           </div>
           <div>
+            {% for page_link in page_links.community_link %}
             <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical Society</a>
+              <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
             </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical councils</a>
-            </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical Committees</a>
-            </div>
+            {% endfor %}
           </div>
         </div>
         <div class="mem-vol-pic">
-          {% comment %} <img src="https://ieeensusb.org/wp-content/uploads/2021/03/branches.jpg" alt="" /> {% endcomment %}
           <img src="{{media_url}}{{about_ieee.community_image}}" alt="" />
         </div>
       </section>
@@ -502,18 +502,11 @@
             </p>
           </div>
           <div>
+            {% for page_link in page_links.start_with_ieee_link %}
             <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
-                Xplore</a>
+              <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
             </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
-                Spectrum</a>
-            </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
-                Standards</a>
-            </div>
+            {% endfor %}
           </div>
         </div>
         <div style="border-left: 1px solid rgb(255, 255, 255)"></div>
@@ -528,18 +521,11 @@
             </p>
           </div>
           <div>
+            {% for page_link in page_links.collaboration_link %}
             <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
-                Xplore</a>
+              <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
             </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
-                Spectrum</a>
-            </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i> IEEE
-                Standards</a>
-            </div>
+            {% endfor %}
           </div>
 
         </div>
@@ -561,14 +547,11 @@
             </p>
           </div>
           <div>
+            {% for page_link in page_links.publications_link %}
             <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                IEEE Publications </a>
+              <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
             </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                List of IEEE publications</a>
-            </div>
+            {% endfor %}
           </div>
         </div>
         <div style="border-left: 1px solid rgb(255, 255, 255)"></div>
@@ -583,18 +566,11 @@
             </p>
           </div>
           <div>
+            {% for page_link in page_links.events_and_conference_link %}
             <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                IEEE Conferences and events</a>
+              <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
             </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Conferences and Events search</a>
-            </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Events and Conferences Calender</a>
-            </div>
+            {% endfor %}
           </div>
         </div>
       </section>
@@ -612,54 +588,16 @@
           </p>
         </div>
         <div class="achievement-container">
+          {% for page_link in page_links.achievement_link %}
           <div class="achievement-card">
             <div>
               <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
                 alt="" />
-              <h4>List of Achievements Suitable for Milestones</h4>
-              <a href="#">Read More</a>
+              <h4>{{page_link.title}}</h4>
+              <a href="{{page_link.link}}">Read More</a>
             </div>
           </div>
-          <div class="achievement-card">
-            <div>
-              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                alt="" />
-              <h4>IEEE MGA Achievement Awards </h4>
-              <a href="#">Read More</a>
-            </div>
-          </div>
-          <div class="achievement-card">
-            <div>
-              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                alt="" />
-              <h4>IEEE Recognition and Awards</h4>
-              <a href="#">Read More</a>
-            </div>
-          </div>
-          <div class="achievement-card">
-            <div>
-              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                alt="" />
-              <h4>Engineering Achievement Award</h4>
-              <a href="#">Read More</a>
-            </div>
-          </div>
-          <div class="achievement-card">
-            <div>
-              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                alt="" />
-              <h4>View the 2020 IEEE Medal and Recognition Recipients</h4>
-              <a href="#">Read More</a>
-            </div>
-          </div>
-          <div class="achievement-card">
-            <div>
-              <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                alt="" />
-              <h4>IEEE Members Affinity Group Achievements and Award</h4>
-              <a href="#">Read More</a>
-            </div>
-          </div>
+          {% endfor %}
         </div>
       </section>
     </section>
@@ -679,22 +617,14 @@
             </p>
           </div>
           <div>
+            {% for page_link in page_links.innovations_and_developments_link %}
             <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Development and Innovations</a>
+              <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
             </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical councils</a>
-            </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical Committees</a>
-            </div>
+            {% endfor %}
           </div>
         </div>
         <div class="mem-vol-pic">
-          {% comment %} <img src="https://ieeensusb.org/wp-content/uploads/2021/03/112942791_646944699242400_5651045497133643740_o.jpg" alt="" /> {% endcomment %}
           <img src="{{media_url}}{{about_ieee.innovations_and_developments_image}}" alt="" />
         </div>
       </section>
@@ -703,7 +633,6 @@
     <section class="centering" style="background-color: #f9f9f9">
       <section class="members-volunteers max-width">
         <div class="mem-vol-pic">
-          {% comment %} <img src="https://ieeensusb.org/wp-content/uploads/2021/03/illustrated-character-4.png" alt="" /> {% endcomment %}
           <img src="{{media_url}}{{about_ieee.students_and_member_activities_image}}" alt="" />
         </div>
         <div>
@@ -717,18 +646,11 @@
             </p>
           </div>
           <div>
+            {% for page_link in page_links.students_and_member_activities_link %}
             <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Development and Innovations</a>
+              <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
             </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical councils</a>
-            </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical Committees</a>
-            </div>
+            {% endfor %}
           </div>
         </div>
       </section>
@@ -746,22 +668,14 @@
             </p>
           </div>
           <div>
+            {% for page_link in page_links.quality_link %}
             <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Development and Innovations</a>
+              <a href="{{page_link.link}}" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>{{page_link.title}}</a>
             </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical councils</a>
-            </div>
-            <div>
-              <a href="" class="link"><i class="fa-solid fa-arrow-up-right-from-square"></i>
-                Technical Committees</a>
-            </div>
+            {% endfor %}
           </div>
         </div>
         <div class="mem-vol-pic">
-          {% comment %} <img src="https://ieeensusb.org/wp-content/uploads/2021/03/image3.png" alt="" /> {% endcomment %}
           <img src="{{media_url}}{{about_ieee.quality_image}}" alt="" />
         </div>
       </section>
@@ -779,7 +693,7 @@
           </div>
         </div>
         <div class="join-btn">
-          <button>Join Now</button>
+          <a href="{{about_ieee.join_now_link}}"><button>Join Now</button></a>
         </div>
       </section>
     </section>
@@ -793,24 +707,23 @@
           <div class="bar"></div>
           <div style="display: grid; grid-template-columns: 2fr 5fr">
             <p>Asia Pacific:</p>
-            <a href="https://site.ieee.org/ieeeap/contact-us/location/">https://site.ieee.org/ieeeap/contact-us/location/
-            </a>
+            <a href="{{about_ieee.asia_pacific_link}}">{{about_ieee.asia_pacific_link}}</a>
           </div>
           <div style="display: grid; grid-template-columns: 2fr 5fr">
             <p>IEEE computer organization:</p>
-            <a href="https://www.computer.org/about/contact"> https://www.computer.org/about/contact </a>
+            <a href="{{about_ieee.ieee_computer_organization_link}}">{{about_ieee.ieee_computer_organization_link}}</a>
           </div>
           <div style="display: grid; grid-template-columns: 2fr 5fr">
             <p>Customer Service:</p>
-            <p>00 1 732-981-0060</p>
+            <p>{{about_ieee.customer_service_number}}</p>
           </div>
           <div style="display: grid; grid-template-columns: 2fr 5fr">
             <p>Presidents:</p>
-            <p>Karen Bartleson (2017-2018), James A. Jefferies (Incumbent)</p>
+            <p>{{about_ieee.presidents_names}}</p>
           </div>
           <div style="display: grid; grid-template-columns: 2fr 5fr">
             <p>Founders:</p>
-            <p>American Institute of Electrical Engineers, Institute of Radio Engineers</p>
+            <p>{{about_ieee.founders_names}}</p>
           </div>
           <div>
 
@@ -820,10 +733,12 @@
       </section>
     </section>
 
-    <!--Footer-->
-    {% block footer %} 
-      {% include "footer_block.html" %} 
-    {% endblock footer %}
+    {% if is_live %}
+      <!--Footer-->
+      {% block footer %} 
+        {% include "footer_block.html" %} 
+      {% endblock footer %}
+    {% endif %}
 
   </div>
   {% block common_js %} 
