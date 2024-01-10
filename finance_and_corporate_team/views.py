@@ -7,15 +7,35 @@ from port.models import Roles_and_Position
 from django.contrib import messages
 from .renderData import FinanceAndCorporateTeam
 from system_administration.models import FCT_Data_Access
+from port.renderData import PortData
+from users import renderData
+from users.renderData import PanelMembersData
 
 # Create your views here.
 @login_required
 def team_homepage(request):
-    return render(request,"finance_and_corporate_team/team_homepage.html")
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    
+    # get team members
+    get_members=FinanceAndCorporateTeam.load_team_members_with_positions()
+    
+    context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'co_ordinators':get_members[0],
+            'incharges':get_members[1],
+            'core_volunteers':get_members[2],
+            'team_volunteers':get_members[3],
+        }
+    return render(request,"finance_and_corporate_team/team_homepage.html",context=context)
 
 @login_required
 def manage_team(request):
-
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     '''This function loads the manage team page for finance and corporate team and is accessable
     by the co-ordinatior only, unless the co-ordinators gives access to others as well'''
     user = request.user
@@ -25,7 +45,7 @@ def manage_team(request):
     data_access = FinanceAndCorporateTeam.load_manage_team_access()
     team_members = FinanceAndCorporateTeam.load_team_members()
     #load all position for insb members
-    position=Branch.load_roles_and_positions()
+    position=PortData.get_all_volunteer_position_with_sc_ag_id(request=request,sc_ag_primary=1)
     #load all insb members
     all_insb_members=Members.objects.all()
 
@@ -37,12 +57,14 @@ def manage_team(request):
             position=request.POST.get('position')
             for member in members_to_add:
                 FinanceAndCorporateTeam.add_member_to_team(member,position)
+            messages.success(request,"Added new Member to Team!")
             return redirect('finance_and_corporate_team:manage_team')
         
         if (request.POST.get('remove_member')):
             '''To remove member from team table'''
             try:
-                Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
+                load_current_panel=Branch.load_current_panel()
+                PanelMembersData.remove_member_from_panel(ieee_id=request.POST['remove_ieee_id'],panel_id=load_current_panel.pk,request=request)
                 try:
                     FCT_Data_Access.objects.filter(ieee_id=request.POST['remove_ieee_id']).delete()
                 except FCT_Data_Access.DoesNotExist:
@@ -91,7 +113,8 @@ def manage_team(request):
         'members':team_members,
         'insb_members':all_insb_members,
         'positions':position,
-        
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
     }
 
     if has_access:
