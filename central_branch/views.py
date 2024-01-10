@@ -1059,7 +1059,8 @@ def ieee_region_10(request):
 def ieee_bangladesh_section(request):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
-
+        #getting the ieee bangladesh section gallery images if any
+        ieee_bangladesh_section_gallery = Branch.get_all_ieee_bangladesh_section_images()
         ieee_bangladesh_section, created = IEEE_Bangladesh_Section.objects.get_or_create(id=1)
         page_title = 'ieee_bangladesh_section'
 
@@ -1079,6 +1080,10 @@ def ieee_bangladesh_section(request):
                 secretary_email = request.POST['secretary_email']
                 office_secretary_name = request.POST['office_secretary_name']
                 office_secretary_number = request.POST['office_secretary_number']
+                gallery_images = request.FILES.getlist('gallery_img')
+
+                #passing the gallery images to function for saving them in database
+                Branch.save_ieee_bangladesh_section_images(gallery_images)
 
                 about_image = request.FILES.get('about_image')
                 members_and_volunteers_image = request.FILES.get('members_and_volunteers_image')
@@ -1142,6 +1147,17 @@ def ieee_bangladesh_section(request):
 
                 return redirect("central_branch:ieee_bangladesh_section")
             
+            if request.POST.get('delete_image_gallery'):
+
+                #getting id of image that needs to be deleted
+                img_id = request.POST.get('remove_image')
+                #passing the id to function for the image to be deleted
+                if Branch.delete_ieee_bangladesh_section_gallery_image(img_id):
+                    messages.success(request,'Image removed successfully')
+                else:
+                    messages.error(request,'Something went wrong while deleting the image')
+                return redirect("central_branch:ieee_bangladesh_section")
+            
         page_links = Branch.get_about_page_links(page_title=page_title)
 
         context={
@@ -1149,6 +1165,8 @@ def ieee_bangladesh_section(request):
             'ieee_bangladesh_section':ieee_bangladesh_section,
             'page_links':page_links,
             'media_url':settings.MEDIA_URL,
+            'allowed_image_upload':6-len(ieee_bangladesh_section_gallery),
+            'all_images':ieee_bangladesh_section_gallery
         }
         return render(request,'Manage Website/About/IEEE Bangladesh Section/ieee_bangladesh_section.html',context=context)
     except Exception as e:

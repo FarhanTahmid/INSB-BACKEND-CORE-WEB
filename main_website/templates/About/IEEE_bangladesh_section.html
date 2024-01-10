@@ -522,24 +522,11 @@
                 </div>
                 <div class="bar"></div>
                 <div class="pic-container">
+                    {% for image in all_images %}
                     <div class="pic-box">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2021/03/group.jpg" style="width:100%" alt="">
-                        {% comment %} <a href="https://ieeensusb.org/wp-content/uploads/2021/03/group.jpg"
-                            data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img
-                                src="https://ieeensusb.org/wp-content/uploads/2021/03/group.jpg" alt="" /></a> {% endcomment %}
+                        <img src="{{media_url}}{{image.picture}}" style="width:100%" alt="Gallery Image">
                     </div>
-                    <div class="pic-box">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2021/03/group-2.jpg" style="width:100%" alt="">
-                        {% comment %} <a href="https://ieeensusb.org/wp-content/uploads/2021/03/group-2.jpg"
-                            data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img
-                                src="https://ieeensusb.org/wp-content/uploads/2021/03/group-2.jpg" alt="" /></a> {% endcomment %}
-                    </div>
-                    <div class="pic-box">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2021/03/group-3.jpg" style="width:100%" alt="">
-                        {% comment %} <a href="https://ieeensusb.org/wp-content/uploads/2021/03/group-3.jpg"
-                            data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img
-                                src="https://ieeensusb.org/wp-content/uploads/2021/03/group-3.jpg" alt="" /></a> {% endcomment %}
-                    </div>
+                    {% endfor %}
                 </div>
                 <div id="myModal" class="modal">
                     <span class="close" onclick="closeModal()">&times;</span>
