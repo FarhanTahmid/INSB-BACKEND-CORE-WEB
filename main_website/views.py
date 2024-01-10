@@ -1138,4 +1138,14 @@ def contact(request):
     return render(request, 'Contact/contact.html', context)
 
 def toolkit(request):
-    return render(request, 'Publications/Toolkit/toolkit.html')
+    #loading all the teams of Branch
+    branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+    
+    # load all toolkit items
+    toolkit_items = Toolkit.objects.all().order_by('pk')
+    
+    context={
+        'branch_teams':branch_teams,
+        'all_toolkits':toolkit_items,
+    }
+    return render(request, 'Publications/Toolkit/toolkit.html',context=context)

@@ -2639,7 +2639,7 @@ def manage_toolkit(request):
     user_data=current_user.getUserData() #getting user data as dictionary file
     
     # get all toolkits
-    all_toolkits=Toolkit.objects.all().order_by('-pk')
+    all_toolkits=Toolkit.objects.all().order_by('pk')
     if(request.method=="POST"):
         toolkit_form=ToolkitForm(request.POST,request.FILES)
         if(request.POST.get('add_item')):
