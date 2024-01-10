@@ -58,9 +58,14 @@ def insb_members_list(request):
     '''This function is responsible to display all the member data in the page'''
     if request.method=="POST":
         if request.POST.get("site_register"):
-            
             return redirect('membership_development_team:site_registration')
-        
+        if(request.POST.get('refresh_member_status')):
+            get_all_members=Members.objects.all()
+            for member in get_all_members.iterator():
+                member.is_active_member=renderData.MDT_DATA.get_member_account_status(ieee_id=member.ieee_id)
+                member.save()
+            messages.success(request,"All Members Account Status were Updated!")
+            return redirect('membership_development_team:members_list')        
     members=Members.objects.order_by('position')
     totalNumber=Members.objects.all().count()
     has_view_permission=True
