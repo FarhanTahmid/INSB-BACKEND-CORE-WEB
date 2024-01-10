@@ -222,7 +222,7 @@
         }
 
 
-        .modal {
+        .modal.message-modal {
             display: none;
             position: fixed;
             top: 0;
@@ -234,7 +234,7 @@
             align-items: center;
         }
         
-        .modal-content {
+        .modal-content.message-modal-content {
             background-color: #fff;
             width: 450px;
             height: 115px;
@@ -247,7 +247,7 @@
             animation: unfold 1.25s ease-in-out forwards;
         }
         
-        .modal-content-items {
+        .modal-content-items.message-modal-content-items {
             opacity: 0;
             animation: fadeIn 1.25s 1s ease-in-out forwards;
         }
@@ -267,7 +267,7 @@
         }
         
         /* Styling for the close button */
-        .close {
+        .close.message-close {
             cursor: pointer;
             position: absolute;
             top: 10px;
@@ -339,10 +339,10 @@
             <div class="container">
 
                 {% for message in messages  %}
-                    <div id="myModal{{ loop.index }}" class="modal">
-                        <div class="modal-content">
-                            <div class="modal-content-items">
-                                <span class="close" onclick="closeModal({{ loop.index }})">&times;</span>
+                    <div id="myMessageModal{{ loop.index }}" class="modal message-modal">
+                        <div class="modal-content message-modal-content">
+                            <div class="modal-content-items message-modal-content-items">
+                                <span class="close message-close" onclick="closeModal({{ loop.index }})">&times;</span>
                                 <p class="message">{{ message }}</p>
                             </div>
                         </div>
@@ -661,20 +661,21 @@
     {% endblock %}
     <script src="{% static '/js/event_script.js'%}"></script>
 
+    <!--Logic to handle my message modal-->
     <script>
         // Function to display the modal
         function openModal() {
-            document.getElementById('myModal').style.display = 'flex';
+            document.getElementById('myMessageModal').style.display = 'flex';
         }
 
         // Function to close the modal
         function closeModal() {
-            document.getElementById('myModal').style.display = 'none';
+            document.getElementById('myMessageModal').style.display = 'none';
         }
 
         // Close the modal when clicking outside the modal content
         window.onclick = function(event) {
-            var modal = document.getElementById('myModal');
+            var modal = document.getElementById('myMessageModal');
             if (event.target == modal) {
                 closeModal();
             }
