@@ -788,7 +788,7 @@ def panel_members_page(request,year):
     get_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_panel.pk)
     # TODO:add algo to add SC AG Faculty and EB
     branch_counselor=[]
-    sc_ag_faculty_advisors=[]
+    sc_ag_faculty_advisors=PortData.get_sc_ag_faculty_by_year(panel_year=get_panel.year,request=request)
     mentors=[]
     branch_chair=[]
     branch_eb=[]

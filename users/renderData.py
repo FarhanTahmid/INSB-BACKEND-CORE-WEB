@@ -564,15 +564,16 @@ class PanelMembersData:
         except Exception as e:
             PanelMembersData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error(request,"Can not add alumni to Branch Panel. Something went wrong!")
+            messages.error(request,"Can not add alumni to the Panel. Something went wrong!")
             return False
-            
+    
+           
             
     def remove_alumns_from_branch_panel(request,member_to_remove,panel_id):
-        '''Removes Alumni Member from Branch panel. Gets the tenure id, and the Member id from Panel Members table'''
+        '''Removes Alumni Member from Branch panel. Gets the panel id, and the Member id from Panel Members table'''
         try:
             member_to_remove = Panel_Members.objects.get(pk=member_to_remove,tenure=panel_id)
-            messages.error(request,f"{member_to_remove.ex_member.name} was removed from the panel.")
+            messages.warning(request,f"{member_to_remove.ex_member.name} was removed from the panel.")
             member_to_remove.delete()
             return True
         except Exception as e:

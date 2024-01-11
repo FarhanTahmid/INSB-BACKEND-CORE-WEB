@@ -262,13 +262,13 @@
                                 {% for member in sc_ag_eb_members %}
                                 <tr>
                                     {% if member_details_access %}
-                                    <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.member.ieee_id %}">{{member.member.ieee_id}}</a></td>
+                                    <td>{{member.member.ieee_id}}</a></td>
                                     {% else %}
                                     <td>{{member.member.ieee_id}}</td>
                                     {% endif %}
-                                    <td>{{ member.member.name  }}</td>
-                                    <td>{{member.member.email_ieee}}</td>
-                                    <td>{{member.position}}</td>
+                                    <td>{{ member.member.name }}{{member.ex_member.name}}</td>
+                                    <td>{{member.member.email_ieee}}{{ member.ex_member.email  }}</td>
+                                    <td>{{member.position}}{{member.position}}</td>
                                     {% if panel_edit_access %}
                                     <td>
                                         <form method="POST">

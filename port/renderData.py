@@ -102,6 +102,25 @@ class PortData:
             PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"An internal Database error occured loading the Excom!")
+    
+    def get_sc_ag_faculty_by_year(request,panel_year):
+        try:
+            faculty_of_sc_ag=[]
+            for i in range(2,6):
+                try:
+                    get_panel_of_sc_ag=Panels.objects.get(year=panel_year,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=i))
+                except:
+                    continue
+                get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel_of_sc_ag.pk))
+                if(get_panel_members.exists()):
+                    for member in get_panel_members:
+                        if(member.position.is_sc_ag_eb_member and member.position.is_faculty):
+                            faculty_of_sc_ag.append(member)
+            return faculty_of_sc_ag
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"An internal Database error occured loading the Excom!")
                 
     def get_all_executive_positions_of_branch(request,sc_ag_primary):
          

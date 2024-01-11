@@ -10,6 +10,8 @@ from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
 from port.renderData import PortData
 from users import renderData
+from users.renderData import Alumnis,PanelMembersData
+from django.utils.datastructures import MultiValueDictKeyError
 from django.http import HttpResponse
 from .get_sc_ag_info import SC_AG_Info
 from .renderData import Sc_Ag
@@ -29,6 +31,7 @@ from central_events.models import Events
 from central_events.forms import EventForm
 from events_and_management_team.renderData import Events_And_Management_Team
 from port.models import Chapters_Society_and_Affinity_Groups
+from users.models import Alumni_Members
 from django.views.decorators.clickjacking import xframe_options_exempt
 from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
 # Create your views here.
@@ -156,7 +159,6 @@ def sc_ag_panel_details(request,primary,panel_pk):
 
         # get sc_ag_executives
         sc_ag_eb_members=SC_AG_Info.get_sc_ag_executives_from_panels(request=request,panel_id=panel_pk)
-        
         if request.method=="POST":
             # adding member to panel
             if request.POST.get('add_executive_to_sc_ag_panel'):
@@ -238,7 +240,7 @@ def sc_ag_panel_details(request,primary,panel_pk):
                 )):
                     return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
 
-               
+        print(sc_ag_eb_members)  
         context={
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
@@ -255,7 +257,8 @@ def sc_ag_panel_details(request,primary,panel_pk):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request") 
+        # return HttpResponseBadRequest("Bad Request") 
+        return render(request,'Panels/sc_ag_executive_members_tab.html',context=context)
 
 @login_required               
 def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
@@ -290,7 +293,7 @@ def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
             if request.POST.get('remove_member_officer'):
                 member_to_remove=request.POST['remove_officer_member']
                 if(Sc_Ag.remove_sc_ag_member_from_panel(request=request,member_ieee_id=member_to_remove,panel_id=panel_pk,sc_ag_primary=primary)):
-                    return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details_officers',primary,panel_pk)
             
             
         context={
@@ -390,11 +393,51 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
         else:
             tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
 
+        # get all alumni members registered in database of IEEE NSU SB
+        alumni_members=Alumni_Members.objects.all().order_by('pk')
+        
+        if(request.POST.get('create_new_alumni')):
+            try:
+                alumni_name=request.POST['alumni_name']
+                alumni_email=request.POST['alumni_email']
+                alumni_contact_no=request.POST['alumni_contact_no']
+                alumni_facebook_link=request.POST['alumni_facebook_link']
+                alumni_linkedin_link=request.POST['alumni_linkedin_link']
+                alumni_picture=request.FILES.get('alumni_picture')
+
+            except MultiValueDictKeyError:
+                messages.error(request,"Image can not be uploaded!")
+            finally:
+                # create alumni
+                if(Alumnis.create_alumni_members(
+                    request=request,contact_no=alumni_contact_no,
+                    email=alumni_email,
+                    facebook_link=alumni_facebook_link,
+                    linkedin_link=alumni_linkedin_link,
+                    name=alumni_name,
+                    picture=alumni_picture)):
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details_alumni',panel_pk)
+                else:
+                    messages.warning(request,'Failed to Add new alumni!')
+        if(request.POST.get('add_alumni_to_panel')):
+            alumni_to_add=request.POST.getlist('alumni_select')
+            position=request.POST['alumni_position']
+            for i in alumni_to_add:            
+                if(PanelMembersData.add_alumns_to_branch_panel(request=request,alumni_id=i,panel_id=panel_pk,position=position)):
+                    pass
+        if(request.POST.get('remove_member_alumni')):
+            alumni_to_remove=request.POST['remove_alumni_member']
+            if(PanelMembersData.remove_alumns_from_branch_panel(request=request,member_to_remove=alumni_to_remove,panel_id=panel_pk)):
+                pass        
+        
         context={
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'panel_info':panel_info,
             'tenure_time':tenure_time,
+            'positions':SC_AG_Info.get_sc_ag_executive_positions(request=request,sc_ag_primary=primary),
+            'alumni_members':alumni_members,
+            'alumni_members_in_panel':PanelMembersData.get_alumni_members_from_panel(panel=panel_pk,request=request)
 
         }
         return render(request,'Panels/sc_ag_alumni_members_tab.html',context=context)
@@ -402,8 +445,7 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
-
+        raise HttpResponseBadRequest("Bad Request")
 @login_required
 def sc_ag_membership_renewal_sessions(request,primary):
     try:
