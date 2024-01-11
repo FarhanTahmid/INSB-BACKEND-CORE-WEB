@@ -62,6 +62,20 @@
                             class="form-control"
                         />
                     </div>
+                    <br>
+                    <div class="form-group">
+                        <label>Event Time: <span style="color:red">*<span></label> 
+                        <input
+                            placeholder="Event Time"
+                            class="form-control"
+                            type="text"
+                            autocomplete="off"
+                            required
+                            name="event_time"
+                            value="{{event_details.event_name}}" 
+                        />
+                            
+                    </div>
                     <br>  
                     <div style="text-align: center;">
                         {% if is_branch %}
