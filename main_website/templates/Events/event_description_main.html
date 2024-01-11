@@ -392,6 +392,15 @@
                                 <!--Register Box-->
                                 <div class="box">
                                     <div class="inner_box">
+                                        <h6><i class="fa-regular fa-clock" style="color: #E87722;"></i><span
+                                                style="margin-left: 10px;">Time</span></h6>
+                                        {% if event.registration_fee %}
+                                        <h6 class="adjust_placement">{{event.registration_fee_amount}}</h6>
+                                        {% else %}
+                                        <h6 class="adjust_placement" style="color: #5e5e5e;">Free</h6>
+                                        {% endif %}
+                                    </div>
+                                    <div class="inner_box">
                                         <h6><i class="fa-solid fa-wallet" style="color: #E87722;"></i><span
                                                 style="margin-left: 10px;">COST</span></h6>
                                         {% if event.registration_fee %}
@@ -453,6 +462,15 @@
                         <section class="register-bottom-for-tablet-view">
                             <!--Register Box-->
                             <div class="box">
+                                <div class="inner_box">
+                                    <h6><i class="fa-regular fa-clock" style="color: #E87722;"></i><span
+                                            style="margin-left: 10px;">Time</span></h6>
+                                    {% if event.registration_fee %}
+                                    <h6 class="adjust_placement">{{event.registration_fee_amount}}</h6>
+                                    {% else %}
+                                    <h6 class="adjust_placement" style="color: #5e5e5e;">Free</h6>
+                                    {% endif %}
+                                </div>
                                 <div class="inner_box">
                                     <h6><i class="fa-solid fa-wallet" style="color: 		#E87722;"></i><span
                                             style="margin-left: 10px;">COST</span></h6>
