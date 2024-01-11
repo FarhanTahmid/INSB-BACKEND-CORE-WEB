@@ -241,6 +241,9 @@ def manage_team(request):
 
     '''This function loads the manage team page for public relations and is accessable
     by the co-ordinatior only, unless the co-ordinators gives access to others as well'''
+
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
     user = request.user
     has_access=(Access_Render.team_co_ordinator_access(team_id=PRT_Data.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username)
@@ -314,6 +317,7 @@ def manage_team(request):
                             messages.info(request,f"Member with {ieeeID} was added to the team table!")
                             return redirect('public_relation_team:manage_team')
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'data_access':data_access,
             'members':team_members,

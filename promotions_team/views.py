@@ -8,14 +8,17 @@ from django.contrib import messages
 from .renderData import PromotionTeam
 from system_administration.models import Promotions_Data_Access
 from port.renderData import PortData
-from users.renderData import PanelMembersData
+from users.renderData import PanelMembersData,LoggedinUser
 # Create your views here.
 @login_required
 def team_homepage(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get officers of the team
     get_members=PromotionTeam.load_team_members()
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'co_ordinators':get_members[0],
         'incharges':get_members[1],
@@ -30,6 +33,8 @@ def manage_team(request):
     '''This function loads the manage team page for promotions team and is accessable
     by the co-ordinatior only, unless the co-ordinators gives access to others as well'''
     sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     user = request.user
     has_access=(Access_Render.team_co_ordinator_access(team_id=PromotionTeam.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username)
     or PromotionTeam.promotions_manage_team_access(user.username))
@@ -100,6 +105,7 @@ def manage_team(request):
                             messages.info(request,f"Member with {ieeeID} was added to the team table!")
                             return redirect('promotions_team:manage_team')
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'data_access':data_access,
             'members':team_members,

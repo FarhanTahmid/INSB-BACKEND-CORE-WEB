@@ -919,7 +919,8 @@ def manage_about(request):
 
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
-
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         has_access = Branch_View_Access.get_manage_web_access(request)
         if has_access:
             about_ieee, created = About_IEEE.objects.get_or_create(id=1)
@@ -1030,6 +1031,7 @@ def manage_about(request):
             page_links = Branch.get_about_page_links(page_title=page_title)
             
             context={
+                'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'about_ieee':about_ieee,
                 'media_url':settings.MEDIA_URL,
@@ -1049,7 +1051,8 @@ def manage_about(request):
 def ieee_region_10(request):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
-
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         has_access = Branch_View_Access.get_manage_web_access(request)
         if has_access:
             about_ieee_region_10, created = IEEE_Region_10.objects.get_or_create(id=1)
@@ -1148,6 +1151,7 @@ def ieee_region_10(request):
             page_links = Branch.get_about_page_links(page_title=page_title)
 
             context={
+                'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'ieee_region_10':about_ieee_region_10,
                 'media_url':settings.MEDIA_URL,
@@ -1167,7 +1171,8 @@ def ieee_region_10(request):
 def ieee_bangladesh_section(request):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
-
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         has_access = Branch_View_Access.get_manage_web_access(request)
         if has_access:
             #getting the ieee bangladesh section gallery images if any
@@ -1272,6 +1277,7 @@ def ieee_bangladesh_section(request):
             page_links = Branch.get_about_page_links(page_title=page_title)
 
             context={
+                'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'ieee_bangladesh_section':ieee_bangladesh_section,
                 'page_links':page_links,
@@ -1292,7 +1298,8 @@ def ieee_bangladesh_section(request):
 def ieee_nsu_student_branch(request):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
-
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         has_access = Branch_View_Access.get_manage_web_access(request)
         if has_access:
             ieee_nsu_student_branch, created = IEEE_NSU_Student_Branch.objects.get_or_create(id=1)
@@ -1359,6 +1366,7 @@ def ieee_nsu_student_branch(request):
                     return redirect("central_branch:ieee_nsu_student_branch")
 
             context={
+                'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'ieee_nsu_student_branch':ieee_nsu_student_branch,
                 'media_url':settings.MEDIA_URL,
@@ -1474,6 +1482,8 @@ def faq(request):
 
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         has_access = Branch_View_Access.get_manage_web_access(request)
         if has_access:
             all_categories_of_faq = Branch.get_all_category_of_questions()
@@ -1531,6 +1541,7 @@ def faq(request):
                     return redirect("central_branch:faq")
 
             context={
+                'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'all_titles':all_categories_of_faq,
                 'saved_question_answers':saved_questions_answers,
@@ -2733,6 +2744,8 @@ def feedbacks(request):
         groups'''
     
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         #rendering all the data to be loaded on the page
         sc_ag=PortData.get_all_sc_ag(request=request)
         #getting all the feedbacks for INSB
@@ -2754,6 +2767,7 @@ def feedbacks(request):
                     return redirect("central_branch:feedbacks")
         
             context={
+                    'user_data':user_data,
                     'is_branch' : True,
                     'all_sc_ag':sc_ag,
                     'media_url':settings.MEDIA_URL,
