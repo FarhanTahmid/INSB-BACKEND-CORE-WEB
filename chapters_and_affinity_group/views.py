@@ -1370,6 +1370,7 @@ def manage_main_website(request, primary):
                     secondParagraph_details = request.POST.get('secondParagraph')
                     email = request.POST.get('email')
                     facebook_link = request.POST.get('facebook_link')
+                    mission_vision_color_code_details = request.POST.get('mission_vision_color_code')
 
                     print(pageTitle_details)
                     #checking to see if no picture is uploaded by user, if so then if picture is already present in database
@@ -1393,7 +1394,7 @@ def manage_main_website(request, primary):
                                     mission_description,mission_image,vision_description,vision_picture,
                                     what_is_this_description,why_join_it,what_activites_it_has,how_to_join,
                                     short_form,short_form_alternative_details,primary_color_code_details,secondary_color_code_details,
-                                    text_color_code_details,pageTitle_details,secondParagraph_details,email,facebook_link):
+                                    text_color_code_details,pageTitle_details,secondParagraph_details,email,facebook_link,mission_vision_color_code_details):
                         
                             messages.success(request,"Saved Changes Successfully!")
                     else:
