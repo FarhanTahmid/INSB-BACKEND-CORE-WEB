@@ -36,24 +36,22 @@
             margin: 30px 15px;
         }
         
-        .error_container p , .error_container h3{
+        .error_container h1 , .error_container p , .error_container h3{
             color: #4b4d4f;
             font-weight: 600;
         }
         .error_container h3{
             margin-bottom: -20px;
-            margin-top: 180px;
+            margin-top: 30px;
+        }
+        .error_container h1{
+            position: relative;
+            margin-bottom: -70px;
+            z-index: 2;
         }
         .gif{
             max-width: 848px;
             max-height: 400px;
-            margin-top: 0px;
-            overflow: hidden;
-        }
-        .gif img{
-            width: auto;
-            object-fit: contain;
-            object-position: ;
         }
         /*common CSS used throughout the page*/
 
@@ -68,11 +66,17 @@
             .max-width {
                 max-width: 650px;
             }
+            .error_container h1{
+                margin-bottom: -50px;
+            }
         }
 
         @media screen and (max-width: 630px) {
             .max-width {
                 max-width: 90%;
+            }
+            .error_container h1{
+                margin-bottom: -10px;
             }
         }
 
@@ -93,12 +97,12 @@
 
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
     <div class="body-wrapper  float-menu">
-        
 
         <!--Page start-->
         <section class="centering">
             <section class="max-width error_container">
-                <div class="gif"><img src="https://i.pinimg.com/originals/0e/c0/db/0ec0dbf1e9a008acb9955d3246970e15.gif" alt=""></div>
+                <div class="error_code"><h1>404</h1></div>
+                <div class="gif"><img src="https://cdn.dribbble.com/users/550484/screenshots/2128340/404-gif.gif" alt=""></div>
                 <div class="404_message"><h3>Looks like you are lost</h3> <br><p>the page you are looking for is not available!</p></div>
             </section>
         </section>
