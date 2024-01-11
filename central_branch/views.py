@@ -318,6 +318,68 @@ def branch_panel_details(request,panel_id):
             # remove member
             if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
                 return redirect('central_branch:panel_details',panel_id)
+            
+        #Create Positions
+        if(request.POST.get('create_position')):
+            mentor_position_check=request.POST.get('mentor_position_check')
+            if mentor_position_check is None:
+                mentor_position_check=False
+            else:
+                mentor_position_check=True
+                
+            officer_position_check=request.POST.get('officer_position_check')
+            if officer_position_check is None:
+                officer_position_check=False
+            else:
+                officer_position_check=True
+                
+            coordinator_position_check=request.POST.get('coordinator_position_check')
+            if coordinator_position_check is None:
+                coordinator_position_check=False
+            else:
+                coordinator_position_check=True
+            
+            executive_position_check=request.POST.get('executive_position_check')
+            if executive_position_check is None:
+                executive_position_check=False
+            else:
+                executive_position_check=True
+            
+            faculty_position_check=request.POST.get('faculty_position_check')
+            if faculty_position_check is None:
+                faculty_position_check=False
+            else:
+                faculty_position_check=True
+
+            core_volunteer_position_check = request.POST.get('core_volunteer_position_check')
+            if core_volunteer_position_check is None:
+                core_volunteer_position_check = False
+            else:
+                core_volunteer_position_check = True
+
+            volunteer_position_check = request.POST.get('volunteer_position_check')
+            if volunteer_position_check is None:
+                volunteer_position_check = False
+            else:
+                volunteer_position_check = True
+                
+            position_name=request.POST['position_name']
+            # create new Position
+            if(PortData.create_positions(request=request,sc_ag_primary=1,
+                                        is_eb_member=executive_position_check,
+                                        is_officer=officer_position_check,
+                                        is_sc_ag_eb_member=False,is_mentor=mentor_position_check,
+                                        is_faculty=faculty_position_check,is_co_ordinator=coordinator_position_check,role=position_name,
+                                        is_core_volunteer=core_volunteer_position_check,is_volunteer=volunteer_position_check)):
+                return redirect('central_branch:panel_details',panel_id)
+            
+        #Create New TEam
+        if(request.POST.get('create_team')):
+            team_name=request.POST['team_name']
+            if(PortData.create_team(
+                request=request,sc_ag_primary=1,team_name=team_name
+            )):
+                return redirect('central_branch:panel_details',panel_id)
 
         
     context={
