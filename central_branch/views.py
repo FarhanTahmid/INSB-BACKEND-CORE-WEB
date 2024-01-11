@@ -383,6 +383,7 @@ def branch_panel_details(request,panel_id):
 
         
     context={
+        'panel_edit_access':Branch_View_Access.get_create_panel_access(request),
         'user_data':user_data,
         'all_sc_ag':sc_ag,
         'panel_id':panel_id,
