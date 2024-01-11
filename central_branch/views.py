@@ -3153,7 +3153,7 @@ def member_details(request,ieee_id):
                 member_to_delete=Members.objects.get(ieee_id=ieee_id)
                 messages.error(request,f"{member_to_delete.ieee_id} was deleted from the INSB Registered Members Database.")
                 member_to_delete.delete()
-                return redirect('membership_development_team:members_list')
+                return redirect('central_branch:members_list')
                 
                 
         if(has_access):
@@ -3166,6 +3166,5 @@ def member_details(request,ieee_id):
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
 
-# @login_required
-# def volunteer_recognition(request):
-#     return render(request,"Manage Website\Homepage\Volunteer Recognition\recognition_table.html")
+def custom_404(request,exception):
+    return render(request,'404.html',status=404)
