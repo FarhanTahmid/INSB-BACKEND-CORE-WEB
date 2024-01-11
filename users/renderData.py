@@ -303,9 +303,12 @@ def getEventNumberStat(request,primary):
         for event in events_copy:
             #when event year is found removing increasing count value and removing it from list 
             #to loawer time complexity
-            if event.event_date.year == year-i:
-                count+=1
-                events.remove(event)
+            try:
+                if event.event_date.year == year-i:
+                    count+=1
+                    events.remove(event)
+            except:
+                pass
         #assiging the number of events occured in a year to the list
         event_num.append(count)
     #reversing list to get the oldest count first and lasted count last
