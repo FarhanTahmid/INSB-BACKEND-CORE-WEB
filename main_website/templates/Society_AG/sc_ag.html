@@ -6,7 +6,7 @@
 
 
     <title>{{society.short_form}} - IEEE NSU SB</title>
-    <link rel="icon" href= "{{media_url}}{{society.sc_ag_logo}}" />
+    <link rel="icon" href= "{{media_url}}{{society.sc_ag_logo}}"/>
 
 
     {% block common_css %}
@@ -317,14 +317,16 @@
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
     <div class="body-wrapper  float-menu">
 
-        {% block header %}
-        {% include 'header.html' %}
-        {% endblock header %}
+        {% if is_live %}
+            {% block header %}
+            {% include 'header.html' %}
+            {% endblock header %}
 
 
-        {% block wave_design %}
-        {% include 'wave.html' %}
-        {% endblock wave_design %}
+            {% block wave_design %}
+            {% include 'wave.html' %}
+            {% endblock wave_design %}
+        {% endif %}
 
         <!-- end of wAVE PART  -->
 
@@ -497,6 +499,7 @@
             <div class="container">
                 <h2 style="font-weight: bold;">MEET OUR EXECUTIVE BODY</h2>
                 <div class="bar"></div>
+                {% if faculty_advisor %}
                 <div class="row justify-content-center">
                     <div class="col-lg-3 col-md-6 col-sm-12 my-2">
                         <div class="card executive-body-profile text-center">
@@ -528,7 +531,7 @@
                         </div>
                     </div>
                 </div>
-
+                {% endif %}
                 <div class="row justify-content-center">
                     {% for members in eb_members %}
                     <div class="col-lg-3 col-md-6 col-sm-12 my-2">
@@ -644,10 +647,12 @@
 
 
 
-        <!--Footer-->
-        {% block footer %}
-        {% include "footer_block.html" %}
-        {% endblock footer %}
+        {% if is_live %}
+            <!--Footer-->
+            {% block footer %}
+            {% include "footer_block.html" %}
+            {% endblock footer %}
+        {% endif %}
 
     </div>
     <!-- body-wrapper -->

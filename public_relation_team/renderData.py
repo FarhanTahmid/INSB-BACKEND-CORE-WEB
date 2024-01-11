@@ -34,49 +34,36 @@ class PRT_Data:
 
         load_team_members=Branch.load_team_members(team_primary=6)
         team_members=[]
+        
         for i in range(len(load_team_members)):
             team_members.append(load_team_members[i])
             
         # This is only for special case where PR and Promotions Team gets Merged
-        if (len(team_members)==0):
-            load_team_members=Branch.load_team_members(team_primary=6)
-            team_members=[]
-            for i in range(len(load_team_members)):
-                team_members.append(load_team_members[i])
-            return team_members
+        if (len(team_members)==0) or (len(team_members)>0):
+            team_members.extend(Branch.load_team_members(team_primary=0))
+        
         return team_members
     
-    def getTeamCoOrdinators():
+    def get_team_members_with_position():
+        '''This function returns members with their positions'''
         team_members=PRT_Data.load_team_members()
-        co_ordinator=[]
-        for member in team_members:
-            if(member.position.id==9):
-                co_ordinator.append(member)
-        return co_ordinator
-    
-    def getTeamIncharges():
-        team_members=PRT_Data.load_team_members()
+        co_ordinators=[]
         incharges=[]
-        for member in team_members:
-            if(member.position.id==10):
-                incharges.append(member)
-        return incharges
-    
-    def getTeamCoreVolunteers():
-        team_members=PRT_Data.load_team_members()
         core_volunteers=[]
-        for member in team_members:
-            if(member.position.id==11):
-                core_volunteers.append(member)
-        return core_volunteers
-    
-    def getTeamVolunteers():
-        team_members=PRT_Data.load_team_members()
-        volunteers=[]
-        for member in team_members:
-            if(member.position.id==12):
-                volunteers.append(member)
-        return volunteers
+        team_volunteers=[]
+        for i in team_members:
+            if i.position.is_officer:
+                if i.position.is_co_ordinator:
+                   co_ordinators.append(i)
+                else:
+                    incharges.append(i)
+            elif i.position.is_volunteer:
+                if i.position.is_core_volunteer:
+                     core_volunteers.append(i)
+                else:
+                    team_volunteers.append(i)
+        return co_ordinators,incharges,core_volunteers,team_volunteers
+
     
     def getAllRecruitmentSessions():
         return recruitment_session.objects.all().order_by('-id')

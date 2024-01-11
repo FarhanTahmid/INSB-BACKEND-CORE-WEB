@@ -559,7 +559,7 @@
                         <p>{{ieee_nsu_student_branch.events_description|safe}}</p>
                     </div>
                     <div class="events-btn">
-                        <button><i class="fa-solid fa-angles-right" style="color: #f9f9f9;"></i> All Events</button>
+                        <a href="{% url 'main_website:event_homepage' %}"><button><i class="fa-solid fa-angles-right" style="color: #f9f9f9;"></i> All Events</button></a>
                     </div>
                 </div>
 
@@ -614,7 +614,7 @@
                     </div>
                 </div>
                 <div class="join-btn">
-                    <button>Join Now</button>
+                    <a href="{{ieee_nsu_student_branch.join_now_link}}"><button>Join Now</button></a>
                 </div>
             </section>
         </section>

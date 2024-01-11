@@ -98,3 +98,13 @@ class Events_And_Management_Team():
         except:
             Access_Render.system_administrator_superuser_access(username) or Access_Render.system_administrator_staffuser_access(username)
             return True
+        
+    def emt_manage_team_access(ieee_id):
+        try:
+            user = EMT_Data_Access.objects.get(ieee_id = ieee_id)
+            if(user.manage_team_data_access):
+                return True
+            else:
+                return False
+        except:
+            return False

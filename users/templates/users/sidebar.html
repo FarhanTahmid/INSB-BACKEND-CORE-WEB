@@ -61,7 +61,7 @@
                       </a>
                     </li>
                     <li>
-                      <a href="#">
+                      <a href="{% url 'central_branch:members_list' %}">
                         <span class="nav-text">Members</span>
                       </a>
                     </li>
@@ -227,16 +227,6 @@
                       </a>
                     </li>
                     <li>
-                      <a href="{% url 'public_relation_team:manage_event' %}" >
-                        <span class="nav-text">Manage Events</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="{% url 'public_relation_team:team_homepage' %}" >
-                        <span class="nav-text">Manage Website</span>
-                      </a>
-                    </li>
-                    <li>
                       <a href="{% url 'public_relation_team:manage_team' %}" >
                         <span class="nav-text">Manage Team</span>
                       </a>
@@ -313,7 +303,7 @@
                     </li>
                     <li>
                       <a href="{% url 'website_development_team:manage_team' %}" >
-                        <span class="nav-text">Home</span>
+                        <span class="nav-text">Manage Team</span>
                       </a>
                     </li>
                   </ul>

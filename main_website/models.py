@@ -208,7 +208,7 @@ class IEEE_Bangladesh_Section_Gallery(models.Model):
 class HomePage_Thoughts(models.Model):
 
     quote = models.TextField(null=False,blank=False)
-    author = models.CharField(null=False,blank=False,max_length=500)#can be a foreign key to a faculty
+    author = models.CharField(null=False,blank=False,max_length=500)
     
     class Meta:
         verbose_name="HomePage Thoughts"
@@ -301,6 +301,16 @@ class Toolkit(models.Model):
         verbose_name="Toolkit"
     def __str__(self) -> str:
         return self.title
+
+class VolunteerOfTheMonth(models.Model):
+    ieee_id=models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE)
+    contributions=RichTextField(null=True,blank=True,max_length=200)
+    
+    class Meta:
+        verbose_name="Volunteer Of the Month"
+    def __str__(self) -> str:
+        return str(self.ieee_id)
+    
     
 class IEEE_Region_10(models.Model):
     ieee_region_10_description = models.TextField(null=True,blank=True)

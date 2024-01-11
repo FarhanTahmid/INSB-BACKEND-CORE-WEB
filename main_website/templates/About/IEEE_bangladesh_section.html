@@ -498,51 +498,17 @@
                     <p>{{ieee_bangladesh_section.achievements_description|safe}}</p>
                 </div>
                 <div class="achievement-container">
+                    {% for page_link in page_links.achievement_link %}
                     <div class="achievement-card">
                         <div>
                             <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
                                 alt="">
                                 <!--links-->
-                            <h4>IEEE NSU Achievements</h4>
-                            <a href="#">Read More</a>
+                            <h4>{{page_link.title}}</h4>
+                            <a href="{{page_link.link}}">Read More</a>
                         </div>
                     </div>
-                    <div class="achievement-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                                <!--links-->
-                            <h4>IEEE BUET Achievements</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
-                    <div class="achievement-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                                <!--links-->
-                            <h4>IEEE AIUB Achievements</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
-                    <div class="achievement-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                                <!--links-->
-                            <h4>Achievements of DUET</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
-                    <div class="achievement-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                                <!--links-->
-                            <h4>Achievements of Milestone</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </section>
         </section>
@@ -556,24 +522,11 @@
                 </div>
                 <div class="bar"></div>
                 <div class="pic-container">
+                    {% for image in all_images %}
                     <div class="pic-box">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2021/03/group.jpg" style="width:100%" alt="">
-                        {% comment %} <a href="https://ieeensusb.org/wp-content/uploads/2021/03/group.jpg"
-                            data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img
-                                src="https://ieeensusb.org/wp-content/uploads/2021/03/group.jpg" alt="" /></a> {% endcomment %}
+                        <img src="{{media_url}}{{image.picture}}" style="width:100%" alt="Gallery Image">
                     </div>
-                    <div class="pic-box">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2021/03/group-2.jpg" style="width:100%" alt="">
-                        {% comment %} <a href="https://ieeensusb.org/wp-content/uploads/2021/03/group-2.jpg"
-                            data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img
-                                src="https://ieeensusb.org/wp-content/uploads/2021/03/group-2.jpg" alt="" /></a> {% endcomment %}
-                    </div>
-                    <div class="pic-box">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2021/03/group-3.jpg" style="width:100%" alt="">
-                        {% comment %} <a href="https://ieeensusb.org/wp-content/uploads/2021/03/group-3.jpg"
-                            data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img
-                                src="https://ieeensusb.org/wp-content/uploads/2021/03/group-3.jpg" alt="" /></a> {% endcomment %}
-                    </div>
+                    {% endfor %}
                 </div>
                 <div id="myModal" class="modal">
                     <span class="close" onclick="closeModal()">&times;</span>

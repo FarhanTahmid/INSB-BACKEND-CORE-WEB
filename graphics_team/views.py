@@ -19,20 +19,21 @@ from system_administration.system_error_handling import ErrorHandling
 from django.http import Http404,HttpResponseBadRequest
 from datetime import datetime
 from port.renderData import PortData
-
+from users.renderData import PanelMembersData
+from users import renderData
 
 logger=logging.getLogger(__name__)
 # Create your views here.
 @login_required
 def team_homepage(request):
-    
-    co_ordinators=renderData.GraphicsTeam.get_co_ordinator()
-    in_charges=renderData.GraphicsTeam.get_officer()
-    print(in_charges)
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    co_ordinators=GraphicsTeam.get_co_ordinator()
+    in_charges=GraphicsTeam.get_officer()
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     volunteers=GraphicsTeam.get_volunteers()
     context={
+        'all_sc_ag':sc_ag,
         'co_ordinators':co_ordinators,
         'incharges':in_charges,
         'media_url':settings.MEDIA_URL,
@@ -46,21 +47,18 @@ def team_homepage(request):
 
 @login_required
 def manage_team(request):
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     '''This function loads the manage team page for graphics team and is accessable
     by the co-ordinatiors and other admin users only, unless the co-ordinators gives access to others as well'''
     
     sc_ag=PortData.get_all_sc_ag(request=request)
-    has_access = GraphicsTeam_Render_Access.get_common_access(request)
+    has_access = GraphicsTeam_Render_Access.access_for_manage_team(request)
     if has_access:
         data_access = GraphicsTeam.load_data_access()
         team_members = GraphicsTeam.load_team_members()
         #load all position for insb members
-        position=Branch.load_roles_and_positions()
-
-        # Excluding position of EB, Faculty and SC-AG members
-        for i in position:
-            if(i.is_eb_member or i.is_faculty or i.is_sc_ag_eb_member):
-                position=position.exclude(pk=i.pk)
+        position=PortData.get_all_volunteer_position_with_sc_ag_id(request=request,sc_ag_primary=1)
                 
         #load all insb members
         all_insb_members=Members.objects.all()
@@ -75,12 +73,14 @@ def manage_team(request):
                 position=request.POST.get('position')
                 for member in members_to_add:
                     GraphicsTeam.add_member_to_team(member,position)
+                messages.success(request,"Added new Members to the Team!")
                 return redirect('graphics_team:manage_team')
             
             if (request.POST.get('remove_member')):
                 '''To remove member from team table'''
                 try:
-                    Members.objects.filter(ieee_id=request.POST['remove_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13))
+                    load_current_panel=Branch.load_current_panel()
+                    PanelMembersData.remove_member_from_panel(ieee_id=request.POST['remove_ieee_id'],panel_id=load_current_panel.pk,request=request)
                     try:
                         Graphics_Data_Access.objects.filter(ieee_id=request.POST['remove_ieee_id']).delete()
                     except Graphics_Data_Access.DoesNotExist:
@@ -134,7 +134,7 @@ def manage_team(request):
             'current_panel_members':current_panel_members,
             'positions':position,
             'all_sc_ag':sc_ag,
-            
+            'user_data':user_data,
         }  
         return render(request,"graphics_team/manage_team.html",context=context)
     else:
@@ -142,7 +142,9 @@ def manage_team(request):
 
 @login_required
 def event_page(request):
-
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     '''Only events organised by INSB would be shown on the event page of Graphics Team
        So, only those events are being retrieved from database'''
     insb_organised_events = Branch.load_insb_organised_events()
@@ -151,6 +153,7 @@ def event_page(request):
     context = {
         'all_sc_ag':sc_ag,
         'events_of_insb_only':insb_organised_events,
+        'user_data':user_data,
     }
 
 
@@ -158,7 +161,9 @@ def event_page(request):
 
 @login_required
 def event_form(request,event_id):
-
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     #Initially loading the events whose  links and images were previously uploaded
     #and can be editible
 
@@ -204,6 +209,7 @@ def event_form(request,event_id):
                     return redirect("graphics_team:event_form",event_id)
 
             context={
+                'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'graphic_links' : graphics_link,
                 'graphics_banner_image':graphic_banner_image,
@@ -223,7 +229,9 @@ def event_form(request,event_id):
 
 @login_required
 def event_form_add_links(request,event_id):
-
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         all_graphics_link = GraphicsTeam.get_all_graphics_form_link(event_id)
@@ -263,6 +271,7 @@ def event_form_add_links(request,event_id):
                     return redirect("graphics_team:add_link_event_form",event_id)
                   
             context = {
+                'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'event_id':event_id,
                 'all_graphics_link':all_graphics_link,

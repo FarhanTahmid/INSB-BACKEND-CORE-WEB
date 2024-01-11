@@ -34,6 +34,7 @@ urlpatterns = [
     
     #WEBSITE Management URL Path
     path('manage_website/homepage',views.manage_website_homepage,name="manage_website_home"),
+    path('manage_website/homepage/volunteer_of_the_month/<int:pk>',views.update_volunteer_of_month,name="update_vom"),
     path('manage_website/achievements',views.manage_achievements,name="manage_achievements"),
     path('manage_website/achievements/update/<int:pk>',views.update_achievements,name="achievements_update"),
     path('manage_website/news',views.manage_news,name="manage_news"),
@@ -92,5 +93,9 @@ urlpatterns = [
     path('events/create_super_event/',views.super_event_creation,name="super_event_creation"), 
     #Event preview
     path('event_details/<int:event_id>/preview/',views.event_preview,name='event_preview'),  
+    #Members list
+    path('members/',views.insb_members_list,name="members_list"),
+    #Members details list
+    path('member_details/<int:ieee_id>',views.member_details,name="member_details")
 
 ]

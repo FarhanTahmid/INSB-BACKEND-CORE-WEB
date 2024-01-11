@@ -166,6 +166,8 @@
             <div style="justify-content:center;text-align:center;">  
                 <div class="btn-container">
                   <a href="{% url 'membership_development_team:site_registration_form' %}" class="btn btn-outline b-primary text-primary">View Portal Site Registration Form</a>  
+                  <a href="{% url 'membership_development_team:site_registration_faculty' %}" class="btn btn-outline b-info text-info">View Portal Site Registration Form (Faculty Use)</a>  
+
                 </div>
             </div>
             <br>
@@ -176,6 +178,12 @@
                 <input type="text" id="urlInput" value={{form_link}}>
                 <button class="copyButton" id="copyButton"><i class="fa fa-copy"></i></button>
             </div>
+            <!--Form link copy section-->
+            <div class="form_link" style="justify-content:center;">
+              <label><h6>Portal Site Registration Form Link (Faculty Use Only):</h6></label>
+              <input type="text" id="urlInput2" value={{form_link_faculty}}>
+              <button class="copyButton" id="copyButton2"><i class="fa fa-copy"></i></button>
+          </div>
 
             <br>
             
@@ -190,7 +198,7 @@
             <!--Messages End-->
             <br>
             <!--Bar chart options for application status-->
-            <div style="justify-content:center;text-align:center;">
+            <div class="col-md-6 mx-auto" style="justify-content:center;text-align:center;">
                 <h4>Portal Site Registration Statistics</h4> 
               <div class="card-body">
                 <canvas id="doughnut" data-colors='["#BA0C2F", "#FFC72C","#007377"]'></canvas>
@@ -687,5 +695,18 @@
             });
         });
     </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          const urlInput = document.getElementById("urlInput2");
+          const copyButton = document.getElementById("copyButton2");
+      
+          copyButton.addEventListener("click", function () {
+              urlInput.select();
+              document.execCommand("copy");
+              window.getSelection().removeAllRanges();
+              alert("URL copied to clipboard!");
+          });
+      });
+  </script>
 </body>
 </html>
