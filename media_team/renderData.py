@@ -1,5 +1,5 @@
 from users.models import Members
-from port.models import Teams,Roles_and_Position
+from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups
 from system_administration.models import Media_Data_Access
 from .models import Media_Images,Media_Link
 from django.conf import settings
@@ -14,12 +14,12 @@ class MediaTeam:
     logger=logging.getLogger(__name__)
 
     def get_co_ordinator():
-        roles = Roles_and_Position.objects.get(is_co_ordinator=True)
+        roles = Roles_and_Position.objects.get(is_co_ordinator=True,role_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
         members = Members.objects.filter(position=roles,team=MediaTeam.get_team_id())
         return members
 
     def get_officer():
-        roles = Roles_and_Position.objects.get(is_officer = True,is_co_ordinator=False)
+        roles = Roles_and_Position.objects.get(is_officer = True,is_co_ordinator=False,role_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
         members = Members.objects.filter(position = roles,team=MediaTeam.get_team_id())
         return members
 
