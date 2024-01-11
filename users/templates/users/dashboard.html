@@ -31,6 +31,22 @@
   <link rel="stylesheet" href="{% static '/assets/styles/app.css'%}" type="text/css" />
   <!-- endbuild -->
   <link rel="stylesheet" href="{% static '/assets/styles/font.css'%}" type="text/css" />
+
+  <style>
+	.card{
+		box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+	}
+	.mt-4.pt-2.mb-2 .btn{
+		border: 1px solid #fff;
+		color: #fff;
+		font-weight: 500;
+		transition: all 0.5s;
+	}
+	.mt-4.pt-2.mb-2 .btn:hover{
+		color: #000;
+		background: #fff;
+	}
+  </style>
 </head>
 <body>
   <div class="app" id="app">
@@ -111,8 +127,8 @@
 </div>
 <div class="padding">
 	<div class="row">
-		<div class="col-xl-4">
-			<div class="card bg-primary">
+		<div class="col-xl-6">
+			<div class="card bg-primary" style="border: none; background: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);">
 				<div class="card-body">
 					<div class="text-center py-3">
 					   <div class="main-wid position-relative">
@@ -123,14 +139,102 @@
 							<p class="text-white-50 px-4 mt-4" style="color:#ffff; text-size=25px;">{{user_data.position}}, {{user_data.team}}</p>
 							
 							<div class="mt-4 pt-2 mb-2">
-								<a href="{% url 'users:profile' %}" class="btn btn-success">View Profile <i class="mdi mdi-arrow-right ms-1"></i></a>
+								<a href="{% url 'users:profile' %}" class="btn">View Profile <i class="mdi mdi-arrow-right ms-1"></i></a>
 							</div>
 					   </div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col-xl-8">
+		<div class="col-xl-6">
+			<div class="card">
+				<div class="card-body">
+					<div class="d-flex flex-wrap align-items-center mb-3">
+						<br><br><br><br><br><br>
+						<h5 class="card-title mb-0">Recruitment Statistics</h5>
+						
+					</div>
+
+				   <div class="row align-items-center">
+					<div class="col-xl-8" >
+						<div>
+							 <div id="recruitment-statistics" data-colors='["#33a186","#3980c0","#33a186","#3980c0","#33a186","#3980c0"]' onload="initializeChart()" class="apex-chart"></div>
+						</div>
+					  </div>
+					   <!--<div class="col-xl-4">
+						   <div class="">
+								<div>
+									<div class="d-flex justify-content-between align-items-center">
+										<div class="d-flex">
+											<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
+											<div class="flex-1 ms-2">
+												<p class="mb-0">Product Order</p>
+												<h5 class="mt-1 mb-0 font-size-16">43,541.58</h5>
+											</div>
+										</div>
+										<div>
+											<span class="badge badge-soft-primary">25.4%<i class="mdi mdi-arrow-down ms-2"></i></span>
+										</div>
+									</div>
+								</div>
+
+								<div class="mt-3 border-top pt-3">
+									<div class="d-flex justify-content-between align-items-center">
+										<div class="d-flex">
+											<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
+											<div class="flex-1 ms-2">
+												<p class="mb-0">Product Pending</p>
+												<h5 class="mt-1 mb-0 font-size-16">17,351.12</h5>
+											</div>
+										</div>
+										<div>
+											<span class="badge badge-soft-primary">17.4%<i class="mdi mdi-arrow-down ms-2"></i></span>
+										</div>
+									</div>
+								</div>
+
+								<div class="mt-3 border-top pt-3">
+									<div class="d-flex justify-content-between align-items-center">
+										<div class="d-flex">
+											<i class="mdi mdi-circle font-size-10 mt-1 text-success"></i>
+											<div class="flex-1 ms-2">
+												<p class="mb-0">Product Cancelled</p>
+												<h5 class="mt-1 mb-0 font-size-16">32,569.74</h5>
+											</div>
+										</div>
+										<div>
+											<span class="badge badge-soft-success">16.3%<i class="mdi mdi-arrow-up ms-1"></i></span>
+										</div>
+									</div>
+								</div>
+
+								<div class="mt-3 border-top pt-3">
+									<div class="d-flex justify-content-between align-items-center">
+										<div class="d-flex">
+											<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
+											<div class="flex-1 ms-2">
+												<p class="mb-0">Product Delivered</p>
+												<h5 class="mt-1 mb-0 font-size-16">67,356.24</h5>
+											</div>
+										</div>
+										<div>
+											<span class="badge badge-soft-primary">65.7%<i class="mdi mdi-arrow-up ms-1"></i></span>
+										</div>
+									</div>
+								</div>
+						   </div>
+					   </div>-->
+					   
+				   </div>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-xl-12">
 			<div class="row">
 				<div class="col-lg-3 col-md-6">
 					<div class="card">
@@ -230,95 +334,11 @@
 
 			</div>
 		</div>
+
 	</div>
 	<br>
 	<div class="row">
-		<div class="col-xl-8">
-			<div class="card">
-				<div class="card-body">
-					<div class="d-flex flex-wrap align-items-center mb-3">
-						<br><br><br><br><br><br>
-						<h5 class="card-title mb-0">Recruitment Statistics</h5>
-						
-					</div>
-
-				   <div class="row align-items-center">
-					<div class="col-xl-8" >
-						<div>
-							 <div id="recruitment-statistics" data-colors='["#33a186","#3980c0","#33a186","#3980c0","#33a186","#3980c0"]' onload="initializeChart()" class="apex-chart"></div>
-						</div>
-					  </div>
-					   <!--<div class="col-xl-4">
-						   <div class="">
-								<div>
-									<div class="d-flex justify-content-between align-items-center">
-										<div class="d-flex">
-											<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
-											<div class="flex-1 ms-2">
-												<p class="mb-0">Product Order</p>
-												<h5 class="mt-1 mb-0 font-size-16">43,541.58</h5>
-											</div>
-										</div>
-										<div>
-											<span class="badge badge-soft-primary">25.4%<i class="mdi mdi-arrow-down ms-2"></i></span>
-										</div>
-									</div>
-								</div>
-
-								<div class="mt-3 border-top pt-3">
-									<div class="d-flex justify-content-between align-items-center">
-										<div class="d-flex">
-											<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
-											<div class="flex-1 ms-2">
-												<p class="mb-0">Product Pending</p>
-												<h5 class="mt-1 mb-0 font-size-16">17,351.12</h5>
-											</div>
-										</div>
-										<div>
-											<span class="badge badge-soft-primary">17.4%<i class="mdi mdi-arrow-down ms-2"></i></span>
-										</div>
-									</div>
-								</div>
-
-								<div class="mt-3 border-top pt-3">
-									<div class="d-flex justify-content-between align-items-center">
-										<div class="d-flex">
-											<i class="mdi mdi-circle font-size-10 mt-1 text-success"></i>
-											<div class="flex-1 ms-2">
-												<p class="mb-0">Product Cancelled</p>
-												<h5 class="mt-1 mb-0 font-size-16">32,569.74</h5>
-											</div>
-										</div>
-										<div>
-											<span class="badge badge-soft-success">16.3%<i class="mdi mdi-arrow-up ms-1"></i></span>
-										</div>
-									</div>
-								</div>
-
-								<div class="mt-3 border-top pt-3">
-									<div class="d-flex justify-content-between align-items-center">
-										<div class="d-flex">
-											<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
-											<div class="flex-1 ms-2">
-												<p class="mb-0">Product Delivered</p>
-												<h5 class="mt-1 mb-0 font-size-16">67,356.24</h5>
-											</div>
-										</div>
-										<div>
-											<span class="badge badge-soft-primary">65.7%<i class="mdi mdi-arrow-up ms-1"></i></span>
-										</div>
-									</div>
-								</div>
-						   </div>
-					   </div>-->
-					   
-				   </div>
-
-				</div>
-			</div>
-		</div>
-
-		<div class="col-xl-4">
+		<div class="col-xl-6">
 			<div class="card">
 				<div class="card-body">
 					<div class="d-flex flex-wrap align-items-center">
@@ -375,268 +395,268 @@
 					
 				</div>
 			</div>
-		</div>
-	</div>
-	<br>
+		
+			<div class="col-xl-6">
+				<div class="card">
+					<div class="card-body">
+						<div class="d-flex flex-wrap align-items-center">
+							<h5 class="card-title mb-0">Ratios</h5>
+							<div class="ms-auto">
+								<!--<div class="dropdown">
+									<a class="dropdown-toggle text-reset" href="#" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<span class="text-muted font-size-12"> Sort By:</span> <span class="fw-medium"><i class="mdi mdi-chevron-down ms-1"></i></span>
+									</a>
+									<div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+										<a class="dropdown-item" href="#">Monthly</a>
+										<a class="dropdown-item" href="#">Yearly</a>
+									</div>
+								</div>-->
+							</div>
+						</div>
 	
-	<div class="row">
-	   <div class="col-xl-8">
-				<div class="row">
-					<div class="col-lg-5">
-							<div class="card">
-								<div class="card-body">
-									<div class="d-flex flex-wrap align-items-center">
-										<h5 class="card-title mb-0">Ratios</h5>
-										<div class="ms-auto">
-											<!--<div class="dropdown">
-												<a class="dropdown-toggle text-reset" href="#" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-													<span class="text-muted font-size-12"> Sort By:</span> <span class="fw-medium"><i class="mdi mdi-chevron-down ms-1"></i></span>
-												</a>
-												<div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-													<a class="dropdown-item" href="#">Monthly</a>
-													<a class="dropdown-item" href="#">Yearly</a>
-												</div>
-											</div>-->
+						<div class="text-center mt-4">
+							<canvas onload = "initializeCircleChart2()" class="mx-auto" id="Category2" height="281" data-colors='["#3367d6","#4285f4","#7baaf7","#c6dafc"]'></canvas>
+						</div>
+						
+						<br>
+						<div class="row mt-2">
+							{% for key, value in gender_active_inactive_users_dic.items %}
+								<div class="col">
+									<div class="px-2">
+										<div class="d-flex align-items-center mt-sm-0 mt-2">
+											<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
+											<div class="flex-grow-1 ms-2">
+												<p class="mb-0 text-truncate">{{ key }}: &nbsp;</p>
+											</div>
+											<div class="flex-shrink-0">
+												<span class="fw-bold">{{ value }}%</span>
+											</div>
 										</div>
 									</div>
-				
-									<div class="text-center mt-4">
-										<canvas onload = "initializeCircleChart2()" class="mx-auto" id="Category2" height="281" data-colors='["#3367d6","#4285f4","#7baaf7","#c6dafc"]'></canvas>
-									</div>
-									
-									<br>
-									<div class="row mt-2">
-										{% for key, value in gender_active_inactive_users_dic.items %}
-											<div class="col">
-												<div class="px-2">
-													<div class="d-flex align-items-center mt-sm-0 mt-2">
-														<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
-														<div class="flex-grow-1 ms-2">
-															<p class="mb-0 text-truncate">{{ key }}: &nbsp;</p>
-														</div>
-														<div class="flex-shrink-0">
-															<span class="fw-bold">{{ value }}%</span>
-														</div>
-													</div>
-												</div>
-											</div>
-									
-											{% if loop.index|divisibleby:3 and not loop.last %}
-												</div><div class="row mt-2">
-											{% endif %}
-									
-											{% if loop.last and not loop.index|divisibleby:3 %}
-												</div>
-											{% endif %}
-										{% endfor %}
-									</div>
-									
 								</div>
-							</div>
+						
+								{% if loop.index|divisibleby:3 and not loop.last %}
+									</div><div class="row mt-2">
+								{% endif %}
+						
+								{% if loop.last and not loop.index|divisibleby:3 %}
+									</div>
+								{% endif %}
+							{% endfor %}
+						</div>
+						
 					</div>
+				</div>
+		</div>
+		</div>
 
-					<div class="col-lg-7">
-						<div class="card">
-							<div class="card-header">
-								<div class="align-items-center d-flex">
-									<h4 class="card-title mb-0 flex-grow-1">Top Users</h4>
-									<div class="flex-shrink-0">
-										<div class="dropdown">
-											<a class=" dropdown-toggle" href="#" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<span class="text-muted">All Members<i class="mdi mdi-chevron-down ms-1"></i></span>
-											</a>
-					
-											<div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton2">
-												<a class="dropdown-item" href="#">Members</a>
-												<a class="dropdown-item" href="#">New Members</a>
-												<a class="dropdown-item" href="#">Old Members</a>
-											</div>
-										</div>
-									</div>
+
+
+
+	</div>
+</div>
+<div class="padding">
+	<div class="row">
+		<div class="col-xl-6">
+			<div class="card">
+				<div class="card-header">
+					<div class="align-items-center d-flex">
+						<h4 class="card-title mb-0 flex-grow-1">Top Users</h4>
+						<div class="flex-shrink-0">
+							<div class="dropdown">
+								<a class=" dropdown-toggle" href="#" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<span class="text-muted">All Members<i class="mdi mdi-chevron-down ms-1"></i></span>
+								</a>
+		
+								<div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton2">
+									<a class="dropdown-item" href="#">Members</a>
+									<a class="dropdown-item" href="#">New Members</a>
+									<a class="dropdown-item" href="#">Old Members</a>
 								</div>
-							</div>
-
-							<div class="card-body px-0 pt-2">
-								<div class="table-responsive px-3" data-simplebar style="max-height: 393px;">
-									<table class="table table-borderless table-centered align-middle table-nowrap mb-0">
-										<tbody>
-											<tr>
-												<td style="width: 20px;"><img src="{% static 'images/users/avatar-4.jpg' %}" class="avatar-sm rounded-circle " alt="..."></td>
-												<td>
-													<h6 class="font-size-15 mb-1">Glenn Holden</h6>
-													<p class="text-muted font-size-13 mb-0"><i class="mdi mdi-map-marker"></i> Nevada</p>
-												</td>
-												<td class="text-muted"><i class="icon-xs icon me-2 text-success" data-feather="trending-up"></i>$250.00</td>
-												<td><span class="badge badge-soft-danger font-size-12">Cancel</span></td>
-												<td>
-													<div class="dropdown">
-														<a class="text-muted dropdown-toggle font-size-20" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-															<i class="mdi mdi-dots-vertical"></i>
-														</a>
-				
-														<div class="dropdown-menu dropdown-menu-end">
-															<a class="dropdown-item" href="#">Action</a>
-															<a class="dropdown-item" href="#">Another action</a>
-															<a class="dropdown-item" href="#">Something else here</a>
-															<div class="dropdown-divider"></div>
-															<a class="dropdown-item" href="#">Separated link</a>
-														</div>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td><img src="{% static 'images/users/avatar-5.jpg' %}" class="avatar-sm rounded-circle " alt="..."></td>
-												<td>
-													<h6 class="font-size-15 mb-1">Lolita Hamill</h6>
-													<p class="text-muted font-size-13 mb-0"><i class="mdi mdi-map-marker"></i> Texas</p>
-												</td>
-												<td class="text-muted"><i class="icon-xs icon me-2 text-danger" data-feather="trending-down"></i>$110.00</td>
-												<td><span class="badge badge-soft-success font-size-12">Success</span></td>
-												<td>
-													<div class="dropdown">
-														<a class="text-muted dropdown-toggle font-size-20" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-															<i class="mdi mdi-dots-vertical"></i>
-														</a>
-				
-														<div class="dropdown-menu dropdown-menu-end">
-															<a class="dropdown-item" href="#">Action</a>
-															<a class="dropdown-item" href="#">Another action</a>
-															<a class="dropdown-item" href="#">Something else here</a>
-															<div class="dropdown-divider"></div>
-															<a class="dropdown-item" href="#">Separated link</a>
-														</div>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td><img src="{% static 'images/users/avatar-6.jpg' %}" class="avatar-sm rounded-circle " alt="..."></td>
-												<td>
-													<h6 class="font-size-15 mb-1">Robert Mercer</h6>
-													<p class="text-muted font-size-13 mb-0"><i class="mdi mdi-map-marker"></i> California</p>
-												</td>
-												<td class="text-muted"><i class="icon-xs icon me-2 text-success" data-feather="trending-up"></i>$420.00</td>
-												<td><span class="badge badge-soft-info font-size-12">Active</span></td>
-												<td>
-													<div class="dropdown">
-														<a class="text-muted dropdown-toggle font-size-20" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-															<i class="mdi mdi-dots-vertical"></i>
-														</a>
-				
-														<div class="dropdown-menu dropdown-menu-end">
-															<a class="dropdown-item" href="#">Action</a>
-															<a class="dropdown-item" href="#">Another action</a>
-															<a class="dropdown-item" href="#">Something else here</a>
-															<div class="dropdown-divider"></div>
-															<a class="dropdown-item" href="#">Separated link</a>
-														</div>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td><img src="{% static 'images/users/avatar-7.jpg' %}" class="avatar-sm rounded-circle " alt="..."></td>
-												<td>
-													<h6 class="font-size-15 mb-1">Marie Kim</h6>
-													<p class="text-muted font-size-13 mb-0"><i class="mdi mdi-map-marker"></i> Montana</p>
-												</td>
-												<td class="text-muted"><i class="icon-xs icon me-2 text-danger" data-feather="trending-down"></i>$120.00</td>
-												<td><span class="badge badge-soft-warning font-size-12">Pending</span></td>
-												<td>
-													<div class="dropdown">
-														<a class="text-muted dropdown-toggle font-size-20" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-															<i class="mdi mdi-dots-vertical"></i>
-														</a>
-				
-														<div class="dropdown-menu dropdown-menu-end">
-															<a class="dropdown-item" href="#">Action</a>
-															<a class="dropdown-item" href="#">Another action</a>
-															<a class="dropdown-item" href="#">Something else here</a>
-															<div class="dropdown-divider"></div>
-															<a class="dropdown-item" href="#">Separated link</a>
-														</div>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td><img src="{% static 'images/users/avatar-8.jpg' %}" class="avatar-sm rounded-circle " alt="..."></td>
-												<td>
-													<h6 class="font-size-15 mb-1">Sonya Henshaw</h6>
-													<p class="text-muted font-size-13 mb-0"><i class="mdi mdi-map-marker"></i> Colorado</p>
-												</td>
-												<td class="text-muted"><i class="icon-xs icon me-2 text-success" data-feather="trending-up"></i>$112.00</td>
-												<td><span class="badge badge-soft-info font-size-12">Active</span></td>
-												<td>
-													<div class="dropdown">
-														<a class="text-muted dropdown-toggle font-size-20" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-															<i class="mdi mdi-dots-vertical"></i>
-														</a>
-				
-														<div class="dropdown-menu dropdown-menu-end">
-															<a class="dropdown-item" href="#">Action</a>
-															<a class="dropdown-item" href="#">Another action</a>
-															<a class="dropdown-item" href="#">Something else here</a>
-															<div class="dropdown-divider"></div>
-															<a class="dropdown-item" href="#">Separated link</a>
-														</div>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td><img src="{% static 'images/users/avatar-2.jpg' %}" class="avatar-sm rounded-circle " alt="..."></td>
-												<td>
-													<h6 class="font-size-15 mb-1">Marie Kim</h6>
-													<p class="text-muted font-size-13 mb-0"><i class="mdi mdi-map-marker"></i> Australia</p>
-												</td>
-												<td class="text-muted"><i class="icon-xs icon me-2 text-danger" data-feather="trending-down"></i>$120.00</td>
-												<td><span class="badge badge-soft-success font-size-12">Success</span></td>
-												<td>
-													<div class="dropdown">
-														<a class="text-muted dropdown-toggle font-size-20" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-															<i class="mdi mdi-dots-vertical"></i>
-														</a>
-				
-														<div class="dropdown-menu dropdown-menu-end">
-															<a class="dropdown-item" href="#">Action</a>
-															<a class="dropdown-item" href="#">Another action</a>
-															<a class="dropdown-item" href="#">Something else here</a>
-															<div class="dropdown-divider"></div>
-															<a class="dropdown-item" href="#">Separated link</a>
-														</div>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td><img src="{% static 'images/users/avatar-1.jpg' %}" class="avatar-sm rounded-circle " alt="..."></td>
-												<td>
-													<h6 class="font-size-15 mb-1">Sonya Henshaw</h6>
-													<p class="text-muted font-size-13 mb-0"><i class="mdi mdi-map-marker"></i> India</p>
-												</td>
-												<td class="text-muted"><i class="icon-xs icon me-2 text-success" data-feather="trending-up"></i>$112.00</td>
-												<td><span class="badge badge-soft-danger font-size-12">Cancel</span></td>
-												<td>
-													<div class="dropdown">
-														<a class="text-muted dropdown-toggle font-size-20" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-															<i class="mdi mdi-dots-vertical"></i>
-														</a>
-				
-														<div class="dropdown-menu dropdown-menu-end">
-															<a class="dropdown-item" href="#">Action</a>
-															<a class="dropdown-item" href="#">Another action</a>
-															<a class="dropdown-item" href="#">Something else here</a>
-															<div class="dropdown-divider"></div>
-															<a class="dropdown-item" href="#">Separated link</a>
-														</div>
-													</div>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div> <!-- enbd table-responsive-->
 							</div>
 						</div>
 					</div>
-		   </div>
-	   </div>
-	   <div class="col-xl-4">
+				</div>
+
+				<div class="card-body px-0 pt-2">
+					<div class="table-responsive px-3" data-simplebar style="max-height: 393px;">
+						<table class="table table-borderless table-centered align-middle table-nowrap mb-0">
+							<tbody>
+								<tr>
+									<td style="width: 20px;"><img src="{% static 'images/users/avatar-4.jpg' %}" class="avatar-sm rounded-circle " alt="..."></td>
+									<td>
+										<h6 class="font-size-15 mb-1">Glenn Holden</h6>
+										<p class="text-muted font-size-13 mb-0"><i class="mdi mdi-map-marker"></i> Nevada</p>
+									</td>
+									<td class="text-muted"><i class="icon-xs icon me-2 text-success" data-feather="trending-up"></i>$250.00</td>
+									<td><span class="badge badge-soft-danger font-size-12">Cancel</span></td>
+									<td>
+										<div class="dropdown">
+											<a class="text-muted dropdown-toggle font-size-20" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+												<i class="mdi mdi-dots-vertical"></i>
+											</a>
+	
+											<div class="dropdown-menu dropdown-menu-end">
+												<a class="dropdown-item" href="#">Action</a>
+												<a class="dropdown-item" href="#">Another action</a>
+												<a class="dropdown-item" href="#">Something else here</a>
+												<div class="dropdown-divider"></div>
+												<a class="dropdown-item" href="#">Separated link</a>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td><img src="{% static 'images/users/avatar-5.jpg' %}" class="avatar-sm rounded-circle " alt="..."></td>
+									<td>
+										<h6 class="font-size-15 mb-1">Lolita Hamill</h6>
+										<p class="text-muted font-size-13 mb-0"><i class="mdi mdi-map-marker"></i> Texas</p>
+									</td>
+									<td class="text-muted"><i class="icon-xs icon me-2 text-danger" data-feather="trending-down"></i>$110.00</td>
+									<td><span class="badge badge-soft-success font-size-12">Success</span></td>
+									<td>
+										<div class="dropdown">
+											<a class="text-muted dropdown-toggle font-size-20" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+												<i class="mdi mdi-dots-vertical"></i>
+											</a>
+	
+											<div class="dropdown-menu dropdown-menu-end">
+												<a class="dropdown-item" href="#">Action</a>
+												<a class="dropdown-item" href="#">Another action</a>
+												<a class="dropdown-item" href="#">Something else here</a>
+												<div class="dropdown-divider"></div>
+												<a class="dropdown-item" href="#">Separated link</a>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td><img src="{% static 'images/users/avatar-6.jpg' %}" class="avatar-sm rounded-circle " alt="..."></td>
+									<td>
+										<h6 class="font-size-15 mb-1">Robert Mercer</h6>
+										<p class="text-muted font-size-13 mb-0"><i class="mdi mdi-map-marker"></i> California</p>
+									</td>
+									<td class="text-muted"><i class="icon-xs icon me-2 text-success" data-feather="trending-up"></i>$420.00</td>
+									<td><span class="badge badge-soft-info font-size-12">Active</span></td>
+									<td>
+										<div class="dropdown">
+											<a class="text-muted dropdown-toggle font-size-20" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+												<i class="mdi mdi-dots-vertical"></i>
+											</a>
+	
+											<div class="dropdown-menu dropdown-menu-end">
+												<a class="dropdown-item" href="#">Action</a>
+												<a class="dropdown-item" href="#">Another action</a>
+												<a class="dropdown-item" href="#">Something else here</a>
+												<div class="dropdown-divider"></div>
+												<a class="dropdown-item" href="#">Separated link</a>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td><img src="{% static 'images/users/avatar-7.jpg' %}" class="avatar-sm rounded-circle " alt="..."></td>
+									<td>
+										<h6 class="font-size-15 mb-1">Marie Kim</h6>
+										<p class="text-muted font-size-13 mb-0"><i class="mdi mdi-map-marker"></i> Montana</p>
+									</td>
+									<td class="text-muted"><i class="icon-xs icon me-2 text-danger" data-feather="trending-down"></i>$120.00</td>
+									<td><span class="badge badge-soft-warning font-size-12">Pending</span></td>
+									<td>
+										<div class="dropdown">
+											<a class="text-muted dropdown-toggle font-size-20" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+												<i class="mdi mdi-dots-vertical"></i>
+											</a>
+	
+											<div class="dropdown-menu dropdown-menu-end">
+												<a class="dropdown-item" href="#">Action</a>
+												<a class="dropdown-item" href="#">Another action</a>
+												<a class="dropdown-item" href="#">Something else here</a>
+												<div class="dropdown-divider"></div>
+												<a class="dropdown-item" href="#">Separated link</a>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td><img src="{% static 'images/users/avatar-8.jpg' %}" class="avatar-sm rounded-circle " alt="..."></td>
+									<td>
+										<h6 class="font-size-15 mb-1">Sonya Henshaw</h6>
+										<p class="text-muted font-size-13 mb-0"><i class="mdi mdi-map-marker"></i> Colorado</p>
+									</td>
+									<td class="text-muted"><i class="icon-xs icon me-2 text-success" data-feather="trending-up"></i>$112.00</td>
+									<td><span class="badge badge-soft-info font-size-12">Active</span></td>
+									<td>
+										<div class="dropdown">
+											<a class="text-muted dropdown-toggle font-size-20" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+												<i class="mdi mdi-dots-vertical"></i>
+											</a>
+	
+											<div class="dropdown-menu dropdown-menu-end">
+												<a class="dropdown-item" href="#">Action</a>
+												<a class="dropdown-item" href="#">Another action</a>
+												<a class="dropdown-item" href="#">Something else here</a>
+												<div class="dropdown-divider"></div>
+												<a class="dropdown-item" href="#">Separated link</a>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td><img src="{% static 'images/users/avatar-2.jpg' %}" class="avatar-sm rounded-circle " alt="..."></td>
+									<td>
+										<h6 class="font-size-15 mb-1">Marie Kim</h6>
+										<p class="text-muted font-size-13 mb-0"><i class="mdi mdi-map-marker"></i> Australia</p>
+									</td>
+									<td class="text-muted"><i class="icon-xs icon me-2 text-danger" data-feather="trending-down"></i>$120.00</td>
+									<td><span class="badge badge-soft-success font-size-12">Success</span></td>
+									<td>
+										<div class="dropdown">
+											<a class="text-muted dropdown-toggle font-size-20" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+												<i class="mdi mdi-dots-vertical"></i>
+											</a>
+	
+											<div class="dropdown-menu dropdown-menu-end">
+												<a class="dropdown-item" href="#">Action</a>
+												<a class="dropdown-item" href="#">Another action</a>
+												<a class="dropdown-item" href="#">Something else here</a>
+												<div class="dropdown-divider"></div>
+												<a class="dropdown-item" href="#">Separated link</a>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td><img src="{% static 'images/users/avatar-1.jpg' %}" class="avatar-sm rounded-circle " alt="..."></td>
+									<td>
+										<h6 class="font-size-15 mb-1">Sonya Henshaw</h6>
+										<p class="text-muted font-size-13 mb-0"><i class="mdi mdi-map-marker"></i> India</p>
+									</td>
+									<td class="text-muted"><i class="icon-xs icon me-2 text-success" data-feather="trending-up"></i>$112.00</td>
+									<td><span class="badge badge-soft-danger font-size-12">Cancel</span></td>
+									<td>
+										<div class="dropdown">
+											<a class="text-muted dropdown-toggle font-size-20" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+												<i class="mdi mdi-dots-vertical"></i>
+											</a>
+	
+											<div class="dropdown-menu dropdown-menu-end">
+												<a class="dropdown-item" href="#">Action</a>
+												<a class="dropdown-item" href="#">Another action</a>
+												<a class="dropdown-item" href="#">Something else here</a>
+												<div class="dropdown-divider"></div>
+												<a class="dropdown-item" href="#">Separated link</a>
+											</div>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div> <!-- enbd table-responsive-->
+				</div>
+			</div>
+		</div>
+	   	<div class="col-xl-6">
 
 		   <div class="card">
 			   <div class="card-header">
@@ -813,9 +833,10 @@
 			 </div>
 			</div>
 		</div>
-	   </div>
+	   	</div>
 	</div>
-	<br>
+</div>
+<div class="padding">
 	<div class="row">
 		<div class="col-xl-4">
 
