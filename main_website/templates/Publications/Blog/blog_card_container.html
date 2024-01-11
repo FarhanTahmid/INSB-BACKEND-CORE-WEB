@@ -157,50 +157,7 @@
         
                 </div>
             </div>
-            <div class="card">
-                <div class="image">
-                    <img src="media_files/{{i.blog_banner_picture}}" alt="Sample photo">
-                </div>
-                <div class="card_content">
-                    <a href="{% url 'main_website:blog_description' i.pk %}"><h5>{{i.title}}</h5></a>
-                    <i class="fa-regular fa-clock"></i>
-                    <span>{{i.date}}</span>
-                    <i class="fa-solid fa-align-left"></i><span> {{i.writer_name}} •</span><br>
-                    <p>{{i.short_description | safe}}</p>
-                    <a href="{% url 'main_website:blog_description' i.pk %}">Read More</a>
-        
-                </div>
-            </div>
-            <div class="card">
-                <div class="image">
-                    <img src="media_files/{{i.blog_banner_picture}}" alt="Sample photo">
-                </div>
-                <div class="card_content">
-                    <a href="{% url 'main_website:blog_description' i.pk %}"><h5>{{i.title}}</h5></a>
-                    <i class="fa-regular fa-clock"></i>
-                    <span>{{i.date}}</span>
-                    <i class="fa-solid fa-align-left"></i><span> {{i.writer_name}} •</span><br>
-                    <p>{{i.short_description | safe}}</p>
-                    <a href="{% url 'main_website:blog_description' i.pk %}">Read More</a>
-        
-                </div>
-            </div>
-            <div class="card">
-                <div class="image">
-                    <img src="media_files/{{i.blog_banner_picture}}" alt="Sample photo">
-                </div>
-                <div class="card_content">
-                    <a href="{% url 'main_website:blog_description' i.pk %}"><h5>{{i.title}}</h5></a>
-                    <i class="fa-regular fa-clock"></i>
-                    <span>{{i.date}}</span>
-                    <i class="fa-solid fa-align-left"></i><span> {{i.writer_name}} •</span><br>
-                    <p>{{i.short_description | safe}}</p>
-                    <a href="{% url 'main_website:blog_description' i.pk %}">Read More</a>
-        
-                </div>
-            </div>
             {% endfor %}
-            
         </div>
     </div>
 </section>

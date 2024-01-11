@@ -1169,6 +1169,15 @@ def toolkit(request):
     }
     return render(request, 'Publications/Toolkit/toolkit.html',context=context)
 
+def join_insb(request):
+    branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+
+    context={
+        'page_title':"Join IEEE NSU SB",
+        'branch_teams':branch_teams,
+    }
+    return render(request,"join_INSB.html",context=context)
+
 def test_view(request):
     #loading all the teams of Branch
     branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
@@ -1177,4 +1186,4 @@ def test_view(request):
             'branch_teams':branch_teams,
         }
  
-    return render(request,"test.html",context=context)
+    return render(request,"error_505.html",context=context)
