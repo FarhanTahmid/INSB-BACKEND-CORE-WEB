@@ -1,6 +1,6 @@
 from central_branch.renderData import Branch
 from users.models import Members
-from port.models import Teams,Roles_and_Position
+from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups
 from system_administration.models import Graphics_Data_Access
 import os
 import logging
@@ -15,13 +15,13 @@ class GraphicsTeam:
     logger=logging.getLogger(__name__)
 
     def get_co_ordinator():
-        roles = Roles_and_Position.objects.get(is_co_ordinator=True)
+        roles = Roles_and_Position.objects.get(is_co_ordinator=True,role_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
         members = Members.objects.filter(position=roles,team=GraphicsTeam.get_team_id())
         print(members)
         return members
 
     def get_officer():
-        roles = Roles_and_Position.objects.get(is_officer = True,is_co_ordinator=False)
+        roles = Roles_and_Position.objects.get(is_officer = True,is_co_ordinator=False,role_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
         members = Members.objects.filter(position = roles,team=GraphicsTeam.get_team_id())
         
         print(roles,members)

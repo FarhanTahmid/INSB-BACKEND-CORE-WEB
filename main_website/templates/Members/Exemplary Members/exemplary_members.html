@@ -115,17 +115,17 @@
                             </div>
                         </div>
 
-                        <div class="accordion" id="">
+                        <div class="accordion" id="accordion_{{ forloop.counter }}">
                             <div class="accordion-item">
-                                <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                                <button style="background-color: #f0f0f1;" class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#member_1" aria-expanded="false" aria-controls="member_1">
-                                    View Some Achivements
-                                </button>
+                                <h2 class="accordion-header" id="panelsStayOpen-heading{{ forloop.counter }}">
+                                    <button style="background-color: #f0f0f1;" class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#member_{{ forloop.counter }}" aria-expanded="false" aria-controls="member_{{ forloop.counter }}">
+                                        View Some Achievements
+                                    </button>
                                 </h2>
-                                <div id="member_1" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
-                                <div class="accordion-body">
-                                    {{i.achievements | safe}}                                    
-                                </div>
+                                <div id="member_{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading{{ forloop.counter }}">
+                                    <div class="accordion-body">
+                                        {{ i.achievements | safe }}                                    
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -207,7 +207,8 @@ class PortData:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
 
-    def create_positions(request,sc_ag_primary,role,is_eb_member,is_sc_ag_eb_member,is_officer,is_co_ordinator,is_faculty,is_mentor):
+    def create_positions(request,sc_ag_primary,role,is_eb_member,is_sc_ag_eb_member,is_officer,is_co_ordinator,is_faculty,is_mentor,
+                        is_core_volunteer,is_volunteer):
         '''Creates Positions in the Roles and Positions Table with Different attributes for sc ag and branch as well'''
         try:
             # get the last object of the model
@@ -218,7 +219,8 @@ class PortData:
                 id=get_the_last_object.id + 1,
                 role=role,role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),
                 is_eb_member=is_eb_member,is_sc_ag_eb_member=is_sc_ag_eb_member,
-                is_officer=is_officer,is_co_ordinator=is_co_ordinator,is_faculty=is_faculty,is_mentor=is_mentor
+                is_officer=is_officer,is_co_ordinator=is_co_ordinator,is_faculty=is_faculty,is_mentor=is_mentor,
+                is_core_volunteer = is_core_volunteer,is_volunteer = is_volunteer
             )
             new_position.save()
             messages.success(request,f"New Position: {role} was created!")

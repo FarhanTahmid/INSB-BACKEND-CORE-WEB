@@ -1,623 +1,728 @@
-
-{% block about_base %}
-{% include "Manage Website/About/about_base.html" %}
-{% endblock about_base %}
-{% block manage_ieee_bangladesh_section %}
+{% block manage_ieee_nsu_student_branch %}
+<!DOCTYPE html>
 {% load static %}
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+        <!-- CKEditor CDN -->
+        <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+
+        {% block common_css %}
+            {% include "common_css.html" %}
+        {% endblock common_css %}
+
+        <style>
+            body, html {
+                
+                margin: 0;
+                
+                align-items: center;
+                justify-content: center;
+            }
+
+            .row {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+            }
+            .row {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+            }
+            .btn-container {
+                text-align: center;
+            }
+            
+            .btn {
+                max-width: 100%;
+                width: auto;
+                display: inline-block;
+                white-space: normal; /* Allow text to wrap within the button */
+                word-wrap: break-word; /* Break long words if necessary */
+                font-size: 16px; /* Adjust the font size as needed */
+            }
+            
+            /* Media query for smaller screens (adjust the breakpoint as needed) */
+            @media (max-width: 768px) {
+                .btn {
+                    width: 100%; /* Make the button full width on smaller screens */
+                }
+            }
 
 
-<!-- CKEditor CDN -->
-<script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+            
+            h1{
+                text-align:center;
+                font-size:30px;
+                font-weight:bold;
+            }
 
-<style>
+            label{
+                font-size:20px;
+            }
 
-    h1{
-        text-align:center;
-        font-size:30px;
-        font-weight:bold;
-    }
+            .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+                max-width: 80%; 
+                height: 90%; 
+                z-index: 1500;
+            }
+            @media screen and (max-width:700px){
+                .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+                    max-width:100%;
+                }
+            }
+            
+        </style>
+    </head>
 
-    label{
-        font-size:20px;
-    }
 
-    .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
-        max-width: 80%; 
-        height: 90%; 
-        z-index: 1500;
-    }
-    @media screen and (max-width:700px){
-        .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
-            max-width:100%;
-        }
-    }
 
-</style>
+    <body>
+        <div class="app" id="app">
 
-<body>
-    <div class="app" id="app">
-        <div ui-view class="app-body" style="justify-content:center; margin-left:27%; margin-right:15%;" id="view">
+            <!-- aside -->
+            <div id="aside" class="app-aside modal nav-dropdown">
 
-            <br>
-            <h4 style="justify-content:center;text-align:center;"><b>IEEE NSU Student Branch</b></h2>
-            <br>
+                {% block sidebar %}
+                    {% include 'users/sidebar.html' %}
+                {% endblock %}
 
-            <div class="btn-container">
-                <button class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#previewModal">Preview</button>
             </div>
-            <br>
+            <!-- aside end -->
 
-            <!-- Preview Modal -->
-            <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" style="z-index: 1500;">
-                <div class="modal-dialog modal-dialog-centered modal-lg preview_modal_box" role="document">
-                    <div class="modal-content" style="width: 100%; height: 100%;">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="previewModalLabel">Preview</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <iframe src="{% url 'central_branch:ieee_nsu_student_branch_preview' %}" style="width: 100%; height: 100%;" loading="lazy"></iframe>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <!-- navbar content -->
+            <div id="content" class="app-content box-shadow-z0" role="main">
+                {% block navbar %}
+                    {% include 'Manage Website/manage_web_navbar.html' %}
+                {% endblock navbar %}
+
+            </div>
+            <!--navbar content-->
+
+            <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
+                <div class="container">
+                    <br>
+                    <br>
+                    <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
+                    <h6>Note:</h6>
+                    <ol style="justify-content:center;margin-bottom:15px;"><b>
+                    <li>All ( * ) marked fields are mandatory to be filled </li>
+                    <li>Keep in mind your description does not exceed the character count </li>
+                    <li>Maximum 1 picture can be uploaded in dedicated sections </li>
+                    <li>To replace a picture, delete the previous one and add a new one </li>
+                    <li>You can view the image by clicking on it  </li>
+                    <li>You can add as many links as you want </li>
+                    <li>You can see your changes by clicking the preview button </li>
+                    <li>Don’t forget to save the changes by clicking save button </li>
+
+                    </ol></b>
+                </div>
+                    
+
+                <!--Start from here-->
+                <br>
+                <br>
+                <h2 style="text-align: center;margin-bottom:15px;">Manage the <b>About Section</b> of the Central Website of <span style="color:#00629B;"><b>IEEE NSU Student Branch</b></span></h2>
+                <br>
+                {% block publications_tab %}
+                {% include "Manage Website/About/about_tabs.html" %}
+                {% endblock publications_tab %}
+
+                <br>
+                <h4 style="justify-content:center;text-align:center;"><b>IEEE NSU Student Branch</b></h2>
+                <br>
+
+                <div class="btn-container">
+                    <button class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#previewModal">Preview</button>
+                </div>
+                <br>
+
+                <!-- Preview Modal -->
+                <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" style="z-index: 1500;">
+                    <div class="modal-dialog modal-dialog-centered modal-lg preview_modal_box" role="document">
+                        <div class="modal-content" style="width: 100%; height: 100%;">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="previewModalLabel">Preview</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="{% url 'central_branch:ieee_nsu_student_branch_preview' %}" style="width: 100%; height: 100%;" loading="lazy"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                
+                <!--Messages-->
+                <div class="container">
+                    {% for message in messages  %}
+                        <p>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{message}}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        </p>
+                    {% endfor %}
+                </div>
+                <!--Messages End-->
+                
+                <div class="container">
             
-            <!--Messages-->
-            <div class="container">
-                {% for message in messages  %}
-                    <p>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{message}}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                    <div class="box">
+                
+                
+                        {% comment %} <br>
+                        <div class="box-header">
+                            <h1>Details</h1>
+                            <hr>
+                        </div> {% endcomment %}
+                        
+                
+                        <form id="myForm" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                            <div class="box-body">    
+                                
+                                <br>
+                                <h1>About</h1>
+                                <br>
+                                
+                                <div class="form-group">
+                                    <label>About <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="about_details">{{ieee_nsu_student_branch.about_nsu_student_branch}}</textarea>
+                                    <p id="aboutCharacterCount" style="color: red;">Required</p>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label for="images">About Image:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="about-image-input" name="about_image" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
+                                    </div>
+                                    <br>
+
+                                    {% if ieee_nsu_student_branch.about_image %}
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.about_image}}')">About Image</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.about_image}}', 'about_image')">✖</button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>  
+
+                                <br>
+                                <hr>
+                                <br> 
+
+                                <h1>Chapters</h1>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Chapters Details <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="chapters_details">{{ieee_nsu_student_branch.chapters_description}}</textarea>
+                                    <p id="chaptersCharacterCount" style="color: red;">Required</p>
+                                </div>
+                                <br>
+
+                                <!--RAS -->
+                                <div class="form-group">
+                                    <label for="images">RAS Image:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="ras-image-input" name="ras_image" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="ras-image-input">Choose file</label>
+                                    </div>
+                                    
+                                    <br>
+                                    {% if ieee_nsu_student_branch.ras_image %}
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.ras_image}}')">RAS Image</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.ras_image}}', 'ras_image')">✖</button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    <br>
+
+                                    <label>RAS Read More Link <span style="color:red">*<span></label> 
+                                    <input
+                                    placeholder="Read More Link"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="ras_read_more_link"
+                                    value="{{ieee_nsu_student_branch.ras_read_more_link}}"/>
+                                </div>
+                                <br> 
+
+                                <!-- PES -->
+                                <div class="form-group">
+                                    <label for="images">PES Image:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="pes-image-input" name="pes_image" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="pes-image-input">Choose file</label>
+                                    </div>
+                                    
+                                    <br>
+                                    {% if ieee_nsu_student_branch.pes_image %}
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.pes_image}}')">PES Image</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.pes_image}}', 'pes_image')">✖</button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    <br>
+
+                                    <label>PES Read More Link <span style="color:red">*<span></label> 
+                                    <input
+                                    placeholder="Read More Link"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="pes_read_more_link"
+                                    value="{{ieee_nsu_student_branch.pes_read_more_link}}"/>
+                                </div> 
+                                <br>
+
+                                <!-- IAS -->
+                                <div class="form-group">
+                                    <label for="images">IAS Image:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="ias-image-input" name="ias_image" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="ias-image-input">Choose file</label>
+                                    </div>
+                                    
+                                    <br>
+                                    {% if ieee_nsu_student_branch.ias_image %}
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.ias_image}}')">IAS Image</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.ias_image}}', 'ias_image')">✖</button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    <br>
+
+                                    <label>IAS Read More Link <span style="color:red">*<span></label> 
+                                    <input
+                                    placeholder="Read More Link"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="ias_read_more_link"
+                                    value="{{ieee_nsu_student_branch.ias_read_more_link}}"/>
+                                </div> 
+                                <br>
+
+                                <!-- WIE -->
+                                <div class="form-group">
+                                    <label for="images">WIE Image:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="wie-image-input" name="wie_image" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="wie-image-input">Choose file</label>
+                                    </div>
+                                    
+                                    <br>
+                                    {% if ieee_nsu_student_branch.wie_image %}
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.wie_image}}')">WIE Image</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.wie_image}}', 'wie_image')">✖</button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    <br>
+
+                                    <label>WIE Read More Link <span style="color:red">*<span></label> 
+                                    <input
+                                    placeholder="Read More Link"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="wie_read_more_link"
+                                    value="{{ieee_nsu_student_branch.wie_read_more_link}}"/>
+                                </div> 
+
+
+                                <br> 
+                                <hr>
+                                <br> 
+
+                                <h1>Creative Team</h1>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Creative Team <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="creative_team_details">{{ieee_nsu_student_branch.creative_team_description}}</textarea>
+                                    <p id="creativeTeamCharacterCount" style="color: red;">Required</p>
+
+                                </div>
+                            
+                                <br>
+                                <hr>
+                                <br> 
+
+                                <h1>Mission</h1>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Mission Details <span style="color:red">*<span></label> 
+                                    <textarea  
+                                    class="form-control" 
+                                    type="text"
+                                    name="mission_details">{{ieee_nsu_student_branch.mission_description}}</textarea>
+                                    <p id="missionCharacterCount" style="color: red;">Required</p>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label for="images">Mission Image:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="mission-image-input" name="mission_image" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="mission-image-input">Choose file</label>
+                                    </div>
+                                    
+                                    <br>
+                                    {% if ieee_nsu_student_branch.mission_image %}
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.mission_image}}')">Mission Image</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.mission_image}}', 'mission_image')">✖</button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div> 
+
+                                <br>
+                                <hr>
+                                <br> 
+
+                                <h1>Vision</h1>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Vision Details <span style="color:red">*<span></label> 
+                                    <textarea  
+                                    class="form-control" 
+                                    type="text"
+                                    name="vision_details">{{ieee_nsu_student_branch.vision_description}}</textarea>
+                                    <p id="visionCharacterCount" style="color: red;">Required</p>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label for="images">Vision Image:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="vision-image-input" name="vision_image" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="vision-image-input">Choose file</label>
+                                    </div>
+                                    
+                                    <br>
+                                    {% if ieee_nsu_student_branch.vision_image %}
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.vision_image}}')">Vision Image</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.vision_image}}', 'vision_image')">✖</button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div> 
+
+                                <br>
+                                <hr>
+                                <br> 
+
+                                <h1>Events</h1>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Event Details <span style="color:red">*<span></label> 
+                                    <textarea  
+                                    class="form-control" 
+                                    type="text"
+                                    name="events_details">{{ieee_nsu_student_branch.events_description}}</textarea>
+                                    <p id="eventsCharacterCount" style="color: red;">Required</p>
+                                    {% comment %} <br>
+
+                                    <label>All Events Link <span style="color:red">*<span></label> 
+                                    <input
+                                    placeholder="All Events link"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="all_events_link"/> {% endcomment %}
+                                </div>
+
+                                <br>
+                                <hr>
+                                <br> 
+
+                                <h1>Join US</h1>
+                                <br>
+                                
+                                <div class="form-group">
+                                    <label>Join Now Button Link <span style="color:red">*<span></label> 
+                                    <input
+                                    placeholder="Join Now Link"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="join_now_link"
+                                    value="{{ieee_nsu_student_branch.join_now_link}}"/>
+                                </div>
+
+                                <br>
+                                <hr>
+                                <br> 
+
+                                <h1>Achievements</h1>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Achievements Details <span style="color:red">*<span></label> 
+                                    <textarea  
+                                    class="form-control" 
+                                    type="text"
+                                    name="achievements_details">{{ieee_nsu_student_branch.achievements_description}}</textarea>
+                                    <p id="achievementsCharacterCount" style="color: red;">Required</p>
+                                </div>
+
+                                
+                                <br>
+                                <hr>
+                                <br> 
+
+                                <div class="form-group text-center">
+                                    <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
+                                </div>
+                                <br>
+
+                                
+                                
+                            </div> 
+            
+                        
+                        </form>  
+            
+                    <div>
+                </div>
+
+                <!-- for showing image -->
+                <div class="modal fade" id="showImageModal" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="showImageModalLabel">Image</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <img id="modal_image" src="" class="img-fluid w-100" alt="Image">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                            </form>
                         </div>
-                    </p>
-                {% endfor %}
-            </div>
-            <!--Messages End-->
-            
-            <div class="container">
-          
-                <div class="box">
-            
-            
-                    {% comment %} <br>
-                    <div class="box-header">
-                        <h1>Details</h1>
-                        <hr>
-                    </div> {% endcomment %}
-                    
-            
-                    <form id="myForm" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                        <div class="box-body">    
-                            
-                            <br>
-                            <h1>About</h1>
-                            <br>
-                            
-                            <div class="form-group">
-                                <label>About <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="about_details">{{ieee_nsu_student_branch.about_nsu_student_branch}}</textarea>
-                                <p id="aboutCharacterCount" style="color: red;">Required</p>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label for="images">About Image:</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="about-image-input" name="about_image" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
-                                </div>
-                                <br>
-
-                                {% if ieee_nsu_student_branch.about_image %}
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.about_image}}')">About Image</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.about_image}}', 'about_image')">✖</button>
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </div>  
-
-                            <br>
-                            <hr>
-                            <br> 
-
-                            <h1>Chapters</h1>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Chapters Details <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="chapters_details">{{ieee_nsu_student_branch.chapters_description}}</textarea>
-                                <p id="chaptersCharacterCount" style="color: red;">Required</p>
-                            </div>
-                            <br>
-
-                            <!--RAS -->
-                            <div class="form-group">
-                                <label for="images">RAS Image:</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="ras-image-input" name="ras_image" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="ras-image-input">Choose file</label>
-                                </div>
-                                
-                                <br>
-                                {% if ieee_nsu_student_branch.ras_image %}
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.ras_image}}')">RAS Image</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.ras_image}}', 'ras_image')">✖</button>
-                                    </div>
-                                </div>
-                                {% endif %}
-                                <br>
-
-                                <label>RAS Read More Link <span style="color:red">*<span></label> 
-                                <input
-                                placeholder="Read More Link"
-                                class="form-control"
-                                type="text"
-                                autocomplete="off"
-                                required
-                                name="ras_read_more_link"
-                                value="{{ieee_nsu_student_branch.ras_read_more_link}}"/>
-                            </div>
-                            <br> 
-
-                            <!-- PES -->
-                            <div class="form-group">
-                                <label for="images">PES Image:</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="pes-image-input" name="pes_image" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="pes-image-input">Choose file</label>
-                                </div>
-                                
-                                <br>
-                                {% if ieee_nsu_student_branch.pes_image %}
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.pes_image}}')">PES Image</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.pes_image}}', 'pes_image')">✖</button>
-                                    </div>
-                                </div>
-                                {% endif %}
-                                <br>
-
-                                <label>PES Read More Link <span style="color:red">*<span></label> 
-                                <input
-                                placeholder="Read More Link"
-                                class="form-control"
-                                type="text"
-                                autocomplete="off"
-                                required
-                                name="pes_read_more_link"
-                                value="{{ieee_nsu_student_branch.pes_read_more_link}}"/>
-                            </div> 
-                            <br>
-
-                            <!-- IAS -->
-                            <div class="form-group">
-                                <label for="images">IAS Image:</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="ias-image-input" name="ias_image" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="ias-image-input">Choose file</label>
-                                </div>
-                                
-                                <br>
-                                {% if ieee_nsu_student_branch.ias_image %}
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.ias_image}}')">IAS Image</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.ias_image}}', 'ias_image')">✖</button>
-                                    </div>
-                                </div>
-                                {% endif %}
-                                <br>
-
-                                <label>IAS Read More Link <span style="color:red">*<span></label> 
-                                <input
-                                placeholder="Read More Link"
-                                class="form-control"
-                                type="text"
-                                autocomplete="off"
-                                required
-                                name="ias_read_more_link"
-                                value="{{ieee_nsu_student_branch.ias_read_more_link}}"/>
-                            </div> 
-                            <br>
-
-                            <!-- WIE -->
-                            <div class="form-group">
-                                <label for="images">WIE Image:</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="wie-image-input" name="wie_image" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="wie-image-input">Choose file</label>
-                                </div>
-                                
-                                <br>
-                                {% if ieee_nsu_student_branch.wie_image %}
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.wie_image}}')">WIE Image</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.wie_image}}', 'wie_image')">✖</button>
-                                    </div>
-                                </div>
-                                {% endif %}
-                                <br>
-
-                                <label>WIE Read More Link <span style="color:red">*<span></label> 
-                                <input
-                                placeholder="Read More Link"
-                                class="form-control"
-                                type="text"
-                                autocomplete="off"
-                                required
-                                name="wie_read_more_link"
-                                value="{{ieee_nsu_student_branch.wie_read_more_link}}"/>
-                            </div> 
+                    </div>
+                </div>
 
 
-                            <br> 
-                            <hr>
-                            <br> 
-
-                            <h1>Creative Team</h1>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Creative Team <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="creative_team_details">{{ieee_nsu_student_branch.creative_team_description}}</textarea>
-                                <p id="creativeTeamCharacterCount" style="color: red;">Required</p>
-
-                            </div>
-                         
-                            <br>
-                            <hr>
-                            <br> 
-
-                            <h1>Mission</h1>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Mission Details <span style="color:red">*<span></label> 
-                                <textarea  
-                                class="form-control" 
-                                type="text"
-                                name="mission_details">{{ieee_nsu_student_branch.mission_description}}</textarea>
-                                <p id="missionCharacterCount" style="color: red;">Required</p>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label for="images">Mission Image:</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="mission-image-input" name="mission_image" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="mission-image-input">Choose file</label>
-                                </div>
-                                
-                                <br>
-                                {% if ieee_nsu_student_branch.mission_image %}
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.mission_image}}')">Mission Image</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.mission_image}}', 'mission_image')">✖</button>
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </div> 
-
-                            <br>
-                            <hr>
-                            <br> 
-
-                            <h1>Vision</h1>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Vision Details <span style="color:red">*<span></label> 
-                                <textarea  
-                                class="form-control" 
-                                type="text"
-                                name="vision_details">{{ieee_nsu_student_branch.vision_description}}</textarea>
-                                <p id="visionCharacterCount" style="color: red;">Required</p>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label for="images">Vision Image:</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="vision-image-input" name="vision_image" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="vision-image-input">Choose file</label>
-                                </div>
-                                
-                                <br>
-                                {% if ieee_nsu_student_branch.vision_image %}
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_nsu_student_branch.vision_image}}')">Vision Image</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{ieee_nsu_student_branch.vision_image}}', 'vision_image')">✖</button>
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </div> 
-
-                            <br>
-                            <hr>
-                            <br> 
-
-                            <h1>Events</h1>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Event Details <span style="color:red">*<span></label> 
-                                <textarea  
-                                class="form-control" 
-                                type="text"
-                                name="events_details">{{ieee_nsu_student_branch.events_description}}</textarea>
-                                <p id="eventsCharacterCount" style="color: red;">Required</p>
-                                {% comment %} <br>
-
-                                <label>All Events Link <span style="color:red">*<span></label> 
-                                <input
-                                placeholder="All Events link"
-                                class="form-control"
-                                type="text"
-                                autocomplete="off"
-                                required
-                                name="all_events_link"/> {% endcomment %}
-                            </div>
-
-                            <br>
-                            <hr>
-                            <br> 
-
-                            <h1>Join US</h1>
-                            <br>
-                            
-                            <div class="form-group">
-                                <label>Join Now Button Link <span style="color:red">*<span></label> 
-                                <input
-                                placeholder="Join Now Link"
-                                class="form-control"
-                                type="text"
-                                autocomplete="off"
-                                required
-                                name="join_now_link"
-                                value="{{ieee_nsu_student_branch.join_now_link}}"/>
-                            </div>
-
-                            <br>
-                            <hr>
-                            <br> 
-
-                            <h1>Achievements</h1>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Achievements Details <span style="color:red">*<span></label> 
-                                <textarea  
-                                class="form-control" 
-                                type="text"
-                                name="achievements_details">{{ieee_nsu_student_branch.achievements_description}}</textarea>
-                                <p id="achievementsCharacterCount" style="color: red;">Required</p>
-                            </div>
-
-                            
-                            <br>
-                            <hr>
-                            <br> 
-
-                            <div class="form-group text-center">
-                                <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
-                            </div>
-                            <br>
-
-                            
-                            
-                        </div> 
-        
-                    
-                    </form>  
-        
-                <div>
-            </div>
-
-            <!-- for showing image -->
-            <div class="modal fade" id="showImageModal" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <!-- Confirmation modal for deleting images -->
+                <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForImagesLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-top" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="showImageModalLabel">Image</h5>
+                            <h5 class="modal-title" id="ConfirmDeleteModalForImagesLabel">Confirm Delete</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <img id="modal_image" src="" class="img-fluid w-100" alt="Image">
+                            <form method="POST">
+                                {% csrf_token %}
+                            <p><input id="image_delete" name= "image_delete" type="hidden">
+                                <input id="image_id" name= "image_id" type="hidden" ></p>
+                            Are you sure you want to delete the Image?
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                            <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                         </div>
                         </form>
                     </div>
                 </div>
-            </div>
-
-
-            <!-- Confirmation modal for deleting images -->
-            <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForImagesLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-top" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="ConfirmDeleteModalForImagesLabel">Confirm Delete</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="POST">
-                            {% csrf_token %}
-                        <p><input id="image_delete" name= "image_delete" type="hidden">
-                            <input id="image_id" name= "image_id" type="hidden" ></p>
-                        Are you sure you want to delete the Image?
-                    </div>
-                    <div class="modal-footer">
-                        <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
-                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                    </div>
-                    </form>
                 </div>
-            </div>
+
             </div>
 
+            <!--Theme Switcher-->
+            {% block theme_switcher %}
+                {% include "theme_switcher.html" %}
+            {% endblock theme_switcher %}
         </div>
-    </div>
 
-      <!--Script for CKEditor Control-->
-      <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Replace the textareas with CKEditor instances
-            CKEDITOR.replace('about_details');
-            CKEDITOR.replace('chapters_details');
-            CKEDITOR.replace('creative_team_details');           
-            CKEDITOR.replace('mission_details');
-            CKEDITOR.replace('vision_details');
-            CKEDITOR.replace('events_details');
-            CKEDITOR.replace('achievements_details');
-            
+        {% block common_js %}
+            {% include "common_js.html" %}
+        {% endblock common_js %}
+        <!--Script for CKEditor Control-->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // Replace the textareas with CKEditor instances
+                CKEDITOR.replace('about_details');
+                CKEDITOR.replace('chapters_details');
+                CKEDITOR.replace('creative_team_details');           
+                CKEDITOR.replace('mission_details');
+                CKEDITOR.replace('vision_details');
+                CKEDITOR.replace('events_details');
+                CKEDITOR.replace('achievements_details');
+                
 
-            // Attach a function to the change event for each CKEditor instance
-            ["about", "chapters", "creative_team_details",  "achievements", "mission", "vision", "events"]
-                .forEach(function (editorId) {
-                    var editor = CKEDITOR.instances[editorId + '_details'];
+                // Attach a function to the change event for each CKEditor instance
+                ["about", "chapters", "creative_team_details",  "achievements", "mission", "vision", "events"]
+                    .forEach(function (editorId) {
+                        var editor = CKEDITOR.instances[editorId + '_details'];
 
-                    editor.on('change', function () {
-                        // Update character count display for each CKEditor instance
+                        editor.on('change', function () {
+                            // Update character count display for each CKEditor instance
+                            updateCharacterCount(editorId);
+                        });
+
+                        // Update character count initially
                         updateCharacterCount(editorId);
                     });
+            });
 
-                    // Update character count initially
-                    updateCharacterCount(editorId);
-                });
-        });
-
-        function updateCharacterCount(editorId) {
-            var editorContent = CKEDITOR.instances[editorId + '_details'].getData();
-        
-            // Handle special space representations
-            var cleanedContent = editorContent.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
-        
-            // Count each character (including spaces)
-            var characterCount = cleanedContent.length;
-        
-            var characterCountElement = document.getElementById(editorId + 'CharacterCount');
-        
-            // Check conditions and update text color and content
-            if (characterCount === 0) {
-                characterCountElement.style.color = "red";
-                characterCountElement.innerText = "Required";
-            } else if (characterCount > 500) {
-                characterCountElement.style.color = "red";
-                characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
-            } else {
-                characterCountElement.style.color = "black";
-                characterCountElement.innerText = "Character Count: " + characterCount;
+            function updateCharacterCount(editorId) {
+                var editorContent = CKEDITOR.instances[editorId + '_details'].getData();
+            
+                // Handle special space representations
+                var cleanedContent = editorContent.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+            
+                // Count each character (including spaces)
+                var characterCount = cleanedContent.length;
+            
+                var characterCountElement = document.getElementById(editorId + 'CharacterCount');
+            
+                // Check conditions and update text color and content
+                if (characterCount === 0) {
+                    characterCountElement.style.color = "red";
+                    characterCountElement.innerText = "Required";
+                } else if (characterCount > 1500) {
+                    characterCountElement.style.color = "red";
+                    characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
+                } else {
+                    characterCountElement.style.color = "black";
+                    characterCountElement.innerText = "Character Count: " + characterCount;
+                }
             }
-        }
-    </script>
+        </script>
 
-    <!--Script to handle file name showing when choosing file-->
-    <script type="text/javascript">
+        <!--Script to handle file name showing when choosing file-->
+        <script type="text/javascript">
 
-        $('.custom-file input').change(function (e) {
-            var files = [];
-            for (var i = 0; i < $(this)[0].files.length; i++) {
-                files.push($(this)[0].files[i].name);
+            $('.custom-file input').change(function (e) {
+                var files = [];
+                for (var i = 0; i < $(this)[0].files.length; i++) {
+                    files.push($(this)[0].files[i].name);
+                }
+                $(this).next('.custom-file-label').html(files.join(', '));
+            });
+        
+        </script>
+
+
+        <!--script to prevent user from selecting image is image already selected-->
+        <script>
+            // Function to check and disable file input if an image is already saved
+            function checkSavedImage(inputId, savedImageUrl) {
+                var fileInput = document.getElementById(inputId);
+
+                if (savedImageUrl) {
+                    // If an image is already saved, disable the file input
+                    fileInput.disabled = true;
+                    fileInput.classList.add("disabled");
+
+                    // Change the placeholder text
+                    var fileLabel = fileInput.nextElementSibling;
+                    fileLabel.innerText = "Delete existing file to Choose image.";
+                }
             }
-            $(this).next('.custom-file-label').html(files.join(', '));
-        });
+
+            // Call the function for each image section when the page loads
+            window.onload = function () {
+                checkSavedImage("about-image-input", "{{ ieee_nsu_student_branch.about_image }}");
+                checkSavedImage("ras-image-input", "{{ ieee_nsu_student_branch.ras_image }}");
+                checkSavedImage("pes-image-input", "{{ ieee_nsu_student_branch.pes_image }}");
+                checkSavedImage("ias-image-input", "{{ ieee_nsu_student_branch.ias_image }}");
+                checkSavedImage("wie-image-input", "{{ ieee_nsu_student_branch.wie_image }}");
+                checkSavedImage("mission-image-input", "{{ ieee_nsu_student_branch.mission_image }}");
+                checkSavedImage("vision-image-input", "{{ ieee_nsu_student_branch.vision_image }}");
+                // Add more calls for other image sections if needed
+            };
+        </script>
+
+        <script>
+            //Delete logic for image
+            function openModal(image_delete, image_id) {
+                // Set data in the modal
+                var inputElement = document.getElementById('image_delete');    
+                inputElement.value = image_delete;
+                var inputElement2 = document.getElementById('image_id');
+                inputElement2.value=image_id;
+            }
+
+            //View logic for image
+            function openImageModal(image_path){
+                var inputElement = document.getElementById('modal_image');
+                inputElement.src = image_path
+            }
+        </script>
     
-    </script>
-
-
-    <!--script to prevent user from selecting image is image already selected-->
-    <script>
-        // Function to check and disable file input if an image is already saved
-        function checkSavedImage(inputId, savedImageUrl) {
-            var fileInput = document.getElementById(inputId);
-
-            if (savedImageUrl) {
-                // If an image is already saved, disable the file input
-                fileInput.disabled = true;
-                fileInput.classList.add("disabled");
-
-                // Change the placeholder text
-                var fileLabel = fileInput.nextElementSibling;
-                fileLabel.innerText = "Delete existing file to Choose image.";
-            }
-        }
-
-        // Call the function for each image section when the page loads
-        window.onload = function () {
-            checkSavedImage("about-image-input", "{{ ieee_nsu_student_branch.about_image }}");
-            checkSavedImage("ras-image-input", "{{ ieee_nsu_student_branch.ras_image }}");
-            checkSavedImage("pes-image-input", "{{ ieee_nsu_student_branch.pes_image }}");
-            checkSavedImage("ias-image-input", "{{ ieee_nsu_student_branch.ias_image }}");
-            checkSavedImage("wie-image-input", "{{ ieee_nsu_student_branch.wie_image }}");
-            checkSavedImage("mission-image-input", "{{ ieee_nsu_student_branch.mission_image }}");
-            checkSavedImage("vision-image-input", "{{ ieee_nsu_student_branch.vision_image }}");
-            // Add more calls for other image sections if needed
-        };
-    </script>
-
-    <script>
-        //Delete logic for image
-        function openModal(image_delete, image_id) {
-            // Set data in the modal
-            var inputElement = document.getElementById('image_delete');    
-            inputElement.value = image_delete;
-            var inputElement2 = document.getElementById('image_id');
-            inputElement2.value=image_id;
-        }
-
-        //View logic for image
-        function openImageModal(image_path){
-            var inputElement = document.getElementById('modal_image');
-            inputElement.src = image_path
-        }
-    </script>
- 
-</body>
-
-{% endblock manage_ieee_bangladesh_section %}
+    </body>
+</html>
+{% endblock manage_ieee_nsu_student_branch %}

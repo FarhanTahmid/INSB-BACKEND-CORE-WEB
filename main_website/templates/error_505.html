@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>505 Page Not Found - IEEE NSU Student Branch</title>
+    
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+    <link rel="icon" href="{% static 'upload/logo.gif' %}" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />  
+        
+        <!--Common CSS-->
+        {% block common_css %}
+        {% include "common_css_includes.html" %}
+        {% endblock common_css %}
+        
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+         /*common CSS used throughout the page*/
+         .centering {
+            margin: 250px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            font-family: 'Poppins' , sans-serif;
+            text-align: center;
+        }
+        .max-width {
+            max-width: 1080px;
+            margin: 30px 15px;
+        }
+        
+        .error_container h1 , .error_container p , .error_container h3{
+            color: #4b4d4f;
+            font-weight: 600;
+        }
+        .error_container p{
+            margin-bottom: -20px;
+            margin-top: 15px;
+        }
+        .error_container h1{
+            position: relative;
+            margin-bottom: -70px;
+            z-index: 2;
+        }
+        .gif{
+            max-width: 848px;
+            max-height: 450px;
+            overflow: hidden;
+        }
+        .gif img{
+            width: auto;
+            position: relative;
+            bottom: -33px;
+        }
+        /*common CSS used throughout the page*/
+
+        /*media queries*/
+        @media screen and (max-width: 1199px) {
+            .max-width {
+                max-width: 850px;
+            }
+        }
+
+        @media screen and (max-width: 991px) {
+            .max-width {
+                max-width: 650px;
+            }
+            .error_container h1{
+                margin-bottom: -50px;
+            }
+        }
+
+        @media screen and (max-width: 630px) {
+            .max-width {
+                max-width: 90%;
+            }
+            .error_container h1{
+                margin-bottom: -10px;
+            }
+            .gif img{
+                scale: 1.4;
+            }
+        }
+
+        @media screen and (max-width: 425px) {
+            .max-width {
+                max-width: 80%;
+            }
+            .error_container p {
+                font-size: 15px;
+            }
+            .error_container h3{
+                font-size: 20px;
+             }
+        }
+        
+    </style>
+</head>
+
+<body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+    <div class="body-wrapper  float-menu">
+
+        <!--Page start-->
+        <section class="centering">
+            <section class="max-width error_container">
+                <div class="error_code"><h1>Error 505</h1></div>
+                <div class="gif"><img src="https://cdn.dribbble.com/users/550484/screenshots/2128340/404-gif.gif" alt=""></div>
+                <div class="505_message"> <p>Looks like you have discovered a bug! Report it to us and no worries we will fix it soon!
+                    </p><br><h3>Trust us!</h3></div>
+            </section>
+        </section>
+        <!--Page end-->
+
+        {% block footer %}
+            {% include "footer_block.html" %}
+        {% endblock footer %}
+    </div>
+    
+    {% block common_js %}
+        {% include "common_js_includes.html" %}
+    {% endblock %}
+</body>
+
+</html>
