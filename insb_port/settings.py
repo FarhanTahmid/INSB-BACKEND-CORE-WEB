@@ -208,7 +208,7 @@ REST_FRAMEWORK={
 }
 
 handler404='central_branch.views.custom_404'
-
+handler500='central_branch.views.custom_500'
 
 #EMAIL SETTINGS
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'

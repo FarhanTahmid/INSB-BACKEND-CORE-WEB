@@ -72,8 +72,7 @@ def central_home(request):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return custom_500
 
 
 #Panel and Team Management
@@ -3168,3 +3167,6 @@ def member_details(request,ieee_id):
 
 def custom_404(request,exception):
     return render(request,'404.html',status=404)
+
+def custom_500(request,exception):
+    return render(request,'500.html',status=500)
