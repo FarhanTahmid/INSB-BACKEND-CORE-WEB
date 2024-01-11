@@ -6,7 +6,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 Page Not Found - IEEE NSU Student Branch</title>
+    <title>505 Page Not Found - IEEE NSU Student Branch</title>
     
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
     <link rel="icon" href="{% static 'upload/logo.gif' %}" />
@@ -25,8 +25,8 @@
     <style>
          /*common CSS used throughout the page*/
          .centering {
-             display: flex;
-             flex-wrap: wrap;
+            display: flex;
+            flex-wrap: wrap;
             justify-content: center;
             font-family: 'Poppins' , sans-serif;
             text-align: center;
@@ -40,9 +40,9 @@
             color: #4b4d4f;
             font-weight: 600;
         }
-        .error_container h3{
+        .error_container p{
             margin-bottom: -20px;
-            margin-top: 30px;
+            margin-top: 15px;
         }
         .error_container h1{
             position: relative;
@@ -51,7 +51,13 @@
         }
         .gif{
             max-width: 848px;
-            max-height: 400px;
+            max-height: 450px;
+            overflow: hidden;
+        }
+        .gif img{
+            width: auto;
+            position: relative;
+            bottom: -33px;
         }
         /*common CSS used throughout the page*/
 
@@ -78,6 +84,9 @@
             .error_container h1{
                 margin-bottom: -10px;
             }
+            .gif img{
+                scale: 1.4;
+            }
         }
 
         @media screen and (max-width: 425px) {
@@ -101,9 +110,10 @@
         <!--Page start-->
         <section class="centering">
             <section class="max-width error_container">
-                <div class="error_code"><h1>404</h1></div>
+                <div class="error_code"><h1>Error 505</h1></div>
                 <div class="gif"><img src="https://cdn.dribbble.com/users/550484/screenshots/2128340/404-gif.gif" alt=""></div>
-                <div class="404_message"><h3>Looks like you are lost</h3> <br><p>the page you are looking for is not available!</p></div>
+                <div class="505_message"> <p>Looks like you have discovered a bug! Report it to us and no worries we will fix it soon!
+                    </p><br><h3>Trust us!</h3></div>
             </section>
         </section>
         <!--Page end-->
