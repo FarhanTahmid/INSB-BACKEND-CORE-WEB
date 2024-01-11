@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join - IEEE NSU Student Branch</title>
+    
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+    <link rel="icon" href="{% static 'upload/logo.gif' %}" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />  
+        
+        <!--Common CSS-->
+        {% block common_css %}
+        {% include "common_css_includes.html" %}
+        {% endblock common_css %}
+        
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        .centering {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            font-family: 'Poppins' , sans-serif;
+            text-align: center;
+        }
+        .max-width {
+            max-width: 1080px;
+            margin: 30px 15px;
+        }
+        
+        .join_container h1{
+            color: #002855;
+            font-weight: 600;
+            position: relative;
+            margin-bottom: -20px;
+            margin-top: 30px;
+            z-index: 2;
+            border: 1px solid white;
+        }
+        .gif{
+            max-width: 848px;
+            max-height: 450px;
+            overflow: hidden;
+            transition: all .6s ease-in-out;
+        }
+        .gif img{
+            width: auto;
+            position: relative;
+            bottom: -55px;
+            scale: 1.5;
+            left: 76px;
+        }
+        .join_container:hover .gif{
+            scale: 1.08;
+        }
+        .join_container h1::after {
+            content: "";
+            width: 0%;
+            transition: all .4s ease-in-out;
+            display: block;
+            border: 1px solid white;
+
+        }
+
+        .join_container h1:hover::after {
+            width: 100%;
+            border: 1px solid #002855;
+        }
+
+        /*media queries*/
+        @media screen and (max-width: 1199px) {
+            .max-width {
+                max-width: 850px;
+            }
+            .gif img{
+                left: 37px;
+            }
+        }
+
+        @media screen and (max-width: 991px) {
+            .max-width {
+                max-width: 650px;
+            }
+            .join_container h1{
+                margin-bottom: -50px;
+            }
+        }
+
+        @media screen and (max-width: 630px) {
+            .max-width {
+                max-width: 90%;
+            }
+            .join_container h1{
+                margin-bottom: -10px;
+            }
+            .gif img{
+                scale: 1.6;
+                left: 23px;
+            }
+        }
+
+        @media screen and (max-width: 425px) {
+            .max-width {
+                max-width: 80%;
+            }
+            .join_container h1{
+                font-size: 25px;
+            }
+            .gif img{
+                bottom: -25px;
+            }
+        }
+        
+    </style>
+</head>
+
+<body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+    <div class="body-wrapper  float-menu">
+
+        {% block header %}
+        {% include 'header.html' %}
+        {% endblock header %}
+
+
+        {% block wave_design %}
+        {% include 'wave.html' %}
+        {% endblock wave_design %}
+
+        <!--Page start-->
+        <section class="centering">
+            <section class="max-width join_container">
+                <div class="join_msg"><h1>Recruitment process will be announced soon</h1></div>
+                <div class="gif"><img src="https://i.pinimg.com/originals/7d/04/bd/7d04bd4d633a55d52e051a574ae0022f.gif" alt=""></div>
+            </section>
+        </section>
+        <!--Page end-->
+
+        {% block footer %}
+            {% include "footer_block.html" %}
+        {% endblock footer %}
+    </div>
+    
+    {% block common_js %}
+        {% include "common_js_includes.html" %}
+    {% endblock %}
+</body>
+
+</html>

@@ -278,7 +278,7 @@ def rasPage(request):
         context={
             'is_live':True, #This enables the header and footer of the page along with wavy   
             'society':society,
-            #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+            'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'media_url':settings.MEDIA_URL,
             'featured_events':featured_events,
             'faculty_advisor':faculty_advisor,
@@ -325,7 +325,7 @@ def pesPage(request):
         context={
             'is_live':True, #This enables the header and footer of the page along with wavy    
             'society':society,
-            #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+            'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'media_url':settings.MEDIA_URL,
             'featured_events':featured_events,
             'faculty_advisor':faculty_advisor,
@@ -371,7 +371,7 @@ def iasPage(request):
         context={
             'is_live':True, #This enables the header and footer of the page along with wavy    
             'society':society,
-            #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+            'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'media_url':settings.MEDIA_URL,
             'featured_events':featured_events,
             'faculty_advisor':faculty_advisor,
@@ -418,7 +418,7 @@ def wiePage(request):
         context={
             'is_live':True, #This enables the header and footer of the page along with wavy    
             'society':society,
-            #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+            'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'media_url':settings.MEDIA_URL,
             'featured_events':featured_events,
             'faculty_advisor':faculty_advisor,
@@ -575,6 +575,7 @@ def write_blogs(request):
                 return redirect('main_website:write_blogs')
             
     context={
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         'all_sc_ag':load_all_sc_ag,
         'blog_categories':load_all_blog_category,
         'page_title':"Write a Blog",
@@ -606,6 +607,8 @@ def blog_description(request,pk):
         'blog':get_blog,
         'recent_blogs':get_recent_blogs,
         'recent_news':get_recent_news,
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+
     }
     return render(request, 'Publications/Blog/blog_description_main.html',context=context)
 
@@ -618,6 +621,7 @@ def research_Paper(request):
     get_all_research_papers = Research_Papers.objects.filter(publish_research=True).order_by('-publish_date')
     
     context={
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         'page_title':"Research Papers",
         'page_subtitle':"IEEE NSU Student Branch",
         "all_research_papers":get_all_research_papers
@@ -672,6 +676,8 @@ def add_research_form(request):
         Together, let's make a lasting impact in the world of research and innovation!""",
         'research_categories':research_categories,
         'all_sc_ag':load_all_sc_ag,
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+
     }
     
     return render(request,"Get Involved/Add Research/research_paper_form.html",context=context)
@@ -696,6 +702,8 @@ def gallery(request):
         'page_title':"Gallery",
         'all_images':all_images,
         'all_videos':all_videos,
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+
     }
     return render(request, 'Publications/Gallery/gallery.html',context=context)
 
@@ -848,6 +856,7 @@ def officers_page(request):
         context={
         'page_title':'Officers of IEEE NSU Student Branch',
         'teams':get_teams,
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         }
     else:
         get_panel_officers=PanelMembersData.get_officer_members_from_branch_panel(request=request,panel=get_current_panel.pk)
@@ -935,6 +944,8 @@ def volunteers_page(request):
     return render(request,'Members/Volunteers/volunteers_page.html',context=context)
 
 def exemplary_members(request):
+    #loading all the teams of Branch
+    branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
     # get all exemplary members
     all_exemplary_members=ExemplaryMembers.objects.all().order_by('-rank')
         
@@ -942,6 +953,8 @@ def exemplary_members(request):
         'page_title':"Exemplary Members",
         'page_subtitle':"IEEE NSU Student Branch",
         'exemplary_members':all_exemplary_members,
+        'branch_teams':branch_teams,
+
     }
     return render(request,"Members/Exemplary Members/exemplary_members.html",context=context)
 
@@ -984,12 +997,13 @@ def all_members(request):
     get_all_members = userData.get_all_registered_members(request=request)
     recruitment_stat=userData.getRecruitmentStats()
     
-    
     context={
         'page_title':"All Registered Members & Member Statistics of IEEE NSU SB",
         'members':get_all_members,
         'male_count':Members.objects.filter(gender="Male").count(),
         'female_count':Members.objects.filter(gender="Female").count(),
+        'active_count':Members.objects.filter(is_active_member=True).count(),
+        'inactive_count':Members.objects.filter(is_active_member=False).count(),
         'session_name':recruitment_stat[0],
         'session_recruitee':recruitment_stat[1],
         'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
@@ -1086,7 +1100,9 @@ def ieee(request):
     return render(request, 'About/About_IEEE.html', context)
 
 def faq(request):
-
+    #loading all the teams of Branch
+    branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+    
     all_categories = Branch.get_all_category_of_questions()
     saved_question_answers = Branch.get_saved_questions_and_answers()
 
@@ -1107,7 +1123,9 @@ def faq(request):
     context = {
         'all_categories':all_categories,
         'saved_question_answer':saved_question_answers,
-        'page_title':'FAQ'
+        'page_title':'FAQ',
+        'branch_teams':branch_teams,
+
     }
 
     return render(request, 'About/faq.html',context)
@@ -1138,4 +1156,35 @@ def contact(request):
     return render(request, 'Contact/contact.html', context)
 
 def toolkit(request):
-    return render(request, 'Publications/Toolkit/toolkit.html')
+    #loading all the teams of Branch
+    branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+    
+    # load all toolkit items
+    toolkit_items = Toolkit.objects.all().order_by('pk')
+    
+    context={
+        'page_title':"Toolkit",
+        'branch_teams':branch_teams,
+        'all_toolkits':toolkit_items,
+    }
+    return render(request, 'Publications/Toolkit/toolkit.html',context=context)
+
+def join_insb(request):
+    #loading all the teams of Branch
+    branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+    context={
+            'page_title':"Join INSB",
+            'branch_teams':branch_teams,
+        }
+ 
+    return render(request,"join_INSB.html",context=context)
+
+# def test_view(request):
+#     #loading all the teams of Branch
+#     branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+#     context={
+#             'page_title':"Lost?!",
+#             'branch_teams':branch_teams,
+#         }
+ 
+#     return render(request,"test.html",context=context)

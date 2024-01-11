@@ -55,4 +55,8 @@ urlpatterns = [
     path('contact',views.contact, name="contact"),
     # Toolkit
     path('toolkit',views.toolkit, name="toolkit"),
+    # Join INSB
+    path('join_insb',views.join_insb, name = "join_insb"),
+    
+    # path('hello',views.test_view,name="404"),
 ]

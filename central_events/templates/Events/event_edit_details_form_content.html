@@ -120,6 +120,19 @@
                 </div>
                 <br>  
                 <div class="form-group">
+                    <label>Event Time: </label> 
+                    <input
+                        placeholder="Event Time"
+                        class="form-control"
+                        type="text"
+                        autocomplete="off"
+                        name="event_time"
+                        value="{{event_details.event_time|default:""}}" 
+                    />
+                        
+                </div>
+                <br>
+                <div class="form-group">
                     <label>Inter Branch Collaboration With: (Press CTRL to select multiple options) </label>
                     <select multiple class="form-control" name="inter_branch_collaboration">
                         <option value="null" {% if not hasCollaboration %}selected{% endif %}>--------------------</option>
