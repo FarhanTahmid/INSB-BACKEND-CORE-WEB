@@ -39,7 +39,7 @@ def emt_data_access(request):
     #Only sub eb of that team can access the page
     sc_ag=PortData.get_all_sc_ag(request=request)
     user = request.user
-    has_access=(Access_Render.team_co_ordinator_access(team_id=renderData.Events_And_Management_Team.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
+    has_access=(Access_Render.team_co_ordinator_access(team_id=renderData.Events_And_Management_Team.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username) or Events_And_Management_Team.emt_manage_team_access(user.username))
     if(has_access):    
         data_access = renderData.Events_And_Management_Team.load_emt_data_access()
         team_members=renderData.Events_And_Management_Team.load_team_members()
@@ -57,7 +57,7 @@ def emt_data_access(request):
                 #getting values from checkbox
                 if(request.POST.get('task_assign')):
                     task_assign_permission=True
-                if(request.POST.get('manage_team')):
+                if(request.POST.get('manage_team_access')):
                     manage_team_permission=True
                 ieee_id=request.POST['access_ieee_id']
 
