@@ -2956,7 +2956,6 @@ def insb_members_list(request):
         '''This function is responsible to display all the member data in the page'''
         if request.method=="POST":
             if request.POST.get("site_register"):
-                
                 return redirect('membership_development_team:site_registration')
             
         members=Members.objects.order_by('position')
