@@ -30,7 +30,9 @@
         .justify-pagragraph-content {
             text-align: justify;
         }
-
+        .container{
+            max-width: 1140px;
+        }
         .parallax {
             /* Set a specific height */
             min-height: 250px;
@@ -152,17 +154,7 @@
             background-color: black;
         }
 
-        @media screen and (max-width: 768px) {
-            .line {
-                display: none;
-                /* Hide the horizontal line */
-            }
 
-            .what-why-who-section-partition {
-                border-left: none !important;
-                /* Remove the left border */
-            }
-        }
 
 
         .form-control {
@@ -197,11 +189,29 @@
 
         .row {
             justify-content: center;
+            align-items: center;
+        }
+        @media (max-width: 768px){
+            .container, .container-md, .container-sm {
+                max-width: 96%;
+            }
         }
 
         @media only screen and (max-width: 767px) {
             .societies_about_section .container .row {
                 flex-direction: column-reverse;
+            }
+            .what-why-who-section-partition {
+                border-left: none !important;
+                border-right: none !important;
+                /* Remove the left border */
+            }
+            .line {
+                display: none;
+                /* Hide the horizontal line */
+            }
+            #imageMissionColumn, #imageVisionColumn{
+                height: 300px !important;
             }
         }
 
@@ -296,21 +306,8 @@
                 opacity: 1;
             }
         }
-        .w-100{
-            width: 350px!important;
-            height: 350px;
-        }
-        .col-md-6.order-md-1.p-0{
-            height: 370px;
-            width: 100%;
-            overflow: hidden;
-        }
-        @media screen and (max-width: 400px){
-            .w-100 {
-                width: 100%!important;
-                height: 100%;
-            }
-        }
+
+
     </style>
 </head>
 
@@ -450,12 +447,12 @@
                 <!-- First Row - Mission -->
                 <div class="row mission-vision-content">
                     <!-- Image column (order-md-2 means it will be the second column on medium and larger screens) -->
-                    <div class="col-md-6 order-md-2 p-0">
+                    <div class="col-md-6 order-md-2 p-0" id="imageMissionColumn">
                         <img class="mission-vision-image img-fluid"
                             src="{{media_url}}{{society.mission_picture}}" alt="Mission Image">
                     </div>
                     <!-- Text column (order-md-1 means it will be the first column on medium and larger screens) -->
-                    <div class="col-md-6 order-md-1">
+                    <div class="col-md-6 order-md-1" id="textMissionColumn">
                         <div class="mx-3 my-4">
                             <h1 style="color: var(--text-color);"><b>Mission</b></h1>
                             <br>
@@ -472,12 +469,12 @@
                 <!-- Second Row - Vision -->
                 <div class="row mission-vision-content">
                     <!-- Image column (order-md-1 means it will be the first column on medium and larger screens) -->
-                    <div class="col-md-6 order-md-1 p-0">
+                    <div class="col-md-6 order-md-1 p-0" id="imageVisionColumn">
                         <img class="mission-vision-image img-fluid"
                             src="{{media_url}}{{society.vision_picture}}" alt="Vision Image">
                     </div>
                     <!-- Text column (order-md-2 means it will be the second column on medium and larger screens) -->
-                    <div class="col-md-6 order-md-2">
+                    <div class="col-md-6 order-md-2" id="textVisionColumn">
                         <div class="mx-3 my-4">
                             <h1 style="color: var(--text-color);"><b>Vision</b></h1>
                             <br>
@@ -576,11 +573,11 @@
         <section class="what-why-who-section">
             <div class="container what-why-who-section-container">
                 <div class="row">
-                    <div class="col-md-6 p-md-5 pt-5 px-4 what-why-who-section-partition">
+                    <div class="col-md-6 p-md-5 pt-5 px-4 what-why-who-section-partition" id="firstColumn">
                         <h3 style="color: var(--secondary-color);"><b>What is {{society.short_form_2|upper}}?</b></h3>
                         <div class="justify-pagragraph-content" style="text-align: justify; color: #fff;" id="pid">{{society.what_is_this_description|safe}}</div>
                     </div>
-                    <div class="col-md-6 p-md-5 pt-5 px-4 what-why-who-section-partition"
+                    <div class="col-md-6 p-md-5 pt-5 px-4 what-why-who-section-partition" id="secondColumn"
                         style="border-left: 1px solid rgb(255, 255, 255);">
                         <h3 style="color: var(--secondary-color);"><b>Why join {{society.short_form_2|upper}}?</b></h3>
                         <div class="justify-pagragraph-content" style="text-align: justify; color: #fff;" id="pid">{{society.why_join_it|safe}}</div>
@@ -590,11 +587,11 @@
             <hr class="line" style="width:100%; border: #ffffff solid 1px; margin:0px; padding:0px;">
             <div class="container what-why-who-section-container">
                 <div class="row">
-                    <div class="col-md-6 p-md-5 pt-5 px-4 what-why-who-section-partition">
+                    <div class="col-md-6 p-md-5 pt-5 px-4 what-why-who-section-partition" id="firstColumn2">
                         <h3 style="color:var(--secondary-color);"><b>What activities do we usually do?</b></h3>
                         <div class="justify-pagragraph-content" style="text-align: justify; color: #fff;" id="pid">{{society.what_activites_it_has|safe}}</div>
                     </div>
-                    <div class="col-md-6 p-md-5 py-5 px-4 what-why-who-section-partition"
+                    <div class="col-md-6 p-md-5 py-5 px-4 what-why-who-section-partition" id="secondColumn2"
                         style="border-left: 1px solid rgb(255, 255, 255);">
                         <h3 style="color:var(--secondary-color);"><b>How to join {{society.short_form|upper}}?</b></h3>
                         <div class="justify-pagragraph-content" style="text-align: justify; color: #fff;" id="pid">{{society.how_to_join|safe}}</div>
@@ -660,7 +657,68 @@
     {% include "common_js_includes.html" %}
     {% endblock %}
     <script src="{% static '/js/event_script.js'%}"></script>
-
+    <script>
+        // Get the height of the columns and set the maximum height
+        window.addEventListener('load', function () {
+            var imageMissionColumn = document.getElementById('imageMissionColumn');
+            var textMissionColumn = document.getElementById('textMissionColumn');
+    
+            // Set the height of the shorter column to match the taller one
+            var maxHeight = Math.max(imageMissionColumn.offsetHeight, textMissionColumn.offsetHeight);
+            imageMissionColumn.style.height = maxHeight + 'px';
+            textMissionColumn.style.height = maxHeight + 'px';
+        });
+    </script>
+    <script>
+        // Get the height of the columns and set the maximum height
+        window.addEventListener('load', function () {
+            var imageMissionColumn = document.getElementById('imageVisionColumn');
+            var textMissionColumn = document.getElementById('textVisionColumn');
+    
+            // Set the height of the shorter column to match the taller one
+            var maxHeight = Math.max(imageVisionColumn.offsetHeight, textVisionColumn.offsetHeight);
+            imageVisionColumn.style.height = maxHeight + 'px';
+            textVisionColumn.style.height = maxHeight + 'px';
+        });
+    </script>
+    <script>
+        window.addEventListener('load', function () {
+            var firstColumn = document.getElementById('firstColumn');
+            var secondColumn = document.getElementById('secondColumn');
+    
+            // Get the heights of the columns
+            var firstColumnHeight = firstColumn.offsetHeight;
+            var secondColumnHeight = secondColumn.offsetHeight;
+    
+            // Set border styles based on the height comparison
+            if (firstColumnHeight > secondColumnHeight) {
+                firstColumn.style.borderRight = '1px solid rgb(255, 255, 255)';
+                secondColumn.style.borderLeft = '0px';
+            } else {
+                firstColumn.style.borderRight = '0px';
+                secondColumn.style.borderLeft = '1px solid rgb(255, 255, 255)';
+            }
+        });
+    </script>
+        <script>
+            window.addEventListener('load', function () {
+                var firstColumn2 = document.getElementById('firstColumn2');
+                var secondColumn2 = document.getElementById('secondColumn2');
+        
+                // Get the heights of the columns
+                var firstColumnHeight2 = firstColumn2.offsetHeight;
+                var secondColumnHeight2 = secondColumn2.offsetHeight;
+        
+                // Set border styles based on the height comparison
+                if (firstColumnHeight2 > secondColumnHeight2) {
+                    firstColumn2.style.borderRight = '1px solid rgb(255, 255, 255)';
+                    secondColumn2.style.borderLeft = '0px';
+                } else {
+                    firstColumn2.style.borderRight = '0px';
+                    secondColumn2.style.borderLeft = '1px solid rgb(255, 255, 255)';
+                }
+            });
+        </script>
     <script>
         // Function to display the modal
         function openModal() {
