@@ -56,32 +56,38 @@ def insb_members_list(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     '''This function is responsible to display all the member data in the page'''
-    if request.method=="POST":
-        if request.POST.get("site_register"):
-            return redirect('membership_development_team:site_registration')
-        if(request.POST.get('refresh_member_status')):
-            get_all_members=Members.objects.all()
-            for member in get_all_members.iterator():
-                member.is_active_member=renderData.MDT_DATA.get_member_account_status(ieee_id=member.ieee_id)
-                member.save()
-            messages.success(request,"All Members Account Status were Updated!")
-            return redirect('membership_development_team:members_list')        
-    members=Members.objects.order_by('position')
-    totalNumber=Members.objects.all().count()
-    has_view_permission=True
-    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-    user_data=current_user.getUserData() #getting user data as dictionary file
+    #Loading Access Permission
+    user=request.user   
+    has_access=(renderData.MDT_DATA.insb_member_details_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
+    if has_access:
+        if request.method=="POST":
+            if request.POST.get("site_register"):
+                return redirect('membership_development_team:site_registration')
+            if(request.POST.get('refresh_member_status')):
+                get_all_members=Members.objects.all()
+                for member in get_all_members.iterator():
+                    member.is_active_member=renderData.MDT_DATA.get_member_account_status(ieee_id=member.ieee_id)
+                    member.save()
+                messages.success(request,"All Members Account Status were Updated!")
+                return redirect('membership_development_team:members_list')        
+        members=Members.objects.order_by('position')
+        totalNumber=Members.objects.all().count()
+        has_view_permission=True
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
 
-    context={
-        'is_branch':False,
-        'all_sc_ag':sc_ag,
-        'members':members,
-        'totalNumber':totalNumber,
-        'has_view_permission':has_view_permission,
-        'user_data':user_data
-    }
-    
-    return render(request,'INSB Members/members_list.html',context=context)
+        context={
+            'is_branch':False,
+            'all_sc_ag':sc_ag,
+            'members':members,
+            'totalNumber':totalNumber,
+            'has_view_permission':has_view_permission,
+            'user_data':user_data
+        }
+        
+        return render(request,'INSB Members/members_list.html',context=context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def member_details(request,ieee_id):
@@ -249,40 +255,45 @@ def membership_renewal(request):
 
     sc_ag=PortData.get_all_sc_ag(request=request)
 
-    '''This function is responsible for the data handling for renewal Process and loads all the sessions'''
-    #Load all sessions at first
-    sessions=Renewal_Sessions.objects.order_by('-id')
+    user=request.user
+    has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
+    if has_access:
+        '''This function is responsible for the data handling for renewal Process and loads all the sessions'''
+        #Load all sessions at first
+        sessions=Renewal_Sessions.objects.order_by('-id')
 
-    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-    user_data=current_user.getUserData() #getting user data as dictionary file
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
 
-    if request.method=="POST":
-        #MUST PERFORM TRY CATCH
-        #Creating and inserting the data of the session
-        try:
-            session_name=request.POST['renewal_session']
+        if request.method=="POST":
+            #MUST PERFORM TRY CATCH
+            #Creating and inserting the data of the session
             try:
-                if(Renewal_Sessions.objects.get(session_name=session_name)):
-                    messages.error(request,"A same session with this name already exists!")
+                session_name=request.POST['renewal_session']
+                try:
+                    if(Renewal_Sessions.objects.get(session_name=session_name)):
+                        messages.error(request,"A same session with this name already exists!")
+                        return redirect('membership_development_team:membership_renewal')
+                except Renewal_Sessions.DoesNotExist:
+                    session_time=datetime.now()
+                    add_session=Renewal_Sessions(session_name=session_name,session_time=session_time)
+                    add_session.save()
+                    messages.success(request,"A new session has been created!")
                     return redirect('membership_development_team:membership_renewal')
-            except Renewal_Sessions.DoesNotExist:
-                session_time=datetime.now()
-                add_session=Renewal_Sessions(session_name=session_name,session_time=session_time)
-                add_session.save()
-                messages.success(request,"A new session has been created!")
+            except DatabaseError:
+                messages.info(request,"Error Creating a new Session!")
                 return redirect('membership_development_team:membership_renewal')
-        except DatabaseError:
-            messages.info(request,"Error Creating a new Session!")
-            return redirect('membership_development_team:membership_renewal')
-    
-    context={
-        'all_sc_ag':sc_ag,
-        'sessions':sessions,
-        'user_data':user_data,
-        'is_branch':True,
-    }
         
-    return render(request,'Renewal/renewal_homepage.html',context)
+        context={
+            'all_sc_ag':sc_ag,
+            'sessions':sessions,
+            'user_data':user_data,
+            'is_branch':True,
+        }
+            
+        return render(request,'Renewal/renewal_homepage.html',context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 # no login required as this will open up for other people
 from system_administration.render_access import Access_Render
@@ -525,29 +536,35 @@ def sc_ag_renewal_session_data(request,pk,sc_ag_primary):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    get_renewal_requests=[]
     
-    if(int(sc_ag_primary)==2):
-        get_renewal_requests=Renewal_requests.objects.filter(session_id=pk,pes_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
-    elif(int(sc_ag_primary)==3):
-        get_renewal_requests=Renewal_requests.objects.filter(session_id=pk,ras_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
-    elif(int(sc_ag_primary)==4):
-        get_renewal_requests=Renewal_requests.objects.filter(session_id=pk,ias_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
-    elif(int(sc_ag_primary)==5):
-        get_renewal_requests=Renewal_requests.objects.filter(session_id=pk,wie_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+    user=request.user
+    has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
+    if has_access:
+        get_renewal_requests=[]
+        
+        if(int(sc_ag_primary)==2):
+            get_renewal_requests=Renewal_requests.objects.filter(session_id=pk,pes_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+        elif(int(sc_ag_primary)==3):
+            get_renewal_requests=Renewal_requests.objects.filter(session_id=pk,ras_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+        elif(int(sc_ag_primary)==4):
+            get_renewal_requests=Renewal_requests.objects.filter(session_id=pk,ias_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
+        elif(int(sc_ag_primary)==5):
+            get_renewal_requests=Renewal_requests.objects.filter(session_id=pk,wie_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
 
-    # get session info
-    get_session = Renewal_Sessions.objects.get(pk=pk)
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'sc_ag_info':get_sc_ag,
-        'session_id':pk,
-        'requests':get_renewal_requests,
-        'session_info':get_session,
-        'is_branch':True,
-    }
-    return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context)
+        # get session info
+        get_session = Renewal_Sessions.objects.get(pk=pk)
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag,
+            'session_id':pk,
+            'requests':get_renewal_requests,
+            'session_info':get_session,
+            'is_branch':True,
+        }
+        return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def renewal_request_details(request,pk,request_id):
@@ -720,104 +737,117 @@ def renewal_request_details(request,pk,request_id):
 def generateExcelSheet_renewal_requestList(request,session_id):
     
     '''This method generates excel sheets only for renewal recruitment details for particular sessions'''
-    session_name=renewal_data.get_renewal_session_name(pk=session_id)
-    date=datetime.now()
-    response = HttpResponse(
-        content_type='application/ms-excel')  # declaring content type for the excel files
-    response['Content-Disposition'] = f'attachment; filename=Renewal Application - ' +\
-        session_name + ' - ' +\
-        str(date.strftime('%m/%d/%Y')) + \
-        '.xls'  # making files downloadable with name of session and timestamp
-    # adding encoding to the workbook
-    workBook = xlwt.Workbook(encoding='utf-8')
-    # opening an worksheet to work with the columns
-    workSheet = workBook.add_sheet(f'Application List')
 
-    # generating the first row
-    row_num = 0
-    font_style = xlwt.XFStyle()
-    font_style.font.bold = True
+    user=request.user
+    has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
+    if has_access:
+        session_name=renewal_data.get_renewal_session_name(pk=session_id)
+        date=datetime.now()
+        response = HttpResponse(
+            content_type='application/ms-excel')  # declaring content type for the excel files
+        response['Content-Disposition'] = f'attachment; filename=Renewal Application - ' +\
+            session_name + ' - ' +\
+            str(date.strftime('%m/%d/%Y')) + \
+            '.xls'  # making files downloadable with name of session and timestamp
+        # adding encoding to the workbook
+        workBook = xlwt.Workbook(encoding='utf-8')
+        # opening an worksheet to work with the columns
+        workSheet = workBook.add_sheet(f'Application List')
 
-    # Defining columns that will stay in the first row
-    columns = ['Name','IEEE ID', 'Associated Email','IEEE Email','Contact No', 'IEEE Account Password', 'IEEE-Renewal', 'PES-Renewal', 'RAS-Renewal','IAS-Renewal','WIE-Renewal','Transaction ID','Any Comments?',
-               'Renewal Status','MDT Comment']
+        # generating the first row
+        row_num = 0
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
 
-    # Defining first column
-    for column in range(len(columns)):
-        workSheet.write(row_num, column, columns[column], font_style)
+        # Defining columns that will stay in the first row
+        columns = ['Name','IEEE ID', 'Associated Email','IEEE Email','Contact No', 'IEEE Account Password', 'IEEE-Renewal', 'PES-Renewal', 'RAS-Renewal','IAS-Renewal','WIE-Renewal','Transaction ID','Any Comments?',
+                'Renewal Status','MDT Comment']
 
-    # reverting font style to default
-    font_style = xlwt.XFStyle()
+        # Defining first column
+        for column in range(len(columns)):
+            workSheet.write(row_num, column, columns[column], font_style)
 
-    # getting all the values of members as rows with same session
-    rows = Renewal_requests.objects.all().values_list('name',
-                                            'ieee_id',
-                                             'email_associated',
-                                             'email_ieee',
-                                             'contact_no',
-                                             'ieee_account_password',
-                                             'ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check',
-                                             'transaction_id',
-                                             'comment',
-                                             'renewal_status',
-                                             'official_comment')
-    for row in rows:
-        row_num += 1
-        for col_num in range(len(row)):
-            workSheet.write(row_num, col_num, str(row[col_num]), font_style)
-    workBook.save(response)
-    return (response)
+        # reverting font style to default
+        font_style = xlwt.XFStyle()
+
+        # getting all the values of members as rows with same session
+        rows = Renewal_requests.objects.all().values_list('name',
+                                                'ieee_id',
+                                                'email_associated',
+                                                'email_ieee',
+                                                'contact_no',
+                                                'ieee_account_password',
+                                                'ieee_renewal_check','pes_renewal_check','ras_renewal_check','ias_renewal_check','wie_renewal_check',
+                                                'transaction_id',
+                                                'comment',
+                                                'renewal_status',
+                                                'official_comment')
+        for row in rows:
+            row_num += 1
+            for col_num in range(len(row)):
+                workSheet.write(row_num, col_num, str(row[col_num]), font_style)
+        workBook.save(response)
+        return (response)
+    else:
+        return render(request,'access_denied2.html')
     
     
     
 @login_required
 def generateExcelSheet_membersList(request):
     '''This method generates the excel files for The Registered INSB members for MDT'''
-    date=datetime.now()
-    response = HttpResponse(
-        content_type='application/ms-excel')  # eclaring content type for the excel files
-    response['Content-Disposition'] = f'attachment; filename=Registered Member List - ' +\
-        str(date.strftime('%m/%d/%Y')) + \
-        '.xls'  # making files downloadable with name of session and timestamp
-    # adding encoding to the workbook
-    workBook = xlwt.Workbook(encoding='utf-8')
-    # opening an worksheet to work with the columns
-    workSheet = workBook.add_sheet(f'Member-List')
 
-    # generating the first row
-    row_num = 0
-    font_style = xlwt.XFStyle()
-    font_style.font.bold = True
+    #Loading Access Permission
+    user=request.user
+    has_access=(renderData.MDT_DATA.insb_member_details_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
+    if has_access:
+        date=datetime.now()
+        response = HttpResponse(
+            content_type='application/ms-excel')  # eclaring content type for the excel files
+        response['Content-Disposition'] = f'attachment; filename=Registered Member List - ' +\
+            str(date.strftime('%m/%d/%Y')) + \
+            '.xls'  # making files downloadable with name of session and timestamp
+        # adding encoding to the workbook
+        workBook = xlwt.Workbook(encoding='utf-8')
+        # opening an worksheet to work with the columns
+        workSheet = workBook.add_sheet(f'Member-List')
 
-    # Defining columns that will stay in the first row
-    columns = ['IEEE ID','NSU ID', 'Name', 'Email (IEEE)','Email (Personal)', 'Major', 'Contact No', 'Home Address', 'Date Of Birth', 'Gender',
-               'Facebook URL']
+        # generating the first row
+        row_num = 0
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
 
-    # Defining first column
-    for column in range(len(columns)):
-        workSheet.write(row_num, column, columns[column], font_style)
+        # Defining columns that will stay in the first row
+        columns = ['IEEE ID','NSU ID', 'Name', 'Email (IEEE)','Email (Personal)', 'Major', 'Contact No', 'Home Address', 'Date Of Birth', 'Gender',
+                'Facebook URL']
 
-    # reverting font style to default
-    font_style = xlwt.XFStyle()
+        # Defining first column
+        for column in range(len(columns)):
+            workSheet.write(row_num, column, columns[column], font_style)
 
-    # getting all the values of members as rows ORDERED BY POSITION
-    rows = Members.objects.all().values_list('ieee_id',
-                                             'nsu_id',
-                                             'name',
-                                             'email_ieee',
-                                             'email_personal',
-                                             'major',
-                                             'contact_no',
-                                             'home_address',
-                                             'date_of_birth',
-                                             'gender',
-                                             'facebook_url').order_by('position')
-    for row in rows:
-        row_num += 1
-        for col_num in range(len(row)):
-            workSheet.write(row_num, col_num, str(row[col_num]), font_style)
-    workBook.save(response)
-    return (response)
+        # reverting font style to default
+        font_style = xlwt.XFStyle()
+
+        # getting all the values of members as rows ORDERED BY POSITION
+        rows = Members.objects.all().values_list('ieee_id',
+                                                'nsu_id',
+                                                'name',
+                                                'email_ieee',
+                                                'email_personal',
+                                                'major',
+                                                'contact_no',
+                                                'home_address',
+                                                'date_of_birth',
+                                                'gender',
+                                                'facebook_url').order_by('position')
+        for row in rows:
+            row_num += 1
+            for col_num in range(len(row)):
+                workSheet.write(row_num, col_num, str(row[col_num]), font_style)
+        workBook.save(response)
+        return (response)
+    else:
+        return render(request,'access_denied2.html')
 
 
 @login_required
