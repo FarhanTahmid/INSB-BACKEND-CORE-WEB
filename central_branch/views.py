@@ -2749,7 +2749,7 @@ def manage_toolkit(request):
     user_data=current_user.getUserData() #getting user data as dictionary file
     
     # get all toolkits
-    all_toolkits=Toolkit.objects.all().order_by('-pk')
+    all_toolkits=Toolkit.objects.all().order_by('pk')
     if(request.method=="POST"):
         toolkit_form=ToolkitForm(request.POST,request.FILES)
         if(request.POST.get('add_item')):
@@ -2853,7 +2853,6 @@ def insb_members_list(request):
         '''This function is responsible to display all the member data in the page'''
         if request.method=="POST":
             if request.POST.get("site_register"):
-                
                 return redirect('membership_development_team:site_registration')
             
         members=Members.objects.order_by('position')
