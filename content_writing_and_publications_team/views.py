@@ -18,7 +18,8 @@ import logging
 from datetime import datetime
 import traceback
 from .forms import Content_Form
-from users.renderData import PanelMembersData
+from users.renderData import PanelMembersData,LoggedinUser
+
 
 logger=logging.getLogger(__name__)
 # Create your views here.
@@ -26,12 +27,14 @@ logger=logging.getLogger(__name__)
 @login_required
 def homepage(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
-
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # get team members
     get_officers=ContentWritingTeam.get_officers()
     get_volunteers=ContentWritingTeam.get_volunteers()
     
     context = {
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'co_ordinators':get_officers[0],
         'incharges':get_officers[1],
@@ -46,6 +49,8 @@ def manage_team(request):
     '''This function loads the manage team page for content writing and publications team and is accessable
     by the co-ordinatior only, unless the co-ordinators gives access to others as well'''
 
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
     has_access = CWPTeam_Render_Access.access_for_manage_team(request)
     if has_access:
@@ -120,6 +125,7 @@ def manage_team(request):
                             return redirect('content_writing_and_publications_team:manage_team')
 
         context={
+            'user_data':user_data,
             'data_access':data_access,
             'members':team_members,
             'insb_members':all_insb_members,
@@ -136,11 +142,14 @@ def event_page(request):
 
     '''Only events organised by INSB would be shown on the event page of Content and Publications Team
        So, only those events are being retrieved from database'''
-    
+
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file  
     sc_ag=PortData.get_all_sc_ag(request=request)
     insb_organised_events = Branch.load_insb_organised_events()
 
     context = {
+        'user_data':user_data,
         'events_of_insb_only':insb_organised_events,
         'all_sc_ag':sc_ag,
     }
@@ -153,6 +162,8 @@ def event_page(request):
 def event_form(request,event_id):
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = CWPTeam_Render_Access.access_for_events(request)
 
@@ -199,6 +210,7 @@ def event_form(request,event_id):
             documents = Content_Team_Document.objects.filter(event_id=event_id)
             
             context = {
+                'user_data':user_data,
                 'all_sc_ag' : sc_ag,
                 'event_id' : event_id,
                 'event_details' : event_details,
@@ -224,6 +236,8 @@ def event_form_add_notes(request,event_id):
     ''' This function is used to generate view for add notes of content team. '''
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = CWPTeam_Render_Access.access_for_events(request)
         if has_access:
@@ -262,6 +276,7 @@ def event_form_add_notes(request,event_id):
                     return redirect("content_writing_and_publications_team:event_form_add_notes",event_id)
             
             context = {
+                'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'event_id':event_id,
                 'form_adding_note':form,

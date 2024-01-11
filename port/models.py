@@ -10,6 +10,7 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
     short_form=models.CharField(null=True,blank=True,max_length=20)
     primary_color_code=models.CharField(null=True,blank=True,max_length=20)
     secondary_color_code = models.CharField(null=True,blank=True,max_length=20)
+    mission_vision_color_code = models.CharField(null=True,blank=True,max_length=20)
     text_color_code = models.CharField(null=True,blank=True,max_length=20)
     logo=models.ImageField(null=True,blank=True,upload_to='sc_ag_logos/')
 

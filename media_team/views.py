@@ -169,7 +169,7 @@ def event_page(request):
 @login_required
 def event_form(request,event_id):
     sc_ag=PortData.get_all_sc_ag(request=request)
-    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)

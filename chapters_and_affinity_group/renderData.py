@@ -424,7 +424,7 @@ class Sc_Ag:
                         what_is_this_description,why_join_it,what_activites_it_has,how_to_join,
                         short_form,short_form_alternative_details,primary_color_code_details,secondary_color_code_details,
                         text_color_code_details,pageTitle_details,secondParagraph_details,
-                        email,facebook_link):
+                        email,facebook_link,mission_vision_color_code_details):
         
 
         ''''This function saves the data for the main website of societies and affinity groups'''
@@ -453,6 +453,7 @@ class Sc_Ag:
             sc_ag.secondary_paragraph = secondParagraph_details
             sc_ag.email = email
             sc_ag.facebook_link = facebook_link
+            sc_ag.mission_vision_color_code = mission_vision_color_code_details
 
             sc_ag.save()
 

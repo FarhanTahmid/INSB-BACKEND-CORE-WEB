@@ -113,7 +113,7 @@ class HomepageItems:
     def getHomepageBannerItems():
         
         try:
-            return HomePageTopBanner.objects.all()
+            return HomePageTopBanner.objects.all().order_by('pk')
             
         except Exception as e:
             print(e)

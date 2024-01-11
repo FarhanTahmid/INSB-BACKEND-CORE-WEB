@@ -31,8 +31,7 @@
         content: '+';
     }
 </style>
-<div class="tabs-container" style="    display: flex;
-flex-direction: column;">
+<div class="tabs-container" style="display: flex; flex-direction: column;">
     <ul class="tabs" style="display: flex; margin-right: 0px; justify-content: center;">
         <li class="tab active_tab" onclick="showTab('tab1')">Top Banner with Picture & Texts</li>
         <li class="tab" onclick="showTab('tab2')">Middle Banner Picture With Statistics</li>
@@ -48,14 +47,14 @@ flex-direction: column;">
         {% include "Manage Website/Homepage/banner_with_numbers_tab2.html" %}
     {% endblock banner_with_numbers %}
 
+    {% block volunteer_recognition %}
+        {% include "Manage Website\Homepage\recognition_table_tab3.html" %}    
+    {% endblock volunteer_recognition %}
+
     {% block homepage_thoughts_tab%}
         {% include "Manage Website/Homepage/homepage_thoughts_tab4.html"%}
     {% endblock homepage_thoughts_tab %}
 
-    <div id="tab3" class="tab-content" style="    margin-right: 0px;">
-        <h2>Tab 3 Content</h2>
-        <p>This is the content of Tab 3.</p>
-    </div>
 </div>
 <script>
     const linkels = document.querySelectorAll('.tab');

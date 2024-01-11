@@ -23,20 +23,7 @@
                     <div class="modal-body text-left p-lg">
                         
                         <p>View the Image given below to understand about the fields and fill the Form according to it.</p>
-                        <p>For Button URL(Link), take URL from the Path.</p>
-                        <ul>
-                            <li>
-                                <p>For example: If you want to go the <b>'Events'</b> page and the URL(link) is <b>'ieeensusb.org/events/'</b></p>
-                                <p>In this case you will have to enter <b>'/events/'</b> as your Button URL to make it work properly.
-                                
-                            </li>
-                            <li>
-                                <p>Do not use dynamic page URL in the Button URL</p> 
-                            </li>
-                        </ul>
-                        
-
-
+                        <p><span style="color:red;">**</span>Fill the fields carefully as the Objects can not be updated! You will have to Delete the whole object if anything goes wrong!</p>
                         <!-- Thumbnail image (clickable) -->
                         <!--If you wish to change photo, make changes in both of the places-->
                         <div style="text-align:center;">
@@ -58,26 +45,28 @@
                                                 {% csrf_token %}
                                                 <div class="box-body">
                                                         <div class="form-group row">
-                                                            <label class="col-sm-2 form-control-label">Banner Picture (1600 x 750) <span style="color:red;">*</span></label>
+                                                            <label class="col-sm-10 form-control-label">Banner Picture (1600 x 750) <span style="color:red;">*</span></label>
                                                             <div class="col-sm-10">
-                                                            <input type="file" required id="myFile" name="banner_picture">
+                                                            <input type="file" required id="myFile" name="banner_picture" class="form-control">
                                     
                                                             </div>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label>First Layer Text <span style="color:red">*<span></label>
-                                                                <div class="col-sm-10">
-                                                                <input
-                                                                    placeholder="First Layer Text"
-                                                                    class="form-control"
-                                                                    type="text"
-                                                                    autocomplete="off"
-                                                                    required
-                                                                    name="first_layer_text"/>
-                                                                </div>
-                                                        </div>
                                                         <br>
                                                         <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label>First Layer Text <span style="color:red">*<span></label>
+                                                                    <div class="col-sm-10">
+                                                                        <input
+                                                                            placeholder="First Layer Text"
+                                                                            class="form-control"
+                                                                            type="text"
+                                                                            autocomplete="off"
+                                                                            required
+                                                                            name="first_layer_text"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
                                                                     <label>First Layer Text (colored) <span style="color:red">*<span></label>
@@ -92,7 +81,6 @@
                                                                         </div>
                                                                 </div>
                                                             </div>
-                                                            
                                                         </div>
                                                         
                                                         <div class="form-group">
@@ -125,7 +113,7 @@
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
-                                                                    <label>Button URL <span style="color:red">*<span></label>
+                                                                    <label>Button Link <span style="color:red">*<span></label>
                                                                         <div class="col-sm-10">
                                                                         <input
                                                                             placeholder="Read above Instructions before adding the URL"
@@ -191,6 +179,7 @@
         
             <thead>
                 <tr>
+                    <th>Button Text</th>
                     <th>Image</th>
                     <th>Update/Delete</th>
 
@@ -199,7 +188,8 @@
             <tbody>
                 {% for i in topBannerItems %}
                     <tr>
-                    <td style="width: 100px; height: 70px;">
+                    <td><a href="#" ><span style="color:blue;">{{i.button_text}}</span></a></td>
+                    <td style="width: 250px; height: 150px;">
                         <img src="{{media_url}}{{i.banner_picture}}" alt="Your Image" style="width: 100%; height: 100%;">
                     </td>
                     <td>
