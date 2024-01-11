@@ -220,6 +220,18 @@ def sc_ag_panel_details(request,primary,panel_pk):
                     faculty_position_check=False
                 else:
                     faculty_position_check=True
+
+                core_volunteer_position_check = request.POST.get('core_volunteer_position_check')
+                if core_volunteer_position_check is None:
+                    core_volunteer_position_check = False
+                else:
+                    core_volunteer_position_check = True
+
+                volunteer_position_check = request.POST.get('volunteer_position_check')
+                if volunteer_position_check is None:
+                    volunteer_position_check = False
+                else:
+                    volunteer_position_check = True
                     
                 position_name=request.POST['position_name']
                 # create new Position
@@ -227,7 +239,8 @@ def sc_ag_panel_details(request,primary,panel_pk):
                                           is_eb_member=False,
                                           is_officer=officer_position_check,
                                           is_sc_ag_eb_member=sc_ag_executive_position_check,is_mentor=mentor_position_check,
-                                          is_faculty=faculty_position_check,is_co_ordinator=coordinator_position_check,role=position_name)):
+                                          is_faculty=faculty_position_check,is_co_ordinator=coordinator_position_check,role=position_name,
+                                          is_core_volunteer=core_volunteer_position_check,is_volunteer=volunteer_position_check)):
                     return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
             
             #Create New TEam
