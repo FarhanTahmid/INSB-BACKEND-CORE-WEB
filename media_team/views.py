@@ -55,6 +55,7 @@ def team_homepage(request):
 
 @login_required
 def manage_team(request):
+    
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
 

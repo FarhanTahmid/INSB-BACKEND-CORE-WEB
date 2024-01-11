@@ -35,8 +35,6 @@ def homepage(request):
     #getting all the thoughts
     all_thoughts = Branch.get_all_homepage_thoughts()
 
-    
-    
     # get recent 6 news
     get_recent_news=News.objects.filter().order_by('-news_date')[:6]
     # get recent 6 Blogs

@@ -167,7 +167,7 @@ def team_details(request,primary,name):
                 Members.objects.filter(ieee_id=request.POST['access_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13)) #ID 13 means general member
                 # remove member from the current panel ass well
                 Panel_Members.objects.filter(tenure=current_panel.pk,member=request.POST['access_ieee_id']).delete()
-                messages.error(request,f"{request.POST['access_ieee_id']} was removed from the Team. The Member was also removed from the current Panel.")
+                messages.warning(request,f"{request.POST['access_ieee_id']} was removed from the Team. The Member was also removed from the current Panel.")
                 return redirect('central_branch:team_details',primary,name)
             except Exception as ex:
                 messages.error(request,"Something went Wrong!")
