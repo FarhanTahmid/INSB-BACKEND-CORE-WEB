@@ -23,7 +23,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
-        /*common CSS used throughout the page*/
         .centering {
             display: flex;
             flex-wrap: wrap;
@@ -36,7 +35,7 @@
             margin: 30px 15px;
         }
         
-        .error_container h1{
+        .join_container h1{
             color: #002855;
             font-weight: 600;
             position: relative;
@@ -49,6 +48,7 @@
             max-width: 848px;
             max-height: 450px;
             overflow: hidden;
+            transition: all .6s ease-in-out;
         }
         .gif img{
             width: auto;
@@ -56,25 +56,23 @@
             bottom: -55px;
             scale: 1.5;
             left: 76px;
-            transition: all .6s ease-in-out;
         }
-        .error_container h1::after {
+        .join_container:hover .gif{
+            scale: 1.08;
+        }
+        .join_container h1::after {
             content: "";
             width: 0%;
-            transition: all .6s ease-in-out;
+            transition: all .4s ease-in-out;
             display: block;
             border: 1px solid white;
 
         }
-        .error_code h1:hover img{
-            scale: 1.7;
-        }
 
-        .error_container h1:hover::after {
+        .join_container h1:hover::after {
             width: 100%;
             border: 1px solid #002855;
         }
-        /*common CSS used throughout the page*/
 
         /*media queries*/
         @media screen and (max-width: 1199px) {
@@ -90,7 +88,7 @@
             .max-width {
                 max-width: 650px;
             }
-            .error_container h1{
+            .join_container h1{
                 margin-bottom: -50px;
             }
         }
@@ -99,7 +97,7 @@
             .max-width {
                 max-width: 90%;
             }
-            .error_container h1{
+            .join_container h1{
                 margin-bottom: -10px;
             }
             .gif img{
@@ -112,7 +110,7 @@
             .max-width {
                 max-width: 80%;
             }
-            .error_container h1{
+            .join_container h1{
                 font-size: 25px;
             }
             .gif img{
@@ -137,10 +135,9 @@
 
         <!--Page start-->
         <section class="centering">
-            <section class="max-width error_container">
-                <div class="error_code"><h1>Recruitment process will be announced soon</h1>
+            <section class="max-width join_container">
+                <div class="join_msg"><h1>Recruitment process will be announced soon</h1></div>
                 <div class="gif"><img src="https://i.pinimg.com/originals/7d/04/bd/7d04bd4d633a55d52e051a574ae0022f.gif" alt=""></div>
-            </div>
             </section>
         </section>
         <!--Page end-->
