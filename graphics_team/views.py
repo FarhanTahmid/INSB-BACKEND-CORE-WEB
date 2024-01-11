@@ -27,7 +27,7 @@ logger=logging.getLogger(__name__)
 @login_required
 def team_homepage(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
-    co_ordinators=GraphicsTeam.get_co_ordinator()
+    co_ordinators=GraphicsTeam.get_co_ordinator() #Eije
     in_charges=GraphicsTeam.get_officer()
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
