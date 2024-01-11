@@ -109,7 +109,7 @@ def dashboard(request):
     #getting year list for the last 5 years event chart
     years = renderData.getEventNumberStatYear()
     #getting data for the number of events over last 5 years
-    event_number_over_5_years = renderData.getEventNumberStat()
+    event_number_over_5_years = renderData.getEventNumberStat(request,1)
     #getting data for the daily hit count
     hit_count_per_day_in_a_month = renderData.getHitCountMonthly()
     #getting data for the recruitment stats graph
