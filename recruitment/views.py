@@ -102,7 +102,8 @@ def getPaymentStats(request):
 @login_required
 def recruitee_details(request,session_id,nsu_id):  
     """Preloads all the data of the recruitees who are registered in the particular session, here we can edit and save the data of the recruitee"""
-    
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     #Checking user access
@@ -140,6 +141,7 @@ def recruitee_details(request,session_id,nsu_id):
     # Passing data to the template
     session=data.session_id
     context = {
+        'user_data':user_data,
         'session': data.session_id,
         'data': data,
         'dob': dob,
@@ -299,11 +301,14 @@ def recruitee_details(request,session_id,nsu_id):
 @login_required
 def recruit_member(request, session_name):
     sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     getSessionId = renderData.Recruitment.getSessionid(
         session_name=session_name)
     form = StudentForm
 
     context = {
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'form': form,
         'session_name': session_name,

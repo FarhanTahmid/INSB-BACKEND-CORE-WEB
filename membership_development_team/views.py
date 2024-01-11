@@ -444,7 +444,8 @@ def renewal_session_data(request,pk):
 
     user=request.user
     has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
-
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
 
     get_all_sc_ag=PortData.get_all_sc_ag(request=request)
     session_name=renewal_data.get_renewal_session_name(pk)
@@ -501,6 +502,7 @@ def renewal_session_data(request,pk):
             )
             return redirect('membership_development_team:renewal_session_data',pk) 
     context={
+        'user_data':user_data,
         'session_name':session_name,
         'form_data':form_data,
         'session_id':session_id,
@@ -521,7 +523,8 @@ def sc_ag_renewal_session_data(request,pk,sc_ag_primary):
     
     get_sc_ag=PortData.get_sc_ag(request=request,primary=sc_ag_primary)
     sc_ag=PortData.get_all_sc_ag(request=request)
-    
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     get_renewal_requests=[]
     
     if(int(sc_ag_primary)==2):
@@ -536,6 +539,7 @@ def sc_ag_renewal_session_data(request,pk,sc_ag_primary):
     # get session info
     get_session = Renewal_Sessions.objects.get(pk=pk)
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'sc_ag_info':get_sc_ag,
         'session_id':pk,
@@ -550,6 +554,8 @@ def renewal_request_details(request,pk,request_id):
     '''This function loads the datas for particular renewal requests'''
     #check if the user has access to view
     print(f"here the pk is{pk}")
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
     user=request.user
@@ -604,6 +610,7 @@ def renewal_request_details(request,pk,request_id):
         has_next_request=False
 
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'id':request_id,
         'details':renewal_request_details,
@@ -818,7 +825,8 @@ def data_access(request):
     '''This function mantains all the data access works'''
     
     sc_ag=PortData.get_all_sc_ag(request=request)
-
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     #Only sub eb of that team can access the page
     user=request.user
     has_access=(Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
@@ -927,6 +935,7 @@ def data_access(request):
             return redirect('membership_development_team:data_access')
 
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'data_access':data_access,
         'members':team_members,
@@ -943,12 +952,15 @@ def site_registration_request_home(request):
     
     '''This loads data for site joining request'''
     sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     # Getting all the requests for portal site
     get_requests=Portal_Joining_Requests.objects.all().order_by('application_status','-pk')
     #form link for site registration
     form_link=f"{request.META['HTTP_HOST']}/portal/membership_development_team/insb_site_registration_form"
     form_link_faculty=f"{request.META['HTTP_HOST']}/portal/membership_development_team/insb_site_registration_form/faculty"
     context={
+        'user_data':user_data,
         'all_sc_ag':sc_ag,
         'requests':get_requests,
         'form_link':form_link,
@@ -980,6 +992,9 @@ def getSiteRegistrationRequestStats(request):
 def site_registration_request_details(request,ieee_id):
     #gaining access data at first
     user=request.user
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     has_access=Access_Render.system_administrator_superuser_access(user.username) or renderData.MDT_DATA.get_officials_access(request.user)
     
     '''Get the request data'''
@@ -1001,6 +1016,8 @@ def site_registration_request_details(request,ieee_id):
         next_application_id=None
         has_next_request=False
     context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'request':get_request,
         'dob':dob,
         'next_application_id':next_application_id,

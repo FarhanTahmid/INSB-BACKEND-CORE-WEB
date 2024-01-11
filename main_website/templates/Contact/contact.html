@@ -115,7 +115,7 @@
       color: white;
       font-size: 30px;
       background: #75787B;
-      padding: 30px;
+      padding: 40px;
       border-radius: 50%;
       transition: all .5s;
     }
@@ -557,7 +557,7 @@
     <div class="container">
 
       {% for message in messages  %}
-          <div id="myModal{{ loop.index }}" class="modal">
+          <div id="myMessageModal{{ loop.index }}" class="modal">
               <div class="modal-content">
                   <div class="modal-content-items">
                       <span class="close" onclick="closeModal({{ loop.index }})">&times;</span>
@@ -732,6 +732,29 @@
     document.addEventListener("DOMContentLoaded", function () { // On DOM Load initiate the effect
       if (txt.length) setTimeout(typeWriter, typingSpeed + 250);
     });
+  </script>
+
+  <!--Logic to handle my message modal-->
+  <script>
+    // Function to display the modal
+    function openModal() {
+        document.getElementById('myMessageModal').style.display = 'flex';
+    }
+
+    // Function to close the modal
+    function closeModal() {
+        document.getElementById('myMessageModal').style.display = 'none';
+    }
+
+    // Close the modal when clicking outside the modal content
+    window.onclick = function(event) {
+        var modal = document.getElementById('myMessageModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    };
+    // Open the modal when the page loads (you can trigger this in your JavaScript when you want to show the modal)
+    openModal();
   </script>
 
   {% block common_js %}

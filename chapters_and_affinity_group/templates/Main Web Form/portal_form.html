@@ -532,6 +532,19 @@
                             <br>
 
                             <div class="form-group">
+                                <label>Mission Vision Color Code</label>
+                                <input 
+                                type="text" 
+                                class="form-control"
+                                name="mission_vision_color_code" 
+                                placeholder="Mission Vision Color Code" 
+                                maxlength="7" 
+                                value = "{{sc_ag_info.mission_vision_color_code| default:""}}"
+                                >
+                            </div>
+                            <br>
+
+                            <div class="form-group">
                                 <label>Text Color Code</label>
                                 <input 
                                 type="text" 
@@ -746,7 +759,7 @@
             if (characterCount === 0) {
                 characterCountElement.style.color = "red";
                 characterCountElement.innerText = "Required";
-            } else if (characterCount > 500) {
+            } else if (characterCount > 1500) {
                 characterCountElement.style.color = "red";
                 characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
             } else {

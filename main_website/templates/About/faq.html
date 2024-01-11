@@ -473,7 +473,7 @@
         <div class="container">
 
             {% for message in messages  %}
-                <div id="myModal{{ loop.index }}" class="modal">
+                <div id="myMessageModal{{ loop.index }}" class="modal">
                     <div class="modal-content">
                         <div class="modal-content-items">
                             <span class="close" onclick="closeModal({{ loop.index }})">&times;</span>
@@ -536,7 +536,7 @@
                         <label for="user_email">Your email</label>
                         <input type="email" name="user_email" class="input" required>
                         <label for="user_message">Your message</label>
-                        <textarea type="text" name="user_message" required></textarea>
+                        <textarea type="text" name="user_message" style="min-height: 150px; max-height: 250px;" required></textarea>
                         <input type="submit" value="Submit" name="submit">
                     </form>
                 </div>
@@ -623,6 +623,29 @@
             window.masterslider_instances = window.masterslider_instances || [];
             window.masterslider_instances.push(masterslider_8b8a);
         });
+    </script>
+
+    <!--Logic to handle my message modal-->
+    <script>
+        // Function to display the modal
+        function openModal() {
+            document.getElementById('myMessageModal').style.display = 'flex';
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById('myMessageModal').style.display = 'none';
+        }
+
+        // Close the modal when clicking outside the modal content
+        window.onclick = function(event) {
+            var modal = document.getElementById('myMessageModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        };
+        // Open the modal when the page loads (you can trigger this in your JavaScript when you want to show the modal)
+        openModal();
     </script>
 
     
