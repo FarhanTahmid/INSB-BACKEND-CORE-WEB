@@ -191,7 +191,7 @@ class Sc_Ag:
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error(request,"Can not Delete Panel. Something went wrong!")
+            messages.warning(request,"Can not Delete Panel. Something went wrong!")
             return False
             
         
@@ -258,7 +258,7 @@ class Sc_Ag:
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error(request,"Can not add Member to panel. Something went wrong!")
+            messages.warning(request,"Can not add Member to panel. Something went wrong!")
             return False
     
     def remove_sc_ag_member_from_panel(request,panel_id,member_ieee_id,sc_ag_primary):
@@ -269,12 +269,12 @@ class Sc_Ag:
                 member_in_sc_ag=SC_AG_Members.objects.filter(sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),member=Members.objects.get(ieee_id=member_ieee_id))
                 member_in_sc_ag.update(team=None,position=None)
                 i.delete()
-            messages.error(request,f"{i.member.name} was removed from the panel!")
+                messages.warning(request,f"{i.member.name} was removed from the panel!")
             return True
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error(request,"Can not remove member from panel. Something went wrong!")
+            messages.warning(request,"Can not remove member from panel. Something went wrong! If you are trying to remove an alumni member from Panel, please remove it from Alumni Members Tab")
             return False
     
     def generate_renewal_excel_sheet(request,sc_ag_primary,renewal_session_id):

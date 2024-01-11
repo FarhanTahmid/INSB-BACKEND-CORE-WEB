@@ -62,7 +62,7 @@ class Alumni_Members(models.Model):
     ieee_collaboratec=models.URLField(null=True,blank=True,max_length=100)
     
     class Meta:
-        verbose_name='Ex Panel Members'
+        verbose_name='Alumni Members'
     
     def __str__(self) -> str:
         return str(self.pk)

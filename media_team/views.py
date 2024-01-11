@@ -32,7 +32,7 @@ def team_homepage(request):
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     #Loading data of the co-ordinators, co ordinator id is 9,
-    co_ordinators=MediaTeam.get_co_ordinator()
+    co_ordinators=MediaTeam.get_co_ordinator() #Eije
     #Loading data of the incharges, incharge id is 10
     in_charges=MediaTeam.get_officer()
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials

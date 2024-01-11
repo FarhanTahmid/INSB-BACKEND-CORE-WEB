@@ -540,15 +540,15 @@ def branch_panel_alumni_tab(request,panel_id):
                     picture=alumni_picture)):
                     return redirect('central_branch:panel_details_alumni',panel_id)
                 else:
-                    messages.error(request,'Failed to Add new alumni!')
+                    messages.warning(request,'Failed to Add new alumni!')
         
         # Add alumni to panel
         if(request.POST.get('add_alumni_to_panel')):
-            alumni_to_add=request.POST['alumni_select']
+            alumni_to_add=request.POST.getlist('alumni_select')
             position=request.POST['alumni_position']
             
             for i in alumni_to_add:            
-                if(PanelMembersData.add_alumns_to_branch_panel(request=request,alumni_id=alumni_to_add,panel_id=panel_id,position=position)):
+                if(PanelMembersData.add_alumns_to_branch_panel(request=request,alumni_id=i,panel_id=panel_id,position=position)):
                     pass
             return redirect('central_branch:panel_details_alumni',panel_id)
         
