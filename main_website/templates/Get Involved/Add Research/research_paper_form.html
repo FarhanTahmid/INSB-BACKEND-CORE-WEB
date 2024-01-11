@@ -172,6 +172,45 @@
                 height: 100%;
             }
         }
+
+        .form_container{
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; 
+            border-radius:30px; 
+            padding: 10px 30px;
+        }
+
+        @media (max-width: 760px) {
+            .form_container {
+                padding: 10px 15px;
+            }
+        }
+
+        .instructions_ul {
+            list-style-type: none;
+            padding: 0;
+        }
+    
+        .instructions_ul li::before {
+            content: "\f105"; /* Example: Unicode code for a bolder arrow in FontAwesome */
+            font-family: 'FontAwesome'; /* Specify the custom font family */
+            font-weight: bold; /* Make the arrow bolder */
+            font-size:16px;
+            margin-right: 10px; /* Adjust spacing between arrow and text */
+        }
+
+        .publish_button {
+            text-decoration: none;
+            color: #fff;
+            background: #002855;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        .publish_button:hover {
+            background: #FFC72C;
+        }
     </style>
 </head>
 
@@ -187,15 +226,19 @@
         {% endblock wave_design %}
 
         <!--Start adding from here-->
-        <section class="col-md-6 mx-auto">
-            <h5>Read instructions given below before adding your Research Paper:</h5>
-            <ul>
-                <li>You must be a Registered IEEE NSU Student Branch Member to get your Research Paper added in our website!</li>
-                <li>IEEE NSU Student Branch holds the right to decline or delete your Research Paper.</li>
-                <li>IEEE NSU Student Branch will not publish any Research that is not authentic and does not go with the Code of Conduct!</li>
-                <li>Keep Grinding! &#128515; &#128513;</li>
-            </ul>
+        <br><br>
+        <section class="col-lg-6 mx-auto" style="margin-top:3%">
+            <div class="container">
+                <h5>Read instructions given below before adding your Research Paper:</h5>
+                <ul class="instructions_ul">
+                    <li>You must be a Registered IEEE NSU Student Branch Member to get your Research Paper added in our website!</li>
+                    <li>IEEE NSU Student Branch holds the right to decline or delete your Research Paper.</li>
+                    <li>IEEE NSU Student Branch will not publish any Research that is not authentic and does not go with the Code of Conduct!</li>
+                    <li>Keep Grinding! &#128515; &#128513;</li>
+                </ul>
+            </div>
         </section>
+        <br>
 
 
         <!--Messages-->
@@ -220,128 +263,123 @@
         <!--Messages End-->
 
 
-        <section style="margin-top:3%">
-            <div class="col-md-6 mx-auto">
+        <section style="margin-top:1%">
+            <div class="col-lg-6 mx-auto">
                 
-                <h1>Add Research Paper</h1>
+                {% comment %} <h1>Add Research Paper</h1>
                 <br>
-                <br>
-                <div class="container">
+                <br> {% endcomment %}
+                <div class="container form_container">
           
-                <div class="box">
-            
-            
-                    <br>
-                    <div class="box-header">
-                        <h1 style="text-align:center;font-size:30px;">Author Information</h1>
-                        <hr>
-                    </div>
-                    
-            
-                    <form id="myForm" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                        <div class="box-body">    
-                            <div class="form-group">
-                                <label>Authors<span style="color:red">*<span></label>
-                                <input 
-                                    type="text" 
-                                    class="form-control"
-                                    name="author_names" 
-                                    placeholder="E.g: Sakib Shahriar Junayed, Sami Uddin, Farhana Rahman" 
-                                    maxlength="300" 
-                                >
-                            </div>
-                            <br>
-                            <div class="form-group">
-                                <label>From which Chapter/Affinity Group you want to submit the Research Paper?</label> 
-                                <select class="form-control" name="group">
-                                    {% for i in all_sc_ag %}
-                                        <option value="{{i.primary}}">{{i.group_name}}</option>
-                                    {% endfor %}
-                                    
-                                </select>
-                            </div>
-
-                            <br> 
-                            <br> 
-
-                            <h1 style="text-align:center;font-size:30px;">Research Paper Description</h1>
-                            <br>
-                            <hr>
-                            <div class="form-group">
-                                <label>Research Paper Title <span style="color:red">*<span></label> 
-                                <input 
-                                    class="form-control" 
-                                    type="text"
-                                    name="paper_title"
-                                    maxlength="200"
-                                    placeholder="Title of your Paper" 
-                                    Required
+                    <div class="box">
+                
+                
+                        <br>
+                        <div class="box-header">
+                            <h1 style="text-align:center;font-size:30px;">Author Information</h1>
+                        </div>
+                        <br>
+                        
+                
+                        <form id="myForm" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                            <div class="box-body">    
+                                <div class="form-group">
+                                    <label>Authors<span style="color:red">*<span></label>
+                                    <input 
+                                        type="text" 
+                                        class="form-control"
+                                        name="author_names" 
+                                        placeholder="E.g: Sakib Shahriar Junayed, Sami Uddin, Farhana Rahman" 
+                                        maxlength="300" 
                                     >
-                                </input>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Research Category</label> 
-                                <select class="form-control" name="research_category">
-                                    <option value="">-----------</option>
-                                    {% for i in research_categories %}
-                                        <option value="{{i.pk}}">{{i.category}}</option>
-                                    {% endfor %}
-                                    
-                                </select>
-                            </div>
-                            <br>
-                            <div class="form-group">
-                                <label>Abstract <span style="color:red">*<span></label> 
-                                <textarea 
-                                    class="form-control" 
-                                    type="text"
-                                    name="abstract_description"
-                                    Required>
-                                </textarea>
-                                <p id="abstractCharacterCount" style="color: red;">Required</p>
-                            </div> 
-                            <br> 
-                            <div class="form-group">
-                                <label>Paper Publication Link <span style="color:red">*<span></label> 
-                                <input 
-                                    class="form-control" 
-                                    type="url"
-                                    name="paper_link"
-                                    placeholder="Link to read the paper" 
-                                    Required
-                                    >
-                                </input>
-                            </div>
-                            <br>
-                            <div class="form-group">
-                                <label for="images">Research Banner Picture:</label>
-                                <div class="custom-file">
-                                    <input placeholder="Upload a picture which is related to your research" type="file" class="custom-file-input" id="mission-image-input" required name="research_banner_picture" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="mission-image-input">Upload</label>
                                 </div>
-                            
-                            </div>
-                            <br> 
-                            
-                            <div class="form-group text-center">
-                                <input type="submit" name="submit_paper" class="btn btn-outline-success p-x-md" value="Place Add Request">
-                            </div>
-                            <br>
+                                <br>
+                                <div class="form-group">
+                                    <label>From which Chapter/Affinity Group you want to submit the Research Paper?</label> 
+                                    <select class="form-control" name="group">
+                                        {% for i in all_sc_ag %}
+                                            <option value="{{i.primary}}">{{i.group_name}}</option>
+                                        {% endfor %}
+                                        
+                                    </select>
+                                </div>
 
-                            
-                            
-                        </div> 
-        
-                    
-                    </form>  
-        
-                <div>
-            </div> 
+                                <br> 
+                                <hr>
+                                <br> 
+
+                                <h1 style="text-align:center;font-size:30px;">Research Paper Description</h1>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Research Paper Title <span style="color:red">*<span></label> 
+                                    <input 
+                                        class="form-control" 
+                                        type="text"
+                                        name="paper_title"
+                                        maxlength="200"
+                                        placeholder="Title of your Paper" 
+                                        Required
+                                        >
+                                    </input>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Research Category</label> 
+                                    <select class="form-control" name="research_category">
+                                        <option value="">-----------</option>
+                                        {% for i in research_categories %}
+                                            <option value="{{i.pk}}">{{i.category}}</option>
+                                        {% endfor %}
+                                        
+                                    </select>
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <label>Abstract <span style="color:red">*<span></label> 
+                                    <textarea 
+                                        class="form-control" 
+                                        type="text"
+                                        name="abstract_description"
+                                        Required>
+                                    </textarea>
+                                    <p id="abstractCharacterCount" style="color: red;">Required</p>
+                                </div> 
+                                <br> 
+                                <div class="form-group">
+                                    <label>Paper Publication Link <span style="color:red">*<span></label> 
+                                    <input 
+                                        class="form-control" 
+                                        type="url"
+                                        name="paper_link"
+                                        placeholder="Link to read the paper" 
+                                        Required
+                                        >
+                                    </input>
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <label for="images">Research Banner Picture:</label>
+                                    <div class="custom-file">
+                                        <input placeholder="Upload a picture which is related to your research" type="file" class="custom-file-input" id="mission-image-input" required name="research_banner_picture" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="mission-image-input">Upload</label>
+                                    </div>
+                                
+                                </div>
+                                <br> 
+                                
+                                <div class="form-group text-center">
+                                    <input type="submit" name="submit_paper" class="btn btn-outline-success publish_button p-x-md" value="Place Add Request">
+                                </div>
+                            </div> 
+                        </form>  
+                    <div>
+                </div> 
             </div>
         </section>
+        <br><br>
         {% block footer %}
             {% include "footer_block.html" %}
         {% endblock footer %}
