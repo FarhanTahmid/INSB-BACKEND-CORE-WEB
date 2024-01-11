@@ -1177,4 +1177,4 @@ def test_view(request):
             'branch_teams':branch_teams,
         }
  
-    return render(request,"test.html",context=context)
+    return render(request,"join_insb.html",context=context)
