@@ -15,7 +15,6 @@
     }
 
     .slide {
-        background-image: url('{% static 'Screenshot (2118).png' %}');
         width: 100%;
         height: 100%;
         position: relative;
@@ -227,9 +226,8 @@
     <button id="next-btn" class="slider-btn" onclick="nextSlide()">❯</button>
     <div id="image-slider">
         {% for i in banner_item %}
-        <!-- <div class="slide" style="background-image: url('{{media_url}}{{i.banner_picture}}');"> -->
-        <div class="slide">
-                <div class="overlay"></div>
+        <div class="slide" style="background-image: url('{{media_url}}{{i.banner_picture}}');">
+            <div class="overlay"></div>
             <div class="slider-content">
                 <div class="title">{{i.first_layer_text}} <span>{{i.first_layer_text_colored}}</span></div>
                 <div class="paragraph">{{i.third_layer_text}}</div>
