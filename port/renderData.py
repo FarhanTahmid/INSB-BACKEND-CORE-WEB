@@ -44,6 +44,7 @@ class PortData:
         '''This method gets all the Chairs of SC AG from current panel'''
         try:
             chairs_of_sc_ag=[]
+            # as sc_ag_primary extends from 2-5, if in future any sc ag extends, extend the range
             for i in range(2,6):
                 try:
                     get_current_panel_of_sc_ag=Panels.objects.get(current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=i))
@@ -61,6 +62,26 @@ class PortData:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"An internal Database error occured loading the Excom!")
     
+    def get_sc_ag_faculty_members(request):
+        '''This function returns all the faculties related to sc ag'''
+        try:
+            faculties_of_sc_ag=[]
+            for i in range(2,6):
+                try:
+                    get_current_panel_of_sc_ag=Panels.objects.get(current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=i))
+                except:
+                    continue
+                get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_current_panel_of_sc_ag.pk))
+                if(get_panel_members.exists()):
+                    for member in get_panel_members:
+                        if(member.position.is_sc_ag_eb_member and member.position.is_faculty):
+                            faculties_of_sc_ag.append(member)
+            return faculties_of_sc_ag
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"An internal Database error occured loading the Faculties of SC AG!")
+
     def get_branch_ex_com_from_sc_ag_by_year(request,panel_year):
         '''This methods loads SC AG Chairs by year'''
         try:

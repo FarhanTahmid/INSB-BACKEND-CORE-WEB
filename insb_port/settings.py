@@ -28,7 +28,7 @@ load_dotenv()
 SECRET_KEY = 'django-insecure-*%*n1(qq^95t^+bl96wxty9h6qc4)h%ts27fv9egh8v0tj%60h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -103,7 +103,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'insb_port.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

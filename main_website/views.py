@@ -724,7 +724,7 @@ def current_panel_members(request):
         # TODO:add algo to add SC AG Faculty and Branch Counselor
 
         branch_counselor=[]
-        sc_ag_faculty_advisors=[]
+        sc_ag_faculty_advisors=PortData.get_sc_ag_faculty_members(request=request)
         mentors=[]
         branch_chair=[]
         branch_eb=[]
@@ -740,7 +740,6 @@ def current_panel_members(request):
                         mentors.append(i)
                     else:
                         branch_eb.append(i)
-        
         # check of having different members
         has_branch_counselor=False
         has_sc_ag_faculty_advisor=False
