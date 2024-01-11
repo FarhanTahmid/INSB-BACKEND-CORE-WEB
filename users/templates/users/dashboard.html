@@ -35,6 +35,7 @@
   <style>
 	.card{
 		box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+		overflow: hidden;
 	}
 	.mt-4.pt-2.mb-2 .btn{
 		border: 1px solid #fff;
@@ -45,6 +46,25 @@
 	.mt-4.pt-2.mb-2 .btn:hover{
 		color: #000;
 		background: #fff;
+	}
+	.card-title.mb-0{
+		font-weight: 700;
+	}
+	.card.best-product{
+		padding: 15px;
+	}
+	.col-xl-4, .col-xl-6, .col-xl-8, .col-lg-3.col-md-6{
+		margin-bottom: 15px;
+	}
+	.text-muted{
+		opacity: 1;
+		padding: 0 15px;
+	}
+	.text-muted.mt-4.mb-0{
+		margin-top: -0.5rem!important;
+	}
+	.col-lg-3.col-md-6 .card{
+		height: 160px!important;
 	}
   </style>
 </head>
@@ -149,9 +169,9 @@
 		<div class="col-xl-6">
 			<div class="card">
 				<div class="card-body">
-					<div class="d-flex flex-wrap align-items-center mb-3">
+					<div class="d-flex flex-wrap align-items-center mb-3" style="justify-content: center;">
 						<br><br><br><br><br><br>
-						<h5 class="card-title mb-0">Recruitment Statistics</h5>
+						<h3 class="card-title mb-0">Recruitment Statistics</h3>
 						
 					</div>
 
@@ -341,8 +361,9 @@
 		<div class="col-xl-6">
 			<div class="card">
 				<div class="card-body">
-					<div class="d-flex flex-wrap align-items-center">
-						<h5 class="card-title mb-0">Events</h5>
+					<div class="d-flex flex-wrap align-items-center"  style="justify-content: center;">
+						<br><br><br>
+						<h3 class="card-title mb-0">Events</h3>
 						<div class="ms-auto">
 							<!--<div class="dropdown">
 								<a class="dropdown-toggle text-reset" href="#" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -399,8 +420,9 @@
 			<div class="col-xl-6">
 				<div class="card">
 					<div class="card-body">
-						<div class="d-flex flex-wrap align-items-center">
-							<h5 class="card-title mb-0">Ratios</h5>
+						<div class="d-flex flex-wrap align-items-center"  style="justify-content: center;">
+							<br><br><br>
+							<h3 class="card-title mb-0">Ratios</h3>
 							<div class="ms-auto">
 								<!--<div class="dropdown">
 									<a class="dropdown-toggle text-reset" href="#" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
