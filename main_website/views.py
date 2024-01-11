@@ -91,7 +91,7 @@ def event_homepage(request):
             event_stat.append(event_stat_dict)
         
         # prepare yearly event stat list for Branch
-        get_yearly_events=userData.getEventNumberStat()
+        get_yearly_events=userData.getEventNumberStat(request,1)
         # prepare years
         get_years=get_yearly_events[0]
         # prepare event counts according to years
@@ -460,7 +460,7 @@ def events_for_sc_ag(request,primary):
             event_stat.append(event_stat_dict)
         
         # prepare yearly event stat list for Branch
-        get_yearly_events=userData.getEventNumberStat()
+        get_yearly_events=userData.getEventNumberStat(request,primary)
         # prepare years
         get_years=get_yearly_events[0]
         # prepare event counts according to years
