@@ -172,6 +172,46 @@
                 height: 100%;
             }
         }
+
+
+        .form_container{
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; 
+            border-radius:30px; 
+            padding: 10px 30px;
+        }
+
+        @media (max-width: 760px) {
+            .form_container {
+                padding: 10px 15px;
+            }
+        }
+
+        .instructions_ul {
+            list-style-type: none;
+            padding: 0;
+        }
+    
+        .instructions_ul li::before {
+            content: "\f105"; /* Example: Unicode code for a bolder arrow in FontAwesome */
+            font-family: 'FontAwesome'; /* Specify the custom font family */
+            font-weight: bold; /* Make the arrow bolder */
+            font-size:16px;
+            margin-right: 10px; /* Adjust spacing between arrow and text */
+        }
+
+        .publish_button {
+            text-decoration: none;
+            color: #fff;
+            background: #002855;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        .publish_button:hover {
+            background: #FFC72C;
+        }
     </style>
 </head>
 
@@ -187,15 +227,19 @@
         {% endblock wave_design %}
 
         <!--Start adding from here-->
-        <section class="col-md-6 mx-auto">
-            <h5>Read instructions given below before submitting your Blog:</h5>
-            <ul>
-                <li>You must be a Registered IEEE NSU Student Branch Member to get your blogs published in our website!</li>
-                <li>IEEE NSU Student Branch holds the right to decline or delete your Blog.</li>
-                <li>IEEE NSU Student Branch will not publish any Blog that does not go with the Code of Conduct!</li>
-                <li>Keep Blogging! &#128515; &#128513;</li>
-            </ul>
+        <br><br>
+        <section class="col-lg-6 mx-auto" style="margin-top:3%">
+            <div class="container">
+                <h5>Read instructions given below before submitting your Blog:</h5>
+                <ul class="instructions_ul">
+                    <li>You must be a Registered IEEE NSU Student Branch Member to get your blogs published in our website!</li>
+                    <li>IEEE NSU Student Branch holds the right to decline or delete your Blog.</li>
+                    <li>IEEE NSU Student Branch will not publish any Blog that does not go with the Code of Conduct!</li>
+                    <li>Keep Blogging! &#128515; &#128513;</li>
+                </ul>
+            </div>
         </section>
+        <br>
 
         <!--Messages-->
         {% comment %} <div style="justify-content:center; text-align:center;">
@@ -217,142 +261,137 @@
         {% endfor %}
         <!--Messages End-->
 
-        <section style="margin-top:3%">
-            <div class="col-md-6 mx-auto">
+        <section style="margin-top:1%">
+            <div class="col-lg-6 mx-auto">
 
-                <h1>Write a Blog</h1>
+                {% comment %} <h1>Write a Blog</h1>
                 <br>
-                <br>
-                <div class="container">
+                <br> {% endcomment %}
+                <div class="container form_container">
           
-                <div class="box">
-            
-            
-                    <br>
-                    <div class="box-header">
-                        <h1 style="text-align:center;font-size:30px;">Writer Information</h1>
-                        <hr>
-                    </div>
-                    
-            
-                    <form id="myForm" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                        <div class="box-body">    
-                            
-                            <div class="form-group">
-                                <label>IEEE ID <span style="color:red">*<span></label>
-                                <input 
-                                    type="text" 
-                                    class="form-control"
-                                    name="writer_ieee_id" 
-                                    placeholder="Enter your IEEE ID" 
-                                    maxlength="100" 
-                                >
-                            </div>
-                            <br>
+                    <div class="box">
+                
+                
+                        <br>
+                        <div class="box-header">
+                            <h1 style="text-align:center;font-size:30px;">Writer Information</h1>
+                        </div>
+                        <br>
                         
-                            <div class="form-group">
-                                <label>Writer Name <span style="color:red">*<span></label>
-                                <input 
-                                    type="text" 
-                                    class="form-control"
-                                    name="writer_name" 
-                                    placeholder="Enter your name" 
-                                    maxlength="50" 
-                                >
-                            </div>
-                            <br>
-                            <div class="form-group">
-                                <label>From which Chapter/Affinity Group you want to submit the Blog?</label> 
-                                <select class="form-control" name="group">
-                                    <option value="">-------</option>
-                                    {% for i in all_sc_ag %}
-                                        <option value="{{i.primary}}">{{i.group_name}}</option>
-                                    {% endfor %}
-                                    
-                                </select>
-                            </div>
-
-                            <br> 
-                            <br> 
-
-                            <h1 style="text-align:center;font-size:30px;">Blog Description</h1>
-                            <br>
-                            <hr>
-                            <div class="form-group">
-                                <label>Blog Title <span style="color:red">*<span></label> 
-                                <input 
-                                    class="form-control" 
-                                    type="text"
-                                    name="blog_title"
-                                    maxlength="150"
-                                    placeholder="Title of your Blog" 
-                                    Required
+                
+                        <form id="myForm" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                            <div class="box-body">    
+                                
+                                <div class="form-group">
+                                    <label>IEEE ID <span style="color:red">*<span></label>
+                                    <input 
+                                        type="text" 
+                                        class="form-control"
+                                        name="writer_ieee_id" 
+                                        placeholder="Enter your IEEE ID" 
+                                        maxlength="100" 
                                     >
-                                </input>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Blog Category</label> 
-                                <select class="form-control" name="blog_category">
-                                    <option value="">-------</option>
-                                    {% for i in blog_categories %}
-                                        <option value="{{i.pk}}">{{i.blog_category}}</option>
-                                    {% endfor %}
-                                    
-                                </select>
-                            </div>
-                            <br>
-                            <div class="form-group">
-                                <label>Write a short description of your Blog<span style="color:red">*<span></label> 
-                                <textarea 
-                                    class="form-control" 
-                                    type="text"
-                                    name="blog_short_description"
-                                    maxlength="200"
-                                    Required>
-                                </textarea>
-                            </div>
-                            <br>
-                            <div class="form-group">
-                                <label>Write your Blog <span style="color:red">*<span></label> 
-                                <textarea 
-                                    class="form-control" 
-                                    type="text"
-                                    name="blog_description"
-                                    Required>
-                                </textarea>
-                                <p id="blogCharacterCount" style="color: red;">Required</p>
-                            </div> 
-                            <br> 
-
-                            <div class="form-group">
-                                <label for="images">Blog Banner Picture:</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="mission-image-input" required name="blog_banner_picture" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="mission-image-input">Choose file</label>
                                 </div>
+                                <br>
                             
-                            </div>
-                            <br> 
-                            
-                            <div class="form-group text-center">
-                                <input type="submit" name="submit_blog" class="btn btn-outline-success p-x-md" value="Place Publish Request">
-                            </div>
-                            <br>
+                                <div class="form-group">
+                                    <label>Writer Name <span style="color:red">*<span></label>
+                                    <input 
+                                        type="text" 
+                                        class="form-control"
+                                        name="writer_name" 
+                                        placeholder="Enter your name" 
+                                        maxlength="50" 
+                                    >
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <label>From which Chapter/Affinity Group you want to submit the Blog?</label> 
+                                    <select class="form-control" name="group">
+                                        <option value="">-------</option>
+                                        {% for i in all_sc_ag %}
+                                            <option value="{{i.primary}}">{{i.group_name}}</option>
+                                        {% endfor %}
+                                        
+                                    </select>
+                                </div>
 
-                            
-                            
-                        </div> 
-        
-                    
-                    </form>  
-        
-                <div>
-            </div> 
+                                <br> 
+                                <hr>
+                                <br> 
+
+                                <h1 style="text-align:center;font-size:30px;">Blog Description</h1>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Blog Title <span style="color:red">*<span></label> 
+                                    <input 
+                                        class="form-control" 
+                                        type="text"
+                                        name="blog_title"
+                                        maxlength="150"
+                                        placeholder="Title of your Blog" 
+                                        Required
+                                        >
+                                    </input>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Blog Category</label> 
+                                    <select class="form-control" name="blog_category">
+                                        <option value="">-------</option>
+                                        {% for i in blog_categories %}
+                                            <option value="{{i.pk}}">{{i.blog_category}}</option>
+                                        {% endfor %}
+                                        
+                                    </select>
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <label>Write a short description of your Blog<span style="color:red">*<span></label> 
+                                    <textarea 
+                                        class="form-control" 
+                                        type="text"
+                                        name="blog_short_description"
+                                        maxlength="200"
+                                        Required>
+                                    </textarea>
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <label>Write your Blog <span style="color:red">*<span></label> 
+                                    <textarea 
+                                        class="form-control" 
+                                        type="text"
+                                        name="blog_description"
+                                        Required>
+                                    </textarea>
+                                    <p id="blogCharacterCount" style="color: red;">Required</p>
+                                </div> 
+                                <br> 
+
+                                <div class="form-group">
+                                    <label for="images">Blog Banner Picture:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="mission-image-input" required name="blog_banner_picture" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="mission-image-input">Choose file</label>
+                                    </div>
+                                
+                                </div>
+                                <br> 
+                                
+                                <div class="form-group text-center">
+                                    <input type="submit" name="submit_blog" class="btn btn-outline-success publish_button p-x-md" value="Place Publish Request">
+                                </div>
+                            </div> 
+                        </form>  
+                    <div>
+                </div> 
             </div>
         </section>
+        <br><br>
         {% block footer %}
             {% include "footer_block.html" %}
         {% endblock footer %}
