@@ -42,10 +42,22 @@ def sc_ag_homepage(request,primary):
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         
+        # get the current panel of sc ag
+        get_current_panel_of_sc_ag=SC_AG_Info.get_current_panel_of_sc_ag(request=request,sc_ag_primary=primary).first()
+        sc_ag_eb_members=[]
+        sc_ag_officers=[]
+        sc_ag_volunteers=[]
+        if(get_current_panel_of_sc_ag):
+            sc_ag_eb_members=SC_AG_Info.get_sc_ag_executives_from_panels(request=request,panel_id=get_current_panel_of_sc_ag.pk)
+            sc_ag_officers=SC_AG_Info.get_sc_ag_officers_from_panels(request=request,panel_id=get_current_panel_of_sc_ag.pk)
+            sc_ag_volunteers=SC_AG_Info.get_sc_ag_volunteer_from_panels(request=request,panel_id=get_current_panel_of_sc_ag.pk)
         
         context={
             'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info
+            'sc_ag_info':get_sc_ag_info,
+            'sc_ag_ebs':sc_ag_eb_members,
+            'sc_ag_officers':sc_ag_officers,
+            'sc_ag_volunteers':sc_ag_volunteers,
         }
         return render(request,'Homepage/sc_ag_homepage.html',context)
     except Exception as e:
@@ -172,6 +184,9 @@ def sc_ag_panel_details(request,primary,panel_pk):
                 member_to_remove=request.POST['remove_panel_member']
                 if(Sc_Ag.remove_sc_ag_member_from_panel(request=request,member_ieee_id=member_to_remove,panel_id=panel_pk,sc_ag_primary=primary)):
                     return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+                else:
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+
             
             # Delete panel
             if(request.POST.get('delete_panel')):

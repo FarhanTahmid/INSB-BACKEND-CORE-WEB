@@ -4,149 +4,107 @@
 
 <head>
 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 Page Not Found - IEEE NSU Student Branch</title>
-    <link rel="icon" href="{% static 'upload/logo.gif' %}"/>
-    <meta name="mobile-web-app-capable" content="yes">
+    
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+    <link rel="icon" href="{% static 'upload/logo.gif' %}" />
 
-    <!--Common CSS-->
-    {% block common_css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />  
+        
+        <!--Common CSS-->
+        {% block common_css %}
         {% include "common_css_includes.html" %}
-    {% endblock common_css %}
-
-    <!--Extra CSS-->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+        {% endblock common_css %}
+        
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
     <style>
-        .gdlr-header-inner,
-        .gdlr-header-wrapper.header-style-2-wrapper .gdlr-header-inner-overlay {
-            background-color: 	#002855;
+         /*common CSS used throughout the page*/
+         .centering {
+            margin: 250px 0;
+             display: flex;
+             flex-wrap: wrap;
+            justify-content: center;
+            font-family: 'Poppins' , sans-serif;
+            text-align: center;
         }
-
-        .gdlr-header-wrapper.header-style-3-wrapper,
-        .gdlr-header-wrapper.header-style-7-wrapper {
-            background-color: #002855;
+        .max-width {
+            max-width: 1080px;
+            margin: 30px 15px;
         }
-
-        .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
-            background-color: #002855;
+        
+        .error_container p , .error_container h3{
+            color: #000;
+            font-weight: 600;
         }
-
-        @media only screen and (max-width: 767px) {
-            .gdlr-header-wrapper.header-style-5-wrapper {
-                background-color: #002855;
-            }
-
-            .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
-                background-color: #002855;
-            }
-
-            .gdlr-header-wrapper.header-style-6-wrapper {
-                background-color: #002855;
-            }
+        .error_container h3{
+            margin-bottom: -20px;
         }
-        #gdlr-responsive-navigation.dl-menuwrapper button {
-            background-color: #002855;
+        .gif{
+            max-width: 848px;
+            max-height: 450px;
+            overflow: hidden;
         }
-        #gdlr-responsive-navigation.dl-menuwrapper button:hover, #gdlr-responsive-navigation.dl-menuwrapper button.dl-active, #gdlr-responsive-navigation.dl-menuwrapper ul {
-            background-color: #002855;
-        }
-        .dl-menuwrapper li a {
-            display: block;
+        .gif img{
+            width: auto;
             position: relative;
-            padding: 15px 20px;
-            font-size: 16px;
-            line-height: 20px;
-            font-weight: 300;
-            color: #fff;
-            outline: none;
+            bottom: 89px;
         }
-        .dl-menuwrapper li.dl-back:after, .dl-menuwrapper li > a:not(:only-child):after {
-            position: absolute;
-            top: 0;
-            line-height: 50px;
-            font-family: 'FontAwesome';
-            speak: none;
-            -webkit-font-smoothing: antialiased;
-            content: "\f105";
-            font-size: 16px;
-            color: #ffffff;
-        }
-        a{
-            text-decoration:none;
-        }
-        .page_404{ padding:40px 0; background:#fff; font-family: 'Arvo', serif;
+        /*common CSS used throughout the page*/
+
+        /*media queries*/
+        @media screen and (max-width: 1199px) {
+            .max-width {
+                max-width: 850px;
+            }
         }
 
-        .page_404  img{ width:100%;}
+        @media screen and (max-width: 991px) {
+            .max-width {
+                max-width: 650px;
+            }
+        }
 
-        .four_zero_four_bg{
-        
-        background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
-            height: 400px;
-            background-position: center;
-            width: 100%;
-            background-color: green;
-            margin: auto auto;
+        @media screen and (max-width: 630px) {
+            .max-width {
+                max-width: 90%;
+            }
+        }
+
+        @media screen and (max-width: 425px) {
+            .max-width {
+                max-width: 80%;
+            }
+            .error_container p {
+                font-size: 15px;
+            }
+            .error_container h3{
+                font-size: 20px;
+             }
+             .gif img{
+                bottom:15px;
+             }
         }
         
-        
-        .four_zero_four_bg h1{
-        font-size:80px;
-        }
-        
-        .four_zero_four_bg h3{
-                    font-size:80px;
-                    }
-                    
-                    .link_404{			 
-            color: #fff!important;
-            padding: 10px 20px;
-            background: #39ac31;
-            margin: 20px 0;
-            display: inline-block;}
-            .contant_box_404{ margin-top:-50px;}
     </style>
 </head>
 
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
     <div class="body-wrapper  float-menu">
         
-        {% block header %}
-            {% include 'header.html' %}
-        {% endblock header %}
-        
-        {% block wave_design %}
-            {% include 'wave.html' %}
-        {% endblock wave_design %}
 
-        <!--Start adding from here-->
-        <section class="page_404">
-            <div class="">
-                <div class="row text-center d-flex align-items-center">	
-                    <div class="col-md-6 mx-auto">
-                        <div class="col-sm-10 col-sm-offset-1  text-center">
-                            <div class="four_zero_four_bg">
-                                <h1 class="text-center">404</h1>
-                            </div>
-                            
-                            <div class="contant_box_404">
-                                <h3 class="h2">
-                                Look like you're lost
-                                </h3>
-                            
-                                <p>the page you are looking for not avaible!</p>
-                                
-                                <a href="" class="link_404">Go to Home</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!--Page start-->
+        <section class="centering">
+            <section class="max-width error_container">
+                <div class="gif"><img src="https://i.pinimg.com/originals/0e/c0/db/0ec0dbf1e9a008acb9955d3246970e15.gif" alt=""></div>
+                <div class="404_message"><h3>Looks like you are lost</h3> <br><p>the page you are looking for is not available!</p></div>
+            </section>
         </section>
+        <!--Page end-->
 
         {% block footer %}
             {% include "footer_block.html" %}
