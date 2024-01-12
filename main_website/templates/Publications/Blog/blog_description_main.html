@@ -191,6 +191,7 @@
             width: 0%;
             transition: all .4s ease-in-out;
             display: block;
+            border: 1px solid #fff;
         }
 
         .blog-card:hover::after {
@@ -267,9 +268,11 @@
                         <div class="blog-card-container">
                             {% for i in recent_blogs %}
                             <div class="blog-card">
-                                <div class="blog-card-banner"><img
+                                <div class="blog-card-banner">
+                                    <a href="{% url 'main_website:blog_description' i.pk %}"><img
                                         src="/media_files/{{i.blog_banner_picture}}"
-                                        alt=""></div>
+                                        alt="blog_thumbnail"></a>
+                                </div>
                                 <div style="margin-top: 10px;">
                                     <p><a href="{% url 'main_website:blog_description' i.pk %}">{{i.title}}</a></p>
                                 </div>
