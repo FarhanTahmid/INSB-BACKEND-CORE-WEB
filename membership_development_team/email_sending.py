@@ -100,9 +100,7 @@ Once again, we appreciate you renewing your membership once more. We are gratefu
 def send_email_upon_renewal_confirmed(reciever_name,reciever_email):
     '''This function sends email to users upon the renewal is done'''
     try:
-        
-        load_mdt_co_ordinator=renderData.MDT_DATA.load_MDT_coordinator()
-        
+                
         subject="SUCCESS - Membership Renewal Complete."
         
         message_body=f"""Dear {reciever_name},\n

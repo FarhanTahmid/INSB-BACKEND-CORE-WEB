@@ -207,8 +207,8 @@ REST_FRAMEWORK={
     'DEFAULT_RENDERER_CLASSES':('rest_framework.renderers.JSONRenderer',)
 }
 
-handler404=''
-
+handler404='central_branch.views.custom_404'
+handler500='central_branch.views.custom_500'
 
 #EMAIL SETTINGS
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'

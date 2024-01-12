@@ -14,30 +14,24 @@ class GraphicsTeam:
 
     logger=logging.getLogger(__name__)
 
-    def get_co_ordinator():
-        roles = Roles_and_Position.objects.get(is_co_ordinator=True,role_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
-        members = Members.objects.filter(position=roles,team=GraphicsTeam.get_team_id())
-        print(members)
-        return members
-
-    def get_officer():
-        roles = Roles_and_Position.objects.get(is_officer = True,is_co_ordinator=False,role_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
-        members = Members.objects.filter(position = roles,team=GraphicsTeam.get_team_id())
-        
-        print(roles,members)
-        return members
-
-    def get_volunteers():
+    def get_team_members_with_positions():
         team_members=GraphicsTeam.load_team_members()
+        co_ordinators=[]
+        incharges=[]
         core_volunteer=[]
         team_volunteer=[]
         for i in team_members:
-            if(i.position.is_volunteer):
+            if(i.position.is_officer):
+                if(i.position.is_co_ordinator):
+                    co_ordinators.append(i)
+                else:
+                    incharges.append(i)
+            elif(i.position.is_volunteer):
                 if(i.position.is_core_volunteer):
                     core_volunteer.append(i)
                 else:
                     team_volunteer.append(i)
-        return core_volunteer,team_volunteer
+        return co_ordinators,incharges,core_volunteer,team_volunteer
 
     def get_member_with_postion(position):
         '''Returns Graphics Team Members with positions'''
@@ -69,7 +63,7 @@ class GraphicsTeam:
         
         '''Gets the team id from the database only for Media Team. Not the right approach'''
         
-        team=Teams.objects.get(team_name="Graphics")
+        team=Teams.objects.get(primary=10)
         return team
 
     def add_member_to_team(ieee_id,position):

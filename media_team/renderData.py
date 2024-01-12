@@ -13,15 +13,6 @@ import traceback
 class MediaTeam:
     logger=logging.getLogger(__name__)
 
-    def get_co_ordinator():
-        roles = Roles_and_Position.objects.get(is_co_ordinator=True,role_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
-        members = Members.objects.filter(position=roles,team=MediaTeam.get_team_id())
-        return members
-
-    def get_officer():
-        roles = Roles_and_Position.objects.get(is_officer = True,is_co_ordinator=False,role_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
-        members = Members.objects.filter(position = roles,team=MediaTeam.get_team_id())
-        return members
 
     def get_member_with_postion(position):
         '''Returns Media Team Members with positions'''
@@ -160,17 +151,24 @@ class MediaTeam:
         return team_members
     
     
-    def get_volunteers():
+    def get_team_members_with_positions():
         team_members=MediaTeam.load_team_members()
+        co_ordinators=[]
+        incharges=[]
         core_volunteer=[]
         team_volunteer=[]
         for i in team_members:
-            if(i.position.is_volunteer):
+            if(i.position.is_officer):
+                if(i.position.is_co_ordinator):
+                    co_ordinators.append(i)
+                else:
+                    incharges.append(i)
+            elif(i.position.is_volunteer):
                 if(i.position.is_core_volunteer):
                     core_volunteer.append(i)
                 else:
                     team_volunteer.append(i)
-        return core_volunteer,team_volunteer    
+        return co_ordinators,incharges,core_volunteer,team_volunteer    
     
     def media_manage_team_access_modifications(manage_team_access, event_access, ieee_id):
         try:
