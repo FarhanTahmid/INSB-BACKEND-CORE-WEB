@@ -290,12 +290,12 @@
                     <!--Right part of the page start-->
                     <div class="aside">
                         <div>
-                            <p style="font-size: 20px; font-weight:400; color: #75787B;">Recent Posts</p>
+                            <p style="font-size: 20px; font-weight:400; color: #75787B;">Recent News</p>
                         </div>
                         <div>
                             <hr>
                         </div>
-                        <!--Recent Posts-->
+                        <!--Recent News-->
                         {% for i in recent_news %}
                         <div>
                             <p><a href="{% url 'main_website:news_description' i.pk %}"><i class="fa-solid fa-chevron-right" style="font-size: 12px;"></i></i>{{i.news_title}}</a></p>

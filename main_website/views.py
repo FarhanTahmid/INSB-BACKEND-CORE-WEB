@@ -1173,7 +1173,7 @@ def join_insb(request):
             'branch_teams':branch_teams,
         }
  
-    return render(request,"join_INSB.html",context=context)
+    return render(request,"Get Involved/Join INSB/join_INSB.html",context=context)
 
 # def test_view(request):
 #     #loading all the teams of Branch
