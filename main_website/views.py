@@ -141,6 +141,7 @@ def event_details(request,event_id):
         
         get_event = Events.objects.get(id = event_id)
         
+        # get host
         if(get_event.publish_in_main_web):
             event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
             event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
@@ -153,6 +154,7 @@ def event_details(request,event_id):
                 'media_url':settings.MEDIA_URL,
                 'event_banner_image' : event_banner_image,
                 'event_gallery_images' : event_gallery_images,
+                'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             }
             return render(request,"Events/event_description_main.html", context)
         else:
