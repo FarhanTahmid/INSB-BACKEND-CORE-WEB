@@ -33,7 +33,7 @@
     option1 = {
         title: {
             text: 'Event Types',
-            subtext: 'Based on IEEE NSU SB Portal Data since 2023',
+            subtext: 'Based on {% if is_sc_ag %}{{society.short_form}}{% else %}IEEE NSU SB{% endif %} Portal Data since 2023',
             left: 'center'
         },
         tooltip: {
