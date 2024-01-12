@@ -20,12 +20,12 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background-color: red;
+    background-color: #E87722!important;
     margin: 2px 1px;
-
-    
   }
-
+  .events-list li a{
+    color: #E87722!important;
+  }
   .event_container {
     width: 90%;
     max-width: 1140px;
@@ -81,7 +81,18 @@
     border-radius: 0 3px 3px 0;
     user-select: none;
   }
-
+  .event-box h5 {
+    margin-bottom: 5px;
+    color: #002855;
+    font-weight: bold;
+}
+.next-btn, .prev-btn{
+    background-color: 	#FFC72C!important;
+    background-image: radial-gradient(circle, #ffc72c, #fbb325, #f69f21, #f08b20, #e87722);
+}
+.day:hover{
+  background-color: 	#002855!important;
+}
   /* Position the "next button" to the right */
   .next {
     right: 0;
@@ -126,7 +137,7 @@
                   {% for event, banner_image in latest_five_event.items %}
                   <div class="mySlides" style="width:100px">
                     <div class="card mb-3">
-                      <img src="{{media_url}}{{banner_image}}" alt="Event banner picture">
+                      <a href = "{% if event.pk %}{% url 'main_website:event_details' event.pk %}{% endif %}"><img src="{{media_url}}{{banner_image}}" alt="Event banner picture"></a>
                       <div class="card-body" style="
                       height: 150px;
                       overflow: hidden;">
@@ -161,19 +172,20 @@
               
               <h4 style="margin-bottom: 30px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">EVENT C</span>ALENDER</h4>
               <div class="calendar">
-              <div class="header" style="padding: 20px;">
+              <div class="header" style="padding: 20px; background-image: linear-gradient(to right top, #002855, #00487a, #006a9e, #008fc1, #00b5e2);">
               <div style="cursor: pointer;" class="prev-btn"><i class="fa-solid fa-chevron-left"></i></div>
               <span class="month-year"></span>
               <div style="cursor: pointer;" class="next-btn"><i class="fa-solid fa-chevron-right"></i></div>
               </div>
               <div class="days-of-week" style="display: flex; justify-content: space-around; padding: 10px 0px; font-weight: bold;">
-              <span class="day-of-week">Sun</span>
               <span class="day-of-week">Mon</span>
               <span class="day-of-week">Tue</span>
               <span class="day-of-week">Wed</span>
               <span class="day-of-week">Thu</span>
               <span class="day-of-week">Fri</span>
               <span class="day-of-week">Sat</span>
+              <span class="day-of-week">Sun</span>
+
               </div>
               <div class="days " style="padding: 15px 0px; font-weight: bold;"  >
                   <span style="color:red; height:20px"></span>
@@ -204,81 +216,83 @@
   }
 </script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    let slideIndex = 1;
-    let autoSlideInterval;
-
-    function plusSlides(n) {
-        showSlides(slideIndex += n);
-    }
-
-    function currentSlide(n) {
-        showSlides(slideIndex = n);
-    }
-
-    function showSlides(n) {
-        let i;
-        let slides = document.getElementsByClassName("mySlides");
-
-        if (n > slides.length) {
-            slideIndex = 1;
-        }
-
-        if (n < 1) {
-            slideIndex = slides.length;
-        }
-
-        for (i = 0; i < slides.length; i++) {
-            slides[i].style.transform = "translateX(" + -100 * (slideIndex - 1) + "%)";
-        }
-    }
-
-    // Event listeners for slideshow navigation
-    document.querySelector('.prev').addEventListener('click', function () {
-        clearInterval(autoSlideInterval);
-        plusSlides(-1);
-    });
-
-    document.querySelector('.next').addEventListener('click', function () {
-        clearInterval(autoSlideInterval);
-        plusSlides(1);
-    });
-
-    // Add swipe functionality using Hammer.js
-    const slideshowContainer = document.querySelector('.slideshow-container');
-    const hammer = new Hammer(slideshowContainer);
-
-    hammer.on('swipeleft', function () {
-        clearInterval(autoSlideInterval);
-        plusSlides(1);
-    });
-
-    hammer.on('swiperight', function () {
-        clearInterval(autoSlideInterval);
-        plusSlides(-1);
-    });
-
-    // Auto slide feature
-    function startAutoSlide() {
-        autoSlideInterval = setInterval(function () {
-            plusSlides(1);
-        }, 5000); // Adjust the interval time (in milliseconds) as needed
-    }
-
-    // Start auto slide when the page loads
-    startAutoSlide();
-
-    // Restart auto slide after manual navigation
-    slideshowContainer.addEventListener('mouseenter', function () {
-        clearInterval(autoSlideInterval);
-    });
-
-    slideshowContainer.addEventListener('mouseleave', function () {
-        startAutoSlide();
-    });
-});
-</script>
-
+  document.addEventListener('DOMContentLoaded', function () {
+      let slideIndex = 1;
+      let autoSlideInterval;
+  
+      function plusSlides(n) {
+          showSlides(slideIndex += n);
+      }
+  
+      function currentSlide(n) {
+          showSlides(slideIndex = n);
+      }
+  
+      function showSlides(n) {
+          let i;
+          let slides = document.getElementsByClassName("mySlides");
+  
+          if (n > slides.length) {
+              slideIndex = 1;
+          }
+  
+          if (n < 1) {
+              slideIndex = slides.length;
+          }
+  
+          for (i = 0; i < slides.length; i++) {
+              slides[i].style.transform = "translateX(" + -100 * (slideIndex - 1) + "%)";
+          }
+      }
+  
+      // Event listeners for slideshow navigation
+      document.querySelector('.prev').addEventListener('click', function () {
+          clearInterval(autoSlideInterval);
+          plusSlides(-1);
+      });
+  
+      document.querySelector('.next').addEventListener('click', function () {
+          clearInterval(autoSlideInterval);
+          plusSlides(1);
+      });
+  
+      // Add swipe functionality using Hammer.js only if it's available (for touch devices)
+      if (typeof Hammer !== 'undefined') {
+          const slideshowContainer = document.querySelector('.slideshow-container');
+          const hammer = new Hammer(slideshowContainer);
+  
+          hammer.on('swipeleft', function () {
+              clearInterval(autoSlideInterval);
+              plusSlides(1);
+          });
+  
+          hammer.on('swiperight', function () {
+              clearInterval(autoSlideInterval);
+              plusSlides(-1);
+          });
+      }
+  
+      // Auto slide feature
+      function startAutoSlide() {
+          autoSlideInterval = setInterval(function () {
+              plusSlides(1);
+          }, 2500); // Adjust the interval time (in milliseconds) as needed
+      }
+  
+      // Start auto slide when the page loads
+      startAutoSlide();
+  
+      // Restart auto slide after manual navigation
+      document.querySelector('.slideshow-container').addEventListener('mouseenter', function () {
+          clearInterval(autoSlideInterval);
+      });
+  
+      document.querySelector('.slideshow-container').addEventListener('mouseleave', function () {
+          startAutoSlide();
+      });
+  });
+  </script>
+  
 
 
 <script> 

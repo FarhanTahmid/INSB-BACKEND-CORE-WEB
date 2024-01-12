@@ -86,7 +86,7 @@
                             <a href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}"> <img
                                     class="article-image"
                                     src="{{media_url}}{{value}}"
-                                    alt="" width="100%" /></a>
+                                    alt="event_banner" width="100%" /></a>
                         </div>
 
                         <div class="gdlr-blog-grid-content" style="overflow: hidden;">
@@ -94,13 +94,10 @@
                                 <div class="gdlr-blog-info">
                                     <div
                                         class="blog-info blog-date gdlr-skin-info">
-                                        <span class="gdlr-sep">/</span><a
-                                            href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}">{{key.event_date}}</a></div>
+                                        <span class="gdlr-sep">/</span>{{key.event_date}}</div>
                                     <div
                                         class="blog-info blog-author gdlr-skin-info">
-                                        <span class="gdlr-sep">/</span>By <a
-                                            href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}" title="{{key.event_organiser.group_name}}"
-                                            rel="author">{{key.event_organiser.short_form}}</a></div>
+                                        <span class="gdlr-sep">/</span>By {{key.event_organiser.group_name}}</div>
                                     <div class="clear"></div>
                                 </div>
 

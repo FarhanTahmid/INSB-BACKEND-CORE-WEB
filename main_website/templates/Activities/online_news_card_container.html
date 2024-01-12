@@ -31,7 +31,7 @@
                                             <div class="gdlr-blog-thumbnail">
                                                 <a href="{{i.article_link}}"> <img
                                                         src="{{i.article_picture}}"
-                                                        alt="" width="400" height="300" /></a>
+                                                        alt="blog_thumbnail" width="400" height="300" /></a>
                                             </div>
 
                                             <div class="gdlr-blog-grid-content">
@@ -39,12 +39,11 @@
                                                     <div class="gdlr-blog-info">
                                                         <div
                                                             class="blog-info blog-date gdlr-skin-info">
-                                                            <span class="gdlr-sep">/</span><a
-                                                                href="#">{{i.pubDate}}</a></div>
+                                                            <span class="gdlr-sep">/</span>{{i.pubDate}}</div>
                                                         <div
                                                             class="blog-info blog-author gdlr-skin-info">
                                                             <span class="gdlr-sep">/</span>By <a
-                                                                href="#" title="Posts by John Doe"
+                                                                href="{{i.article_link}}" title="Posts by {{i.article_creator}}"
                                                                 rel="author">{{i.article_creator}}</a></div>
                                                         <div class="clear"></div>
                                                     </div>
