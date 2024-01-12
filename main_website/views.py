@@ -120,6 +120,8 @@ def event_details(request,event_id):
  
     '''Loads details for the corresponding event page on site'''
     try:
+        if request.method == 'POST':
+            return redirect('main_website:event_details', event_id)
         get_event = Events.objects.get(id = event_id)
         
         if(get_event.publish_in_main_web):

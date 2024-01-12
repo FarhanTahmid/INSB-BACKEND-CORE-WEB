@@ -632,6 +632,7 @@
                             <h2>Leave a Feedback</h2>
                             <div class="bar"></div>
                             <form method="post" class="leave_reply_box">
+                                {% csrf_token %}
                                 <input type="text" name="name" placeholder="Name" required>
                                 <input type="email" name="email" placeholder="Email" required>
                                 <select name="satisfy" required>
