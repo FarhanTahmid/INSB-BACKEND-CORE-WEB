@@ -328,7 +328,7 @@
 
 .ms-slide-vcbtn-mobile .ms-vcbtn-txt {
     text-transform: uppercase;
-    font-family: sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 0.75em;
     display: inline-block;
     background: url(common/video-close-btn.png) no-repeat 0px 3px;
@@ -2881,7 +2881,7 @@ only screen and (                min-resolution: 2dppx) {
 	background: black;
 	color: white;
 	font-weight: 300;
-	font-family: "Lato", sans-serif;
+	font-family: 'Poppins', sans-serif;
 	font-size: 18px;
 	position: relative;
 }

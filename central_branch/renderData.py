@@ -541,7 +541,7 @@ class Branch:
         '''This function loads all the EB panel members from the branch.
         Checks if the position of the member is True for is_eb_member and if member exists in current EB Panel'''
         get_current_panel=Branch.load_current_panel()
-        members=Members.objects.all()
+        members=Members.objects.all().order_by('position')
         eb_panel=[]
         for member in members:
             if member.position.is_eb_member:
