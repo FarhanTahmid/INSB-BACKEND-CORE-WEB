@@ -38,6 +38,7 @@
             grid-template-columns: 2fr 1fr;
             grid-gap: 50px;
             margin-top: 15px;
+            align-items: end;
         }
 
         .banner_image {
@@ -71,16 +72,16 @@
             display: flex;
             flex-direction: column;
             margin: 15px 20px;
-            padding: 20px 20px;
+            padding: 12px 20px;
             background: #f7f7f7;
         }
 
         .inner_box h6 {
-            color: #000;
             margin-bottom: 5px;
         }
 
         .adjust_placement {
+            color: 	#75787B;
             margin-left: 32px;
             margin-bottom: -2px;
         }
@@ -93,7 +94,7 @@
         .register_btn {
             text-decoration: none;
             margin: 15px 20px;
-            padding: 28px 20px;
+            padding: 17px 20px;
             display: flex;
             flex-direction: column;
             background: #002855;
@@ -109,7 +110,6 @@
             display: flex;
             justify-content: center;
             gap: 2%;
-            padding: 5%;
         }
 
         .below_banner {
@@ -128,7 +128,9 @@
         .register-bottom-for-tablet-view {
             display: none;
         }
-
+        .current-menu-item{
+            font-size: 30px;
+        }
         #name {
             grid-area: name;
         }
@@ -314,6 +316,14 @@
             padding: 0 10px;
             height: 45px;
         }
+        .leave_reply_section .leave_reply_box select{
+            background-color: #75787b22;
+            color: #000;
+            border: none;
+            border-radius: 3px;
+            padding: 0 10px;
+            height: 45px;
+        }
         .leave_reply_section .leave_reply_box textarea{
             background-color: #75787b22;
             color: #000;
@@ -376,7 +386,7 @@
                                     {% else %}
                                     {% endif %}
                                 </div>
-                                <div class="event_header" style="text-transform: uppercase;">
+                                <div class="event_header" style="text-transform: uppercase;    margin-bottom: 15px;">
                                     <!--Event Date and Time-->
                                     <h4 style="color: #BA0C2F;">{{event.event_date | date:"l, F d Y"}}</h4>
                                 </div>
@@ -402,7 +412,7 @@
                                         <h6><i class="fa-solid fa-wallet" style="color: #E87722;"></i><span
                                                 style="margin-left: 10px;">COST</span></h6>
                                         {% if event.registration_fee %}
-                                        <h6 class="adjust_placement">{{event.registration_fee_amount}}</h6>
+                                        <h6 class="adjust_placement">BDT {{event.registration_fee_amount}}</h6>
                                         {% else %}
                                         <h6 class="adjust_placement" style="color: #5e5e5e;">Free</h6>
                                         {% endif %}
@@ -411,7 +421,7 @@
                                         <h6><i class="fa-solid fa-circle-info" style="color: #E87722;"></i><span
                                                 style="margin-left: 10px;">MORE INFO</span></h6>
                                         <!--READ MORE LINK-->
-                                        <h6 class="adjust_placement"><a href="#" class="read_more_btn">Read More</a></h6>
+                                        <h6 class="adjust_placement"><a href="{{event.form_link}}" class="read_more_btn">Read More</a></h6>
                                     </div>
                                     <div class="register">
                                         <!--Registration button-->
@@ -471,7 +481,7 @@
                                     <h6><i class="fa-solid fa-wallet" style="color: 		#E87722;"></i><span
                                             style="margin-left: 10px;">COST</span></h6>
                                     {% if event.registration_fee %}
-                                    <h6 class="adjust_placement">{{event.registration_fee_amount}}</h6>
+                                    <h6 class="adjust_placement">BDT {{event.registration_fee_amount}}</h6>
                                     {% else %}
                                     <h6 class="adjust_placement" style="color: #5e5e5e;">Free</h6>
                                     {% endif %}
@@ -480,7 +490,7 @@
                                     <h6><i class="fa-solid fa-circle-info" style="color: 		#E87722;"></i><span
                                             style="margin-left: 10px;">MORE INFO</span></h6>
                                     <!--READ MORE LINK-->
-                                    <h6 class="adjust_placement"><a href="" class="read_more_btn">Read More</a></h6>
+                                    <h6 class="adjust_placement"><a href="{{event.form_link}}" class="read_more_btn">Read More</a></h6>
                                 </div>
                                 <div class="register">
                                     <!--Registration button-->
@@ -508,13 +518,18 @@
                         {% if is_live %}
                         <!--Leave a reply section-->
                         <section class="leave_reply_section">
-                            <h2>Leave a reply</h2>
+                            <h2>Leave a Feedback</h2>
                             <div class="bar"></div>
                             <form method="post" class="leave_reply_box">
                                 <input type="text" name="name" placeholder="Name" required>
                                 <input type="email" name="email" placeholder="Email" required>
-                                <input type="text" name="url" placeholder="Website" required>
-                                <textarea name="comment" placeholder="Your comment here...." required></textarea>
+                                <select name="satisfy" required>
+                                    <option value="" selected disabled>How satisfied were you?</option>
+                                    <option value="very_satisfied">Very Satisfied</option>
+                                    <option value="satisfied">Satisfied</option>
+                                    <option value="not_satisfied">Not Satisfied</option>
+                                </select>
+                                <textarea name="comment" maxlength="300" placeholder="Your comment here...." required></textarea>
                                 <div class="btn">
                                     <input type="submit" value="submit">
                                 </div>
