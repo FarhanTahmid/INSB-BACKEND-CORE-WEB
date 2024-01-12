@@ -29,23 +29,18 @@ from . models import Portal_Joining_Requests
 def md_team_homepage(request):
     '''Loads the data for homepage of MDT TEAM'''
     sc_ag=PortData.get_all_sc_ag(request=request)
-    #Loading data of the co-ordinators, co ordinator id is 9,
-    co_ordinators=renderData.MDT_DATA.get_member_with_postion(9)
-    #Loading data of the incharges, incharge id is 10
-    in_charges=renderData.MDT_DATA.get_member_with_postion(10)
-    #Loading data of the cor-volunteers, core-volunteer id is 11
-    core_volunteers=renderData.MDT_DATA.get_member_with_postion(11)
-    #Loading data of the cor-volunteers, volunteer id is 12
-    volunteers=renderData.MDT_DATA.get_member_with_postion(12)
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     
+    # get team members
+    team_members=renderData.MDT_DATA.get_all_team_members()
+    print(team_members)
     context={
         'all_sc_ag':sc_ag,
-        'co_ordinators':co_ordinators,
-        'incharges':in_charges,
-        'core_volunteers':core_volunteers,
-        'team_volunteers':volunteers,
+        'co_ordinators':team_members[0],
+        'incharges':team_members[1],
+        'core_volunteers':team_members[2],
+        'team_volunteers':team_members[3],
         'media_url':settings.MEDIA_URL,
         'user_data':user_data,
     }
@@ -366,6 +361,7 @@ def membership_renewal_form(request,pk):
                         'IEEE IAS Membership':ias_renewal,
                         'IEEE WIE Membership':wie_renewal,
                     }
+                    # send email to renewer
                     email_stat=email_sending.send_emails_upon_filling_up_renewal_form(ieee_id=ieee_id,reciever_name=name,reciever_email=email_associated,renewal_session=session_name,renewal_check_dict=renewal_check_dict,request_id=renewal_instance.pk,form_id=pk)
                     if(email_stat):
                         messages.success(request,"A confirmation mail has been sent to your email.")
@@ -995,7 +991,7 @@ def site_registration_request_details(request,ieee_id):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    has_access=Access_Render.system_administrator_superuser_access(user.username) or renderData.MDT_DATA.get_officials_access(request.user)
+    has_access=(Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
     
     '''Get the request data'''
     get_request=Portal_Joining_Requests.objects.get(ieee_id=ieee_id)

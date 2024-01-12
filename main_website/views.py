@@ -35,8 +35,6 @@ def homepage(request):
     #getting all the thoughts
     all_thoughts = Branch.get_all_homepage_thoughts()
 
-    
-    
     # get recent 6 news
     get_recent_news=News.objects.filter().order_by('-news_date')[:6]
     # get recent 6 Blogs
@@ -45,8 +43,7 @@ def homepage(request):
     get_featured_events=HomepageItems.load_featured_events(sc_ag_primary=1)
     # get volunteer of the months
     get_volunteers_of_the_month=VolunteerOfTheMonth.objects.all().order_by('-pk')
-    
-    
+
     context={
         'banner_item':bannerItems,
         'banner_pic_with_stat':bannerWithStat,
@@ -724,7 +721,7 @@ def current_panel_members(request):
         # TODO:add algo to add SC AG Faculty and Branch Counselor
 
         branch_counselor=[]
-        sc_ag_faculty_advisors=[]
+        sc_ag_faculty_advisors=PortData.get_sc_ag_faculty_members(request=request)
         mentors=[]
         branch_chair=[]
         branch_eb=[]
@@ -740,7 +737,6 @@ def current_panel_members(request):
                         mentors.append(i)
                     else:
                         branch_eb.append(i)
-        
         # check of having different members
         has_branch_counselor=False
         has_sc_ag_faculty_advisor=False
@@ -789,7 +785,7 @@ def panel_members_page(request,year):
     get_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_panel.pk)
     # TODO:add algo to add SC AG Faculty and EB
     branch_counselor=[]
-    sc_ag_faculty_advisors=[]
+    sc_ag_faculty_advisors=PortData.get_sc_ag_faculty_by_year(panel_year=get_panel.year,request=request)
     mentors=[]
     branch_chair=[]
     branch_eb=[]
@@ -1170,20 +1166,21 @@ def toolkit(request):
     return render(request, 'Publications/Toolkit/toolkit.html',context=context)
 
 def join_insb(request):
-    branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
-
-    context={
-        'page_title':"Join IEEE NSU SB",
-        'branch_teams':branch_teams,
-    }
-    return render(request,"join_INSB.html",context=context)
-
-def test_view(request):
     #loading all the teams of Branch
     branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
     context={
-            'page_title':"Lost?!",
+            'page_title':"Join INSB",
             'branch_teams':branch_teams,
         }
  
-    return render(request,"error_505.html",context=context)
+    return render(request,"join_INSB.html",context=context)
+
+# def test_view(request):
+#     #loading all the teams of Branch
+#     branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+#     context={
+#             'page_title':"Lost?!",
+#             'branch_teams':branch_teams,
+#         }
+ 
+#     return render(request,"test.html",context=context)

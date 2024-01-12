@@ -192,6 +192,7 @@
             {% endif %}
             <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">Panel Duration:<span style="color:#00629B;"> {{tenure_time}} </span></b></h5>
             <br>
+            {% if panel_edit_access %}
             <div style="justify-content:center;text-align:center;">  
                 <div class="btn-container">
                     <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-f" ui-toggle-class="bounce" ui-target="#animate">Delete Panel</button>
@@ -205,6 +206,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
             <br>
             <br>
 
@@ -257,7 +259,7 @@
                         
                             {% for member in eb_member %}
                             <tr>
-                                <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.member.ieee_id %}">{{member.member.ieee_id}}</a></td>
+                                <td>{{member.member.ieee_id}}</td>
                                 <td>{{ member.member.name  }}</td>
                                 <td>{{member.member.email_ieee}}</td>
                                 <td>{{member.position}}</td>

@@ -1,41 +1,52 @@
 {% load static %}
 {% block executive_cards %}
 <!--Executive Body-->
-<h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our <span><b>Executive Body</b></span> </h3>
+<h3 style="justify-content:center;text-align:center;margin-top:25px;margin-bottom:25px;"> Meet our <span><b>Executive Body</b></span> </h3>
 
-<div class="row" style="margin-bottom:15px;">
-    <div class="col-xs-6 col-sm-12 col-md-6" >
-      {% for i in co_ordinators %}
-        <div class="box">
-            <div class="item">
-              <div class="item-bg">
-                <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
-              </div>
-              <div class="p-a-lg pos-rlt text-center">
-                <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
-              </div>
-            </div>
-            <div class="p-a text-center">
-              <a href class="text-md m-t block">{{i.name}}</a>
-              <p><small>NSU ID: {{i.nsu_id}}</small></p>
-              <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
-                <i class="fa fa-facebook"></i>
-                <i class="fa fa-facebook indigo"></i>
-              </a>
-              <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
-                <i class="fa fa-envelope-o"></i>
-                <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
-              </a>
-              <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
-                <i class="fa fa-linkedin"></i>
-                <i class="fa fa-linkedin light-blue-800"></i>
-              </a>
-              <div class="text-xs">
-                <em>Contact: <strong>{{i.contact_no}}</strong></em>
-              </div>
-            </div>
-        </div>
-      {% endfor %}
+<!-- Grid row -->
+<div class="row d-flex justify-content-center">
+                            
+  <!-- Grid column -->
+  {% for i in sc_ag_ebs %}
+    {% if i.member %}
+    <div class="col-md-3 mb-4 text-center">
+  
+      <div class="avatar mx-auto white" style="height: 250px; width:200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+          <img src="/media_files/{{i.member.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+      </div>
+      <h5 class="font-weight-bold">{{i.member.name}}</h5>
+      <p class="font-weight-bold">{{i.position}}</p>
+      <small class="text-muted">{{i.member.contact_no}}</small>
+
+      <ul class="list-unstyled d-flex justify-content-center m-2">
+          <li><a href="{{i.member.linkedin_url}}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+          <li><a href="{{i.member.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
+          <li><a href="mailto:{{i.member.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
+      </ul>
+
     </div>
+    {% else %}
+    <div class="col-md-3 mb-4 text-center">
+  
+      <div class="avatar mx-auto white" style="height: 250px; width:200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+          <img src="/media_files/{{i.ex_member.picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+      </div>
+      <h5 class="font-weight-bold">{{i.ex_member.name}}</h5>
+      <p class="font-weight-bold">{{i.position}}</p>
+      <small class="text-muted">{{i.ex_member.contact_no}}</small>
+
+      <ul class="list-unstyled d-flex justify-content-center m-2">
+          <li><a href="{{i.ex_member.linkedin_link}}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+          <li><a href="{{i.ex_member.facebook_link}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
+          <li><a href="mailto:{{i.ex_member.email}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
+      </ul>
+
+    </div>
+    {% endif %}
+      
+  {% endfor %}
+  <!-- Grid column -->
+
 </div>
+<!-- Grid row -->
 {% endblock executive_cards %}

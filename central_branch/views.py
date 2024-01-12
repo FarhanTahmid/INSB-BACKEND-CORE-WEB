@@ -72,8 +72,7 @@ def central_home(request):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return custom_500
 
 
 #Panel and Team Management
@@ -167,7 +166,7 @@ def team_details(request,primary,name):
                 Members.objects.filter(ieee_id=request.POST['access_ieee_id']).update(team=None,position=Roles_and_Position.objects.get(id=13)) #ID 13 means general member
                 # remove member from the current panel ass well
                 Panel_Members.objects.filter(tenure=current_panel.pk,member=request.POST['access_ieee_id']).delete()
-                messages.error(request,f"{request.POST['access_ieee_id']} was removed from the Team. The Member was also removed from the current Panel.")
+                messages.warning(request,f"{request.POST['access_ieee_id']} was removed from the Team. The Member was also removed from the current Panel.")
                 return redirect('central_branch:team_details',primary,name)
             except Exception as ex:
                 messages.error(request,"Something went Wrong!")
@@ -383,6 +382,7 @@ def branch_panel_details(request,panel_id):
 
         
     context={
+        'panel_edit_access':Branch_View_Access.get_create_panel_access(request),
         'user_data':user_data,
         'all_sc_ag':sc_ag,
         'panel_id':panel_id,
@@ -539,15 +539,15 @@ def branch_panel_alumni_tab(request,panel_id):
                     picture=alumni_picture)):
                     return redirect('central_branch:panel_details_alumni',panel_id)
                 else:
-                    messages.error(request,'Failed to Add new alumni!')
+                    messages.warning(request,'Failed to Add new alumni!')
         
         # Add alumni to panel
         if(request.POST.get('add_alumni_to_panel')):
-            alumni_to_add=request.POST['alumni_select']
+            alumni_to_add=request.POST.getlist('alumni_select')
             position=request.POST['alumni_position']
             
             for i in alumni_to_add:            
-                if(PanelMembersData.add_alumns_to_branch_panel(request=request,alumni_id=alumni_to_add,panel_id=panel_id,position=position)):
+                if(PanelMembersData.add_alumns_to_branch_panel(request=request,alumni_id=i,panel_id=panel_id,position=position)):
                     pass
             return redirect('central_branch:panel_details_alumni',panel_id)
         
@@ -579,81 +579,96 @@ def manage_research(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    # load all research papers
-    researches = Research_Papers.objects.filter(is_requested=False).order_by('-publish_date','publish_research')
-    '''function for adding new Research paper'''
-    if request.method == "POST":
-        add_research_form=ResearchPaperForm(request.POST,request.FILES)
-        add_research_category_form=ResearchCategoryForm(request.POST)
 
-        if(request.POST.get('add_research')):
-            if(add_research_form.is_valid()):
-                add_research_form.save()
-                messages.success(request,"A new Research Paper was added!")
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # load all research papers
+        researches = Research_Papers.objects.filter(is_requested=False).order_by('-publish_date','publish_research')
+        '''function for adding new Research paper'''
+        if request.method == "POST":
+            add_research_form=ResearchPaperForm(request.POST,request.FILES)
+            add_research_category_form=ResearchCategoryForm(request.POST)
+
+            if(request.POST.get('add_research')):
+                if(add_research_form.is_valid()):
+                    add_research_form.save()
+                    messages.success(request,"A new Research Paper was added!")
+                    return redirect('central_branch:manage_research')
+            if(request.POST.get('add_research_category')):
+                if(add_research_category_form.is_valid()):
+                    add_research_category_form.save()
+                    messages.success(request,"A new Research Category was added!")
+                    return redirect('central_branch:manage_research')
+            if(request.POST.get('remove_research')):
+                MainWebsiteRenderData.delete_research_paper(request=request)
                 return redirect('central_branch:manage_research')
-        if(request.POST.get('add_research_category')):
-            if(add_research_category_form.is_valid()):
-                add_research_category_form.save()
-                messages.success(request,"A new Research Category was added!")
-                return redirect('central_branch:manage_research')
-        if(request.POST.get('remove_research')):
-            MainWebsiteRenderData.delete_research_paper(request=request)
-            return redirect('central_branch:manage_research')
+        else:
+            form=ResearchPaperForm
+            form2=ResearchCategoryForm
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'form':form,
+            'form2':form2,'all_researches':researches,
+        }
+        return render(request,"Manage Website/Publications/Research Paper/manage_research_paper.html",context=context)
     else:
-        form=ResearchPaperForm
-        form2=ResearchCategoryForm
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'form':form,
-        'form2':form2,'all_researches':researches,
-    }
-    return render(request,"Manage Website/Publications/Research Paper/manage_research_paper.html",context=context)
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def manage_research_request(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
+    
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
         # get all research requests
-    research_requests=Research_Papers.objects.filter(is_requested=True).order_by('-publish_date')
-    if(request.method=="POST"):
-        if(request.POST.get('remove_research')):
-            MainWebsiteRenderData.delete_research_paper(request=request)
-            return redirect('central_branch:manage_research_request')
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'all_research_requests':research_requests
-    }
-    return render(request,"Manage Website/Publications/Research Paper/manage_paper_request.html",context=context)
+        research_requests=Research_Papers.objects.filter(is_requested=True).order_by('-publish_date')
+        if(request.method=="POST"):
+            if(request.POST.get('remove_research')):
+                MainWebsiteRenderData.delete_research_paper(request=request)
+                return redirect('central_branch:manage_research_request')
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'all_research_requests':research_requests
+        }
+        return render(request,"Manage Website/Publications/Research Paper/manage_paper_request.html",context=context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def publish_research_request(request,pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    # get research to publish
-    research_to_publish=get_object_or_404(Research_Papers,pk=pk)
-    if(request.method=="POST"):
-        research_form=ResearchPaperForm(request.POST,request.FILES,instance=research_to_publish)
-        if(request.POST.get('publish_research')):
-            if(research_form.is_valid()):
-                research_to_publish.is_requested=False
-                research_to_publish.publish_research=True
-                research_to_publish.save()
-                research_form.save()
-                messages.success(request,f"{research_to_publish.title} was Published in the Main Website")
-                return redirect('central_branch:manage_research_request')
+    
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # get research to publish
+        research_to_publish=get_object_or_404(Research_Papers,pk=pk)
+        if(request.method=="POST"):
+            research_form=ResearchPaperForm(request.POST,request.FILES,instance=research_to_publish)
+            if(request.POST.get('publish_research')):
+                if(research_form.is_valid()):
+                    research_to_publish.is_requested=False
+                    research_to_publish.publish_research=True
+                    research_to_publish.save()
+                    research_form.save()
+                    messages.success(request,f"{research_to_publish.title} was Published in the Main Website")
+                    return redirect('central_branch:manage_research_request')
+        else:
+            research_form=ResearchPaperForm(instance=research_to_publish)            
+        context={
+            'all_sc_ag':sc_ag,
+            'user_data':user_data,
+            'research':research_to_publish,
+            'form':research_form,
+        }
+        return render(request,"Manage Website/Publications/Research Paper/publish_research.html",context=context)
     else:
-        research_form=ResearchPaperForm(instance=research_to_publish)            
-    context={
-        'all_sc_ag':sc_ag,
-        'user_data':user_data,
-        'research':research_to_publish,
-        'form':research_form,
-    }
-    return render(request,"Manage Website/Publications/Research Paper/publish_research.html",context=context)
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def update_researches(request,pk):
@@ -661,25 +676,29 @@ def update_researches(request,pk):
     user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
-    # get the research and Form
-    research_to_update=get_object_or_404(Research_Papers,pk=pk)
-    if(request.method=="POST"):
-        if(request.POST.get('update_research_paper')):
-            form=ResearchPaperForm(request.POST,request.FILES,instance=research_to_update)
-            if(form.is_valid()):
-                form.save()
-                messages.info(request,"Research Paper Informations were updated")
-                return redirect('central_branch:manage_research')
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # get the research and Form
+        research_to_update=get_object_or_404(Research_Papers,pk=pk)
+        if(request.method=="POST"):
+            if(request.POST.get('update_research_paper')):
+                form=ResearchPaperForm(request.POST,request.FILES,instance=research_to_update)
+                if(form.is_valid()):
+                    form.save()
+                    messages.info(request,"Research Paper Informations were updated")
+                    return redirect('central_branch:manage_research')
+        else:
+            form=ResearchPaperForm(instance=research_to_update)
+        
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'form':form,
+            'research_paper':research_to_update,
+        }
+        return render(request,"Manage Website/Publications/Research Paper/update_research_papers.html",context=context)
     else:
-        form=ResearchPaperForm(instance=research_to_update)
-    
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'form':form,
-        'research_paper':research_to_update,
-    }
-    return render(request,"Manage Website/Publications/Research Paper/update_research_papers.html",context=context)
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def manage_blogs(request):
@@ -687,41 +706,45 @@ def manage_blogs(request):
     user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
-    # Load all blogs
-    all_blogs=Blog.objects.filter(is_requested=False)
-    
-    form=BlogsForm
-    form2=BlogCategoryForm
-    
-    if(request.method=="POST"):
-        form=BlogsForm(request.POST,request.FILES)
-        if(request.POST.get('add_blog')):
-            if(form.is_valid()):
-                form.save()
-                messages.success(request,"A new Blog was added!")
-                return redirect('central_branch:manage_blogs')
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # Load all blogs
+        all_blogs=Blog.objects.filter(is_requested=False)
         
-        if(request.POST.get('add_blog_category')):
-            form2=BlogCategoryForm(request.POST)
-            if(form2.is_valid()):
-                form2.save()
-                messages.success(request,"A new Blog Category was added!")
+        form=BlogsForm
+        form2=BlogCategoryForm
+        
+        if(request.method=="POST"):
+            form=BlogsForm(request.POST,request.FILES)
+            if(request.POST.get('add_blog')):
+                if(form.is_valid()):
+                    form.save()
+                    messages.success(request,"A new Blog was added!")
+                    return redirect('central_branch:manage_blogs')
+            
+            if(request.POST.get('add_blog_category')):
+                form2=BlogCategoryForm(request.POST)
+                if(form2.is_valid()):
+                    form2.save()
+                    messages.success(request,"A new Blog Category was added!")
+                    return redirect('central_branch:manage_blogs')
+            if(request.POST.get('remove_blog')):
+                MainWebsiteRenderData.delete_blog(request=request)
                 return redirect('central_branch:manage_blogs')
-        if(request.POST.get('remove_blog')):
-            MainWebsiteRenderData.delete_blog(request=request)
-            return redirect('central_branch:manage_blogs')
 
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        # get form
-        'form':form,
-        'form2':form2,
-        'all_blogs':all_blogs,
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            # get form
+            'form':form,
+            'form2':form2,
+            'all_blogs':all_blogs,
+            
+        }
         
-    }
-    
-    return render(request,"Manage Website/Publications/Blogs/manage_blogs.html",context=context)
+        return render(request,"Manage Website/Publications/Blogs/manage_blogs.html",context=context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def update_blogs(request,pk):
@@ -729,82 +752,96 @@ def update_blogs(request,pk):
     user_data=current_user.getUserData() #getting user data as dictionary file  
     sc_ag=PortData.get_all_sc_ag(request=request)
 
-    # get the blog and form
-    blog_to_update=get_object_or_404(Blog,pk=pk)
-    if(request.method=="POST"):
-        if(request.POST.get('update_blog')):
-            form=BlogsForm(request.POST,request.FILES,instance=blog_to_update)
-            if(form.is_valid()):
-                form.save()
-                messages.info(request,"Blog Informations were updated")
-                return redirect('central_branch:manage_blogs')
-    else:
-        form=BlogsForm(instance=blog_to_update)
-    
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'form':form,
-        'blog':blog_to_update,
-    }
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # get the blog and form
+        blog_to_update=get_object_or_404(Blog,pk=pk)
+        if(request.method=="POST"):
+            if(request.POST.get('update_blog')):
+                form=BlogsForm(request.POST,request.FILES,instance=blog_to_update)
+                if(form.is_valid()):
+                    form.save()
+                    messages.info(request,"Blog Informations were updated")
+                    return redirect('central_branch:manage_blogs')
+        else:
+            form=BlogsForm(instance=blog_to_update)
+        
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'form':form,
+            'blog':blog_to_update,
+        }
 
-    return render(request,"Manage Website/Publications/Blogs/update_blogs.html",context=context)
+        return render(request,"Manage Website/Publications/Blogs/update_blogs.html",context=context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def blog_requests(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    # get all blog requests
-    all_requested_blogs=Blog.objects.filter(is_requested=True).order_by('-date')
     
-    if(request.method=="POST"):
-        if(request.POST.get('remove_blog')):
-            get_blog_to_remove=Blog.objects.get(pk=request.POST['blog_pk'])
-            # delete blog banner picture from system at first
-            if(os.path.isfile(get_blog_to_remove.blog_banner_picture.path)):
-                os.remove(get_blog_to_remove.blog_banner_picture.path)
-            # remove the requested blog object from database
-            get_blog_to_remove.delete()
-            messages.warning(request,"The blog was deleted from requests!")
-            return redirect('central_branch:blog_requests')
-    
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'all_requested_blogs':all_requested_blogs
-    }
-    return render(request,"Manage Website/Publications/Blogs/blog_requests.html",context=context)
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # get all blog requests
+        all_requested_blogs=Blog.objects.filter(is_requested=True).order_by('-date')
+        
+        if(request.method=="POST"):
+            if(request.POST.get('remove_blog')):
+                get_blog_to_remove=Blog.objects.get(pk=request.POST['blog_pk'])
+                # delete blog banner picture from system at first
+                if(os.path.isfile(get_blog_to_remove.blog_banner_picture.path)):
+                    os.remove(get_blog_to_remove.blog_banner_picture.path)
+                # remove the requested blog object from database
+                get_blog_to_remove.delete()
+                messages.warning(request,"The blog was deleted from requests!")
+                return redirect('central_branch:blog_requests')
+        
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'all_requested_blogs':all_requested_blogs
+        }
+        return render(request,"Manage Website/Publications/Blogs/blog_requests.html",context=context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def publish_blog_request(request,pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    # get the blog and form
-    blog_to_publish=get_object_or_404(Blog,pk=pk)
-    if(request.method=="POST"):
-        if(request.POST.get('publish_blog')):
-            form=BlogsForm(request.POST,request.FILES,instance=blog_to_publish)
-            if(form.is_valid()):
-                form.save()
-                blog_to_publish.is_requested=False
-                blog_to_publish.publish_blog=True
-                blog_to_publish.save()
-                print("Saved")
-                print(blog_to_publish.publish_blog)
-                messages.info(request,"Blog was published in the main website")
-                return redirect('central_branch:blog_requests')
-    else:
-        form=BlogsForm(instance=blog_to_publish)
     
-    context={
-        'all_sc_ag':sc_ag,
-        'form':form,
-        'blog':blog_to_publish,
-        'user_data':user_data,
-    }
-    return render(request,"Manage Website/Publications/Blogs/publish_blog.html",context=context)
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # get the blog and form
+        blog_to_publish=get_object_or_404(Blog,pk=pk)
+        if(request.method=="POST"):
+            if(request.POST.get('publish_blog')):
+                form=BlogsForm(request.POST,request.FILES,instance=blog_to_publish)
+                if(form.is_valid()):
+                    form.save()
+                    blog_to_publish.is_requested=False
+                    blog_to_publish.publish_blog=True
+                    blog_to_publish.save()
+                    print("Saved")
+                    print(blog_to_publish.publish_blog)
+                    messages.info(request,"Blog was published in the main website")
+                    return redirect('central_branch:blog_requests')
+        else:
+            form=BlogsForm(instance=blog_to_publish)
+        
+        context={
+            'all_sc_ag':sc_ag,
+            'form':form,
+            'blog':blog_to_publish,
+            'user_data':user_data,
+        }
+        return render(request,"Manage Website/Publications/Blogs/publish_blog.html",context=context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 from main_website.models import HomePageTopBanner
 @login_required
@@ -812,168 +849,177 @@ def manage_website_homepage(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    '''For top banner picture with Texts and buttons - Tab 1'''
-    topBannerItems=HomePageTopBanner.objects.all().order_by('pk')
-    # get user data
-    #Loading current user data from renderData.py
-    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-    user_data=current_user.getUserData() #getting user data as dictionary file
-    if(user_data==False):
-        return DatabaseError
     
-    
-    # Getting Form response
-    if request.method=="POST":
-
-        # To delete an item
-        if request.POST.get('delete'):
-            # Delelte the item. Getting the id of the item from the hidden input value.
-            HomePageTopBanner.objects.filter(id=request.POST.get('get_item')).delete()
-            return redirect('central_branch:manage_website_home')
-        # To add a new Banner Item
-        if request.POST.get('add_banner'):
-            try:
-                newBanner=HomePageTopBanner.objects.create(
-                    banner_picture=request.FILES['banner_picture'],
-                    first_layer_text=request.POST['first_layer_text'],
-                    first_layer_text_colored=request.POST['first_layer_text_colored'],
-                    third_layer_text=request.POST['third_layer_text'],
-                    button_text=request.POST['button_text'],
-                    button_url=request.POST['button_url']
-                )
-                newBanner.save()
-                messages.success(request,"New Banner Picture added in Homepage successfully!")
-                return redirect('central_branch:manage_website_home')
-            except:
-                print("GG")
-
-
-    '''For banner picture with Texts'''   
-    from main_website.models import BannerPictureWithStat
-
-    existing_banner_picture_with_numbers=BannerPictureWithStat.objects.all()
-    if request.method=="POST":
-        if request.POST.get('update_banner'):
-            # first get all the objects and get the image file path. Delete the files from the system and then delete the object, then get the new image and create a new object.
-            try:
-                banner_image=request.FILES['banner_picture_with_stat']
-                
-                # Now get previous instances of Banner Picture with stat
-                for i in BannerPictureWithStat.objects.all():
-                    image_instance=settings.MEDIA_ROOT+str(i.image)
-                    if(os.path.isfile(image_instance)):
-                        # Delete the image now:
-                        os.remove(image_instance)
-                        # Now delete the object:
-                        i.delete()
-                
-                newBannerPictureWithStat=BannerPictureWithStat.objects.create(image=banner_image)
-                newBannerPictureWithStat.save()
-                messages.success(request,"Banner Picture With Statistics was successfully updated")
-                return redirect('central_branch:manage_website_home')    
-            except Exception as e:
-                messages.error(request,"Something went wrong! Please try again.")
-                return redirect('central_branch:manage_website_home')  
-
-    '''For Homepage Thoughts'''
-    all_thoughts = Branch.get_all_homepage_thoughts()
-
-    if request.method == "POST":
-        #when user hits save
-        if request.POST.get('save'):
-
-            author_name = request.POST.get('author')
-            thoughts = request.POST.get('your_thoughts')
-
-            #passing them in function to save
-            if Branch.save_homepage_thoughts(author_name,thoughts):
-                messages.success(request,"Thoughts added successfully!")
-            else:
-                messages.error(request,"Error Occured. Please try again later!")
-            return redirect('central_branch:manage_website_home')
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        '''For top banner picture with Texts and buttons - Tab 1'''
+        topBannerItems=HomePageTopBanner.objects.all().order_by('pk')
+        # get user data
+        #Loading current user data from renderData.py
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        if(user_data==False):
+            return DatabaseError
         
-        #when user edits saved thoughts
-        if request.POST.get('update'):
-
-            author_edit = request.POST.get('author_edit')
-            thoughts_edit = request.POST.get('your_thoughts_edit')
-            thoughts_id = request.POST.get('thought_id')
-            #passing them to function to update changes made
-            if Branch.update_saved_thoughts(author_edit,thoughts_edit,thoughts_id):
-                messages.success(request,"Thoughts updated successfully!")
-            else:
-                messages.error(request,"Error Occured. Please try again later!")
-            return redirect('central_branch:manage_website_home')
         
-        #when user wants to delete a thought
-        if request.POST.get('thought_delete'):
-             
-            id = request.POST.get('delete_thought')
+        # Getting Form response
+        if request.method=="POST":
 
-            if Branch.delete_thoughts(id):
-                messages.success(request,"Thoughts deleted successfully!")
-            else:
-                messages.error(request,"Error Occured. Please try again later!")
-            return redirect('central_branch:manage_website_home')
-
-    '''For Volunteer Recognition'''
-    # get all insb members
-    get_all_insb_members=Members.objects.all()
-    if(request.method=="POST"):
-        volunteer_of_the_month_form=VolunteerOftheMonthForm(request.POST)
-        if(request.POST.get('add_volunteer_of_month')):
-            ieee_id=request.POST.get('member_select1')
-            if(volunteer_of_the_month_form.is_valid()):
-                new_volunteer_of_the_month=VolunteerOfTheMonth.objects.create(
-                    ieee_id=Members.objects.get(ieee_id=ieee_id)
-                )
-                new_volunteer_of_the_month.contributions=request.POST['contributions']
-                new_volunteer_of_the_month.save()
-                messages.success(request,"A new Volunteer of the month was added!")
+            # To delete an item
+            if request.POST.get('delete'):
+                # Delelte the item. Getting the id of the item from the hidden input value.
+                HomePageTopBanner.objects.filter(id=request.POST.get('get_item')).delete()
                 return redirect('central_branch:manage_website_home')
-        if(request.POST.get('delete_volunteer_of_month')):
-            volunteer_to_delete=VolunteerOfTheMonth.objects.get(ieee_id=request.POST['get_volunteer'])
-            volunteer_to_delete.delete()
-            messages.warning(request,'Member has been removed from the list of Volunteers of the Month')
-            return redirect('central_branch:manage_website_home')
+            # To add a new Banner Item
+            if request.POST.get('add_banner'):
+                try:
+                    newBanner=HomePageTopBanner.objects.create(
+                        banner_picture=request.FILES['banner_picture'],
+                        first_layer_text=request.POST['first_layer_text'],
+                        first_layer_text_colored=request.POST['first_layer_text_colored'],
+                        third_layer_text=request.POST['third_layer_text'],
+                        button_text=request.POST['button_text'],
+                        button_url=request.POST['button_url']
+                    )
+                    newBanner.save()
+                    messages.success(request,"New Banner Picture added in Homepage successfully!")
+                    return redirect('central_branch:manage_website_home')
+                except:
+                    print("GG")
 
+
+        '''For banner picture with Texts'''   
+        from main_website.models import BannerPictureWithStat
+
+        existing_banner_picture_with_numbers=BannerPictureWithStat.objects.all()
+        if request.method=="POST":
+            if request.POST.get('update_banner'):
+                # first get all the objects and get the image file path. Delete the files from the system and then delete the object, then get the new image and create a new object.
+                try:
+                    banner_image=request.FILES['banner_picture_with_stat']
+                    
+                    # Now get previous instances of Banner Picture with stat
+                    for i in BannerPictureWithStat.objects.all():
+                        image_instance=settings.MEDIA_ROOT+str(i.image)
+                        if(os.path.isfile(image_instance)):
+                            # Delete the image now:
+                            os.remove(image_instance)
+                            # Now delete the object:
+                            i.delete()
+                    
+                    newBannerPictureWithStat=BannerPictureWithStat.objects.create(image=banner_image)
+                    newBannerPictureWithStat.save()
+                    messages.success(request,"Banner Picture With Statistics was successfully updated")
+                    return redirect('central_branch:manage_website_home')    
+                except Exception as e:
+                    messages.error(request,"Something went wrong! Please try again.")
+                    return redirect('central_branch:manage_website_home')  
+
+        '''For Homepage Thoughts'''
+        all_thoughts = Branch.get_all_homepage_thoughts()
+
+        if request.method == "POST":
+            #when user hits save
+            if request.POST.get('save'):
+
+                author_name = request.POST.get('author')
+                thoughts = request.POST.get('your_thoughts')
+
+                #passing them in function to save
+                if Branch.save_homepage_thoughts(author_name,thoughts):
+                    messages.success(request,"Thoughts added successfully!")
+                else:
+                    messages.error(request,"Error Occured. Please try again later!")
+                return redirect('central_branch:manage_website_home')
+            
+            #when user edits saved thoughts
+            if request.POST.get('update'):
+
+                author_edit = request.POST.get('author_edit')
+                thoughts_edit = request.POST.get('your_thoughts_edit')
+                thoughts_id = request.POST.get('thought_id')
+                #passing them to function to update changes made
+                if Branch.update_saved_thoughts(author_edit,thoughts_edit,thoughts_id):
+                    messages.success(request,"Thoughts updated successfully!")
+                else:
+                    messages.error(request,"Error Occured. Please try again later!")
+                return redirect('central_branch:manage_website_home')
+            
+            #when user wants to delete a thought
+            if request.POST.get('thought_delete'):
+                
+                id = request.POST.get('delete_thought')
+
+                if Branch.delete_thoughts(id):
+                    messages.success(request,"Thoughts deleted successfully!")
+                else:
+                    messages.error(request,"Error Occured. Please try again later!")
+                return redirect('central_branch:manage_website_home')
+
+        '''For Volunteer Recognition'''
+        # get all insb members
+        get_all_insb_members=Members.objects.all()
+        if(request.method=="POST"):
+            volunteer_of_the_month_form=VolunteerOftheMonthForm(request.POST)
+            if(request.POST.get('add_volunteer_of_month')):
+                ieee_id=request.POST.get('member_select1')
+                if(volunteer_of_the_month_form.is_valid()):
+                    new_volunteer_of_the_month=VolunteerOfTheMonth.objects.create(
+                        ieee_id=Members.objects.get(ieee_id=ieee_id)
+                    )
+                    new_volunteer_of_the_month.contributions=request.POST['contributions']
+                    new_volunteer_of_the_month.save()
+                    messages.success(request,"A new Volunteer of the month was added!")
+                    return redirect('central_branch:manage_website_home')
+            if(request.POST.get('delete_volunteer_of_month')):
+                volunteer_to_delete=VolunteerOfTheMonth.objects.get(ieee_id=request.POST['get_volunteer'])
+                volunteer_to_delete.delete()
+                messages.warning(request,'Member has been removed from the list of Volunteers of the Month')
+                return redirect('central_branch:manage_website_home')
+
+        else:
+            volunteer_of_the_month_form=VolunteerOftheMonthForm
+        
+        # getall volunteers of the month
+        volunteers_of_the_month=VolunteerOfTheMonth.objects.all().order_by('-pk')
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'user_data':user_data,
+            'topBannerItems':topBannerItems,
+            'bannerPictureWithNumbers':existing_banner_picture_with_numbers,
+            'media_url':settings.MEDIA_URL,
+            'all_thoughts':all_thoughts,
+            'insb_members':get_all_insb_members,
+            'volunteer_of_the_month_form':volunteer_of_the_month_form,
+            'all_volunteer_of_month':volunteers_of_the_month,
+        }
+        return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
     else:
-        volunteer_of_the_month_form=VolunteerOftheMonthForm
-    
-    # getall volunteers of the month
-    volunteers_of_the_month=VolunteerOfTheMonth.objects.all().order_by('-pk')
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'user_data':user_data,
-        'topBannerItems':topBannerItems,
-        'bannerPictureWithNumbers':existing_banner_picture_with_numbers,
-        'media_url':settings.MEDIA_URL,
-        'all_thoughts':all_thoughts,
-        'insb_members':get_all_insb_members,
-        'volunteer_of_the_month_form':volunteer_of_the_month_form,
-        'all_volunteer_of_month':volunteers_of_the_month,
-    }
-    return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def update_volunteer_of_month(request,pk):
-    volunteer_to_be_updated=VolunteerOfTheMonth.objects.get(pk=pk)
-    if(request.method=="POST"):
-        volunteer_update_form=VolunteerOftheMonthForm(request.POST,instance=volunteer_to_be_updated)
-        if(request.POST.get('update_vom')):
-            if(volunteer_update_form.is_valid()):
-                volunteer_update_form.save()
-                messages.success(request,"Volunteer Information was updated!")
-                return redirect('central_branch:manage_website_home')
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        volunteer_to_be_updated=VolunteerOfTheMonth.objects.get(pk=pk)
+        if(request.method=="POST"):
+            volunteer_update_form=VolunteerOftheMonthForm(request.POST,instance=volunteer_to_be_updated)
+            if(request.POST.get('update_vom')):
+                if(volunteer_update_form.is_valid()):
+                    volunteer_update_form.save()
+                    messages.success(request,"Volunteer Information was updated!")
+                    return redirect('central_branch:manage_website_home')
+        else:
+            volunteer_update_form=VolunteerOftheMonthForm(instance=volunteer_to_be_updated)
+        
+        context={
+            'volunteer':volunteer_to_be_updated,
+            'form':volunteer_update_form
+        }
+        return render(request,'Manage Website/Homepage/update_volunteer_of_the_month.html',context)
     else:
-        volunteer_update_form=VolunteerOftheMonthForm(instance=volunteer_to_be_updated)
-    
-    context={
-        'volunteer':volunteer_to_be_updated,
-        'form':volunteer_update_form
-    }
-    return render(request,'Manage Website/Homepage/update_volunteer_of_the_month.html',context)
+        return render(request,'access_denied2.html')
 
 
 @login_required
@@ -1625,116 +1671,136 @@ def manage_achievements(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    # load the achievement form
-    form=AchievementForm
-    # load all SC AG And Branch
-    load_award_of=Chapters_Society_and_Affinity_Groups.objects.all().order_by('primary')
     
-    # load all achievements
-    all_achievements=MainWebsiteRenderData.get_all_achievements(request=request)
-    
-    if(request.method=="POST"):
-        if(request.POST.get('add_achievement')):
-            # add award
-            if(MainWebsiteRenderData.add_awards(request=request)):
-                return redirect('central_branch:manage_achievements')
-            else:
-                return redirect('central_branch:manage_achievements')
-        if(request.POST.get('remove_achievement')):
-            if(MainWebsiteRenderData.delete_achievement(request=request)):
-                return redirect('central_branch:manage_achievements')
-            else:
-                return redirect('central_branch:manage_achievements')
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # load the achievement form
+        form=AchievementForm
+        # load all SC AG And Branch
+        load_award_of=Chapters_Society_and_Affinity_Groups.objects.all().order_by('primary')
+        
+        # load all achievements
+        all_achievements=MainWebsiteRenderData.get_all_achievements(request=request)
+        
+        if(request.method=="POST"):
+            if(request.POST.get('add_achievement')):
+                # add award
+                if(MainWebsiteRenderData.add_awards(request=request)):
+                    return redirect('central_branch:manage_achievements')
+                else:
+                    return redirect('central_branch:manage_achievements')
+            if(request.POST.get('remove_achievement')):
+                if(MainWebsiteRenderData.delete_achievement(request=request)):
+                    return redirect('central_branch:manage_achievements')
+                else:
+                    return redirect('central_branch:manage_achievements')
 
-    context={
-        'all_sc_ag':sc_ag,
-        'form':form,
-        'load_all_sc_ag':load_award_of,
-        'all_achievements':all_achievements,
-        'user_data':user_data,
-    }
-    return render(request,'Manage Website/Activities/manage_achievements.html',context=context)
+        context={
+            'all_sc_ag':sc_ag,
+            'form':form,
+            'load_all_sc_ag':load_award_of,
+            'all_achievements':all_achievements,
+            'user_data':user_data,
+        }
+        return render(request,'Manage Website/Activities/manage_achievements.html',context=context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def update_achievements(request,pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    # get the achievement and form
-    achievement_to_update=get_object_or_404(Achievements,pk=pk)
-    if(request.method=="POST"):
-        if(request.POST.get('update_achievement')):
-            form=AchievementForm(request.POST,request.FILES,instance=achievement_to_update)
-            if(form.is_valid()):
-                form.save()
-                messages.info(request,"Achievement Informations were updates")
-                return redirect('central_branch:manage_achievements')
-    else:
-        form=AchievementForm(instance=achievement_to_update)
     
-    context={
-        'all_sc_ag':sc_ag,
-        'form':form,
-        'achievement':achievement_to_update,
-        'user_data':user_data,
-    }
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # get the achievement and form
+        achievement_to_update=get_object_or_404(Achievements,pk=pk)
+        if(request.method=="POST"):
+            if(request.POST.get('update_achievement')):
+                form=AchievementForm(request.POST,request.FILES,instance=achievement_to_update)
+                if(form.is_valid()):
+                    form.save()
+                    messages.info(request,"Achievement Informations were updates")
+                    return redirect('central_branch:manage_achievements')
+        else:
+            form=AchievementForm(instance=achievement_to_update)
+        
+        context={
+            'all_sc_ag':sc_ag,
+            'form':form,
+            'achievement':achievement_to_update,
+            'user_data':user_data,
+        }
 
-    return render(request,"Manage Website/Activities/achievements_update_section.html",context=context)
+        return render(request,"Manage Website/Activities/achievements_update_section.html",context=context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def manage_news(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    form=NewsForm
-    get_all_news=News.objects.all().order_by('-news_date')
     
-    if(request.method=="POST"):
-        if(request.POST.get('add_news')):
-            form=NewsForm(request.POST,request.FILES)
-            if(form.is_valid()):
-                form.save()
-                messages.success(request,"A new News was added to the main page")
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        form=NewsForm
+        get_all_news=News.objects.all().order_by('-news_date')
+        
+        if(request.method=="POST"):
+            if(request.POST.get('add_news')):
+                form=NewsForm(request.POST,request.FILES)
+                if(form.is_valid()):
+                    form.save()
+                    messages.success(request,"A new News was added to the main page")
+                    return redirect('central_branch:manage_news')
+            if(request.POST.get('remove_news')):
+                news_to_delete=request.POST['remove_news']
+                news_obj=News.objects.get(pk=news_to_delete)
+                if(os.path.isfile(news_obj.news_picture.path)):
+                    os.remove(news_obj.news_picture.path)
+                news_obj.delete()
+                messages.info(request,"A news item was deleted!")
                 return redirect('central_branch:manage_news')
-        if(request.POST.get('remove_news')):
-            news_to_delete=request.POST['remove_news']
-            news_obj=News.objects.get(pk=news_to_delete)
-            if(os.path.isfile(news_obj.news_picture.path)):
-                os.remove(news_obj.news_picture.path)
-            news_obj.delete()
-            messages.info(request,"A news item was deleted!")
-            return redirect('central_branch:manage_news')
-    
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'form':form,
-        'all_news':get_all_news
-    }
-    return render(request,"Manage Website/Activities/manage_news.html",context=context)
+        
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'form':form,
+            'all_news':get_all_news
+        }
+        return render(request,"Manage Website/Activities/manage_news.html",context=context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def update_news(request,pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    # get the news instance to update
-    news_to_update = get_object_or_404(News, pk=pk)
-    if request.method == "POST":
-        form = NewsForm(request.POST, request.FILES, instance=news_to_update)
-        if form.is_valid():
-            form.save()
-            messages.info(request,"News Informations were updates")
-            return redirect('central_branch:manage_news')
+    
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # get the news instance to update
+        news_to_update = get_object_or_404(News, pk=pk)
+        if request.method == "POST":
+            form = NewsForm(request.POST, request.FILES, instance=news_to_update)
+            if form.is_valid():
+                form.save()
+                messages.info(request,"News Informations were updates")
+                return redirect('central_branch:manage_news')
+        else:
+            form = NewsForm(instance=news_to_update)
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'form':form,
+            'news':news_to_update,
+        }
+        return render(request,'Manage Website/Activities/news_update_section.html',context=context)
     else:
-        form = NewsForm(instance=news_to_update)
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'form':form,
-        'news':news_to_update,
-    }
-    return render(request,'Manage Website/Activities/news_update_section.html',context=context)
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 
 @login_required
@@ -1742,37 +1808,41 @@ def manage_magazines(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    # get form
-    magazine_form = MagazineForm
     
-    # get all magazines
-    all_magazines=Magazines.objects.all().order_by('-publish_date')
-    if(request.method=="POST"):
-        magazine_form=MagazineForm(request.POST,request.FILES)
-        if(request.POST.get('add_magazine')):
-            if (magazine_form.is_valid()):
-                magazine_form.save()
-                messages.success(request,"New Magazine Added Successfully")
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # get form
+        magazine_form = MagazineForm  
+        # get all magazines
+        all_magazines=Magazines.objects.all().order_by('-publish_date')
+        if(request.method=="POST"):
+            magazine_form=MagazineForm(request.POST,request.FILES)
+            if(request.POST.get('add_magazine')):
+                if (magazine_form.is_valid()):
+                    magazine_form.save()
+                    messages.success(request,"New Magazine Added Successfully")
+                    return redirect('central_branch:manage_magazines')
+            if(request.POST.get('remove_magazine')):
+                magazine_to_delete=request.POST['magazine_pk']
+                get_magazine=Magazines.objects.get(pk=magazine_to_delete)
+                if(os.path.isfile(get_magazine.magazine_picture.path)):
+                    os.remove(get_magazine.magazine_picture.path)
+                if(os.path.isfile(get_magazine.magazine_file.path)):
+                    os.remove(get_magazine.magazine_file.path)
+                get_magazine.delete()
+                messages.warning(request,"One Item Deleted from Magazines")
                 return redirect('central_branch:manage_magazines')
-        if(request.POST.get('remove_magazine')):
-            magazine_to_delete=request.POST['magazine_pk']
-            get_magazine=Magazines.objects.get(pk=magazine_to_delete)
-            if(os.path.isfile(get_magazine.magazine_picture.path)):
-                os.remove(get_magazine.magazine_picture.path)
-            if(os.path.isfile(get_magazine.magazine_file.path)):
-                os.remove(get_magazine.magazine_file.path)
-            get_magazine.delete()
-            messages.warning(request,"One Item Deleted from Magazines")
-            return redirect('central_branch:manage_magazines')
-            
-                    
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'magazine_form':magazine_form,
-        'all_magazines':all_magazines,
-    }
-    return render(request,'Manage Website/Publications/Magazine/manage_magazine.html',context=context)
+                
+                        
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'magazine_form':magazine_form,
+            'all_magazines':all_magazines,
+        }
+        return render(request,'Manage Website/Publications/Magazine/manage_magazine.html',context=context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 
 @login_required
@@ -1805,154 +1875,178 @@ def manage_gallery(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    # get all images of gallery
-    all_images = GalleryImages.objects.all().order_by('-pk')
-    all_videos=GalleryVideos.objects.all().order_by('-pk')
     
-    if(request.method=="POST"):
-        image_form=GalleryImageForm(request.POST,request.FILES)
-        video_form=GalleryVideoForm(request.POST)
-        if(request.POST.get('add_image')):
-            if(image_form.is_valid()):
-                image_form.save()
-                messages.success(request,"New Image added Successfully!")
-                return redirect('central_branch:manage_gallery')
-        if(request.POST.get('remove_image')):
-            image_to_delete=GalleryImages.objects.get(pk=request.POST['image_pk'])
-            # first delete the image from filesystem
-            if(os.path.isfile(image_to_delete.image.path)):
-                os.remove(image_to_delete.image.path)
-            image_to_delete.delete()
-            messages.warning(request,"An Image from the Gallery was deleted!")
-            return redirect('central_branch:manage_gallery')
-
-        if(request.POST.get('add_video')):
-            if(video_form.is_valid()):
-                video_form.save()
-                messages.success(request,"New Video added Successfully")
-                return redirect('central_branch:manage_gallery')
-        if(request.POST.get('remove_video')):
-            video_to_delete=GalleryVideos.objects.get(pk=request.POST['video_pk'])
-            video_to_delete.delete()
-            messages.success(request,"A Video from the Gallery was deleted!")
-            return redirect('central_branch:manage_gallery')
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # get all images of gallery
+        all_images = GalleryImages.objects.all().order_by('-pk')
+        all_videos=GalleryVideos.objects.all().order_by('-pk')
         
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'image_form':GalleryImageForm,
-        'video_form':GalleryVideoForm,
-        'all_images':all_images,
-        'all_videos':all_videos,
-    }
-    
-    return render(request,'Manage Website/Publications/Gallery/manage_gallery.html',context=context)
+        if(request.method=="POST"):
+            image_form=GalleryImageForm(request.POST,request.FILES)
+            video_form=GalleryVideoForm(request.POST)
+            if(request.POST.get('add_image')):
+                if(image_form.is_valid()):
+                    image_form.save()
+                    messages.success(request,"New Image added Successfully!")
+                    return redirect('central_branch:manage_gallery')
+            if(request.POST.get('remove_image')):
+                image_to_delete=GalleryImages.objects.get(pk=request.POST['image_pk'])
+                # first delete the image from filesystem
+                if(os.path.isfile(image_to_delete.image.path)):
+                    os.remove(image_to_delete.image.path)
+                image_to_delete.delete()
+                messages.warning(request,"An Image from the Gallery was deleted!")
+                return redirect('central_branch:manage_gallery')
+
+            if(request.POST.get('add_video')):
+                if(video_form.is_valid()):
+                    video_form.save()
+                    messages.success(request,"New Video added Successfully")
+                    return redirect('central_branch:manage_gallery')
+            if(request.POST.get('remove_video')):
+                video_to_delete=GalleryVideos.objects.get(pk=request.POST['video_pk'])
+                video_to_delete.delete()
+                messages.success(request,"A Video from the Gallery was deleted!")
+                return redirect('central_branch:manage_gallery')
+            
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'image_form':GalleryImageForm,
+            'video_form':GalleryVideoForm,
+            'all_images':all_images,
+            'all_videos':all_videos,
+        }
+        
+        return render(request,'Manage Website/Publications/Gallery/manage_gallery.html',context=context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def update_images(request,pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-     # get the magazine to update
-    image_to_update=get_object_or_404(GalleryImages,pk=pk)
     
-    if request.method == "POST":
-        if(request.POST.get('update_image')):
-            update_form = GalleryImageForm(request.POST, request.FILES, instance=image_to_update)
-            if update_form.is_valid():
-                update_form.save()
-                messages.info(request,"Image was updated")
-                return redirect('central_branch:manage_gallery')
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # get the magazine to update
+        image_to_update=get_object_or_404(GalleryImages,pk=pk)
+        
+        if request.method == "POST":
+            if(request.POST.get('update_image')):
+                update_form = GalleryImageForm(request.POST, request.FILES, instance=image_to_update)
+                if update_form.is_valid():
+                    update_form.save()
+                    messages.info(request,"Image was updated")
+                    return redirect('central_branch:manage_gallery')
+        else:
+            update_form = GalleryImageForm(instance=image_to_update)
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'update_form':update_form,
+            'image':image_to_update,
+        }
+        return render(request,"Manage Website/Publications/Gallery/update_images.html",context=context)
     else:
-        update_form = GalleryImageForm(instance=image_to_update)
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'update_form':update_form,
-        'image':image_to_update,
-    }
-    return render(request,"Manage Website/Publications/Gallery/update_images.html",context=context)
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def update_videos(request,pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-     # get the magazine to update
-    video_to_update=get_object_or_404(GalleryVideos,pk=pk)
     
-    if request.method == "POST":
-        if(request.POST.get('update_video')):
-            update_form = GalleryVideoForm(request.POST, instance=video_to_update)
-            if update_form.is_valid():
-                update_form.save()
-                messages.info(request,"Video was updated")
-                return redirect('central_branch:manage_gallery')
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # get the magazine to update
+        video_to_update=get_object_or_404(GalleryVideos,pk=pk)
+        
+        if request.method == "POST":
+            if(request.POST.get('update_video')):
+                update_form = GalleryVideoForm(request.POST, instance=video_to_update)
+                if update_form.is_valid():
+                    update_form.save()
+                    messages.info(request,"Video was updated")
+                    return redirect('central_branch:manage_gallery')
+        else:
+            update_form = GalleryVideoForm(instance=video_to_update)
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'update_form':update_form,
+            'video':video_to_update,
+        }
+        return render(request,"Manage Website/Publications/Gallery/update_videos.html",context=context)
     else:
-        update_form = GalleryVideoForm(instance=video_to_update)
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'update_form':update_form,
-        'video':video_to_update,
-    }
-    return render(request,"Manage Website/Publications/Gallery/update_videos.html",context=context)
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def manage_exemplary_members(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    # get all exemplary members
-    exemplary_members = ExemplaryMembers.objects.all().order_by('rank')
     
-    if(request.method=="POST"):
-        exemplary_member_form=ExemplaryMembersForm(request.POST,request.FILES)
-        if(request.POST.get('add_member')):
-            if(exemplary_member_form.is_valid()):
-                exemplary_member_form.save()
-                messages.success(request,f"{request.POST['member_name']} was added to Exemplary Members")
-                return redirect('central_branch:manage_exemplary_members')
-        if(request.POST.get('remove_member')):
-            member_to_delete=ExemplaryMembers.objects.get(pk=request.POST['remove_member_pk'])
-            # delete image of the member
-            if(os.path.isfile(member_to_delete.member_picture.path)):
-                os.remove(member_to_delete.member_picture.path)
-            messages.warning(request,f"Member {member_to_delete.member_name} was deleted!")
-            member_to_delete.delete()
-            return redirect('central_branch:manage_exemplary_members')
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # get all exemplary members
+        exemplary_members = ExemplaryMembers.objects.all().order_by('rank')
         
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'all_exemplary_members':exemplary_members,
-        'exemplary_member_form':ExemplaryMembersForm,
-    }
-    return render(request,"Manage Website/Exemplary Members/exemplary_member.html",context=context)
+        if(request.method=="POST"):
+            exemplary_member_form=ExemplaryMembersForm(request.POST,request.FILES)
+            if(request.POST.get('add_member')):
+                if(exemplary_member_form.is_valid()):
+                    exemplary_member_form.save()
+                    messages.success(request,f"{request.POST['member_name']} was added to Exemplary Members")
+                    return redirect('central_branch:manage_exemplary_members')
+            if(request.POST.get('remove_member')):
+                member_to_delete=ExemplaryMembers.objects.get(pk=request.POST['remove_member_pk'])
+                # delete image of the member
+                if(os.path.isfile(member_to_delete.member_picture.path)):
+                    os.remove(member_to_delete.member_picture.path)
+                messages.warning(request,f"Member {member_to_delete.member_name} was deleted!")
+                member_to_delete.delete()
+                return redirect('central_branch:manage_exemplary_members')
+            
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'all_exemplary_members':exemplary_members,
+            'exemplary_member_form':ExemplaryMembersForm,
+        }
+        return render(request,"Manage Website/Exemplary Members/exemplary_member.html",context=context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def update_exemplary_members(request,pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    # get memeber to update
-    member_to_update=ExemplaryMembers.objects.get(pk=pk)
-    if request.method=='POST':
-        if(request.POST.get('update_member')):
-            member_form=ExemplaryMembersForm(request.POST,request.FILES,instance=member_to_update)
-            if(member_form.is_valid()):
-                member_form.save()
-                messages.info(request,f"Information for {member_to_update.member_name} was updated!")
-                return redirect('central_branch:manage_exemplary_members')
-    else:
-        member_form=ExemplaryMembersForm(instance=member_to_update)
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'exemplary_member':member_to_update,
-        'member_form':member_form
-    }
-    return render(request,"Manage Website/Exemplary Members/update_exemplary_member.html",context=context)
+    
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # get memeber to update
+        member_to_update=ExemplaryMembers.objects.get(pk=pk)
+        if request.method=='POST':
+            if(request.POST.get('update_member')):
+                member_form=ExemplaryMembersForm(request.POST,request.FILES,instance=member_to_update)
+                if(member_form.is_valid()):
+                    member_form.save()
+                    messages.info(request,f"Information for {member_to_update.member_name} was updated!")
+                    return redirect('central_branch:manage_exemplary_members')
+        else:
+            member_form=ExemplaryMembersForm(instance=member_to_update)
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'exemplary_member':member_to_update,
+            'member_form':member_form
+        }
+        return render(request,"Manage Website/Exemplary Members/update_exemplary_member.html",context=context)
+    return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def manage_view_access(request):
@@ -2150,6 +2244,7 @@ def event_creation_form_page(request):
                     super_event_id=request.POST.get('super_event')
                     event_type_list = request.POST.getlist('event_type')
                     event_date=request.POST['event_date']
+                    event_time=request.POST['event_time']
 
                     #It will return True if register event page 1 is success
                     get_event=Branch.register_event_page1(
@@ -2157,7 +2252,8 @@ def event_creation_form_page(request):
                         event_name=event_name,
                         event_type_list=event_type_list,
                         event_description=event_description,
-                        event_date=event_date
+                        event_date=event_date,
+                        event_time=event_time
                     )
                     
                     if(get_event)==False:
@@ -2352,6 +2448,7 @@ def event_edit_form(request, event_id):
                     super_event_id=request.POST.get('super_event')
                     event_type_list = request.POST.getlist('event_type')
                     event_date=request.POST['event_date']
+                    event_time=request.POST['event_time']
                     inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
                     intra_branch_collaboration=request.POST['intra_branch_collaboration']
                     venue_list_for_event=request.POST.getlist('event_venues')
@@ -2369,7 +2466,7 @@ def event_edit_form(request, event_id):
                     else:
                         registration_fee_amount=0
                     #Check if the update request is successful
-                    if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
+                    if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, event_time=event_time, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
                                                             flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,form_link = form_link,is_featured_event= is_featured)):
                         messages.success(request,f"EVENT: {event_name} was Updated successfully")
                         return redirect('central_branch:event_edit_form', event_id) 
@@ -2748,56 +2845,65 @@ def manage_toolkit(request):
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     
-    # get all toolkits
-    all_toolkits=Toolkit.objects.all().order_by('pk')
-    if(request.method=="POST"):
-        toolkit_form=ToolkitForm(request.POST,request.FILES)
-        if(request.POST.get('add_item')):
-            if(toolkit_form.is_valid()):
-                toolkit_form.save()
-                messages.success(request,"A new Toolkit Item was added!")
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # get all toolkits
+        all_toolkits=Toolkit.objects.all().order_by('-pk')
+        if(request.method=="POST"):
+            toolkit_form=ToolkitForm(request.POST,request.FILES)
+            if(request.POST.get('add_item')):
+                if(toolkit_form.is_valid()):
+                    toolkit_form.save()
+                    messages.success(request,"A new Toolkit Item was added!")
+                    return redirect('central_branch:manage_toolkit')
+            if(request.POST.get('remove_toolkit')):
+                item_to_delete=Toolkit.objects.get(pk=request.POST['toolkit_pk'])
+                # first delete the picture from the filesystem
+                if(os.path.isfile(item_to_delete.picture.path)):
+                    os.remove(item_to_delete.picture.path)
+                item_to_delete.delete()
+                messages.warning(request,"A Toolkit Item was deleted!")
                 return redirect('central_branch:manage_toolkit')
-        if(request.POST.get('remove_toolkit')):
-            item_to_delete=Toolkit.objects.get(pk=request.POST['toolkit_pk'])
-            # first delete the picture from the filesystem
-            if(os.path.isfile(item_to_delete.picture.path)):
-                os.remove(item_to_delete.picture.path)
-            item_to_delete.delete()
-            messages.warning(request,"A Toolkit Item was deleted!")
-            return redirect('central_branch:manage_toolkit')
+        else:
+            toolkit_form=ToolkitForm
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'all_toolkits':all_toolkits,
+            'form':toolkit_form,
+        }
+        return render(request,"Manage Website/Publications/Toolkit/manage_toolkit.html",context=context)
     else:
-        toolkit_form=ToolkitForm
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'all_toolkits':all_toolkits,
-        'form':toolkit_form,
-    }
-    return render(request,"Manage Website/Publications/Toolkit/manage_toolkit.html",context=context)
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def update_toolkit(request,pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    # toolkit to update
-    toolkit_to_update=get_object_or_404(Toolkit,pk=pk)
-    if(request.method=="POST"):
-        toolkit_form=ToolkitForm(request.POST,request.FILES,instance=toolkit_to_update)
-        if(request.POST.get('update_toolkit_item')):
-            if(toolkit_form.is_valid()):
-                toolkit_form.save()
-                messages.success(request,"Toolkit Item was updated!")
-                return redirect('central_branch:manage_toolkit')
+    
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        # toolkit to update
+        toolkit_to_update=get_object_or_404(Toolkit,pk=pk)
+        if(request.method=="POST"):
+            toolkit_form=ToolkitForm(request.POST,request.FILES,instance=toolkit_to_update)
+            if(request.POST.get('update_toolkit_item')):
+                if(toolkit_form.is_valid()):
+                    toolkit_form.save()
+                    messages.success(request,"Toolkit Item was updated!")
+                    return redirect('central_branch:manage_toolkit')
+        else:
+            toolkit_form=ToolkitForm(instance=toolkit_to_update)
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'toolkit':toolkit_to_update,
+            'form':toolkit_form,
+        }
+        return render(request,"Manage Website/Publications/Toolkit/update_toolkit.html",context=context)
     else:
-        toolkit_form=ToolkitForm(instance=toolkit_to_update)
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'toolkit':toolkit_to_update,
-        'form':toolkit_form,
-    }
-    return render(request,"Manage Website/Publications/Toolkit/update_toolkit.html",context=context)
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def feedbacks(request):
@@ -2810,12 +2916,11 @@ def feedbacks(request):
         user_data=current_user.getUserData() #getting user data as dictionary file
         #rendering all the data to be loaded on the page
         sc_ag=PortData.get_all_sc_ag(request=request)
-        #getting all the feedbacks for INSB
-        all_feedbacks = Sc_Ag.get_all_feedbacks(request,1)
-        # has_access = Branch.event_page_access(request)
-        
-        if(True):
+        has_access = Branch_View_Access.get_manage_web_access(request)
 
+        if(has_access):
+            #getting all the feedbacks for INSB
+            all_feedbacks = Sc_Ag.get_all_feedbacks(request,1)
             if request.method=="POST":
                 #when user hits submit button to changes status of responded fields
                 if request.POST.get('reponded'):
@@ -3047,7 +3152,7 @@ def member_details(request,ieee_id):
                 member_to_delete=Members.objects.get(ieee_id=ieee_id)
                 messages.error(request,f"{member_to_delete.ieee_id} was deleted from the INSB Registered Members Database.")
                 member_to_delete.delete()
-                return redirect('membership_development_team:members_list')
+                return redirect('central_branch:members_list')
                 
                 
         if(has_access):
@@ -3060,6 +3165,8 @@ def member_details(request,ieee_id):
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
 
-# @login_required
-# def volunteer_recognition(request):
-#     return render(request,"Manage Website\Homepage\Volunteer Recognition\recognition_table.html")
+def custom_404(request,exception):
+    return render(request,'404.html',status=404)
+
+def custom_500(request,exception):
+    return render(request,'500.html',status=500)

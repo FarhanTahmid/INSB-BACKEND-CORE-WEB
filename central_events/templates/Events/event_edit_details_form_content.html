@@ -120,15 +120,14 @@
                 </div>
                 <br>  
                 <div class="form-group">
-                    <label>Event Time: <span style="color:red">*<span></label> 
+                    <label>Event Time: </label> 
                     <input
                         placeholder="Event Time"
                         class="form-control"
                         type="text"
                         autocomplete="off"
-                        required
                         name="event_time"
-                        value="{{event_details.event_name}}" 
+                        value="{{event_details.event_time|default:""}}" 
                     />
                         
                 </div>

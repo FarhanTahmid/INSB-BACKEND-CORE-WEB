@@ -1,8 +1,9 @@
-// Dummy events data for demonstration, this is the calendar event load function
+// Dummy events data for demonstration
 const eventsData = {
-    '2023-09-10': ['Event 1', 'Event 2'],
+    '2023-07-27': ['Event 1', 'Event 2'],
     '2023-07-23': ['Event 3'],
-    '2023-07-20': ['Spac event'],
+    '2023-07-15': ['hello event'],
+    '2023-12-18' : ['test']
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -35,20 +36,37 @@ document.addEventListener('DOMContentLoaded', () => {
             const day = daysInPrevMonth - i + 1;
             const dayElement = createDayElement(new Date(date.getFullYear(), date.getMonth() - 1, day));
             dayElement.classList.add('prev-month');
+            
             daysContainer.appendChild(dayElement);
+            
+
         }
 
         // Display current month days
         for (let i = 1; i <= daysInMonth; i++) {
             const dayElement = createDayElement(new Date(date.getFullYear(), date.getMonth(), i));
             if (eventsData.hasOwnProperty(getFormattedDate(dayElement.date))) {
-                const eventMark = document.createElement('div');
-                eventMark.classList.add('event-mark');
-                dayElement.appendChild(eventMark);
+                
+                eventsData[getFormattedDate(dayElement.date)].forEach(()=> {
+                    const eventMark = document.createElement('div');
+                    eventMark.classList.add('event-mark');
+                    eventMark.style.width = '6px';
+                    eventMark.style.height = '6px';
+                    eventMark.style.borderRadius = '50%';
+                    eventMark.style.backgroundColor = 'red';
+                    eventMark.style.margin = '2px 1px';
+                    eventMark.style.position = 'static';
+                    dayElement.appendChild(eventMark);
+                    
+                })
+               
+                
+                
             }
+           
             daysContainer.appendChild(dayElement);
         }
-
+        
         // Display next month days
         for (let i = 1; i <= nextMonthDays; i++) {
             const dayElement = createDayElement(new Date(date.getFullYear(), date.getMonth() + 1, i));
@@ -62,14 +80,17 @@ document.addEventListener('DOMContentLoaded', () => {
     function createDayElement(date) {
         const dayElement = document.createElement('div');
         dayElement.classList.add('day');
+     
         dayElement.textContent = date.getDate();
         dayElement.date = date;
-        dayElement.addEventListener('click', () => showEventsForDate((date)));
+        dayElement.addEventListener('click', () => showEventsForDate(date));
         return dayElement;
     }
 
     function showEventsForDate(date) {
+        // console.log(data)
         const formattedDate = getFormattedDate(date);
+        console.log(formattedDate)
         selectedDateText.textContent = formattedDate;
         const eventsForDate = eventsData[formattedDate] || [];
         eventsList.innerHTML = '';
@@ -88,7 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getFormattedDate(date) {
-        return date.toISOString().split('T')[0];
+        
+        return date.toISOString('en-US').split('T')[0];
+        // return date.toLocaleDateString('en-US');
     }
 
     document.querySelector('.prev-btn').addEventListener('click', () => {
@@ -101,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCalendar(currentDate);
     });
 });
+
 
 function eventFilterFunction() {
     var input, filter, box, eventName, i, txtValue;

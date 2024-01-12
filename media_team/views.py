@@ -31,23 +31,16 @@ def team_homepage(request):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    #Loading data of the co-ordinators, co ordinator id is 9,
-    co_ordinators=MediaTeam.get_co_ordinator()
-    #Loading data of the incharges, incharge id is 10
-    in_charges=MediaTeam.get_officer()
-    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-    user_data=current_user.getUserData() #getting user data as dictionary file
     # get media volunteers
-    volunteers=MediaTeam.get_volunteers()
+    get_team_members=MediaTeam.get_team_members_with_positions()
     context={
         'user_data':user_data,
         'all_sc_ag':sc_ag,
-        'co_ordinators':co_ordinators,
-        'incharges':in_charges,
+        'co_ordinators':get_team_members[0],
+        'incharges':get_team_members[1],
         'media_url':settings.MEDIA_URL,
-        'user_data':user_data,
-        'core_volunteers':volunteers[0],
-        'team_volunteers':volunteers[1],
+        'core_volunteers':get_team_members[2],
+        'team_volunteers':get_team_members[3],
     }
 
     
@@ -55,6 +48,7 @@ def team_homepage(request):
 
 @login_required
 def manage_team(request):
+    
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
 
