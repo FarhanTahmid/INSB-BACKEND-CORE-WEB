@@ -374,7 +374,7 @@ class Branch:
                     pass
 
     def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_date, event_time, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
-                             flagship_event,registration_fee,registration_fee_amount,form_link,is_featured_event):
+                             flagship_event,registration_fee,registration_fee_amount,more_info_link,form_link,is_featured_event):
         ''' Update event details and save to database '''
 
         try:
@@ -419,6 +419,7 @@ class Branch:
             event.flagship_event = flagship_event
             event.registration_fee = registration_fee
             event.registration_fee_amount = registration_fee_amount
+            event.more_info_link = more_info_link
             event.form_link = form_link
             event.is_featured = is_featured_event
             event.save()
