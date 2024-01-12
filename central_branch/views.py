@@ -56,19 +56,19 @@ def central_home(request):
         current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
+        
+        
+        # get all EB Members
+        get_all_branch_eb=Branch.load_branch_eb_panel()
+
+        
         context={
             'user_data':user_data,
             'all_sc_ag':sc_ag,
+            'branch_ebs':get_all_branch_eb,
         }
-        user=request.user
-        # has_access=Access_Render.system_administrator_superuser_access(user.username)
-        if (True):
-            #Branch.test_google_form()'''
-            return render(request,'homepage/branch_homepage.html',context)
-            # return render(request,'central_home.html')
+        return render(request,'homepage/branch_homepage.html',context)
 
-        else:
-            return render(request,"access_denied2.html")
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -237,26 +237,30 @@ def panel_home(request):
     user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
-    # get all panels from database
-    panels = Branch.load_all_panels()
-    create_panel_access=Branch_View_Access.get_create_panel_access(request=request)
-    if request.method=="POST":
-        tenure_year=request.POST['tenure_year']
-        current_check=request.POST.get('current_check')
-        panel_start_date=request.POST['panel_start_date']
-        panel_end_date=request.POST['panel_end_date']
-        # create panel
-        if(Branch.create_panel(request,tenure_year=tenure_year,current_check=current_check,panel_end_date=panel_end_date,panel_start_date=panel_start_date)):
-            return redirect('central_branch:panels')
+    has_access = Branch_View_Access.get_create_panel_access(request)
+    if has_access:
+        # get all panels from database
+        panels = Branch.load_all_panels()
+        create_panel_access=Branch_View_Access.get_create_panel_access(request=request)
+        if request.method=="POST":
+            tenure_year=request.POST['tenure_year']
+            current_check=request.POST.get('current_check')
+            panel_start_date=request.POST['panel_start_date']
+            panel_end_date=request.POST['panel_end_date']
+            # create panel
+            if(Branch.create_panel(request,tenure_year=tenure_year,current_check=current_check,panel_end_date=panel_end_date,panel_start_date=panel_start_date)):
+                return redirect('central_branch:panels')
+            
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'panels':panels,
+            'create_panel_access':create_panel_access,
+        }
         
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'panels':panels,
-        'create_panel_access':create_panel_access,
-    }
-    
-    return render(request,"Panel/panel_homepage.html",context)
+        return render(request,"Panel/panel_homepage.html",context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 
 @login_required
@@ -265,134 +269,138 @@ def branch_panel_details(request,panel_id):
     user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
-    # get panel information
-    panel_info = Branch.load_panel_by_id(panel_id)
-    # get panel tenure time
-    if(panel_info.panel_end_time is None):
-        present_date=datetime.now()
-        tenure_time=present_date.date()-panel_info.creation_time.date()
+    has_access = Branch_View_Access.get_create_panel_access(request)
+    if has_access:
+        # get panel information
+        panel_info = Branch.load_panel_by_id(panel_id)
+        # get panel tenure time
+        if(panel_info.panel_end_time is None):
+            present_date=datetime.now()
+            tenure_time=present_date.date()-panel_info.creation_time.date()
+        else:
+            tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+        # get all insb members
+        all_insb_members=port_render.get_all_registered_members(request)
+        
+        if(request.method=="POST"):
+            # Delete panel
+            if(request.POST.get('delete_panel')):
+                if(Branch.delete_panel(request,panel_id)):
+                    return redirect('central_branch:panels')
+            
+            # Update Panel Settings
+            if(request.POST.get('save_changes')):
+                panel_tenure=request.POST.get('panel_tenure')
+                current_panel_check=request.POST.get('current_panel_check')
+                if(current_panel_check is None):
+                    current_panel_check=False
+                else:
+                    current_panel_check=True
+                panel_start_date=request.POST['panel_start_date']
+                panel_end_date=request.POST['panel_end_date']
+                if(panel_end_date==""):
+                    panel_end_date=None
+                
+                if(Branch.update_panel_settings(request=request,panel_tenure=panel_tenure,panel_end_date=panel_end_date,is_current_check=current_panel_check,panel_id=panel_id,panel_start_date=panel_start_date)):
+                    return redirect('central_branch:panel_details',panel_id)
+                else:
+                    return redirect('central_branch:panel_details',panel_id)
+                
+            # Check whether the add executive button was pressed
+            if (request.POST.get('add_executive_to_panel')):
+                # get position
+                position=request.POST.get('position')
+                # get members as list
+                members=request.POST.getlist('member_select')
+
+                if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=1)): #team_primary=1 as branchs primary is always 1
+                    return redirect('central_branch:panel_details',panel_id)
+            
+            # check whether the remove member button was pressed
+            if (request.POST.get('remove_member')):
+                # get ieee_id of the member
+                ieee_id=request.POST['remove_panel_member']
+                # remove member
+                if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
+                    return redirect('central_branch:panel_details',panel_id)
+                
+            #Create Positions
+            if(request.POST.get('create_position')):
+                mentor_position_check=request.POST.get('mentor_position_check')
+                if mentor_position_check is None:
+                    mentor_position_check=False
+                else:
+                    mentor_position_check=True
+                    
+                officer_position_check=request.POST.get('officer_position_check')
+                if officer_position_check is None:
+                    officer_position_check=False
+                else:
+                    officer_position_check=True
+                    
+                coordinator_position_check=request.POST.get('coordinator_position_check')
+                if coordinator_position_check is None:
+                    coordinator_position_check=False
+                else:
+                    coordinator_position_check=True
+                
+                executive_position_check=request.POST.get('executive_position_check')
+                if executive_position_check is None:
+                    executive_position_check=False
+                else:
+                    executive_position_check=True
+                
+                faculty_position_check=request.POST.get('faculty_position_check')
+                if faculty_position_check is None:
+                    faculty_position_check=False
+                else:
+                    faculty_position_check=True
+
+                core_volunteer_position_check = request.POST.get('core_volunteer_position_check')
+                if core_volunteer_position_check is None:
+                    core_volunteer_position_check = False
+                else:
+                    core_volunteer_position_check = True
+
+                volunteer_position_check = request.POST.get('volunteer_position_check')
+                if volunteer_position_check is None:
+                    volunteer_position_check = False
+                else:
+                    volunteer_position_check = True
+                    
+                position_name=request.POST['position_name']
+                # create new Position
+                if(PortData.create_positions(request=request,sc_ag_primary=1,
+                                            is_eb_member=executive_position_check,
+                                            is_officer=officer_position_check,
+                                            is_sc_ag_eb_member=False,is_mentor=mentor_position_check,
+                                            is_faculty=faculty_position_check,is_co_ordinator=coordinator_position_check,role=position_name,
+                                            is_core_volunteer=core_volunteer_position_check,is_volunteer=volunteer_position_check)):
+                    return redirect('central_branch:panel_details',panel_id)
+                
+            #Create New TEam
+            if(request.POST.get('create_team')):
+                team_name=request.POST['team_name']
+                if(PortData.create_team(
+                    request=request,sc_ag_primary=1,team_name=team_name
+                )):
+                    return redirect('central_branch:panel_details',panel_id)
+
+            
+        context={
+            'panel_edit_access':Branch_View_Access.get_create_panel_access(request),
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'panel_id':panel_id,
+            'panel_info':panel_info,
+            'tenure_time':tenure_time,
+            'insb_members':all_insb_members,
+            'positions':PortData.get_all_executive_positions_of_branch(request=request,sc_ag_primary=1),#as this is for branch, the primary=1
+            'eb_member':PanelMembersData.get_eb_members_from_branch_panel(request=request,panel=panel_id),
+        }
+        return render(request,'Panel/panel_details.html',context=context)
     else:
-        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
-    # get all insb members
-    all_insb_members=port_render.get_all_registered_members(request)
-    
-    if(request.method=="POST"):
-        # Delete panel
-        if(request.POST.get('delete_panel')):
-            if(Branch.delete_panel(request,panel_id)):
-                return redirect('central_branch:panels')
-        
-        # Update Panel Settings
-        if(request.POST.get('save_changes')):
-            panel_tenure=request.POST.get('panel_tenure')
-            current_panel_check=request.POST.get('current_panel_check')
-            if(current_panel_check is None):
-                current_panel_check=False
-            else:
-                current_panel_check=True
-            panel_start_date=request.POST['panel_start_date']
-            panel_end_date=request.POST['panel_end_date']
-            if(panel_end_date==""):
-                panel_end_date=None
-            
-            if(Branch.update_panel_settings(request=request,panel_tenure=panel_tenure,panel_end_date=panel_end_date,is_current_check=current_panel_check,panel_id=panel_id,panel_start_date=panel_start_date)):
-                return redirect('central_branch:panel_details',panel_id)
-            else:
-                return redirect('central_branch:panel_details',panel_id)
-            
-        # Check whether the add executive button was pressed
-        if (request.POST.get('add_executive_to_panel')):
-            # get position
-            position=request.POST.get('position')
-            # get members as list
-            members=request.POST.getlist('member_select')
-
-            if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=1)): #team_primary=1 as branchs primary is always 1
-                return redirect('central_branch:panel_details',panel_id)
-        
-        # check whether the remove member button was pressed
-        if (request.POST.get('remove_member')):
-            # get ieee_id of the member
-            ieee_id=request.POST['remove_panel_member']
-            # remove member
-            if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
-                return redirect('central_branch:panel_details',panel_id)
-            
-        #Create Positions
-        if(request.POST.get('create_position')):
-            mentor_position_check=request.POST.get('mentor_position_check')
-            if mentor_position_check is None:
-                mentor_position_check=False
-            else:
-                mentor_position_check=True
-                
-            officer_position_check=request.POST.get('officer_position_check')
-            if officer_position_check is None:
-                officer_position_check=False
-            else:
-                officer_position_check=True
-                
-            coordinator_position_check=request.POST.get('coordinator_position_check')
-            if coordinator_position_check is None:
-                coordinator_position_check=False
-            else:
-                coordinator_position_check=True
-            
-            executive_position_check=request.POST.get('executive_position_check')
-            if executive_position_check is None:
-                executive_position_check=False
-            else:
-                executive_position_check=True
-            
-            faculty_position_check=request.POST.get('faculty_position_check')
-            if faculty_position_check is None:
-                faculty_position_check=False
-            else:
-                faculty_position_check=True
-
-            core_volunteer_position_check = request.POST.get('core_volunteer_position_check')
-            if core_volunteer_position_check is None:
-                core_volunteer_position_check = False
-            else:
-                core_volunteer_position_check = True
-
-            volunteer_position_check = request.POST.get('volunteer_position_check')
-            if volunteer_position_check is None:
-                volunteer_position_check = False
-            else:
-                volunteer_position_check = True
-                
-            position_name=request.POST['position_name']
-            # create new Position
-            if(PortData.create_positions(request=request,sc_ag_primary=1,
-                                        is_eb_member=executive_position_check,
-                                        is_officer=officer_position_check,
-                                        is_sc_ag_eb_member=False,is_mentor=mentor_position_check,
-                                        is_faculty=faculty_position_check,is_co_ordinator=coordinator_position_check,role=position_name,
-                                        is_core_volunteer=core_volunteer_position_check,is_volunteer=volunteer_position_check)):
-                return redirect('central_branch:panel_details',panel_id)
-            
-        #Create New TEam
-        if(request.POST.get('create_team')):
-            team_name=request.POST['team_name']
-            if(PortData.create_team(
-                request=request,sc_ag_primary=1,team_name=team_name
-            )):
-                return redirect('central_branch:panel_details',panel_id)
-
-        
-    context={
-        'panel_edit_access':Branch_View_Access.get_create_panel_access(request),
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'panel_id':panel_id,
-        'panel_info':panel_info,
-        'tenure_time':tenure_time,
-        'insb_members':all_insb_members,
-        'positions':PortData.get_all_executive_positions_of_branch(request=request,sc_ag_primary=1),#as this is for branch, the primary=1
-        'eb_member':PanelMembersData.get_eb_members_from_branch_panel(request=request,panel=panel_id),
-    }
-    return render(request,'Panel/panel_details.html',context=context)
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def branch_panel_officers_tab(request,panel_id):
@@ -400,51 +408,55 @@ def branch_panel_officers_tab(request,panel_id):
     user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
-    # get panel information
-    panel_info = Branch.load_panel_by_id(panel_id)
-     # get panel tenure time
-    if(panel_info.panel_end_time is None):
-        present_date=datetime.now()
-        tenure_time=present_date.date()-panel_info.creation_time.date()
-    else:
-        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
-    # get all insb members
-    all_insb_members=port_render.get_all_registered_members(request)
-    
-    if(request.method=="POST"):
-        # Check whether the add officer button was pressed
-        if(request.POST.get('add_officer_to_panel')):
-            # get position
-            position=request.POST.get('position1')
-            # get team
-            team=request.POST.get('team')
-            # get members as a list
-            members=request.POST.getlist('member_select1')
-
-            if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=team)):
-                return redirect('central_branch:panel_details_officers',panel_id)
+    has_access = Branch_View_Access.get_create_panel_access(request)
+    if has_access:
+        # get panel information
+        panel_info = Branch.load_panel_by_id(panel_id)
+        # get panel tenure time
+        if(panel_info.panel_end_time is None):
+            present_date=datetime.now()
+            tenure_time=present_date.date()-panel_info.creation_time.date()
+        else:
+            tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+        # get all insb members
+        all_insb_members=port_render.get_all_registered_members(request)
         
-        # Check whether the update button was pressed
-        if(request.POST.get('remove_member_officer')):
-            # get ieee_id of the member
-            ieee_id=request.POST['remove_officer_member']
-            # remove member
-            if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
-                return redirect('central_branch:panel_details_officers',panel_id)
+        if(request.method=="POST"):
+            # Check whether the add officer button was pressed
+            if(request.POST.get('add_officer_to_panel')):
+                # get position
+                position=request.POST.get('position1')
+                # get team
+                team=request.POST.get('team')
+                # get members as a list
+                members=request.POST.getlist('member_select1')
 
-    
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'panel_id':panel_id,
-        'panel_info':panel_info,
-        'tenure_time':tenure_time,
-        'officer_member':PanelMembersData.get_officer_members_from_branch_panel(panel=panel_id,request=request),
-        'insb_members':all_insb_members,
-        'officer_positions':PortData.get_all_officer_positions_with_sc_ag_id(request=request,sc_ag_primary=1),#as this is for branch, the primary=1
-        'teams':PortData.get_teams_of_sc_ag_with_id(request,sc_ag_primary=1),
-    }
-    return render(request,'Panel/officer_members_tab.html',context=context)
+                if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=team)):
+                    return redirect('central_branch:panel_details_officers',panel_id)
+            
+            # Check whether the update button was pressed
+            if(request.POST.get('remove_member_officer')):
+                # get ieee_id of the member
+                ieee_id=request.POST['remove_officer_member']
+                # remove member
+                if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
+                    return redirect('central_branch:panel_details_officers',panel_id)
+
+        
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'panel_id':panel_id,
+            'panel_info':panel_info,
+            'tenure_time':tenure_time,
+            'officer_member':PanelMembersData.get_officer_members_from_branch_panel(panel=panel_id,request=request),
+            'insb_members':all_insb_members,
+            'officer_positions':PortData.get_all_officer_positions_with_sc_ag_id(request=request,sc_ag_primary=1),#as this is for branch, the primary=1
+            'teams':PortData.get_teams_of_sc_ag_with_id(request,sc_ag_primary=1),
+        }
+        return render(request,'Panel/officer_members_tab.html',context=context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def branch_panel_volunteers_tab(request,panel_id):
@@ -452,53 +464,56 @@ def branch_panel_volunteers_tab(request,panel_id):
     user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
-    # get panel information
-    panel_info = Branch.load_panel_by_id(panel_id)
-     # get panel tenure time
-    if(panel_info.panel_end_time is None):
-        present_date=datetime.now()
-        tenure_time=present_date.date()-panel_info.creation_time.date()
+    has_access = Branch_View_Access.get_create_panel_access(request)
+    if has_access:
+        # get panel information
+        panel_info = Branch.load_panel_by_id(panel_id)
+        # get panel tenure time
+        if(panel_info.panel_end_time is None):
+            present_date=datetime.now()
+            tenure_time=present_date.date()-panel_info.creation_time.date()
+        else:
+            tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+        
+        # get all insb members
+        all_insb_members=port_render.get_all_registered_members(request)
+        
+        if(request.method=="POST"):
+            # check whether the add buton was pressed
+            if(request.POST.get('add_volunteer_to_panel')):
+                # get_position
+                position=request.POST.get('position2')
+                # get team
+                team=request.POST.get('team1')
+                # get members as a list
+                members=request.POST.getlist('member_select2')
+
+                if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=team)):
+                    return redirect('central_branch:panel_details_volunteers',panel_id)
+            # check whether the remove button was pressed
+            if(request.POST.get('remove_member_volunteer')):
+                # get ieee id of the member
+                ieee_id=request.POST['remove_officer_member']
+                # remove member
+                if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
+                    return redirect('central_branch:panel_details_volunteers',panel_id)
+      
+        
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'panel_id':panel_id,
+            'panel_info':panel_info,
+            'tenure_time':tenure_time,
+            'insb_members':all_insb_members,
+            'all_insb_volunteer_positions':PortData.get_all_volunteer_position_with_sc_ag_id(request,sc_ag_primary=1),
+            'volunteer_positions':PortData.get_all_volunteer_position_with_sc_ag_id(request=request,sc_ag_primary=1),
+            'teams':PortData.get_teams_of_sc_ag_with_id(request,sc_ag_primary=1),
+            'volunteer_members':PanelMembersData.get_volunteer_members_from_branch_panel(request=request,panel=panel_id),
+        }
+        return render(request,'Panel/volunteer_members_tab.html',context=context)
     else:
-        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
-    
-    # get all insb members
-    all_insb_members=port_render.get_all_registered_members(request)
-    
-    if(request.method=="POST"):
-        # check whether the add buton was pressed
-        if(request.POST.get('add_volunteer_to_panel')):
-            # get_position
-            position=request.POST.get('position2')
-            # get team
-            team=request.POST.get('team1')
-            # get members as a list
-            members=request.POST.getlist('member_select2')
-
-            if(PanelMembersData.add_members_to_branch_panel(request=request,members=members,panel_info=panel_info,position=position,team_primary=team)):
-                return redirect('central_branch:panel_details_volunteers',panel_id)
-        # check whether the remove button was pressed
-        if(request.POST.get('remove_member_volunteer')):
-            # get ieee id of the member
-            ieee_id=request.POST['remove_officer_member']
-            # remove member
-            if(PanelMembersData.remove_member_from_panel(request=request,ieee_id=ieee_id,panel_id=panel_info.pk)):
-                return redirect('central_branch:panel_details_volunteers',panel_id)
-
-    
-    
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'panel_id':panel_id,
-        'panel_info':panel_info,
-        'tenure_time':tenure_time,
-        'insb_members':all_insb_members,
-        'all_insb_volunteer_positions':PortData.get_all_volunteer_position_with_sc_ag_id(request,sc_ag_primary=1),
-        'volunteer_positions':PortData.get_all_volunteer_position_with_sc_ag_id(request=request,sc_ag_primary=1),
-        'teams':PortData.get_teams_of_sc_ag_with_id(request,sc_ag_primary=1),
-        'volunteer_members':PanelMembersData.get_volunteer_members_from_branch_panel(request=request,panel=panel_id),
-    }
-    return render(request,'Panel/volunteer_members_tab.html',context=context)
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 @login_required
 def branch_panel_alumni_tab(request,panel_id):
@@ -506,68 +521,71 @@ def branch_panel_alumni_tab(request,panel_id):
     user_data=current_user.getUserData() #getting user data as dictionary file
     sc_ag=PortData.get_all_sc_ag(request=request)
 
-    # get panel information
-    panel_info = Branch.load_panel_by_id(panel_id)
-     # get panel tenure time
-    if(panel_info.panel_end_time is None):
-        present_date=datetime.now()
-        tenure_time=present_date.date()-panel_info.creation_time.date()
-    else:
-        tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
-    
-    if(request.method=="POST"):
-        # Create New Alumni Member
-        if(request.POST.get('create_new_alumni')):
-            try:
-                alumni_name=request.POST['alumni_name']
-                alumni_email=request.POST['alumni_email']
-                alumni_contact_no=request.POST['alumni_contact_no']
-                alumni_facebook_link=request.POST['alumni_facebook_link']
-                alumni_linkedin_link=request.POST['alumni_linkedin_link']
-                alumni_picture=request.FILES.get('alumni_picture') 
-
-            except MultiValueDictKeyError:
-                messages.error(request,"Image can not be uploaded!")
-            finally:
-                # create alumni
-                if(Alumnis.create_alumni_members(
-                    request=request,contact_no=alumni_contact_no,
-                    email=alumni_email,
-                    facebook_link=alumni_facebook_link,
-                    linkedin_link=alumni_linkedin_link,
-                    name=alumni_name,
-                    picture=alumni_picture)):
-                    return redirect('central_branch:panel_details_alumni',panel_id)
-                else:
-                    messages.warning(request,'Failed to Add new alumni!')
+    has_access = Branch_View_Access.get_create_panel_access(request)
+    if has_access:
+        # get panel information
+        panel_info = Branch.load_panel_by_id(panel_id)
+        # get panel tenure time
+        if(panel_info.panel_end_time is None):
+            present_date=datetime.now()
+            tenure_time=present_date.date()-panel_info.creation_time.date()
+        else:
+            tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
         
-        # Add alumni to panel
-        if(request.POST.get('add_alumni_to_panel')):
-            alumni_to_add=request.POST.getlist('alumni_select')
-            position=request.POST['alumni_position']
+        if(request.method=="POST"):
+            # Create New Alumni Member
+            if(request.POST.get('create_new_alumni')):
+                try:
+                    alumni_name=request.POST['alumni_name']
+                    alumni_email=request.POST['alumni_email']
+                    alumni_contact_no=request.POST['alumni_contact_no']
+                    alumni_facebook_link=request.POST['alumni_facebook_link']
+                    alumni_linkedin_link=request.POST['alumni_linkedin_link']
+                    alumni_picture=request.FILES.get('alumni_picture') 
+
+                except MultiValueDictKeyError:
+                    messages.error(request,"Image can not be uploaded!")
+                finally:
+                    # create alumni
+                    if(Alumnis.create_alumni_members(
+                        request=request,contact_no=alumni_contact_no,
+                        email=alumni_email,
+                        facebook_link=alumni_facebook_link,
+                        linkedin_link=alumni_linkedin_link,
+                        name=alumni_name,
+                        picture=alumni_picture)):
+                        return redirect('central_branch:panel_details_alumni',panel_id)
+                    else:
+                        messages.warning(request,'Failed to Add new alumni!')
             
-            for i in alumni_to_add:            
-                if(PanelMembersData.add_alumns_to_branch_panel(request=request,alumni_id=i,panel_id=panel_id,position=position)):
-                    pass
-            return redirect('central_branch:panel_details_alumni',panel_id)
-        
-        if(request.POST.get('remove_member_alumni')):
-            alumni_to_remove=request.POST['remove_alumni_member']
-            if(PanelMembersData.remove_alumns_from_branch_panel(request=request,member_to_remove=alumni_to_remove,panel_id=panel_id)):
+            # Add alumni to panel
+            if(request.POST.get('add_alumni_to_panel')):
+                alumni_to_add=request.POST.getlist('alumni_select')
+                position=request.POST['alumni_position']
+                
+                for i in alumni_to_add:            
+                    if(PanelMembersData.add_alumns_to_branch_panel(request=request,alumni_id=i,panel_id=panel_id,position=position)):
+                        pass
                 return redirect('central_branch:panel_details_alumni',panel_id)
-    
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'panel_id':panel_id,
-        'panel_info':panel_info,
-        'tenure_time':tenure_time,
-        'alumni_members':Alumnis.getAllAlumns(),
-        'positions':PortData.get_all_executive_positions_of_branch(request=request,sc_ag_primary=1),#as this is for branch, the primary=1
-        'alumni_members_in_panel':PanelMembersData.get_alumni_members_from_panel(panel=panel_id,request=request)
-    }
-    return render(request,'Panel/alumni_members_tab.html',context=context)
-
+            
+            if(request.POST.get('remove_member_alumni')):
+                alumni_to_remove=request.POST['remove_alumni_member']
+                if(PanelMembersData.remove_alumns_from_branch_panel(request=request,member_to_remove=alumni_to_remove,panel_id=panel_id)):
+                    return redirect('central_branch:panel_details_alumni',panel_id)
+        
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'panel_id':panel_id,
+            'panel_info':panel_info,
+            'tenure_time':tenure_time,
+            'alumni_members':Alumnis.getAllAlumns(),
+            'positions':PortData.get_all_executive_positions_of_branch(request=request,sc_ag_primary=1),#as this is for branch, the primary=1
+            'alumni_members_in_panel':PanelMembersData.get_alumni_members_from_panel(panel=panel_id,request=request)
+        }
+        return render(request,'Panel/alumni_members_tab.html',context=context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 
 @login_required
@@ -2055,65 +2073,68 @@ def manage_view_access(request):
 
     sc_ag=PortData.get_all_sc_ag(request=request)
 
-    # get access of the page first
-    all_insb_members=port_render.get_all_registered_members(request)
-    branch_data_access=Branch.get_branch_data_access(request)
+    has_access = Branch_View_Access.common_access(request.user.username)
+    if has_access:
+        # get access of the page first
+        all_insb_members=port_render.get_all_registered_members(request)
+        branch_data_access=Branch.get_branch_data_access(request)
 
-    if request.method=="POST":
-        if(request.POST.get('update_access')):
-            ieee_id=request.POST['remove_member_data_access']
+        if request.method=="POST":
+            if(request.POST.get('update_access')):
+                ieee_id=request.POST['remove_member_data_access']
+                
+                # Setting Data Access Fields to false initially
+                create_event_access=False
+                event_details_page_access=False
+                create_panels_access=False
+                panel_memeber_add_remove_access=False
+                team_details_page=False
+                manage_web_access=False
+
+                # Getting values from check box
+                
+                if(request.POST.get('create_event_access')):
+                    create_event_access=True
+                if(request.POST.get('event_details_page_access')):
+                    event_details_page_access=True
+                if(request.POST.get('create_panels_access')):
+                    create_panels_access=True
+                if(request.POST.get('panel_memeber_add_remove_access')):
+                    panel_memeber_add_remove_access=True
+                if(request.POST.get('team_details_page')):
+                    team_details_page=True
+                if(request.POST.get('manage_web_access')):
+                    manage_web_access=True
+                
+                # ****The passed keys must match the field name in the models. otherwise it wont update access
+                if(Branch.update_member_to_branch_view_access(request=request,ieee_id=ieee_id,kwargs={'create_event_access':create_event_access,
+                                                        'event_details_page_access':event_details_page_access,
+                                                        'create_panels_access':create_panels_access,'panel_memeber_add_remove_access':panel_memeber_add_remove_access,
+                                                        'team_details_page':team_details_page,'manage_web_access':manage_web_access})):
+                    return redirect('central_branch:manage_access')
+                
+            if(request.POST.get('add_member_to_access')):
+                selected_members=request.POST.getlist('member_select')
+                if(Branch.add_member_to_branch_view_access(request=request,selected_members=selected_members)):
+                    return redirect('central_branch:manage_access')
             
-            # Setting Data Access Fields to false initially
-            create_event_access=False
-            event_details_page_access=False
-            create_panels_access=False
-            panel_memeber_add_remove_access=False
-            team_details_page=False
-            manage_web_access=False
+            if(request.POST.get('remove_member')):
+                ieee_id=request.POST['remove_member_data_access']
+                if(Branch.remover_member_from_branch_access(request=request,ieee_id=ieee_id)):
+                    return redirect('central_branch:manage_access')
 
-            # Getting values from check box
             
-            if(request.POST.get('create_event_access')):
-                create_event_access=True
-            if(request.POST.get('event_details_page_access')):
-                event_details_page_access=True
-            if(request.POST.get('create_panels_access')):
-                create_panels_access=True
-            if(request.POST.get('panel_memeber_add_remove_access')):
-                panel_memeber_add_remove_access=True
-            if(request.POST.get('team_details_page')):
-                team_details_page=True
-            if(request.POST.get('manage_web_access')):
-                manage_web_access=True
-            
-            # ****The passed keys must match the field name in the models. otherwise it wont update access
-            if(Branch.update_member_to_branch_view_access(request=request,ieee_id=ieee_id,kwargs={'create_event_access':create_event_access,
-                                                       'event_details_page_access':event_details_page_access,
-                                                       'create_panels_access':create_panels_access,'panel_memeber_add_remove_access':panel_memeber_add_remove_access,
-                                                       'team_details_page':team_details_page,'manage_web_access':manage_web_access})):
-                return redirect('central_branch:manage_access')
-            
-        if(request.POST.get('add_member_to_access')):
-            selected_members=request.POST.getlist('member_select')
-            if(Branch.add_member_to_branch_view_access(request=request,selected_members=selected_members)):
-                return redirect('central_branch:manage_access')
-        
-        if(request.POST.get('remove_member')):
-            ieee_id=request.POST['remove_member_data_access']
-            if(Branch.remover_member_from_branch_access(request=request,ieee_id=ieee_id)):
-                return redirect('central_branch:manage_access')
 
-        
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'insb_members':all_insb_members,
+            'branch_data_access':branch_data_access,
+        }
 
-    context={
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'insb_members':all_insb_members,
-        'branch_data_access':branch_data_access,
-    }
-
-    return render(request,'Manage Access/manage_access.html',context)
-
+        return render(request,'Manage Access/manage_access.html',context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 
 

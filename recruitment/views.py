@@ -28,27 +28,33 @@ def recruitment_home(request):
         this passes all the datas into the template file    
     '''
     sc_ag=PortData.get_all_sc_ag(request=request)
-    numberOfSessions = renderData.Recruitment.loadSession()
-    
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    
-    if request.method == "POST":
-        session_name = request.POST["recruitment_session"]
-        session_time=datetime.datetime.now()
-        try:
-            add_session = recruitment_session(session=session_name,session_time=session_time)
-            add_session.save()
-        except DatabaseError:
-            return DatabaseError
-    
-    context={
-        'all_sc_ag':sc_ag,
-        'sessions':numberOfSessions,
-        "user_data":user_data
-    }
 
-    return render(request, 'recruitment_homepage.html', context)
+    #Checking user access
+    user=request.user
+    has_access=(MDT_DATA.recruited_member_details_view_access(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
+    if has_access:
+        numberOfSessions = renderData.Recruitment.loadSession()
+        
+        if request.method == "POST":
+            session_name = request.POST["recruitment_session"]
+            session_time=datetime.datetime.now()
+            try:
+                add_session = recruitment_session(session=session_name,session_time=session_time)
+                add_session.save()
+            except DatabaseError:
+                return DatabaseError
+        
+        context={
+            'all_sc_ag':sc_ag,
+            'sessions':numberOfSessions,
+            "user_data":user_data
+        }
+
+        return render(request, 'recruitment_homepage.html', context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 
 @login_required
@@ -303,143 +309,157 @@ def recruit_member(request, session_name):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    getSessionId = renderData.Recruitment.getSessionid(
-        session_name=session_name)
-    form = StudentForm
+    
+    #Checking user access
+    user=request.user
+    has_access=(MDT_DATA.recruited_member_details_view_access(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
+    if has_access:
+        getSessionId = renderData.Recruitment.getSessionid(
+            session_name=session_name)
+        form = StudentForm
 
-    context = {
-        'user_data':user_data,
-        'all_sc_ag':sc_ag,
-        'form': form,
-        'session_name': session_name,
-        'session_id': getSessionId['session'][0]['id']
-    }
+        context = {
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'form': form,
+            'session_name': session_name,
+            'session_id': getSessionId['session'][0]['id']
+        }
 
-    # this method is for the POST from the recruitment form
+        # this method is for the POST from the recruitment form
 
-    if request.method == "POST":
+        if request.method == "POST":
+            
         
-       
-            cash_payment_status = False
-            if request.POST.get("cash_payment_status"):
-                cash_payment_status = True
-            ieee_payment_status = False
-            if request.POST.get("ieee_payment_status"):
-                ieee_payment_status = True
-            time = datetime.datetime.now()
-            # getting all data from form and registering user upon validation
-            if(recruited_members.objects.filter(nsu_id=request.POST['nsu_id'],session_id=getSessionId['session'][0]['id']).exists()):
-                messages.info(request,f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database under this same recruitment session!")
-                return redirect('recruitment:recruit_member',session_name)
-            else:
-                try:
+                cash_payment_status = False
+                if request.POST.get("cash_payment_status"):
+                    cash_payment_status = True
+                ieee_payment_status = False
+                if request.POST.get("ieee_payment_status"):
+                    ieee_payment_status = True
+                time = datetime.datetime.now()
+                # getting all data from form and registering user upon validation
+                if(recruited_members.objects.filter(nsu_id=request.POST['nsu_id'],session_id=getSessionId['session'][0]['id']).exists()):
+                    messages.info(request,f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database under this same recruitment session!")
+                    return redirect('recruitment:recruit_member',session_name)
+                else:
+                    try:
 
-                    recruited_member = recruited_members(
-                        nsu_id=request.POST['nsu_id'],
-                        first_name=request.POST['first_name'],
-                        middle_name=request.POST['middle_name'],
-                        last_name=request.POST['last_name'],
-                        contact_no=request.POST['contact_no'],
-                        emergency_contact_no=request.POST['emergency_contact_no'],
-                        date_of_birth=request.POST['date_of_birth'],
-                        email_personal=request.POST['email_personal'],
-                        email_nsu=request.POST['email_nsu'],
-                        gender=request.POST['gender'],
-                        facebook_url=request.POST['facebook_url'],
-                        facebook_username=request.POST['facebook_username'],
-                        home_address=request.POST['home_address'],
-                        major=request.POST.get('major'),
-                        graduating_year=request.POST['graduating_year'],
-                        session_id=getSessionId['session'][0]['id'],
-                        recruitment_time=time,
-                        recruited_by=request.POST['recruited_by'],
-                        cash_payment_status=cash_payment_status,
-                        ieee_payment_status=ieee_payment_status
-                    )
-                    
-                    recruited_member.save()  # Saving the member to the database
-                    
-                    #send an email now to the recruited member
-                    email_status=email_sending.send_email_to_recruitees_upon_recruitment(
-                        recruited_member.first_name,recruited_member.nsu_id,recruited_member.email_personal,session_name)
-                    
-                    if(email_status)==False:
-                        messages.info(request,"The system could not send email to the previous recruited member due to some errors! Please contact the system administrator")
-                    elif(email_status):
-                        messages.info(request,"E-mail was sent to the previous recruited member!")
+                        recruited_member = recruited_members(
+                            nsu_id=request.POST['nsu_id'],
+                            first_name=request.POST['first_name'],
+                            middle_name=request.POST['middle_name'],
+                            last_name=request.POST['last_name'],
+                            contact_no=request.POST['contact_no'],
+                            emergency_contact_no=request.POST['emergency_contact_no'],
+                            date_of_birth=request.POST['date_of_birth'],
+                            email_personal=request.POST['email_personal'],
+                            email_nsu=request.POST['email_nsu'],
+                            gender=request.POST['gender'],
+                            facebook_url=request.POST['facebook_url'],
+                            facebook_username=request.POST['facebook_username'],
+                            home_address=request.POST['home_address'],
+                            major=request.POST.get('major'),
+                            graduating_year=request.POST['graduating_year'],
+                            session_id=getSessionId['session'][0]['id'],
+                            recruitment_time=time,
+                            recruited_by=request.POST['recruited_by'],
+                            cash_payment_status=cash_payment_status,
+                            ieee_payment_status=ieee_payment_status
+                        )
                         
-                    return redirect('recruitment:recruitee', getSessionId['session'][0]['id'])
+                        recruited_member.save()  # Saving the member to the database
+                        
+                        #send an email now to the recruited member
+                        email_status=email_sending.send_email_to_recruitees_upon_recruitment(
+                            recruited_member.first_name,recruited_member.nsu_id,recruited_member.email_personal,session_name)
+                        
+                        if(email_status)==False:
+                            messages.info(request,"The system could not send email to the previous recruited member due to some errors! Please contact the system administrator")
+                        elif(email_status):
+                            messages.info(request,"E-mail was sent to the previous recruited member!")
+                            
+                        return redirect('recruitment:recruitee', getSessionId['session'][0]['id'])
 
-                except IntegrityError:  # Checking if same id exist and handling the exception
-                    messages.info(
-                        request, f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database! It is prohibited to recruit another member with same NSU ID under one recruitment session.")
-                    return render(request, "recruitment_form.html", context=context)
+                    except IntegrityError:  # Checking if same id exist and handling the exception
+                        messages.info(
+                            request, f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database! It is prohibited to recruit another member with same NSU ID under one recruitment session.")
+                        return render(request, "recruitment_form.html", context=context)
 
-                except:  # Handling all errors
-                    messages.info(request, "Something went Wrong! Please try again")
-                    return render(request, "recruitment_form.html", context=context)
-                
-                
+                    except:  # Handling all errors
+                        messages.info(request, "Something went Wrong! Please try again")
+                        return render(request, "recruitment_form.html", context=context)
+                    
+                    
 
+        else:
+            return render(request, "recruitment_form.html", context=context)
     else:
-        return render(request, "recruitment_form.html", context=context)
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
 
 
 @login_required
 def generateExcelSheet(request, session_name):
     '''This method generates the excel files for different sessions'''
-    date=datetime.datetime.now()
-    response = HttpResponse(
-        content_type='application/ms-excel')  # eclaring content type for the excel files
-    response['Content-Disposition'] = f'attachment; filename=Recruitment Session - {session_name}---' +\
-        str(date.strftime('%m/%d/%Y')) + \
-        '.xls'  # making files downloadable with name of session and timestamp
-    # adding encoding to the workbook
-    workBook = xlwt.Workbook(encoding='utf-8')
-    # opening an worksheet to work with the columns
-    workSheet = workBook.add_sheet(f'Recruitment-{session_name}')
 
-    # generating the first row
-    row_num = 0
-    font_style = xlwt.XFStyle()
-    font_style.font.bold = True
+    #Checking user access
+    user=request.user
+    has_access=(MDT_DATA.recruited_member_details_view_access(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
+    if has_access:
+        date=datetime.datetime.now()
+        response = HttpResponse(
+            content_type='application/ms-excel')  # eclaring content type for the excel files
+        response['Content-Disposition'] = f'attachment; filename=Recruitment Session - {session_name}---' +\
+            str(date.strftime('%m/%d/%Y')) + \
+            '.xls'  # making files downloadable with name of session and timestamp
+        # adding encoding to the workbook
+        workBook = xlwt.Workbook(encoding='utf-8')
+        # opening an worksheet to work with the columns
+        workSheet = workBook.add_sheet(f'Recruitment-{session_name}')
 
-    # Defining columns that will stay in the first row
-    columns = ['NSU ID', 'First Name', 'Middle Name', 'Last Name', 'Email (personal)', 'Email (NSU)', 'Contact No', 'IEEE ID', 'Gender', 'Date Of Birth','Facebook Username', 'Facebook Url',
-               'Address', 'Major', 'Graduating Year', 'Recruitment Time', 'Recruited By', 'Cash Payment Status', 'IEEE Payment Status']
+        # generating the first row
+        row_num = 0
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
 
-    # Defining first column
-    for column in range(len(columns)):
-        workSheet.write(row_num, column, columns[column], font_style)
+        # Defining columns that will stay in the first row
+        columns = ['NSU ID', 'First Name', 'Middle Name', 'Last Name', 'Email (personal)', 'Email (NSU)', 'Contact No', 'IEEE ID', 'Gender', 'Date Of Birth','Facebook Username', 'Facebook Url',
+                'Address', 'Major', 'Graduating Year', 'Recruitment Time', 'Recruited By', 'Cash Payment Status', 'IEEE Payment Status']
 
-    # reverting font style to default
-    font_style = xlwt.XFStyle()
+        # Defining first column
+        for column in range(len(columns)):
+            workSheet.write(row_num, column, columns[column], font_style)
 
-    # getting the session to find members recruited in that particular session
-    getSession = renderData.Recruitment.getSessionid(session_name=session_name)
+        # reverting font style to default
+        font_style = xlwt.XFStyle()
 
-    # getting all the values of members as rows with same session
-    rows = recruited_members.objects.filter(session_id=getSession['session'][0]['id']).values_list('nsu_id',
-                                                                                                   'first_name', 'middle_name', 'last_name',
-                                                                                                   'email_personal','email_nsu',
-                                                                                                   'contact_no',
-                                                                                                   'ieee_id',
-                                                                                                   'gender',
-                                                                                                   'date_of_birth',
-                                                                                                   'facebook_username',
-                                                                                                   'facebook_url',
-                                                                                                   'home_address',
-                                                                                                   'major', 'graduating_year',
-                                                                                                   'recruitment_time',
-                                                                                                   'recruited_by',
-                                                                                                   'cash_payment_status',
-                                                                                                   'ieee_payment_status'
-                                                                                                   )
+        # getting the session to find members recruited in that particular session
+        getSession = renderData.Recruitment.getSessionid(session_name=session_name)
 
-    for row in rows:
+        # getting all the values of members as rows with same session
+        rows = recruited_members.objects.filter(session_id=getSession['session'][0]['id']).values_list('nsu_id',
+                                                                                                    'first_name', 'middle_name', 'last_name',
+                                                                                                    'email_personal','email_nsu',
+                                                                                                    'contact_no',
+                                                                                                    'ieee_id',
+                                                                                                    'gender',
+                                                                                                    'date_of_birth',
+                                                                                                    'facebook_username',
+                                                                                                    'facebook_url',
+                                                                                                    'home_address',
+                                                                                                    'major', 'graduating_year',
+                                                                                                    'recruitment_time',
+                                                                                                    'recruited_by',
+                                                                                                    'cash_payment_status',
+                                                                                                    'ieee_payment_status'
+                                                                                                    )
 
-        row_num += 1
-        for col_num in range(len(row)):
-            workSheet.write(row_num, col_num, str(row[col_num]), font_style)
-    workBook.save(response)
-    return (response)
+        for row in rows:
+
+            row_num += 1
+            for col_num in range(len(row)):
+                workSheet.write(row_num, col_num, str(row[col_num]), font_style)
+        workBook.save(response)
+        return (response)
+    else:
+        return render(request,'access_denied2.html')
