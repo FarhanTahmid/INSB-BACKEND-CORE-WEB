@@ -42,7 +42,7 @@ urlpatterns = [
     path('portal/finance_and_corporate_team/',include("finance_and_corporate_team.urls",namespace="finanace_and_corporate_team")),
     path('portal/SC_AG/',include("chapters_and_affinity_group.urls",namespace="sc_ag")),
     re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}), 
-    re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),   
+    re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
 ]
 urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 urlpatterns+=static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
