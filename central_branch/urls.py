@@ -94,7 +94,7 @@ urlpatterns = [
     #Event preview
     path('event_details/<int:event_id>/preview/',views.event_preview,name='event_preview'),
     #Event Feedback
-    path('event_details/<int:event_id>/feedback/',views.event_feedback,name="event_feedback"),  
+    path('event_details/<int:event_id>/feedbacks/',views.event_feedback,name="event_feedback"),  
     #Members list
     path('members/',views.insb_members_list,name="members_list"),
     #Members details list

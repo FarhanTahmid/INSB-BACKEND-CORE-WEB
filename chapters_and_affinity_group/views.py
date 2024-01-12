@@ -801,7 +801,7 @@ def event_creation_form_page(request,primary):
                         event_type_list=event_type_list,
                         event_description=event_description,
                         event_date=event_date,
-                        evet_time=event_time,
+                        event_time=event_time,
                         event_organiser=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary).primary
                     )
                     
@@ -1586,5 +1586,17 @@ def feedbacks(request,primary):
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
 
+@login_required
+def event_feedback(request, primary, event_id):
+    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+    event_feedbacks = Branch.get_all_feedbacks(event_id=event_id)
 
+    context = {
+        'sc_ag_info':get_sc_ag_info,
+        'primary':primary,
+        'is_branch':False, 
+        'event_id':event_id, 
+        'event_feedbacks':event_feedbacks
+    }
 
+    return render(request,'Events/event_feedbacks.html', context)

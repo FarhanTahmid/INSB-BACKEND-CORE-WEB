@@ -39,19 +39,13 @@
             </tr>
           </thead>
           <tbody>
-            {% for feedback in all_feedbacks %}
+            {% for feedback in event_feedbacks %}
             <tr>
               <td>{{ forloop.counter }}</td>
                 <td>{{feedback.date}}</td>
                 <td>{{feedback.name}}</td>
                 <td>{{feedback.email}}</td>
-                <td>
-                  <div>
-                    <label>
-                        <input type="checkbox" style="transform: scale(1.5);" name="responded_id" {% if feedback.is_responded %} value="{{ feedback.pk }}" checked {% else %} value="{{ feedback.pk }}"{% endif %}>
-                    </label>
-                  </div>
-                </td>
+                <td>{{feedback.comment}}</td>
             </tr>
             {% endfor %}
           </form>

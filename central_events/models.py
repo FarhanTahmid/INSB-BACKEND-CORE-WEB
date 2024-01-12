@@ -157,7 +157,7 @@ class Graphics_Files(models.Model):
     
 class Event_Feedback(models.Model):
     date = models.DateField(auto_now_add=True)
-    event_organiser=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE,default=5)#Default is set to 5 to keep branch as default organizer of events, If a new database is created change this number according to the id of the branch
+    event_id = models.ForeignKey(Events,null=False,blank=False,on_delete=models.CASCADE)
     name = models.CharField(null=False,blank=False,max_length=100)
     email = models.EmailField(null=False,blank=False)
     satisfaction = models.CharField(null=False,blank=False,max_length=50)

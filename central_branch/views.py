@@ -2973,7 +2973,17 @@ def feedbacks(request):
     
 @login_required
 def event_feedback(request, event_id):
-    return render(request,'Events/event_feedbacks.html', {'is_branch':True, 'event_id':event_id})
+    event = Events.objects.get(id=event_id)
+
+    event_feedbacks = Branch.get_all_feedbacks(event_id=event_id)
+
+    context = {
+        'is_branch':True, 
+        'event_id':event_id, 
+        'event_feedbacks':event_feedbacks
+    }
+
+    return render(request,'Events/event_feedbacks.html', context)
 
 @login_required
 def insb_members_list(request):

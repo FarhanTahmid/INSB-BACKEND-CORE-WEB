@@ -476,20 +476,21 @@ class Branch:
         except:
             return False
         
-    def add_feedback(event_organiser, name, email, satisfaction, comment):
+    def add_feedback(event_id, name, email, satisfaction, comment):
         try:
             allowed_values = ['very_satisfied', 'satisfied', 'not_satisfied']
             if satisfaction not in allowed_values:
                 return False
-            event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
-            feedback = Event_Feedback(event_organiser=event_organiser, name=name, email=email, satisfaction=satisfaction, comment=comment)
+            feedback = Event_Feedback(event_id=Events.objects.get(id=event_id), name=name, email=email, satisfaction=satisfaction, comment=comment)
             feedback.save()
             return True
         except:
             return False
         
-    def get_all_feedbacks(event_organiser, event_id):
-        pass
+    def get_all_feedbacks(event_id):
+        event_feedbacks = Event_Feedback.objects.filter(event_id=Events.objects.get(id=event_id))
+
+        return event_feedbacks
 
     # def load_ex_com_panel_list():
     #     panels=Executive_commitee.objects.all().order_by('-pk')
