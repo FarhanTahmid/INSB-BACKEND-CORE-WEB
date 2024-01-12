@@ -56,19 +56,19 @@ def central_home(request):
         current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
+        
+        
+        # get all EB Members
+        get_all_branch_eb=Branch.load_branch_eb_panel()
+
+        
         context={
             'user_data':user_data,
             'all_sc_ag':sc_ag,
+            'branch_ebs':get_all_branch_eb,
         }
-        user=request.user
-        # has_access=Access_Render.system_administrator_superuser_access(user.username)
-        if (True):
-            #Branch.test_google_form()'''
-            return render(request,'homepage/branch_homepage.html',context)
-            # return render(request,'central_home.html')
+        return render(request,'homepage/branch_homepage.html',context)
 
-        else:
-            return render(request,"access_denied2.html")
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
