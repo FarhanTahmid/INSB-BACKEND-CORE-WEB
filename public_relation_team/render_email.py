@@ -11,12 +11,13 @@ import logging
 from django_celery_beat.models import ClockedSchedule,PeriodicTask
 from system_administration.system_error_handling import ErrorHandling
 from django.contrib import messages
-
+from chapters_and_affinity_group.renderData import SC_AG_Info
+from port.renderData import PortData
 class PRT_Email_System:
 
     logger=logging.getLogger(__name__)
     
-    def get_all_selected_emails_from_backend(single_emails,to_email_list,cc_email_list,bcc_email_list):
+    def get_all_selected_emails_from_backend(single_emails,to_email_list,cc_email_list,bcc_email_list,request):
         
         # At first seperate the emails of single emails seperated by commas
         single_emails_final_list=[]
@@ -43,19 +44,37 @@ class PRT_Email_System:
                     branch_officers=Branch.load_all_officers_of_branch()
                     for officer in branch_officers:
                         to_email_final_list.append(officer.email_nsu)
+                        to_email_final_list.append(officer.email_ieee)
                         
                 elif email=="eb_panel":
                     # get all eb panel email
                     eb_panel=Branch.load_branch_eb_panel()
                     for eb in eb_panel:
+                        to_email_final_list.append(eb.email_nsu)
                         to_email_final_list.append(eb.email_ieee)
-                        
                 elif email=="excom_branch":
                     # get all the email of branch excom. this means all branch EBs + SC & AG chairs(only)
+                    eb_panel=Branch.load_branch_eb_panel()
+                    branch_ex_com=PortData.get_branch_ex_com_from_sc_ag(request=request)
+                    for eb in eb_panel:
+                        to_email_final_list.append(eb.email_nsu)
+                        to_email_final_list.append(eb.email_ieee)
+                    for excom in branch_ex_com:
+                        to_email_final_list.append(excom.member.email_nsu)
+                        to_email_final_list.append(excom.member.email_ieee)
                     pass
                 elif email=="scag_eb":
                     # get all the society, chapters and AG EBS
-                    pass
+                    for i in range(2,6):
+                        get_current_panel_of_sc_ag=SC_AG_Info.get_current_panel_of_sc_ag(request=request,sc_ag_primary=i)
+                        if(get_current_panel_of_sc_ag.exists()):
+                            ex_com=SC_AG_Info.get_sc_ag_executives_from_panels(request=request,panel_id=get_current_panel_of_sc_ag[0].pk)
+                            for ex in ex_com:
+                                if ex.member is not None:
+                                    to_email_final_list.append(ex.member.email_ieee)
+                                    to_email_final_list.append(ex.member.email_nsu)
+                                else:
+                                    to_email_final_list.append(ex.ex_member.email)
         # Removing the mails which are common in single email list and to email list
         for email in to_email_final_list:
             if email in single_emails_final_list:
@@ -78,17 +97,36 @@ class PRT_Email_System:
                     branch_officers=Branch.load_all_officers_of_branch()
                     for officer in branch_officers:
                         cc_email_final_list.append(officer.email_nsu)
+                        cc_email_final_list.append(officer.email_ieee)
                 elif email=="eb_panel":
                     # get all eb panel email
                     eb_panel=Branch.load_branch_eb_panel()
                     for eb in eb_panel:
                         cc_email_final_list.append(eb.email_ieee)
+                        cc_email_final_list.append(eb.email_nsu)
                 elif email=="excom_branch":
                     # get all the email of branch excom. this means all branch EBs + SC & AG chairs(only)
+                    eb_panel=Branch.load_branch_eb_panel()
+                    branch_ex_com=PortData.get_branch_ex_com_from_sc_ag(request=request)
+                    for eb in eb_panel:
+                        cc_email_final_list.append(eb.email_ieee)
+                        cc_email_final_list.append(eb.email_nsu)
+                    for excom in branch_ex_com:
+                        cc_email_final_list.append(excom.member.email_ieee)
+                        cc_email_final_list.append(excom.member.email_nsu)
                     pass
                 elif email=="scag_eb":
                     # get all the society, chapters and AG EBS
-                    pass
+                    for i in range(2,6):
+                        get_current_panel_of_sc_ag=SC_AG_Info.get_current_panel_of_sc_ag(request=request,sc_ag_primary=i)
+                        if(get_current_panel_of_sc_ag.exists()):
+                            ex_com=SC_AG_Info.get_sc_ag_executives_from_panels(request=request,panel_id=get_current_panel_of_sc_ag[0].pk)
+                            for ex in ex_com:
+                                if ex.member is not None:
+                                    cc_email_final_list.append(ex.member.email_ieee)
+                                    cc_email_final_list.append(ex.member.email_nsu)
+                                else:
+                                    cc_email_final_list.append(ex.ex_member.email)
         
         # get all bcc_email_list
         bcc_email_final_list=[]
@@ -105,17 +143,36 @@ class PRT_Email_System:
                     branch_officers=Branch.load_all_officers_of_branch()
                     for officer in branch_officers:
                         bcc_email_final_list.append(officer.email_nsu)
+                        bcc_email_final_list.append(officer.email_ieee)
                 elif email=="eb_panel":
                     # get all eb panel email
                     eb_panel=Branch.load_branch_eb_panel()
                     for eb in eb_panel:
                         bcc_email_final_list.append(eb.email_ieee)
+                        bcc_email_final_list.append(eb.email_nsu)
                 elif email=="excom_branch":
                     # get all the email of branch excom. this means all branch EBs + SC & AG chairs(only)
+                    eb_panel=Branch.load_branch_eb_panel()
+                    branch_ex_com=PortData.get_branch_ex_com_from_sc_ag(request=request)
+                    for eb in eb_panel:
+                        bcc_email_final_list.append(eb.email_ieee)
+                        bcc_email_final_list.append(eb.member.email_nsu)
+                    for excom in branch_ex_com:
+                        bcc_email_final_list.append(excom.member.email_ieee)
+                        bcc_email_final_list.append(excom.member.email_nsu)
                     pass
                 elif email=="scag_eb":
                     # get all the society, chapters and AG EBS
-                    pass
+                    for i in range(2,6):
+                        get_current_panel_of_sc_ag=SC_AG_Info.get_current_panel_of_sc_ag(request=request,sc_ag_primary=i)
+                        if(get_current_panel_of_sc_ag.exists()):
+                            ex_com=SC_AG_Info.get_sc_ag_executives_from_panels(request=request,panel_id=get_current_panel_of_sc_ag[0].pk)
+                            for ex in ex_com:
+                                if ex.member is not None:
+                                    bcc_email_final_list.append(ex.member.email_ieee)
+                                    bcc_email_final_list.append(ex.member.email_nsu)
+                                else:
+                                    bcc_email_final_list.append(ex.ex_member.email)
     
         '''Checking if same emails exists in 'to' and 'cc'. If so they will be removed from
            the 'to' and kept in 'cc' '''
