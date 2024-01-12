@@ -119,6 +119,9 @@
       border-radius: 50%;
       transition: all .5s;
     }
+    .mobile-icon{
+      padding: 40px 43px;
+    }
 
     .address-icon:hover,
     .email-icon:hover,
@@ -257,7 +260,7 @@
 
       .even-col {
         grid-template-columns: 1fr;
-        max-width: 650px;
+        max-width: 100%;
       }
 
       .even-col iframe {
@@ -265,7 +268,7 @@
       }
     }
 
-    @media screen and (max-width: 630px) {
+    @media screen and (max-width: 675px) {
       .contact-card-container{
         grid-template-columns: 1fr;
       }
@@ -275,12 +278,6 @@
 
       .even-col {
         max-width: 100%;
-      }
-    }
-
-    @media screen and (max-width: 425px) {
-      .max-width {
-        max-width: 80%;
       }
     }
 
@@ -352,7 +349,6 @@
     }
 
     .section-C .container {
-      width: 90%;
       margin: auto auto;
       display: grid;
       height: auto;
@@ -611,9 +607,12 @@
           <div>
             <h4>Social Media</h4>
           </div>
-          <div class="social-media-icons"><a href="#"><i class="fa-brands fa-facebook"></i></a><a href="#"><i
-                class="fa-brands fa-linkedin-in"></i></a><a href="#"><i class="fa-brands fa-instagram"></i></a><a
-              href="#"><i class="fa-brands fa-x-twitter"></i></a><a href="#"><i class="fa-brands fa-youtube"></i></a>
+          <div class="social-media-icons" style="margin-top:-25px;">
+            <a href="https://www.facebook.com/ieeensusb/" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+            <a href="https://www.linkedin.com/company/ieeensusb/" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="https://www.instagram.com/ieeensusb/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://twitter.com/ieeensusb/" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="https://www.youtube.com/@IEEENSUStudentBranch" target="_blank"><i class="fa-brands fa-youtube"></i></a>
           </div>
         </div>
       </section>

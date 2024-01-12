@@ -241,7 +241,28 @@
             color: #FFC72C;
         }
         /*join us*/
-
+        .event-mark {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #E87722!important;
+            margin: 2px 1px;
+        }
+        .events-list li a{
+            color: #E87722!important;
+        }
+        .event-box h5 {
+            margin-bottom: 5px;
+            color: #002855;
+            font-weight: bold;
+        }
+        .next-btn, .prev-btn{
+            background-color: 	#FFC72C!important;
+            background-image: radial-gradient(circle, #ffc72c, #fbb325, #f69f21, #f08b20, #e87722);
+        }
+        .day:hover{
+            background-color: 	#002855!important;
+        }
         /*media queries*/
         @media screen and (max-width: 1199px) {
             .max-width {
@@ -568,7 +589,7 @@
                     <h4 style="margin-bottom: 30px; font-weight: bolder; color: #000;"><span
                             style="border-bottom: 4px solid #fecd13;">EVENT C</span>ALENDER</h4>
                     <div class="calendar">
-                        <div class="header" style="padding: 20px;">
+                        <div class="header" style="padding: 20px; background-image: linear-gradient(to right top, #002855, #00487a, #006a9e, #008fc1, #00b5e2);">
                             <div style="cursor: pointer;" class="prev-btn"><i class="fa-solid fa-chevron-left"></i>
                             </div>
                             <span class="month-year"></span>
@@ -577,13 +598,14 @@
                         </div>
                         <div class="days-of-week"
                             style="display: flex; justify-content: space-around; padding: 10px 0px; font-weight: bold;">
-                            <span class="day-of-week">Sun</span>
                             <span class="day-of-week">Mon</span>
                             <span class="day-of-week">Tue</span>
                             <span class="day-of-week">Wed</span>
                             <span class="day-of-week">Thu</span>
                             <span class="day-of-week">Fri</span>
                             <span class="day-of-week">Sat</span>
+                            <span class="day-of-week">Sun</span>
+
                         </div>
                         <div class="days" style="padding: 15px 0px; font-weight: bold;">
                             <span style="color:red; height:20px"></span>

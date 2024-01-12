@@ -7,7 +7,7 @@ from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_G
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
 from system_administration.models import MDT_Data_Access
-from central_events.models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_Category
+from central_events.models import Event_Feedback, SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_Category
 from events_and_management_team.models import Venue_List, Permission_criteria
 from system_administration.render_access import Access_Render
 from system_administration.system_error_handling import ErrorHandling
@@ -374,7 +374,7 @@ class Branch:
                     pass
 
     def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_date, event_time, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
-                             flagship_event,registration_fee,registration_fee_amount,form_link,is_featured_event):
+                             flagship_event,registration_fee,registration_fee_amount,more_info_link,form_link,is_featured_event):
         ''' Update event details and save to database '''
 
         try:
@@ -419,6 +419,7 @@ class Branch:
             event.flagship_event = flagship_event
             event.registration_fee = registration_fee
             event.registration_fee_amount = registration_fee_amount
+            event.more_info_link = more_info_link
             event.form_link = form_link
             event.is_featured = is_featured_event
             event.save()
@@ -474,6 +475,22 @@ class Branch:
             return True
         except:
             return False
+        
+    def add_feedback(event_id, name, email, satisfaction, comment):
+        try:
+            allowed_values = ['very_satisfied', 'satisfied', 'not_satisfied']
+            if satisfaction not in allowed_values:
+                return False
+            feedback = Event_Feedback(event_id=Events.objects.get(id=event_id), name=name, email=email, satisfaction=satisfaction, comment=comment)
+            feedback.save()
+            return True
+        except:
+            return False
+        
+    def get_all_feedbacks(event_id):
+        event_feedbacks = Event_Feedback.objects.filter(event_id=Events.objects.get(id=event_id))
+
+        return event_feedbacks
 
     # def load_ex_com_panel_list():
     #     panels=Executive_commitee.objects.all().order_by('-pk')
