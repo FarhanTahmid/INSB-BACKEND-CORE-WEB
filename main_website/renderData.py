@@ -218,7 +218,6 @@ class HomepageItems:
         
         try:
             address = request.META.get('HTTP_X_FORWARDED_FOR')
-            print(address)
             if address:
                 ip = address.split(',')[-1].strip()
             else:

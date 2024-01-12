@@ -14,9 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path,include,re_path
 from django.conf.urls.static import static
 from django.conf import settings
+from django.views.static import serve
 
 urlpatterns = [
     
@@ -39,7 +40,9 @@ urlpatterns = [
     path('portal/media_team/',include('media_team.urls',namespace='media_team')),
     path('portal/graphics_team/',include('graphics_team.urls',namespace="graphics_team")),
     path('portal/finance_and_corporate_team/',include("finance_and_corporate_team.urls",namespace="finanace_and_corporate_team")),
-    path('portal/SC_AG/',include("chapters_and_affinity_group.urls",namespace="sc_ag")),  
+    path('portal/SC_AG/',include("chapters_and_affinity_group.urls",namespace="sc_ag")),
+    re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}), 
+    re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),   
 ]
 urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 urlpatterns+=static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

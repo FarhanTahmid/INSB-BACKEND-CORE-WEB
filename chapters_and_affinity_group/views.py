@@ -42,10 +42,22 @@ def sc_ag_homepage(request,primary):
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         
+        # get the current panel of sc ag
+        get_current_panel_of_sc_ag=SC_AG_Info.get_current_panel_of_sc_ag(request=request,sc_ag_primary=primary).first()
+        sc_ag_eb_members=[]
+        sc_ag_officers=[]
+        sc_ag_volunteers=[]
+        if(get_current_panel_of_sc_ag):
+            sc_ag_eb_members=SC_AG_Info.get_sc_ag_executives_from_panels(request=request,panel_id=get_current_panel_of_sc_ag.pk)
+            sc_ag_officers=SC_AG_Info.get_sc_ag_officers_from_panels(request=request,panel_id=get_current_panel_of_sc_ag.pk)
+            sc_ag_volunteers=SC_AG_Info.get_sc_ag_volunteer_from_panels(request=request,panel_id=get_current_panel_of_sc_ag.pk)
         
         context={
             'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info
+            'sc_ag_info':get_sc_ag_info,
+            'sc_ag_ebs':sc_ag_eb_members,
+            'sc_ag_officers':sc_ag_officers,
+            'sc_ag_volunteers':sc_ag_volunteers,
         }
         return render(request,'Homepage/sc_ag_homepage.html',context)
     except Exception as e:
