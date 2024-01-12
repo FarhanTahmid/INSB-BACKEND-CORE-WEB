@@ -222,9 +222,20 @@
   document.addEventListener('DOMContentLoaded', function () {
     let slideIndex = 1;
     let autoSlideInterval;
+    let isPressActive = false; // Flag to track if press is active
 
-    function plusSlides(n) {
+    function plusSlides(n, resetTimer) {
         showSlides(slideIndex += n);
+        if (resetTimer) {
+            resetAutoSlide();
+        }
+    }
+
+    function currentSlide(n, resetTimer) {
+        showSlides(slideIndex = n);
+        if (resetTimer) {
+            resetAutoSlide();
+        }
     }
 
     function showSlides(n) {
@@ -246,24 +257,63 @@
 
     // Event listeners for slideshow navigation
     document.querySelector('.prev').addEventListener('click', function () {
-        plusSlides(-1);
+        pauseAutoSlide();
+        plusSlides(-1, true);
     });
 
     document.querySelector('.next').addEventListener('click', function () {
-        plusSlides(1);
+        pauseAutoSlide();
+        plusSlides(1, true);
     });
+
+    // Add swipe functionality using Hammer.js only if it's available (for touch devices)
+    if (typeof Hammer !== 'undefined') {
+        const slideshowContainer = document.querySelector('.slideshow-container');
+        const hammer = new Hammer(slideshowContainer);
+
+        hammer.on('swipeleft', function () {
+            pauseAutoSlide();
+            plusSlides(1, true);
+        });
+
+        hammer.on('swiperight', function () {
+            pauseAutoSlide();
+            plusSlides(-1, true);
+        });
+
+        // Additional Hammer.js event listeners to pause/resume auto slide on hold
+        hammer.on('press', function () {
+            isPressActive = true; // Set the flag to true when press is active
+            pauseAutoSlide();
+        });
+
+        hammer.on('pressup', function () {
+            isPressActive = false; // Set the flag to false when press is released
+            resetAutoSlide();
+        });
+
+        // Additional Hammer.js event listener for tap
+        hammer.on('tap', function (event) {
+            // Handle tap separately, e.g., open a link or perform an action
+            // Prevent tap from interfering with auto slide
+            event.preventDefault();
+            resetAutoSlide();
+        });
+    }
 
     // Auto slide feature
     function startAutoSlide() {
         autoSlideInterval = setInterval(function () {
-            plusSlides(1);
+            plusSlides(1, false);
         }, 5000); // Adjust the interval time (in milliseconds) as needed
     }
 
     // Reset auto slide without changing the interval
     function resetAutoSlide() {
-        clearInterval(autoSlideInterval);
-        startAutoSlide();
+        if (!isPressActive) {
+            clearInterval(autoSlideInterval);
+            startAutoSlide();
+        }
     }
 
     // Pause auto slide
@@ -280,7 +330,9 @@
     });
 
     document.querySelector('.slideshow-container').addEventListener('mouseleave', function () {
-        resetAutoSlide();
+        if (!isPressActive) {
+            resetAutoSlide();
+        }
     });
 });
 
