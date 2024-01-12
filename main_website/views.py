@@ -42,7 +42,7 @@ def homepage(request):
     # get featured events of branch
     get_featured_events=HomepageItems.load_featured_events(sc_ag_primary=1)
     # get volunteer of the months
-    get_volunteers_of_the_month=VolunteerOfTheMonth.objects.all(d=0).order_by('-pk')
+    get_volunteers_of_the_month=VolunteerOfTheMonth.objects.all().order_by('-pk')
 
     context={
         'banner_item':bannerItems,
