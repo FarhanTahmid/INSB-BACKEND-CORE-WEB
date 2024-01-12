@@ -126,31 +126,43 @@ def event_details(request,event_id):
  
     '''Loads details for the corresponding event page on site'''
     try:
-        try:
-            get_event = Events.objects.get(id = event_id)
-            
-            if(get_event.publish_in_main_web):
-                event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
-                event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
+        if request.method == 'POST':
+            name = request.POST.get('name')
+            email = request.POST.get('email')
+            satisfaction = request.POST.get('satisfaction')
+            comment = request.POST.get('comment')
 
-                context = {
-                    'is_live':True, #This enables the header and footer along with the wavy
-                    'page_title':get_event.event_name,
-                    'page_subtitle':get_event.event_organiser,
-                    "event":get_event,
-                    'media_url':settings.MEDIA_URL,
-                    'event_banner_image' : event_banner_image,
-                    'event_gallery_images' : event_gallery_images,
-                }
-                return render(request,"Events/event_description_main.html", context)
+            if(Branch.add_feedback(event_id=event_id, name=name,email=email,satisfaction=satisfaction,comment=comment)):
+                messages.success(request,'We have received it. Thank you for your feedback!')
             else:
-                return redirect('main_website:event_homepage')
-        except:
+                messages.warning(request,'Sorry you couldn\'t read us at the moment. Please try again later.')
+
+            return redirect('main_website:event_details', event_id)
+        
+        get_event = Events.objects.get(id = event_id)
+        
+        if(get_event.publish_in_main_web):
+            event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
+            event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
+
+            context = {
+                'is_live':True, #This enables the header and footer along with the wavy
+                'page_title':get_event.event_name,
+                'page_subtitle':get_event.event_organiser,
+                "event":get_event,
+                'media_url':settings.MEDIA_URL,
+                'event_banner_image' : event_banner_image,
+                'event_gallery_images' : event_gallery_images,
+            }
+            return render(request,"Events/event_description_main.html", context)
+        else:
             return redirect('main_website:event_homepage')
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        return cv.custom_500(request)
+    except:
+        return redirect('main_website:event_homepage')
+    # except Exception as e:
+    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+    #     return cv.custom_500(request)
 
 
 # ###################### ACHIEVEMENTS ##############################
