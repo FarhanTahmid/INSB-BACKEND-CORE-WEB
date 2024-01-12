@@ -22,6 +22,8 @@ import traceback
 import logging
 from system_administration.system_error_handling import ErrorHandling
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
+import calendar
+from datetime import datetime
 
 
 class LoggedinUser:
@@ -341,7 +343,13 @@ def getHitCountMonthly():
     daily = []
     days_of_month=[]
 
-    for i in range(31):
+    current_date = datetime.datetime.now()
+    year = current_date.year
+    month = current_date.month
+    # Get the number of days in the current month
+    num_days_in_month = calendar.monthrange(year, month)[1]
+  
+    for i in range(num_days_in_month):
         #getting number of people on each day from database
         number_of_people_per_day = User_IP_Address.objects.filter(Q(created_at__day=(i+1)), Q(created_at__month=datetime.datetime.now().month), Q(created_at__year=datetime.datetime.now().year)).count()   
         if number_of_people_per_day>0:
@@ -367,7 +375,7 @@ def getHitCountYearly():
         #TODO: need styling
         if number_of_people_per_month>0:
             monthly.append(number_of_people_per_month)
-            month_names.append(getMonthName(i+1)[0:3])
+        month_names.append(getMonthName(i+1)[0:3])
     year = datetime.datetime.now().year
     return year,month_names,monthly
 
