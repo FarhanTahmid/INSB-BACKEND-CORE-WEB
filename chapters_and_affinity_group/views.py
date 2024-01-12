@@ -184,6 +184,9 @@ def sc_ag_panel_details(request,primary,panel_pk):
                 member_to_remove=request.POST['remove_panel_member']
                 if(Sc_Ag.remove_sc_ag_member_from_panel(request=request,member_ieee_id=member_to_remove,panel_id=panel_pk,sc_ag_primary=primary)):
                     return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+                else:
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+
             
             # Delete panel
             if(request.POST.get('delete_panel')):

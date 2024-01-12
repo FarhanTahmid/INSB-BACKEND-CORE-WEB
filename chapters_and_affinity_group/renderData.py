@@ -273,7 +273,7 @@ class Sc_Ag:
             return True
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            # ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.warning(request,"Can not remove member from panel. Something went wrong! If you are trying to remove an alumni member from Panel, please remove it from Alumni Members Tab")
             return False
     
