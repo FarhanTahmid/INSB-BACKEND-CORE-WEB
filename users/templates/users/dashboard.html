@@ -180,12 +180,12 @@
 						
 					</div>
 
-				   <div class="row align-items-center">
-					<div class="col-xl-8" >
-						<div>
-							 <div id="recruitment-statistics" data-colors='["#33a186","#3980c0","#33a186","#3980c0","#33a186","#3980c0"]' onload="initializeChart()" class="apex-chart"></div>
+				   	<div class="row align-items-center">
+						<div class="col-xl-12" >
+							<div>
+								<div id="recruitment-statistics" data-colors='["#33a186","#3980c0","#33a186","#3980c0","#33a186","#3980c0"]' onload="initializeChart()" class="apex-chart"></div>
+							</div>
 						</div>
-					  </div>
 					   <!--<div class="col-xl-4">
 						   <div class="">
 								<div>
@@ -250,7 +250,7 @@
 						   </div>
 					   </div>-->
 					   
-				   </div>
+				   	</div>
 
 				</div>
 			</div>
@@ -261,7 +261,7 @@
 	<div class="row">
 		<div class="col-xl-12">
 			<div class="row">
-				<div class="col-lg-3 col-md-6">
+				<div class="col-lg-6 col-md-6">
 					<div class="card">
 						<div class="card-body">
 							<div class="avatar">
@@ -277,7 +277,7 @@
 								</div>
 								<ul class="list-inline d-flex justify-content-between justify-content-center mb-0">
 									{% for i in years %}
-									<li class="list-inline-item" style="font-size:11px;"><a href="#" class="text-muted"></a>{{i}}</li>
+									<li class="list-inline-item" style="font-size:11px;">{{i}}</li>
 									{% endfor %}
 								</ul>
 							</div>
@@ -285,7 +285,7 @@
 					</div>
 				</div>
 
-				<div class="col-lg-3 col-md-6">
+				<div class="col-lg-6 col-md-6">
 					<div class="card">
 						<div class="card-body">
 							<div class="avatar">
@@ -301,7 +301,7 @@
 								</div>
 								<div class="list-inline d-flex justify-content-between justify-content-center mb-0">
 									{% for i in days_of_month %}
-									<li class="list-inline-item" style=font-size:"11px;"><a href="#" class="text-muted"></a>{{i}}</li>
+									<li class="list-inline-item" style=font-size:"11px;">{{i}}</li>
 									{% endfor %}
 								</div>
 							</div>
@@ -309,7 +309,17 @@
 					</div>
 				</div>
 				
-				<div class="col-lg-3 col-md-6">
+
+			</div>
+		</div>
+
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-xl-12">
+			<div class="row">
+				
+				<div class="col-lg-6 col-md-6">
 					<div class="card">
 						<div class="card-body">
 							<div class="avatar">
@@ -324,7 +334,7 @@
 								</div>
 								<ul class="list-inline d-flex justify-content-between justify-content-center mb-0">
 									{% for i in current_year_month_name %}
-									<li class="list-inline-item" style="font-size:11px;"><a href="#" class="text-muted"></a>{{i}}</li>
+									<li class="list-inline-item" style="font-size:11px;">{{i}}</li>
 									{% endfor %}
 								</ul>
 							</div>
@@ -332,7 +342,7 @@
 					</div>
 				</div>
 				
-				<div class="col-lg-3 col-md-6">
+				<div class="col-lg-6 col-md-6">
 					<div class="card">
 						<div class="card-body">
 							<div class="avatar">
@@ -348,7 +358,7 @@
 								</div>
 								<ul class="list-inline d-flex justify-content-between justify-content-center mb-0">
 									{% for i in years %}
-									<li class="list-inline-item" style="font-size:11px;"><a href="#" class="text-muted"></a>{{i}}</li>
+									<li class="list-inline-item" style="font-size:11px;">{{i}}</li>
 									
 									{% endfor %}
 								</ul>

@@ -114,6 +114,13 @@
             {% include 'wave.html' %}
         {% endblock wave_design %}
 
+
+        <!--Upcoming Event-->
+        {% block upcoming_event %}
+            {% include "Events/upcoming_event.html" %}
+        {% endblock upcoming_event %}
+
+        
         <!--Upcoming Event with Calendar-->
 
         {% block event_with_calendar %}
@@ -125,11 +132,6 @@
             {% include "Events/event_stat.html" %}
         {% endblock stats %}
         </section>
-
-        <!--Upcoming Event-->
-        {% block upcoming_event %}
-            {% include "Events/upcoming_event.html" %}
-        {% endblock upcoming_event %}
 
 
         <!--Event card with search function and load more option-->

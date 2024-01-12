@@ -9,7 +9,7 @@
                 <div class="gdlr-item-title-container container">
                     <div class="gdlr-item-title-head">
                         <h3 class="gdlr-item-title gdlr-skin-title gdlr-skin-border">Recent News
-                        </h3><a class="gdlr-item-title-link" href="#">Read All News</a><span
+                        </h3><a class="gdlr-item-title-link" href="{% url 'main_website:news' %}">Read All News</a><span
                             class="gdlr-nav-title"><i class="icon-angle-left gdlr-flex-prev"></i><i
                                 class="icon-angle-right gdlr-flex-next"></i></span>
                     </div>
@@ -28,9 +28,9 @@
                                         class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
                                         <div class="gdlr-standard-style">
                                             <div class="gdlr-blog-thumbnail">
-                                                <img
+                                                <a href="#"><img
                                                         src="/media_files/{{i.news_picture}}"
-                                                        alt="" width="400" height="300"/>
+                                                        alt="news_thumbnail" width="400" height="300"/></a>
                                             </div>
 
                                             <div class="gdlr-blog-grid-content">
@@ -42,9 +42,7 @@
                                                         </div>
                                                         <div
                                                             class="blog-info blog-author gdlr-skin-info">
-                                                            <span class="gdlr-sep">/</span>By <a
-                                                                href="#" title="Posts by John Doe"
-                                                                rel="author">IEEE NSU SB</a></div>
+                                                            <span class="gdlr-sep">/</span>By IEEE NSU SB</a></div>
                                                         <div class="clear"></div>
                                                     </div>
 
@@ -75,4 +73,15 @@
     </div>
     <div class="clear"></div>
 </section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flexslider/2.7.2/jquery.flexslider.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.flexslider').flexslider({
+            animation: 'slide',
+            controlNav: true, // Set this to true to enable carousel navigation buttons
+            directionNav: true,
+        });
+    });
+</script>
 {% endblock news_cards %}
