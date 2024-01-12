@@ -41,12 +41,6 @@
             align-items: end;
         }
 
-        .banner_image {
-            object-fit: fill;
-            border-radius: 8px;
-            box-shadow: 5px 5px 10px #5e5e5e;
-        }
-
         .event_header h2 {
             margin-top: -15px;
             margin-bottom: -2px;
@@ -226,67 +220,7 @@
             border: 2px solid #002855;
         }
 
-        /*media queries*/
-        @media screen and (max-width: 1199px) {
-            .max-width {
-                max-width: 900px;
-            }
-        }
 
-        @media screen and (max-width: 1050px) {
-            .max-width {
-                max-width: 860px;
-            }
-
-            .inner_box h5 {
-                font-size: 16px;
-            }
-        }
-
-        @media screen and (max-width: 991px) {
-            .banner_section {
-                grid-template-columns: 1fr;
-            }
-
-            .gallery {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .max-width {
-                max-width: 670px;
-            }
-
-            .register-bottom-for-pc {
-                display: none;
-            }
-
-            .below_banner {
-                margin-top: -50px;
-            }
-
-            .register-bottom-for-tablet-view {
-                display: block;
-            }
-            .below_banner div div h2{
-                margin-top: 50px;
-            }
-        }
-
-        @media screen and (max-width: 600px) {
-            .gallery {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media screen and (max-width: 425px) {
-            .max-width {
-                max-width: 370px;
-            }
-
-            .pic-container {
-                width: 100%;
-            }
-        }
         .leave_reply_section{
             display: flex;
             flex-direction: column;
@@ -356,6 +290,92 @@
             color: #002855;
             border: 2px solid #002855;
         }
+        .event_banner{
+            width: 100%;
+            height: 394px;
+            overflow: hidden;
+            transition: all 0.5s;
+        }
+        .event_banner:hover{
+            box-shadow: 2px 2px 5px #5e5e5e;
+        }
+        .banner_image {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            transition: all 1s;
+        }
+        .event_banner:hover .banner_image{
+            scale: 1.1;
+        }
+
+        /*media queries*/
+        @media screen and (max-width: 1199px) {
+            .max-width {
+                max-width: 900px;
+            }
+        }
+
+        @media screen and (max-width: 1050px) {
+            .max-width {
+                max-width: 860px;
+            }
+
+            .inner_box h5 {
+                font-size: 16px;
+            }
+        }
+
+        @media screen and (max-width: 991px) {
+            .banner_section {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .max-width {
+                max-width: 670px;
+            }
+
+            .register-bottom-for-pc {
+                display: none;
+            }
+
+            .below_banner {
+                margin-top: -50px;
+            }
+
+            .register-bottom-for-tablet-view {
+                display: block;
+            }
+            .below_banner div div h2{
+                margin-top: 50px;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+            .event_banner{
+                height: 270px;
+            }
+        }
+
+        @media screen and (max-width: 425px) {
+            .max-width {
+                max-width: 370px;
+            }
+
+            .pic-container {
+                width: 100%;
+            }
+            .event_banner{
+                height: 200px;
+            }
+        }
     </style>
 </head>
 
@@ -379,7 +399,7 @@
                         <!--Page Start-->
                         <section class="banner_section">
                             <div>
-                                <div>
+                                <div class="event_banner">
                                     <!--Event Banner Image-->
                                     {% if event_banner_image %}
                                     <img src="{{media_url}}{{event_banner_image}}" alt="" class="banner_image">
