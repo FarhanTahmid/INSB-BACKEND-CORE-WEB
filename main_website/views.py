@@ -1377,7 +1377,7 @@ def join_insb(request):
                 'branch_teams':branch_teams,
             }
     
-        return render(request,"join_INSB.html",context=context)
+        return render(request,"Get Involved/Join INSB/join_INSB.html",context=context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
