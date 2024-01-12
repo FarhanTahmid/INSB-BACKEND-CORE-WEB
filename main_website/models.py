@@ -46,7 +46,7 @@ class Research_Papers(models.Model):
     group=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
     research_banner_picture = models.ImageField(null=False,blank=False,default='main_website_files/Research_pictures/default_research_banner_picture.png',upload_to='main_website_files/Research_pictures/')
     author_names = RichTextField(null=False,blank=False,max_length=300)
-    short_description=RichTextField(null=False,blank=False,max_length=3000,verbose_name="Abstract")
+    short_description=RichTextField(null=False,blank=False,max_length=4000,verbose_name="Abstract",help_text="Please write within 1500 words. If this limit exceeds Research paper won't be added!")
     publish_date=models.DateField(null=False,blank=False,help_text = "<br>Please use the following format: <em>YYYY-MM-DD</em>.")
     publication_link = models.URLField(null=False)
     is_requested=models.BooleanField(null=False,blank=False,default=False)
@@ -73,9 +73,9 @@ class Blog(models.Model):
     title = models.CharField(null=False,blank=False,max_length=150)
     category = models.ForeignKey(Blog_Category,null=True,blank=True,on_delete=models.CASCADE)
     date = models.DateField(null=False,blank=False,help_text = "<br>Please use the following format: <em>YYYY-MM-DD</em>.")
-    short_description=RichTextField(null=False,blank=False,max_length=1000,help_text="Write within 200 words!")
+    short_description=RichTextField(null=False,blank=False,max_length=1000,help_text="Write within 300 words!")
     blog_banner_picture = ResizedImageField(null=False,blank=False,default='main_website_files/Blog_banner_pictures/default_blog_banner_picture.png',upload_to='main_website_files/Blog_pictures/')
-    description = RichTextField(null=False,blank=False,max_length=10000,help_text="Write within 1000 words!")
+    description = RichTextField(null=False,blank=False,max_length=10000,help_text="Write within 1500 words! If the limits exceed, the model won't save.")
     branch_or_society = models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
     publish_blog=models.BooleanField(null=False,blank=False,default=False)
     is_requested=models.BooleanField(null=False,blank=False,default=False)
@@ -101,8 +101,8 @@ class Achievements(models.Model):
 # Table for news
 class News(models.Model):
     news_title=models.CharField(null=False,blank=False,max_length=150)
-    news_subtitle=models.CharField(null=True,blank=True,max_length=100)
-    news_description=RichTextField(null=False,blank=False,max_length=500)
+    news_subtitle=models.CharField(null=True,blank=True,max_length=500,help_text="Please write within 150 words.")
+    news_description=RichTextField(null=False,blank=False,max_length=2000,help_text="Please write within 600 words. If word limit exceeds, News won't be added.")
     news_picture=models.ImageField(null=False,blank=False,upload_to='main_website_files/news/')
     news_date=models.DateField(null=True,blank=True,help_text = "Please use the following format: <em>YYYY-MM-DD</em>.")
     
@@ -116,7 +116,7 @@ class Magazines(models.Model):
     magazine_title=models.CharField(null=False,blank=False,max_length=100)
     published_by=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE)
     publish_date=models.DateField(null=False,blank=False,help_text = "<br>Please use the following format: <em>YYYY-MM-DD</em>.")
-    magazine_short_description=RichTextField(null=False,blank=False,max_length=400)
+    magazine_short_description=RichTextField(null=False,blank=False,max_length=1000,help_text="Please write within 400 words. If word limit exceeds, Magazine won't be added!")
     magazine_picture=ResizedImageField(null=False,blank=False,upload_to="main_website_files/magazine_pictures/")
     magazine_file=models.FileField(null=False,blank=False,upload_to="main_website_files/Magazine/")
     
@@ -186,15 +186,6 @@ class About_IEEE(models.Model):
         super(About_IEEE, self).save(*args, **kwargs)
     def __str__(self) -> str:
         return str(self.pk)
-
-# class IEEE_Bangladesh_Section_Links(models.Model):
-
-#     links = models.URLField(null=True,blank=True,default="www.nolinkgiven.com")
-
-#     class Meta:
-#         verbose_name="IEEE BD Section Link"
-#     def __str__(self) -> str:
-#         return self.pk
     
 class IEEE_Bangladesh_Section_Gallery(models.Model):
 
@@ -208,7 +199,7 @@ class IEEE_Bangladesh_Section_Gallery(models.Model):
 class HomePage_Thoughts(models.Model):
 
     quote = models.TextField(null=False,blank=False)
-    author = models.CharField(null=False,blank=False,max_length=500)
+    author = models.CharField(null=False,blank=False,max_length=500,help_text="Please write within 120 words!")
     
     class Meta:
         verbose_name="HomePage Thoughts"
@@ -242,7 +233,7 @@ class ExemplaryMembers(models.Model):
     current_activity=models.CharField(null=True,blank=True, max_length=200)
     facebook_account_link=models.URLField(null=True,blank=True,max_length=200)
     email=models.EmailField(null=True,blank=True)
-    achievements=RichTextField(null=True,blank=True,max_length=1000)
+    achievements=RichTextField(null=True,blank=True,max_length=1500,help_text="Please write within 700 words. If the word limit exceeds, Exemplary Members won't be added!")
     rank=models.IntegerField(null=True,blank=True,help_text="This is used to sort exemplary members in the main website")
     class Meta:
         verbose_name="Exemplary Members"
