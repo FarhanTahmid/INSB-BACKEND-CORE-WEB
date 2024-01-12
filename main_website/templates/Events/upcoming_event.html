@@ -314,12 +314,12 @@
                     height: 100%;
                     overflow: hidden;
                     width: 100%;">
-                    <a href="{% if upcoming_event.pk %}{% url 'main_website:event_details' upcoming_event.pk %}{% endif %}"><img src="{{media_url}}{{upcoming_event_banner_picture}}" style="object-fit: cover;
+                    <a href="{% if upcoming_event.pk %}{% url 'main_website:event_details' upcoming_event.pk %}{% endif %}"><img src="{{media_url}}{{upcoming_event_banner_picture}}" onerror="this.onerror=null;this.src='{% static 'logos\INSB.png'%}';" style="object-fit: cover;
                         width: 100%;
                         height: 100%;
                         color: 	#75787B;
                         transition: all 0.5s;" 
-                            alt="upcoming_event_banner"></a>
+                        alt="upcoming_event_banner"></a>
                     </div>
                 </div>
             </div>

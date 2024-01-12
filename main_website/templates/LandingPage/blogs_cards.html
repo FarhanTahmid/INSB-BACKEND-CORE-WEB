@@ -37,7 +37,7 @@
                                         class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
                                         <div class="gdlr-standard-style">
                                             <div class="gdlr-blog-thumbnail">
-                                                <a href="#"><img src="/media_files/{{i.blog_banner_picture}}" alt="blog_thumbnail" width="400" height="300" /></a>
+                                                <a href="{% url 'main_website:blog_description' i.pk %}"><img src="/media_files/{{i.blog_banner_picture}}" alt="blog_thumbnail" width="400" height="300" /></a>
                                             </div>
 
                                             <div class="gdlr-blog-grid-content">
@@ -52,13 +52,13 @@
                                                         <div class="clear"></div>
                                                     </div>
 
-                                                    <h3 class="gdlr-blog-title"><a href="#">{{i.title}}</a></h3>
+                                                    <h3 class="gdlr-blog-title"><a href="{% url 'main_website:blog_description' i.pk %}">{{i.title}}</a></h3>
                                                     <div class="clear"></div>
                                                 </header>
                                                 <!-- entry-header -->
 
                                                 <div class="gdlr-blog-content">
-                                                    <div class="clear"></div><a href="#"
+                                                    <div class="clear"></div><a href="{% url 'main_website:blog_description' i.pk %}"
                                                         class="excerpt-read-more">Read More</a>
                                                 </div>
                                             </div>
