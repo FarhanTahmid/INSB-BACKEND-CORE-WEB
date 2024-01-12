@@ -2970,6 +2970,10 @@ def feedbacks(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
+    
+@login_required
+def event_feedback(request, event_id):
+    return render(request,'Events/event_feedbacks.html', {'is_branch':True, 'event_id':event_id})
 
 @login_required
 def insb_members_list(request):

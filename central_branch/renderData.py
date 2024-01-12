@@ -488,7 +488,7 @@ class Branch:
         except:
             return False
         
-    def get_all_feedbacks(event_organiser):
+    def get_all_feedbacks(event_organiser, event_id):
         pass
 
     # def load_ex_com_panel_list():
