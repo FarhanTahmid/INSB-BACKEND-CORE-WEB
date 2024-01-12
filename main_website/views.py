@@ -120,9 +120,20 @@ def event_details(request,event_id):
  
     '''Loads details for the corresponding event page on site'''
     try:
-        if request.method == 'POST':
-            return redirect('main_website:event_details', event_id)
         get_event = Events.objects.get(id = event_id)
+        if request.method == 'POST':
+            event_organiser = get_event.event_organiser.primary
+            name = request.POST.get('name')
+            email = request.POST.get('email')
+            satisfaction = request.POST.get('satisfaction')
+            comment = request.POST.get('comment')
+
+            if(Branch.add_feedback(event_organiser=event_organiser,name=name,email=email,satisfaction=satisfaction,comment=comment)):
+                messages.success(request,'We have received it. Thank you for your feedback!')
+            else:
+                messages.warning(request,'Sorry you couldn\'t read us at the moment. Please try again later.')
+
+            return redirect('main_website:event_details', event_id)
         
         if(get_event.publish_in_main_web):
             event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
