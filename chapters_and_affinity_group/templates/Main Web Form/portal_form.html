@@ -78,6 +78,18 @@
             font-size:20px;
         }
   
+        .app-body{
+            justify-content:center; 
+            margin-left:15%;
+            margin-right:15%;
+        }
+        
+        @media (max-width: 760px) {
+            .app-body {
+                margin-left: 5%;
+                margin-right: 5%;
+            }
+        }
 
         .circle-btn {
             display: flex;
@@ -140,7 +152,7 @@
         </div>
         <!--navbar content-->
         <!-- ############ PAGE START-->
-        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+        <div ui-view class="app-body" id="view">
 
             <div class="container">
                 <br>
@@ -270,17 +282,17 @@
                             <div class="form-group">
                                 <label for="images">Logo Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="about-image-input" name="sc_ag_logo"  accept="image/*">
+                                    <input type="file" class="custom-file-input" id="about-image-input" name="logo"  accept="image/*">
                                     <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
                                 </div>
                                 <br>
-                                {% if sc_ag_info.sc_ag_logo %}
+                                {% if sc_ag_info.logo %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal1">Logo</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.sc_ag_logo}}', 'sc_ag_logo')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.logo}}', 'sc_ag_logo')">✖</button>
                                     </div>
                                 </div>
                                 {% endif %}
@@ -589,7 +601,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <img src="{{media_url}}{{sc_ag_info.sc_ag_logo}}" class="img-fluid w-100" alt="Image">
+                            <img src="{{media_url}}{{sc_ag_info.logo}}" class="img-fluid w-100" alt="Image">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
@@ -802,7 +814,7 @@
 
         // Call the function for each image section when the page loads
         window.onload = function () {
-            checkSavedImage("about-image-input", "{{ sc_ag_info.sc_ag_logo }}");
+            checkSavedImage("about-image-input", "{{ sc_ag_info.logo }}");
             checkSavedImage("background-image-input", "{{ sc_ag_info.background_image }}");
             checkSavedImage("mission-image-input", "{{ sc_ag_info.mission_picture }}");
             checkSavedImage("vision-image-input", "{{ sc_ag_info.vision_picture }}");

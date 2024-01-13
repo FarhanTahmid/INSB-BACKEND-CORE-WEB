@@ -1,7 +1,13 @@
 {% load static %}
 
 {% block sidebar %}
-
+<style>
+  @media screen and (max-width:991px) {
+    .left.navside.dark.dk{
+      overflow: scroll;
+    }
+  }
+</style>
     <!-- fluid app aside -->
   <div class="left navside dark dk" data-layout="column">
       <div class="navbar no-radius">
@@ -435,8 +441,14 @@
   <div class="b-t">
       <div class="nav-fold">
           <a href="{% url 'users:profile' %}">
-              <span class="pull-left">
-                <img src="{{ user_data.profile_picture }}" alt="..." class="w-40 img-circle">
+              <span class="pull-left" style="width: 40px;
+              height: 40px;
+              float: left!important;
+              border-radius: 50%;
+              overflow: hidden;">
+                <img src="{{ user_data.profile_picture }}" alt="profile" style="width: 100%;
+                height: 100%;
+                object-fit: cover;">
               </span>
               <span class="clear hidden-folded p-x">
                 <span class="block _500">{{user_data.name}}</span>

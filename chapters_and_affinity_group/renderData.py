@@ -389,6 +389,7 @@ class Sc_Ag:
                     event_details_edit_access=kwargs['event_details_edit_access'],
                     panel_edit_access=kwargs['panel_edit_access'],
                     membership_renewal_access=kwargs['membership_renewal_access'],
+                    manage_web_access=kwargs['manage_web_access'],
                     manage_access=kwargs['manage_access']
                 )
                 messages.success(kwargs['request'],f"Data Access for {kwargs['member']} was updated!")
@@ -434,7 +435,7 @@ class Sc_Ag:
 
             #saving all the informations
             sc_ag.about_description =about_description
-            sc_ag.sc_ag_logo = about_image
+            sc_ag.logo = about_image
             sc_ag.background_image = background_image
             sc_ag.mission_description = mission_description
             sc_ag.mission_picture = mission_image
@@ -477,7 +478,7 @@ class Sc_Ag:
 
             #checking to see which image is requested to be deleted
             if(image_id == 'sc_ag_logo'):
-                sc_ag.sc_ag_logo = None
+                sc_ag.logo = None
                 os.remove(path)
             elif(image_id == 'background_image'):
                 sc_ag.background_image = None

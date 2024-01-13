@@ -13,7 +13,7 @@ class Roles(admin.ModelAdmin):
 class Chapter_Society(admin.ModelAdmin):
     form = Chapter_Society_Affinity_Groups_Form
     list_display=['id','group_name','primary','short_form','primary_color_code','secondary_color_code','mission_vision_color_code','text_color_code','logo','short_form_2','page_title','secondary_paragraph','about_description',
-                  'sc_ag_logo','background_image','mission_description','mission_picture',
+                  'background_image','mission_description','mission_picture',
                   'vision_description','vision_picture','what_is_this_description','why_join_it',
                   'what_activites_it_has','how_to_join','email','facebook_link']
     

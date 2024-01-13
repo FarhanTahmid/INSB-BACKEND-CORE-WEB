@@ -1,5 +1,35 @@
 {% load static %}
 {% block team_incharges %}
+<style>
+    .p-5 {
+        padding: 1rem!important;
+    }
+    .card.shadow.my-3 .image-box-incharge{
+        width: 100%; 
+        height: 450px; 
+        overflow: hidden;
+    }
+    @media screen and (max-width:991px) {
+        .card.shadow.my-3 .image-box-incharge{
+            height: 200px; 
+        }
+    }
+    @media screen and (max-width:767px) {
+        .card.shadow.my-3 .image-box-incharge{
+            height: 400px; 
+        }
+    }
+    @media screen and (max-width:500px) {
+        .card.shadow.my-3 .image-box-incharge{
+            height: 300px; 
+        }
+    }
+    @media screen and (max-width:370px) {
+        .card.shadow.my-3 .image-box-incharge{
+            height: 250px; 
+        }
+    }
+</style>
 <div class="p-5 my-5 h5">
     <div class=" p-2  border fw-bold text-center mb-4 rounded">
         <span class="">Incharges</span>
@@ -14,8 +44,9 @@
                 {% for i in incharges %}
                 <div class="carousel-item active" data-bs-interval="3000">
                     <div class="card shadow my-3">
-                            
-                        <img height="310px" width="470px" src="/media_files/{{i.member.user_profile_picture}}" class="img-fluid" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                        <div class="image-box-incharge">
+                            <img src="/media_files/{{i.member.user_profile_picture}}" style="height: 100%; width: 100%; object-fit: cover;" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                        </div>
                         <div class="card-body">
                             <h4 class="card-title">{{i.member.name}}</h5>
                                 <div class="card-text">{{i.member.position.role}}, {{i.member.team.team_name}}</div>

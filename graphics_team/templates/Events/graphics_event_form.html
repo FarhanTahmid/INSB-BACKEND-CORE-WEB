@@ -51,9 +51,28 @@
 
 
   
-      
+      h1{
+        text-align:center;
+        font-size:30px;
+        font-weight:bold;
+      }
 
-     
+      label{
+          font-size:20px;
+      }
+
+      .app-body{
+        justify-content:center; 
+        margin-left:15%;
+        margin-right:15%;
+      }
+      
+      @media (max-width: 760px) {
+          .app-body {
+              margin-left: 5%;
+              margin-right: 5%;
+          }
+      }
     
          
     </style>
@@ -80,7 +99,7 @@
         </div>
         <!--navbar content-->
         <!-- ############ PAGE START-->
-        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+        <div ui-view class="app-body" id="view">
 
             <div class="container">
               <br>
@@ -88,10 +107,10 @@
               <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
               <h6>Note:</h6>
               <ol style="justify-content:center;margin-bottom:15px;"><b>
-              <li>Provide the Link of the folder for the Banner Images </li>
-              <li>If the banner picture is already uploaded, you can change it by deleting existing one.
-                  Select the desired picture and hit <span style="color:blue;">'Save'</span>.</li>
-              <li>Make sure to save any changes made before leaving</li>
+                <li>Provide the drive link of the folder for the banner images </li>
+                <li>If the banner picture is already uploaded, you can change it by deleting the existing one.
+                    Select the desired picture and hit <span style="color:blue;">'Save'</span>.</li>
+                <li>Make sure to save any changes you make before leaving</li>
               </ol></b>
 
               <br>

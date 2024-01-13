@@ -63,6 +63,18 @@
             }
         }
         
+        .app-body{
+            justify-content:center; 
+            margin-left:15%;
+            margin-right:15%;
+        }
+        
+        @media (max-width: 760px) {
+            .app-body {
+                margin-left: 5%;
+                margin-right: 5%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -94,33 +106,33 @@
         <!--navbar content-->
         
         <!-- ############ PAGE START-->
-        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
-            
-        <div class="container">
-            <br>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span
-                style="color:#00629B;">{{event_name}}</b></span></h2><br>
-            
-            {% comment %} <h6>Note:</h6>
-            <ol style="justify-content:center;margin-bottom:15px;"><b>
-                <li>Add NOTE</li>
-            </ol></b>
+        <div ui-view class="app-body" id="view">
+                
+            <div class="container">
+                <br>
+                <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span
+                    style="color:#00629B;">{{event_name}}</b></span></h2><br>
+                
+                {% comment %} <h6>Note:</h6>
+                <ol style="justify-content:center;margin-bottom:15px;"><b>
+                    <li>Add NOTE</li>
+                </ol></b>
 
-            <br> {% endcomment %}
+                <br> {% endcomment %}
 
-            {% for message in messages  %}
-                  <p>
-                      <div class="alert alert-success alert-dismissible fade show" role="alert">
-                          {{message}}
-                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                          </button>
-                      </div>
-                  </p>
-            {% endfor %}
+                {% for message in messages  %}
+                    <p>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{message}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </p>
+                {% endfor %}
 
-            <br>
-        </div>
+                <br>
+            </div>
 
 
             <br>  

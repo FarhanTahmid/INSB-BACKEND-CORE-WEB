@@ -71,9 +71,9 @@ class PRT_Data:
     def add_member_to_team(ieee_id,position):
         Branch.add_member_to_team(ieee_id=ieee_id,position=position,team_primary=6) 
 
-    def prt_manage_team_access_modifications(manage_team_access,ieee_id):
+    def prt_manage_team_access_modifications(manage_email_access,manage_team_access,ieee_id):
         try:
-            Manage_Team.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access)
+            Manage_Team.objects.filter(ieee_id=ieee_id).update(manage_email_access=manage_email_access,manage_team_access=manage_team_access)
             return True
         except Manage_Team.DoesNotExist:
             return False
@@ -101,6 +101,16 @@ class PRT_Data:
         try:
             user = Manage_Team.objects.get(ieee_id = ieee_id)
             if(user.manage_team_access):
+                return True
+            else:
+                return False
+        except:
+            return False
+        
+    def prt_manage_email_access(ieee_id):
+        try:
+            user = Manage_Team.objects.get(ieee_id = ieee_id)
+            if(user.manage_email_access):
                 return True
             else:
                 return False
