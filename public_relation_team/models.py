@@ -9,7 +9,8 @@ from django.core.files.storage import FileSystemStorage
 class Manage_Team(models.Model):
 
     ieee_id = models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE,verbose_name="IEEE ID")
-    manage_team_access = models.BooleanField(default=False,null=False,blank=False,verbose_name="Access")
+    manage_team_access = models.BooleanField(default=False,null=False,blank=False,verbose_name="Team Access")
+    manage_email_access = models.BooleanField(default=False,null=False,blank=False,verbose_name="Email Access")
 
     class Meta:
 
