@@ -3216,23 +3216,31 @@ def feedbacks(request):
     
 @login_required
 def event_feedback(request, event_id):
-    sc_ag=PortData.get_all_sc_ag(request=request)
 
-    has_access = Branch_View_Access.get_event_edit_access(request)
-    if has_access:
-        event = Events.objects.get(id=event_id)
-        event_feedbacks = Branch.get_all_feedbacks(event_id=event_id)
+    try:
 
-        context = {
-            'is_branch':True,
-            'all_sc_ag':sc_ag, 
-            'event_id':event_id, 
-            'event_feedbacks':event_feedbacks
-        }
+        sc_ag=PortData.get_all_sc_ag(request=request)
 
-        return render(request,'Events/event_feedbacks.html', context)
-    else:
-        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+        has_access = Branch_View_Access.get_event_edit_access(request)
+        if has_access:
+            event = Events.objects.get(id=event_id)
+            event_feedbacks = Branch.get_all_feedbacks(event_id=event_id)
+
+            context = {
+                'is_branch':True,
+                'all_sc_ag':sc_ag, 
+                'event_id':event_id, 
+                'event_feedbacks':event_feedbacks
+            }
+
+            return render(request,'Events/event_feedbacks.html', context)
+        else:
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+        
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
 
 @login_required
 def insb_members_list(request):
