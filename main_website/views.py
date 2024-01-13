@@ -616,7 +616,7 @@ def write_blogs(request):
                                 is_requested=True
                             )
                             new_requested_blog.save()
-                    messages.success(request,"We have recieved your blog publishing request! You will be notified via email when it get's published. Thank you.")
+                    messages.success(request,"We have received your blog publishing request. We will publish it soon. Thank you!")
                     return redirect('main_website:write_blogs')
                 except Exception as e:
                     messages.warning(request,"Something went wrong! Please try again!")

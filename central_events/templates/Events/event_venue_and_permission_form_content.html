@@ -7,12 +7,12 @@
             <div class="box-header" style="text-align:center;">
                 <h1>Provide Venue and Permission Criterias</h1>
             </div>
-            <!--Error Message-->
+            {% comment %} <!--Error Message-->
             <div class="py-3 text-center">
                 {% for message in messages %}
                     <p style="color:red" class="message">{{message}}</p>
                 {% endfor %}
-            </div>
+            </div> {% endcomment %}
             <form method="POST">
                 {% csrf_token %}
                 <div class="box-body">
@@ -24,6 +24,7 @@
                             {% endfor %}
                         </select>
                     </div>
+                    <br>
                     <div class="form-group">
                         <label>Select Permission Criterias For the Event: (Press CTRL to select multiple options) <span style="color:red">*<span></label>
                         <select multiple class="form-control" name="permission_criteria" required>
@@ -33,7 +34,7 @@
                             {% endfor %}
                         </select>
                     </div>
-                        
+                    <br>
                     <div style="text-align: center;">
                         <input type="submit" class="btn btn-outline b-success text-success" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate" value="Create Event">
                     </div>

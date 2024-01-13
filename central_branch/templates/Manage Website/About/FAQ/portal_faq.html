@@ -102,6 +102,28 @@
                 }
             }
             
+            h1{
+                text-align:center;
+                font-size:30px;
+                font-weight:bold;
+            }
+        
+            label{
+                font-size:20px;
+            }
+
+            .app-body{
+                justify-content:center; 
+                margin-left:15%;
+                margin-right:15%;
+            }
+            
+            @media (max-width: 760px) {
+                .app-body {
+                    margin-left: 5%;
+                    margin-right: 5%;
+                }
+            }
         </style>
     </head>
 
@@ -128,7 +150,7 @@
             </div>
             <!--navbar content-->
 
-            <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+            <div ui-view class="app-body" id="view">
 
                 <div class="container">
                     <br>
@@ -136,14 +158,10 @@
                     <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
                     <h6>Note:</h6>
                     <ol style="justify-content:center;margin-bottom:15px;"><b>
-                    <li>All ( * ) marked fields are mandatory to be filled </li>
-                    <li>Keep in mind your description does not exceed the character count </li>
-                    <li>Maximum 1 picture can be uploaded in dedicated sections </li>
-                    <li>To replace a picture, delete the previous one and add a new one </li>
-                    <li>You can view the image by clicking on it  </li>
-                    <li>You can add as many links as you want </li>
-                    <li>You can see your changes by clicking the preview button </li>
-                    <li>Don’t forget to save the changes by clicking save button </li>
+                    <li>Make a category for that Q&A by clicking on the (+) icon</li>
+                    <li>You can view or add Q&A by clicking on the created category</li>
+                    <li>You can add as many Q&As as you want</li>
+                    <li>Don’t forget to save the changes by clicking the update button</li>
 
                     </ol></b>
                 </div>
