@@ -149,7 +149,7 @@ def emt_data_access(request):
             }
             return render(request,'Manage Team\emt_manage_team.html',context=context)
         else:
-            return render(request,"emt_access_denied.html", {'all_sc_ag':sc_ag})
+            return render(request,"emt_access_denied.html", {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)

@@ -66,6 +66,8 @@ def insb_members_list(request):
     try:
 
         sc_ag=PortData.get_all_sc_ag(request=request)
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
 
         '''This function is responsible to display all the member data in the page'''
         #Loading Access Permission
@@ -85,8 +87,7 @@ def insb_members_list(request):
             members=Members.objects.order_by('position')
             totalNumber=Members.objects.all().count()
             has_view_permission=True
-            current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-            user_data=current_user.getUserData() #getting user data as dictionary file
+            
 
             context={
                 'is_branch':False,
@@ -99,7 +100,7 @@ def insb_members_list(request):
             
             return render(request,'INSB Members/members_list.html',context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -281,6 +282,8 @@ def membership_renewal(request):
     try:
 
         sc_ag=PortData.get_all_sc_ag(request=request)
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
 
         user=request.user
         has_access=(renderData.MDT_DATA.renewal_data_access_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
@@ -289,8 +292,7 @@ def membership_renewal(request):
             #Load all sessions at first
             sessions=Renewal_Sessions.objects.order_by('-id')
 
-            current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-            user_data=current_user.getUserData() #getting user data as dictionary file
+            
 
             if request.method=="POST":
                 #MUST PERFORM TRY CATCH
@@ -320,7 +322,7 @@ def membership_renewal(request):
                 
             return render(request,'Renewal/renewal_homepage.html',context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -577,7 +579,7 @@ def renewal_session_data(request,pk):
         if has_access:
             return render(request,'Renewal/renewal_session_details.html',context)
         else:
-            return render(request,'access_denied.html')
+            return render(request,'access_denied.html',context)
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -621,7 +623,7 @@ def sc_ag_renewal_session_data(request,pk,sc_ag_primary):
             }
             return render(request,"Renewal/SC-AG Renewals/sc_ag_renewal_details.html",context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -795,7 +797,7 @@ def renewal_request_details(request,pk,request_id):
         if(has_access):        
             return render(request,"Renewal/renewal_application_details.html",context=context)
         else:
-            return render(request,'access_denied.html')
+            return render(request,'access_denied.html',context)
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -1060,7 +1062,7 @@ def data_access(request):
         if(has_access):
             return render(request,'Manage Team/manage_team.html',context=context)
         else:
-            return render(request,'access_denied.html')
+            return render(request,'access_denied.html',context)
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -1236,7 +1238,7 @@ def site_registration_request_details(request,ieee_id):
             
             return render(request,'Site Registration/site_registration_application_details.html',context)
         else:
-            return render(request,"access_denied.html")
+            return render(request,"access_denied.html",context)
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
