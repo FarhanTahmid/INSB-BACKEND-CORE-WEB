@@ -124,10 +124,14 @@
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
-                  <span class="avatar w-32">
-                    <img src="{{ user_data.profile_picture }}" alt="...">
-                    <i class="on b-white bottom"></i>
-                  </span>
+				<span class="avatar w-32" style="border-radius: 50%;
+				overflow: hidden;">
+					<img src="{{ user_data.profile_picture }}" alt="user_profile" style="border-radius: 0;
+					width: 100%;
+					height: 100%;
+					object-fit: cover;">
+					<i class="on b-white bottom"></i>
+				</span>
                 </a>
                 <div ui-include="'../views/blocks/dropdown.user.html'"></div>
             </li>
