@@ -117,20 +117,22 @@
             <br>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"><span><b>Messages</b></span> for <span style="color:#00629B;">{% if sc_ag_info %}{{sc_ag_info.short_form}}{% else %}INSB{% endif %}</b></span></h2>
             
+            <!--for error messages-->
             <div class="container">
               <br>
               {% for message in messages  %}
                   <p>
                       <div class="alert alert-success alert-dismissible fade show" role="alert">
-                          {{message}}
                           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                           </button>
+                          <p style="margin: 0;">{{message}}</p>
                       </div>
                   </p>
                 {% endfor %}
                 <br>
-            </div>
+          </div>
+          <!--for error messages end-->
              
 
             <!--Events Table-->
