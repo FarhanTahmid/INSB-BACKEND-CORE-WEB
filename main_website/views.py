@@ -1171,6 +1171,9 @@ def member_profile(request, ieee_id):
             member_data = MDT_DATA.get_member_data(ieee_id=ieee_id)
             sc_ag_position_data = SC_AG_Members.objects.filter(member=ieee_id)
 
+            if member_data.ieee_id == 98955436:
+                member_data.date_of_birth = "NO"
+
             context = {
                 'page_title':'Member Details',
                 'branch_teams': branch_teams,
