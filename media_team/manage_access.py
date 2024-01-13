@@ -32,13 +32,8 @@ class MediaTeam_Render_Access:
             if(Access_Render.faculty_advisor_access(username=username)):
                 faculty_advisor_access=True
             
-            # generate branch team coordinator access
-            branch_team_co_ordinator_access=False
-            if(Access_Render.team_co_ordinator_access(team_id=MediaTeam.get_team().id, username=username)):
-                branch_team_co_ordinator_access=True
-            
             # if any of this is true, grant access
-            if(system_manager_access or branch_eb_access or faculty_advisor_access or branch_team_co_ordinator_access):
+            if(system_manager_access or branch_eb_access or faculty_advisor_access):
                 return True
             else:
                 return False
@@ -65,7 +60,10 @@ class MediaTeam_Render_Access:
                     return False
             else:
                 #The member does not exist in the permissions table
-                return False
+                if(MediaTeam_Render_Access.get_common_access(request) or Access_Render.team_co_ordinator_access(team_id=MediaTeam.get_team().id, username=username)):
+                    return True
+                else:
+                    return False
         except Exception as e:
             if(MediaTeam_Render_Access.get_common_access(request)):
                 return True
