@@ -389,6 +389,7 @@ class Sc_Ag:
                     event_details_edit_access=kwargs['event_details_edit_access'],
                     panel_edit_access=kwargs['panel_edit_access'],
                     membership_renewal_access=kwargs['membership_renewal_access'],
+                    manage_web_access=kwargs['manage_web_access'],
                     manage_access=kwargs['manage_access']
                 )
                 messages.success(kwargs['request'],f"Data Access for {kwargs['member']} was updated!")

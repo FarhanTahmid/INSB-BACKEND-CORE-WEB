@@ -154,14 +154,11 @@
                         <div class="toolcard_p text-center">
                             {{i.color_codes | safe}}
                         </div>
-                        <a href="/media_files/{{i.picture}}" download="">Download PNG</a>
+                        <a href="{% url 'main_website:toolkit' %}" onclick="downloadImage('/media_files/{{i.picture}}', '{{i.title}}.png');">Download PNG</a>
                     </div>
                 {% endfor %}
             </section>
         </section>
-
-        <!--Page End-->
-
 
         <!--Footer-->
         {% block footer %}
@@ -169,6 +166,16 @@
         {% endblock footer %}
 
     </div>
+    <script>
+        function downloadImage(imageUrl, fileName) {
+            var a = document.createElement('a');
+            a.href = imageUrl;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
     {% block common_js %}
     {% include "common_js_includes.html" %}
     {% endblock %}

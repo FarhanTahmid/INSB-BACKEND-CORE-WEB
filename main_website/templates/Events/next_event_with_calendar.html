@@ -1,8 +1,8 @@
 {% load static %}
 {% block event_with_calendar %}
 
-
-{% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script> {% endcomment %}
+<!--for swipe functionality-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 
 
 <style>
@@ -51,12 +51,14 @@
 
   .mySlides {
     flex: 0 0 100%; /* Set the card size to a fixed width of 500px */
+    width:100%;
     box-sizing: border-box;
     transition: transform 0.6s ease;
     
   }
   .card{
-    height:500px;
+    height: 500px;
+    width: 100%;
     border-radius: 10px;
   }
 
@@ -135,7 +137,7 @@
               <div class="slide-show">
                 <div class="slideshow-container">
                   {% for event, banner_image in latest_five_event.items %}
-                  <div class="mySlides" style="width:100px">
+                  <div class="mySlides">
                     <div class="card mb-3">
                       <a href = "{% if event.pk %}{% url 'main_website:event_details' event.pk %}{% endif %}"><img src="{{media_url}}{{banner_image}}" alt="Event banner picture"></a>
                       <div class="card-body" style="
@@ -215,83 +217,130 @@
       element.textContent = element.textContent.substring(0, maxLength) + '...';
   }
 </script>
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-      let slideIndex = 1;
-      let autoSlideInterval;
-  
-      function plusSlides(n) {
-          showSlides(slideIndex += n);
-      }
-  
-      function currentSlide(n) {
-          showSlides(slideIndex = n);
-      }
-  
-      function showSlides(n) {
-          let i;
-          let slides = document.getElementsByClassName("mySlides");
-  
-          if (n > slides.length) {
-              slideIndex = 1;
-          }
-  
-          if (n < 1) {
-              slideIndex = slides.length;
-          }
-  
-          for (i = 0; i < slides.length; i++) {
-              slides[i].style.transform = "translateX(" + -100 * (slideIndex - 1) + "%)";
-          }
-      }
-  
-      // Event listeners for slideshow navigation
-      document.querySelector('.prev').addEventListener('click', function () {
-          clearInterval(autoSlideInterval);
-          plusSlides(-1);
-      });
-  
-      document.querySelector('.next').addEventListener('click', function () {
-          clearInterval(autoSlideInterval);
-          plusSlides(1);
-      });
-  
-      // Add swipe functionality using Hammer.js only if it's available (for touch devices)
-      if (typeof Hammer !== 'undefined') {
-          const slideshowContainer = document.querySelector('.slideshow-container');
-          const hammer = new Hammer(slideshowContainer);
-  
-          hammer.on('swipeleft', function () {
-              clearInterval(autoSlideInterval);
-              plusSlides(1);
-          });
-  
-          hammer.on('swiperight', function () {
-              clearInterval(autoSlideInterval);
-              plusSlides(-1);
-          });
-      }
-  
-      // Auto slide feature
-      function startAutoSlide() {
-          autoSlideInterval = setInterval(function () {
-              plusSlides(1);
-          }, 2500); // Adjust the interval time (in milliseconds) as needed
-      }
-  
-      // Start auto slide when the page loads
-      startAutoSlide();
-  
-      // Restart auto slide after manual navigation
-      document.querySelector('.slideshow-container').addEventListener('mouseenter', function () {
-          clearInterval(autoSlideInterval);
-      });
-  
-      document.querySelector('.slideshow-container').addEventListener('mouseleave', function () {
-          startAutoSlide();
-      });
-  });
-  </script>
+    let slideIndex = 1;
+    let autoSlideInterval;
+    let isPressActive = false; // Flag to track if press is active
+
+    function plusSlides(n, resetTimer) {
+        showSlides(slideIndex += n);
+        if (resetTimer) {
+            resetAutoSlide();
+        }
+    }
+
+    function currentSlide(n, resetTimer) {
+        showSlides(slideIndex = n);
+        if (resetTimer) {
+            resetAutoSlide();
+        }
+    }
+
+    function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("mySlides");
+
+        if (n > slides.length) {
+            slideIndex = 1;
+        }
+
+        if (n < 1) {
+            slideIndex = slides.length;
+        }
+
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.transform = "translateX(" + -100 * (slideIndex - 1) + "%)";
+        }
+    }
+
+    // Event listeners for slideshow navigation
+    document.querySelector('.prev').addEventListener('click', function () {
+        pauseAutoSlide();
+        plusSlides(-1, true);
+    });
+
+    document.querySelector('.next').addEventListener('click', function () {
+        pauseAutoSlide();
+        plusSlides(1, true);
+    });
+
+    // Add swipe functionality using Hammer.js only if it's available (for touch devices)
+    if (typeof Hammer !== 'undefined') {
+        const slideshowContainer = document.querySelector('.slideshow-container');
+        const hammer = new Hammer(slideshowContainer);
+
+        hammer.on('swipeleft', function () {
+            pauseAutoSlide();
+            plusSlides(1, true);
+        });
+
+        hammer.on('swiperight', function () {
+            pauseAutoSlide();
+            plusSlides(-1, true);
+        });
+
+        // Additional Hammer.js event listeners to pause/resume auto slide on hold
+        hammer.on('press', function () {
+            isPressActive = true; // Set the flag to true when press is active
+            pauseAutoSlide();
+        });
+
+        hammer.on('pressup', function () {
+            isPressActive = false; // Set the flag to false when press is released
+            resetAutoSlide();
+        });
+
+        // Additional Hammer.js event listener for tap
+        hammer.on('tap', function (event) {
+            // Handle tap separately, e.g., open a link or perform an action
+            // Prevent tap from interfering with auto slide
+            event.preventDefault();
+            resetAutoSlide();
+        });
+    }
+
+    // Auto slide feature
+    function startAutoSlide() {
+        autoSlideInterval = setInterval(function () {
+            plusSlides(1, false);
+        }, 5000); // Adjust the interval time (in milliseconds) as needed
+    }
+
+    // Reset auto slide without changing the interval
+    function resetAutoSlide() {
+        if (!isPressActive) {
+            clearInterval(autoSlideInterval);
+            startAutoSlide();
+        }
+    }
+
+    // Pause auto slide
+    function pauseAutoSlide() {
+        clearInterval(autoSlideInterval);
+    }
+
+    // Start auto slide when the page loads
+    startAutoSlide();
+
+    // Restart auto slide after manual navigation
+    document.querySelector('.slideshow-container').addEventListener('mouseenter', function () {
+        pauseAutoSlide();
+    });
+
+    document.querySelector('.slideshow-container').addEventListener('mouseleave', function () {
+        if (!isPressActive) {
+            resetAutoSlide();
+        }
+    });
+});
+
+
+</script>
+
+
+
   
 
 
