@@ -275,10 +275,16 @@
                                     {% csrf_token %}
                                     <td>
                                         
+                                        {% if data_access.manage_email_access %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="manage_email_access" name="manage_email_access">
+                                        <label for="manage_email_access">Manage Email Access</label><br>
+                                        {% else %}
+                                        <input type="checkbox" class="checkbox" value="manage_email_access" name="manage_email_access">
+                                        <label for="manage_email_access">Manage Email Access</label><br>
+                                        {% endif %}
                                         {% if data_access.manage_team_access %}
                                         <input type="checkbox" checked="True" class="checkbox" value="manage_team_access" name="manage_team_access">
-                                        <label for="manage_team_access">Manage Team Access
-                                        </label><br>
+                                        <label for="manage_team_access">Manage Team Access</label><br>
                                         {% else %}
                                         <input type="checkbox" class="checkbox" value="manage_team_access" name="manage_team_access">
                                         <label for="manage_team_access">Manage Team Access</label><br>
