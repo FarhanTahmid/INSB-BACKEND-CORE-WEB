@@ -94,16 +94,6 @@ class ContentWritingTeam:
             return True
         except:
             return False
-
-    def cwp_manage_team_access(ieee_id):
-        try:
-            user = CWP_Data_Access.objects.get(ieee_id = ieee_id)
-            if(user.manage_team_access):
-                return True
-            else:
-                return False
-        except:
-            return False
         
     def creating_note(title,note,event_id):
 

@@ -67,6 +67,21 @@
                 font-size:20px;
             }
 
+
+            .app-body{
+                justify-content:center; 
+                margin-left:15%;
+                margin-right:15%;
+            }
+            
+            @media (max-width: 760px) {
+                .app-body {
+                    margin-left: 5%;
+                    margin-right: 5%;
+                }
+            }
+
+
             .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
                 max-width: 80%; 
                 height: 90%; 
@@ -105,7 +120,7 @@
             </div>
             <!--navbar content-->
 
-            <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+            <div ui-view class="app-body" id="view">
 
                 <div class="container">
                     <br>
