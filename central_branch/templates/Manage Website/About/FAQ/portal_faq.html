@@ -205,20 +205,22 @@
                     </div>
                 </div>
                 
-                <!--Messages-->
+                <!--for error messages-->
                 <div class="container">
+                    <br>
                     {% for message in messages  %}
                         <p>
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{message}}
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
+                                <p style="margin: 0;">{{message}}</p>
                             </div>
                         </p>
                     {% endfor %}
+                    <br>
                 </div>
-                <!--Messages End-->
+                <!--for error messages end-->
                 
                 <div class="container">          
                     <div class="box">
