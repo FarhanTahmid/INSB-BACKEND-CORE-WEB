@@ -226,7 +226,7 @@ def team_details(request,primary,name):
         if(has_access):
             return render(request,'Teams/team_details.html',context=context)
         else:
-            return render(request,"access_denied2.html", { 'all_sc_ag':sc_ag })
+            return render(request,"access_denied2.html", { 'all_sc_ag':sc_ag,'user_data':user_data })
     
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -287,7 +287,7 @@ def panel_home(request):
             
             return render(request,"Panel/panel_homepage.html",context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -435,7 +435,7 @@ def branch_panel_details(request,panel_id):
             }
             return render(request,'Panel/panel_details.html',context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -499,7 +499,7 @@ def branch_panel_officers_tab(request,panel_id):
             }
             return render(request,'Panel/officer_members_tab.html',context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -564,7 +564,7 @@ def branch_panel_volunteers_tab(request,panel_id):
             }
             return render(request,'Panel/volunteer_members_tab.html',context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -644,7 +644,7 @@ def branch_panel_alumni_tab(request,panel_id):
             }
             return render(request,'Panel/alumni_members_tab.html',context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -703,7 +703,7 @@ def manage_research(request):
             }
             return render(request,"Manage Website/Publications/Research Paper/manage_research_paper.html",context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -733,7 +733,7 @@ def manage_research_request(request):
             }
             return render(request,"Manage Website/Publications/Research Paper/manage_paper_request.html",context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -772,7 +772,7 @@ def publish_research_request(request,pk):
             }
             return render(request,"Manage Website/Publications/Research Paper/publish_research.html",context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -810,7 +810,7 @@ def update_researches(request,pk):
             }
             return render(request,"Manage Website/Publications/Research Paper/update_research_papers.html",context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -864,7 +864,7 @@ def manage_blogs(request):
             
             return render(request,"Manage Website/Publications/Blogs/manage_blogs.html",context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -902,7 +902,7 @@ def update_blogs(request,pk):
 
             return render(request,"Manage Website/Publications/Blogs/update_blogs.html",context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -941,7 +941,7 @@ def blog_requests(request):
             }
             return render(request,"Manage Website/Publications/Blogs/blog_requests.html",context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -984,7 +984,7 @@ def publish_blog_request(request,pk):
             }
             return render(request,"Manage Website/Publications/Blogs/publish_blog.html",context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -1147,7 +1147,7 @@ def manage_website_homepage(request):
             }
             return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -1310,7 +1310,7 @@ def manage_about(request):
             }
             return render(request,'Manage Website/About/About IEEE/manage_ieee.html',context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1429,7 +1429,7 @@ def ieee_region_10(request):
             }
             return render(request,'Manage Website/About/IEEE Region 10/ieee_region_10.html',context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1556,7 +1556,7 @@ def ieee_bangladesh_section(request):
             }
             return render(request,'Manage Website/About/IEEE Bangladesh Section/ieee_bangladesh_section.html',context=context)
         else:
-            return render(request, 'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request, 'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1641,7 +1641,7 @@ def ieee_nsu_student_branch(request):
             }
             return render(request,'Manage Website/About/IEEE NSU Student Branch/ieee_nsu_student_branch.html', context)
         else:
-            return render(request, 'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request, 'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1810,7 +1810,7 @@ def faq(request):
             }
             return render(request,'Manage Website/About/FAQ/portal_faq.html', context)
         else:
-            return render(request, 'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request, 'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
     
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -1860,7 +1860,7 @@ def manage_achievements(request):
             }
             return render(request,'Manage Website/Activities/manage_achievements.html',context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -1899,7 +1899,7 @@ def update_achievements(request,pk):
 
             return render(request,"Manage Website/Activities/achievements_update_section.html",context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -1944,7 +1944,7 @@ def manage_news(request):
             }
             return render(request,"Manage Website/Activities/manage_news.html",context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -1980,7 +1980,7 @@ def update_news(request,pk):
             }
             return render(request,'Manage Website/Activities/news_update_section.html',context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -2030,7 +2030,7 @@ def manage_magazines(request):
             }
             return render(request,'Manage Website/Publications/Magazine/manage_magazine.html',context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -2125,7 +2125,7 @@ def manage_gallery(request):
             
             return render(request,'Manage Website/Publications/Gallery/manage_gallery.html',context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -2162,7 +2162,7 @@ def update_images(request,pk):
             }
             return render(request,"Manage Website/Publications/Gallery/update_images.html",context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
 
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -2200,7 +2200,7 @@ def update_videos(request,pk):
             }
             return render(request,"Manage Website/Publications/Gallery/update_videos.html",context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -2245,7 +2245,7 @@ def manage_exemplary_members(request):
             }
             return render(request,"Manage Website/Exemplary Members/exemplary_member.html",context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -2281,7 +2281,7 @@ def update_exemplary_members(request,pk):
                 'member_form':member_form
             }
             return render(request,"Manage Website/Exemplary Members/update_exemplary_member.html",context=context)
-        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
     
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -2359,7 +2359,7 @@ def manage_view_access(request):
 
             return render(request,'Manage Access/manage_access.html',context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -2856,7 +2856,7 @@ def event_edit_media_form_tab(request, event_id):
             }
             return render(request,"Events/event_edit_media_form_tab.html",context)
         else:
-            return render(request, 'access_denied2.html')
+            return render(request, 'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -2928,7 +2928,7 @@ def event_edit_graphics_form_tab(request, event_id):
             }
             return render(request,"Events/event_edit_graphics_form_tab.html",context)
         else:
-            return render(request, 'access_denied2.html')
+            return render(request, 'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -2990,7 +2990,7 @@ def event_edit_graphics_form_links_sub_tab(request,event_id):
             }
             return render(request,"Events/event_edit_graphics_form_links_sub_tab.html",context)
         else:
-            return render(request, 'access_denied2.html')
+            return render(request, 'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -3053,7 +3053,7 @@ def event_edit_content_form_tab(request,event_id):
             }
             return render(request,"Events/event_edit_content_and_publications_form_tab.html",context)
         else:
-            return render(request, 'access_denied2.html')
+            return render(request, 'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -3127,7 +3127,7 @@ def manage_toolkit(request):
             }
             return render(request,"Manage Website/Publications/Toolkit/manage_toolkit.html",context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -3164,7 +3164,7 @@ def update_toolkit(request,pk):
             }
             return render(request,"Manage Website/Publications/Toolkit/update_toolkit.html",context=context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -3208,7 +3208,7 @@ def feedbacks(request):
 
             }
             return render(request,"FeedBack/feedback.html",context)
-        return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
+        return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag ,'user_data':user_data,})
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -3235,7 +3235,7 @@ def event_feedback(request, event_id):
 
             return render(request,'Events/event_feedbacks.html', context)
         else:
-            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag})
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)

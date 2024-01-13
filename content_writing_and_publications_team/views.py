@@ -145,7 +145,7 @@ def manage_team(request):
             }
             return render(request,"content_writing_and_publications_team/manage_team.html",context=context)
         else:
-            return render(request,"content_writing_and_publications_team/access_denied.html")
+            return render(request,"content_writing_and_publications_team/access_denied.html", {'all_sc_ag':sc_ag,'user_data':user_data,})
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
