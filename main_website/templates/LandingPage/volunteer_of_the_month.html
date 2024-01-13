@@ -85,6 +85,7 @@
         background-color: transparent;
         /* top: 50%; */
         border: none;
+        color: 	#6d6d6d;
         margin-top: 465px;
         outline: none;
         transition: all 0.3s;
@@ -95,10 +96,6 @@
         font-size: 25px;
     }
 
-    #content-section-2 .section1 .prev:hover,
-    #content-section-2 .section1 .next:hover {
-        color: #FFC72C;
-    }
 
     @media screen and (max-width: 991px) {
         #content-section-2 .section1 .section2 .section3 .carousal .container .content .con {
@@ -106,7 +103,7 @@
         }
         #content-section-2 .section1 .prev,
         #content-section-2 .section1 .next {
-            margin-top: 730px;
+            display: none;
             
         }
     }
@@ -119,7 +116,8 @@
     }
     @media screen and (max-width: 770px) {
         #content-section-2 .section1 .section2 .section3 .carousal{
-            display: grid;
+            display: flex;
+            width: 545px;
             overflow: hidden;
             max-width: 1140px;
             margin: auto;
@@ -140,13 +138,6 @@
         }
     }
     @media screen and (max-width: 575px) {
-        #content-section-2 .section1 .section2 .section3 .carousal .container {
-            width: 50%;
-        }
-        #content-section-2 .section1 .prev,
-        #content-section-2 .section1 .next {
-            margin-top: 846px;
-        }
         #content-section-2 .section1 .section2 .section3 .section4 .gdlr-heading-shortcode .break{
             display: block;
         }
@@ -154,10 +145,6 @@
     @media screen and (max-width: 420px) {
         #content-section-2 .section1 .section2 .section3 .carousal .container .content .con .details {
             width: 50%;
-        }
-        #content-section-2 .section1 .prev,
-        #content-section-2 .section1 .next {
-            display: none;
         }
     }
     #content-section-2 .section1 .prev {
@@ -218,94 +205,102 @@
         let currentIndex = 0;
         let startX = 0;
         let isDragging = false;
-    
+        let autoSwipeInterval;
+
         const slides = document.querySelectorAll('#content-section-2 .section1 .section2 .section3 .carousal .container .content');
         const totalSlides = slides.length;
-    
+
         function showSlide(index) {
             const percentage = -index * 100;
             document.querySelector('#content-section-2 .section1 .section2 .section3 .carousal .container').style.transform = `translateX(${percentage}%)`;
         }
-    
-        // Previous slide
+
         function prevSlide() {
             currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
             showSlide(currentIndex);
+            restartAutoSwipe();
         }
-    
-        // Next slide
+
         function nextSlide() {
             currentIndex = (currentIndex + 1) % totalSlides;
             showSlide(currentIndex);
+            restartAutoSwipe();
         }
-    
+
         function handleTouchStart(e) {
             startX = e.touches[0].clientX;
             isDragging = true;
         }
-    
+
         function handleTouchMove(e) {
             if (!isDragging) return;
             const currentX = e.touches[0].clientX;
             const diff = startX - currentX;
-    
-            // Detect swipe direction and move accordingly
+
             if (diff > 0) {
                 nextSlide();
             } else {
                 prevSlide();
             }
-    
+
             isDragging = false;
+            restartAutoSwipe();
         }
-    
+
         function handleTouchEnd() {
             isDragging = false;
         }
-    
+
         function handleMouseDown(e) {
             startX = e.clientX;
             isDragging = true;
         }
-    
+
         function handleMouseMove(e) {
             if (!isDragging) return;
             const currentX = e.clientX;
             const diff = startX - currentX;
-    
-            // Detect swipe direction and move accordingly
+
             if (diff > 0) {
                 nextSlide();
             } else {
                 prevSlide();
             }
-    
+
             isDragging = false;
+            restartAutoSwipe();
         }
-    
+
         function handleMouseUp() {
             isDragging = false;
         }
-    
-        // Attach touch event listeners to the container
+
+        function restartAutoSwipe() {
+            clearInterval(autoSwipeInterval);
+            autoSwipeInterval = setInterval(nextSlide, 3000);
+        }
+
         const container = document.querySelector('#content-section-2 .section1 .section2 .section3 .carousal .container');
         container.addEventListener('touchstart', handleTouchStart);
         container.addEventListener('touchmove', handleTouchMove);
         container.addEventListener('touchend', handleTouchEnd);
-    
-        // Attach mouse event listeners to the container
+
         container.addEventListener('mousedown', handleMouseDown);
         container.addEventListener('mousemove', handleMouseMove);
         container.addEventListener('mouseup', handleMouseUp);
-    
-        // Attach click event listeners to the buttons
+
         document.querySelector('.prev').addEventListener('click', prevSlide);
         document.querySelector('.next').addEventListener('click', nextSlide);
-    
-        // Initial display
+
+        container.addEventListener('mouseenter', stopAutoSwipe);
+        container.addEventListener('mouseleave', restartAutoSwipe);
+
+        restartAutoSwipe(); // Start auto-swipe on page load
         showSlide(currentIndex);
     });
-    </script>
+</script>
+
+
     
 
 {% endblock volunteer_of_the_month %}

@@ -124,10 +124,14 @@
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
-                  <span class="avatar w-32">
-                    <img src="{{ user_data.profile_picture }}" alt="...">
-                    <i class="on b-white bottom"></i>
-                  </span>
+				<span class="avatar w-32" style="border-radius: 50%;
+				overflow: hidden;">
+					<img src="{{ user_data.profile_picture }}" alt="user_profile" style="border-radius: 0;
+					width: 100%;
+					height: 100%;
+					object-fit: cover;">
+					<i class="on b-white bottom"></i>
+				</span>
                 </a>
                 <div ui-include="'../views/blocks/dropdown.user.html'"></div>
             </li>
@@ -439,61 +443,60 @@
 				</div>
 			</div>
 		
-			<div class="col-xl-6">
-				<div class="card">
-					<div class="card-body">
-						<div class="d-flex flex-wrap align-items-center"  style="justify-content: center;">
-							<br><br><br>
-							<h3 class="card-title mb-0">Ratios</h3>
-							<div class="ms-auto">
-								<!--<div class="dropdown">
-									<a class="dropdown-toggle text-reset" href="#" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										<span class="text-muted font-size-12"> Sort By:</span> <span class="fw-medium"><i class="mdi mdi-chevron-down ms-1"></i></span>
-									</a>
-									<div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-										<a class="dropdown-item" href="#">Monthly</a>
-										<a class="dropdown-item" href="#">Yearly</a>
-									</div>
-								</div>-->
-							</div>
+		</div>
+		<div class="col-xl-6">
+			<div class="card">
+				<div class="card-body">
+					<div class="d-flex flex-wrap align-items-center"  style="justify-content: center;">
+						<br><br><br>
+						<h3 class="card-title mb-0">Ratios</h3>
+						<div class="ms-auto">
+							<!--<div class="dropdown">
+								<a class="dropdown-toggle text-reset" href="#" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<span class="text-muted font-size-12"> Sort By:</span> <span class="fw-medium"><i class="mdi mdi-chevron-down ms-1"></i></span>
+								</a>
+								<div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+									<a class="dropdown-item" href="#">Monthly</a>
+									<a class="dropdown-item" href="#">Yearly</a>
+								</div>
+							</div>-->
 						</div>
-	
-						<div class="text-center mt-4">
-							<canvas onload = "initializeCircleChart2()" class="mx-auto" id="Category2" height="281" data-colors='["#3367d6","#4285f4","#7baaf7","#c6dafc"]'></canvas>
-						</div>
-						
-						<br>
-						<div class="row mt-2">
-							{% for key, value in gender_active_inactive_users_dic.items %}
-								<div class="col">
-									<div class="px-2">
-										<div class="d-flex align-items-center mt-sm-0 mt-2">
-											<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
-											<div class="flex-grow-1 ms-2">
-												<p class="mb-0 text-truncate">{{ key }}: &nbsp;</p>
-											</div>
-											<div class="flex-shrink-0">
-												<span class="fw-bold">{{ value }}%</span>
-											</div>
+					</div>
+
+					<div class="text-center mt-4">
+						<canvas onload = "initializeCircleChart2()" class="mx-auto" id="Category2" height="281" data-colors='["#3367d6","#4285f4","#7baaf7","#c6dafc"]'></canvas>
+					</div>
+					
+					<br>
+					<div class="row mt-2">
+						{% for key, value in gender_active_inactive_users_dic.items %}
+							<div class="col">
+								<div class="px-2">
+									<div class="d-flex align-items-center mt-sm-0 mt-2">
+										<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
+										<div class="flex-grow-1 ms-2">
+											<p class="mb-0 text-truncate">{{ key }}: &nbsp;</p>
+										</div>
+										<div class="flex-shrink-0">
+											<span class="fw-bold">{{ value }}%</span>
 										</div>
 									</div>
 								</div>
-						
-								{% if loop.index|divisibleby:3 and not loop.last %}
-									</div><div class="row mt-2">
-								{% endif %}
-						
-								{% if loop.last and not loop.index|divisibleby:3 %}
-									</div>
-								{% endif %}
-							{% endfor %}
-						</div>
-						
+							</div>
+					
+							{% if loop.index|divisibleby:3 and not loop.last %}
+								</div><div class="row mt-2">
+							{% endif %}
+					
+							{% if loop.last and not loop.index|divisibleby:3 %}
+								</div>
+							{% endif %}
+						{% endfor %}
 					</div>
+					
 				</div>
+			</div>
 		</div>
-		</div>
-
 
 
 
