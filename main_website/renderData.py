@@ -23,11 +23,11 @@ class HomepageItems:
 
         ''' This function returns all the events with its banner picture depending on the value of flag being True or False'''
             
-            #when flag is true we are trying to fetch all events, else latest upcoming five events
+            #when flag is true we are trying to fetch all events, else latest five events
         
         try:
             #getting current date to compare with events date that are upcoming
-            current_datetime = timezone.now()
+            #current_datetime = timezone.now()
             #getting which societies event to load
             society = SC_AG_Info.get_sc_ag_details(request,primary)
             #declaring dictionart to store event object as key and graphic banner object as value
@@ -46,15 +46,15 @@ class HomepageItems:
                     ####################################################################################################################
             else:
                 if primary == 1:
-                    #when false getting upcoming five events
-                    events = Events.objects.filter(publish_in_main_web= True,event_date__gt=current_datetime).order_by('event_date')[:5]
+                    #when false getting latest five events
+                    events = Events.objects.filter(publish_in_main_web= True).order_by('-event_date')[:5]
                 else:
                     #when False getting events 5 events which are upcoming, is published and is of particular society
-                    events = Events.objects.filter(publish_in_main_web= True,event_organiser = society,event_date__gt=current_datetime).order_by('event_date')#[:5]
+                    events = Events.objects.filter(publish_in_main_web= True,event_organiser = society).order_by('event_date')#[:5]
                     ####getting collaborated events###if dont want collaborated event remove bottom section and uncommment the list here -----------------------here
                     collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
                     #joining both the events list of collbarated and their own organised events
-                    events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True,event_date__gt=current_datetime)).order_by('event_date')[:5]
+                    events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('-event_date')[:5]
                     ####################################################################################################################
 
             #using this loop, assigning the event with its corresponding banner picture in the dictionary as key and value

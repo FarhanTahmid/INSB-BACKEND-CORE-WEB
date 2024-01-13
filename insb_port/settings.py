@@ -223,8 +223,6 @@ DJANGORESIZED_DEFAULT_SIZE = [1920, 1080]
 DJANGORESIZED_DEFAULT_SCALE = 1.0
 DJANGORESIZED_DEFAULT_QUALITY = 80
 DJANGORESIZED_DEFAULT_KEEP_META = True
-DJANGORESIZED_DEFAULT_FORCE_FORMAT = 'JPEG'
-DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {'JPEG': ".jpg"}
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
 
 #CELERY_BROKER_URL = "amqps://fhfqmapx:YUA5So69ozn0PUIB8eJHSrwz6dhCA07W@rattlesnake.rmq.cloudamqp.com/fhfqmapx"
@@ -243,10 +241,3 @@ CELERY_TASK_SERIALIZER = 'json'
 # }
 
 NEWS_API_KEY=os.environ.get('NEWS_API_KEY')
-
-Q_CLUSTER = {
-    'name': 'insb_port',
-    'workers': 8,
-    'timeout': 60,
-    'broker_class':'insb_port.rabbitMQ_Broker.RabbitMQBroker'
-}

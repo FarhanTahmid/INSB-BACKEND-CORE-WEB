@@ -34,6 +34,7 @@ from port.models import Chapters_Society_and_Affinity_Groups
 from users.models import Alumni_Members
 from django.views.decorators.clickjacking import xframe_options_exempt
 from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
+from central_branch import views as cv
 # Create your views here.
 logger=logging.getLogger(__name__)
 
@@ -63,8 +64,7 @@ def sc_ag_homepage(request,primary):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
 
 @login_required
 def sc_ag_members(request,primary):
@@ -465,8 +465,8 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
             'tenure_time':tenure_time,
             'positions':SC_AG_Info.get_sc_ag_executive_positions(request=request,sc_ag_primary=primary),
             'alumni_members':alumni_members,
-            'alumni_members_in_panel':PanelMembersData.get_alumni_members_from_panel(panel=panel_pk,request=request)
-
+            'alumni_members_in_panel':PanelMembersData.get_alumni_members_from_panel(panel=panel_pk,request=request),
+            'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
         }
         return render(request,'Panels/sc_ag_alumni_members_tab.html',context=context)
     except Exception as e:
@@ -479,16 +479,20 @@ def sc_ag_membership_renewal_sessions(request,primary):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-        #Load all sessions at first from Central Branch
-        sessions=Renewal_Sessions.objects.order_by('-id')
-        
-        context={
-            'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info,
-            'sessions':sessions,
-            'is_branch':False,            
-        }
-        return render(request,"Renewal/renewal_homepage.html",context=context)
+        has_access = SC_Ag_Render_Access.access_for_membership_renewal_access(request=request,sc_ag_primary=primary)
+        if has_access:
+            #Load all sessions at first from Central Branch
+            sessions=Renewal_Sessions.objects.order_by('-id')
+            
+            context={
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'sessions':sessions,
+                'is_branch':False,            
+            }
+            return render(request,"Renewal/renewal_homepage.html",context=context)
+        else:
+            return render(request,"access_denied.html", { 'all_sc_ag':sc_ag })
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -598,6 +602,7 @@ def sc_ag_manage_access(request,primary):
                     event_details_edit_access=False
                     panel_edit_access=False
                     membership_renewal_access=False
+                    manage_web_access=False
                     manage_access=False
                     
                     # get values from template and change according to it
@@ -611,6 +616,8 @@ def sc_ag_manage_access(request,primary):
                         panel_edit_access=True
                     if(request.POST.get('membership_renewal_access') is not None):
                         membership_renewal_access=True
+                    if(request.POST.get('manage_web_access') is not None):
+                        manage_web_access=True
                     if(request.POST.get('manage_access') is not None):
                         manage_access=True
                     
@@ -621,6 +628,7 @@ def sc_ag_manage_access(request,primary):
                                                         event_details_edit_access=event_details_edit_access,
                                                         panel_edit_access=panel_edit_access,
                                                         membership_renewal_access=membership_renewal_access,
+                                                        manage_web_access=manage_web_access,
                                                         manage_access=manage_access)):
                         return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
                     else:
@@ -652,11 +660,15 @@ def sc_ag_manage_access(request,primary):
 @login_required
 def sc_ag_renewal_excel_sheet(request,primary,renewal_session):
     try:
-        response=Sc_Ag.generate_renewal_excel_sheet(request=request,renewal_session_id=renewal_session,sc_ag_primary=primary)
-        if(not response):
-            return redirect('chapters_and_affinity_group:sc_ag_membership_renewal_details',primary,renewal_session)
+        has_access = SC_Ag_Render_Access.access_for_membership_renewal_access(request=request,sc_ag_primary=primary)
+        if has_access:
+            response=Sc_Ag.generate_renewal_excel_sheet(request=request,renewal_session_id=renewal_session,sc_ag_primary=primary)
+            if(not response):
+                return redirect('chapters_and_affinity_group:sc_ag_membership_renewal_details',primary,renewal_session)
+            else:
+                return response
         else:
-            return response
+            return render(request,'access_denied.html')
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -801,7 +813,7 @@ def event_creation_form_page(request,primary):
                         event_type_list=event_type_list,
                         event_description=event_description,
                         event_date=event_date,
-                        evet_time=event_time,
+                        event_time=event_time,
                         event_organiser=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary).primary
                     )
                     
@@ -957,6 +969,7 @@ def event_edit_form(request, primary, event_id):
                     ''' Get data from form and call update function to update event '''
 
                     form_link = request.POST.get('drive_link_of_event')
+                    more_info_link = request.POST.get('more_info_link')
                     publish_event_status = request.POST.get('publish_event')
                     flagship_event_status = request.POST.get('flagship_event')
                     registration_event_status = request.POST.get('registration_fee')
@@ -985,7 +998,7 @@ def event_edit_form(request, primary, event_id):
 
                     #Check if the update request is successful
                     if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, event_time=event_time, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
-                                                flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,form_link = form_link,is_featured_event=is_featured)):
+                                                flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,more_info_link=more_info_link,form_link = form_link,is_featured_event=is_featured)):
                         messages.success(request,f"EVENT: {event_name} was Updated successfully")
                         return redirect('chapters_and_affinity_group:event_edit_form',primary, event_id) 
                     else:
@@ -1416,15 +1429,15 @@ def manage_main_website(request, primary):
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
 
     
-        has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
+        has_access = SC_Ag_Render_Access.access_for_manage_web(request, primary)
         if(has_access):
             
             if request.method == "POST":
                 #if save button is clicked then saving the details user entered
                 if request.POST.get('save'):
 
+                    about_image = request.FILES.get('logo')
                     about_details = request.POST.get('about_details')
-                    about_image = request.FILES.get('sc_ag_logo')
                     background_image =  request.FILES.get('background_image')
                     mission_description = request.POST.get('mission_details')
                     mission_image =  request.FILES.get('mission_picture')
@@ -1445,11 +1458,11 @@ def manage_main_website(request, primary):
                     facebook_link = request.POST.get('facebook_link')
                     mission_vision_color_code_details = request.POST.get('mission_vision_color_code')
 
-                    print(pageTitle_details)
+                    print(about_image)
                     #checking to see if no picture is uploaded by user, if so then if picture is already present in database
                     #then updating it with saved value to prevent data loss. Otherwise it is None
                     if about_image == None:
-                        about_image = get_sc_ag_info.sc_ag_logo
+                        about_image = get_sc_ag_info.logo
                     if background_image == None:
                         background_image = get_sc_ag_info.background_image
                     if vision_picture == None:
@@ -1585,5 +1598,23 @@ def feedbacks(request,primary):
         # TODO: Make a good error code showing page and show it upon errror
         return HttpResponseBadRequest("Bad Request")
 
+@login_required
+def event_feedback(request, primary, event_id):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
+    if has_access:
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        event_feedbacks = Branch.get_all_feedbacks(event_id=event_id)
 
+        context = {
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'primary':primary,
+            'is_branch':False, 
+            'event_id':event_id, 
+            'event_feedbacks':event_feedbacks
+        }
 
+        return render(request,'Events/event_feedbacks.html', context)
+    else:
+        return render(request,'access_denied.html', { 'all_sc_ag':sc_ag })

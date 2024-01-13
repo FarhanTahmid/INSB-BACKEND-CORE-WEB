@@ -1,0 +1,74 @@
+{% block event_feedbacks %}
+<!--Events Table-->
+<div style="text-align:center; margin-top:30px;">
+  <form method="POST" id="form-submit">
+    {% csrf_token %}  
+    <div class="container" style="justify-content:center;">
+      <div class="header_wrap">
+        <div class="num_rows">
+    
+          <div class="form-group">
+            <!--		Show Numbers Of Rows 		-->
+            <select class="form-control" name="state" id="maxRows">
+    
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="5000">Show ALL Rows</option>
+            </select>
+    
+          </div>
+        </div>
+        <div class="tb_search">
+          <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search.." class="form-control">
+        </div>
+      </div>
+      
+      <div class="table-responsive">
+        <table class="table table-striped table-class" id="table-id">
+      
+          <thead>
+            <tr>
+                <th>SL</th>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Message</th>
+                
+            </tr>
+          </thead>
+          <tbody>
+            {% for feedback in event_feedbacks %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+                <td>{{feedback.date}}</td>
+                <td>{{feedback.name}}</td>
+                <td>{{feedback.email}}</td>
+                <td>{{feedback.comment}}</td>
+            </tr>
+            {% endfor %}
+          </form>
+          <tbody>
+        </table>
+        <br>
+ 
+      </div>
+      
+      <!--		Start Pagination -->
+      <div class='pagination-container'>
+        <nav>
+          <ul class="pagination">
+            <!--	Here the JS Function Will Add the Rows -->
+          </ul>
+        </nav>
+      </div>
+      <div class="rows_count">Showing 11 to 20 of 91 entries</div>   
+            
+    </div>
+    
+    </form>
+  </div>
+
+  <!--Events table end-->
+{% endblock event_feedbacks %}
