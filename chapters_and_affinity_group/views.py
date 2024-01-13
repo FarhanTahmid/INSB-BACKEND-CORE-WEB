@@ -35,6 +35,7 @@ from users.models import Alumni_Members
 from django.views.decorators.clickjacking import xframe_options_exempt
 from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
 from central_branch import views as cv
+from users.renderData import LoggedinUser
 # Create your views here.
 logger=logging.getLogger(__name__)
 
@@ -42,6 +43,9 @@ def sc_ag_homepage(request,primary):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
         
         # get the current panel of sc ag
         get_current_panel_of_sc_ag=SC_AG_Info.get_current_panel_of_sc_ag(request=request,sc_ag_primary=primary).first()
@@ -54,6 +58,7 @@ def sc_ag_homepage(request,primary):
             sc_ag_volunteers=SC_AG_Info.get_sc_ag_volunteer_from_panels(request=request,panel_id=get_current_panel_of_sc_ag.pk)
         
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'sc_ag_ebs':sc_ag_eb_members,
@@ -70,7 +75,8 @@ def sc_ag_homepage(request,primary):
 def sc_ag_members(request,primary):
     
     try:
-
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         # get all insb members
@@ -107,6 +113,7 @@ def sc_ag_members(request,primary):
                 return redirect('chapters_and_affinity_group:sc_ag_members',primary)
                     
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'insb_members':all_insb_members,
@@ -128,7 +135,8 @@ def sc_ag_members(request,primary):
 def sc_ag_panels(request,primary):
 
     try:
-
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         
@@ -155,6 +163,7 @@ def sc_ag_panels(request,primary):
                     return redirect('chapters_and_affinity_group:sc_ag_panels',primary)  
         panel_edit_access=SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary)
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'panels':all_panels,
@@ -170,6 +179,8 @@ def sc_ag_panels(request,primary):
 @login_required
 def sc_ag_panel_details(request,primary,panel_pk):
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         
@@ -286,6 +297,7 @@ def sc_ag_panel_details(request,primary,panel_pk):
 
         print(sc_ag_eb_members)  
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'panel_info':panel_info,
@@ -306,6 +318,8 @@ def sc_ag_panel_details(request,primary,panel_pk):
 @login_required               
 def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
 
@@ -340,6 +354,7 @@ def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
             
             
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'panel_info':panel_info,
@@ -362,6 +377,8 @@ def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
 @login_required    
 def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
 
@@ -400,7 +417,8 @@ def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
         
         
         
-        context={
+        context={           
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'panel_info':panel_info,
@@ -422,6 +440,8 @@ def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
 @login_required
 def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
 
@@ -472,6 +492,7 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
                 pass        
         
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'panel_info':panel_info,
@@ -489,6 +510,8 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
 @login_required
 def sc_ag_membership_renewal_sessions(request,primary):
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         has_access = SC_Ag_Render_Access.access_for_membership_renewal_access(request=request,sc_ag_primary=primary)
@@ -497,6 +520,7 @@ def sc_ag_membership_renewal_sessions(request,primary):
             sessions=Renewal_Sessions.objects.order_by('-id')
             
             context={
+                'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
                 'sessions':sessions,
@@ -512,6 +536,8 @@ def sc_ag_membership_renewal_sessions(request,primary):
 
 def sc_ag_renewal_session_details(request,primary,renewal_session):
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         if(SC_Ag_Render_Access.access_for_membership_renewal_access(request=request,sc_ag_primary=primary)):
             
@@ -529,6 +555,7 @@ def sc_ag_renewal_session_details(request,primary,renewal_session):
                 get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,wie_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
 
             context={
+                'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
                 'is_branch':False,
@@ -586,6 +613,8 @@ def get_sc_ag_renewal_stats(request):
 @login_required
 def sc_ag_manage_access(request,primary):
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         if(SC_Ag_Render_Access.access_for_manage_access(request=request,sc_ag_primary=primary)):
             # get sc ag info
@@ -653,6 +682,7 @@ def sc_ag_manage_access(request,primary):
                     else:
                         return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)          
             context={
+                'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
                 'sc_ag_members':get_sc_ag_members,
@@ -690,6 +720,8 @@ def event_control_homepage(request,primary):
 
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         is_branch= False
         has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
@@ -712,6 +744,7 @@ def event_control_homepage(request,primary):
 
 
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'is_branch':is_branch,
@@ -735,12 +768,16 @@ def super_event_creation(request, primary):
     '''function for creating super event'''
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
         sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
         if has_access:
             get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
             is_branch= False
             context={
+                'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
                 'is_branch':is_branch,
@@ -775,6 +812,8 @@ def super_event_creation(request, primary):
 def event_creation_form_page(request,primary):
     #######load data to show in the form boxes#########
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
         if has_access:
@@ -786,6 +825,7 @@ def event_creation_form_page(request,primary):
             super_events=Branch.load_all_mother_events()
             event_types=Branch.load_all_event_type_for_groups(primary)
             context={
+                'user_data':user_data,
                 'super_events':super_events,
                 'event_types':event_types,
                 'all_sc_ag':sc_ag,
@@ -853,6 +893,8 @@ def event_creation_form_page2(request,primary,event_id):
     #loading all inter branch collaboration Options
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         print(request.META.get("HTTP_REFERER"))
         sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
@@ -863,6 +905,7 @@ def event_creation_form_page2(request,primary,event_id):
             sc_ag=PortData.get_all_sc_ag(request=request)
             inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
             context={
+                'user_data':user_data,
                 'inter_branch_collaboration_options':inter_branch_collaboration_options,
                 'all_sc_ag':sc_ag,
                 'is_branch':is_branch,
@@ -897,6 +940,8 @@ def event_creation_form_page2(request,primary,event_id):
 @login_required
 def event_creation_form_page3(request,primary,event_id):
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
         if has_access:
@@ -909,6 +954,7 @@ def event_creation_form_page3(request,primary,event_id):
             permission_criterias=Events_And_Management_Team.getPermissionCriterias()
 
             context={
+                'user_data':user_data,
                 'venues':venues,
                 'permission_criterias':permission_criterias,
                 'all_sc_ag':sc_ag,
@@ -946,6 +992,8 @@ def event_edit_form(request, primary, event_id):
 
     ''' This function loads the edit page of events '''
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
         if has_access:
             sc_ag=PortData.get_all_sc_ag(request=request)
@@ -1042,6 +1090,7 @@ def event_edit_form(request, primary, event_id):
             venues=Events_And_Management_Team.getVenues()
 
             context={
+                'user_data':user_data,
                 'all_sc_ag' : sc_ag,
                 'sc_ag_info':get_sc_ag_info,
                 'primary' : primary,
@@ -1077,6 +1126,8 @@ def event_edit_media_form_tab(request, primary, event_id):
     ''' This function loads the media tab page of events '''
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
@@ -1122,6 +1173,7 @@ def event_edit_media_form_tab(request, primary, event_id):
                     return redirect("chapters_and_affinity_group:event_edit_media_form_tab", primary, event_id)
         
             context={
+                'user_data':user_data,
                 'is_branch' : False,
                 'primary' : primary,
                 'event_id' : event_id,
@@ -1149,6 +1201,8 @@ def event_edit_graphics_form_tab(request, primary, event_id):
     #and can be editible
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         #Get event details from databse
@@ -1193,6 +1247,7 @@ def event_edit_graphics_form_tab(request, primary, event_id):
                     return redirect("chapters_and_affinity_group:event_edit_graphics_form_tab", primary, event_id)
 
             context={
+                'user_data':user_data,
                 'is_branch' : False,
                 'primary' : primary,
                 'event_id' : event_id,
@@ -1221,6 +1276,8 @@ def event_edit_graphics_form_links_sub_tab(request,primary,event_id):
     #and can be editible
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         all_graphics_link = GraphicsTeam.get_all_graphics_form_link(event_id)
@@ -1260,6 +1317,7 @@ def event_edit_graphics_form_links_sub_tab(request,primary,event_id):
                     return redirect("chapters_and_affinity_group:event_edit_graphics_form_links_sub_tab",primary,event_id)
 
             context={
+                'user_data':user_data,
                 'is_branch' : False,
                 'primary' : primary,
                 'event_id' : event_id,
@@ -1282,6 +1340,8 @@ def event_edit_content_form_tab(request,primary,event_id):
     ''' This function loads the content tab page of events '''
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         #Get event details from databse
@@ -1364,6 +1424,7 @@ def event_edit_content_form_tab(request,primary,event_id):
             documents = Content_Team_Document.objects.filter(event_id=event_id)   
 
             context={
+                'user_data':user_data,
                 'is_branch' : False,
                 'primary' : primary,
                 'event_id' : event_id,
@@ -1392,6 +1453,9 @@ def event_preview(request, primary, event_id):
     ''' This function displays a preview of an event regardless of it's published status '''
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
         if(has_access):
             event = Events.objects.get(id=event_id)
@@ -1399,6 +1463,7 @@ def event_preview(request, primary, event_id):
             event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
             context = {
+                'user_data':user_data,
                 'is_branch' : False,
                 'event' : event,
                 'media_url':settings.MEDIA_URL,
@@ -1423,6 +1488,8 @@ def manage_main_website(request, primary):
         and affinity group'''
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
 
@@ -1501,6 +1568,7 @@ def manage_main_website(request, primary):
 
 
             context={
+                'user_data':user_data,
                 'is_branch' : False,
                 'primary' : primary,
                 'all_sc_ag':sc_ag,
@@ -1521,6 +1589,8 @@ def manage_main_website(request, primary):
 @xframe_options_exempt
 def manage_main_website_preview(request,primary):
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         #getting object of the particular society/affinity
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
         #getting featured events of the particular society/affinity 
@@ -1532,6 +1602,7 @@ def manage_main_website_preview(request,primary):
         eb_members = HomepageItems.get_eb_members_for_society(request,primary)
 
         context={
+            'user_data':user_data,
             'is_live':False, #This disable the header and footer of the page along with wavy for previewing
             'society':society,
             #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
@@ -1556,6 +1627,8 @@ def feedbacks(request,primary):
         groups'''
     
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         #rendering all the data to be loaded on the page
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
@@ -1577,6 +1650,7 @@ def feedbacks(request,primary):
                     return redirect("chapters_and_affinity_group:feedbacks",primary)
         
             context={
+                    'user_data':user_data,
                     'is_branch' : False,
                     'primary' : primary,
                     'all_sc_ag':sc_ag,
@@ -1597,7 +1671,8 @@ def feedbacks(request,primary):
 def event_feedback(request, primary, event_id):
 
     try:
-
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
         if has_access:
@@ -1605,6 +1680,7 @@ def event_feedback(request, primary, event_id):
             event_feedbacks = Branch.get_all_feedbacks(event_id=event_id)
 
             context = {
+                'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
                 'primary':primary,

@@ -181,7 +181,9 @@ def profile_page(request):
     
     '''This function loads all the view for User profile View'''
 
-    current_user=renderData.LoggedinUser(request.user)
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     
     profile_data=current_user.getUserData()
     #get user account active status
@@ -206,7 +208,8 @@ def profile_page(request):
             
             
     context={
-        'user_data':profile_data,
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
         'active_status':account_active_status
     }
     
@@ -214,7 +217,17 @@ def profile_page(request):
 
 # profile settings
 def change_password(request):
-    return render(request,"users/change_password.html")
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+
+    context={
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
+    }
+
+
+    return render(request,"users/change_password.html",context)
 
 @login_required
 # update profile information
@@ -224,6 +237,7 @@ def update_information(request):
     current_user=renderData.LoggedinUser(request.user)
     #Get the profile details of the logged in user from database
     profile_data=current_user.getUserData()
+    sc_ag=PortData.get_all_sc_ag(request=request)
 
     if(request.method == "POST"):
         #Update clicked
@@ -287,7 +301,8 @@ def update_information(request):
         return redirect('users:update_information')
 
     context={
-        'user_data' : profile_data
+        'user_data' : profile_data,
+        'all_sc_ag':sc_ag,
     }
 
     return render(request,"users/update_information.html", context)
