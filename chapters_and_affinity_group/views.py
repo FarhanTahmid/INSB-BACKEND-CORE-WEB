@@ -465,8 +465,8 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
             'tenure_time':tenure_time,
             'positions':SC_AG_Info.get_sc_ag_executive_positions(request=request,sc_ag_primary=primary),
             'alumni_members':alumni_members,
-            'alumni_members_in_panel':PanelMembersData.get_alumni_members_from_panel(panel=panel_pk,request=request)
-
+            'alumni_members_in_panel':PanelMembersData.get_alumni_members_from_panel(panel=panel_pk,request=request),
+            'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
         }
         return render(request,'Panels/sc_ag_alumni_members_tab.html',context=context)
     except Exception as e:
@@ -479,16 +479,20 @@ def sc_ag_membership_renewal_sessions(request,primary):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-        #Load all sessions at first from Central Branch
-        sessions=Renewal_Sessions.objects.order_by('-id')
-        
-        context={
-            'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info,
-            'sessions':sessions,
-            'is_branch':False,            
-        }
-        return render(request,"Renewal/renewal_homepage.html",context=context)
+        has_access = SC_Ag_Render_Access.access_for_membership_renewal_access(request=request,sc_ag_primary=primary)
+        if has_access:
+            #Load all sessions at first from Central Branch
+            sessions=Renewal_Sessions.objects.order_by('-id')
+            
+            context={
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'sessions':sessions,
+                'is_branch':False,            
+            }
+            return render(request,"Renewal/renewal_homepage.html",context=context)
+        else:
+            return render(request,"access_denied.html", { 'all_sc_ag':sc_ag })
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -598,6 +602,7 @@ def sc_ag_manage_access(request,primary):
                     event_details_edit_access=False
                     panel_edit_access=False
                     membership_renewal_access=False
+                    manage_web_access=False
                     manage_access=False
                     
                     # get values from template and change according to it
@@ -611,6 +616,8 @@ def sc_ag_manage_access(request,primary):
                         panel_edit_access=True
                     if(request.POST.get('membership_renewal_access') is not None):
                         membership_renewal_access=True
+                    if(request.POST.get('manage_web_access') is not None):
+                        manage_web_access=True
                     if(request.POST.get('manage_access') is not None):
                         manage_access=True
                     
@@ -621,6 +628,7 @@ def sc_ag_manage_access(request,primary):
                                                         event_details_edit_access=event_details_edit_access,
                                                         panel_edit_access=panel_edit_access,
                                                         membership_renewal_access=membership_renewal_access,
+                                                        manage_web_access=manage_web_access,
                                                         manage_access=manage_access)):
                         return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
                     else:
@@ -652,11 +660,15 @@ def sc_ag_manage_access(request,primary):
 @login_required
 def sc_ag_renewal_excel_sheet(request,primary,renewal_session):
     try:
-        response=Sc_Ag.generate_renewal_excel_sheet(request=request,renewal_session_id=renewal_session,sc_ag_primary=primary)
-        if(not response):
-            return redirect('chapters_and_affinity_group:sc_ag_membership_renewal_details',primary,renewal_session)
+        has_access = SC_Ag_Render_Access.access_for_membership_renewal_access(request=request,sc_ag_primary=primary)
+        if has_access:
+            response=Sc_Ag.generate_renewal_excel_sheet(request=request,renewal_session_id=renewal_session,sc_ag_primary=primary)
+            if(not response):
+                return redirect('chapters_and_affinity_group:sc_ag_membership_renewal_details',primary,renewal_session)
+            else:
+                return response
         else:
-            return response
+            return render(request,'access_denied.html')
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1417,7 +1429,7 @@ def manage_main_website(request, primary):
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
 
     
-        has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
+        has_access = SC_Ag_Render_Access.access_for_manage_web(request, primary)
         if(has_access):
             
             if request.method == "POST":
@@ -1588,15 +1600,21 @@ def feedbacks(request,primary):
 
 @login_required
 def event_feedback(request, primary, event_id):
-    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-    event_feedbacks = Branch.get_all_feedbacks(event_id=event_id)
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
+    if has_access:
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        event_feedbacks = Branch.get_all_feedbacks(event_id=event_id)
 
-    context = {
-        'sc_ag_info':get_sc_ag_info,
-        'primary':primary,
-        'is_branch':False, 
-        'event_id':event_id, 
-        'event_feedbacks':event_feedbacks
-    }
+        context = {
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'primary':primary,
+            'is_branch':False, 
+            'event_id':event_id, 
+            'event_feedbacks':event_feedbacks
+        }
 
-    return render(request,'Events/event_feedbacks.html', context)
+        return render(request,'Events/event_feedbacks.html', context)
+    else:
+        return render(request,'access_denied.html', { 'all_sc_ag':sc_ag })
