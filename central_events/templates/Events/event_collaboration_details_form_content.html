@@ -7,12 +7,12 @@
             <div class="box-header" style="text-align:center;">
                 <h1>Provide Event Collaboration Details</h1>
             </div>
-            <!--Error Message-->
+            {% comment %} <!--Error Message-->
             <div class="py-3 text-center">
                 {% for message in messages %}
                     <p style="color:red" class="message">{{message}}</p>
                 {% endfor %}
-            </div>
+            </div> {% endcomment %}
             <form method="POST">
                 {% csrf_token %}
                 <div class="box-body">
