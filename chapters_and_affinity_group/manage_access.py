@@ -173,5 +173,27 @@ class SC_Ag_Render_Access:
                 SC_Ag_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
                 ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
                 return False
+            
+    def access_for_manage_web(request,sc_ag_primary):
+        try:
+            # get the user and username. Username will work as IEEE ID and Developer username both
+            user=request.user
+            username=user.username
+            # get member from SC AG Data Access Table
+            get_member=SC_AG_Data_Access.objects.filter(member=SC_AG_Members.objects.get(member=Members.objects.get(ieee_id=int(username)),sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)),data_access_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary))
+            if(get_member.exists()):
+                if((get_member[0].manage_web_access) or SC_Ag_Render_Access.get_sc_ag_common_access(request=request,sc_ag_primary=sc_ag_primary)):
+                    return True
+                else:
+                    return False
+            else:
+                return False
+        except Exception as e:
+            if(SC_Ag_Render_Access.get_sc_ag_common_access(request=request,sc_ag_primary=sc_ag_primary)):
+                return True
+            else:
+                SC_Ag_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+                ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                return False
     
     
