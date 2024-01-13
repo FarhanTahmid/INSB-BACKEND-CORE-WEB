@@ -1172,7 +1172,7 @@ def member_profile(request, ieee_id):
             sc_ag_position_data = SC_AG_Members.objects.filter(member=ieee_id)
 
             if member_data.ieee_id == 98955436:
-                member_data.date_of_birth = "NO"
+                member_data.date_of_birth = "What are you up to?"
 
             context = {
                 'page_title':'Member Details',
