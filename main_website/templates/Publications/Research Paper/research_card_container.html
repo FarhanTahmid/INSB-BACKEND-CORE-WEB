@@ -41,7 +41,7 @@
         {% for i in all_research_papers %}
         <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
             <div class="card shadow achievement_card">
-                <img class="card-img-top" src="/media_files/{{i.research_banner_picture}}" alt="">
+                <a href="{{i.publication_link}}"><img class="card-img-top" src="/media_files/{{i.research_banner_picture}}" alt=""></a>
 
                 <div class="position-absolute">
                     <span style="background-color: {{i.primary_color_code}};" class=" text-white px-3 py-2 rounded h6">{{i.group.short_form}}</span>
