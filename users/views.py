@@ -89,7 +89,7 @@ def signup(request):
                             #creating account for the user
                             try:
                                 user = User.objects.create_user(username=ieee_id, email=getMember.email_personal,password=password)
-                                user.save();
+                                user.save()
                                 auth.login(request,user) #logging in user after signing up automatically
                                 return redirect('users:dashboard')
                             except:
@@ -266,6 +266,38 @@ def change_password(request):
         sc_ag=PortData.get_all_sc_ag(request=request)
         current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
+
+        if request.method=="POST":
+            old_password=request.POST.get('old_password')
+            new_password=request.POST.get('new_password')
+            confirm_password=request.POST.get('confirm_new_password')
+
+            user=User.objects.get(username=request.user.username)
+            if user.check_password(old_password):
+                #password length must be greater than 6 characters
+                if(len(new_password)>6):
+                    #if new and confirmed password matches:
+                    if(new_password==confirm_password):
+                        try:
+                            #changing the user password
+                            user.set_password(new_password)
+                            user.save()
+                            auth.logout(request)
+                            
+                            messages.success(request,"Password Changed Successfully! Please log in again")
+                            return redirect('users:login')
+                        except Exception as e:
+                            print(e)
+                            messages.error(request,"Password Changing Failed")
+                    else:
+                        messages.error(request,"Two passwords did not match! Please Try again.")
+                else:
+                    messages.error(request,"Your password must be greater than 6 characters!")
+            else:
+                messages.warning(request,"Your old password does not match!")
+            
+            return redirect('users:change_password')    
+            
 
         context={
             'user_data':user_data,
