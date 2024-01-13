@@ -478,7 +478,7 @@ class Sc_Ag:
 
             #checking to see which image is requested to be deleted
             if(image_id == 'sc_ag_logo'):
-                sc_ag.sc_ag_logo = None
+                sc_ag.logo = None
                 os.remove(path)
             elif(image_id == 'background_image'):
                 sc_ag.background_image = None
