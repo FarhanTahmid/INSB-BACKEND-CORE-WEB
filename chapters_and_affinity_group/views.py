@@ -34,6 +34,7 @@ from port.models import Chapters_Society_and_Affinity_Groups
 from users.models import Alumni_Members
 from django.views.decorators.clickjacking import xframe_options_exempt
 from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
+from central_branch import views as cv
 # Create your views here.
 logger=logging.getLogger(__name__)
 
@@ -63,8 +64,7 @@ def sc_ag_homepage(request,primary):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
 
 @login_required
 def sc_ag_members(request,primary):
@@ -1436,7 +1436,7 @@ def manage_main_website(request, primary):
                 #if save button is clicked then saving the details user entered
                 if request.POST.get('save'):
 
-                    about_image = request.FILES['logo']
+                    about_image = request.FILES.get('logo')
                     about_details = request.POST.get('about_details')
                     background_image =  request.FILES.get('background_image')
                     mission_description = request.POST.get('mission_details')
