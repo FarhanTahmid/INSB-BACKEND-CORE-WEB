@@ -12,6 +12,7 @@
         display: flex;
         transition: transform 0.5s ease-in-out;
         height: 90vh;
+        width: 100%; /* Ensure the slider takes the full width */
     }
 
     .slide {
@@ -20,6 +21,7 @@
         position: relative;
         display: flex;
         flex-direction: column;
+        flex: 0 0 100%; /* Each slide takes 100% of the width */
         align-items: flex-start;
         justify-content: center;
         text-align: center;
