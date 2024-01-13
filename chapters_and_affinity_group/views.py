@@ -1436,8 +1436,8 @@ def manage_main_website(request, primary):
                 #if save button is clicked then saving the details user entered
                 if request.POST.get('save'):
 
+                    about_image = request.FILES['logo']
                     about_details = request.POST.get('about_details')
-                    about_image = request.FILES.get('sc_ag_logo')
                     background_image =  request.FILES.get('background_image')
                     mission_description = request.POST.get('mission_details')
                     mission_image =  request.FILES.get('mission_picture')
@@ -1458,11 +1458,11 @@ def manage_main_website(request, primary):
                     facebook_link = request.POST.get('facebook_link')
                     mission_vision_color_code_details = request.POST.get('mission_vision_color_code')
 
-                    print(pageTitle_details)
+                    print(about_image)
                     #checking to see if no picture is uploaded by user, if so then if picture is already present in database
                     #then updating it with saved value to prevent data loss. Otherwise it is None
                     if about_image == None:
-                        about_image = get_sc_ag_info.sc_ag_logo
+                        about_image = get_sc_ag_info.logo
                     if background_image == None:
                         background_image = get_sc_ag_info.background_image
                     if vision_picture == None:

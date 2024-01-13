@@ -435,7 +435,7 @@ class Sc_Ag:
 
             #saving all the informations
             sc_ag.about_description =about_description
-            sc_ag.sc_ag_logo = about_image
+            sc_ag.logo = about_image
             sc_ag.background_image = background_image
             sc_ag.mission_description = mission_description
             sc_ag.mission_picture = mission_image

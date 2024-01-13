@@ -19,7 +19,6 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
     page_title = models.TextField(null=True,blank=True,default="",verbose_name="Page Title")
     secondary_paragraph = models.TextField(null=True,blank=True,default="",verbose_name="Second Paragraph")
     about_description = models.TextField(null=True,blank=True,default="",verbose_name="About")
-    sc_ag_logo = ResizedImageField(null=True,blank=True,upload_to="main_website_files/Societies & AG/logos/",verbose_name="About Image")
     background_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies & ag/background image/",verbose_name="Background Image")
     mission_description = models.TextField(null=True,blank=True,default="",verbose_name="Mission")
     mission_picture = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies & ag/mission picture/",verbose_name="Mission Image")

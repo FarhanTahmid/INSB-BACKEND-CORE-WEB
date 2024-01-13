@@ -28,7 +28,7 @@ load_dotenv()
 SECRET_KEY = 'django-insecure-*%*n1(qq^95t^+bl96wxty9h6qc4)h%ts27fv9egh8v0tj%60h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -241,10 +241,3 @@ CELERY_TASK_SERIALIZER = 'json'
 # }
 
 NEWS_API_KEY=os.environ.get('NEWS_API_KEY')
-
-Q_CLUSTER = {
-    'name': 'insb_port',
-    'workers': 8,
-    'timeout': 60,
-    'broker_class':'insb_port.rabbitMQ_Broker.RabbitMQBroker'
-}
