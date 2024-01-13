@@ -28,7 +28,7 @@ load_dotenv()
 SECRET_KEY = 'django-insecure-*%*n1(qq^95t^+bl96wxty9h6qc4)h%ts27fv9egh8v0tj%60h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -225,7 +225,7 @@ DJANGORESIZED_DEFAULT_QUALITY = 80
 DJANGORESIZED_DEFAULT_KEEP_META = True
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
 
-#CELERY_BROKER_URL = "amqps://fhfqmapx:YUA5So69ozn0PUIB8eJHSrwz6dhCA07W@rattlesnake.rmq.cloudamqp.com/fhfqmapx"
+CELERY_BROKER_URL = "amqps://mrhkupcx:Es-Dd6MKxkwapnb1zMlwybTaYGwflFLB@lionfish.rmq.cloudamqp.com/mrhkupcx"
 CELERY_RESULT_BACKEND = "django-db"
 CELERY_RESULT_EXTENDED = True
 CELERY_TASK_SERIALIZER = 'json'

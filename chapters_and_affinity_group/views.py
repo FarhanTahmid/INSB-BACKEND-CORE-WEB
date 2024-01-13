@@ -444,7 +444,7 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
                     linkedin_link=alumni_linkedin_link,
                     name=alumni_name,
                     picture=alumni_picture)):
-                    return redirect('chapters_and_affinity_group:sc_ag_panel_details_alumni',panel_pk)
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details_alumni',primary,panel_pk)
                 else:
                     messages.warning(request,'Failed to Add new alumni!')
         if(request.POST.get('add_alumni_to_panel')):
