@@ -110,33 +110,17 @@
                 <li>You can also upload the document files</li>
                 <li>Make sure to save any changes made instantly to prevent data loss</li>
             </ol></b>
-
-            <!--for error messages-->
             <br>
-            {% for message in messages  %}
-                <p>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <p style="margin: 0;">{{message}}</p>
-                    </div>
-                </p>
-            {% endfor %}
-            <br>
-            <!--for error messages end-->
         </div>
 
-        <br><br>  
-            <!--Tab view for Events-->
-            <!--Tab view Start-->
-            {% block content_team_event_form_tab %}
-                {% include "Events/content_team_event_form_tabs.html" %}
-            {% endblock content_team_event_form_tab %}
-            <!--Tab view end-->
-            <br>
+        <!--Tab view for Events-->
+        <!--Tab view Start-->
+        {% block content_team_event_form_tab %}
+            {% include "Events/content_team_event_form_tabs.html" %}
+        {% endblock content_team_event_form_tab %}
+        <!--Tab view end-->
+    
         
-            
         {% block content_team_edit_form %}
             {% include "Events/content_team_event_form_content.html" %}
         {% endblock content_team_edit_form %}
