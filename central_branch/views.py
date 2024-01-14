@@ -46,7 +46,7 @@ from chapters_and_affinity_group.renderData import Sc_Ag
 from recruitment.models import recruitment_session
 from membership_development_team.models import Renewal_Sessions,Renewal_requests
 from system_administration.render_access import Access_Render
-
+from django.views import View
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -415,7 +415,86 @@ def branch_panel_details(request,panel_id):
                 )):
                     return redirect('central_branch:panel_details',panel_id)
 
-            
+            # update position details
+            if(request.POST.get('update_position')):
+                mentor_position_check=request.POST.get('mentor_position_check')
+                if mentor_position_check is None:
+                    mentor_position_check=False
+                else:
+                    mentor_position_check=True
+                    
+                officer_position_check=request.POST.get('officer_position_check')
+                if officer_position_check is None:
+                    officer_position_check=False
+                else:
+                    officer_position_check=True
+                    
+                coordinator_position_check=request.POST.get('coordinator_position_check')
+                if coordinator_position_check is None:
+                    coordinator_position_check=False
+                else:
+                    coordinator_position_check=True
+                
+                executive_position_check=request.POST.get('executive_position_check')
+                if executive_position_check is None:
+                    executive_position_check=False
+                else:
+                    executive_position_check=True
+                
+                faculty_position_check=request.POST.get('faculty_position_check')
+                if faculty_position_check is None:
+                    faculty_position_check=False
+                else:
+                    faculty_position_check=True
+
+                core_volunteer_position_check = request.POST.get('core_volunteer_position_check')
+                if core_volunteer_position_check is None:
+                    core_volunteer_position_check = False
+                else:
+                    core_volunteer_position_check = True
+
+                volunteer_position_check = request.POST.get('volunteer_position_check')
+                if volunteer_position_check is None:
+                    volunteer_position_check = False
+                else:
+                    volunteer_position_check = True
+                    
+                position_name=request.POST['position_name']
+                position_rank=request.POST['position_rank']
+                position_id=request.POST.get('position_to_edit')
+                
+                # update Position
+                try:    
+                    if(Roles_and_Position.objects.filter(id=int(position_id)).update(
+                        role=position_name,rank=position_rank,
+                        is_eb_member=executive_position_check,is_sc_ag_eb_member=False,is_officer=officer_position_check,is_co_ordinator=coordinator_position_check,
+                        is_faculty=faculty_position_check,is_mentor=mentor_position_check,is_core_volunteer=core_volunteer_position_check,is_volunteer=volunteer_position_check
+                    )):
+                        messages.success(request,f"Position {position_name} was updated!")
+                        return redirect('central_branch:panel_details',panel_id)
+                except Exception as e:
+                    logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+                    ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                    messages.warning(request,"Something went wrong! Please Try again!")
+                    return redirect('central_branch:panel_details',panel_id)
+
+
+                           
+            # delete positions
+            if(request.POST.get('delete_position')):
+                position_name=request.POST['position_name']
+                position_id=request.POST.get('position_to_edit')
+                try:
+                    if(Roles_and_Position.objects.filter(id=int(position_id)).delete()):
+                        messages.warning(request,f'The position {position_name} has been deleted.')
+                        return redirect('central_branch:panel_details',panel_id)
+                except Exception as e:
+                    logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+                    ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                    messages.warning(request,"Something went wrong! Please Try again!")
+                    return redirect('central_branch:panel_details',panel_id)
+
+                
         context={
             'panel_edit_access':Branch_View_Access.get_create_panel_access(request),
             'user_data':user_data,
@@ -426,6 +505,8 @@ def branch_panel_details(request,panel_id):
             'insb_members':all_insb_members,
             'positions':PortData.get_all_executive_positions_of_branch(request=request,sc_ag_primary=1),#as this is for branch, the primary=1
             'eb_member':PanelMembersData.get_eb_members_from_branch_panel(request=request,panel=panel_id),
+            'all_positions':PortData.get_all_positions_of_everyone(request=request,sc_ag_primary=1),
+            
         }
         return render(request,'Panel/panel_details.html',context=context)
         
@@ -477,6 +558,7 @@ def branch_panel_officers_tab(request,panel_id):
 
         
         context={
+            'panel_edit_access':Branch_View_Access.get_create_panel_access(request),
             'user_data':user_data,
             'all_sc_ag':sc_ag,
             'panel_id':panel_id,
@@ -537,6 +619,7 @@ def branch_panel_volunteers_tab(request,panel_id):
     
         
         context={
+            'panel_edit_access':Branch_View_Access.get_create_panel_access(request),
             'user_data':user_data,
             'all_sc_ag':sc_ag,
             'panel_id':panel_id,
@@ -615,6 +698,7 @@ def branch_panel_alumni_tab(request,panel_id):
                     return redirect('central_branch:panel_details_alumni',panel_id)
         
         context={
+            'panel_edit_access':Branch_View_Access.get_create_panel_access(request),
             'user_data':user_data,
             'all_sc_ag':sc_ag,
             'panel_id':panel_id,
@@ -2232,7 +2316,7 @@ def manage_exemplary_members(request):
                     # delete image of the member
                     if(os.path.isfile(member_to_delete.member_picture.path)):
                         os.remove(member_to_delete.member_picture.path)
-                    messages.warning(request,f"Member {member_to_delete.member_name} was deleted!")
+                    messages.warning(request,f"Member {member_to_delete.member_name} was removed!")
                     member_to_delete.delete()
                     return redirect('central_branch:manage_exemplary_members')
                 
@@ -3478,3 +3562,13 @@ def custom_404(request):
 
 def custom_500(request):
     return render(request,'500.html',status=500)
+
+class UpdatePositionAjax(View):
+    def get(self,request, *args, **kwargs):
+        role_id=request.GET.get('role_id',None)
+        if role_id is not None:
+            role_data=Roles_and_Position.objects.filter(id=role_id).values('role','rank','is_eb_member','is_sc_ag_eb_member','is_officer','is_co_ordinator','is_faculty','is_mentor','is_core_volunteer','is_volunteer').first()
+            if role_data:
+                return JsonResponse(role_data,safe=False)
+        # return null if nothing is selected
+        return JsonResponse({},safe=False)

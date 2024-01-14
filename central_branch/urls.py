@@ -1,6 +1,7 @@
 import imp
 from django.urls import path,include
 from . import views
+from .views import UpdatePositionAjax
 
 app_name='central_branch'
 
@@ -109,6 +110,8 @@ urlpatterns = [
     #Members list
     path('members/',views.insb_members_list,name="members_list"),
     #Members details list
-    path('member_details/<int:ieee_id>',views.member_details,name="member_details")
+    path('member_details/<int:ieee_id>',views.member_details,name="member_details"),
 
+    # get dynamic data in JS position edit
+    path('get_position_data/',UpdatePositionAjax.as_view(),name="update_position")
 ]

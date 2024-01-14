@@ -14,6 +14,9 @@ from django_resized import ResizedImageField
 import datetime
 from django.contrib.postgres.fields import ArrayField
 from port.models import Panels
+from PIL import Image, ExifTags
+from io import BytesIO
+from django.core.files import File
 
 # from membership_development_team.models import Renewal_Sessions
 # Create your models here.
@@ -35,7 +38,7 @@ class Members(models.Model):
     gender=models.CharField(null=True,blank=True,max_length=7)
     facebook_url=models.URLField(null=True,blank=True,max_length=500)
     linkedin_url=models.URLField(null=True,blank=True,max_length=500)
-    user_profile_picture=ResizedImageField(null=False,blank=False,default='user_profile_pictures/default_profile_picture.png',upload_to='user_profile_pictures/')
+    user_profile_picture=models.ImageField(null=False,blank=False,default='user_profile_pictures/default_profile_picture.png',upload_to='user_profile_pictures/')
     team=models.ForeignKey(Teams,null=True,blank=True,on_delete=models.CASCADE)
     position=models.ForeignKey(Roles_and_Position,default=13,on_delete=models.CASCADE) #Default=13 means the position of a general member, check roles and positions table
     session=models.ForeignKey(recruitment_session,null=True,blank=True,on_delete=models.CASCADE) #recruitment session
@@ -49,6 +52,33 @@ class Members(models.Model):
         return str(self.ieee_id)
     def get_absolute_url(self):
         return reverse('registered member',kwargs={'member_id':self.ieee_id})
+    
+    def save(self, *args, **kwargs):
+        if self.user_profile_picture:
+            img = Image.open(BytesIO(self.user_profile_picture.read()))
+            
+            if hasattr(img, '_getexif'):
+                exif = img._getexif()
+                if exif:
+                    for tag, label in ExifTags.TAGS.items():
+                        if label == 'Orientation':
+                            orientation = tag
+                            break
+                    if orientation in exif:
+                        if exif[orientation] == 3:
+                            img = img.rotate(180, expand=True)
+                        elif exif[orientation] == 6:
+                            img = img.rotate(270, expand=True)
+                        elif exif[orientation] == 8:
+                            img = img.rotate(90, expand=True)
+
+            img.thumbnail((1080,1080), Image.ANTIALIAS)
+            output = BytesIO()
+            img.save(output, format='JPEG', quality=85)
+            output.seek(0)
+            self.user_profile_picture = File(output, self.user_profile_picture.name) 
+
+        return super().save(*args, **kwargs)
 
 
 '''This table will be used to get the data of the EX Panel Members of IEEE NSU SB '''
