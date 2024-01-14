@@ -1,127 +1,166 @@
 {% load static %}
-{% block super_event_details_form %}
+{% block super_event_edit_form_content %}
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<!-- CKEditor CDN -->
-<script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
-<style>
-    @media only screen and (max-width: 768px) {
-        
-  
-        .custom-file {
-            margin-bottom: 10px;
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- CKEditor CDN -->
+    <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+    <style>
+
+        .publish-switch {
+            display: flex;
+            justify-content: flex-end; /* Align to the right end */
+            align-items: center;
+            position: relative;
         }
-      }
-  
-      
-      #graphics-selected-image-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        max-width: 200px; /* Set the maximum width for the image container */
-        height:auto;
-        margin:auto;
-        margin-top: 10px; /* Adjust the margin as needed */
-      }
+        .ui-switch{
+            /* Add shadow to the icon */
+            box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.2);
+            display: inline-block;
     
-      .graphics-selected-image {
-        max-width: 100%;
-        height: auto;
-      }
+            /* You can customize the shadow properties */
+        }
+        .form-control-label.slider-checkbox {
+            display: inline-block;
+            margin-right: 10px; /* Add margin for spacing between elements */
+        }
 
-      .graphics-selected-image {
-          max-width: 100%; /* Make the image responsive within its container */
-          height: auto;    /* Maintain the aspect ratio */
-      }
-  
-      .image-container {
-        position: relative;
-        display: inline-block;
-        width: 100%;
-      }
+        @media only screen and (max-width: 768px) {
+            
     
-      .image-container-item {
-          width: 100%;
-          height: auto;
-          border-radius: 8px;
-          box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-          transition: box-shadow 0.3s ease;
-          object-fit: cover; /* Ensure the image fills the container */
-      }
+            .custom-file {
+                margin-bottom: 10px;
+            }
+        }
     
-  
-      .image-container-item:hover {
-          box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
-      }
-  
-      .cross-button {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        cursor: pointer;
-        background-color: white; /* Set the background color to white */
-        border: none;
-        padding: 0;
-        width: 25px; /* Set the width and height to create a circle */
-        height: 25px;
-        border-radius: 50%; /* Make it a circle */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 2rem; /* Adjust font size */
-        color: black; /* Set the initial color */
-        z-index: 2;
-        transition: background-color 0.3s ease, color 0.3s ease; /* Add transitions for color and background-color changes */
-        line-height: 1; /* Ensure line height does not affect vertical alignment */
-      }
+        
+        #graphics-selected-image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 200px; /* Set the maximum width for the image container */
+            height:auto;
+            margin:auto;
+            margin-top: 10px; /* Adjust the margin as needed */
+        }
+        
+        .graphics-selected-image {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .graphics-selected-image {
+            max-width: 100%; /* Make the image responsive within its container */
+            height: auto;    /* Maintain the aspect ratio */
+        }
     
+        .image-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .image-container-item {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            transition: box-shadow 0.3s ease;
+            object-fit: cover; /* Ensure the image fills the container */
+        }
+        
     
-      .cross-button:hover {
-          color: gray; /* Change color on hover */
-      }
-</style>
- 
+        .image-container-item:hover {
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+        }
+    
+        .cross-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            background-color: white; /* Set the background color to white */
+            border: none;
+            padding: 0;
+            width: 25px; /* Set the width and height to create a circle */
+            height: 25px;
+            border-radius: 50%; /* Make it a circle */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem; /* Adjust font size */
+            color: black; /* Set the initial color */
+            z-index: 2;
+            transition: background-color 0.3s ease, color 0.3s ease; /* Add transitions for color and background-color changes */
+            line-height: 1; /* Ensure line height does not affect vertical alignment */
+        }
+        
+        
+        .cross-button:hover {
+            color: gray; /* Change color on hover */
+        }
+    </style>
+
     <div class="container" >
+        <!--for error messages-->
+        <div class="container">
+            {% for message in messages  %}
+                <p>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <p style="margin: 0;">{{message}}</p>
+                    </div>
+                </p>
+            {% endfor %}
+            <br>
+        </div>
+        <!--for error messages end-->
+
         <div class="box">
             <div class="box-header" style="text-align:center;">
                 <br>
-                <h1>Super Event Creation Form</h1>
+                <h1>Mega Event Edit Form</h1>
             </div>
-            {% comment %} <!--Error Message-->
-            <div class="py-3 text-center">
-                {% for message in messages %}
-                    <p style="color:red" class="message">{{message}}</p>
-                {% endfor %}
-            </div> {% endcomment %}
 
             <form method="POST">
                 {% csrf_token %}
                 <div class="box-body">
+                    <div class="publish-switch">
+                        <label class="form-control-label slider-checkbox">Publish Event:</label>
+                        <span>                                            
+                            <label class="ui-switch m-t-xs m-r">
+                                <input name="publish_event" type="checkbox" {% if is_event_published %} checked {% endif %}>
+                                    <i></i>
+                            </label>                
+                        </span>
+                    </div>
+                    <br>
                     <div class="form-group">
                         <label>Name <span style="color:red">*<span></label>
                         <input 
                             type="text" 
                             name="super_event_name" 
-                            class="form-control" 
+                            class="form-control w-100" 
                             placeholder="Event Name"
                             autocomplete="off"
                             required/>
                     </div>
                     <br>
                     <div class="form-group">
-                        <label>Description <span style="color:red">*</span></label>
+                        <label>Description <span style="color:red">*<span></label>
                         <textarea type="text" name="super_event_description" placeholder="Write within 500 words"
                             class="form-control" rows="10"></textarea>
                     </div>
                     <br>
                     <div class="form-group">
                         <label for="">Add a Probable Date For the Event</label>
-                        <input type="date" name="probable_date" class="form-control" />
+                        <input type="date" name="probable_date" class="form-control w-100" />
                     </div>
                     <br>
                     <div class="form-group">
                         <label for="">Add Final Date For the Event (If finalised)</label>
-                        <input type="date" name="final_date" class="form-control" />
+                        <input type="date" name="final_date" class="form-control w-100" />
                     </div>
                     <br>
                     <!-- img field -->
@@ -138,21 +177,21 @@
                         <div id="graphics-selected-image-container"></div>
                         <input type="hidden" name="selected_image" id="graphics-selected-image">
                     </div>
-                    
                     <br>
                     <div style="text-align: center;">
-                        {% if is_branch %}
-                        <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger">Cancel</a>
-                        {% else %}
+                        <input type="submit" value="Submit" name="Submit" class="btn btn-outline b-success text-success" style="margin-bottom:15px;">
+                        {% comment %} {% if is_branch %} {% endcomment %}
+                        <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger" style="margin-bottom:15px;">Cancel</a>
+                        {% comment %} {% else %}
                         <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger">Cancel</a>
-                        {% endif %}
-                        <input type="submit" value="Submit" name="Submit" class="btn btn-outline b-success text-success">
+                        {% endif %} {% endcomment %}
                     </div>
                     <br>
                 </div>
             </form>
         </div>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
         var form = document.getElementById('myForm');
@@ -274,4 +313,4 @@
         });
     
     </script>
-{% endblock super_event_details_form %}
+{% endblock super_event_edit_form_content %}
