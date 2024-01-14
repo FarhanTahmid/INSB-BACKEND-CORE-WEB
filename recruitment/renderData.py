@@ -4,6 +4,7 @@ from . models import recruitment_session,recruited_members
 from django.db import IntegrityError
 from django.db import InternalError
 from django.core.exceptions import ObjectDoesNotExist
+import random,string
 
 from users.models import Members
 
@@ -112,3 +113,29 @@ class Recruitment:
     
     def getTotalCountofIEEE_payment_incomplete(session_id):
         return recruited_members.objects.filter(session_id=session_id,ieee_payment_status=False).count()
+    
+    def generateUniqueCode(request,session,nsu_id):
+        try:
+            nsu_id=str(nsu_id)
+            get_session=recruitment_session.objects.get(id=session)
+            session_code='0'
+            if('Spring' in get_session.session):
+                session_code='1'
+            elif('Summer' in get_session.session):
+                session_code='2'
+            elif('Fall' in get_session.session):
+                session_code='3'
+            
+            session_unique_code=session_code+(get_session.session[-4:])
+            nsu_id_code=nsu_id[3:7]
+            security_code=Recruitment.generate_random_string(length=4)
+            unique_code=nsu_id_code+security_code+session_unique_code
+            return unique_code
+            
+        except Exception as e:
+            print(e)
+
+    def generate_random_string(length=4):
+        characters = string.ascii_letters + string.digits
+        random_string = ''.join(random.choice(characters) for _ in range(length))
+        return random_string

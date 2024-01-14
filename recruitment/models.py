@@ -39,6 +39,7 @@ class recruited_members(models.Model):
     cash_payment_status=models.BooleanField(null=True,blank=True,default=False)
     ieee_payment_status=models.BooleanField(null=False,blank=False,default=False)
     comment=models.CharField(null=True,blank=True,max_length=500,default="")
+    unique_code=models.CharField(null=True,blank=True,max_length=40) #this attribute is to identify the member in the groups
 
     class Meta:
         verbose_name="Recruited Members"
