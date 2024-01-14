@@ -137,7 +137,8 @@ class GraphicsTeam:
 
             image = Graphics_Banner_Image.objects.get(event_id = Events.objects.get(pk = event_id),selected_image = image_url)
             path = settings.MEDIA_ROOT+str(image.selected_image)
-            os.remove(path)
+            if os.path.exists(path):
+                os.remove(path)
             image.delete()
             return True
         except Exception as e:

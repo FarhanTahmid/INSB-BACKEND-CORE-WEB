@@ -122,7 +122,8 @@ class MediaTeam:
 
             image = Media_Images.objects.get(event_id = Events.objects.get(pk = event_id),selected_images = image_url)
             path = settings.MEDIA_ROOT+str(image.selected_images)
-            os.remove(path)
+            if os.path.exists(path):
+                os.remove(path)
             image.delete()
             return True
         except Exception as e:
