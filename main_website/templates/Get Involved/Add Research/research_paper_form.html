@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+
+    <title>Add Research - IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'upload/logo.gif' %}"/>
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!--Common CSS-->
+    {% block common_css %}
+        {% include "common_css_includes.html" %}
+    {% endblock common_css %}
+
+    <!--Extra CSS-->
+
+    <!-- CKEditor CDN -->
+    <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+
+    <style>
+        .gdlr-header-inner,
+        .gdlr-header-wrapper.header-style-2-wrapper .gdlr-header-inner-overlay {
+            background-color: 	#002855;
+        }
+
+        .gdlr-header-wrapper.header-style-3-wrapper,
+        .gdlr-header-wrapper.header-style-7-wrapper {
+            background-color: #002855;
+        }
+
+        .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+            background-color: #002855;
+        }
+
+        @media only screen and (max-width: 767px) {
+            .gdlr-header-wrapper.header-style-5-wrapper {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-6-wrapper {
+                background-color: #002855;
+            }
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button {
+            background-color: #002855;
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button:hover, #gdlr-responsive-navigation.dl-menuwrapper button.dl-active, #gdlr-responsive-navigation.dl-menuwrapper ul {
+            background-color: #002855;
+        }
+        .dl-menuwrapper li a {
+            display: block;
+            position: relative;
+            padding: 15px 20px;
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 300;
+            color: #fff;
+            outline: none;
+        }
+        .dl-menuwrapper li.dl-back:after, .dl-menuwrapper li > a:not(:only-child):after {
+            position: absolute;
+            top: 0;
+            line-height: 50px;
+            font-family: 'FontAwesome';
+            speak: none;
+            -webkit-font-smoothing: antialiased;
+            content: "\f105";
+            font-size: 16px;
+            color: #ffffff;
+        }
+        a{
+            text-decoration:none;
+        }
+
+
+        .modal.message-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content.message-modal-content {
+            background-color: #fff;
+            width: 450px;
+            height: 115px;
+            position: relative;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+            animation: unfold 1.25s ease-in-out forwards;
+        }
+        
+        .modal-content-items.message-modal-content-items {
+            opacity: 0;
+            animation: fadeIn 1.25s 1s ease-in-out forwards;
+        }
+        
+        .message {
+            margin-top: 20px;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Media query for screens below 360px */
+        @media screen and (max-width: 360px) {
+            .message {
+                font-size: 12px; /* Adjust the font size as needed */
+            }
+        }
+        
+        /* Styling for the close button */
+        .close.message-close {
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        
+        @keyframes unfold {
+            0% {
+                width: 0;
+                height: 5px;
+            }
+            50% {
+                width: 450px;
+                height: 5px;
+            }
+            100% {
+                width: 450px;
+                height: 115px;
+            }
+        }
+        
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        .w-100{
+            width: 350px!important;
+            height: 350px;
+        }
+        .col-md-6.order-md-1.p-0{
+            height: 370px;
+            width: 100%;
+            overflow: hidden;
+        }
+        @media screen and (max-width: 400px){
+            .w-100 {
+                width: 100%!important;
+                height: 100%;
+            }
+        }
+
+        .form_container{
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; 
+            border-radius:30px; 
+            padding: 10px 30px;
+        }
+
+        @media (max-width: 760px) {
+            .form_container {
+                padding: 10px 15px;
+            }
+        }
+
+        .instructions_ul {
+            list-style-type: none;
+            padding: 0;
+        }
+    
+        .instructions_ul li::before {
+            content: "\f105"; /* Example: Unicode code for a bolder arrow in FontAwesome */
+            font-family: 'FontAwesome'; /* Specify the custom font family */
+            font-weight: bold; /* Make the arrow bolder */
+            font-size:16px;
+            margin-right: 10px; /* Adjust spacing between arrow and text */
+        }
+
+        .publish_button {
+            text-decoration: none;
+            color: #fff;
+            background: #002855;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        .publish_button:hover {
+            background: #FFC72C;
+        }
+    </style>
+</head>
+
+<body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+    <div class="body-wrapper  float-menu">
+        
+        {% block header %}
+            {% include 'header.html' %}
+        {% endblock header %}
+        
+        {% block wave_design %}
+            {% include 'wave.html' %}
+        {% endblock wave_design %}
+
+        <!--Start adding from here-->
+        <br><br>
+        <section class="col-lg-6 mx-auto" style="margin-top:3%">
+            <div class="container">
+                <h5>Read instructions given below before adding your Research Paper:</h5>
+                <ul class="instructions_ul">
+                    <li>You must be a Registered IEEE NSU Student Branch Member to get your Research Paper added in our website!</li>
+                    <li>IEEE NSU Student Branch holds the right to decline or delete your Research Paper.</li>
+                    <li>IEEE NSU Student Branch will not publish any Research that is not authentic and does not go with the Code of Conduct!</li>
+                    <li>Keep Grinding! &#128515; &#128513;</li>
+                </ul>
+            </div>
+        </section>
+        <br>
+
+
+        <!--Messages-->
+        {% comment %} <div style="justify-content:center; text-align:center;">
+            {% if messages %}
+                {% for message in messages %}
+                    <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                {% endfor %}
+            {% endif %}
+        </div> {% endcomment %}
+
+        {% for message in messages  %}
+            <div id="myMessageModal{{ loop.index }}" class="modal message-modal">
+                <div class="modal-content message-modal-content">
+                    <div class="modal-content-items message-modal-content-items">
+                        <span class="close message-close" onclick="closeModal({{ loop.index }})">&times;</span>
+                        <p class="message" style="text-align: center;">{{ message }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <!--Messages End-->
+
+
+        <section style="margin-top:1%">
+            <div class="col-lg-6 mx-auto">
+                
+                {% comment %} <h1>Add Research Paper</h1>
+                <br>
+                <br> {% endcomment %}
+                <div class="container form_container">
+          
+                    <div class="box">
+                
+                
+                        <br>
+                        <div class="box-header">
+                            <h1 style="text-align:center;font-size:30px;">Author Information</h1>
+                        </div>
+                        <br>
+                        
+                
+                        <form id="myForm" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                            <div class="box-body">    
+                                <div class="form-group">
+                                    <label>Authors<span style="color:red">*<span></label>
+                                    <input 
+                                        type="text" 
+                                        class="form-control"
+                                        name="author_names" 
+                                        placeholder="E.g: Sakib Shahriar Junayed, Sami Uddin, Farhana Rahman" 
+                                        maxlength="300" 
+                                    >
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <label>From which Chapter/Affinity Group you want to submit the Research Paper?</label> 
+                                    <select class="form-control" name="group">
+                                        {% for i in all_sc_ag %}
+                                            <option value="{{i.primary}}">{{i.group_name}}</option>
+                                        {% endfor %}
+                                        
+                                    </select>
+                                </div>
+
+                                <br> 
+                                <hr>
+                                <br> 
+
+                                <h1 style="text-align:center;font-size:30px;">Research Paper Description</h1>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Research Paper Title <span style="color:red">*<span></label> 
+                                    <input 
+                                        class="form-control" 
+                                        type="text"
+                                        name="paper_title"
+                                        maxlength="200"
+                                        placeholder="Title of your Paper" 
+                                        Required
+                                        >
+                                    </input>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Research Category</label> 
+                                    <select class="form-control" name="research_category">
+                                        <option value="">-----------</option>
+                                        {% for i in research_categories %}
+                                            <option value="{{i.pk}}">{{i.category}}</option>
+                                        {% endfor %}
+                                        
+                                    </select>
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <label>Abstract <span style="color:red">*<span></label> 
+                                    <textarea 
+                                        class="form-control" 
+                                        type="text"
+                                        name="abstract_description"
+                                        Required>
+                                    </textarea>
+                                    <p id="abstractCharacterCount" style="color: red;">Required</p>
+                                </div> 
+                                <br> 
+                                <div class="form-group">
+                                    <label>Paper Publication Link <span style="color:red">*<span></label> 
+                                    <input 
+                                        class="form-control" 
+                                        type="url"
+                                        name="paper_link"
+                                        placeholder="Link to read the paper" 
+                                        Required
+                                        >
+                                    </input>
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <label for="images">Research Banner Picture:</label>
+                                    <div class="custom-file">
+                                        <input placeholder="Upload a picture which is related to your research" type="file" class="custom-file-input" id="mission-image-input" required name="research_banner_picture" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="mission-image-input">Upload</label>
+                                    </div>
+                                
+                                </div>
+                                <br> 
+                                
+                                <div class="form-group text-center">
+                                    <input type="submit" name="submit_paper" class="btn btn-outline-success publish_button p-x-md" value="Place Add Request">
+                                </div>
+                            </div> 
+                        </form>  
+                    <div>
+                </div> 
+            </div>
+        </section>
+        <br><br>
+        {% block footer %}
+            {% include "footer_block.html" %}
+        {% endblock footer %}
+    </div>
+    
+    {% block common_js %}
+        {% include "common_js_includes.html" %}
+    {% endblock %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Replace the textareas with CKEditor instances
+            CKEDITOR.replace('abstract_description');
+            
+            // Attach a function to the change event for each CKEditor instance
+            ["abstract"]
+                .forEach(function (editorId) {
+                    var editor = CKEDITOR.instances[editorId + '_description'];
+
+                    editor.on('change', function () {
+                        // Update character count display for each CKEditor instance
+                        updateCharacterCount(editorId);
+                    });
+
+                    // Update character count initially
+                    updateCharacterCount(editorId);
+                });
+        });
+
+        function updateCharacterCount(editorId) {
+            var editorContent = CKEDITOR.instances[editorId + '_description'].getData();
+        
+            // Handle special space representations
+            var cleanedContent = editorContent.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+        
+            // Count each character (including spaces)
+            var characterCount = cleanedContent.length;
+        
+            var characterCountElement = document.getElementById(editorId + 'CharacterCount');
+        
+            // Check conditions and update text color and content
+            if (characterCount === 0) {
+                characterCountElement.style.color = "red";
+                characterCountElement.innerText = "Required";
+            } else if (characterCount > 2500) {
+                characterCountElement.style.color = "red";
+                characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
+            } else {
+                characterCountElement.style.color = "black";
+                characterCountElement.innerText = "Character Count: " + characterCount;
+            }
+        }  
+    </script>
+
+    <!--Logic to handle my message modal-->
+    <script>
+        // Function to display the modal
+        function openModal() {
+            document.getElementById('myMessageModal').style.display = 'flex';
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById('myMessageModal').style.display = 'none';
+        }
+
+        // Close the modal when clicking outside the modal content
+        window.onclick = function(event) {
+            var modal = document.getElementById('myMessageModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        };
+        // Open the modal when the page loads (you can trigger this in your JavaScript when you want to show the modal)
+        openModal();
+    </script>
+
+    <!--Script to handle file name showing when choosing file-->
+    <script type="text/javascript">
+
+        $('.custom-file input').change(function (e) {
+            var files = [];
+            for (var i = 0; i < $(this)[0].files.length; i++) {
+                files.push($(this)[0].files[i].name);
+            }
+            $(this).next('.custom-file-label').html(files.join(', '));
+        });
+    
+    </script>
+</body>
+
+</html>

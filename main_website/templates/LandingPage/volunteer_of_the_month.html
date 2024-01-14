@@ -1,64 +1,306 @@
 {% load static %}
 {% block volunteer_of_the_month %}
-<section id="content-section-2">
-    <div class="gdlr-parallax-wrapper gdlr-background-image gdlr-show-all no-skin"
-        id="gdlr-parallax-wrapper-1" data-bgspeed="0"
-        style="background-image: url('{% static 'upload/service-bg.jpg' %}'); padding-top: 20px; padding-bottom: 20px; ">
-        <div class="container">
-            <div class="six columns" style="display: flex;
-            justify-content: center;
-            align-items: center;">
-                <div class="gdlr-item gdlr-content-item">
-                    <div class="circle">
-                        <img src="{% static 'upload/SPAC-2022.png' %}" alt="Volunteer_of_the_month">
+<style>
+    #content-section-2{
+        max-height: 900px;
+        background-image: url('{% static 'upload/service-bg.jpg' %}');
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    #content-section-2 .section1{
+        display: flex;
+    justify-content: center;
+    }
+    #content-section-2 .section1 .section2{
+        max-width: 1140px;
+    }
+    #content-section-2 .section1 .section2 .section3{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    #content-section-2 .section1 .section2 .section3 .section4{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    #content-section-2 .section1 .section2 .section3 .section4 .gdlr-heading-shortcode{
+        font-size: 46px;font-weight: bold; text-align:center; color: #000;padding: 0 60px;
+    }
+    #content-section-2 .section1 .section2 .section3 .section4 .gdlr-heading-shortcode .break{
+        display: none;
+    }
+    #content-section-2 .section1 .section2 .section3 .section4 .bar{
+        background-color: #002855; width: 200px; height: 5px; text-align: center; border-radius: 5px;
+    }
+    #content-section-2 .section1 .section2 .section3 .carousal{
+        display: flex;
+        overflow: hidden;
+        max-width: 1140px;
+        margin: auto;
+    }
+    #content-section-2 .section1 .section2 .section3 .carousal .container {
+        width: 100%;
+        padding-right: 0;
+        padding-left: 0;
+        margin-right: auto;
+        margin-left: auto;
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+    }
+    #content-section-2 .section1 .section2 .section3 .carousal .container .content{
+        flex: 0 0 100%;
+    }
+    #content-section-2 .section1 .section2 .section3 .carousal .container .content .con {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        justify-items: center;
+        padding: 40px;
+        row-gap: 30px;
+        align-items: center;
+    }
+    #content-section-2 .section1 .section2 .section3 .carousal .container .content .con .circle {
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+    #content-section-2 .section1 .section2 .section3 .carousal .container .content .con .circle img{
+        width: 100%; height: 100%; object-fit: cover;
+    }
+
+
+    #content-section-2 .section1 .prev,
+    #content-section-2 .section1 .next {
+        content: "\f105";
+        font-family: 'FontAwesome';
+        font-style: normal;
+        position: absolute;
+        transform: translateY(-50%);
+        cursor: pointer;
+        height: 70px;
+        padding: 10px;
+        font-size: 30px;
+        background-color: transparent;
+        /* top: 50%; */
+        border: none;
+        color: 	#6d6d6d;
+        margin-top: 465px;
+        outline: none;
+        transition: all 0.3s;
+        
+    }
+    #content-section-2 .section1 .prev .icon-angle-left:before,
+    #content-section-2 .section1 .next .icon-angle-right:before{
+        font-size: 25px;
+    }
+
+
+    @media screen and (max-width: 991px) {
+        #content-section-2 .section1 .section2 .section3 .carousal .container .content .con {
+            grid-template-columns: 1fr;
+        }
+        #content-section-2 .section1 .prev,
+        #content-section-2 .section1 .next {
+            display: none;
+            
+        }
+    }
+    @media screen and (max-width: 767px) {
+        #content-section-2 .section1 .prev,
+        #content-section-2 .section1 .next {
+            margin-top: 778px;
+            
+        }
+    }
+    @media screen and (max-width: 770px) {
+        #content-section-2 .section1 .section2 .section3 .carousal{
+            display: flex;
+            width: 545px;
+            overflow: hidden;
+            max-width: 1140px;
+            margin: auto;
+        }
+        #content-section-2 .section1 .section2 .section3 .carousal .container {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            flex-direction: row;
+        }
+        #content-section-2 .section1 .section2 .section3 .carousal .container .content .con .details{
+            width: 80%;
+        }
+    }
+    @media screen and (max-width: 665px) {
+        #content-section-2 .section1 .prev,
+        #content-section-2 .section1 .next {
+            margin-top: 830px;
+        }
+    }
+    @media screen and (max-width: 575px) {
+        #content-section-2 .section1 .section2 .section3 .section4 .gdlr-heading-shortcode .break{
+            display: block;
+        }
+    }
+    @media screen and (max-width: 420px) {
+        #content-section-2 .section1 .section2 .section3 .carousal .container .content .con .details {
+            width: 50%;
+        }
+    }
+    #content-section-2 .section1 .prev {
+        margin-left: -30px;
+    }
+
+    #content-section-2 .section1 .next {
+        margin-right: -30px;
+    }
+</style>
+<section id="content-section-2"
+    >
+    <div class="section1">
+        <div class="section2">
+            <div class="section3">
+                <div class="section4">
+                    <h1 class="gdlr-heading-shortcode">
+                        Volunteer <br class="break"> of <br class="break">the month</h1>
+                    <div class="bar">
+                    </div>
+                </div>
+                <div class="carousal">
+                    <div class="container">
+                        {% for i in all_vom %}
+                        <div class="content">
+                            <div class="con">
+                                <div class="circle">
+                                    <img src="/media_files/{{i.ieee_id.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="picture_of_volunteer_of_the_month">
+                                </div>
+                                <div class="details">
+                                    <div class="list-with-icon-caption">
+                                        <p style="text-align: left;">Name: <span style="color: #002855;">{{i.ieee_id.name}}</span></p>
+                                        <p style="text-align: left;">Team: <span style="color: #002855;">{{i.ieee_id.team}}</span></p>
+                                        <p style="text-align: left;">Position: <span style="color: #002855;">{{i.ieee_id.position}}</span></p>
+                                    </div>
+                                    <div class="list-with-icon-content">
+                                        <div class="list-with-icon-title gdlr-skin-title" style="font-weight: 500;">
+                                            Contributions
+                                        </div>
+                                        <div class="list-with-icon-caption">
+                                            <p style="text-align: justify;">{{i.contributions | safe}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
-            <div class="six columns">
-                <div class="gdlr-item gdlr-content-item" style="margin-bottom: 30px;"></div>
-                <div class="gdlr-item gdlr-icon-with-list-item">
-                    <div class="list-with-icon-ux gdlr-ux">
-                        <div class="list-with-icon gdlr-left">
-                            <div class="list-with-icon-image"></div>
-                            <div class="list-with-icon-content">
-                                <div class="list-with-icon-title gdlr-skin-title">Volunteer of the
-                                    month
-                                </div>
-                                <div class="list-with-icon-caption">
-                                    <p style="text-align: left;">Name: <span
-                                            style="color: #002855;">Full name</span></p>
-                                    <p style="text-align: left;">Team: <span
-                                            style="color: #002855;">Team name</span></p>
-                                    <p style="text-align: left;">Position: <span
-                                            style="color: #002855;">Position name</span></p>
-                                </div>
-                            </div>
-                            <div class="clear"></div>
-                        </div>
-                    </div>
-                    <div class="list-with-icon-ux gdlr-ux">
-                        <div class="list-with-icon gdlr-left">
-                            <div class="list-with-icon-image"></div>
-                            <div class="list-with-icon-content">
-                                <div class="list-with-icon-title gdlr-skin-title">Contributions
-                                </div>
-                                <div class="list-with-icon-caption">
-                                    <p style="text-align: justify;">Donec sed odio dui. Maecenas sed
-                                        diam eget risus varius
-                                        blandit sit amet non magna. Cras justo odio, dapibus ac
-                                        facilisis in, egestas eget quam. Cum sociis natoque
-                                        penatibus et magnis dis parturient montes</p>
-                                </div>
-                            </div>
-                            <div class="clear"></div>
-                        </div>
-                    </div>
-                    <div class="clear"></div>
-                </div>
-            </div>
-            <div class="clear"></div>
         </div>
+        <button class="prev" onclick="prevSlide()"><i class="icon-angle-left gdlr-flex-prev"></i></button>
+        <button class="next" onclick="nextSlide()"><i class="icon-angle-right gdlr-flex-next"></i></button>
     </div>
-    <div class="clear"></div>
 </section>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let currentIndex = 0;
+        let startX = 0;
+        let isDragging = false;
+        let autoSwipeInterval;
+
+        const slides = document.querySelectorAll('#content-section-2 .section1 .section2 .section3 .carousal .container .content');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            const percentage = -index * 100;
+            document.querySelector('#content-section-2 .section1 .section2 .section3 .carousal .container').style.transform = `translateX(${percentage}%)`;
+        }
+
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+            showSlide(currentIndex);
+            restartAutoSwipe();
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            showSlide(currentIndex);
+            restartAutoSwipe();
+        }
+
+        function handleTouchStart(e) {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+        }
+
+        function handleTouchMove(e) {
+            if (!isDragging) return;
+            const currentX = e.touches[0].clientX;
+            const diff = startX - currentX;
+
+            if (diff > 0) {
+                nextSlide();
+            } else {
+                prevSlide();
+            }
+
+            isDragging = false;
+            restartAutoSwipe();
+        }
+
+        function handleTouchEnd() {
+            isDragging = false;
+        }
+
+        function handleMouseDown(e) {
+            startX = e.clientX;
+            isDragging = true;
+        }
+
+        function handleMouseMove(e) {
+            if (!isDragging) return;
+            const currentX = e.clientX;
+            const diff = startX - currentX;
+
+            if (diff > 0) {
+                nextSlide();
+            } else {
+                prevSlide();
+            }
+
+            isDragging = false;
+            restartAutoSwipe();
+        }
+
+        function handleMouseUp() {
+            isDragging = false;
+        }
+
+        function restartAutoSwipe() {
+            clearInterval(autoSwipeInterval);
+            autoSwipeInterval = setInterval(nextSlide, 3000);
+        }
+
+        const container = document.querySelector('#content-section-2 .section1 .section2 .section3 .carousal .container');
+        container.addEventListener('touchstart', handleTouchStart);
+        container.addEventListener('touchmove', handleTouchMove);
+        container.addEventListener('touchend', handleTouchEnd);
+
+        container.addEventListener('mousedown', handleMouseDown);
+        container.addEventListener('mousemove', handleMouseMove);
+        container.addEventListener('mouseup', handleMouseUp);
+
+        document.querySelector('.prev').addEventListener('click', prevSlide);
+        document.querySelector('.next').addEventListener('click', nextSlide);
+
+        container.addEventListener('mouseenter', stopAutoSwipe);
+        container.addEventListener('mouseleave', restartAutoSwipe);
+
+        restartAutoSwipe(); // Start auto-swipe on page load
+        showSlide(currentIndex);
+    });
+</script>
+
+
+    
+
 {% endblock volunteer_of_the_month %}

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Event_Category,SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Media_Links,Media_Selected_Images,Event_Venue,Event_Permission
+from .models import Event_Category,SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Media_Links,Media_Selected_Images,Event_Venue,Event_Permission,Event_Feedback
 # Register your models here.
 
 @admin.register(Event_Category)
@@ -15,6 +15,10 @@ class Events(admin.ModelAdmin):
 
     def event_types(self, obj):
         return ", ".join([p.event_category for p in obj.event_type.all()])
+    
+@admin.register(Event_Feedback)
+class Event_Feedback(admin.ModelAdmin):
+    list_display = ['id', 'name', 'email', 'comment']
 
 
 @admin.register(InterBranchCollaborations)

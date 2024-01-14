@@ -1,995 +1,1277 @@
-{% block about_base %}
-{% include "Manage Website/About/about_base.html" %}
-{% endblock about_base %}
 {% block manage_ieee_bangladesh_section %}
+<!DOCTYPE html>
 {% load static %}
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+        <!-- CKEditor CDN -->
+        <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+
+        {% block common_css %}
+            {% include "common_css.html" %}
+        {% endblock common_css %}
+
+        <style>
+            body, html {
+                
+                margin: 0;
+                
+                align-items: center;
+                justify-content: center;
+            }
+
+            .row {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+            }
+            .row {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+            }
+            .btn-container {
+                text-align: center;
+            }
+            
+            .btn {
+                max-width: 100%;
+                width: auto;
+                display: inline-block;
+                white-space: normal; /* Allow text to wrap within the button */
+                word-wrap: break-word; /* Break long words if necessary */
+                font-size: 16px; /* Adjust the font size as needed */
+            }
+            
+            /* Media query for smaller screens (adjust the breakpoint as needed) */
+            @media (max-width: 768px) {
+                .btn {
+                    width: 100%; /* Make the button full width on smaller screens */
+                }
+            }
+
+            h1{
+                text-align:center;
+                font-size:30px;
+                font-weight:bold;
+            }
+        
+            label{
+                font-size:20px;
+            }
+
+            .app-body{
+                justify-content:center; 
+                margin-left:15%;
+                margin-right:15%;
+            }
+            
+            @media (max-width: 760px) {
+                .app-body {
+                    margin-left: 5%;
+                    margin-right: 5%;
+                }
+            }
+        
+            .circle-btn {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 45px; /* Set minimum width */
+                height: 45px; /* Set minimum height */
+                background-color: transparent; /* Set to transparent or any other color for the inside */
+                border: 2px solid #78BE20; /* Border color is green */
+                border-radius: 50%;
+                color: #78BE20; /* Text color is green */
+                font-size: 24px; /* Adjust the font size as needed */
+                cursor: pointer;
+                transition: background-color 0.3s, color 0.3s; /* Add smooth transition effect */
+            }
+        
+            .circle-btn:hover {
+                background-color: #78BE20; /* Hover background color is green */
+                color: #fff; /* Hover text color is white */
+            }
+        
+            .plus-sign::before {
+                content: '+';
+            }
+        
+            .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+                max-width: 80%; 
+                height: 90%; 
+                z-index: 1500;
+            }
+            @media screen and (max-width:700px){
+                .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+                    max-width:100%;
+                }
+            }
+        
+            @media only screen and (max-width: 768px) {
+            
+                .custom-file {
+                    margin-bottom: 10px;
+                }
+            }
+        
+            #gallery-selected-images-container {
+                max-width: 100%; /* Set the maximum width for the image container */
+            }
+            
+            #gallery-selected-images {
+                width: 200px; /* Set the width to 100% */
+                height: auto; /* Set the height to 150px */
+                object-fit: cover; /* Maintain aspect ratio and cover the container */
+                margin-top:10px;
+            }
+        
+            .image-container-item{
+                width: 100%;
+                height: auto;
+                border-radius: 8px;
+                box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+                transition: box-shadow 0.3s ease;
+            }
+        
+            .image-container-item:hover {
+                box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+            }
+        
+            .image-container {
+                position: relative;
+                display: inline-block;
+            }
+        
+            .cross-button {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                cursor: pointer;
+                background-color: white; /* Set the background color to white */
+                border: none;
+                padding: 0;
+                width: 25px; /* Set the width and height to create a circle */
+                height: 25px;
+                border-radius: 50%; /* Make it a circle */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 2rem; /* Adjust font size */
+                color: black; /* Set the initial color */
+                z-index: 2;
+                transition: background-color 0.3s ease, color 0.3s ease; /* Add transitions for color and background-color changes */
+                line-height: 1; /* Ensure line height does not affect vertical alignment */
+            }
+            
+            
+            .cross-button:hover {
+                color: gray; /* Change color on hover */
+            }
+            
+        </style>
+    </head>
 
 
-<!-- CKEditor CDN -->
-<script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
 
-<style>
+    <body>
+        <div class="app" id="app">
 
-    h1{
-        text-align:center;
-        font-size:30px;
-        font-weight:bold;
-    }
+            <!-- aside -->
+            <div id="aside" class="app-aside modal nav-dropdown">
 
-    label{
-        font-size:20px;
-    }
+                {% block sidebar %}
+                    {% include 'users/sidebar.html' %}
+                {% endblock %}
 
-    .circle-btn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 45px; /* Set minimum width */
-        height: 45px; /* Set minimum height */
-        background-color: transparent; /* Set to transparent or any other color for the inside */
-        border: 2px solid #78BE20; /* Border color is green */
-        border-radius: 50%;
-        color: #78BE20; /* Text color is green */
-        font-size: 24px; /* Adjust the font size as needed */
-        cursor: pointer;
-        transition: background-color 0.3s, color 0.3s; /* Add smooth transition effect */
-    }
-
-    .circle-btn:hover {
-        background-color: #78BE20; /* Hover background color is green */
-        color: #fff; /* Hover text color is white */
-    }
-
-    .plus-sign::before {
-        content: '+';
-    }
-
-    @media only screen and (max-width: 768px) {
-      
-        .custom-file {
-            margin-bottom: 10px;
-        }
-      }
-  
-      #gallery-selected-images-container {
-        max-width: 100%; /* Set the maximum width for the image container */
-      }
-      
-      #gallery-selected-images {
-        width: 200px; /* Set the width to 100% */
-        height: auto; /* Set the height to 150px */
-        object-fit: cover; /* Maintain aspect ratio and cover the container */
-        margin-top:10px;
-      }
-  
-      .image-container-item{
-        width: 100%;
-        height: auto;
-        border-radius: 8px;
-        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-        transition: box-shadow 0.3s ease;
-      }
-  
-      .image-container-item:hover {
-          box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
-      }
-  
-      .image-container {
-        position: relative;
-        display: inline-block;
-      }
-  
-      .cross-button {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        cursor: pointer;
-        background-color: white; /* Set the background color to white */
-        border: none;
-        padding: 0;
-        width: 25px; /* Set the width and height to create a circle */
-        height: 25px;
-        border-radius: 50%; /* Make it a circle */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 2rem; /* Adjust font size */
-        color: black; /* Set the initial color */
-        z-index: 2;
-        transition: background-color 0.3s ease, color 0.3s ease; /* Add transitions for color and background-color changes */
-        line-height: 1; /* Ensure line height does not affect vertical alignment */
-      }
-    
-    
-      .cross-button:hover {
-          color: gray; /* Change color on hover */
-      }
-
-</style>
-
-<body>
-    <div class="app" id="app">
-        <div ui-view class="app-body" style="justify-content:center; margin-left:27%; margin-right:15%;" id="view">
-
-            <br>
-            <h4 style="justify-content:center;text-align:center;"><b>IEEE Bangladesh Section</b></h2>
-            <br>
-
-            <div class="btn-container">
-                <button class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#previewModal">Preview Event</button>
             </div>
-            <br>
+            <!-- aside end -->
 
-            <!-- Preview Event Modal -->
-            <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="max-width: 80%; height: 90%;">
-                    <div class="modal-content" style="width: 100%; height: 100%;">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="previewModalLabel">Preview Event</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <iframe src="https://ieeensusb.org/ieee-bangladesh-section/" style="width: 100%; height: 100%;" loading="lazy"></iframe>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <!-- navbar content -->
+            <div id="content" class="app-content box-shadow-z0" role="main">
+                {% block navbar %}
+                    {% include 'Manage Website/manage_web_navbar.html' %}
+                {% endblock navbar %}
+
+            </div>
+            <!--navbar content-->
+
+            <div ui-view class="app-body" id="view">
+
+                <div class="container">
+                    <br>
+                    <br>
+                    <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
+                    <h6>Note:</h6>
+                    <ol style="justify-content:center;margin-bottom:15px;"><b>
+                    <li>All ( * ) marked fields are mandatory to be filled </li>
+                    <li>Keep in mind your description does not exceed the character count </li>
+                    <li>Maximum 1 picture can be uploaded in dedicated sections </li>
+                    <li>To replace a picture, delete the previous one and add a new one </li>
+                    <li>You can view the image by clicking on it  </li>
+                    <li>You can add as many links as you want </li>
+                    <li>You can see your changes by clicking the preview button </li>
+                    <li>Don’t forget to save the changes by clicking save button </li>
+
+                    </ol></b>
+                </div>
+                    
+
+                <!--Start from here-->
+                <br>
+                <br>
+                <h2 style="text-align: center;margin-bottom:15px;">Manage the <b>About Section</b> of the Central Website of <span style="color:#00629B;"><b>IEEE NSU Student Branch</b></span></h2>
+                <br>
+                {% block publications_tab %}
+                {% include "Manage Website/About/about_tabs.html" %}
+                {% endblock publications_tab %}
+
+                <br>
+                <h4 style="justify-content:center;text-align:center;"><b>IEEE Bangladesh Section</b></h2>
+                <br>
+
+                <div class="btn-container">
+                    <button class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#previewModal">Preview</button>
+                </div>
+                <br>
+
+                <!-- Preview Modal -->
+                <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" style="z-index: 1500;">
+                    <div class="modal-dialog modal-dialog-centered modal-lg preview_modal_box" role="document">
+                        <div class="modal-content" style="width: 100%; height: 100%;">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="previewModalLabel">Preview</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="{% url 'central_branch:ieee_bangladesh_section_preview' %}" style="width: 100%; height: 100%;" loading="lazy"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!--Messages-->
-            <div style="justify-content:center; text-align:center;">
-                {% if messages %}
-                    {% for message in messages %}
-                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                <!--for error messages-->
+                <div class="container">
+                    <br>
+                    {% for message in messages  %}
+                        <p>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <p style="margin: 0;">{{message}}</p>
+                            </div>
+                        </p>
                     {% endfor %}
-                {% endif %}
-            </div>
-            <!--Messages End-->
+                    <br>
+                </div>
+                <!--for error messages end-->
+                
+                <div class="container">
             
-            <div class="container">
-          
-                <div class="box">
-            
-            
-                    {% comment %} <br>
-                    <div class="box-header">
-                        <h1>Details</h1>
-                        <hr>
-                    </div> {% endcomment %}
-                    
-            
-                    <form id="myForm" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                        <div class="box-body">    
-                            
-                            <br>
-                            <h1>About</h1>
-                            <br>
-                            
-                            <div class="form-group">
-                                <label>About <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="about_details"></textarea>
-                                <p id="aboutCharacterCount" style="color: red;">Required</p>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label for="images">About Image:</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="about-image-input" name="image" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
-                                </div>
-                                
-                                <br>
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
-                                    </div>
-                                </div>
-                                <br>
-
-                                <label>IEEEBD.net Link <span style="color:red">*<span></label> 
-                                <input
-                                placeholder="IEEEBD.net Link"
-                                class="form-control"
-                                type="text"
-                                autocomplete="off"
-                                required
-                                name="ieeebd_link"/>
-                            </div>  
-
-                            <br>
+                    <div class="box">
+                
+                
+                        {% comment %} <br>
+                        <div class="box-header">
+                            <h1>Details</h1>
                             <hr>
-                            <br> 
-
-                            <h1>Members and Volunteers</h1>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Members and Volunteers Details <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="members_and_volunteers_details"></textarea>
-                                <p id="members_and_volunteersCharacterCount" style="color: red;">Required</p>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label for="images">Members and Volunteers Image:</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="members-and-volunteers-image-input" name="image" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="members-and-volunteers-image-input">Choose file</label>
-                                </div>
-                                
-                                <br>
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal">Sample</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('')">✖</button>
-                                    </div>
-                                </div>
-                            </div> 
-
-                            <br>
-
-                            <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
-                                    <!-- Add input field for links here if needed -->
-                                </div>
-                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
-                                </div>
-                            </div>
-                            
-                            <hr>
-                            <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <br> 
-                            <hr>
-                            <br> 
-
-                            <h1>Benefits Branches Groups Community</h1>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Benefits <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="benefits_details"></textarea>
-                                <p id="benefitsCharacterCount" style="color: red;">Required</p>
-
-                            </div>
-                            <br>
-
-                            <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
-                                    <!-- Add input field for links here if needed -->
-                                </div>
-                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
-                                </div>
-                            </div>
-                            
-                            <hr>
-                            <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Student Branches <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="student_branches_details"></textarea>
-                                <p id="student_branchesCharacterCount" style="color: red;">Required</p>
-
-                            </div>
-                            <br>
-
-                            <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
-                                    <!-- Add input field for links here if needed -->
-                                </div>
-                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
-                                </div>
-                            </div>
-                            
-                            <hr>
-                            <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Affinity Groups <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="affinity_groups_details"></textarea>
-                                <p id="affinity_groupsCharacterCount" style="color: red;">Required</p>
-
-                            </div>
-                            <br>
-
-                            <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
-                                    <!-- Add input field for links here if needed -->
-                                </div>
-                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
-                                </div>
-                            </div>
-                            
-                            <hr>
-                            <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Community and society <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="communty_and_society_details"></textarea>
-                                <p id="communty_and_societyCharacterCount" style="color: red;">Required</p>
-
-                            </div>
-                            <br>
-
-                            <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
-                                    <!-- Add input field for links here if needed -->
-                                </div>
-                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
-                                </div>
-                            </div>
-                            
-                            <hr>
-                            <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <br>
-                            <hr>
-                            <br> 
-
-                            <h1>Achievements</h1>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Achievements Details <span style="color:red">*<span></label> 
-                                <textarea  
-                                class="form-control" 
-                                type="text"
-                                name="achievements_details"></textarea>
-                                <p id="achievementsCharacterCount" style="color: red;">Required</p>
-                            </div>
-
-                            <br>
-                            <hr>
-                            <br> 
-
-                            <h1>Gallery</h1>
-                            <br>
-                            
-                            <div class="form-group">
-                                <label for="images">Upload Images:</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="gallery-image-input" name="image" accept="image/*" multiple>
-                                    <label class="custom-file-label bg-light" for="gallery-image-input">Choose files</label>
-                                </div>
-                                
-                                <br>
+                        </div> {% endcomment %}
                         
-                                <div id="gallery-selected-images-container"></div>
-                                <input type="hidden" name="selected_images" id="gallery-selected-images">
-                                <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple images.</small>
-                            </div>
+                
+                        <form id="myForm" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                            <div class="box-body">    
                                 
-                        
-                            <div id="image-container" class="row text-center">
-                            {% for image_url in gallery_images %}
-                                <hr>
-                                <div class="col-lg-4 col-md-6 my-3">
-                                    <div class="image-container">
-                                        <img
-                                        src="{{ gallery_url }}{{ image_url.selected_images }}"
-                                        alt="Image"
-                                        class="img-fluid image-container-item"
-                                        data-toggle="modal"
-                                        data-target="#fullViewModalForGallery{{ forloop.counter }}"
-                                        />
-                    
-                                        <!-- Full View Modal -->
-                                        <div
-                                        id="fullViewModalForGallery{{ forloop.counter }}"
-                                        class="modal fade"
-                                        tabindex="-1"
-                                        role="dialog"
-                                        aria-labelledby="fullViewModalForGalleryLabel"
-                                        aria-hidden="true"
-                                        >
-                                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document" >
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="fullViewModalForGalleryLabel">Image Full View</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <img
-                                                            src="{{ gallery_url }}{{ image_url.selected_images }}"
-                                                            alt="Image"
-                                                            class="img-fluid"
-                                                            style="width: 100%; height: auto; margin: 0 auto; display: block;"
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                    
+                                <br>
+                                <h1>About</h1>
+                                <br>
+                                
+                                <div class="form-group">
+                                    <label>About <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="about_details">{{ieee_bangladesh_section.about_ieee_bangladesh|default:""}}</textarea>
+                                    <p id="aboutCharacterCount" style="color: red;">Required</p>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label for="images">About Image:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="about-image-input" name="about_image" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
+                                    </div>
                                     
-                                        <!-- Cross button to trigger modal -->
-                                        <button type="button" class="cross-button" data-toggle="modal" data-target="#ConfirmDeleteModalForGallery" onclick="openModal('{{image_url.selected_images}}')">
-                                            &times; <!-- Use the "times" symbol (X) as a close icon -->
-                                        </button>
-                    
+                                    <br>
+                                    {% if ieee_bangladesh_section.ieee_bangladesh_logo %}
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_bangladesh_section.ieee_bangladesh_logo}}')">About Image</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{ieee_bangladesh_section.ieee_bangladesh_logo}}', 'ieee_bangladesh_logo')">✖</button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    <br>
+
+                                    <label>IEEE BD Link <span style="color:red">*<span></label> 
+                                    <input
+                                    placeholder="IEEE BD Link"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="ieeebd_link"
+                                    value="{{ieee_bangladesh_section.ieee_bd_link|default:""}}"/>
+                                </div>  
+
+                                <br>
+                                <hr>
+                                <br> 
+
+                                <h1>Members and Volunteers</h1>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Members and Volunteers Details <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="members_and_volunteers_details">{{ieee_bangladesh_section.member_and_volunteer_description|default:""}}</textarea>
+                                    <p id="members_and_volunteersCharacterCount" style="color: red;">Required</p>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label for="images">Members and Volunteers Image:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="members-and-volunteers-image-input" name="members_and_volunteers_image" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="members-and-volunteers-image-input">Choose file</label>
+                                    </div>
+                                    
+                                    <br>
+                                    {% if ieee_bangladesh_section.member_and_volunteer_picture %}
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{ieee_bangladesh_section.member_and_volunteer_picture}}')">Members and Volunteer Image</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{ieee_bangladesh_section.member_and_volunteer_picture}}', 'member_and_volunteer_picture')">✖</button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div> 
+
+                                <br>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-7 form-control-label">Add Links (Members and Volunteers):</label>
+                                    <div class="col-sm-3">
+                                        <!-- Add input field for links here if needed -->
+                                    </div>
+                                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('members_and_volunteers_link')"></button>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                <div id="links-container" class="mt-3">
+                                    <label class="mb-0">Links (Members and Volunteers):</label> 
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        {% for page_link in page_links.members_and_volunteers_link %}
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
+                                        </div>
+                                        {% endfor %}
                                     </div>
                                 </div>
 
-                                <!-- Confirm Delete Modal -->
-                                <div id="ConfirmDeleteModalForGallery" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForGalleryLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="ConfirmDeleteModalForGalleryLabel">Confirm Delete</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                        
-                                            <form method="post">
-                                                {% csrf_token %}
-                                                <div class="modal-body">
-                                                    <p><input id="gallery_image_id" name= "remove_image" type="hidden"></p>
-                                                    <p>Are you sure you want to delete this image?</p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <input type="submit" class="btn btn-outline-danger buttons" value="Delete" name="delete_image">
-                                                    <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                </div>
-                                            </form>
+                                <br> 
+                                <hr>
+                                <br> 
+
+                                <h1>Benefits Branches Groups Community</h1>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Benefits <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="benefits_details">{{ieee_bangladesh_section.benefits_description|default:""}}</textarea>
+                                    <p id="benefitsCharacterCount" style="color: red;">Required</p>
+
+                                </div>
+                                <br>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-7 form-control-label">Add Links (Benefits):</label>
+                                    <div class="col-sm-3">
+                                        <!-- Add input field for links here if needed -->
+                                    </div>
+                                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('benefits_link')"></button>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                <div id="links-container" class="mt-3">
+                                    <label class="mb-0">Links (Benefits):</label> 
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        {% for page_link in page_links.benefits_link %}
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Student Branches <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="student_branches_details">{{ieee_bangladesh_section.student_branches_description|default:""}}</textarea>
+                                    <p id="student_branchesCharacterCount" style="color: red;">Required</p>
+
+                                </div>
+                                <br>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-7 form-control-label">Add Links (Student Branches):</label>
+                                    <div class="col-sm-3">
+                                        <!-- Add input field for links here if needed -->
+                                    </div>
+                                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('student_branches_link')"></button>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                <div id="links-container" class="mt-3">
+                                    <label class="mb-0">Links (Student Branches):</label> 
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        {% for page_link in page_links.student_branches_link %}
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Affinity Groups <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="affinity_groups_details">{{ieee_bangladesh_section.affinity_groups_description|default:""}}</textarea>
+                                    <p id="affinity_groupsCharacterCount" style="color: red;">Required</p>
+
+                                </div>
+                                <br>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-7 form-control-label">Add Links (Affinity Groups):</label>
+                                    <div class="col-sm-3">
+                                        <!-- Add input field for links here if needed -->
+                                    </div>
+                                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('affinity_groups_link')"></button>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                <div id="links-container" class="mt-3">
+                                    <label class="mb-0">Links (Affinity Groups):</label> 
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        {% for page_link in page_links.affinity_groups_link %}
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Community and society <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="communty_and_society_details">{{ieee_bangladesh_section.community_and_society_description|default:""}}</textarea>
+                                    <p id="communty_and_societyCharacterCount" style="color: red;">Required</p>
+
+                                </div>
+                                <br>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-7 form-control-label">Add Links (Community and society):</label>
+                                    <div class="col-sm-3">
+                                        <!-- Add input field for links here if needed -->
+                                    </div>
+                                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('community_and_society_link')"></button>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                <div id="links-container" class="mt-3">
+                                    <label class="mb-0">Links (Community and society):</label> 
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        {% for page_link in page_links.community_and_society_link %}
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                
+                                <br>
+                                <hr>
+                                <br> 
+
+                                <h1>Achievements</h1>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Achievements Details <span style="color:red">*<span></label> 
+                                    <textarea  
+                                    class="form-control" 
+                                    type="text"
+                                    name="achievements_details">{{ieee_bangladesh_section.achievements_description|default:""}}</textarea>
+                                    <p id="achievementsCharacterCount" style="color: red;">Required</p>
+                                </div>
+                                <br>
+
+                                <div class="achievements-link-label">
+                                    <div class="form-group row">
+                                        <label class="col-sm-7 form-control-label">Add Links (Achievements Read More Link):</label>
+                                        <div class="col-sm-3">
+                                            <!-- Add input field for links here if needed -->
+                                        </div>
+                                        <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('achievement_link')"></button>
                                         </div>
                                     </div>
                                 </div>
-                            {% endfor %}
-                            </div>
+                                
+                                <hr>
+                                <div id="links-container achievements-container" class="mt-3">
+                                    <label class="mb-0">Links (Achievements Read More Link):</label> 
+                                    {% for page_link in page_links.achievement_link %}
+                                    <div class="achievements-item">
+                                        <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                            <div class="col-sm-11">
+                                                <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
+                                            </div>
+                                            <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                                <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks" onclick="openLinkModal('{{page_link.pk}}')">✖</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
 
-                            <br>
-                            <hr>
-                            <br> 
+                                <br>
+                                <hr>
+                                <br> 
 
-                            <h1>Contact</h1>
-                            <br>
-                            
-                            <div class="form-group">
-                                <label>Chair <span style="color:red">*<span></label> 
-                                <input
-                                    placeholder="Chair"
-                                    class="form-control"
-                                    type="text"
-                                    autocomplete="off"
-                                    required
-                                    name="chair_name"/>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Chair Email <span style="color:red">*<span></label> 
-                                <input
-                                    placeholder="Email"
-                                    class="form-control"
-                                    type="text"
-                                    autocomplete="off"
-                                    required
-                                    name="chair_email"/>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Secretary <span style="color:red">*<span></label> 
-                                <input
-                                    placeholder="Secretary"
-                                    class="form-control"
-                                    type="text"
-                                    autocomplete="off"
-                                    required
-                                    name="secretary_name"/>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Secretary Email <span style="color:red">*<span></label> 
-                                <input
-                                    placeholder="Email"
-                                    class="form-control"
-                                    type="text"
-                                    autocomplete="off"
-                                    required
-                                    name="secretary_email"/>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Office Secretary <span style="color:red">*<span></label> 
-                                <input
-                                    placeholder="Office Secretary"
-                                    class="form-control"
-                                    type="text"
-                                    autocomplete="off"
-                                    required
-                                    name="office_secretary_name"/>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Office Secretary Number <span style="color:red">*<span></label> 
-                                <input
-                                    placeholder="number"
-                                    class="form-control"
-                                    type="text"
-                                    autocomplete="off"
-                                    required
-                                    name="office_secretary_number"/>
-                            </div>
-
-                            <br>
-                            <hr>
-                            <br> 
-
-                            <div class="form-group text-center">
-                                <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
-                            </div>
-                            <br>
-
-                            
-                            
-                        </div> 
-        
-                    
-                    </form>  
-        
-                <div>
-            </div>
-
-
-            <!-- for showing image -->
-            <div class="modal fade" id="showImageModal" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="showImageModalLabel">Image</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <img id="modal_image" src="" class="img-fluid w-100" alt="Image">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                        </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Confirmation modal for deleting images -->
-            <div class="modal fade" id="ConfirmDeleteModalForImages" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForImagesLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-top" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="ConfirmDeleteModalForImagesLabel">Confirm Delete</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="POST">
-                            {% csrf_token %}
-                        <p><input id="image_delete" name= "image_delete" type="hidden">
-                            <input id="image_id" name= "image_id" type="hidden" ></p>
-                        Are you sure you want to delete the Image?
-                    </div>
-                    <div class="modal-footer">
-                        <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
-                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                    </div>
-                    </form>
-                </div>
-            </div>
-            </div>
-
-
-
-            <!-- Updated Modal for adding links -->
-            <div class="modal fade" id="AddLinksModal" tabindex="-1" role="dialog" aria-labelledby="AddLinksModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="AddLinksModalLabel">Add Links</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="POST">
-                                {% csrf_token %}
+                                <h1>Gallery</h1>
+                                <br>
                                 
                                 <div class="form-group">
-                                    <label>Title: </label> 
-                                        <input
-                                            placeholder="Title"
-                                            class="form-control"
-                                            type="text"
-                                            autocomplete="off"
-                                            required
-                                            name="title"
-                                            value="" 
-                                        />
+                                    <label for="images">Upload Images:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="gallery-image-input" name="gallery_img" accept="image/*" multiple>
+                                        <label class="custom-file-label bg-light" for="gallery-image-input">Choose files</label>
+                                    </div>
+                                    
                                     <br>
-                                    <label>Links:</label>
-                                    <input
-                                    placeholder="Provide Drive Link for The Banner Pictures"
-                                    class="form-control"
-                                    type="url"
-                                    autocomplete="off"
-                                    id="field1"
-                                    name="form_link_add"
-                                    value=""/>
+                            
+                                    <div id="gallery-selected-images-container"></div>
+                                    <input type="hidden" name="selected_images" id="gallery-selected-images">
+                                    <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple images.</small>
                                 </div>
+                                    
+                            
+                                <div id="image-container" class="row text-center">
+                                {% for image_url in all_images %}
+                                    <hr>
+                                    <div class="col-lg-4 col-md-6 my-3">
+                                        <div class="image-container">
+                                            <img
+                                            src="{{ media_url }}{{ image_url.picture }}"
+                                            alt="Image"
+                                            class="img-fluid image-container-item"
+                                            data-toggle="modal"
+                                            data-target="#fullViewModalForGallery{{ forloop.counter }}"
+                                            />
+                        
+                                            <!-- Full View Modal -->
+                                            <div
+                                            id="fullViewModalForGallery{{ forloop.counter }}"
+                                            class="modal fade"
+                                            tabindex="-1"
+                                            role="dialog"
+                                            aria-labelledby="fullViewModalForGalleryLabel"
+                                            aria-hidden="true"
+                                            >
+                                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document" >
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="fullViewModalForGalleryLabel">Image Full View</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <img
+                                                                src="{{ media_url }}{{ image_url.picture }}"
+                                                                alt="Image"
+                                                                class="img-fluid"
+                                                                style="width: 100%; height: auto; margin: 0 auto; display: block;"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                        
+                                        
+                                            <!-- Cross button to trigger modal -->
+                                            <button type="button" class="cross-button" data-toggle="modal" data-target="#ConfirmDeleteModalForGallery" onclick="openModal2('{{image_url.pk}}')">
+                                                &times; <!-- Use the "times" symbol (X) as a close icon -->
+                                            </button>
+                        
+                                        </div>
+                                    </div>
+
+                                    <!-- Confirm Delete Modal -->
+                                    <div id="ConfirmDeleteModalForGallery" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForGalleryLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="ConfirmDeleteModalForGalleryLabel">Confirm Delete</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                            
+                                                <form method="post">
+                                                    {% csrf_token %}
+                                                    <div class="modal-body">
+                                                        <p><input id="gallery_image_id" name= "remove_image" type="hidden"></p>
+                                                        <p>Are you sure you want to delete this image?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <input type="submit" class="btn btn-outline-danger buttons" value="Delete" name="delete_image_gallery">
+                                                        <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                </div>
+
+                                <br>
+                                <hr>
+                                <br> 
+
+                                <h1>Contact</h1>
+                                <br>
+                                
+                                <div class="form-group">
+                                    <label>Chair <span style="color:red">*<span></label> 
+                                    <input
+                                        placeholder="Chair"
+                                        class="form-control"
+                                        type="text"
+                                        autocomplete="off"
+                                        required
+                                        name="chair_name"
+                                        value="{{ieee_bangladesh_section.chair_name|default:""}}"/>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Chair Email <span style="color:red">*<span></label> 
+                                    <input
+                                        placeholder="Email"
+                                        class="form-control"
+                                        type="text"
+                                        autocomplete="off"
+                                        required
+                                        name="chair_email"
+                                        value="{{ieee_bangladesh_section.chair_email|default:""}}"/>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Secretary <span style="color:red">*<span></label> 
+                                    <input
+                                        placeholder="Secretary"
+                                        class="form-control"
+                                        type="text"
+                                        autocomplete="off"
+                                        required
+                                        name="secretary_name"
+                                        value="{{ieee_bangladesh_section.secretary_name|default:""}}"/>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Secretary Email <span style="color:red">*<span></label> 
+                                    <input
+                                        placeholder="Email"
+                                        class="form-control"
+                                        type="text"
+                                        autocomplete="off"
+                                        required
+                                        name="secretary_email"
+                                        value="{{ieee_bangladesh_section.secretary_email|default:""}}"/>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Office Secretary <span style="color:red">*<span></label> 
+                                    <input
+                                        placeholder="Office Secretary"
+                                        class="form-control"
+                                        type="text"
+                                        autocomplete="off"
+                                        required
+                                        name="office_secretary_name"
+                                        value="{{ieee_bangladesh_section.office_secretary_name|default:""}}"/>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Office Secretary Number <span style="color:red">*<span></label> 
+                                    <input
+                                        placeholder="number"
+                                        class="form-control"
+                                        type="text"
+                                        autocomplete="off"
+                                        required
+                                        name="office_secretary_number"
+                                        value="{{ieee_bangladesh_section.office_secretary_number|default:""}}"/>
+                                </div>
+
+                                <br>
+                                <hr>
+                                <br> 
+
+                                <div class="form-group text-center">
+                                    <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
+                                </div>
+                                <br>
+
+                                
+                                
+                            </div> 
+            
+                        
+                        </form>  
+            
+                    <div>
+                </div>
+
+
+                <!-- for showing image -->
+                <div class="modal fade" id="showImageModal" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="showImageModalLabel">Image</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <img id="modal_image" src="" class="img-fluid w-100" alt="Image">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                            </form>
                         </div>
-                        <div class="modal-footer">
-                            <!-- Change the button label and name attribute -->
-                            <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_link" value="Add">
-                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                        </div>
-                        </form>
                     </div>
                 </div>
-            </div>
 
 
-            <!-- New modal for editing links -->
-            <div class="modal fade" id="EditLinkModal" tabindex="-1" role="dialog" aria-labelledby="EditLinkModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <!-- Confirmation modal for deleting images -->
+                <div class="modal fade" id="ConfirmDeleteModalForImages" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForImagesLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-top" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="EditLinkModalLabel">Edit Link</h5>
+                            <h5 class="modal-title" id="ConfirmDeleteModalForImagesLabel">Confirm Delete</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <!-- Display existing link in a textarea for editing -->
                             <form method="POST">
                                 {% csrf_token %}
-                                <div class="form-group">
-                                    <label>Title: </label> 
-                                        <input
-                                            placeholder="Title"
-                                            class="form-control"
-                                            type="text"
-                                            autocomplete="off"
-                                            required
-                                            name="title"
-                                            value="" 
-                                        />
-                                    <br>
-                                    <label>Links:</label>
-                                    <input
-                                    placeholder="Provide Drive Link for The Banner Pictures"
-                                    class="form-control"
-                                    type="url"
-                                    autocomplete="off"
-                                    id="field1"
-                                    name="form_link_edit"
-                                    value=""/>
-                                    <input type="hidden" name = "link_pk" value ="{{link.pk}}">
-                                </div>
+                            <p><input id="image_delete" name= "image_delete" type="hidden">
+                                <input id="image_id" name= "image_id" type="hidden" ></p>
+                            Are you sure you want to delete the Image?
                         </div>
                         <div class="modal-footer">
-                            <input type="submit" name = "update_link" class="btn btn-outline-primary txt-primary buttons" value="Update">
+                            <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
                             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                         </div>
                         </form>
                     </div>
                 </div>
-            </div>
-
-
-            <!-- Confirmation modal for deleting links -->
-            <div class="modal fade" id="ConfirmDeleteModalForLinks" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForLinksLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-top" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="ConfirmDeleteModalForLinksLabel">Confirm Delete</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="POST">
-                            {% csrf_token %}
-                        <p><input id="remove_link" name= "remove_link" type="hidden"></p>
-                        Are you sure you want to delete this link?
-                    </div>
-                    <div class="modal-footer">
-                        <input type="submit" class="btn btn-outline-danger" value="Confirm" name = "remove_form_link">
-                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
                 </div>
-            </div>
+
+                <!-- Updated Modal for adding links -->
+                <div class="modal fade" id="AddLinksModal" tabindex="-1" role="dialog" aria-labelledby="AddLinksModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="AddLinksModalLabel">Add Links</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    
+                                    <div class="form-group">
+                                        <label>Title: </label> 
+                                            <input
+                                                placeholder="Title"
+                                                class="form-control"
+                                                type="text"
+                                                autocomplete="off"
+                                                required
+                                                name="title"
+                                                value="" 
+                                            />
+                                        <br>
+                                        <label>Links:</label>
+                                        <input
+                                        placeholder="Provide Drive Link for The Banner Pictures"
+                                        class="form-control"
+                                        type="url"
+                                        autocomplete="off"
+                                        id="field1"
+                                        name="form_link_add"
+                                        value=""/>
+                                    </div>
+                            </div>
+                            <div class="modal-footer">
+                                <!-- Change the button label and name attribute -->
+                                <input type="hidden" name="link_category" id="link_category"/>
+                                <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_link" value="Add">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- New modal for editing links -->
+                <div class="modal fade" id="EditLinkModal" tabindex="-1" role="dialog" aria-labelledby="EditLinkModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="EditLinkModalLabel">Edit Link</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Display existing link in a textarea for editing -->
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label>Title: </label> 
+                                            <input
+                                                placeholder="Title"
+                                                class="form-control"
+                                                type="text"
+                                                autocomplete="off"
+                                                required
+                                                name="title"
+                                                id="link_title"
+                                            />
+                                        <br>
+                                        <label>Links:</label>
+                                        <input
+                                        placeholder="Provide Drive Link for The Banner Pictures"
+                                        class="form-control"
+                                        type="url"
+                                        autocomplete="off"
+                                        id="link"
+                                        name="form_link_edit"
+                                        value=""/>
+                                        <input type="hidden" name = "link_pk" value ="{{link.pk}}">
+                                    </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="hidden" name="link_id" id="link_id"/>
+                                <input type="submit" name = "update_link" class="btn btn-outline-primary txt-primary buttons" value="Update">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Confirmation modal for deleting links -->
+                <div class="modal fade" id="ConfirmDeleteModalForLinks" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForLinksLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-top" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ConfirmDeleteModalForLinksLabel">Confirm Delete</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST">
+                                {% csrf_token %}
+                            <p><input id="remove_link" name= "remove_link" type="hidden"></p>
+                            Are you sure you want to delete this link?
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" name="link_id" id="remove_link_id"/>
+                            <input type="submit" class="btn btn-outline-danger" value="Confirm" name = "remove_form_link">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+                </div>
+
             </div>
 
+            <!--Theme Switcher-->
+            {% block theme_switcher %}
+                {% include "theme_switcher.html" %}
+            {% endblock theme_switcher %}
         </div>
-    </div>
 
 
+        {% block common_js %}
+            {% include "common_js.html" %}
+        {% endblock common_js %}
 
-    <!--Scripts for Gallery Start-->
-    <script>
-        $(document).ready(function () {
-        $('#gallery-image-input').on('change', function () {
-            var container = $('#gallery-selected-images-container');
-            container.empty();
-    
-            var input = $(this)[0];
-            var files = input.files;
-    
-            var rowContainer;
-    
-            for (var i = 0; i < files.length; i++) {
-                var file = files[i];
-                var reader = new FileReader();
-    
-                (function (index) {
-                    reader.onload = function (e) {
-                        if (index % 3 === 0) {
-                            rowContainer = $('<div class="row"></div>'); // Start a new row for every three images
-                        }
-    
-                        var imageContainer = $('<div class="gallery-selected-image-container"></div>');
-                        var image = $('<img class="gallery-selected-image" src="' + e.target.result + '"  style="width: auto; height: 100px; margin: 5px 10px;">');
-    
-                        imageContainer.append(image);
-                        rowContainer.append(imageContainer);
-    
-                        if ((index + 1) % 3 === 0 || index === files.length - 1) {
-                            container.append(rowContainer); // Append the row when it's full or it's the last image
-                        }
-                    };
-                })(i);
-    
-                reader.readAsDataURL(file);
-            }
-        });
-        });
+        <!--Scripts for Gallery Start-->
+        <script>
+            $(document).ready(function () {
+            $('#gallery-image-input').on('change', function () {
+                var container = $('#gallery-selected-images-container');
+                container.empty();
         
-
-        document.addEventListener("DOMContentLoaded", function () {
-        const fileInput = document.getElementById("gallery-image-input");
-
-        fileInput.addEventListener("change", function () {
-            const selectedFiles = this.files;
-            const maxAllowedFiles = {{allowed_image_upload}};
-
-            if (selectedFiles.length > maxAllowedFiles) {
+                var input = $(this)[0];
+                var files = input.files;
+        
+                var rowContainer;
+        
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    var reader = new FileReader();
+        
+                    (function (index) {
+                        reader.onload = function (e) {
+                            if (index % 3 === 0) {
+                                rowContainer = $('<div class="row"></div>'); // Start a new row for every three images
+                            }
+        
+                            var imageContainer = $('<div class="gallery-selected-image-container"></div>');
+                            var image = $('<img class="gallery-selected-image" src="' + e.target.result + '"  style="width: auto; height: 100px; margin: 5px 10px;">');
+        
+                            imageContainer.append(image);
+                            rowContainer.append(imageContainer);
+        
+                            if ((index + 1) % 3 === 0 || index === files.length - 1) {
+                                container.append(rowContainer); // Append the row when it's full or it's the last image
+                            }
+                        };
+                    })(i);
+        
+                    reader.readAsDataURL(file);
+                }
+            });
+            });
             
-            alert("You can upload a maximum of "+maxAllowedFiles+" images.");
-            // Clear the file input or handle it based on your requirements
-            this.value = null;
+
+            document.addEventListener("DOMContentLoaded", function () {
+            const fileInput = document.getElementById("gallery-image-input");
+
+            fileInput.addEventListener("change", function () {
+                const selectedFiles = this.files;
+                const maxAllowedFiles = {{allowed_image_upload}};
+
+                if (selectedFiles.length > maxAllowedFiles) {
+                
+                alert("You can upload a maximum of "+maxAllowedFiles+" images.");
+                // Clear the file input or handle it based on your requirements
+                this.value = null;
+                }
+
+                // Update the selected images container or perform other actions as needed
+                updateSelectedImagesContainer(selectedFiles);
+            });
+
+            function updateSelectedImagesContainer(files) {
+                const container = document.getElementById("gallery-selected-images-container");
+                container.innerHTML = ""; // Clear existing content
+
+                for (const file of files) {
+                const fileName = file.name;
+                const listItem = document.createElement("div");
+                listItem.textContent = fileName;
+                container.appendChild(listItem);
+                }
+
+                // Update the hidden input with selected images' information
+                updateHiddenInput(files);
             }
 
-            // Update the selected images container or perform other actions as needed
-            updateSelectedImagesContainer(selectedFiles);
-        });
-
-        function updateSelectedImagesContainer(files) {
-            const container = document.getElementById("gallery-selected-images-container");
-            container.innerHTML = ""; // Clear existing content
-
-            for (const file of files) {
-            const fileName = file.name;
-            const listItem = document.createElement("div");
-            listItem.textContent = fileName;
-            container.appendChild(listItem);
+            function updateHiddenInput(files) {
+                const hiddenInput = document.getElementById("gallery-selected-images");
+                const fileNames = Array.from(files).map((file) => file.name);
+                hiddenInput.value = fileNames.join(", ");
             }
+            });
 
-            // Update the hidden input with selected images' information
-            updateHiddenInput(files);
-        }
+            //Delete logic for gallery
+            function openModal(gallery_image_id) {
+                // Set data in the modal
+                var inputElement = document.getElementById('gallery_image_id');
+                inputElement.value=gallery_image_id;
 
-        function updateHiddenInput(files) {
-            const hiddenInput = document.getElementById("gallery-selected-images");
-            const fileNames = Array.from(files).map((file) => file.name);
-            hiddenInput.value = fileNames.join(", ");
-        }
-        });
+            }
+            function openModal2(gallery_image_id) {
+                // Set data in the modal
+                var inputElement = document.getElementById('gallery_image_id');
+                inputElement.value=gallery_image_id;
 
-        //Delete logic for gallery
-        function openModal(gallery_image_id) {
-            // Set data in the modal
-            var inputElement = document.getElementById('gallery_image_id');
-            inputElement.value=gallery_image_id;
-
-        }
-    
-    </script>
-    <!--Scripts for Gallery End-->
+            }
+        
+        </script>
+        <!--Scripts for Gallery End-->
 
 
 
 
 
-    <!--Script for CKEditor Control-->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Replace the textareas with CKEditor instances
-            CKEDITOR.replace('about_details');
-            CKEDITOR.replace('members_and_volunteers_details');
-            CKEDITOR.replace('benefits_details');
-            CKEDITOR.replace('student_branches_details');
-            CKEDITOR.replace('affinity_groups_details');
-            CKEDITOR.replace('communty_and_society_details');
-            CKEDITOR.replace('achievements_details');
+        <!--Script for CKEditor Control-->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // Replace the textareas with CKEditor instances
+                CKEDITOR.replace('about_details');
+                CKEDITOR.replace('members_and_volunteers_details');
+                CKEDITOR.replace('benefits_details');
+                CKEDITOR.replace('student_branches_details');
+                CKEDITOR.replace('affinity_groups_details');
+                CKEDITOR.replace('communty_and_society_details');
+                CKEDITOR.replace('achievements_details');
 
-            // Attach a function to the change event for each CKEditor instance
-            ["about", "members_and_volunteers", "benefits", "student_branches", "affinity_groups", "communty_and_society", "achievements"]
-                .forEach(function (editorId) {
-                    var editor = CKEDITOR.instances[editorId + '_details'];
+                // Attach a function to the change event for each CKEditor instance
+                ["about", "members_and_volunteers", "benefits", "student_branches", "affinity_groups", "communty_and_society", "achievements"]
+                    .forEach(function (editorId) {
+                        var editor = CKEDITOR.instances[editorId + '_details'];
 
-                    editor.on('change', function () {
-                        // Update character count display for each CKEditor instance
+                        editor.on('change', function () {
+                            // Update character count display for each CKEditor instance
+                            updateCharacterCount(editorId);
+                        });
+
+                        // Update character count initially
                         updateCharacterCount(editorId);
                     });
+            });
 
-                    // Update character count initially
-                    updateCharacterCount(editorId);
-                });
-        });
-
-        function updateCharacterCount(editorId) {
-            var editorContent = CKEDITOR.instances[editorId + '_details'].getData();
-        
-            // Handle special space representations
-            var cleanedContent = editorContent.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
-        
-            // Count each character (including spaces)
-            var characterCount = cleanedContent.length;
-        
-            var characterCountElement = document.getElementById(editorId + 'CharacterCount');
-        
-            // Check conditions and update text color and content
-            if (characterCount === 0) {
-                characterCountElement.style.color = "red";
-                characterCountElement.innerText = "Required";
-            } else if (characterCount > 500) {
-                characterCountElement.style.color = "red";
-                characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
-            } else {
-                characterCountElement.style.color = "black";
-                characterCountElement.innerText = "Character Count: " + characterCount;
+            function updateCharacterCount(editorId) {
+                var editorContent = CKEDITOR.instances[editorId + '_details'].getData();
+            
+                // Handle special space representations
+                var cleanedContent = editorContent.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+            
+                // Count each character (including spaces)
+                var characterCount = cleanedContent.length;
+            
+                var characterCountElement = document.getElementById(editorId + 'CharacterCount');
+            
+                // Check conditions and update text color and content
+                if (characterCount === 0) {
+                    characterCountElement.style.color = "red";
+                    characterCountElement.innerText = "Required";
+                } else if (characterCount > 1500) {
+                    characterCountElement.style.color = "red";
+                    characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
+                } else {
+                    characterCountElement.style.color = "black";
+                    characterCountElement.innerText = "Character Count: " + characterCount;
+                }
             }
-        }
-    </script>
+        </script>
 
-    <!--Script to handle file name showing when choosing file-->
-    <script type="text/javascript">
+        <!--Script to handle file name showing when choosing file-->
+        <script type="text/javascript">
 
-        $('.custom-file input').change(function (e) {
-            var files = [];
-            for (var i = 0; i < $(this)[0].files.length; i++) {
-                files.push($(this)[0].files[i].name);
+            $('.custom-file input').change(function (e) {
+                var files = [];
+                for (var i = 0; i < $(this)[0].files.length; i++) {
+                    files.push($(this)[0].files[i].name);
+                }
+                $(this).next('.custom-file-label').html(files.join(', '));
+            });
+        
+        </script>
+
+        <!--script to prevent user from selecting image is image already selected-->
+        <script>
+            // Function to check and disable file input if an image is already saved
+            function checkSavedImage(inputId, savedImageUrl) {
+                var fileInput = document.getElementById(inputId);
+
+                if (savedImageUrl) {
+                    // If an image is already saved, disable the file input
+                    fileInput.disabled = true;
+                    fileInput.classList.add("disabled");
+
+                    // Change the placeholder text
+                    var fileLabel = fileInput.nextElementSibling;
+                    fileLabel.innerText = "Delete existing file to Choose image.";
+                }
             }
-            $(this).next('.custom-file-label').html(files.join(', '));
-        });
+
+            // Call the function for each image section when the page loads
+            window.onload = function () {
+                checkSavedImage("about-image-input", "{{ ieee_bangladesh_section.ieee_bangladesh_logo }}");
+                checkSavedImage("members-and-volunteers-image-input", "{{ ieee_bangladesh_section.member_and_volunteer_picture }}");
+                // Add more calls for other image sections if needed
+            };
+        </script>
+
+        <script>
+            //Delete logic for image
+            function openModal(image_delete, image_id) {
+                // Set data in the modal
+                var inputElement = document.getElementById('image_delete');    
+                inputElement.value = image_delete;
+                var inputElement2 = document.getElementById('image_id');
+                inputElement2.value=image_id;
+            }
+
+            //View logic for image
+            function openImageModal(image_path){
+                var inputElement = document.getElementById('modal_image');
+                inputElement.src = image_path
+            }
+        </script>
+
+        <script>
+            function setLinkCategoryInModal(category){
+                var inputElement = document.getElementById('link_category');    
+                inputElement.value=category;
+            }
+
+            function setLinkDetailsInModal(link_id, title, link){
+                var inputElement2 = document.getElementById('link_title');    
+                inputElement2.value=title;
+                var inputElement3 = document.getElementById('link');    
+                inputElement3.value=link;
+                var inputElement4 = document.getElementById('link_id');    
+                inputElement4.value=link_id;
+            }
+
+            //Delete logic for Link
+            function openLinkModal(id) {
+                // Set data in the modal
+                var inputElement = document.getElementById('remove_link_id');    
+                inputElement.value=id;
+            }
+        </script>
+
+        <!--For Achievements-->
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Function to check the number of achievement items and update the achievements-link-label
+                function checkAchievementCount() {
+                    var achievementsContainer = document.getElementById('links-container achievements-container');
+                    var achievementItems = achievementsContainer.querySelectorAll('.achievements-item');
+                    var achievementsLinkLabel = document.querySelector('.achievements-link-label');
+            
+                    // Set the maximum allowed slots
+                    var maxSlots = 6;
+            
+                    if (achievementItems.length >= maxSlots) {
+                        // Update the achievements-link-label content with the maximum limit message
+                        if (achievementsLinkLabel) {
+                            achievementsLinkLabel.innerHTML = '<div class="form-group row">' +
+                                '<label class="col-sm-12 form-control-label text-left" style="color:red;">Maximum limit for achievements reached. Please remove 1 to add another link. Allowed Slots: 0</label>' +
+                                '</div>';
+                        }
+                    } else {
+                        // Calculate the remaining slots
+                        var remainingSlots = maxSlots - achievementItems.length;
+            
+                        // Reset the achievements-link-label content with the original form and remaining slots count
+                        if (achievementsLinkLabel) {
+                            achievementsLinkLabel.innerHTML = '<div class="form-group row">' +
+                                '<label class="col-sm-7 form-control-label">Add Links (Achievements Read More Link):</label>' +
+                                '<div class="col-sm-3">' +
+                                '<!-- Add input field for links here if needed -->' +
+                                '</div>' +
+                                '<div class="col-sm-2 d-flex align-items-center justify-content-center">' +
+                                '<button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal(\'achievement_link\')"></button>' +
+                                '</div>' +
+                                '<label class="col-sm-12 form-control-label text-left">Allowed Slots: ' + remainingSlots + '</label>' +
+                                '</div>';
+                        }
+                    }
+                }
+            
+                // Call the function initially
+                checkAchievementCount();
+            
+                // Set up an interval to continuously check the count
+                setInterval(checkAchievementCount, 1000); // Adjust the interval time as needed
+            });
+            
+            
+        </script>
     
-    </script>
-
-
-    <script>
-        //Delete logic for image
-        function openModal(image_delete, image_id) {
-            // Set data in the modal
-            var inputElement = document.getElementById('image_delete');    
-            inputElement.value = image_delete;
-            var inputElement2 = document.getElementById('image_id');
-            inputElement2.value=image_id;
-        }
-
-        //View logic for image
-        function openImageModal(image_path){
-            var inputElement = document.getElementById('modal_image');
-            inputElement.src = image_path
-        }
-
-        //Delete logic for Link
-        function openLinkModal(id) {
-            // Set data in the modal
-            var inputElement = document.getElementById('remove_link');    
-            inputElement.value=id;
-        }
-    </script>
- 
-</body>
-
+    </body>
+</html>
 {% endblock manage_ieee_bangladesh_section %}

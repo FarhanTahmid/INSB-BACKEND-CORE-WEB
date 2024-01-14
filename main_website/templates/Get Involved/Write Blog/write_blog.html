@@ -4,7 +4,7 @@
 
 <head>
 
-    <title>Write Blogs - IEEE NSU SB</title>
+    <title>Write Blogs - IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'upload/logo.gif' %}"/>
     <meta name="mobile-web-app-capable" content="yes">
 
@@ -14,11 +14,7 @@
     {% endblock common_css %}
 
     <!--Extra CSS-->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
     <!-- CKEditor CDN -->
     <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
 
@@ -80,6 +76,137 @@
         a{
             text-decoration:none;
         }
+
+
+        .modal.message-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content.message-modal-content {
+            background-color: #fff;
+            width: 450px;
+            height: 115px;
+            position: relative;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+            animation: unfold 1.25s ease-in-out forwards;
+        }
+        
+        .modal-content-items.message-modal-content-items {
+            opacity: 0;
+            animation: fadeIn 1.25s 1s ease-in-out forwards;
+        }
+        
+        .message {
+            margin-top: 20px;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Media query for screens below 360px */
+        @media screen and (max-width: 360px) {
+            .message {
+                font-size: 12px; /* Adjust the font size as needed */
+            }
+        }
+        
+        /* Styling for the close button */
+        .close.message-close {
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        
+        @keyframes unfold {
+            0% {
+                width: 0;
+                height: 5px;
+            }
+            50% {
+                width: 450px;
+                height: 5px;
+            }
+            100% {
+                width: 450px;
+                height: 115px;
+            }
+        }
+        
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        .w-100{
+            width: 350px!important;
+            height: 350px;
+        }
+        .col-md-6.order-md-1.p-0{
+            height: 370px;
+            width: 100%;
+            overflow: hidden;
+        }
+        @media screen and (max-width: 400px){
+            .w-100 {
+                width: 100%!important;
+                height: 100%;
+            }
+        }
+
+
+        .form_container{
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; 
+            border-radius:30px; 
+            padding: 10px 30px;
+        }
+
+        @media (max-width: 760px) {
+            .form_container {
+                padding: 10px 15px;
+            }
+        }
+
+        .instructions_ul {
+            list-style-type: none;
+            padding: 0;
+        }
+    
+        .instructions_ul li::before {
+            content: "\f105"; /* Example: Unicode code for a bolder arrow in FontAwesome */
+            font-family: 'FontAwesome'; /* Specify the custom font family */
+            font-weight: bold; /* Make the arrow bolder */
+            font-size:16px;
+            margin-right: 10px; /* Adjust spacing between arrow and text */
+        }
+
+        .publish_button {
+            text-decoration: none;
+            color: #fff;
+            background: #002855;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        .publish_button:hover {
+            background: #FFC72C;
+        }
     </style>
 </head>
 
@@ -95,164 +222,171 @@
         {% endblock wave_design %}
 
         <!--Start adding from here-->
-        <section class="col-md-6 mx-auto">
-            <h5>Read instructions given below before submitting your Blog:</h5>
-            <ul>
-                <li>You must be a Registered IEEE NSU Student Branch Member to get your blogs published in our website!</li>
-                <li>IEEE NSU Student Branch holds the right to decline or delete your Blog.</li>
-                <li>IEEE NSU Student Branch will not publish any Blog that does not go with the Code of Conduct!</li>
-                <li>Keep Blogging! &#128515; &#128513;</li>
-            </ul>
+        <br><br>
+        <section class="col-lg-6 mx-auto" style="margin-top:3%">
+            <div class="container">
+                <h5>Read instructions given below before submitting your Blog:</h5>
+                <ul class="instructions_ul">
+                    <li>You must be a Registered IEEE NSU Student Branch Member to get your blogs published in our website!</li>
+                    <li>IEEE NSU Student Branch holds the right to decline or delete your Blog.</li>
+                    <li>IEEE NSU Student Branch will not publish any Blog that does not go with the Code of Conduct!</li>
+                    <li>Keep Blogging! &#128515; &#128513;</li>
+                </ul>
+            </div>
         </section>
+        <br>
+
         <!--Messages-->
-        <div style="justify-content:center; text-align:center;">
+        {% comment %} <div style="justify-content:center; text-align:center;">
             {% if messages %}
                 {% for message in messages %}
                     <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
                 {% endfor %}
             {% endif %}
-        </div>
-        <!--Messages End-->
-        <section style="margin-top:3%">
-            <div class="col-md-6 mx-auto">
-                <h1>Write a Blog</h1>
-                <br>
-                <br>
-                <div class="container">
-          
-                <div class="box">
-            
-            
-                    <br>
-                    <div class="box-header">
-                        <h1 style="text-align:center;font-size:30px;">Writer Information</h1>
-                        <hr>
+        </div> {% endcomment %}
+        {% for message in messages  %}
+            <div id="myMessageModal{{ loop.index }}" class="modal message-modal">
+                <div class="modal-content message-modal-content">
+                    <div class="modal-content-items message-modal-content-items">
+                        <span class="close message-close" onclick="closeModal({{ loop.index }})">&times;</span>
+                        <p class="message" style="text-align: center;">{{ message }}</p>
                     </div>
-                    
-            
-                    <form id="myForm" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                        <div class="box-body">    
-                            
-                            <div class="form-group">
-                                <label>IEEE ID <span style="color:red">*<span></label>
-                                <input 
-                                    type="text" 
-                                    class="form-control"
-                                    name="writer_ieee_id" 
-                                    placeholder="Enter your IEEE ID" 
-                                    maxlength="100" 
-                                    value = {{sc_ag_info.page_title}}
-                                >
-                            </div>
-                            <br>
+                </div>
+            </div>
+        {% endfor %}
+        <!--Messages End-->
+
+        <section style="margin-top:1%">
+            <div class="col-lg-6 mx-auto">
+
+                {% comment %} <h1>Write a Blog</h1>
+                <br>
+                <br> {% endcomment %}
+                <div class="container form_container">
+          
+                    <div class="box">
+                
+                
+                        <br>
+                        <div class="box-header">
+                            <h1 style="text-align:center;font-size:30px;">Writer Information</h1>
+                        </div>
+                        <br>
                         
-                            <div class="form-group">
-                                <label>Writer Name <span style="color:red">*<span></label>
-                                <input 
-                                    type="text" 
-                                    class="form-control"
-                                    name="writer_name" 
-                                    placeholder="Enter your name" 
-                                    maxlength="50" 
-                                    value = {{sc_ag_info.page_title}}
-                                >
-                            </div>
-                            <br>
-                            <div class="form-group">
-                                <label>From which Chapter/Affinity Group you want to submit the Blog?</label> 
-                                <select class="form-control" name="group">
-                                    <option value="">-------</option>
-                                    {% for i in all_sc_ag %}
-                                        <option value="{{i.primary}}">{{i.group_name}}</option>
-                                    {% endfor %}
-                                    
-                                </select>
-                            </div>
-
-                            <br> 
-                            <br> 
-
-                            <h1 style="text-align:center;font-size:30px;">Blog Description</h1>
-                            <br>
-                            <hr>
-                            <div class="form-group">
-                                <label>Blog Title <span style="color:red">*<span></label> 
-                                <input 
-                                    class="form-control" 
-                                    type="text"
-                                    name="blog_title"
-                                    maxlength="150"
-                                    placeholder="Title of your Blog" 
-                                    Required
+                
+                        <form id="myForm" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                            <div class="box-body">    
+                                
+                                <div class="form-group">
+                                    <label>IEEE ID <span style="color:red">*<span></label>
+                                    <input 
+                                        type="text" 
+                                        class="form-control"
+                                        name="writer_ieee_id" 
+                                        placeholder="Enter your IEEE ID" 
+                                        maxlength="100" 
                                     >
-                                    {{sc_ag_info.about_description|default:""}}
-                                </input>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Blog Category</label> 
-                                <select class="form-control" name="blog_category">
-                                    <option value="">-------</option>
-                                    {% for i in blog_categories %}
-                                        <option value="{{i.pk}}">{{i.blog_category}}</option>
-                                    {% endfor %}
-                                    
-                                </select>
-                            </div>
-                            <br>
-                            <div class="form-group">
-                                <label>Write a short description of your Blog<span style="color:red">*<span></label> 
-                                <textarea 
-                                    class="form-control" 
-                                    type="text"
-                                    name="blog_short_description"
-                                    maxlength="200"
-                                    Required>
-                                    {{sc_ag_info.mission_description}}
-                                </textarea>
-                            </div>
-                            <br>
-                            <div class="form-group">
-                                <label>Write your Blog <span style="color:red">*<span></label> 
-                                <textarea 
-                                    class="form-control" 
-                                    type="text"
-                                    name="blog_description"
-                                    Required>
-                                    {{sc_ag_info.vision_description|default:""}}
-                                </textarea>
-                                <p id="blogCharacterCount" style="color: red;">Required</p>
-                            </div> 
-                            <br> 
-
-                            <div class="form-group">
-                                <label for="images">Blog Banner Picture:</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="mission-image-input" required name="blog_banner_picture" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="mission-image-input">Choose file</label>
                                 </div>
+                                <br>
                             
-                            </div>
-                            <br> 
-                            
-                            <div class="form-group text-center">
-                                <input type="submit" name="submit_blog" class="btn btn-outline-success p-x-md" value="Save">
-                            </div>
-                            <br>
+                                <div class="form-group">
+                                    <label>Writer Name <span style="color:red">*<span></label>
+                                    <input 
+                                        type="text" 
+                                        class="form-control"
+                                        name="writer_name" 
+                                        placeholder="Enter your name" 
+                                        maxlength="50" 
+                                    >
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <label>From which Chapter/Affinity Group you want to submit the Blog?</label> 
+                                    <select class="form-control" name="group">
+                                        <option value="">-------</option>
+                                        {% for i in all_sc_ag %}
+                                            <option value="{{i.primary}}">{{i.group_name}}</option>
+                                        {% endfor %}
+                                        
+                                    </select>
+                                </div>
 
-                            
-                            
-                        </div> 
-        
-                    
-                    </form>  
-        
-                <div>
-            </div> 
+                                <br> 
+                                <hr>
+                                <br> 
+
+                                <h1 style="text-align:center;font-size:30px;">Blog Description</h1>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Blog Title <span style="color:red">*<span></label> 
+                                    <input 
+                                        class="form-control" 
+                                        type="text"
+                                        name="blog_title"
+                                        maxlength="150"
+                                        placeholder="Title of your Blog" 
+                                        Required
+                                        >
+                                    </input>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Blog Category</label> 
+                                    <select class="form-control" name="blog_category">
+                                        <option value="">-------</option>
+                                        {% for i in blog_categories %}
+                                            <option value="{{i.pk}}">{{i.blog_category}}</option>
+                                        {% endfor %}
+                                        
+                                    </select>
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <label>Write a short description of your Blog<span style="color:red">*<span></label> 
+                                    <textarea 
+                                        class="form-control" 
+                                        type="text"
+                                        name="blog_short_description"
+                                        maxlength="200"
+                                        Required>
+                                    </textarea>
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <label>Write your Blog <span style="color:red">*<span></label> 
+                                    <textarea 
+                                        class="form-control" 
+                                        type="text"
+                                        name="blog_description"
+                                        Required>
+                                    </textarea>
+                                    <p id="blogCharacterCount" style="color: red;">Required</p>
+                                </div> 
+                                <br> 
+
+                                <div class="form-group">
+                                    <label for="images">Blog Banner Picture:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="mission-image-input" required name="blog_banner_picture" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="mission-image-input">Choose file</label>
+                                    </div>
+                                
+                                </div>
+                                <br> 
+                                
+                                <div class="form-group text-center">
+                                    <input type="submit" name="submit_blog" class="btn btn-outline-success publish_button p-x-md" value="Place Publish Request">
+                                </div>
+                            </div> 
+                        </form>  
+                    <div>
+                </div> 
             </div>
         </section>
+        <br><br>
         {% block footer %}
             {% include "footer_block.html" %}
         {% endblock footer %}
@@ -304,6 +438,42 @@
                 characterCountElement.innerText = "Character Count: " + characterCount;
             }
         }  
+    </script>
+
+    <!--Logic to handle my message modal-->
+    <script>
+        // Function to display the modal
+        function openModal() {
+            document.getElementById('myMessageModal').style.display = 'flex';
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById('myMessageModal').style.display = 'none';
+        }
+
+        // Close the modal when clicking outside the modal content
+        window.onclick = function(event) {
+            var modal = document.getElementById('myMessageModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        };
+        // Open the modal when the page loads (you can trigger this in your JavaScript when you want to show the modal)
+        openModal();
+    </script>
+
+    <!--Script to handle file name showing when choosing file-->
+    <script type="text/javascript">
+
+        $('.custom-file input').change(function (e) {
+            var files = [];
+            for (var i = 0; i < $(this)[0].files.length; i++) {
+                files.push($(this)[0].files[i].name);
+            }
+            $(this).next('.custom-file-label').html(files.join(', '));
+        });
+    
     </script>
 </body>
 

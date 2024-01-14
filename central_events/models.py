@@ -55,10 +55,12 @@ class Events(models.Model):
     event_description=RichTextField(null=True,blank=True)
     event_organiser=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE,default=5)#Default is set to 5 to keep branch as default organizer of events, If a new database is created change this number according to the id of the branch
     event_date=models.DateField(null=True,blank=True)
+    event_time=models.CharField(null=True,blank=True,max_length=100)
     registration_fee=models.BooleanField(null=False,blank=False,default=False)
     registration_fee_amount = models.IntegerField(blank=True, null=True,default = 0)
     flagship_event = models.BooleanField(null=False,blank=False,default=False)
     publish_in_main_web = models.BooleanField(null=False,blank=False,default=False)
+    more_info_link = models.URLField(null=True,blank=True,max_length=500)
     form_link = models.URLField(null=True,blank=True,max_length=500)
     is_featured = models.BooleanField(null=False,blank=False,default=False,verbose_name="Feature this event")
     
@@ -152,3 +154,16 @@ class Graphics_Files(models.Model):
     event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
     graphics_file=models.FileField(null=True,blank=True,upload_to='Graphics Items/')
 ######################################################################################
+    
+class Event_Feedback(models.Model):
+    date = models.DateField(auto_now_add=True)
+    event_id = models.ForeignKey(Events,null=False,blank=False,on_delete=models.CASCADE)
+    name = models.CharField(null=False,blank=False,max_length=100)
+    email = models.EmailField(null=False,blank=False)
+    satisfaction = models.CharField(null=False,blank=False,max_length=50)
+    comment = models.TextField(null=False,blank=False,max_length=400)
+
+    class Meta:
+        verbose_name="Event Feedback"
+    def __str__(self) -> str:
+        return str(self.pk)

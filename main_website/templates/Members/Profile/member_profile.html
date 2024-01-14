@@ -55,6 +55,7 @@
             object-fit: cover;
             width: 100%;
             height: 100%;
+            background-color: #002855;
             transition: all 0.5s;
         }
 
@@ -218,7 +219,7 @@
             <div class="card_container">
                 <div class="card_content">
                     <div class="profile_image">
-                        <img src="{{media_url}}{{member.user_profile_picture}}" alt="">
+                        <img src="{{media_url}}{{member.user_profile_picture}}" alt="" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
                     </div>
                     <div class="profile_details">
                         <div class="social_links">
@@ -237,6 +238,11 @@
                                         style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                 </a>
                                 {% endif %}
+                                <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="mailto:{{member.email_ieee}}" target="_blank">
+                                    <i class="fa fa-envelope" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                </a>
                             </div>
                         </div>
                         <div class="information">
@@ -266,7 +272,7 @@
                                     <div class="nsu_email">NSU Email: {{member.email_nsu}}</div>
                                     {% endif %}
                                     {% if member.date_of_birth %}
-                                    <div class="birthday">Birthdate: {{member.date_of_birth}}</div>
+                                    <div class="birthday">Birth Date: {{member.date_of_birth}}</div>
                                     {% endif %}
                                 </div>
                                 <div class="designation">
@@ -277,7 +283,7 @@
                                             <div class="line"></div>
                                         </div>
                                         <div class="des-r3">
-                                            <div class="title">Main Branch</div>
+                                            <div class="title">IEEE NSU Student Branch</div>
                                             <div class="position">Position: {{member.position}}</div>
                                             <div class="team">Team: {{member.team}}</div>
                                         </div>

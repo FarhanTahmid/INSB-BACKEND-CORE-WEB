@@ -1,49 +1,360 @@
 {% load static %}
 {% block image_slider %}
-<section id="content-section-1">
-    <div class="gdlr-full-size-wrapper gdlr-show-all no-skin"
-        style="padding-bottom: 0px;  background-color: #ffffff; ">
-        <div class="gdlr-master-slider-item gdlr-slider-item gdlr-item" style="margin-bottom: 0px;">
-            <!-- MasterSlider -->
-            <div id="P_MS5be015858c2ca" class="master-slider-parent ms-parent-id-1">
+<style>
+    #slider-container {
+        width: 100%;
+        height: 90vh;
+        overflow: hidden;
+        position: relative;
+    }
 
-                <!-- MasterSlider Main -->
-                <div id="MS5be015858c2ca" class="master-slider ms-skin-default">
-                    {% for i in banner_item %}
-                    <div class="ms-slide" data-delay="7" data-fill-mode="fill">
-                        <img src="{% static 'masterslider/public/assets/css/blank.gif' %}" alt="" title="" data-src="{{media_url}}{{i.banner_picture}}" />
-                        <div id="gdlr-parallax-overlay"></div>
-                        <div class="ms-layer  msp-cn-1-7">
-                            <div class="title" style="text-transform:uppercase;">
-                                {{i.first_layer_text}}<span> {{i.first_layer_text_colored}}</span>
-                            </div>
-                            <div class="description">
-                                {{i.third_layer_text}}
-                            </div>
-                            <br>
-                            <div class="links">
-                                <a href="{{i.button_url}}" class="btn">{{i.button_text}}</a>
-                            </div>
+    #image-slider {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+        height: 90vh;
+        width: 100%; /* Ensure the slider takes the full width */
+    }
 
-                        </div>
+    .slide {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        flex: 0 0 100%; /* Each slide takes 100% of the width */
+        align-items: flex-start;
+        justify-content: center;
+        text-align: center;
+        transition: opacity 0.5s ease-in-out;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+    .slide::before {
+        content: '';
+        background: inherit;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        filter: blur(2px); /* Adjust the blur intensity as needed */
+    }
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        background: rgba(0, 0, 0, 0.5);
+    }
 
-                    </div>
-                    {% endfor %}
+    .slider-content {
+        margin: 0 12vw;
+        color: white;
+        text-align: left;
+        z-index: 1;
+    }
 
+    .title,
+    .subtitle,
+    .paragraph {
+        margin-bottom: 10px;
+    }
 
+    .link {
+        color: white;
+        text-decoration: none;
+        border-bottom: 1px solid white;
+    }
 
-                </div>
-                <!-- END MasterSlider Main -->
+    .slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 24px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        outline: none;
+        color: white;
+        padding: 10px;
+        z-index: 2;
+    }
 
+    .slider-btn:hover {
+        color: #FFC72C;
+    }
+
+    #prev-btn {
+        left: 10px;
+    }
+
+    #next-btn {
+        right: 10px;
+    }
+
+    .slider-indicators {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+    }
+
+    .indicator {
+        width: 10px;
+        height: 10px;
+        background-color: #ccc;
+        /* Default color */
+        border-radius: 50%;
+        margin: 0 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .indicator.active {
+        background-color: #002855;
+        /* Active color */
+    }
+
+    .indicator:hover:not(.active) {
+        background-color: #FFC72C;
+        /* Hover color */
+    }
+
+    .slider-content .title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 5vw;
+        font-weight: 700;
+        color: #ffffff;
+    }
+
+    .slider-content .title span {
+        color: #FFC72C;
+    }
+
+    .slider-content .paragraph {
+        font-family: 'Poppins', sans-serif;
+        font-size: 17px;
+        font-weight: 300;
+        width: 50%;
+        color: #ffffff;
+    }
+
+    .links {
+        position: relative;
+        width: calc(var(--width) + 140px);
+        height: 60px;
+        font-family: 'Poppins', sans-serif;
+        border-radius: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: rgba(255, 255, 255, 1);
+        text-decoration: none;
+        letter-spacing: 1px;
+        padding-left: 20px;
+        transition: 0.5s;
+        overflow: hidden;
+    }
+
+    .links:hover {
+        padding-left: 0px;
+        padding-right: 40px;
+        color: #FFC72C;
+        text-decoration: none;
+
+    }
+
+    .links span {
+        position: absolute;
+        left: 5px;
+        width: 50px;
+        height: 50px;
+        background: #FFC72C;
+        border-radius: 50%;
+        transition: 0.5s ease-in-out;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #000;
+        font-size: 1.5em;
+    }
+
+    .links:hover span {
+        left: calc(100% - 55px);
+    }
+
+    .links:after {
+        content: ' ';
+        position: absolute;
+        width: 80px;
+        height: 100%;
+        z-index: 1;
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateX(calc(var(--width) - var(--width) - 350px)) skewX(30deg);
+        transition: 0.75s ease-in-out;
+    }
+
+    .links:hover:after {
+        transform: translateX(calc(var(--width) + 110px)) skewX(30deg);
+    }
+
+    @media screen and (max-width: 900px) {
+        .slider-content .title {
+            font-size: 7vw;
+        }
+
+        .slider-content .paragraph {
+            width: 90%;
+        }
+    }
+    @media screen and (max-width: 767px) {
+        #slider-container, #image-slider {
+            height: 70vh;
+        }
+        .slider-content .paragraph{
+            font-size: 14px;
+        }
+    }
+</style>
+<div id="slider-container">
+    <button id="prev-btn" class="slider-btn" onclick="prevSlide()">❮</button>
+    <button id="next-btn" class="slider-btn" onclick="nextSlide()">❯</button>
+    <div id="image-slider">
+        {% for i in banner_item %}
+        <div class="slide" style="background-image: url('{{media_url}}{{i.banner_picture}}');">
+            <div class="overlay"></div>
+            <div class="slider-content">
+                <div class="title">{{i.first_layer_text}} <span>{{i.first_layer_text_colored}}</span></div>
+                <div class="paragraph">{{i.third_layer_text}}</div>
+                <a href="{{i.button_url}}" class="links">{{i.button_text}} <span><ion-icon
+                            name="arrow-forward-outline"></ion-icon></span></a>
             </div>
-            <!-- END MasterSlider -->
-
-
-
         </div>
-        <div class="clear"></div>
-        <div class="clear"></div>
+        {% endfor %}
     </div>
-    <div class="clear"></div>
-</section>
+    <div class="slider-indicators" id="slider-indicators"></div>
+</div>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var links = document.querySelectorAll('.links');
+
+        links.forEach(function (link) {
+            var textLength = link.textContent.trim().length;
+            var minWidth = 10; 
+            var width = Math.max(textLength * 10, minWidth);
+            link.style.setProperty('--width', width + 'px');
+        });
+    });
+</script>
+<script>
+    let currentSlide = 0;
+    const totalSlides = document.querySelectorAll('.slide').length;
+    const imageSlider = document.getElementById('image-slider');
+    let mouseDownX = 0;
+    let autoSwipeInterval;
+
+    function showSlide() {
+        imageSlider.style.transform = `translateX(${-currentSlide * 100}%)`;
+        fadeInCurrentSlide();
+        updateIndicators();
+    }
+
+    function fadeInCurrentSlide() {
+        const slides = document.querySelectorAll('.slide');
+        slides.forEach((slide, index) => {
+            if (index === currentSlide) {
+                slide.style.opacity = 1;
+            } else {
+                slide.style.opacity = 0;
+            }
+        });
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        showSlide();
+    }
+
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        showSlide();
+    }
+
+    function startAutoSwipe() {
+        autoSwipeInterval = setInterval(() => {
+            nextSlide();
+        }, 10000); // Adjust the interval as needed (milliseconds)
+    }
+
+    function stopAutoSwipe() {
+        clearInterval(autoSwipeInterval);
+    }
+
+    // Touch and Mouse Events
+    imageSlider.addEventListener('touchstart', (e) => {
+        mouseDownX = e.touches[0].pageX;
+    });
+
+    imageSlider.addEventListener('mousedown', (e) => {
+        mouseDownX = e.pageX;
+    });
+
+    imageSlider.addEventListener('touchend', (e) => {
+        handleSwipe(e.changedTouches[0].pageX);
+    });
+
+    imageSlider.addEventListener('mouseup', (e) => {
+        handleSwipe(e.pageX);
+    });
+
+    function handleSwipe(currentX) {
+        const swipeThreshold = 50;
+
+        if (currentX - mouseDownX > swipeThreshold) {
+            prevSlide();
+        } else if (mouseDownX - currentX > swipeThreshold) {
+            nextSlide();
+        }
+    }
+
+    // Create and update indicators
+    const sliderIndicators = document.getElementById('slider-indicators');
+
+    function createIndicators() {
+        for (let i = 0; i < totalSlides; i++) {
+            const indicator = document.createElement('div');
+            indicator.classList.add('indicator');
+            indicator.addEventListener('click', () => {
+                currentSlide = i;
+                showSlide();
+            });
+            sliderIndicators.appendChild(indicator);
+        }
+    }
+
+    function updateIndicators() {
+        const indicators = document.querySelectorAll('.indicator');
+        indicators.forEach((indicator, index) => {
+            if (index === currentSlide) {
+                indicator.classList.add('active');
+            } else {
+                indicator.classList.remove('active');
+            }
+        });
+    }
+
+    // Initialize indicators
+    createIndicators();
+    updateIndicators();
+    startAutoSwipe();
+</script>
 {% endblock image_slider %}

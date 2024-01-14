@@ -66,7 +66,30 @@
                 margin-bottom: 10px;
             }
         }
+
+
+        h1{
+            text-align:center;
+            font-size:30px;
+            font-weight:bold;
+        }
+    
+        label{
+            font-size:20px;
+        }
   
+        .app-body{
+            justify-content:center; 
+            margin-left:15%;
+            margin-right:15%;
+        }
+        
+        @media (max-width: 760px) {
+            .app-body {
+                margin-left: 5%;
+                margin-right: 5%;
+            }
+        }
 
         .circle-btn {
             display: flex;
@@ -92,7 +115,16 @@
             content: '+';
         }
 
-
+        .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+            max-width: 80%; 
+            height: 90%; 
+            z-index: 1500;
+        }
+        @media screen and (max-width:700px){
+            .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+                max-width:100%;
+            }
+        }
 
         
          
@@ -120,7 +152,7 @@
         </div>
         <!--navbar content-->
         <!-- ############ PAGE START-->
-        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+        <div ui-view class="app-body" id="view">
 
             <div class="container">
                 <br>
@@ -128,25 +160,58 @@
                 <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
                 <h6>Note:</h6>
                 <ol style="justify-content:center;margin-bottom:15px;"><b>
-                <li>Provide the Link of the folder for the Banner Images </li>
-                <li>If the banner picture is already uploaded, you can change it by deleting existing one.
-                    Select the desired picture and hit <span style="color:blue;">'Save'</span>.</li>
-                <li>Make sure to save any changes made before leaving</li>
+                    <li>All ( * ) marked fields are mandatory to be filled </li>
+                    <li>Keep in mind your description does not exceed the character count </li>
+                    <li>Maximum 1 picture can be uploaded in dedicated sections </li>
+                    <li>To replace a picture, delete the previous one and add a new one </li>
+                    <li>You can view the image by clicking on it  </li>
+                    <li>For color scheme, use hexcodes (e.g. "#002855").</li>
+                    <li>You can see your changes by clicking the preview button </li>
+                    <li>Don’t forget to save the changes by clicking save button, even before deleting or uploading picture and changing page! </li>
                 </ol></b>
+
+
+                <br>
+                <div class="btn-container">
+                    <button class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#previewModal">Preview</button>
+                </div>
+                <br>
+    
+                <!-- Preview Modal -->
+                <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" style="z-index: 1500;">
+                    <div class="modal-dialog modal-dialog-centered modal-lg preview_modal_box" role="document">
+                        <div class="modal-content" style="width: 100%; height: 100%;">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="previewModalLabel">Preview</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="{% url 'chapters_and_affinity_group:manage_main_website_preview' primary %}" style="width: 100%; height: 100%;" loading="lazy"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <br>
 
+                <!--for error messages-->
                 {% for message in messages  %}
                     <p>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{message}}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
+                            <p style="margin: 0;">{{message}}</p>
                         </div>
                     </p>
-                {% endfor %}
-                <br>
+                  {% endfor %}
+                <!--for error messages end-->
+                
             </div>
                    
 
@@ -156,17 +221,21 @@
                 <div class="box">
             
             
-                    <br>
+                    {% comment %} <br>
                     <div class="box-header">
-                        <h1 style="text-align:center;font-size:30px;">Details</h1>
+                        <h1>Details</h1>
                         <hr>
-                    </div>
+                    </div> {% endcomment %}
                     
             
                     <form id="myForm" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                         <div class="box-body">    
                             
+                            <br>
+                            <h1>Page Header</h1>
+                            <br>
+
                             <div class="form-group">
                                 <label>Page Title <span style="color:red">*<span></label>
                                 <input
@@ -175,27 +244,27 @@
                                 name="pageTitle" 
                                 placeholder="Enter your page title" 
                                 maxlength="100"
-                                value="{{sc_ag_info.page_title}}">
+                                value="{{sc_ag_info.page_title|default:""}}">
                             </div>
                             <br>
                         
                             <div class="form-group">
-                                <label>Second Paragraph <span style="color:red">*<span></label>
-                                <textarea 
+                                <label>Page Subtitle <span style="color:red">*<span></label>
+                                <input
                                 class="form-control"
                                 type="text"
                                 name="secondParagraph"
-                                rows="4" 
-                                placeholder="Enter your second paragraph" 
-                                maxlength="500" 
-                                >{{sc_ag_info.secondary_paragraph| default:""}}</textarea>
+                                placeholder="Enter your page subtitle" 
+                                maxlength="100" 
+                                value="{{sc_ag_info.secondary_paragraph|default:""}}"
+                                >
                             </div>
 
                             <br> 
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">About</h1>
+                            <h1>About</h1>
                             <br>
                             
                             <div class="form-group">
@@ -215,17 +284,17 @@
                             <div class="form-group">
                                 <label for="images">Logo Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="about-image-input" name="sc_ag_logo"  accept="image/*">
+                                    <input type="file" class="custom-file-input" id="about-image-input" name="logo"  accept="image/*">
                                     <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
                                 </div>
                                 <br>
-                                {% if sc_ag_info.sc_ag_logo %}
+                                {% if sc_ag_info.logo %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal1">Logo</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.sc_ag_logo}}', 'sc_ag_logo')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.logo}}', 'sc_ag_logo')">✖</button>
                                     </div>
                                 </div>
                                 {% endif %}
@@ -257,7 +326,7 @@
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">Mission & Vision</h1>
+                            <h1>Mission & Vision</h1>
                             <br>
 
                             <div class="form-group">
@@ -267,7 +336,7 @@
                                 type="text"
                                 name="mission_details"
                                 Required>
-                                {{sc_ag_info.mission_description}}
+                                {{sc_ag_info.mission_description|default:""}}
                                 </textarea>
                                 <p id="missionCharacterCount" style="color: red;">Required</p>
 
@@ -337,7 +406,7 @@
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">What Why Who How</h1>
+                            <h1>What Why Who How</h1>
                             <br>
 
                             <div class="form-group">
@@ -395,11 +464,11 @@
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">Short Forms</h1>
+                            <h1>Short Forms</h1>
                             <br>
 
                             <div class="form-group">
-                                <label>Short Form</label>
+                                <label>Short Form (In capital letters)</label>
                                 <input 
                                 type="text" 
                                 class="form-control"
@@ -411,7 +480,7 @@
                             <br>
 
                             <div class="form-group">
-                                <label>Short Form Alternatives</label>
+                                <label>Short Form Alternatives (In capital letters)</label>
                                 <input 
                                 type="text" 
                                 class="form-control"
@@ -447,7 +516,7 @@
                             <hr>
                             <br> 
 
-                            <h1 style="text-align:center;font-size:30px;">Color Sceheme</h1>
+                            <h1>Color Scheme</h1>
                             <br>
 
                             <div class="form-group">
@@ -472,6 +541,19 @@
                                 placeholder="Secondary Color Code" 
                                 maxlength="7" 
                                 value = "{{sc_ag_info.secondary_color_code| default:""}}"
+                                >
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label>Mission Vision Color Code</label>
+                                <input 
+                                type="text" 
+                                class="form-control"
+                                name="mission_vision_color_code" 
+                                placeholder="Mission Vision Color Code" 
+                                maxlength="7" 
+                                value = "{{sc_ag_info.mission_vision_color_code| default:""}}"
                                 >
                             </div>
                             <br>
@@ -521,7 +603,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <img src="{{media_url}}{{sc_ag_info.sc_ag_logo}}" class="img-fluid w-100" alt="Image">
+                            <img src="{{media_url}}{{sc_ag_info.logo}}" class="img-fluid w-100" alt="Image">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
@@ -691,7 +773,7 @@
             if (characterCount === 0) {
                 characterCountElement.style.color = "red";
                 characterCountElement.innerText = "Required";
-            } else if (characterCount > 500) {
+            } else if (characterCount > 1500) {
                 characterCountElement.style.color = "red";
                 characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
             } else {
@@ -734,7 +816,7 @@
 
         // Call the function for each image section when the page loads
         window.onload = function () {
-            checkSavedImage("about-image-input", "{{ sc_ag_info.sc_ag_logo }}");
+            checkSavedImage("about-image-input", "{{ sc_ag_info.logo }}");
             checkSavedImage("background-image-input", "{{ sc_ag_info.background_image }}");
             checkSavedImage("mission-image-input", "{{ sc_ag_info.mission_picture }}");
             checkSavedImage("vision-image-input", "{{ sc_ag_info.vision_picture }}");

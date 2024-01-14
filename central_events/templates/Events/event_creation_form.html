@@ -48,6 +48,28 @@
             }
         }
         
+        h1{
+            text-align:center;
+            font-size:30px;
+            font-weight:bold;
+        }
+    
+        label{
+            font-size:20px;
+        }
+
+        .app-body{
+            justify-content:center; 
+            margin-left:15%;
+            margin-right:15%;
+        }
+        
+        @media (max-width: 760px) {
+            .app-body {
+                margin-left: 5%;
+                margin-right: 5%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -79,32 +101,48 @@
         <!--navbar content-->
         
         <!-- ############ PAGE START-->
-        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+        <div ui-view class="app-body" id="view">
             
-            <!--Instruction Section Start-->
-            {% block instruction %}
-            {% include "Events/instructions.html" %}
-            {% endblock instruction %}
-            <!--Instruction Section End-->
-
-            <br>
-            <br>
-            
+            <div class="container">
+                <!--Instruction Section Start-->
+                {% block instruction %}
+                {% include "Events/instructions.html" %}
+                {% endblock instruction %}
+                <!--Instruction Section End-->
+            </div>
             
 
-        </div>
-        <!--PAGE END-->
+            <!--for error messages-->
+            <div class="container">
+                <br>
+                {% for message in messages  %}
+                    <p>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p style="margin: 0;">{{message}}</p>
+                        </div>
+                    </p>
+                  {% endfor %}
+                  <br>
+            </div>
+            <!--for error messages end-->
 
-        <!--TabView for event creation-->
+            <!--TabView for event creation-->
+            <div>
             
-        <div>
-           
                 {% block event_creation_form %}
                     {% include "Events/event_details_form_content.html" %}
                 {% endblock event_creation_form %}
                 
+            </div>
+            <!--End of TabView-->
+
         </div>
-        <!--End of TabView-->
+        <!--PAGE END-->
+
+
         
         
 

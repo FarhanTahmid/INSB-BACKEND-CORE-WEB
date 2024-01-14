@@ -41,7 +41,7 @@
         {% for i in all_news %}
         <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
             <div class="card shadow achievement_card">
-                <img class="card-img-top" src="/media_files/{{i.news_picture}}" alt="">
+                <a href="{% url 'main_website:news_description' i.pk %}"><img class="card-img-top" src="/media_files/{{i.news_picture}}" alt="news_thumbnail"></a>
 
                 <div class="card-body">
                     <a href="{% url 'main_website:news_description' i.pk %}"><h5 class="card-title fw-bold mt-2">{{i.news_title}}<br></h5></a>

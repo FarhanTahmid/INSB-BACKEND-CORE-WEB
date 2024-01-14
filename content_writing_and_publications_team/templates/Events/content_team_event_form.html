@@ -47,8 +47,28 @@
         }
     }
    
+    h1{
+        text-align:center;
+        font-size:30px;
+        font-weight:bold;
+    }
 
+    label{
+        font-size:20px;
+    }
     
+    .app-body{
+        justify-content:center; 
+        margin-left:15%;
+        margin-right:15%;
+    }
+    
+    @media (max-width: 760px) {
+        .app-body {
+            margin-left: 5%;
+            margin-right: 5%;
+        }
+    }
   </style>
 </head>
 
@@ -76,7 +96,7 @@
     <!--navbar content-->
 
     <!-- ############ PAGE START-->
-    <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+    <div ui-view class="app-body" id="view">
 
     
         <div class="container">
@@ -86,22 +106,25 @@
                 style="color:#00629B;">{{event_name}}</b></span></h2><br>
             <h6>Note:</h6>
             <ol style="justify-content:center;margin-bottom:15px;"><b>
-                <li>Lorem Ipsum</li>
+                <li>Provide the drive link for the documents</li>
+                <li>You can also upload the document files</li>
+                <li>Make sure to save any changes made instantly to prevent data loss</li>
             </ol></b>
 
+            <!--for error messages-->
             <br>
             {% for message in messages  %}
                 <p>
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{message}}
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
+                        <p style="margin: 0;">{{message}}</p>
                     </div>
                 </p>
             {% endfor %}
-  
             <br>
+            <!--for error messages end-->
         </div>
 
         <br><br>  

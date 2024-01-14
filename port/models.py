@@ -10,6 +10,7 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
     short_form=models.CharField(null=True,blank=True,max_length=20)
     primary_color_code=models.CharField(null=True,blank=True,max_length=20)
     secondary_color_code = models.CharField(null=True,blank=True,max_length=20)
+    mission_vision_color_code = models.CharField(null=True,blank=True,max_length=20)
     text_color_code = models.CharField(null=True,blank=True,max_length=20)
     logo=models.ImageField(null=True,blank=True,upload_to='sc_ag_logos/')
 
@@ -18,7 +19,6 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
     page_title = models.TextField(null=True,blank=True,default="",verbose_name="Page Title")
     secondary_paragraph = models.TextField(null=True,blank=True,default="",verbose_name="Second Paragraph")
     about_description = models.TextField(null=True,blank=True,default="",verbose_name="About")
-    sc_ag_logo = ResizedImageField(null=True,blank=True,upload_to="main_website_files/Societies & AG/logos/",verbose_name="About Image")
     background_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies & ag/background image/",verbose_name="Background Image")
     mission_description = models.TextField(null=True,blank=True,default="",verbose_name="Mission")
     mission_picture = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies & ag/mission picture/",verbose_name="Mission Image")
@@ -65,6 +65,7 @@ class Roles_and_Position(models.Model):
     id=models.IntegerField(null=False,blank=False,default=0,primary_key=True)
     role=models.CharField(max_length=40,null=False,blank=False)
     role_of=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
+    rank = models.IntegerField(null=True,blank=True,default=5000)
     is_eb_member = models.BooleanField(default=False)
     is_sc_ag_eb_member=models.BooleanField(default=False)
     is_officer=models.BooleanField(default=False)

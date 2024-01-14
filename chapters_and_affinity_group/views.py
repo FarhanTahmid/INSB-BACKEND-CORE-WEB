@@ -10,6 +10,8 @@ from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
 from port.renderData import PortData
 from users import renderData
+from users.renderData import Alumnis,PanelMembersData
+from django.utils.datastructures import MultiValueDictKeyError
 from django.http import HttpResponse
 from .get_sc_ag_info import SC_AG_Info
 from .renderData import Sc_Ag
@@ -29,8 +31,11 @@ from central_events.models import Events
 from central_events.forms import EventForm
 from events_and_management_team.renderData import Events_And_Management_Team
 from port.models import Chapters_Society_and_Affinity_Groups
+from users.models import Alumni_Members
 from django.views.decorators.clickjacking import xframe_options_exempt
 from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
+from central_branch import views as cv
+from users.renderData import LoggedinUser
 # Create your views here.
 logger=logging.getLogger(__name__)
 
@@ -38,103 +43,144 @@ def sc_ag_homepage(request,primary):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
         
+        # get the current panel of sc ag
+        get_current_panel_of_sc_ag=SC_AG_Info.get_current_panel_of_sc_ag(request=request,sc_ag_primary=primary).first()
+        sc_ag_eb_members=[]
+        sc_ag_officers=[]
+        sc_ag_volunteers=[]
+        if(get_current_panel_of_sc_ag):
+            sc_ag_eb_members=SC_AG_Info.get_sc_ag_executives_from_panels(request=request,panel_id=get_current_panel_of_sc_ag.pk)
+            sc_ag_officers=SC_AG_Info.get_sc_ag_officers_from_panels(request=request,panel_id=get_current_panel_of_sc_ag.pk)
+            sc_ag_volunteers=SC_AG_Info.get_sc_ag_volunteer_from_panels(request=request,panel_id=get_current_panel_of_sc_ag.pk)
         
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info
+            'sc_ag_info':get_sc_ag_info,
+            'sc_ag_ebs':sc_ag_eb_members,
+            'sc_ag_officers':sc_ag_officers,
+            'sc_ag_volunteers':sc_ag_volunteers,
         }
         return render(request,'Homepage/sc_ag_homepage.html',context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
 
 @login_required
 def sc_ag_members(request,primary):
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-    # get all insb members
-    all_insb_members=renderData.get_all_registered_members(request=request)
-    # get sc_ag_positions
-    sc_ag_positions=PortData.get_positions_with_sc_ag_id(request,sc_ag_primary=primary)
-    # get sc_ag teams
-    sc_ag_teams=PortData.get_teams_of_sc_ag_with_id(request,primary)
-    # get sc_ag members
-    sc_ag_members=SC_AG_Info.get_sc_ag_members(request,primary)
     
-    has_access_to_view_member_details=SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary)
-    
-    if request.method=="POST":
-        if request.POST.get('add_sc_ag_member'):
-            position = request.POST['position']
-            if position=='0':
-                position=None
-            team=request.POST['team']
-            if team=='0':
-                team=None
-            member_ieee_id_list=request.POST.getlist('member_select')
-            
-            # Create Member for SC AG
-            Sc_Ag.add_insb_members_to_sc_ag(ieee_id_list=member_ieee_id_list,
-                                            position_id=position,
-                                            sc_ag_primary=primary,
-                                            team_pk=team,
-                                            request=request)
-            return redirect('chapters_and_affinity_group:sc_ag_members',primary)
-                
-    context={
-        'all_sc_ag':sc_ag,
-        'sc_ag_info':get_sc_ag_info,
-        'insb_members':all_insb_members,
-        'positions':sc_ag_positions,
-        'teams':sc_ag_teams,
-        'sc_ag_members':sc_ag_members,
-        'member_count':len(sc_ag_members),
-        'has_access_to_view_member_details':has_access_to_view_member_details,
+    try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        # get all insb members
+        all_insb_members=renderData.get_all_registered_members(request=request)
+        # get sc_ag_positions
+        sc_ag_positions=PortData.get_positions_with_sc_ag_id(request,sc_ag_primary=primary)
+        # get sc_ag teams
+        sc_ag_teams=PortData.get_teams_of_sc_ag_with_id(request,primary)
+        # get sc_ag members
+        sc_ag_members=SC_AG_Info.get_sc_ag_members(request,primary)
         
-    }
-    return render(request,'Members/sc_ag_members.html',context=context)
+        has_access_to_view_member_details=SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary)
+        
+        if request.method=="POST":
+            if request.POST.get('add_sc_ag_member'):
+                position = request.POST['position']
+                if position=='0':
+                    position=None
+                team=request.POST['team']
+                if team=='0':
+                    team=None
+                member_ieee_id_list=request.POST.getlist('member_select')
+                
+                # Create Member for SC AG
+                Sc_Ag.add_insb_members_to_sc_ag(ieee_id_list=member_ieee_id_list,
+                                                position_id=position,
+                                                sc_ag_primary=primary,
+                                                team_pk=team,
+                                                request=request)
+                return redirect('chapters_and_affinity_group:sc_ag_members',primary)
+            elif request.POST.get('remove_member'):
+                member = request.POST['remove_sc_ag_member']
+                Sc_Ag.remove_insb_member_from_sc_ag(request,sc_ag_primary=primary, ieee_id=member)
+                return redirect('chapters_and_affinity_group:sc_ag_members',primary)
+                    
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'insb_members':all_insb_members,
+            'positions':sc_ag_positions,
+            'teams':sc_ag_teams,
+            'sc_ag_members':sc_ag_members,
+            'member_count':len(sc_ag_members),
+            'has_access_to_view_member_details':has_access_to_view_member_details,
+            
+        }
+        return render(request,'Members/sc_ag_members.html',context=context)
+    
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
 
 @login_required
 def sc_ag_panels(request,primary):
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+
+    try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        
+        # get panels of SC-AG
+        all_panels=SC_AG_Info.get_panels_of_sc_ag(request=request,sc_ag_primary=primary)
+        
+        if request.method=="POST":
+            if request.POST.get('create_panel'):
+                tenure_year=request.POST['tenure_year']
+                panel_start_date=request.POST['panel_start_date']
+                panel_end_date=request.POST['panel_end_date']
+                current_check=request.POST.get('current_check')
+                if current_check is None:
+                    current_check=False
+                else:
+                    current_check=True
+                
+                if(Sc_Ag.create_new_panel_of_sc_ag(request=request,
+                                                current_check=current_check,
+                                                panel_end_time=panel_end_date,
+                                                panel_start_time=panel_start_date,
+                                                sc_ag_primary=primary,tenure_year=tenure_year)
+                ):
+                    return redirect('chapters_and_affinity_group:sc_ag_panels',primary)  
+        panel_edit_access=SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary)
+        context={
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'panels':all_panels,
+            'panel_edit_access':panel_edit_access,
+        }
+        return render(request,'Panels/panel_homepage.html',context=context)
     
-    # get panels of SC-AG
-    all_panels=SC_AG_Info.get_panels_of_sc_ag(request=request,sc_ag_primary=primary)
-    
-    if request.method=="POST":
-        if request.POST.get('create_panel'):
-            tenure_year=request.POST['tenure_year']
-            panel_start_date=request.POST['panel_start_date']
-            panel_end_date=request.POST['panel_end_date']
-            current_check=request.POST.get('current_check')
-            if current_check is None:
-                current_check=False
-            else:
-                current_check=True
-            
-            if(Sc_Ag.create_new_panel_of_sc_ag(request=request,
-                                            current_check=current_check,
-                                            panel_end_time=panel_end_date,
-                                            panel_start_time=panel_start_date,
-                                            sc_ag_primary=primary,tenure_year=tenure_year)
-              ):
-                return redirect('chapters_and_affinity_group:sc_ag_panels',primary)  
-    panel_edit_access=SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary)
-    context={
-        'all_sc_ag':sc_ag,
-        'sc_ag_info':get_sc_ag_info,
-        'panels':all_panels,
-        'panel_edit_access':panel_edit_access,
-    }
-    return render(request,'Panels/panel_homepage.html',context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
 
 @login_required
 def sc_ag_panel_details(request,primary,panel_pk):
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         
@@ -152,7 +198,6 @@ def sc_ag_panel_details(request,primary,panel_pk):
 
         # get sc_ag_executives
         sc_ag_eb_members=SC_AG_Info.get_sc_ag_executives_from_panels(request=request,panel_id=panel_pk)
-        
         if request.method=="POST":
             # adding member to panel
             if request.POST.get('add_executive_to_sc_ag_panel'):
@@ -166,6 +211,9 @@ def sc_ag_panel_details(request,primary,panel_pk):
                 member_to_remove=request.POST['remove_panel_member']
                 if(Sc_Ag.remove_sc_ag_member_from_panel(request=request,member_ieee_id=member_to_remove,panel_id=panel_pk,sc_ag_primary=primary)):
                     return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+                else:
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+
             
             # Delete panel
             if(request.POST.get('delete_panel')):
@@ -216,6 +264,18 @@ def sc_ag_panel_details(request,primary,panel_pk):
                     faculty_position_check=False
                 else:
                     faculty_position_check=True
+
+                core_volunteer_position_check = request.POST.get('core_volunteer_position_check')
+                if core_volunteer_position_check is None:
+                    core_volunteer_position_check = False
+                else:
+                    core_volunteer_position_check = True
+
+                volunteer_position_check = request.POST.get('volunteer_position_check')
+                if volunteer_position_check is None:
+                    volunteer_position_check = False
+                else:
+                    volunteer_position_check = True
                     
                 position_name=request.POST['position_name']
                 # create new Position
@@ -223,7 +283,8 @@ def sc_ag_panel_details(request,primary,panel_pk):
                                           is_eb_member=False,
                                           is_officer=officer_position_check,
                                           is_sc_ag_eb_member=sc_ag_executive_position_check,is_mentor=mentor_position_check,
-                                          is_faculty=faculty_position_check,is_co_ordinator=coordinator_position_check,role=position_name)):
+                                          is_faculty=faculty_position_check,is_co_ordinator=coordinator_position_check,role=position_name,
+                                          is_core_volunteer=core_volunteer_position_check,is_volunteer=volunteer_position_check)):
                     return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
             
             #Create New TEam
@@ -234,8 +295,9 @@ def sc_ag_panel_details(request,primary,panel_pk):
                 )):
                     return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
 
-               
+ 
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'panel_info':panel_info,
@@ -250,12 +312,14 @@ def sc_ag_panel_details(request,primary,panel_pk):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request") 
+        return cv.custom_500(request) 
+       
 
 @login_required               
 def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
 
@@ -286,10 +350,11 @@ def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
             if request.POST.get('remove_member_officer'):
                 member_to_remove=request.POST['remove_officer_member']
                 if(Sc_Ag.remove_sc_ag_member_from_panel(request=request,member_ieee_id=member_to_remove,panel_id=panel_pk,sc_ag_primary=primary)):
-                    return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details_officers',primary,panel_pk)
             
             
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'panel_info':panel_info,
@@ -306,13 +371,14 @@ def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
         
         
 @login_required    
 def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
 
@@ -351,7 +417,8 @@ def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
         
         
         
-        context={
+        context={           
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'panel_info':panel_info,
@@ -368,12 +435,13 @@ def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
 
 @login_required
 def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
 
@@ -386,43 +454,90 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
         else:
             tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
 
+        # get all alumni members registered in database of IEEE NSU SB
+        alumni_members=Alumni_Members.objects.all().order_by('pk')
+        
+        if(request.POST.get('create_new_alumni')):
+            try:
+                alumni_name=request.POST['alumni_name']
+                alumni_email=request.POST['alumni_email']
+                alumni_contact_no=request.POST['alumni_contact_no']
+                alumni_facebook_link=request.POST['alumni_facebook_link']
+                alumni_linkedin_link=request.POST['alumni_linkedin_link']
+                alumni_picture=request.FILES.get('alumni_picture')
+
+            except MultiValueDictKeyError:
+                messages.error(request,"Image can not be uploaded!")
+            finally:
+                # create alumni
+                if(Alumnis.create_alumni_members(
+                    request=request,contact_no=alumni_contact_no,
+                    email=alumni_email,
+                    facebook_link=alumni_facebook_link,
+                    linkedin_link=alumni_linkedin_link,
+                    name=alumni_name,
+                    picture=alumni_picture)):
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details_alumni',primary,panel_pk)
+                else:
+                    messages.warning(request,'Failed to Add new alumni!')
+        if(request.POST.get('add_alumni_to_panel')):
+            alumni_to_add=request.POST.getlist('alumni_select')
+            position=request.POST['alumni_position']
+            for i in alumni_to_add:            
+                if(PanelMembersData.add_alumns_to_branch_panel(request=request,alumni_id=i,panel_id=panel_pk,position=position)):
+                    pass
+        if(request.POST.get('remove_member_alumni')):
+            alumni_to_remove=request.POST['remove_alumni_member']
+            if(PanelMembersData.remove_alumns_from_branch_panel(request=request,member_to_remove=alumni_to_remove,panel_id=panel_pk)):
+                pass        
+        
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'panel_info':panel_info,
             'tenure_time':tenure_time,
-
+            'positions':SC_AG_Info.get_sc_ag_executive_positions(request=request,sc_ag_primary=primary),
+            'alumni_members':alumni_members,
+            'alumni_members_in_panel':PanelMembersData.get_alumni_members_from_panel(panel=panel_pk,request=request),
+            'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
         }
         return render(request,'Panels/sc_ag_alumni_members_tab.html',context=context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
-
+        return cv.custom_500(request)
 @login_required
 def sc_ag_membership_renewal_sessions(request,primary):
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-        #Load all sessions at first from Central Branch
-        sessions=Renewal_Sessions.objects.order_by('-id')
-        
-        context={
-            'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info,
-            'sessions':sessions,
-            'is_branch':False,            
-        }
-        return render(request,"Renewal/renewal_homepage.html",context=context)
+        has_access = SC_Ag_Render_Access.access_for_membership_renewal_access(request=request,sc_ag_primary=primary)
+        if has_access:
+            #Load all sessions at first from Central Branch
+            sessions=Renewal_Sessions.objects.order_by('-id')
+            
+            context={
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'sessions':sessions,
+                'is_branch':False,            
+            }
+            return render(request,"Renewal/renewal_homepage.html",context=context)
+        else:
+            return render(request,"access_denied.html", { 'all_sc_ag':sc_ag })
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
 
 def sc_ag_renewal_session_details(request,primary,renewal_session):
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         if(SC_Ag_Render_Access.access_for_membership_renewal_access(request=request,sc_ag_primary=primary)):
             
@@ -440,6 +555,7 @@ def sc_ag_renewal_session_details(request,primary,renewal_session):
                 get_renewal_requests=Renewal_requests.objects.filter(session_id=renewal_session,wie_renewal_check=True).values('id','name','email_associated','email_ieee','contact_no','ieee_id','renewal_status').order_by('id')
 
             context={
+                'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
                 'is_branch':False,
@@ -454,11 +570,11 @@ def sc_ag_renewal_session_details(request,primary,renewal_session):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
 
 @login_required
 def get_sc_ag_renewal_stats(request):
+    
     if request.method=="GET":
         # get the renewal session id from the URL
         seek_value=request.GET.get('seek_value')
@@ -492,12 +608,13 @@ def get_sc_ag_renewal_stats(request):
         except Exception as e:
             logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            # TODO: Make a good error code showing page and show it upon errror
-            return HttpResponseBadRequest("Bad Request")
+            return cv.custom_500(request)
         
 @login_required
 def sc_ag_manage_access(request,primary):
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         if(SC_Ag_Render_Access.access_for_manage_access(request=request,sc_ag_primary=primary)):
             # get sc ag info
@@ -524,6 +641,7 @@ def sc_ag_manage_access(request,primary):
                     event_details_edit_access=False
                     panel_edit_access=False
                     membership_renewal_access=False
+                    manage_web_access=False
                     manage_access=False
                     
                     # get values from template and change according to it
@@ -537,6 +655,8 @@ def sc_ag_manage_access(request,primary):
                         panel_edit_access=True
                     if(request.POST.get('membership_renewal_access') is not None):
                         membership_renewal_access=True
+                    if(request.POST.get('manage_web_access') is not None):
+                        manage_web_access=True
                     if(request.POST.get('manage_access') is not None):
                         manage_access=True
                     
@@ -547,6 +667,7 @@ def sc_ag_manage_access(request,primary):
                                                         event_details_edit_access=event_details_edit_access,
                                                         panel_edit_access=panel_edit_access,
                                                         membership_renewal_access=membership_renewal_access,
+                                                        manage_web_access=manage_web_access,
                                                         manage_access=manage_access)):
                         return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)
                     else:
@@ -561,6 +682,7 @@ def sc_ag_manage_access(request,primary):
                     else:
                         return redirect('chapters_and_affinity_group:sc_ag_manage_access',primary)          
             context={
+                'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
                 'sc_ag_members':get_sc_ag_members,
@@ -572,22 +694,24 @@ def sc_ag_manage_access(request,primary):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
     
 @login_required
 def sc_ag_renewal_excel_sheet(request,primary,renewal_session):
     try:
-        response=Sc_Ag.generate_renewal_excel_sheet(request=request,renewal_session_id=renewal_session,sc_ag_primary=primary)
-        if(not response):
-            return redirect('chapters_and_affinity_group:sc_ag_membership_renewal_details',primary,renewal_session)
+        has_access = SC_Ag_Render_Access.access_for_membership_renewal_access(request=request,sc_ag_primary=primary)
+        if has_access:
+            response=Sc_Ag.generate_renewal_excel_sheet(request=request,renewal_session_id=renewal_session,sc_ag_primary=primary)
+            if(not response):
+                return redirect('chapters_and_affinity_group:sc_ag_membership_renewal_details',primary,renewal_session)
+            else:
+                return response
         else:
-            return response
+            return render(request,'access_denied.html')
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
         
 @login_required
 def event_control_homepage(request,primary):
@@ -596,6 +720,8 @@ def event_control_homepage(request,primary):
 
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         is_branch= False
         has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
@@ -618,6 +744,7 @@ def event_control_homepage(request,primary):
 
 
         context={
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'is_branch':is_branch,
@@ -633,8 +760,7 @@ def event_control_homepage(request,primary):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
     
 @login_required
 def super_event_creation(request, primary):
@@ -642,12 +768,16 @@ def super_event_creation(request, primary):
     '''function for creating super event'''
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
         sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
         if has_access:
             get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
             is_branch= False
             context={
+                'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
                 'is_branch':is_branch,
@@ -676,13 +806,14 @@ def super_event_creation(request, primary):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
 
 @login_required
 def event_creation_form_page(request,primary):
     #######load data to show in the form boxes#########
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
         if has_access:
@@ -694,6 +825,7 @@ def event_creation_form_page(request,primary):
             super_events=Branch.load_all_mother_events()
             event_types=Branch.load_all_event_type_for_groups(primary)
             context={
+                'user_data':user_data,
                 'super_events':super_events,
                 'event_types':event_types,
                 'all_sc_ag':sc_ag,
@@ -718,6 +850,7 @@ def event_creation_form_page(request,primary):
                     event_description=request.POST['event_description']
                     event_type_list = request.POST.getlist('event_type')
                     event_date=request.POST['event_date']
+                    event_time=request.POST['event_time']
                 
                     #It will return True if register event page 1 is success
                     get_event=Branch.register_event_page1(
@@ -726,6 +859,7 @@ def event_creation_form_page(request,primary):
                         event_type_list=event_type_list,
                         event_description=event_description,
                         event_date=event_date,
+                        event_time=event_time,
                         event_organiser=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary).primary
                     )
                     
@@ -748,18 +882,19 @@ def event_creation_form_page(request,primary):
 
             return render(request,'Events/event_creation_form.html',context)
         else:
-            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
+            return redirect('chapters_and_affinity_group:event_control_homepage', primary)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
 
 @login_required
 def event_creation_form_page2(request,primary,event_id):
     #loading all inter branch collaboration Options
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         print(request.META.get("HTTP_REFERER"))
         sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
@@ -770,6 +905,7 @@ def event_creation_form_page2(request,primary,event_id):
             sc_ag=PortData.get_all_sc_ag(request=request)
             inter_branch_collaboration_options=Branch.load_all_inter_branch_collaboration_options()
             context={
+                'user_data':user_data,
                 'inter_branch_collaboration_options':inter_branch_collaboration_options,
                 'all_sc_ag':sc_ag,
                 'is_branch':is_branch,
@@ -800,11 +936,12 @@ def event_creation_form_page2(request,primary,event_id):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
 @login_required
 def event_creation_form_page3(request,primary,event_id):
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
         if has_access:
@@ -817,6 +954,7 @@ def event_creation_form_page3(request,primary,event_id):
             permission_criterias=Events_And_Management_Team.getPermissionCriterias()
 
             context={
+                'user_data':user_data,
                 'venues':venues,
                 'permission_criterias':permission_criterias,
                 'all_sc_ag':sc_ag,
@@ -846,8 +984,7 @@ def event_creation_form_page3(request,primary,event_id):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
     
 
 @login_required
@@ -855,6 +992,8 @@ def event_edit_form(request, primary, event_id):
 
     ''' This function loads the edit page of events '''
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
         if has_access:
             sc_ag=PortData.get_all_sc_ag(request=request)
@@ -881,6 +1020,7 @@ def event_edit_form(request, primary, event_id):
                     ''' Get data from form and call update function to update event '''
 
                     form_link = request.POST.get('drive_link_of_event')
+                    more_info_link = request.POST.get('more_info_link')
                     publish_event_status = request.POST.get('publish_event')
                     flagship_event_status = request.POST.get('flagship_event')
                     registration_event_status = request.POST.get('registration_fee')
@@ -889,6 +1029,7 @@ def event_edit_form(request, primary, event_id):
                     super_event_id=request.POST.get('super_event')
                     event_type_list = request.POST.getlist('event_type')
                     event_date=request.POST['event_date']
+                    event_time=request.POST['event_time']
                     inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
                     intra_branch_collaboration=request.POST['intra_branch_collaboration']
                     venue_list_for_event=request.POST.getlist('event_venues')
@@ -907,8 +1048,8 @@ def event_edit_form(request, primary, event_id):
                         registration_fee_amount = 0
 
                     #Check if the update request is successful
-                    if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
-                                                flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,form_link = form_link,is_featured_event=is_featured)):
+                    if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, event_time=event_time, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
+                                                flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,more_info_link=more_info_link,form_link = form_link,is_featured_event=is_featured)):
                         messages.success(request,f"EVENT: {event_name} was Updated successfully")
                         return redirect('chapters_and_affinity_group:event_edit_form',primary, event_id) 
                     else:
@@ -949,6 +1090,7 @@ def event_edit_form(request, primary, event_id):
             venues=Events_And_Management_Team.getVenues()
 
             context={
+                'user_data':user_data,
                 'all_sc_ag' : sc_ag,
                 'sc_ag_info':get_sc_ag_info,
                 'primary' : primary,
@@ -977,13 +1119,15 @@ def event_edit_form(request, primary, event_id):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
 
 @login_required    
 def event_edit_media_form_tab(request, primary, event_id):
     ''' This function loads the media tab page of events '''
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
@@ -1029,6 +1173,7 @@ def event_edit_media_form_tab(request, primary, event_id):
                     return redirect("chapters_and_affinity_group:event_edit_media_form_tab", primary, event_id)
         
             context={
+                'user_data':user_data,
                 'is_branch' : False,
                 'primary' : primary,
                 'event_id' : event_id,
@@ -1046,8 +1191,7 @@ def event_edit_media_form_tab(request, primary, event_id):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
 
 def event_edit_graphics_form_tab(request, primary, event_id):
 
@@ -1057,6 +1201,8 @@ def event_edit_graphics_form_tab(request, primary, event_id):
     #and can be editible
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         #Get event details from databse
@@ -1101,6 +1247,7 @@ def event_edit_graphics_form_tab(request, primary, event_id):
                     return redirect("chapters_and_affinity_group:event_edit_graphics_form_tab", primary, event_id)
 
             context={
+                'user_data':user_data,
                 'is_branch' : False,
                 'primary' : primary,
                 'event_id' : event_id,
@@ -1118,8 +1265,7 @@ def event_edit_graphics_form_tab(request, primary, event_id):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
     
 
 def event_edit_graphics_form_links_sub_tab(request,primary,event_id):
@@ -1130,6 +1276,8 @@ def event_edit_graphics_form_links_sub_tab(request,primary,event_id):
     #and can be editible
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         all_graphics_link = GraphicsTeam.get_all_graphics_form_link(event_id)
@@ -1169,6 +1317,7 @@ def event_edit_graphics_form_links_sub_tab(request,primary,event_id):
                     return redirect("chapters_and_affinity_group:event_edit_graphics_form_links_sub_tab",primary,event_id)
 
             context={
+                'user_data':user_data,
                 'is_branch' : False,
                 'primary' : primary,
                 'event_id' : event_id,
@@ -1183,8 +1332,7 @@ def event_edit_graphics_form_links_sub_tab(request,primary,event_id):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
 
 
 def event_edit_content_form_tab(request,primary,event_id):
@@ -1192,6 +1340,8 @@ def event_edit_content_form_tab(request,primary,event_id):
     ''' This function loads the content tab page of events '''
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         #Get event details from databse
@@ -1274,6 +1424,7 @@ def event_edit_content_form_tab(request,primary,event_id):
             documents = Content_Team_Document.objects.filter(event_id=event_id)   
 
             context={
+                'user_data':user_data,
                 'is_branch' : False,
                 'primary' : primary,
                 'event_id' : event_id,
@@ -1294,8 +1445,7 @@ def event_edit_content_form_tab(request,primary,event_id):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
     
 @login_required
 @xframe_options_exempt
@@ -1303,6 +1453,9 @@ def event_preview(request, primary, event_id):
     ''' This function displays a preview of an event regardless of it's published status '''
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
         if(has_access):
             event = Events.objects.get(id=event_id)
@@ -1310,6 +1463,7 @@ def event_preview(request, primary, event_id):
             event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
             context = {
+                'user_data':user_data,
                 'is_branch' : False,
                 'event' : event,
                 'media_url':settings.MEDIA_URL,
@@ -1324,8 +1478,7 @@ def event_preview(request, primary, event_id):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
     
 
 @login_required
@@ -1335,19 +1488,21 @@ def manage_main_website(request, primary):
         and affinity group'''
 
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
 
     
-        has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
+        has_access = SC_Ag_Render_Access.access_for_manage_web(request, primary)
         if(has_access):
             
             if request.method == "POST":
                 #if save button is clicked then saving the details user entered
                 if request.POST.get('save'):
 
+                    about_image = request.FILES.get('logo')
                     about_details = request.POST.get('about_details')
-                    about_image = request.FILES.get('sc_ag_logo')
                     background_image =  request.FILES.get('background_image')
                     mission_description = request.POST.get('mission_details')
                     mission_image =  request.FILES.get('mission_picture')
@@ -1366,12 +1521,13 @@ def manage_main_website(request, primary):
                     secondParagraph_details = request.POST.get('secondParagraph')
                     email = request.POST.get('email')
                     facebook_link = request.POST.get('facebook_link')
+                    mission_vision_color_code_details = request.POST.get('mission_vision_color_code')
 
-                    print(pageTitle_details)
+                    print(about_image)
                     #checking to see if no picture is uploaded by user, if so then if picture is already present in database
                     #then updating it with saved value to prevent data loss. Otherwise it is None
                     if about_image == None:
-                        about_image = get_sc_ag_info.sc_ag_logo
+                        about_image = get_sc_ag_info.logo
                     if background_image == None:
                         background_image = get_sc_ag_info.background_image
                     if vision_picture == None:
@@ -1382,14 +1538,14 @@ def manage_main_website(request, primary):
                     #passing the fields data to the function to check length before saving
                     if Sc_Ag.checking_length(request,about_details,mission_description,vision_description,what_is_this_description,
                                why_join_it,what_activites_it_has,how_to_join):
-                        messages.error(request,"Please ensure your word limit is with in 500 and you have filled out all descriptions")
+                        messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
                         return redirect("chapters_and_affinity_group:manage_main_website",primary)
                     #passing the fields data to save the data in the database
                     if Sc_Ag.main_website_info(request,primary,about_details,about_image,background_image,
                                     mission_description,mission_image,vision_description,vision_picture,
                                     what_is_this_description,why_join_it,what_activites_it_has,how_to_join,
                                     short_form,short_form_alternative_details,primary_color_code_details,secondary_color_code_details,
-                                    text_color_code_details,pageTitle_details,secondParagraph_details,email,facebook_link):
+                                    text_color_code_details,pageTitle_details,secondParagraph_details,email,facebook_link,mission_vision_color_code_details):
                         
                             messages.success(request,"Saved Changes Successfully!")
                     else:
@@ -1412,12 +1568,12 @@ def manage_main_website(request, primary):
 
 
             context={
+                'user_data':user_data,
                 'is_branch' : False,
                 'primary' : primary,
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
                 'media_url':settings.MEDIA_URL,
-
             }
 
             return render(request,"Main Web Form/portal_form.html",context)
@@ -1427,8 +1583,42 @@ def manage_main_website(request, primary):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
+    
+@login_required
+@xframe_options_exempt
+def manage_main_website_preview(request,primary):
+    try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        #getting object of the particular society/affinity
+        society = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
+        #getting featured events of the particular society/affinity 
+        featured_events = HomepageItems.get_featured_events_for_societies(primary)
+
+        #getting faculty member
+        faculty_advisor = HomepageItems.get_faculty_advisor_for_society(request,primary)
+        #getting eb members for the particular society/affinity
+        eb_members = HomepageItems.get_eb_members_for_society(request,primary)
+
+        context={
+            'user_data':user_data,
+            'is_live':False, #This disable the header and footer of the page along with wavy for previewing
+            'society':society,
+            #'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+            'media_url':settings.MEDIA_URL,
+            'featured_events':featured_events,
+            'faculty_advisor':faculty_advisor,
+            'eb_members':eb_members,
+            'page_title':society.page_title,
+            'page_subtitle':society.secondary_paragraph
+        }
+
+        return render(request,'Society_AG/sc_ag.html',context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
 
 @login_required
 def feedbacks(request,primary):
@@ -1437,6 +1627,8 @@ def feedbacks(request,primary):
         groups'''
     
     try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         #rendering all the data to be loaded on the page
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
@@ -1458,6 +1650,7 @@ def feedbacks(request,primary):
                     return redirect("chapters_and_affinity_group:feedbacks",primary)
         
             context={
+                    'user_data':user_data,
                     'is_branch' : False,
                     'primary' : primary,
                     'all_sc_ag':sc_ag,
@@ -1472,8 +1665,35 @@ def feedbacks(request,primary):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        # TODO: Make a good error code showing page and show it upon errror
-        return HttpResponseBadRequest("Bad Request")
+        return cv.custom_500(request)
 
+@login_required
+def event_feedback(request, primary, event_id):
 
+    try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
+        if has_access:
+            get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+            event_feedbacks = Branch.get_all_feedbacks(event_id=event_id)
 
+            context = {
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'primary':primary,
+                'is_branch':False, 
+                'event_id':event_id, 
+                'event_feedbacks':event_feedbacks
+            }
+
+            return render(request,'Events/event_feedbacks.html', context)
+        else:
+            return render(request,'access_denied.html', { 'all_sc_ag':sc_ag })
+        
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)

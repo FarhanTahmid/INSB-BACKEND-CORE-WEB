@@ -63,8 +63,8 @@ INSTALLED_APPS = [
     'media_team',
     'graphics_team',
     'finance_and_corporate_team',
-    'ieee_nsu_sb_pes_sbc',
-    'ieee_nsu_sb_ras_sbc',
+    # 'ieee_nsu_sb_pes_sbc',
+    # 'ieee_nsu_sb_ras_sbc',
     'ckeditor',
     'chapters_and_affinity_group',
     'central_events',
@@ -89,7 +89,7 @@ import os
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -103,7 +103,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'insb_port.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -175,17 +174,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 
-if(os.environ.get('SETTINGS')=='dev'):
-    STATIC_URL = 'static/'
-    #static directory
-    STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
-    STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static/'))
+STATIC_URL = 'static/'
+#static directory
+STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
+STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static/'))
     
-if(os.environ.get('SETTINGS')=='prod'):
-    STATIC_URL = 'static/'
-    #static directory
-    STATICFIlES_DIRS=(os.path.join(BASE_DIR,'static/'))
-    STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles_build','static')
 
 
 #TEMPLATE_DIRS=(os.path.join(os.path.dirname(__file__) ,'../Templates').replace('\\','/'))
@@ -214,8 +207,8 @@ REST_FRAMEWORK={
     'DEFAULT_RENDERER_CLASSES':('rest_framework.renderers.JSONRenderer',)
 }
 
-handler404=''
-
+handler404='central_branch.views.custom_404'
+handler500='central_branch.views.custom_500'
 
 #EMAIL SETTINGS
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
@@ -230,11 +223,9 @@ DJANGORESIZED_DEFAULT_SIZE = [1920, 1080]
 DJANGORESIZED_DEFAULT_SCALE = 1.0
 DJANGORESIZED_DEFAULT_QUALITY = 80
 DJANGORESIZED_DEFAULT_KEEP_META = True
-DJANGORESIZED_DEFAULT_FORCE_FORMAT = 'JPEG'
-DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {'JPEG': ".jpg"}
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
 
-#CELERY_BROKER_URL = "amqps://fhfqmapx:YUA5So69ozn0PUIB8eJHSrwz6dhCA07W@rattlesnake.rmq.cloudamqp.com/fhfqmapx"
+CELERY_BROKER_URL = "amqps://mrhkupcx:Es-Dd6MKxkwapnb1zMlwybTaYGwflFLB@lionfish.rmq.cloudamqp.com/mrhkupcx"
 CELERY_RESULT_BACKEND = "django-db"
 CELERY_RESULT_EXTENDED = True
 CELERY_TASK_SERIALIZER = 'json'
@@ -250,10 +241,3 @@ CELERY_TASK_SERIALIZER = 'json'
 # }
 
 NEWS_API_KEY=os.environ.get('NEWS_API_KEY')
-
-Q_CLUSTER = {
-    'name': 'insb_port',
-    'workers': 8,
-    'timeout': 60,
-    'broker_class':'insb_port.rabbitMQ_Broker.RabbitMQBroker'
-}

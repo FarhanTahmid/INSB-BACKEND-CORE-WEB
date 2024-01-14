@@ -44,6 +44,7 @@ class PortData:
         '''This method gets all the Chairs of SC AG from current panel'''
         try:
             chairs_of_sc_ag=[]
+            # as sc_ag_primary extends from 2-5, if in future any sc ag extends, extend the range
             for i in range(2,6):
                 try:
                     get_current_panel_of_sc_ag=Panels.objects.get(current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=i))
@@ -61,6 +62,26 @@ class PortData:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"An internal Database error occured loading the Excom!")
     
+    def get_sc_ag_faculty_members(request):
+        '''This function returns all the faculties related to sc ag'''
+        try:
+            faculties_of_sc_ag=[]
+            for i in range(2,6):
+                try:
+                    get_current_panel_of_sc_ag=Panels.objects.get(current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=i))
+                except:
+                    continue
+                get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_current_panel_of_sc_ag.pk))
+                if(get_panel_members.exists()):
+                    for member in get_panel_members:
+                        if(member.position.is_sc_ag_eb_member and member.position.is_faculty):
+                            faculties_of_sc_ag.append(member)
+            return faculties_of_sc_ag
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"An internal Database error occured loading the Faculties of SC AG!")
+
     def get_branch_ex_com_from_sc_ag_by_year(request,panel_year):
         '''This methods loads SC AG Chairs by year'''
         try:
@@ -77,6 +98,25 @@ class PortData:
                             if(member.position.role=="Chair"):
                                 chairs_of_sc_ag.append(member)
             return chairs_of_sc_ag
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"An internal Database error occured loading the Excom!")
+    
+    def get_sc_ag_faculty_by_year(request,panel_year):
+        try:
+            faculty_of_sc_ag=[]
+            for i in range(2,6):
+                try:
+                    get_panel_of_sc_ag=Panels.objects.get(year=panel_year,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=i))
+                except:
+                    continue
+                get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel_of_sc_ag.pk))
+                if(get_panel_members.exists()):
+                    for member in get_panel_members:
+                        if(member.position.is_sc_ag_eb_member and member.position.is_faculty):
+                            faculty_of_sc_ag.append(member)
+            return faculty_of_sc_ag
         except Exception as e:
             PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -167,22 +207,33 @@ class PortData:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
 
-    def create_positions(request,sc_ag_primary,role,is_eb_member,is_sc_ag_eb_member,is_officer,is_co_ordinator,is_faculty,is_mentor):
+    def create_positions(request,sc_ag_primary,role,is_eb_member,is_sc_ag_eb_member,is_officer,is_co_ordinator,is_faculty,is_mentor,
+                        is_core_volunteer,is_volunteer):
         '''Creates Positions in the Roles and Positions Table with Different attributes for sc ag and branch as well'''
         try:
             # get the last object of the model
             get_the_last_object=Roles_and_Position.objects.all().last()
             # The logic of creating new position is to assign the id = las objects id + 1.
             # this ensures that ids never conflict with each other
-            new_position=Roles_and_Position.objects.create(
-                id=get_the_last_object.id + 1,
-                role=role,role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),
-                is_eb_member=is_eb_member,is_sc_ag_eb_member=is_sc_ag_eb_member,
-                is_officer=is_officer,is_co_ordinator=is_co_ordinator,is_faculty=is_faculty,is_mentor=is_mentor
-            )
-            new_position.save()
-            messages.success(request,f"New Position: {role} was created!")
-            return True
+            check_if_same_position_exists=Roles_and_Position.objects.filter(role=role,role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),
+                                                                            is_eb_member=is_eb_member,is_sc_ag_eb_member=is_sc_ag_eb_member,
+                                                                            is_officer=is_officer,is_co_ordinator=is_co_ordinator,is_faculty=is_faculty,is_mentor=is_mentor,
+                                                                            is_core_volunteer = is_core_volunteer,is_volunteer = is_volunteer
+                                                                            )
+            if(check_if_same_position_exists.exists()):
+                messages.warning(request,f"A same position {check_if_same_position_exists.first().role} already exists in the Database. Creating same position with same attributes will cause conflicts!")
+                return False
+            else:            
+                new_position=Roles_and_Position.objects.create(
+                    id=get_the_last_object.id + 1,
+                    role=role,role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),
+                    is_eb_member=is_eb_member,is_sc_ag_eb_member=is_sc_ag_eb_member,
+                    is_officer=is_officer,is_co_ordinator=is_co_ordinator,is_faculty=is_faculty,is_mentor=is_mentor,
+                    is_core_volunteer = is_core_volunteer,is_volunteer = is_volunteer
+                )
+                new_position.save()
+                messages.success(request,f"New Position: {role} was created!")
+                return True
         except Exception as e:
             PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

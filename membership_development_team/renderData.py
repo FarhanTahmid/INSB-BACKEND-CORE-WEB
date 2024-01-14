@@ -6,7 +6,7 @@ from system_administration.models import MDT_Data_Access
 from system_administration.render_access import Access_Render
 from datetime import date
 from datetime import datetime
-
+from central_branch import renderData
 
 
 class MDT_DATA:
@@ -64,10 +64,25 @@ class MDT_DATA:
         
         return team.id
     
-    def get_member_with_postion(position):
+    def get_all_team_members():
         '''Returns MDT Team Members with positions'''
-        team_members=Members.objects.filter(team=MDT_DATA.get_team_id(),position=position)
-        return team_members
+        team_members=renderData.Branch.load_team_members(team_primary=7)
+        co_ordinators=[]
+        incharges=[]
+        core_volunteers=[]
+        team_volunteers=[]
+        for i in team_members:
+            if(i.position.is_officer):
+                if(i.position.is_co_ordinator):
+                    co_ordinators.append(i)
+                else:
+                    incharges.append(i)
+            elif(i.position.is_volunteer):
+                if(i.position.is_core_volunteer):
+                    core_volunteers.append(i)
+                else:
+                    team_volunteers.append(i)
+        return co_ordinators,incharges,core_volunteers,team_volunteers
     
     
     def getRenewalInvoiceQuantity(request_id,info):
@@ -131,10 +146,10 @@ class MDT_DATA:
                 return 0
     
     def load_team_members():
-        
+        # function works fine
         '''This function loads all the team members for membership development team'''
 
-        load_team_members=Members.objects.filter(team=MDT_DATA.get_team_id()).order_by('position')
+        load_team_members=renderData.Branch.load_team_members(team_primary=7)
         team_members=[]
         for i in range(len(load_team_members)):
             team_members.append(load_team_members[i])
@@ -300,19 +315,13 @@ class MDT_DATA:
             return False
     
     def load_officials_of_MDT():
-        ''''''
         '''This function loads all the officials of mdt and returns a list of their ieee id'''
-        load_incharges=Members.objects.filter(team=MDT_DATA.get_team_id(),position=10)
-        load_co_ordinators=Members.objects.filter(team=MDT_DATA.get_team_id(),position=9)
-        
-        mdt_officials=[]
-        for i in range(len(load_incharges)):
-            mdt_officials.append(load_incharges[i])
-        
-        for i in range(len(load_co_ordinators)):
-            mdt_officials.append(load_co_ordinators[i])
-        
-        return mdt_officials
+        team_members=renderData.Branch.load_team_members(team_primary=7)
+        officers=[]
+        for i in team_members:
+            if(i.position.is_officer):
+                officers.append(i)
+        return officers
     
     def add_member_to_data_access(ieee_id):
         try:
@@ -334,33 +343,12 @@ class MDT_DATA:
         except:
             return False
     def add_member_to_team(ieee_id,position):
-        team_id=MDT_DATA.get_team_id()
         try:
-            Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
+            renderData.Branch.add_member_to_team(ieee_id=ieee_id,position=position,team_primary=7)
             return True
         except:
             return False
-    def get_officials_access(ieee_id):
-        ''''''
-        try:
-            ieee_id=str(ieee_id)
-            load_member=Members.objects.get(ieee_id=ieee_id)
-            print(load_member.position.id)
-            if(load_member.position.id==10 or load_member.position.id==9):
-                return True
-            else:
-                return False
-        except:
-            return False
     
-    def load_MDT_coordinator():
-        '''This function loads only the coordinator of MDT Team'''
-        # get Roles for which is_coordinator is True
-        try:
-            getPosition=Roles_and_Position.objects.get(is_co_ordinator=True)
-            return (Members.objects.filter(team=MDT_DATA.get_team_id(),position=Roles_and_Position.objects.get(id=getPosition.id)))
-        except:
-            return False
     
     def process_renewal_item_dict(renewal_check_dict,request_id,form_id):
         renewal_list=[]
@@ -388,11 +376,14 @@ class MDT_DATA:
     def check_active_members(self):
         
         all_users = Members.objects.all()
-        for member in all_users:
-            is_active = MDT_DATA.get_member_account_status(member.ieee_id)
+        if len(all_users) == 0:
+            pass
+        else:
+            for member in all_users:
+                is_active = MDT_DATA.get_member_account_status(member.ieee_id)
 
-            if is_active:
-                member.is_active_member = True
-                member.save()
+                if is_active:
+                    member.is_active_member = True
+                    member.save()
             
 

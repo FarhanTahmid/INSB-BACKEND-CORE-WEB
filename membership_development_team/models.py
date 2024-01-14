@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-
+from django_resized import ResizedImageField
 from port.models import Teams, Roles_and_Position
 
 # Create your models here.
@@ -86,7 +86,7 @@ class Renewal_Form_Info(models.Model):
 class Portal_Joining_Requests(models.Model):
     ieee_id=models.BigIntegerField(primary_key=True,blank=False,null=False)
     name=models.CharField(null=False,blank=False,max_length=100)
-    nsu_id=models.BigIntegerField(null=False, blank=False)
+    nsu_id=models.BigIntegerField(null=True, blank=True)
     email_ieee=models.EmailField(null=True,blank=True)
     email_nsu=models.EmailField(null=True,blank=True)
     email_personal=models.EmailField(null=False,blank=False)
@@ -101,10 +101,11 @@ class Portal_Joining_Requests(models.Model):
     position=models.ForeignKey(Roles_and_Position,default=13,on_delete=models.CASCADE) #Default=13 means the position of a general member, check roles and positions table
     application_status=models.BooleanField(null=False,blank=False,default=False)
     view_status=models.BooleanField(null=False,blank=False,default=False)
-    
+    user_profile_picture=ResizedImageField(null=True,blank=True,upload_to='user_profile_pictures/')
     
     class Meta:
         verbose_name='Portal Joining Requests'
+        ordering = ["position__rank"]
     
     def __str__(self) -> str:
         return str(self.ieee_id)

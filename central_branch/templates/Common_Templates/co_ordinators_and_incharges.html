@@ -1,79 +1,121 @@
+{% load static %}
 {% block co_ordinators_and_incharges %}
+<br>
 <!--CO ORDINATORS-->
 <h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our <span><b>Co-Ordinators</b></span> </h3>
 
-<div class="row" style="margin-bottom:15px;">
-    <div class="col-xs-6 col-sm-12 col-md-6" >
-      {% for i in co_ordinators %}
-        <div class="box">
-            <div class="item">
-              <div class="item-bg">
-                <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
-              </div>
-              <div class="p-a-lg pos-rlt text-center">
-                <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
-              </div>
-            </div>
-            <div class="p-a text-center">
-              <a href class="text-md m-t block">{{i.name}}</a>
-              <p><small>NSU ID: {{i.nsu_id}}</small></p>
-              <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
-                <i class="fa fa-facebook"></i>
-                <i class="fa fa-facebook indigo"></i>
-              </a>
-              <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
-                <i class="fa fa-envelope-o"></i>
-                <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
-              </a>
-              <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
-                <i class="fa fa-linkedin"></i>
-                <i class="fa fa-linkedin light-blue-800"></i>
-              </a>
-              <div class="text-xs">
-                <em>Contact: <strong>{{i.contact_no}}</strong></em>
-              </div>
-            </div>
-        </div>
-      {% endfor %}
-    </div>
+<!-- Grid row -->
+<div class="row d-flex justify-content-center">
+                            
+  <!-- Grid column -->
+  {% for i in co_ordinators %}
+      <div class="col-md-3 mb-4 text-center">
+  
+          <div class="avatar mx-auto white" style="height: 250px; width:200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+              <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+          </div>
+          <h6 class="font-weight-bold">{{i.name}}</h6>
+          <small class="text-muted">{{i.team}} Team<br></small>
+          <small class="text-muted">{{i.contact_no}}</small>
+
+          <ul class="list-unstyled d-flex justify-content-center m-2">
+              <li><a href="{{i.linkedin_url}}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+              <li><a href="{{i.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
+              <li><a href="mailto:{{i.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
+          </ul>
+  
+  </div>
+  {% endfor %}
+  <!-- Grid column -->
+
 </div>
+<!-- Grid row -->
 
 <!--INCHARGES-->
 <h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our <span><b>Incharges</b></span> </h3>
 
-<div class="row" style="margin-bottom:15px;">
-  <div class="col-xs-6 col-sm-12 col-md-6" >
-    {% for i in inchargess %}
-      <div class="box">
-          <div class="item">
-            <div class="item-bg">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="blur">
-            </div>
-            <div class="p-a-lg pos-rlt text-center">
-              <img src="{{media_url}}{{i.user_profile_picture}}" class="img-circle w-56" style="margin-bottom: -7rem">
-            </div>
+<!-- Grid row -->
+<div class="row d-flex justify-content-center">
+                            
+  <!-- Grid column -->
+  {% for i in incharges %}
+      <div class="col-md-3 mb-4 text-center">
+  
+          <div class="avatar mx-auto white" style="height: 250px; width:200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+              <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
           </div>
-          <div class="p-a text-center">
-            <a href class="text-md m-t block">{{i.name}}</a>
-            <p><small>NSU ID: {{i.nsu_id}}</small></p>
-            <a href="{{i.facebook_url}}" target="blank" class="btn btn-icon btn-social white" title="Facebook" >
-              <i class="fa fa-facebook"></i>
-              <i class="fa fa-facebook indigo"></i>
-            </a>
-            <a href="mailto:{{i.email_ieee}}" class="btn btn-icon btn-social white" title="Mail" >
-              <i class="fa fa-envelope-o"></i>
-              <i class="fa fa-envelope-o" style="bg-color:#0000;"></i>
-            </a>
-            <a href="{{i.linkedin_url}}" target="blank" class="btn btn-icon btn-social white" title="LinkedIn" >
-              <i class="fa fa-linkedin"></i>
-              <i class="fa fa-linkedin light-blue-800"></i>
-            </a>
-            <div class="text-xs">
-              <em>Contact: <strong>{{i.contact_no}}</strong></em>
-            </div>
-          </div>
-      </div>
-    {% endfor %}
+          <h6 class="font-weight-bold">{{i.name}}</h6>
+          <small class="text-muted">{{i.team}} Team<br></small>
+          <small class="text-muted">{{i.contact_no}}</small>
+
+          <ul class="list-unstyled d-flex justify-content-center m-2">
+              <li><a href="{{i.linkedin_url}}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+              <li><a href="{{i.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
+              <li><a href="mailto:{{i.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
+          </ul>
+  
   </div>
+  {% endfor %}
+  <!-- Grid column -->
+
 </div>
+<!-- Grid row -->
+
+<!--Core Volunteers-->
+<h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our <span><b>Core-Volunteers</b></span> </h3>
+<!-- Grid row -->
+<div class="row d-flex justify-content-center">
+                            
+  <!-- Grid column -->
+  {% for i in core_volunteers %}
+      <div class="col-md-3 mb-4 text-center">
+  
+          <div class="avatar mx-auto white" style="height: 250px; width:200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+              <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+          </div>
+          <h6 class="font-weight-bold">{{i.name}}</h6>
+          <small class="text-muted">{{i.team}} Team<br></small>
+          <small class="text-muted">{{i.contact_no}}</small>
+
+          <ul class="list-unstyled d-flex justify-content-center m-2">
+              <li><a href="{{i.linkedin_url}}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+              <li><a href="{{i.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
+              <li><a href="mailto:{{i.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
+          </ul>
+  
+  </div>
+  {% endfor %}
+  <!-- Grid column -->
+
+</div>
+<!-- Grid row -->
+
+<!--Team Volunteers-->
+<h3 style="justify-content:center;text-align:center;margin-bottom:15px;"> Meet our <span><b>Team Volunteers</b></span> </h3>
+<!-- Grid row -->
+<div class="row d-flex justify-content-center">
+                            
+  <!-- Grid column -->
+  {% for i in team_volunteers %}
+      <div class="col-md-3 mb-4 text-center">
+  
+          <div class="avatar mx-auto white" style="height: 250px; width:200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+              <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+          </div>
+          <h6 class="font-weight-bold">{{i.name}}</h6>
+          <small class="text-muted">{{i.team}} Team<br></small>
+          <small class="text-muted">{{i.contact_no}}</small>
+
+          <ul class="list-unstyled d-flex justify-content-center m-2">
+              <li><a href="{{i.linkedin_url}}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+              <li><a href="{{i.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
+              <li><a href="mailto:{{i.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
+          </ul>
+  
+  </div>
+  {% endfor %}
+  <!-- Grid column -->
+
+</div>
+<!-- Grid row -->
 {% endblock co_ordinators_and_incharges %}

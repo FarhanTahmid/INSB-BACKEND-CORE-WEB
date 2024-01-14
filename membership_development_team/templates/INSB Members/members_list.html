@@ -55,6 +55,9 @@
         width: 100%; /* Make the button full width on smaller screens */
       }
     }
+    .nav a.active {
+      color: #FFA300;
+    }
   </style>
 </head>
 <body>
@@ -86,6 +89,65 @@
             <div class="mb-0 h5 no-wrap" ng-bind="$state.current.data.title" id="pageTitle"></div>
         
             <!-- navbar collapse -->
+            {% if is_branch %}
+            <div class="collapse navbar-collapse" id="collapse">
+              <!-- link and dropdown -->
+              <ul class="nav navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'central_branch:central_home' %}">
+                  <i class="fa fa-home"></i>
+                  <span>Home</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+              <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'central_branch:event_control' %}">
+                  <i class="fa fa-calendar"></i>
+                  <span>Events</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+              <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'central_branch:members_list' %}">
+                  <i class="fa fa-user"></i>
+                  <span>Members</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+              <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'central_branch:panels' %}">
+                  <i class="fa  fa-graduation-cap"></i>
+                  <span>Panels</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+              <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'central_branch:teams' %}">
+                  <i class="fa fa-group"></i>
+                  <span>Teams</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+              <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'central_branch:manage_website_home' %}">
+                  <i class="material-icons">&#xe894;</i>
+                  <span>Manage Branch Website</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+              <li class="nav-item dropdown">
+                  <a class="nav-link" href="{% url 'central_branch:manage_access' %}">
+                  <i class="fa fa-lock"></i>
+                  <span>Manage View Access</span>
+                  </a>
+                  <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+              </li>
+              </ul>
+        
+              <div ui-include="'../views/blocks/navbar.form.html'"></div>
+              <!-- / -->
+            </div>
+            {% else %}
             <div class="collapse navbar-collapse" id="collapse">
               <!-- link and dropdown -->
               <ul class="nav navbar-nav mr-auto">
@@ -136,6 +198,7 @@
               <div ui-include="'../views/blocks/navbar.form.html'"></div>
               <!-- / -->
             </div>
+            {% endif %}
             <!-- / navbar collapse -->
         
             <!-- navbar right -->
@@ -183,8 +246,17 @@
   </div>
   <!--Messages-->
     <div style="justify-content:center;text-align:center;">  
-        <div class="btn-container">
-          <a href="{% url 'membership_development_team:export_excel' %}" class="btn btn-outline b-success text-success">Generate an Excel Sheet of All Registered INSB Members</a>
+        <div class="btn-container row">
+          <div style="margin-right:5px;">
+            <a href="{% url 'membership_development_team:export_excel' %}" class="btn btn-outline b-success text-success">Generate an Excel Sheet of All Registered INSB Members</a>
+          </div>
+          <div>
+            <form method="POST">
+              {% csrf_token %}
+              <input type="submit" name="refresh_member_status" class="btn btn-outline b-info text-info" value="Refresh Membership Status of INSB Members">
+            </form>          
+          </div>
+        
         </div>
     </div>
 
@@ -230,7 +302,7 @@
                               
               <tr>
               
-                  <td style="color:#00629B"><a href="{% url 'membership_development_team:member_details' member.ieee_id %}">{{ member.ieee_id  }}</a></td>
+                  <td style="color:#00629B"><a href="{% if is_branch %}{% url 'central_branch:member_details' member.ieee_id %}{% else %}{% url 'membership_development_team:member_details' member.ieee_id %}{% endif %}">{{ member.ieee_id  }}</a></td>
                   <td>{{ member.nsu_id }}</td>
                   <td>{{ member.name  }}</td>
                   <td>{{ member.email_ieee }}</td>
@@ -483,6 +555,22 @@ function FilterkeyWord_all_table() {
       $('#maxRows').trigger('change');
     }
 }
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get the current page's URL
+        const currentPageUrl = window.location.href;
+      
+        // Find the links in the navigation bar
+        const navLinks = document.querySelectorAll(".nav a");
+      
+        // Loop through the links and add a "active" class to the matching link
+        navLinks.forEach(function (link) {
+          if (link.href === currentPageUrl) {
+            link.classList.add("active");
+          }
+        });
+      });
   </script>
 <!-- endbuild -->
 </body>

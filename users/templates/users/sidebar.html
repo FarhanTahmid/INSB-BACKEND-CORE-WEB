@@ -1,7 +1,13 @@
 {% load static %}
 
 {% block sidebar %}
-
+<style>
+  @media screen and (max-width:991px) {
+    .left.navside.dark.dk{
+      overflow: scroll;
+    }
+  }
+</style>
     <!-- fluid app aside -->
   <div class="left navside dark dk" data-layout="column">
       <div class="navbar no-radius">
@@ -53,6 +59,36 @@
                     <li>
                       <a href={% url 'central_branch:central_home' %}>
                         <span class="nav-text">Home</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href={% url 'central_branch:event_control' %}>
+                        <span class="nav-text">Events</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'central_branch:members_list' %}">
+                        <span class="nav-text">Members</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href={% url 'central_branch:panels' %}>
+                        <span class="nav-text">Panels</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href={% url 'central_branch:teams' %}>
+                        <span class="nav-text">Teams</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href={% url 'central_branch:manage_website_home' %}>
+                        <span class="nav-text">Manage Branch Website</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href={% url 'central_branch:manage_access' %}>
+                        <span class="nav-text">Manage View Access</span>
                       </a>
                     </li>
                     
@@ -109,6 +145,11 @@
                         <span class="nav-text">Home</span>
                       </a>
                     </li>
+                    <li>
+                      <a href="{% url 'events_and_management_team:emt_data_access' %}" >
+                        <span class="nav-text">Manage Team</span>
+                      </a>
+                    </li>
                     
                   </ul>
                 </li>
@@ -128,11 +169,15 @@
                   </a>
                   <ul class="nav-sub nav-mega nav-mega-3">
                     <li>
-                      <a href="arrow.html" >
-                        <span class="nav-text">Arrow</span>
+                      <a href="{% url 'logistics_and_operations_team:team_homepage' %}" >
+                        <span class="nav-text">Home</span>
                       </a>
                     </li>
-                    
+                    <li>
+                      <a href="{% url 'logistics_and_operations_team:manage_team' %}" >
+                        <span class="nav-text">Manage Team</span>
+                      </a>
+                    </li>
                   </ul>
                 </li>
 
@@ -151,11 +196,15 @@
                   </a>
                   <ul class="nav-sub nav-mega nav-mega-3">
                     <li>
-                      <a href="arrow.html" >
-                        <span class="nav-text">Arrow</span>
+                      <a href="{% url 'promotions_team:team_homepage' %}" >
+                        <span class="nav-text">Home</span>
                       </a>
                     </li>
-                    
+                    <li>
+                      <a href="{% url 'promotions_team:manage_team' %}" >
+                        <span class="nav-text">Manage Team</span>
+                      </a>
+                    </li>
                   </ul>
                 </li>
 
@@ -181,16 +230,6 @@
                     <li>
                       <a href="{% url 'public_relation_team:send_email' %}" >
                         <span class="nav-text">Send Email</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="{% url 'public_relation_team:manage_event' %}" >
-                        <span class="nav-text">Manage Events</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="{% url 'public_relation_team:team_homepage' %}" >
-                        <span class="nav-text">Manage Website</span>
                       </a>
                     </li>
                     <li>
@@ -264,11 +303,15 @@
                   </a>
                   <ul class="nav-sub nav-mega nav-mega-3">
                     <li>
-                      <a href="arrow.html" >
-                        <span class="nav-text">Arrow</span>
+                      <a href="{% url 'website_development_team:team_homepage' %}" >
+                        <span class="nav-text">Home</span>
                       </a>
                     </li>
-                    
+                    <li>
+                      <a href="{% url 'website_development_team:manage_team' %}" >
+                        <span class="nav-text">Manage Team</span>
+                      </a>
+                    </li>
                   </ul>
                 </li>
 
@@ -353,11 +396,15 @@
                   </a>
                   <ul class="nav-sub nav-mega nav-mega-3">
                     <li>
-                      <a href="arrow.html" >
-                        <span class="nav-text">Arrow</span>
+                      <a href="{% url 'finance_and_corporate_team:team_homepage' %}" >
+                        <span class="nav-text">Home</span>
                       </a>
                     </li>
-                    
+                    <li>
+                      <a href="{% url 'finance_and_corporate_team:manage_team' %}" >
+                        <span class="nav-text">Manage Team</span>
+                      </a>
+                    </li>
                   </ul>
                 </li>
                 <ul class="nav" ui-nav>
@@ -394,8 +441,14 @@
   <div class="b-t">
       <div class="nav-fold">
           <a href="{% url 'users:profile' %}">
-              <span class="pull-left">
-                <img src="{{ user_data.profile_picture }}" alt="..." class="w-40 img-circle">
+              <span class="pull-left" style="width: 40px;
+              height: 40px;
+              float: left!important;
+              border-radius: 50%;
+              overflow: hidden;">
+                <img src="{{ user_data.profile_picture }}" alt="profile" style="width: 100%;
+                height: 100%;
+                object-fit: cover;">
               </span>
               <span class="clear hidden-folded p-x">
                 <span class="block _500">{{user_data.name}}</span>

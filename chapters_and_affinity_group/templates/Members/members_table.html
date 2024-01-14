@@ -5,9 +5,11 @@
 <div class="box">
     <div class="box-header">
         
+        {% if has_access_to_view_member_details %}
         <div style="text-align:right;">
-        <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add New Members</button>
+            <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add New Members</button>
         </div>
+        {% endif %}
         <small>This table holds the data of the Registered Members of {{sc_ag_info.group_name}}</small>
         <strong>Total Number of Registered Members in Database:<span style="color:blue;"> {{member_count}}</span></strong>
         <!--Messages-->
@@ -32,6 +34,9 @@
             <th style="text-align:center;">IEEE Email</th>
             <th style="text-align:center;">Current Position</th>
             <th style="text-align:center;">Current Team</th>
+            {% if has_access_to_view_member_details %}
+            <th style="text-align:center;">Action</th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -47,6 +52,15 @@
                 <td>{{member.member.email_ieee}}</td>
                 <td>{{member.position}}</td>
                 <td>{{member.team}}</td>
+                {% if has_access_to_view_member_details %}
+                <td>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input class="btn btn-outline b-danger text-danger has-value" name="remove_member" type="submit" value="Remove Member">
+                        <input type="hidden" name="remove_sc_ag_member" value="{{member.member.ieee_id}}" class="has-value">
+                    </form>
+                </td>
+                {% endif %}
             </tr>
             {% endfor %}
         </tbody>
@@ -56,6 +70,7 @@
 <!--Table Ends-->
 <br>
 <br>
+{% if has_access_to_view_member_details %}
 <!--Add modal-->
 <div id="m-s-a" class="modal" data-backdrop="true">
     <div class="modal-dialog modal-lg">
@@ -140,6 +155,7 @@
     </div>
 </div>
 <!--Add modal ends-->
+{% endif %}
 
 <script>
     function searchTable() {

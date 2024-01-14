@@ -1,3 +1,5 @@
+import os
+from django.conf import settings
 from central_branch.renderData import Branch
 from django.shortcuts import get_object_or_404
 from users.models import Members
@@ -28,7 +30,6 @@ class ContentWritingTeam:
         return CWP_Data_Access.objects.all()
     
     def load_team_members():
-        
         '''This function loads all the team members for the content wrtiting and publications team'''
 
         load_team_members=Branch.load_team_members(team_primary=ContentWritingTeam.get_team().primary)
@@ -37,10 +38,37 @@ class ContentWritingTeam:
             team_members.append(load_team_members[i])
         return team_members
     
+    def get_officers():
+        '''This function returns all the officers and co-ordinators of the team'''
+        team_members=ContentWritingTeam.load_team_members()
+        co_ordinators=[]
+        incharges=[]
+        for i in team_members:
+            if(i.position.is_officer):
+                if(i.position.is_co_ordinator):
+                    co_ordinators.append(i)
+                else:
+                    incharges.append(i)
+        return co_ordinators,incharges
+    
+    def get_volunteers():
+        '''this function returns all the volunteers of the team'''
+        team_members=ContentWritingTeam.load_team_members()
+        core_volunteers=[]
+        team_volunteers=[]
+        for i in team_members:
+            if(i.position.is_volunteer):
+                if(i.position.is_core_volunteer):
+                    core_volunteers.append(i)
+                else:
+                    team_volunteers.append(i)
+        return core_volunteers,team_volunteers
+    
+        
     def add_member_to_team(ieee_id,position):
-        team_id=ContentWritingTeam.get_team_id()
-        Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
-
+        Branch.add_member_to_team(ieee_id=ieee_id,position=position,team_primary=2)
+        return True
+    
     def cwp_manage_team_access_modifications(manage_team_access, event_access, ieee_id):
         try:
             CWP_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access, event_access=event_access)
@@ -66,16 +94,6 @@ class ContentWritingTeam:
                 )
                 new_access.save()
             return True
-        except:
-            return False
-
-    def cwp_manage_team_access(ieee_id):
-        try:
-            user = CWP_Data_Access.objects.get(ieee_id = ieee_id)
-            if(user.manage_team_access):
-                return True
-            else:
-                return False
         except:
             return False
         
@@ -172,7 +190,9 @@ class ContentWritingTeam:
         ''' This function is used to delete a file of CWP Team. It takes a file id as parameter '''
         try:
             doc = Content_Team_Document.objects.get(id=file_id)
-            doc.document.delete()
+            path = settings.MEDIA_ROOT+str(doc.document)
+            if os.path.exists(path):
+                os.remove(path)
             doc.delete()
             return True
         except Exception as e:

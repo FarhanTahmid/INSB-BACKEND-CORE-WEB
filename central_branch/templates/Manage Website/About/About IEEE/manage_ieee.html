@@ -1,978 +1,1227 @@
-{% block about_base %}
-{% include "Manage Website/About/about_base.html" %}
-{% endblock about_base %}
 {% block manage_about_ieee %}
+<!DOCTYPE html>
 {% load static %}
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-<!-- CKEditor CDN -->
-<script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
-    
-<style>
-    h1{
-        text-align:center;
-        font-size:30px;
-        font-weight:bold;
-    }
+        <!-- CKEditor CDN -->
+        <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
 
-    label{
-        font-size:20px;
-    }
+        {% block common_css %}
+            {% include "common_css.html" %}
+        {% endblock common_css %}
 
-    .circle-btn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 45px; /* Set minimum width */
-        height: 45px; /* Set minimum height */
-        background-color: transparent; /* Set to transparent or any other color for the inside */
-        border: 2px solid #78BE20; /* Border color is green */
-        border-radius: 50%;
-        color: #78BE20; /* Text color is green */
-        font-size: 24px; /* Adjust the font size as needed */
-        cursor: pointer;
-        transition: background-color 0.3s, color 0.3s; /* Add smooth transition effect */
-    }
+        <style>
+            body, html {
+                
+                margin: 0;
+                
+                align-items: center;
+                justify-content: center;
+            }
 
-    .circle-btn:hover {
-        background-color: #78BE20; /* Hover background color is green */
-        color: #fff; /* Hover text color is white */
-    }
+            .row {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+            }
+            .row {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+            }
+            .btn-container {
+                text-align: center;
+            }
+            
+            .btn {
+                max-width: 100%;
+                width: auto;
+                display: inline-block;
+                white-space: normal; /* Allow text to wrap within the button */
+                word-wrap: break-word; /* Break long words if necessary */
+                font-size: 16px; /* Adjust the font size as needed */
+            }
+            
+            /* Media query for smaller screens (adjust the breakpoint as needed) */
+            @media (max-width: 768px) {
+                .btn {
+                    width: 100%; /* Make the button full width on smaller screens */
+                }
+            }
 
-    .plus-sign::before {
-        content: '+';
-    }
+            h1{
+                text-align:center;
+                font-size:30px;
+                font-weight:bold;
+            }
+        
+            label{
+                font-size:20px;
+            }
+
+            .app-body{
+                justify-content:center; 
+                margin-left:15%;
+                margin-right:15%;
+            }
+            
+            @media (max-width: 760px) {
+                .app-body {
+                    margin-left: 5%;
+                    margin-right: 5%;
+                }
+            }
+        
+            .circle-btn {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 45px; /* Set minimum width */
+                height: 45px; /* Set minimum height */
+                background-color: transparent; /* Set to transparent or any other color for the inside */
+                border: 2px solid #78BE20; /* Border color is green */
+                border-radius: 50%;
+                color: #78BE20; /* Text color is green */
+                font-size: 24px; /* Adjust the font size as needed */
+                cursor: pointer;
+                transition: background-color 0.3s, color 0.3s; /* Add smooth transition effect */
+            }
+        
+            .circle-btn:hover {
+                background-color: #78BE20; /* Hover background color is green */
+                color: #fff; /* Hover text color is white */
+            }
+        
+            .plus-sign::before {
+                content: '+';
+            }
+        
+        
+            
+            .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+                max-width: 80%; 
+                height: 90%; 
+                z-index: 1500;
+            }
+            @media screen and (max-width:700px){
+                .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+                    max-width:100%;
+                }
+            }
+
+            
+        </style>
+    </head>
 
 
-    
-    .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
-        max-width: 80%; 
-        height: 90%; 
-        z-index: 1500;
-    }
-    @media screen and (max-width:700px){
-        .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
-            max-width:100%;
-        }
-    }
-</style>
 
-<body>
-    <div class="app" id="app">
-        <div ui-view class="app-body" style="justify-content:center; margin-left:27%; margin-right:15%;" id="view">
+    <body>
+        <div class="app" id="app">
+            <!-- aside -->
+            <div id="aside" class="app-aside modal nav-dropdown">
 
-            <br>
-            <h4 style="justify-content:center;text-align:center;"><b>IEEE Section</b></h2>
-            <br>
+                {% block sidebar %}
+                    {% include 'users/sidebar.html' %}
+                {% endblock %}
 
-            <div class="btn-container">
-                <button class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#previewModal">Preview Event</button>
             </div>
-            <br>
+            <!-- aside end -->
 
-            <!-- Preview Event Modal -->
-            <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" style="z-index: 1500;">
-                <div class="modal-dialog modal-dialog-centered modal-lg preview_modal_box" role="document">
-                    <div class="modal-content" style="width: 100%; height: 100%;">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="previewModalLabel">Preview Event</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <iframe src="https://ieeensusb.org/ieee/" style="width: 100%; height: 100%;" loading="lazy"></iframe>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <!-- navbar content -->
+            <div id="content" class="app-content box-shadow-z0" role="main">
+                {% block navbar %}
+                    {% include 'Manage Website/manage_web_navbar.html' %}
+                {% endblock navbar %}
+
+            </div>
+            <!--navbar content-->
+
+            <div ui-view class="app-body" id="view">
+
+                <div class="container">
+                    <br>
+                    <br>
+                    <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
+                    <h6>Note:</h6>
+                    <ol style="justify-content:center;margin-bottom:15px;"><b>
+                    <li>All ( * ) marked fields are mandatory to be filled </li>
+                    <li>Keep in mind your description does not exceed the character count </li>
+                    <li>Maximum 1 picture can be uploaded in dedicated sections </li>
+                    <li>To replace a picture, delete the previous one and add a new one </li>
+                    <li>You can view the image by clicking on it  </li>
+                    <li>You can add as many links as you want </li>
+                    <li>You can see your changes by clicking the preview button </li>
+                    <li>Don’t forget to save the changes by clicking save button </li>
+
+                    </ol></b>
+                </div>
+                    
+
+                <!--Start from here-->
+                <br>
+                <br>
+                <h2 style="text-align: center;margin-bottom:15px;">Manage the <b>About Section</b> of the Central Website of <span style="color:#00629B;"><b>IEEE NSU Student Branch</b></span></h2>
+                <br>
+                {% block publications_tab %}
+                {% include "Manage Website/About/about_tabs.html" %}
+                {% endblock publications_tab %}
+
+                <br>
+                <h4 style="justify-content:center;text-align:center;"><b>IEEE Section</b></h2>
+                <br>
+
+                <div class="btn-container">
+                    <button class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#previewModal">Preview</button>
+                </div>
+                <br>
+
+                <!-- Preview Modal -->
+                <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" style="z-index: 1500;">
+                    <div class="modal-dialog modal-dialog-centered modal-lg preview_modal_box" role="document">
+                        <div class="modal-content" style="width: 100%; height: 100%;">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="previewModalLabel">Preview</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="{% url 'central_branch:manage_about_preview' %}" style="width: 100%; height: 100%;" loading="lazy"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <!--Messages-->
-            <div style="justify-content:center; text-align:center;">
-                {% if messages %}
-                    {% for message in messages %}
-                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                
+                <!--for error messages-->
+                <div class="container">
+                    <br>
+                    {% for message in messages  %}
+                        <p>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <p style="margin: 0;">{{message}}</p>
+                            </div>
+                        </p>
                     {% endfor %}
-                {% endif %}
-            </div>
-            <!--Messages End-->
+                    <br>
+                </div>
+                <!--for error messages end-->
 
+                
+                
+                <div class="container">
             
-            
-            <div class="container">
-          
-                <div class="box">
-            
-            
-                    {% comment %} <br>
-                    <div class="box-header">
-                        <h1>Details</h1>
-                        <hr>
-                    </div> {% endcomment %}
-                    
-            
-                    <form id="myForm" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                        <div class="box-body">    
-                            
-                            <br>
-                            <h1>About</h1>
-                            <br>
-                            <div class="form-group">
-                                <label>About <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="about_details">{{about_ieee.about_ieee}}</textarea>
-                                <p id="aboutCharacterCount" style="color: red;">Required</p>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label for="images">About Image:</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="about-image-input" name="about_picture" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
-                                </div>
+                    <div class="box">
+                
+                
+                        {% comment %} <br>
+                        <div class="box-header">
+                            <h1>Details</h1>
+                            <hr>
+                        </div> {% endcomment %}
+                        
+                
+                        <form id="myForm" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                            <div class="box-body">    
                                 
                                 <br>
-                                {% if about_ieee.about_image %}
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.about_image}}')">About IEEE Image</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{about_ieee.about_image}}', 'about_image')">✖</button>
-                                    </div>
-                                </div>
-                                {% endif %}
+                                <h1>About</h1>
                                 <br>
-
-                                <label>Learn More Link <span style="color:red">*<span></label> 
-                                <input
-                                placeholder="Learn More Link"
-                                class="form-control"
-                                type="text"
-                                autocomplete="off"
-                                required
-                                name="learn_more_link"/>
-                                <br>
-
-                                <label>Mission and Vision Link <span style="color:red">*<span></label> 
-                                <input
-                                placeholder="Mission and Vision Link"
-                                class="form-control"
-                                type="text"
-                                autocomplete="off"
-                                required
-                                name="mission_and_vision_link"/>
-
-                            </div>  
-
-                            <br>
-                            <hr>
-                            <br> 
-
-                            <h1>Largest Community</h1>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Community Details <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="community_details">{{about_ieee.community_description}}</textarea>
-                                <p id="communityCharacterCount" style="color: red;">Required</p>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label for="images">Community Image:</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="community-image-input" name="community_picture" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="community-image-input">Choose file</label>
-                                </div>
-                                
-                                <br>
-                                {% if about_ieee.community_image %}
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.community_image}}')">Community Image</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{about_ieee.community_image}}', 'community_image')">✖</button>
-                                    </div>
-                                </div>
-                                {% endif %}
-                                <br>
-                            </div> 
-
-                            <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
-                                    <!-- Add input field for links here if needed -->
-                                </div>
-                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
-                                </div>
-                            </div>
-                            
-                            <hr>
-                            <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <br> 
-                            <hr>
-                            <br> 
-
-                            <h1>Start Collabs Publications Events</h1>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Start with IEEE <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="start_with_ieee_details">{{about_ieee.start_with_ieee_description}}</textarea>
-                                <p id="start_with_ieeeCharacterCount" style="color: red;">Required</p>
-                            </div>
-                            <br>
-
-                            <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
-                                    <!-- Add input field for links here if needed -->
-                                </div>
-                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
-                                </div>
-                            </div>
-                            
-                            <hr>
-                            <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <br> 
-
-                            <div class="form-group">
-                                <label>Collaboration <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="collaboration_details">{{about_ieee.collaboration_description}}</textarea>
-                                <p id="collaborationCharacterCount" style="color: red;">Required</p>
-                            </div>
-                            <br>
-
-                            <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
-                                    <!-- Add input field for links here if needed -->
-                                </div>
-                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
-                                </div>
-                            </div>
-                            
-                            <hr>
-                            <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <br> 
-
-                            <div class="form-group">
-                                <label>Publications <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="publications_details">{{about_ieee.publications_description}}</textarea>
-                                <p id="publicationsCharacterCount" style="color: red;">Required</p>
-
-                            </div>
-                            <br>
-
-                            <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
-                                    <!-- Add input field for links here if needed -->
-                                </div>
-                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
-                                </div>
-                            </div>
-                            
-                            <hr>
-                            <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <br> 
-
-                            <div class="form-group">
-                                <label>Events and Conference <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="events_and_conferences_details">{{about_ieee.events_and_conferences_description}}</textarea>
-                                <p id="events_and_conferencesCharacterCount" style="color: red;">Required</p>
-                            </div>
-                            <br>
-
-                            <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
-                                    <!-- Add input field for links here if needed -->
-                                </div>
-                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
-                                </div>
-                            </div>
-                            
-                            <hr>
-                            <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <br>
-                            <hr>
-                            <br> 
-
-                            <h1>Achievements</h1>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Achievements Details <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="achievements_details">{{about_ieee.achievements_description}}</textarea>
-                                <p id="achievementsCharacterCount" style="color: red;">Required</p>
-                            </div>
-
-                            <br>
-                            <hr>
-                            <br>
-
-                            <h1>Innovations and Developments</h1>
-                            <br>
-                            
-                            <div class="form-group">
-                                <label>Innovations and Developments Details <span style="color:red">*<span></label> 
-                                <textarea  
-                                class="form-control" 
-                                type="text"
-                                name="innovations_and_developments_details">{{about_ieee.innovations_and_developments_description}}</textarea>
-                                <p id="innovations_and_developmentsCharacterCount" style="color: red;">Required</p>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label for="images">Innovations and Developments Image </label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="innovations-and-developments-image-input" name="innovations_and_developments_picture" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="innovations-and-developments-image-input">Choose file</label>
-                                </div>
-                                
-                                <br>
-                                {% if about_ieee.innovations_and_developments_image %}
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.innovations_and_developments_image}}')">Innovation & Developments Image</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{about_ieee.innovations_and_developments_image}}', 'innovations_and_developments_image')">✖</button>
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </div>
-                            <br>
-
-                            <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
-                                    <!-- Add input field for links here if needed -->
-                                </div>
-                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
-                                </div>
-                            </div>
-                            
-                            <hr>
-                            <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <br>
-                            <hr>
-                            <br> 
-
-                            <h1>Students and Member Activities</h1>
-                            <br>
-                            
-                            <div class="form-group">
-                                <label>Students and Member Activities Details <span style="color:red">*<span></label> 
-                                <textarea 
-                                class="form-control" 
-                                type="text"
-                                name="students_and_member_activities_details">{{about_ieee.students_and_member_activities_description}}</textarea>
-                                <p id="students_and_member_activitiesCharacterCount" style="color: red;">Required</p>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label for="images">Students and Member Activities Image </label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="students-and-member-activities-image-input" name="students_and_member_activities_picture" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="students-and-member-activities-image-input">Choose file</label>
-                                </div>
-                                
-                                <br>
-                                {% if about_ieee.students_and_member_activities_image %}
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.students_and_member_activities_image}}')">Students & Members Activities Image</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{about_ieee.students_and_member_activities_image}}', 'students_and_member_activities_image')">✖</button>
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </div>
-                            <br>
-
-                            <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
-                                    <!-- Add input field for links here if needed -->
-                                </div>
-                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
-                                </div>
-                            </div>
-                            
-                            <hr>
-                            <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <br>
-                            <hr>
-                            <br> 
-
-                            <h1>Quality</h1>
-                            <br>
-                            
-                            <div class="form-group">
-                                <label>Quality Details <span style="color:red">*<span></label> 
+                                <div class="form-group">
+                                    <label>About <span style="color:red">*<span></label> 
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="quality_details">{{about_ieee.quality_description}}</textarea>
-                                    <p id="qualityCharacterCount" style="color: red;">Required</p>
-                            </div>
-                            <br>
+                                    name="about_details">{{about_ieee.about_ieee|default:""}}</textarea>
+                                    <p id="aboutCharacterCount" style="color: red;">Required</p>
+                                </div>
+                                <br>
 
-                            <div class="form-group">
-                                <label for="images">Quality Image </label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="quality-image-input" name="quality_picture" accept="image/*">
-                                    <label class="custom-file-label bg-light" for="quality-image-input">Choose file</label>
+                                <div class="form-group">
+                                    <label for="images">About Image:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="about-image-input" name="about_picture" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
+                                    </div>
+                                    
+                                    <br>
+                                    {% if about_ieee.about_image %}
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.about_image}}')">About IEEE Image</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{about_ieee.about_image}}', 'about_image')">✖</button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    <br>
+
+                                    <label>Learn More Link <span style="color:red">*<span></label> 
+                                    <input
+                                    placeholder="Learn More Link"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="learn_more_link"
+                                    value="{{about_ieee.learn_more_link|default:""}}"/>
+                                    <br>
+
+                                    <label>Mission and Vision Link <span style="color:red">*<span></label> 
+                                    <input
+                                    placeholder="Mission and Vision Link"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="mission_and_vision_link"
+                                    value="{{about_ieee.mission_and_vision_link|default:""}}"/>
+
+                                </div>  
+
+                                <br>
+                                <hr>
+                                <br> 
+
+                                <h1>Largest Community</h1>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Community Details <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="community_details">{{about_ieee.community_description|default:""}}</textarea>
+                                    <p id="communityCharacterCount" style="color: red;">Required</p>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label for="images">Community Image:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="community-image-input" name="community_picture" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="community-image-input">Choose file</label>
+                                    </div>
+                                    
+                                    <br>
+                                    {% if about_ieee.community_image %}
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.community_image}}')">Community Image</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{about_ieee.community_image}}', 'community_image')">✖</button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    <br>
+                                </div> 
+
+                                <div class="form-group row">
+                                    <label class="col-sm-7 form-control-label">Add Links (Community):</label>
+                                    <div class="col-sm-3">
+                                        <!-- Add input field for links here if needed -->
+                                    </div>
+                                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('community_link')"></button>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                <div id="links-container" class="mt-3">
+                                    <label class="mb-0">Links (Community):</label> 
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        {% for page_link in page_links.community_link %}
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <br> 
+                                <hr>
+                                <br> 
+
+                                <h1>Start Collabs Publications Events</h1>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Start with IEEE <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="start_with_ieee_details">{{about_ieee.start_with_ieee_description|default:""}}</textarea>
+                                    <p id="start_with_ieeeCharacterCount" style="color: red;">Required</p>
+                                </div>
+                                <br>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-7 form-control-label">Add Links (Start with IEEE):</label>
+                                    <div class="col-sm-3">
+                                        <!-- Add input field for links here if needed -->
+                                    </div>
+                                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('start_with_ieee_link')"></button>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                <div id="links-container" class="mt-3">
+                                    <label class="mb-0">Links (Start with IEEE):</label> 
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        {% for page_link in page_links.start_with_ieee_link %}
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')"  data-target="#EditLinkModal">{{page_link.title}}</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <br> 
+
+                                <div class="form-group">
+                                    <label>Collaboration <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="collaboration_details">{{about_ieee.collaboration_description|default:""}}</textarea>
+                                    <p id="collaborationCharacterCount" style="color: red;">Required</p>
+                                </div>
+                                <br>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-7 form-control-label">Add Links (Collaboration):</label>
+                                    <div class="col-sm-3">
+                                        <!-- Add input field for links here if needed -->
+                                    </div>
+                                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('collaboration_link')"></button>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                <div id="links-container" class="mt-3">
+                                    <label class="mb-0">Links (Collaboration):</label> 
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        {% for page_link in page_links.collaboration_link %}
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <br> 
+
+                                <div class="form-group">
+                                    <label>Publications <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="publications_details">{{about_ieee.publications_description|default:""}}</textarea>
+                                    <p id="publicationsCharacterCount" style="color: red;">Required</p>
+
+                                </div>
+                                <br>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-7 form-control-label">Add Links (Publications):</label>
+                                    <div class="col-sm-3">
+                                        <!-- Add input field for links here if needed -->
+                                    </div>
+                                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('publications_link')"></button>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                <div id="links-container" class="mt-3">
+                                    <label class="mb-0">Links (Publications):</label> 
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        {% for page_link in page_links.publications_link %}
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <br> 
+
+                                <div class="form-group">
+                                    <label>Events and Conference <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="events_and_conferences_details">{{about_ieee.events_and_conferences_description|default:""}}</textarea>
+                                    <p id="events_and_conferencesCharacterCount" style="color: red;">Required</p>
+                                </div>
+                                <br>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-7 form-control-label">Add Links (Events and Conference):</label>
+                                    <div class="col-sm-3">
+                                        <!-- Add input field for links here if needed -->
+                                    </div>
+                                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('events_and_conference_link')"></button>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                <div id="links-container" class="mt-3">
+                                    <label class="mb-0">Links (Events and Conference):</label> 
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        {% for page_link in page_links.events_and_conference_link %}
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
                                 </div>
                                 
                                 <br>
-                                {% if about_ieee.quality_image %}
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.quality_image}}')">Quality Image</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{about_ieee.quality_image}}', 'quality_image')">✖</button>
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </div>
-                            <br>
+                                <hr>
+                                <br> 
 
-                            <div class="form-group row">
-                                <label class="col-sm-3 form-control-label">Add Links:</label>
-                                <div class="col-sm-7">
-                                    <!-- Add input field for links here if needed -->
+                                <h1>Achievements</h1>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Achievements Details <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="achievements_details">{{about_ieee.achievements_description|default:""}}</textarea>
+                                    <p id="achievementsCharacterCount" style="color: red;">Required</p>
                                 </div>
-                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"></button>
-                                </div>
-                            </div>
-                            
-                            <hr>
-                            <div id="links-container" class="mt-3">
-                                <label class="mb-0">Links:</label> 
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal">Sample</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('Sample')">✖</button>
+                                <br>
+
+                                <div class="achievements-link-label">
+                                    <div class="form-group row">
+                                        <label class="col-sm-7 form-control-label">Add Links (Achievements Read More Link):</label>
+                                        <div class="col-sm-3">
+                                            <!-- Add input field for links here if needed -->
+                                        </div>
+                                        <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('achievement_link')"></button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                                
+                                <hr>
+                                <div id="links-container achievements-container" class="mt-3">
+                                    <label class="mb-0">Links (Achievements Read More Link):</label>
+                                    {% for page_link in page_links.achievement_link %}
+                                    <div class="achievements-item">
+                                        <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                            <div class="col-sm-11">
+                                                <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
+                                            </div>
+                                            <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                                <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks" onclick="openLinkModal('{{page_link.pk}}')">✖</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
 
-                            <br>
-                            <hr>
-                            <br> 
+                                <br>
+                                <hr>
+                                <br>
 
-                            <h1>Join US</h1>
-                            <br>
-                            
-                            <div class="form-group">
-                                <label>Join Now Button Link <span style="color:red">*<span></label> 
-                                <input
-                                placeholder="Join Now Link"
-                                class="form-control"
-                                type="text"
-                                autocomplete="off"
-                                required
-                                name="join_now_link"/>
-                            </div>
-                            
-                            <br>
-                            <hr>
-                            <br> 
-
-                            <h1>Contact</h1>
-                            <br>
-                            
-                            <div class="form-group">
-                                <label>Asia Pacific Link <span style="color:red">*<span></label> 
-                                <input
-                                    placeholder="Asia Pacific Link"
-                                    class="form-control"
-                                    type="text"
-                                    autocomplete="off"
-                                    required
-                                    name="asia_pacific_link"/>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>IEEE computer organization Link <span style="color:red">*<span></label> 
-                                <input
-                                    placeholder="IEEE computer organization Link"
-                                    class="form-control"
-                                    type="text"
-                                    autocomplete="off"
-                                    required
-                                    name="ieee_computer_organization_link"/>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Customer Service Number <span style="color:red">*<span></label> 
-                                <input
-                                    placeholder="Number"
-                                    class="form-control"
-                                    type="text"
-                                    autocomplete="off"
-                                    required
-                                    name="customer_service_number"/>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Presidents Names <span style="color:red">*<span></label> 
-                                <input
-                                    placeholder="Names"
-                                    class="form-control"
-                                    type="text"
-                                    autocomplete="off"
-                                    required
-                                    name="presidents_names"/>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
-                                <label>Founders Names <span style="color:red">*<span></label> 
-                                <input
-                                    placeholder="Names"
-                                    class="form-control"
-                                    type="text"
-                                    autocomplete="off"
-                                    required
-                                    name="founders_names"/>
-                            </div>
-
-                            <br>
-                            <hr>
-                            <br> 
-
-                            <div class="form-group text-center">
-                                <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
-                            </div>
-                            <br>
-
-                            
-                            
-                        </div> 
-        
-                    
-                    </form>  
-        
-                <div>
-            </div>
-
-            
-            <!-- for showing image -->
-            <div class="modal fade" id="showImageModal" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="showImageModalLabel">Image</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <img id="modal_image" src="" class="img-fluid w-100" alt="Image">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                        </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Confirmation modal for deleting images -->
-            <div class="modal fade" id="ConfirmDeleteModalForImages" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForImagesLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-top" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="ConfirmDeleteModalForImagesLabel">Confirm Delete</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="POST">
-                            {% csrf_token %}
-                        <p><input id="image_delete" name= "image_delete" type="hidden">
-                            <input id="image_id" name= "image_id" type="hidden" ></p>
-                        Are you sure you want to delete the Image?
-                    </div>
-                    <div class="modal-footer">
-                        <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
-                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                    </div>
-                    </form>
-                </div>
-            </div>
-            </div>
-
-
-
-            <!-- Updated Modal for adding links -->
-            <div class="modal fade" id="AddLinksModal" tabindex="-1" role="dialog" aria-labelledby="AddLinksModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="AddLinksModalLabel">Add Links</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="POST">
-                                {% csrf_token %}
+                                <h1>Innovations and Developments</h1>
+                                <br>
                                 
                                 <div class="form-group">
-                                    <label>Title: </label> 
-                                        <input
-                                            placeholder="Title"
-                                            class="form-control"
-                                            type="text"
-                                            autocomplete="off"
-                                            required
-                                            name="title"
-                                            value="" 
-                                        />
-                                    <br>
-                                    <label>Links:</label>
-                                    <input
-                                    placeholder="Provide Drive Link for The Banner Pictures"
-                                    class="form-control"
-                                    type="url"
-                                    autocomplete="off"
-                                    id="field1"
-                                    name="form_link_add"
-                                    value=""/>
+                                    <label>Innovations and Developments Details <span style="color:red">*<span></label> 
+                                    <textarea  
+                                    class="form-control" 
+                                    type="text"
+                                    name="innovations_and_developments_details">{{about_ieee.innovations_and_developments_description|default:""}}</textarea>
+                                    <p id="innovations_and_developmentsCharacterCount" style="color: red;">Required</p>
                                 </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label for="images">Innovations and Developments Image </label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="innovations-and-developments-image-input" name="innovations_and_developments_picture" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="innovations-and-developments-image-input">Choose file</label>
+                                    </div>
+                                    
+                                    <br>
+                                    {% if about_ieee.innovations_and_developments_image %}
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.innovations_and_developments_image}}')">Innovation & Developments Image</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{about_ieee.innovations_and_developments_image}}', 'innovations_and_developments_image')">✖</button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <br>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-7 form-control-label">Add Links (Innovations and Developments):</label>
+                                    <div class="col-sm-3">
+                                        <!-- Add input field for links here if needed -->
+                                    </div>
+                                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('innovations_and_developments_link')"></button>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                <div id="links-container" class="mt-3">
+                                    <label class="mb-0">Links (Innovations and Developments):</label> 
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        {% for page_link in page_links.innovations_and_developments_link %}
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                
+                                <br>
+                                <hr>
+                                <br> 
+
+                                <h1>Students and Member Activities</h1>
+                                <br>
+                                
+                                <div class="form-group">
+                                    <label>Students and Member Activities Details <span style="color:red">*<span></label> 
+                                    <textarea 
+                                    class="form-control" 
+                                    type="text"
+                                    name="students_and_member_activities_details">{{about_ieee.students_and_member_activities_description|default:""}}</textarea>
+                                    <p id="students_and_member_activitiesCharacterCount" style="color: red;">Required</p>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label for="images">Students and Member Activities Image </label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="students-and-member-activities-image-input" name="students_and_member_activities_picture" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="students-and-member-activities-image-input">Choose file</label>
+                                    </div>
+                                    
+                                    <br>
+                                    {% if about_ieee.students_and_member_activities_image %}
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.students_and_member_activities_image}}')">Students & Members Activities Image</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{about_ieee.students_and_member_activities_image}}', 'students_and_member_activities_image')">✖</button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <br>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-7 form-control-label">Add Links (Students and Member Activities):</label>
+                                    <div class="col-sm-3">
+                                        <!-- Add input field for links here if needed -->
+                                    </div>
+                                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('students_and_member_activities_link')"></button>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                <div id="links-container" class="mt-3">
+                                    <label class="mb-0">Links (Students and Member Activities):</label> 
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        {% for page_link in page_links.students_and_member_activities_link %}
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                
+                                <br>
+                                <hr>
+                                <br> 
+
+                                <h1>Quality</h1>
+                                <br>
+                                
+                                <div class="form-group">
+                                    <label>Quality Details <span style="color:red">*<span></label> 
+                                        <textarea 
+                                        class="form-control" 
+                                        type="text"
+                                        name="quality_details">{{about_ieee.quality_description|default:""}}</textarea>
+                                        <p id="qualityCharacterCount" style="color: red;">Required</p>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label for="images">Quality Image </label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="quality-image-input" name="quality_picture" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="quality-image-input">Choose file</label>
+                                    </div>
+                                    
+                                    <br>
+                                    {% if about_ieee.quality_image %}
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.quality_image}}')">Quality Image</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{about_ieee.quality_image}}', 'quality_image')">✖</button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <br>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-7 form-control-label">Add Links (Quality):</label>
+                                    <div class="col-sm-3">
+                                        <!-- Add input field for links here if needed -->
+                                    </div>
+                                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal" onclick="setLinkCategoryInModal('quality_link')"></button>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                <div id="links-container" class="mt-3">
+                                    <label class="mb-0">Links (Quality):</label> 
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        {% for page_link in page_links.quality_link %}
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" onclick="setLinkDetailsInModal('{{page_link.pk}}', '{{page_link.title}}', '{{page_link.link}}')" data-target="#EditLinkModal">{{page_link.title}}</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForLinks"  onclick="openLinkModal('{{page_link.pk}}')">✖</button>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <br>
+                                <hr>
+                                <br> 
+
+                                <h1>Join US</h1>
+                                <br>
+                                
+                                <div class="form-group">
+                                    <label>Join Now Button Link <span style="color:red">*<span></label> 
+                                    <input
+                                    placeholder="Join Now Link"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="join_now_link"
+                                    value="{{about_ieee.join_now_link|default:""}}"/>
+                                </div>
+                                
+                                <br>
+                                <hr>
+                                <br> 
+
+                                <h1>Contact</h1>
+                                <br>
+                                
+                                <div class="form-group">
+                                    <label>Asia Pacific Link <span style="color:red">*<span></label> 
+                                    <input
+                                        placeholder="Asia Pacific Link"
+                                        class="form-control"
+                                        type="text"
+                                        autocomplete="off"
+                                        required
+                                        name="asia_pacific_link"
+                                        value="{{about_ieee.asia_pacific_link|default:""}}"/>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>IEEE computer organization Link <span style="color:red">*<span></label> 
+                                    <input
+                                        placeholder="IEEE computer organization Link"
+                                        class="form-control"
+                                        type="text"
+                                        autocomplete="off"
+                                        required
+                                        name="ieee_computer_organization_link"
+                                        value="{{about_ieee.ieee_computer_organization_link|default:""}}"/>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Customer Service Number <span style="color:red">*<span></label> 
+                                    <input
+                                        placeholder="Number"
+                                        class="form-control"
+                                        type="text"
+                                        autocomplete="off"
+                                        required
+                                        name="customer_service_number"
+                                        value="{{about_ieee.customer_service_number|default:""}}"/>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Presidents Names <span style="color:red">*<span></label> 
+                                    <input
+                                        placeholder="Names"
+                                        class="form-control"
+                                        type="text"
+                                        autocomplete="off"
+                                        required
+                                        name="presidents_names"
+                                        value="{{about_ieee.presidents_names|default:""}}"/>
+                                </div>
+                                <br>
+
+                                <div class="form-group">
+                                    <label>Founders Names <span style="color:red">*<span></label> 
+                                    <input
+                                        placeholder="Names"
+                                        class="form-control"
+                                        type="text"
+                                        autocomplete="off"
+                                        required
+                                        name="founders_names"
+                                        value="{{about_ieee.founders_names|default:""}}"/>
+                                </div>
+
+                                <br>
+                                <hr>
+                                <br> 
+
+                                <div class="form-group text-center">
+                                    <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
+                                </div>
+                                <br>
+
+                                
+                                
+                            </div> 
+            
+                        
+                        </form>  
+            
+                    <div>
+                </div>
+
+                
+                <!-- for showing image -->
+                <div class="modal fade" id="showImageModal" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="showImageModalLabel">Image</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <img id="modal_image" src="" class="img-fluid w-100" alt="Image">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                            </form>
                         </div>
-                        <div class="modal-footer">
-                            <!-- Change the button label and name attribute -->
-                            <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_link" value="Add">
-                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                        </div>
-                        </form>
                     </div>
                 </div>
-            </div>
 
 
-            <!-- New modal for editing links -->
-            <div class="modal fade" id="EditLinkModal" tabindex="-1" role="dialog" aria-labelledby="EditLinkModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <!-- Confirmation modal for deleting images -->
+                <div class="modal fade" id="ConfirmDeleteModalForImages" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForImagesLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-top" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="EditLinkModalLabel">Edit Link</h5>
+                            <h5 class="modal-title" id="ConfirmDeleteModalForImagesLabel">Confirm Delete</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <!-- Display existing link in a textarea for editing -->
                             <form method="POST">
                                 {% csrf_token %}
-                                <div class="form-group">
-                                    <label>Title: </label> 
-                                        <input
-                                            placeholder="Title"
-                                            class="form-control"
-                                            type="text"
-                                            autocomplete="off"
-                                            required
-                                            name="title"
-                                            value="" 
-                                        />
-                                    <br>
-                                    <label>Links:</label>
-                                    <input
-                                    placeholder="Provide Drive Link for The Banner Pictures"
-                                    class="form-control"
-                                    type="url"
-                                    autocomplete="off"
-                                    id="field1"
-                                    name="form_link_edit"
-                                    value=""/>
-                                    <input type="hidden" name = "link_pk" value ="{{link.pk}}">
-                                </div>
+                            <p><input id="image_delete" name= "image_delete" type="hidden">
+                                <input id="image_id" name= "image_id" type="hidden" ></p>
+                            Are you sure you want to delete the Image?
                         </div>
                         <div class="modal-footer">
-                            <input type="submit" name = "update_link" class="btn btn-outline-primary txt-primary buttons" value="Update">
+                            <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
                             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                         </div>
                         </form>
                     </div>
                 </div>
-            </div>
-
-
-            <!-- Confirmation modal for deleting links -->
-            <div class="modal fade" id="ConfirmDeleteModalForLinks" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForLinksLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-top" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="ConfirmDeleteModalForLinksLabel">Confirm Delete</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="POST">
-                            {% csrf_token %}
-                        <p><input id="remove_link" name= "remove_link" type="hidden"></p>
-                        Are you sure you want to delete this link?
-                    </div>
-                    <div class="modal-footer">
-                        <input type="submit" class="btn btn-outline-danger" value="Confirm" name = "remove_form_link">
-                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
                 </div>
-            </div>
-            </div>
 
 
+
+                <!-- Updated Modal for adding links -->
+                <div class="modal fade" id="AddLinksModal" tabindex="-1" role="dialog" aria-labelledby="AddLinksModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="AddLinksModalLabel">Add Links</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    
+                                    <div class="form-group">
+                                        <label>Title: </label> 
+                                            <input
+                                                placeholder="Title"
+                                                class="form-control"
+                                                type="text"
+                                                autocomplete="off"
+                                                required
+                                                name="title"
+                                                value="" 
+                                            />
+                                        <br>
+                                        <label>Links:</label>
+                                        <input
+                                        placeholder="Provide Drive Link for The Banner Pictures"
+                                        class="form-control"
+                                        type="url"
+                                        autocomplete="off"
+                                        id="field1"
+                                        name="form_link_add"
+                                        value=""/>
+                                    </div>
+                            </div>
+                            <div class="modal-footer">
+                                <!-- Change the button label and name attribute -->
+                                <input type="hidden" name="link_category" id="link_category"/>
+                                <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_link" value="Add">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- New modal for editing links -->
+                <div class="modal fade" id="EditLinkModal" tabindex="-1" role="dialog" aria-labelledby="EditLinkModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="EditLinkModalLabel">Edit Link</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Display existing link in a textarea for editing -->
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label>Title: </label> 
+                                            <input
+                                                placeholder="Title"
+                                                class="form-control"
+                                                type="text"
+                                                autocomplete="off"
+                                                required
+                                                name="title"
+                                                id="link_title"
+                                            />
+                                        <br>
+                                        <label>Links:</label>
+                                        <input
+                                        placeholder="Provide Drive Link for The Banner Pictures"
+                                        class="form-control"
+                                        type="url"
+                                        autocomplete="off"
+                                        id="link"
+                                        name="form_link_edit"
+                                        value=""/>
+                                        <input type="hidden" name = "link_pk" value ="{{link.pk}}">
+                                    </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="hidden" name="link_id" id="link_id"/>
+                                <input type="submit" name = "update_link" class="btn btn-outline-primary txt-primary buttons" value="Update">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Confirmation modal for deleting links -->
+                <div class="modal fade" id="ConfirmDeleteModalForLinks" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForLinksLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-top" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ConfirmDeleteModalForLinksLabel">Confirm Delete</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST">
+                                {% csrf_token %}
+                            <p><input id="remove_link" name= "remove_link" type="hidden"></p>
+                            Are you sure you want to delete this link?
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" name="link_id" id="remove_link_id"/>
+                            <input type="submit" class="btn btn-outline-danger" value="Confirm" name = "remove_form_link">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+                </div>
+
+            </div>
+
+            <!--Theme Switcher-->
+            {% block theme_switcher %}
+                {% include "theme_switcher.html" %}
+            {% endblock theme_switcher %}
         </div>
-    </div>
 
+        {% block common_js %}
+            {% include "common_js.html" %}
+        {% endblock common_js %}
+        
+        <!--Script for CKEditor Control-->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // Replace the textareas with CKEditor instances
+                CKEDITOR.replace('about_details');
+                CKEDITOR.replace('community_details');
+                CKEDITOR.replace('start_with_ieee_details');
+                CKEDITOR.replace('collaboration_details');
+                CKEDITOR.replace('publications_details');
+                CKEDITOR.replace('events_and_conferences_details');
+                CKEDITOR.replace('achievements_details');
+                CKEDITOR.replace('innovations_and_developments_details');
+                CKEDITOR.replace('students_and_member_activities_details');
+                CKEDITOR.replace('quality_details');
 
-    <!--Script for CKEditor Control-->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Replace the textareas with CKEditor instances
-            CKEDITOR.replace('about_details');
-            CKEDITOR.replace('community_details');
-            CKEDITOR.replace('start_with_ieee_details');
-            CKEDITOR.replace('collaboration_details');
-            CKEDITOR.replace('publications_details');
-            CKEDITOR.replace('events_and_conferences_details');
-            CKEDITOR.replace('achievements_details');
-            CKEDITOR.replace('innovations_and_developments_details');
-            CKEDITOR.replace('students_and_member_activities_details');
-            CKEDITOR.replace('quality_details');
+                // Attach a function to the change event for each CKEditor instance
+                ["about", "community", "start_with_ieee", "collaboration", "publications", "events_and_conferences", "achievements", "innovations_and_developments", "students_and_member_activities", "quality"]
+                    .forEach(function (editorId) {
+                        var editor = CKEDITOR.instances[editorId + '_details'];
 
-            // Attach a function to the change event for each CKEditor instance
-            ["about", "community", "start_with_ieee", "collaboration", "publications", "events_and_conferences", "achievements", "innovations_and_developments", "students_and_member_activities", "quality"]
-                .forEach(function (editorId) {
-                    var editor = CKEDITOR.instances[editorId + '_details'];
+                        editor.on('change', function () {
+                            // Update character count display for each CKEditor instance
+                            updateCharacterCount(editorId);
+                        });
 
-                    editor.on('change', function () {
-                        // Update character count display for each CKEditor instance
+                        // Update character count initially
                         updateCharacterCount(editorId);
                     });
+            });
 
-                    // Update character count initially
-                    updateCharacterCount(editorId);
-                });
-        });
-
-        function updateCharacterCount(editorId) {
-            var editorContent = CKEDITOR.instances[editorId + '_details'].getData();
-        
-            // Handle special space representations
-            var cleanedContent = editorContent.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
-        
-            // Count each character (including spaces)
-            var characterCount = cleanedContent.length;
-        
-            var characterCountElement = document.getElementById(editorId + 'CharacterCount');
-        
-            // Check conditions and update text color and content
-            if (characterCount === 0) {
-                characterCountElement.style.color = "red";
-                characterCountElement.innerText = "Required";
-            } else if (characterCount > 500) {
-                characterCountElement.style.color = "red";
-                characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
-            } else {
-                characterCountElement.style.color = "black";
-                characterCountElement.innerText = "Character Count: " + characterCount;
+            function updateCharacterCount(editorId) {
+                var editorContent = CKEDITOR.instances[editorId + '_details'].getData();
+            
+                // Handle special space representations
+                var cleanedContent = editorContent.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+            
+                // Count each character (including spaces)
+                var characterCount = cleanedContent.length;
+            
+                var characterCountElement = document.getElementById(editorId + 'CharacterCount');
+            
+                // Check conditions and update text color and content
+                if (characterCount === 0) {
+                    characterCountElement.style.color = "red";
+                    characterCountElement.innerText = "Required";
+                } else if (characterCount > 1500) {
+                    characterCountElement.style.color = "red";
+                    characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
+                } else {
+                    characterCountElement.style.color = "black";
+                    characterCountElement.innerText = "Character Count: " + characterCount;
+                }
             }
-        }
-    </script>
+        </script>
 
-    <!--Script to handle file name showing when choosing file-->
-    <script type="text/javascript">
+        <!--Script to handle file name showing when choosing file-->
+        <script type="text/javascript">
 
-        $('.custom-file input').change(function (e) {
-            var files = [];
-            for (var i = 0; i < $(this)[0].files.length; i++) {
-                files.push($(this)[0].files[i].name);
+            $('.custom-file input').change(function (e) {
+                var files = [];
+                for (var i = 0; i < $(this)[0].files.length; i++) {
+                    files.push($(this)[0].files[i].name);
+                }
+                $(this).next('.custom-file-label').html(files.join(', '));
+            });
+        
+        </script>
+
+        <!--script to prevent user from selecting image is image already selected-->
+        <script>
+            // Function to check and disable file input if an image is already saved
+            function checkSavedImage(inputId, savedImageUrl) {
+                var fileInput = document.getElementById(inputId);
+
+                if (savedImageUrl) {
+                    // If an image is already saved, disable the file input
+                    fileInput.disabled = true;
+                    fileInput.classList.add("disabled");
+
+                    // Change the placeholder text
+                    var fileLabel = fileInput.nextElementSibling;
+                    fileLabel.innerText = "Delete existing file to Choose image.";
+                }
             }
-            $(this).next('.custom-file-label').html(files.join(', '));
-        });
-    
-    </script>
 
-    <!--script to prevent user from selecting image is image already selected-->
-    <script>
-        // Function to check and disable file input if an image is already saved
-        function checkSavedImage(inputId, savedImageUrl) {
-            var fileInput = document.getElementById(inputId);
+            // Call the function for each image section when the page loads
+            window.onload = function () {
+                checkSavedImage("about-image-input", "{{ about_ieee.about_image }}");
+                checkSavedImage("community-image-input", "{{ about_ieee.community_image }}");
+                checkSavedImage("innovations-and-developments-image-input", "{{ about_ieee.innovations_and_developments_image }}");
+                checkSavedImage("students-and-member-activities-image-input", "{{ about_ieee.students_and_member_activities_image }}");
+                checkSavedImage("quality-image-input", "{{ about_ieee.quality_image }}");
+                // Add more calls for other image sections if needed
+            };
+        </script>
 
-            if (savedImageUrl) {
-                // If an image is already saved, disable the file input
-                fileInput.disabled = true;
-                fileInput.classList.add("disabled");
-
-                // Change the placeholder text
-                var fileLabel = fileInput.nextElementSibling;
-                fileLabel.innerText = "Delete existing file to Choose image.";
+        <script>
+            //Delete logic for image
+            function openModal(image_delete, image_id) {
+                // Set data in the modal
+                var inputElement = document.getElementById('image_delete');    
+                inputElement.value = image_delete;
+                var inputElement2 = document.getElementById('image_id');
+                inputElement2.value=image_id;
             }
-        }
 
-        // Call the function for each image section when the page loads
-        window.onload = function () {
-            checkSavedImage("about-image-input", "{{ about_ieee.about_image }}");
-            checkSavedImage("community-image-input", "{{ about_ieee.community_image }}");
-            checkSavedImage("innovations-and-developments-image-input", "{{ about_ieee.innovations_and_developments_image }}");
-            checkSavedImage("students-and-member-activities-image-input", "{{ about_ieee.students_and_member_activities_image }}");
-            checkSavedImage("quality-image-input", "{{ about_ieee.quality_image }}");
-            // Add more calls for other image sections if needed
-        };
-    </script>
+            //View logic for image
+            function openImageModal(image_path){
+                var inputElement = document.getElementById('modal_image');
+                inputElement.src = image_path
+            }
+        </script>
 
-    <script>
-        //Delete logic for image
-        function openModal(image_delete, image_id) {
-            // Set data in the modal
-            var inputElement = document.getElementById('image_delete');    
-            inputElement.value = image_delete;
-            var inputElement2 = document.getElementById('image_id');
-            inputElement2.value=image_id;
-        }
+        <script>
+            function setLinkCategoryInModal(category){
+                var inputElement = document.getElementById('link_category');    
+                inputElement.value=category;
+            }
 
-        //View logic for image
-        function openImageModal(image_path){
-            var inputElement = document.getElementById('modal_image');
-            inputElement.src = image_path
-        }
+            function setLinkDetailsInModal(link_id, title, link){
+                var inputElement2 = document.getElementById('link_title');    
+                inputElement2.value=title;
+                var inputElement3 = document.getElementById('link');    
+                inputElement3.value=link;
+                var inputElement4 = document.getElementById('link_id');    
+                inputElement4.value=link_id;
+            }
 
-        //Delete logic for Link
-        function openLinkModal(id) {
-            // Set data in the modal
-            var inputElement = document.getElementById('remove_link');    
-            inputElement.value=id;
-        }
-    </script>
-    
-</body>
+            //Delete logic for Link
+            function openLinkModal(id) {
+                // Set data in the modal
+                var inputElement = document.getElementById('remove_link_id');    
+                inputElement.value=id;
+            }
+        </script>
+
+        <!--For Achievements-->
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Function to check the number of achievement items and update the achievements-link-label
+                function checkAchievementCount() {
+                    var achievementsContainer = document.getElementById('links-container achievements-container');
+                    var achievementItems = achievementsContainer.querySelectorAll('.achievements-item');
+                    var achievementsLinkLabel = document.querySelector('.achievements-link-label');
+            
+                    // Set the maximum allowed slots
+                    var maxSlots = 6;
+            
+                    if (achievementItems.length >= maxSlots) {
+                        // Update the achievements-link-label content with the maximum limit message
+                        if (achievementsLinkLabel) {
+                            achievementsLinkLabel.innerHTML = '<div class="form-group row">' +
+                                '<label class="col-sm-12 form-control-label text-left" style="color:red;">Maximum limit for achievements reached. Please remove 1 to add another link. Allowed Slots: 0</label>' +
+                                '</div>';
+                        }
+                    } else {
+                        // Calculate the remaining slots
+                        var remainingSlots = maxSlots - achievementItems.length;
+            
+                        // Reset the achievements-link-label content with the original form and remaining slots count
+                        if (achievementsLinkLabel) {
+                            achievementsLinkLabel.innerHTML = '<div class="form-group row">' +
+                                '<label class="col-sm-7 form-control-label">Add Links (Achievements Read More Link):</label>' +
+                                '<div class="col-sm-3">' +
+                                '<!-- Add input field for links here if needed -->' +
+                                '</div>' +
+                                '<div class="col-sm-2 d-flex align-items-center justify-content-center">' +
+                                '<button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddLinksModal"  onclick="setLinkCategoryInModal(\'achievement_link\')"></button>' +
+                                '</div>' +
+                                '<label class="col-sm-12 form-control-label text-left">Allowed Slots: ' + remainingSlots + '</label>' +
+                                '</div>';
+                        }
+                    }
+                }
+            
+                // Call the function initially
+                checkAchievementCount();
+            
+                // Set up an interval to continuously check the count
+                setInterval(checkAchievementCount, 1000); // Adjust the interval time as needed
+            });
+            
+            
+        </script>
+        
+    </body>
+</html>
 {% endblock manage_about_ieee %}

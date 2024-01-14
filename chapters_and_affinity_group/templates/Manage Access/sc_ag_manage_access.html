@@ -179,6 +179,14 @@
                                         <label for="renewal_data_access">Membership Renewal Access</label><br>
                                         {% endif %}
 
+                                        {% if data_access.manage_web_access %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="renewal_data_access" name="manage_web_access">
+                                        <label for="renewal_data_access">Manage Web Access</label><br>
+                                        {% else %}
+                                        <input type="checkbox" class="checkbox" value="renewal_data_access" name="manage_web_access">
+                                        <label for="renewal_data_access">Manage Web Access</label><br>
+                                        {% endif %}
+
                                         {% if data_access.manage_access %}
                                         <input type="checkbox" checked="True" class="checkbox" value="renewal_data_access" name="manage_access">
                                         <label for="renewal_data_access">Manage View Access</label><br>
