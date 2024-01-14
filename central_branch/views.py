@@ -1241,7 +1241,7 @@ def manage_about(request):
                     if Branch.checking_length(about_details,community_details,start_with_ieee_details,collaboration_details,publications_details,
                                             events_and_conferences_details,achievements_details,innovations_and_developments_details,
                                             students_and_member_activities_details,quality_details):
-                        messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                        messages.error(request,"Please ensure your word limit is within 1500 and you have filled out all descriptions")
                         return redirect("central_branch:manage_about")
                     #passing the fields data to save the data in the database
                     if(Branch.set_about_ieee_page(about_details, learn_more_link, mission_and_vision_link, community_details, start_with_ieee_details, collaboration_details,
@@ -1365,7 +1365,7 @@ def ieee_region_10(request):
                     if Branch.checking_length(ieee_region_10_description,young_professionals_description,women_in_engineering_ddescription,
                                             student_and_member_activities_description,educational_activities_and_involvements_description,
                                             industry_relations_description,membership_development_description,events_and_conference_description):
-                        messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                        messages.error(request,"Please ensure your word limit is within 1500 and you have filled out all descriptions")
                         return redirect("central_branch:ieee_region_10")
 
                     if(Branch.set_ieee_region_10_page(ieee_region_10_description,ieee_region_10_history_link,young_professionals_description,women_in_engineering_ddescription,
@@ -1480,7 +1480,7 @@ def ieee_bangladesh_section(request):
 
                     if Branch.checking_length(about_details,members_and_volunteers_details,benefits_details,student_branches_details,
                                             affinity_groups_details,communty_and_society_details,achievements_details):
-                        messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                        messages.error(request,"Please ensure your word limit is within 1500 and you have filled out all descriptions")
                         return redirect("central_branch:ieee_bangladesh_section")
 
                     if(Branch.set_ieee_bangladesh_section_page(about_details, ieeebd_link, members_and_volunteers_details, benefits_details,
@@ -1612,7 +1612,7 @@ def ieee_nsu_student_branch(request):
 
                     if Branch.checking_length(about_nsu_student_branch,chapters_description,creative_team_description,mission_description,
                                             vision_description,events_description,achievements_description):
-                        messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                        messages.error(request,"Please ensure your word limit is within 1500 and you have filled out all descriptions")
                         return redirect("central_branch:ieee_nsu_student_branch")
                     
                     if(Branch.set_ieee_nsu_student_branch_page(about_nsu_student_branch, chapters_description, ras_read_more_link,
@@ -3477,8 +3477,8 @@ def member_details(request,ieee_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
 
-def custom_404(request,exception):
+def custom_404(request):
     return render(request,'404.html',status=404)
 
-def custom_500(request,exception):
+def custom_500(request):
     return render(request,'500.html',status=500)

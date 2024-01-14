@@ -244,10 +244,10 @@
                         </div>
                         <div class="bar"></div>
                         <div>
-                            <p>{{ieee_region_10.ieee_region_10_description|safe}}</p>
+                            <p>{{ieee_region_10.ieee_region_10_description|default:""|safe}}</p>
                         </div>
                         <!--IEEE Region 10 history button-->
-                        <div><a href="{{ieee_region_10.ieee_region_10_history_link}}">Region 10 History</a></div>
+                        <div><a href="{{ieee_region_10.ieee_region_10_history_link|default:""}}">Region 10 History</a></div>
                     </div>
             </section>
         </section>
@@ -263,7 +263,7 @@
                         </div>
                         <div class="bar"></div>
                         <div>
-                            <p>{{ieee_region_10.young_professionals_description|safe}}</p>
+                            <p>{{ieee_region_10.young_professionals_description|default:""|safe}}</p>
                         </div>
                         <!--Links-->
                         {% for page_link in page_links.young_professionals_link %}
@@ -289,7 +289,7 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>{{ieee_region_10.women_in_engineering_ddescription|safe}}</p>
+                        <p>{{ieee_region_10.women_in_engineering_ddescription|default:""|safe}}</p>
                     </div>
                     <!--links-->
                     {% for page_link in page_links.women_in_engineering_link %}
@@ -306,7 +306,7 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>{{ieee_region_10.student_and_member_activities_description|safe}}</p>
+                        <p>{{ieee_region_10.student_and_member_activities_description|default:""|safe}}</p>
                     </div>
                     <!--links-->
                     {% for page_link in page_links.student_and_member_activities_link %}
@@ -334,7 +334,7 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>{{ieee_region_10.educational_activities_and_involvements_description|safe}}</p>
+                        <p>{{ieee_region_10.educational_activities_and_involvements_description|default:""|safe}}</p>
                     </div>
                     <!--links-->
                     {% for page_link in page_links.educational_activities_and_involvements_link %}
@@ -352,7 +352,7 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>{{ieee_region_10.industry_relations_description|safe}}</p>
+                        <p>{{ieee_region_10.industry_relations_description|default:""|safe}}</p>
                     </div>
                     <!--links-->
                     {% for page_link in page_links.industry_relations_link %}
@@ -378,7 +378,7 @@
                         </div>
                         <div class="bar"></div>
                         <div>
-                            <p>{{ieee_region_10.membership_development_description|safe}}</p>
+                            <p>{{ieee_region_10.membership_development_description|default:""|safe}}</p>
                         </div>
                         <!--links-->
                         {% for page_link in page_links.membership_development_link %}
@@ -403,7 +403,7 @@
                 </div>
                 <div class="bar"></div>
                 <div>
-                    <p>{{ieee_region_10.events_and_conference_description|safe}}</p>
+                    <p>{{ieee_region_10.events_and_conference_description|default:""|safe}}</p>
                 </div>
                 <!--links-->
                 {% for page_link in page_links.events_and_conference_link %}
@@ -431,26 +431,26 @@
                         <div>
                             <p>Home page</p>
                             <!--links-->
-                            <p><a href="{{ieee_region_10.home_page_link}}" class="link">: http://www.ieeer10.org/</a></p>
+                            <p><a href="{{ieee_region_10.home_page_link|default:""}}" class="link">: http://www.ieeer10.org/</a></p>
                         </div>
                         <div>
                             <p>Website</p>
                             <!--links-->
-                            <p><a href="{{ieee_region_10.website_link}}" class="link">: IEEE Asia Pacific Region 10</a></p>
+                            <p><a href="{{ieee_region_10.website_link|default:""}}" class="link">: IEEE Asia Pacific Region 10</a></p>
                         </div>
                         <div>
                             <p>For membership enquiry</p>
                             <!--links-->
-                            <p><a href="{{ieee_region_10.membership_inquiry_link}}" class="link">: IEEE Support Center</a></p>
+                            <p><a href="{{ieee_region_10.membership_inquiry_link|default:""}}" class="link">: IEEE Support Center</a></p>
                         </div>
                         <div>
                             <p>For Volunteers</p>
                             <!--links-->
-                            <p><a href="{{ieee_region_10.for_volunteers_link}}" class="link">: Ewell Tan</a></p>
+                            <p><a href="{{ieee_region_10.for_volunteers_link|default:""}}" class="link">: Ewell Tan</a></p>
                         </div>
                         <div>
                             <p>Contact number</p>
-                            <p>{{ieee_region_10.contact_number}}</p>
+                            <p>{{ieee_region_10.contact_number|default:""}}</p>
                         </div>
                     </div>
             </section>

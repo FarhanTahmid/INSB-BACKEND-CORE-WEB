@@ -412,7 +412,7 @@
                     </div>
                     <div class="bar"></div>
                     <div>
-                        <p>{{ieee_nsu_student_branch.about_nsu_student_branch|safe}}</p>
+                        <p>{{ieee_nsu_student_branch.about_nsu_student_branch|default:""|safe}}</p>
                     </div>
                 </div>
             </section>
@@ -427,7 +427,7 @@
                 </div>
                 <div class="bar"></div>
                 <div>
-                    <p>{{ieee_nsu_student_branch.chapters_description|safe}}</p>
+                    <p>{{ieee_nsu_student_branch.chapters_description|default:""|safe}}</p>
                 </div>
                 <div class="chapter-container">
                     <div class="chapter-card RAS">
@@ -486,7 +486,7 @@
                 </div>
                 <div class="bar"></div>
                 <div>
-                    <p>{{ieee_nsu_student_branch.creative_team_description|safe}}</p>
+                    <p>{{ieee_nsu_student_branch.creative_team_description|default:""|safe}}</p>
                 </div>
                 <div class="creative-container">
                     <div class="creative-box">
@@ -539,7 +539,7 @@
                     </div>
                     <div class="bar" style="background: white;"></div>
                     <div>
-                        <p>{{ieee_nsu_student_branch.mission_description|safe}}</p>
+                        <p>{{ieee_nsu_student_branch.mission_description|default:""|safe}}</p>
                     </div>
                 </div>
                 <div style="    height: 350px;
@@ -563,7 +563,7 @@
                     </div>
                     <div class="bar" style="background: white;"></div>
                     <div>
-                        <p>{{ieee_nsu_student_branch.vision_description|safe}}</p>
+                        <p>{{ieee_nsu_student_branch.vision_description|default:""|safe}}</p>
                     </div>
                 </div>
             </section>
@@ -579,7 +579,7 @@
                     </div>
                     <div class="bar"></div>
                     <div>
-                        <p>{{ieee_nsu_student_branch.events_description|safe}}</p>
+                        <p>{{ieee_nsu_student_branch.events_description|default:""|safe}}</p>
                     </div>
                     <div class="events-btn">
                         <a href="{% url 'main_website:event_homepage' %}"><button><i class="fa-solid fa-angles-right" style="color: #f9f9f9;"></i> All Events</button></a>
@@ -638,7 +638,7 @@
                     </div>
                 </div>
                 <div class="join-btn">
-                    <a href="{{ieee_nsu_student_branch.join_now_link}}"><button>Join Now</button></a>
+                    <a href="{{ieee_nsu_student_branch.join_now_link|default:""}}"><button>Join Now</button></a>
                 </div>
             </section>
         </section>
@@ -652,7 +652,7 @@
                 </div>
                 <div class="bar"></div>
                 <div>
-                    <p>{{ieee_nsu_student_branch.achievements_description|safe}}</p>
+                    <p>{{ieee_nsu_student_branch.achievements_description|default:""|safe}}</p>
                 </div>
             </section>
         </section>

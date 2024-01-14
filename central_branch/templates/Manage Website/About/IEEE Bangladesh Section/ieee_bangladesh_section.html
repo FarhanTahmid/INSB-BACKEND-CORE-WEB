@@ -302,7 +302,7 @@
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="about_details">{{ieee_bangladesh_section.about_ieee_bangladesh}}</textarea>
+                                    name="about_details">{{ieee_bangladesh_section.about_ieee_bangladesh|default:""}}</textarea>
                                     <p id="aboutCharacterCount" style="color: red;">Required</p>
                                 </div>
                                 <br>
@@ -327,15 +327,15 @@
                                     {% endif %}
                                     <br>
 
-                                    <label>IEEEBD.net Link <span style="color:red">*<span></label> 
+                                    <label>IEEE BD Link <span style="color:red">*<span></label> 
                                     <input
-                                    placeholder="IEEEBD.net Link"
+                                    placeholder="IEEE BD Link"
                                     class="form-control"
                                     type="text"
                                     autocomplete="off"
                                     required
                                     name="ieeebd_link"
-                                    value="{{ieee_bangladesh_section.ieee_bd_link}}"/>
+                                    value="{{ieee_bangladesh_section.ieee_bd_link|default:""}}"/>
                                 </div>  
 
                                 <br>
@@ -350,7 +350,7 @@
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="members_and_volunteers_details">{{ieee_bangladesh_section.member_and_volunteer_description}}</textarea>
+                                    name="members_and_volunteers_details">{{ieee_bangladesh_section.member_and_volunteer_description|default:""}}</textarea>
                                     <p id="members_and_volunteersCharacterCount" style="color: red;">Required</p>
                                 </div>
                                 <br>
@@ -414,7 +414,7 @@
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="benefits_details">{{ieee_bangladesh_section.benefits_description}}</textarea>
+                                    name="benefits_details">{{ieee_bangladesh_section.benefits_description|default:""}}</textarea>
                                     <p id="benefitsCharacterCount" style="color: red;">Required</p>
 
                                 </div>
@@ -451,7 +451,7 @@
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="student_branches_details">{{ieee_bangladesh_section.student_branches_description}}</textarea>
+                                    name="student_branches_details">{{ieee_bangladesh_section.student_branches_description|default:""}}</textarea>
                                     <p id="student_branchesCharacterCount" style="color: red;">Required</p>
 
                                 </div>
@@ -488,7 +488,7 @@
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="affinity_groups_details">{{ieee_bangladesh_section.affinity_groups_description}}</textarea>
+                                    name="affinity_groups_details">{{ieee_bangladesh_section.affinity_groups_description|default:""}}</textarea>
                                     <p id="affinity_groupsCharacterCount" style="color: red;">Required</p>
 
                                 </div>
@@ -525,7 +525,7 @@
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="communty_and_society_details">{{ieee_bangladesh_section.community_and_society_description}}</textarea>
+                                    name="communty_and_society_details">{{ieee_bangladesh_section.community_and_society_description|default:""}}</textarea>
                                     <p id="communty_and_societyCharacterCount" style="color: red;">Required</p>
 
                                 </div>
@@ -568,7 +568,7 @@
                                     <textarea  
                                     class="form-control" 
                                     type="text"
-                                    name="achievements_details">{{ieee_bangladesh_section.achievements_description}}</textarea>
+                                    name="achievements_details">{{ieee_bangladesh_section.achievements_description|default:""}}</textarea>
                                     <p id="achievementsCharacterCount" style="color: red;">Required</p>
                                 </div>
                                 <br>
@@ -719,7 +719,7 @@
                                         autocomplete="off"
                                         required
                                         name="chair_name"
-                                        value="{{ieee_bangladesh_section.chair_name}}"/>
+                                        value="{{ieee_bangladesh_section.chair_name|default:""}}"/>
                                 </div>
                                 <br>
 
@@ -732,7 +732,7 @@
                                         autocomplete="off"
                                         required
                                         name="chair_email"
-                                        value="{{ieee_bangladesh_section.chair_email}}"/>
+                                        value="{{ieee_bangladesh_section.chair_email|default:""}}"/>
                                 </div>
                                 <br>
 
@@ -745,7 +745,7 @@
                                         autocomplete="off"
                                         required
                                         name="secretary_name"
-                                        value="{{ieee_bangladesh_section.secretary_name}}"/>
+                                        value="{{ieee_bangladesh_section.secretary_name|default:""}}"/>
                                 </div>
                                 <br>
 
@@ -758,7 +758,7 @@
                                         autocomplete="off"
                                         required
                                         name="secretary_email"
-                                        value="{{ieee_bangladesh_section.secretary_email}}"/>
+                                        value="{{ieee_bangladesh_section.secretary_email|default:""}}"/>
                                 </div>
                                 <br>
 
@@ -771,7 +771,7 @@
                                         autocomplete="off"
                                         required
                                         name="office_secretary_name"
-                                        value="{{ieee_bangladesh_section.office_secretary_name}}"/>
+                                        value="{{ieee_bangladesh_section.office_secretary_name|default:""}}"/>
                                 </div>
                                 <br>
 
@@ -784,7 +784,7 @@
                                         autocomplete="off"
                                         required
                                         name="office_secretary_number"
-                                        value="{{ieee_bangladesh_section.office_secretary_number}}"/>
+                                        value="{{ieee_bangladesh_section.office_secretary_number|default:""}}"/>
                                 </div>
 
                                 <br>

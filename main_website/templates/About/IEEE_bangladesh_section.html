@@ -371,11 +371,11 @@
                     </div>
                     <div class="bar"></div>
                     <div>
-                        <p>{{ieee_bangladesh_section.about_ieee_bangladesh|safe}}</p>
+                        <p>{{ieee_bangladesh_section.about_ieee_bangladesh|default:""|safe}}</p>
                     </div>
                     <!--links-->
                     <div class="ieee-bd-btn">
-                        <a href="{{ieee_bangladesh_section.ieee_bd_link}}">IEEEBD.net</a>
+                        <a href="{{ieee_bangladesh_section.ieee_bd_link|default:""}}">IEEEBD.net</a>
                     </div>
                 </div>
             </section>
@@ -391,7 +391,7 @@
                     </div>
                     <div class="bar"></div>
                     <div>
-                        <p>{{ieee_bangladesh_section.member_and_volunteer_description|safe}}</p>
+                        <p>{{ieee_bangladesh_section.member_and_volunteer_description|default:""|safe}}</p>
                     </div>
                     <div>
                         {% for page_link in page_links.members_and_volunteers_link %}
@@ -418,7 +418,7 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>{{ieee_bangladesh_section.benefits_description|safe}}</p>
+                        <p>{{ieee_bangladesh_section.benefits_description|default:""|safe}}</p>
                     </div>
                     <div>
                         {% for page_link in page_links.benefits_link %}
@@ -435,7 +435,7 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>{{ieee_bangladesh_section.student_branches_description|safe}}</p>
+                        <p>{{ieee_bangladesh_section.student_branches_description|default:""|safe}}</p>
                     </div>
                     <div>
                         {% for page_link in page_links.student_branches_link %}
@@ -461,7 +461,7 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>{{ieee_bangladesh_section.affinity_groups_description|safe}}</p>
+                        <p>{{ieee_bangladesh_section.affinity_groups_description|default:""|safe}}</p>
                     </div>
                     <div>
                         {% for page_link in page_links.affinity_groups_link %}
@@ -478,7 +478,7 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>{{ieee_bangladesh_section.community_and_society_description|safe}}</p>
+                        <p>{{ieee_bangladesh_section.community_and_society_description|default:""|safe}}</p>
                     </div>
                     <div>
                         {% for page_link in page_links.community_and_society_link %}
@@ -500,7 +500,7 @@
                 </div>
                 <div class="bar"></div>
                 <div>
-                    <p>{{ieee_bangladesh_section.achievements_description|safe}}</p>
+                    <p>{{ieee_bangladesh_section.achievements_description|default:""|safe}}</p>
                 </div>
                 <div class="achievement-container">
                     {% for page_link in page_links.achievement_link %}
@@ -552,23 +552,23 @@
                     <div class="contact-details">
                         <div>
                             <p>Chair</p>
-                            <p>: {{ieee_bangladesh_section.chair_name}}</p>
+                            <p>: {{ieee_bangladesh_section.chair_name|default:""}}</p>
                          </div>
                         <div>
                             <p>Email</p>
-                            <p>: {{ieee_bangladesh_section.chair_email}}</p>
+                            <p>: {{ieee_bangladesh_section.chair_email|default:""}}</p>
                         </div>
                         <div>
                             <p>Secretary</p>
-                            <p>: {{ieee_bangladesh_section.secretary_name}}</p>
+                            <p>: {{ieee_bangladesh_section.secretary_name|default:""}}</p>
                         </div>
                         <div>
                             <p>Email</p>
-                            <p>: {{ieee_bangladesh_section.secretary_email}}</p>
+                            <p>: {{ieee_bangladesh_section.secretary_email|default:""}}</p>
                         </div>
                         <div>
-                            <p>{{ieee_bangladesh_section.office_secretary_name}}</p>
-                            <p> :  {{ieee_bangladesh_section.office_secretary_number}}</p>
+                            <p>{{ieee_bangladesh_section.office_secretary_name|default:""}}</p>
+                            <p> :  {{ieee_bangladesh_section.office_secretary_number|default:""}}</p>
                         </div>
                     </div>
             </section>

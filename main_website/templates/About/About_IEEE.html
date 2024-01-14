@@ -450,15 +450,15 @@
           <div class="bar"></div>
           <div>
             <p>
-              {{about_ieee.about_ieee|safe}}
+              {{about_ieee.about_ieee|default:""|safe}}
             </p>
           </div>
           <div class="first_buttons">
             <div class="ieee-bd-btn">
-              <a href="{{about_ieee.learn_more_link}}">Learn More</a>
+              <a href="{{about_ieee.learn_more_link|default:""}}">Learn More</a>
             </div>
             <div class="mission-btn">
-              <a href="{{about_ieee.mission_and_vision_link}}">Mission and Vision</a>
+              <a href="{{about_ieee.mission_and_vision_link|default:""}}">Mission and Vision</a>
             </div>
           </div>
         </div>
@@ -474,7 +474,7 @@
           <div class="bar"></div>
           <div>
             <p>
-              {{about_ieee.community_description|safe}}
+              {{about_ieee.community_description|default:""|safe}}
             </p>
           </div>
           <div>
@@ -500,7 +500,7 @@
           <div class="bar" style="background-color: #fff;"></div>
           <div>
             <p>
-              {{about_ieee.start_with_ieee_description|safe}}
+              {{about_ieee.start_with_ieee_description|default:""|safe}}
             </p>
           </div>
           <div>
@@ -519,7 +519,7 @@
           <div class="bar" style="background-color: #fff;"></div>
           <div>
             <p>
-              {{about_ieee.collaboration_description|safe}}
+              {{about_ieee.collaboration_description|default:""|safe}}
             </p>
           </div>
           <div>
@@ -545,7 +545,7 @@
           <div class="bar" style="background-color: #fff;"></div>
           <div>
             <p>
-              {{about_ieee.publications_description|safe}}
+              {{about_ieee.publications_description|default:""|safe}}
             </p>
           </div>
           <div>
@@ -564,7 +564,7 @@
           <div class="bar" style="background-color: #fff;"></div>
           <div>
             <p>
-              {{about_ieee.events_and_conferences_description|safe}}
+              {{about_ieee.events_and_conferences_description|default:""|safe}}
             </p>
           </div>
           <div>
@@ -586,7 +586,7 @@
         <div class="bar"></div>
         <div>
           <p>
-            {{about_ieee.achievements_description|safe}}
+            {{about_ieee.achievements_description|default:""|safe}}
           </p>
         </div>
         <div class="achievement-container">
@@ -615,7 +615,7 @@
           <div class="bar"></div>
           <div>
             <p>
-              {{about_ieee.innovations_and_developments_description|safe}}
+              {{about_ieee.innovations_and_developments_description|default:""|safe}}
             </p>
           </div>
           <div>
@@ -644,7 +644,7 @@
           <div class="bar"></div>
           <div>
             <p>
-              {{about_ieee.students_and_member_activities_description|safe}}
+              {{about_ieee.students_and_member_activities_description|default:""|safe}}
             </p>
           </div>
           <div>
@@ -666,7 +666,7 @@
           <div class="bar"></div>
           <div>
             <p>
-              {{about_ieee.quality_description|safe}}
+              {{about_ieee.quality_description|default:""|safe}}
             </p>
           </div>
           <div>
@@ -695,7 +695,7 @@
           </div>
         </div>
         <div class="join-btn">
-          <a href="{{about_ieee.join_now_link}}"><button>Join Now</button></a>
+          <a href="{{about_ieee.join_now_link|default:""}}"><button>Join Now</button></a>
         </div>
       </section>
     </section>
@@ -709,23 +709,23 @@
           <div class="bar"></div>
           <div style="display: grid; grid-template-columns: 2fr 5fr">
             <p>Asia Pacific:</p>
-            <a href="{{about_ieee.asia_pacific_link}}">{{about_ieee.asia_pacific_link}}</a>
+            {% if about_ieee.asia_pacific_link %}<a href="{{about_ieee.asia_pacific_link}}">{{about_ieee.asia_pacific_link}}</a>{% endif %}
           </div>
           <div style="display: grid; grid-template-columns: 2fr 5fr">
             <p>IEEE computer organization:</p>
-            <a href="{{about_ieee.ieee_computer_organization_link}}">{{about_ieee.ieee_computer_organization_link}}</a>
+            {% if about_ieee.ieee_computer_organization_link %}<a href="{{about_ieee.ieee_computer_organization_link}}">{{about_ieee.ieee_computer_organization_link}}</a>{% endif %}
           </div>
           <div style="display: grid; grid-template-columns: 2fr 5fr">
             <p>Customer Service:</p>
-            <p>{{about_ieee.customer_service_number}}</p>
+            {% if about_ieee.customer_service_number %}<p>{{about_ieee.customer_service_number}}</p>{% endif %}
           </div>
           <div style="display: grid; grid-template-columns: 2fr 5fr">
             <p>Presidents:</p>
-            <p>{{about_ieee.presidents_names}}</p>
+            {% if about_ieee.presidents_names %}<p>{{about_ieee.presidents_names}}</p>{% endif %}
           </div>
           <div style="display: grid; grid-template-columns: 2fr 5fr">
             <p>Founders:</p>
-            <p>{{about_ieee.founders_names}}</p>
+            {% if about_ieee.founders_names %}<p>{{about_ieee.founders_names}}</p>{% endif %}
           </div>
           <div>
 
