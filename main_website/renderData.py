@@ -271,7 +271,7 @@ class HomepageItems:
                 #getting the particular society object
                 society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
                 #getting position
-                position = Roles_and_Position.objects.get(is_faculty = True,role_of = society)
+                position = Roles_and_Position.objects.get(is_faculty = True,role_of = society,is_sc_ag_eb_member = True)
                 #getting current tenure
                 current_tenure = Panels.objects.get(current = True, panel_of = society)
                 #getting the faculty
@@ -301,7 +301,7 @@ class HomepageItems:
                 #getting current tenure
                 current_tenure = Panels.objects.get(current = True, panel_of = society)
                 #getting all th eb roles
-                roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society,is_faculty = False).order_by('role_of')
+                roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society,is_mentor = True).order_by('role_of','role')
                 for role in roles:
                     try:
                         #getting the member of the particular society whose role matches with the role iteration in the list and is if current panel

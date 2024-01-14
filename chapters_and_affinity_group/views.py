@@ -295,7 +295,7 @@ def sc_ag_panel_details(request,primary,panel_pk):
                 )):
                     return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
 
-        print(sc_ag_eb_members)  
+ 
         context={
             'user_data':user_data,
             'all_sc_ag':sc_ag,
