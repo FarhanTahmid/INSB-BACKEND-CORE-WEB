@@ -5,6 +5,25 @@
     <!-- CKEditor CDN -->
     <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
     <style>
+
+        .publish-switch {
+            display: flex;
+            justify-content: flex-end; /* Align to the right end */
+            align-items: center;
+            position: relative;
+        }
+        .ui-switch{
+            /* Add shadow to the icon */
+            box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+    
+            /* You can customize the shadow properties */
+        }
+        .form-control-label.slider-checkbox {
+            display: inline-block;
+            margin-right: 10px; /* Add margin for spacing between elements */
+        }
+
         @media only screen and (max-width: 768px) {
             
     
@@ -82,6 +101,22 @@
     </style>
 
     <div class="container" >
+        <!--for error messages-->
+        <div class="container">
+            {% for message in messages  %}
+                <p>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <p style="margin: 0;">{{message}}</p>
+                    </div>
+                </p>
+            {% endfor %}
+            <br>
+        </div>
+        <!--for error messages end-->
+
         <div class="box">
             <div class="box-header" style="text-align:center;">
                 <br>
@@ -91,6 +126,16 @@
             <form method="POST">
                 {% csrf_token %}
                 <div class="box-body">
+                    <div class="publish-switch">
+                        <label class="form-control-label slider-checkbox">Publish Event:</label>
+                        <span>                                            
+                            <label class="ui-switch m-t-xs m-r">
+                                <input name="publish_event" type="checkbox" {% if is_event_published %} checked {% endif %}>
+                                    <i></i>
+                            </label>                
+                        </span>
+                    </div>
+                    <br>
                     <div class="form-group">
                         <label>Name <span style="color:red">*<span></label>
                         <input 
