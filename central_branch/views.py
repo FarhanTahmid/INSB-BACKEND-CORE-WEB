@@ -2313,7 +2313,7 @@ def manage_exemplary_members(request):
                     # delete image of the member
                     if(os.path.isfile(member_to_delete.member_picture.path)):
                         os.remove(member_to_delete.member_picture.path)
-                    messages.warning(request,f"Member {member_to_delete.member_name} was deleted!")
+                    messages.warning(request,f"Member {member_to_delete.member_name} was removed!")
                     member_to_delete.delete()
                     return redirect('central_branch:manage_exemplary_members')
                 
