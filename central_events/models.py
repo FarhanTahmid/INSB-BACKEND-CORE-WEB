@@ -41,6 +41,7 @@ class SuperEvents(models.Model):
     start_date=models.DateField(null=True,blank=True,auto_now_add=False)
     end_date=models.DateField(null=True,blank=True,auto_now_add=False)
     banner_image=ResizedImageField(null=True,blank=True,upload_to='Mega Event Banner Images/')
+    publish_mega_event=models.BooleanField(null=False,blank=False,default=False)
 
     class Meta:
         verbose_name="Mega Event"
