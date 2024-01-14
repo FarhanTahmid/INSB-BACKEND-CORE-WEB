@@ -113,15 +113,27 @@
                 <li>You can add as many captions as you want, and you can update or delete them</li>
                 <li>Make sure to save any changes made instantly to prevent data loss</li>
             </ol></b>
-            <br>
 
-        </div> 
-        <!--Tab view for Events-->
-        <!--Tab view Start-->
-        {% block content_team_event_form_tab %}
-            {% include "Events/content_team_event_form_tabs.html" %}
-        {% endblock content_team_event_form_tab %}
-        <!--Tab view end-->
+            <br>
+            {% for message in messages  %}
+                <p>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </p>
+            {% endfor %}
+            <br>
+        </div>
+            <!--Tab view for Events-->
+            <!--Tab view Start-->
+            {% block content_team_event_form_tab %}
+                {% include "Events/content_team_event_form_tabs.html" %}
+            {% endblock content_team_event_form_tab %}
+            <!--Tab view end-->
+            <br>
         
         {% block content_team_edit_form_add_notes %}
             {% include "Events/content_team_event_form_add_notes_content.html" %}
