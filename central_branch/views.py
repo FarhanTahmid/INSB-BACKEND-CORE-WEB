@@ -1739,6 +1739,7 @@ def ieee_nsu_student_branch_preview(request):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
+    
 @login_required
 def faq(request):
 
@@ -1817,6 +1818,24 @@ def faq(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
 
+@login_required
+@xframe_options_exempt
+def faq_preview(request):
+    try:
+        all_categories = Branch.get_all_category_of_questions()
+        saved_question_answers = Branch.get_saved_questions_and_answers()
+
+        context = {
+            'is_live':False,
+            'all_categories':all_categories,
+            'saved_question_answer':saved_question_answers,
+        }
+
+        return render(request, 'About/faq.html',context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
 
 
 @login_required
@@ -3218,7 +3237,8 @@ def feedbacks(request):
 def event_feedback(request, event_id):
 
     try:
-
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
 
         has_access = Branch_View_Access.get_event_edit_access(request)
@@ -3228,6 +3248,7 @@ def event_feedback(request, event_id):
 
             context = {
                 'is_branch':True,
+                'user_data':user_data,
                 'all_sc_ag':sc_ag, 
                 'event_id':event_id, 
                 'event_feedbacks':event_feedbacks

@@ -1314,6 +1314,7 @@ def faq(request):
                     return redirect("main_website:faq")
 
         context = {
+            'is_live':True,
             'all_categories':all_categories,
             'saved_question_answer':saved_question_answers,
             'page_title':'FAQ',
