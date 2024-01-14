@@ -1,8 +1,86 @@
 {% load static %}
 {% block super_event_details_form %}
 
-    <!-- CKEditor CDN -->
-    <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!-- CKEditor CDN -->
+<script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+<style>
+    @media only screen and (max-width: 768px) {
+        
+  
+        .custom-file {
+            margin-bottom: 10px;
+        }
+      }
+  
+      
+      #graphics-selected-image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 200px; /* Set the maximum width for the image container */
+        height:auto;
+        margin:auto;
+        margin-top: 10px; /* Adjust the margin as needed */
+      }
+    
+      .graphics-selected-image {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .graphics-selected-image {
+          max-width: 100%; /* Make the image responsive within its container */
+          height: auto;    /* Maintain the aspect ratio */
+      }
+  
+      .image-container {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+      }
+    
+      .image-container-item {
+          width: 100%;
+          height: auto;
+          border-radius: 8px;
+          box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+          transition: box-shadow 0.3s ease;
+          object-fit: cover; /* Ensure the image fills the container */
+      }
+    
+  
+      .image-container-item:hover {
+          box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+      }
+  
+      .cross-button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        cursor: pointer;
+        background-color: white; /* Set the background color to white */
+        border: none;
+        padding: 0;
+        width: 25px; /* Set the width and height to create a circle */
+        height: 25px;
+        border-radius: 50%; /* Make it a circle */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2rem; /* Adjust font size */
+        color: black; /* Set the initial color */
+        z-index: 2;
+        transition: background-color 0.3s ease, color 0.3s ease; /* Add transitions for color and background-color changes */
+        line-height: 1; /* Ensure line height does not affect vertical alignment */
+      }
+    
+    
+      .cross-button:hover {
+          color: gray; /* Change color on hover */
+      }
+</style>
+ 
     <div class="container" >
         <div class="padding" >
             <div class="row" >
@@ -26,27 +104,43 @@
                                     <input 
                                         type="text" 
                                         name="super_event_name" 
-                                        class="form-control w-75" 
+                                        class="form-control" 
                                         placeholder="Event Name"
                                         autocomplete="off"
                                         required/>
                                 </div>
                                 <br>
                                 <div class="form-group">
-                                    <label>Description</label>
+                                    <label>Description <span style="color:red">*</span></label>
                                     <textarea type="text" name="super_event_description" placeholder="Write within 500 words"
                                         class="form-control" rows="10"></textarea>
                                 </div>
                                 <br>
                                 <div class="form-group">
                                     <label for="">Add a Probable Date For the Event</label>
-                                    <input type="date" name="probable_date" class="form-control w-75" />
+                                    <input type="date" name="probable_date" class="form-control" />
                                 </div>
                                 <br>
                                 <div class="form-group">
                                     <label for="">Add Final Date For the Event (If finalised)</label>
-                                    <input type="date" name="final_date" class="form-control w-75" />
+                                    <input type="date" name="final_date" class="form-control" />
                                 </div>
+                                <br>
+                                <!-- img field -->
+                                <div class="form-group">
+                                    <label for="images">Upload Image:</label>
+                                    <div class="custom-file">
+
+                                        <input type="file" class="custom-file-input" id="graphics-image-input" name="image" accept="image/*">
+                                        <label class="custom-file-label bg-light" for="graphics-image-input">Choose file</label>
+                                    </div>
+
+                                    
+                                    <br>
+                                    <div id="graphics-selected-image-container"></div>
+                                    <input type="hidden" name="selected_image" id="graphics-selected-image">
+                                </div>
+                               
                                 <br>
                                 <div style="text-align: center;">
                                     {% if is_branch %}
@@ -64,7 +158,108 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        var form = document.getElementById('myForm');
+        var isFormDirty = false;
 
+        // Listen for changes in the form fields
+        form.addEventListener('input', function (event) {
+            var target = event.target;
+        
+            // Check if the input is not the file input
+            if (target !== document.getElementById('media-image-input')) {
+                isFormDirty = true;
+            }
+        });
+
+        // Handle form submission
+        form.addEventListener('submit', function () {
+            // Set isFormDirty to false when the form is submitted
+            isFormDirty = false;
+        });
+
+        // Warn the user before leaving the page if the form is dirty
+        window.addEventListener('beforeunload', function (event) {
+            if (isFormDirty) {
+            event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+            }
+        });
+        });
+
+  </script>
+  
+  <script>
+    $(document).ready(function () {
+        $('#graphics-image-input').on('change', function () {
+            var container = $('#graphics-selected-image-container');
+            container.empty();
+
+            var input = $(this)[0];
+            var file = input.files[0];
+
+            if (file) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    var selectedImage = $('<img class="graphics-selected-image" src="' + e.target.result + '">');
+                    container.append(selectedImage);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const fileInput = document.getElementById("graphics-image-input");
+
+        fileInput.addEventListener("change", function () {
+            const selectedFiles = this.files;
+            const maxAllowedFiles = {{allowed_image_upload}}; // Allow only 1 file to be selected
+
+            if (selectedFiles.length > maxAllowedFiles) {
+                alert("You can upload only one image.");
+                // Clear the file input or handle it based on your requirements
+                this.value = null;
+            }
+
+            // Update the selected image container or perform other actions as needed
+            updateSelectedImageContainer(selectedFiles);
+        });
+
+        function updateSelectedImageContainer(files) {
+            const container = document.getElementById("graphics-selected-image-container");
+            container.innerHTML = ""; // Clear existing content
+
+            if (files.length > 0) {
+                const file = files[0];
+                const fileName = file.name;
+                const selectedImage = document.createElement("img");
+                selectedImage.src = URL.createObjectURL(file);
+                selectedImage.className = "graphics-selected-image";
+                container.appendChild(selectedImage);
+            }
+
+            // Update the hidden input with the selected image's information
+            updateHiddenInput(files);
+        }
+
+        function updateHiddenInput(files) {
+            const hiddenInput = document.getElementById("graphics-selected-image");
+            const fileNames = Array.from(files).map((file) => file.name);
+            hiddenInput.value = fileNames.join(", ");
+        }
+    });
+
+    function openModal(graphics_image_id) {
+      // Set data in the modal
+      var inputElement = document.getElementById('graphics_image_id');
+      inputElement.value=graphics_image_id;
+  
+    }
+</script>
+    
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Replace the textareas with CKEditor instances
