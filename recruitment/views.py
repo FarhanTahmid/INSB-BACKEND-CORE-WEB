@@ -445,7 +445,7 @@ def generateExcelSheet(request, session_name):
         user=request.user
         has_access=(MDT_DATA.recruited_member_details_view_access(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
         if has_access:
-            date=datetime.datetime.now()
+            date=datetime.now()
             response = HttpResponse(
                 content_type='application/ms-excel')  # eclaring content type for the excel files
             response['Content-Disposition'] = f'attachment; filename=Recruitment Session - {session_name}---' +\
