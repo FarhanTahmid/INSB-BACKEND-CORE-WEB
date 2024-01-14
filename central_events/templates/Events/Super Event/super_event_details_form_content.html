@@ -1,5 +1,8 @@
 {% load static %}
 {% block super_event_details_form %}
+
+    <!-- CKEditor CDN -->
+    <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
     <div class="container" >
         <div class="padding" >
             <div class="row" >
@@ -61,4 +64,11 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Replace the textareas with CKEditor instances
+            CKEDITOR.replace('super_event_description');
+        });
+    </script>
 {% endblock super_event_details_form %}

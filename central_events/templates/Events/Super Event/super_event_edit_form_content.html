@@ -25,7 +25,7 @@
                     </div>
                     <br>
                     <div class="form-group">
-                        <label>Description</label>
+                        <label>Description <span style="color:red">*<span></label>
                         <textarea type="text" name="super_event_description" placeholder="Write within 500 words"
                             class="form-control" rows="10"></textarea>
                     </div>
@@ -41,12 +41,12 @@
                     </div>
                     <br>
                     <div style="text-align: center;">
+                        <input type="submit" value="Submit" name="Submit" class="btn btn-outline b-success text-success" style="margin-bottom:15px;">
                         {% comment %} {% if is_branch %} {% endcomment %}
-                        <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger">Cancel</a>
+                        <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger" style="margin-bottom:15px;">Cancel</a>
                         {% comment %} {% else %}
                         <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger">Cancel</a>
                         {% endif %} {% endcomment %}
-                        <input type="submit" value="Submit" name="Submit" class="btn btn-outline b-success text-success">
                     </div>
                     <br>
                 </div>
