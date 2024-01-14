@@ -462,13 +462,15 @@
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
     <div class="body-wrapper  float-menu">
 
-        {% block header %}
-        {% include 'header.html' %}
-        {% endblock header %}
+        {% if is_live %}
+            {% block header %}
+            {% include 'header.html' %}
+            {% endblock header %}
 
-        {% block wave_design %}
-        {% include 'wave.html' %}
-        {% endblock wave_design %}
+            {% block wave_design %}
+            {% include 'wave.html' %}
+            {% endblock wave_design %}
+        {% endif %}
 
         <div class="container">
 
@@ -511,6 +513,7 @@
             </section>
         </section>
 
+        {% if is_live %}
         <section class="faq_form_section">
             <div class="faq_form">
                 <div class="form_head">
@@ -542,11 +545,14 @@
                 </div>
             </div>
         </section>
+        {% endif %}
 
 
-        {% block footer %}
-        {% include "footer_block.html" %}
-        {% endblock footer %}
+        {% if is_live %}
+            {% block footer %}
+            {% include "footer_block.html" %}
+            {% endblock footer %}
+        {% endif %}
 
 
     </div>

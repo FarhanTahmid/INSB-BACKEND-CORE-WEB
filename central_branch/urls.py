@@ -69,6 +69,7 @@ urlpatterns = [
     path('manage_website/about/ieee_region_10/preview/',views.ieee_region_10_preview,name = "ieee_region_10_preview"),
     path('manage_website/about/ieee_bangladesh_section/preview/',views.ieee_bangladesh_section_preview,name = "ieee_bangladesh_section_preview"),
     path('manage_website/about/ieee_nsu_student_branch/preview/',views.ieee_nsu_student_branch_preview,name = "ieee_nsu_student_branch_preview"),
+    path('manage_website/about/faq/preview',views.faq_preview,name = "faq_preview"),
 
     #Events urls
     #Event control page 

@@ -244,7 +244,7 @@
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="about_details">{{about_ieee.about_ieee}}</textarea>
+                                    name="about_details">{{about_ieee.about_ieee|default:""}}</textarea>
                                     <p id="aboutCharacterCount" style="color: red;">Required</p>
                                 </div>
                                 <br>
@@ -277,7 +277,7 @@
                                     autocomplete="off"
                                     required
                                     name="learn_more_link"
-                                    value="{{about_ieee.learn_more_link}}"/>
+                                    value="{{about_ieee.learn_more_link|default:""}}"/>
                                     <br>
 
                                     <label>Mission and Vision Link <span style="color:red">*<span></label> 
@@ -288,7 +288,7 @@
                                     autocomplete="off"
                                     required
                                     name="mission_and_vision_link"
-                                    value="{{about_ieee.mission_and_vision_link}}"/>
+                                    value="{{about_ieee.mission_and_vision_link|default:""}}"/>
 
                                 </div>  
 
@@ -304,7 +304,7 @@
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="community_details">{{about_ieee.community_description}}</textarea>
+                                    name="community_details">{{about_ieee.community_description|default:""}}</textarea>
                                     <p id="communityCharacterCount" style="color: red;">Required</p>
                                 </div>
                                 <br>
@@ -367,7 +367,7 @@
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="start_with_ieee_details">{{about_ieee.start_with_ieee_description}}</textarea>
+                                    name="start_with_ieee_details">{{about_ieee.start_with_ieee_description|default:""}}</textarea>
                                     <p id="start_with_ieeeCharacterCount" style="color: red;">Required</p>
                                 </div>
                                 <br>
@@ -403,7 +403,7 @@
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="collaboration_details">{{about_ieee.collaboration_description}}</textarea>
+                                    name="collaboration_details">{{about_ieee.collaboration_description|default:""}}</textarea>
                                     <p id="collaborationCharacterCount" style="color: red;">Required</p>
                                 </div>
                                 <br>
@@ -439,7 +439,7 @@
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="publications_details">{{about_ieee.publications_description}}</textarea>
+                                    name="publications_details">{{about_ieee.publications_description|default:""}}</textarea>
                                     <p id="publicationsCharacterCount" style="color: red;">Required</p>
 
                                 </div>
@@ -476,7 +476,7 @@
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="events_and_conferences_details">{{about_ieee.events_and_conferences_description}}</textarea>
+                                    name="events_and_conferences_details">{{about_ieee.events_and_conferences_description|default:""}}</textarea>
                                     <p id="events_and_conferencesCharacterCount" style="color: red;">Required</p>
                                 </div>
                                 <br>
@@ -518,7 +518,7 @@
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="achievements_details">{{about_ieee.achievements_description}}</textarea>
+                                    name="achievements_details">{{about_ieee.achievements_description|default:""}}</textarea>
                                     <p id="achievementsCharacterCount" style="color: red;">Required</p>
                                 </div>
                                 <br>
@@ -564,7 +564,7 @@
                                     <textarea  
                                     class="form-control" 
                                     type="text"
-                                    name="innovations_and_developments_details">{{about_ieee.innovations_and_developments_description}}</textarea>
+                                    name="innovations_and_developments_details">{{about_ieee.innovations_and_developments_description|default:""}}</textarea>
                                     <p id="innovations_and_developmentsCharacterCount" style="color: red;">Required</p>
                                 </div>
                                 <br>
@@ -627,7 +627,7 @@
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="students_and_member_activities_details">{{about_ieee.students_and_member_activities_description}}</textarea>
+                                    name="students_and_member_activities_details">{{about_ieee.students_and_member_activities_description|default:""}}</textarea>
                                     <p id="students_and_member_activitiesCharacterCount" style="color: red;">Required</p>
                                 </div>
                                 <br>
@@ -690,7 +690,7 @@
                                         <textarea 
                                         class="form-control" 
                                         type="text"
-                                        name="quality_details">{{about_ieee.quality_description}}</textarea>
+                                        name="quality_details">{{about_ieee.quality_description|default:""}}</textarea>
                                         <p id="qualityCharacterCount" style="color: red;">Required</p>
                                 </div>
                                 <br>
@@ -757,7 +757,7 @@
                                     autocomplete="off"
                                     required
                                     name="join_now_link"
-                                    value="{{about_ieee.join_now_link}}"/>
+                                    value="{{about_ieee.join_now_link|default:""}}"/>
                                 </div>
                                 
                                 <br>
@@ -776,7 +776,7 @@
                                         autocomplete="off"
                                         required
                                         name="asia_pacific_link"
-                                        value="{{about_ieee.asia_pacific_link}}"/>
+                                        value="{{about_ieee.asia_pacific_link|default:""}}"/>
                                 </div>
                                 <br>
 
@@ -789,7 +789,7 @@
                                         autocomplete="off"
                                         required
                                         name="ieee_computer_organization_link"
-                                        value="{{about_ieee.ieee_computer_organization_link}}"/>
+                                        value="{{about_ieee.ieee_computer_organization_link|default:""}}"/>
                                 </div>
                                 <br>
 
@@ -802,7 +802,7 @@
                                         autocomplete="off"
                                         required
                                         name="customer_service_number"
-                                        value="{{about_ieee.customer_service_number}}"/>
+                                        value="{{about_ieee.customer_service_number|default:""}}"/>
                                 </div>
                                 <br>
 
@@ -815,7 +815,7 @@
                                         autocomplete="off"
                                         required
                                         name="presidents_names"
-                                        value="{{about_ieee.presidents_names}}"/>
+                                        value="{{about_ieee.presidents_names|default:""}}"/>
                                 </div>
                                 <br>
 
@@ -828,7 +828,7 @@
                                         autocomplete="off"
                                         required
                                         name="founders_names"
-                                        value="{{about_ieee.founders_names}}"/>
+                                        value="{{about_ieee.founders_names|default:""}}"/>
                                 </div>
 
                                 <br>

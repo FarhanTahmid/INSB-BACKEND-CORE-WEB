@@ -1117,7 +1117,7 @@ class Branch:
             return False
         
     def checking_length(*descriptions):
-        '''This function checks the length of the description fields. If any one exceed 700 or if any one is
+        '''This function checks the length of the description fields. If any one exceed 2000 or if any one is
             empty then data won't be saved.'''
         
         try:

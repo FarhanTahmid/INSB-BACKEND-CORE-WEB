@@ -1241,7 +1241,7 @@ def manage_about(request):
                     if Branch.checking_length(about_details,community_details,start_with_ieee_details,collaboration_details,publications_details,
                                             events_and_conferences_details,achievements_details,innovations_and_developments_details,
                                             students_and_member_activities_details,quality_details):
-                        messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                        messages.error(request,"Please ensure your word limit is within 1500 and you have filled out all descriptions")
                         return redirect("central_branch:manage_about")
                     #passing the fields data to save the data in the database
                     if(Branch.set_about_ieee_page(about_details, learn_more_link, mission_and_vision_link, community_details, start_with_ieee_details, collaboration_details,
@@ -1365,7 +1365,7 @@ def ieee_region_10(request):
                     if Branch.checking_length(ieee_region_10_description,young_professionals_description,women_in_engineering_ddescription,
                                             student_and_member_activities_description,educational_activities_and_involvements_description,
                                             industry_relations_description,membership_development_description,events_and_conference_description):
-                        messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                        messages.error(request,"Please ensure your word limit is within 1500 and you have filled out all descriptions")
                         return redirect("central_branch:ieee_region_10")
 
                     if(Branch.set_ieee_region_10_page(ieee_region_10_description,ieee_region_10_history_link,young_professionals_description,women_in_engineering_ddescription,
@@ -1480,7 +1480,7 @@ def ieee_bangladesh_section(request):
 
                     if Branch.checking_length(about_details,members_and_volunteers_details,benefits_details,student_branches_details,
                                             affinity_groups_details,communty_and_society_details,achievements_details):
-                        messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                        messages.error(request,"Please ensure your word limit is within 1500 and you have filled out all descriptions")
                         return redirect("central_branch:ieee_bangladesh_section")
 
                     if(Branch.set_ieee_bangladesh_section_page(about_details, ieeebd_link, members_and_volunteers_details, benefits_details,
@@ -1612,7 +1612,7 @@ def ieee_nsu_student_branch(request):
 
                     if Branch.checking_length(about_nsu_student_branch,chapters_description,creative_team_description,mission_description,
                                             vision_description,events_description,achievements_description):
-                        messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                        messages.error(request,"Please ensure your word limit is within 1500 and you have filled out all descriptions")
                         return redirect("central_branch:ieee_nsu_student_branch")
                     
                     if(Branch.set_ieee_nsu_student_branch_page(about_nsu_student_branch, chapters_description, ras_read_more_link,
@@ -1739,6 +1739,7 @@ def ieee_nsu_student_branch_preview(request):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
+    
 @login_required
 def faq(request):
 
@@ -1817,6 +1818,24 @@ def faq(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
 
+@login_required
+@xframe_options_exempt
+def faq_preview(request):
+    try:
+        all_categories = Branch.get_all_category_of_questions()
+        saved_question_answers = Branch.get_saved_questions_and_answers()
+
+        context = {
+            'is_live':False,
+            'all_categories':all_categories,
+            'saved_question_answer':saved_question_answers,
+        }
+
+        return render(request, 'About/faq.html',context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
 
 
 @login_required
@@ -3218,7 +3237,8 @@ def feedbacks(request):
 def event_feedback(request, event_id):
 
     try:
-
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
 
         has_access = Branch_View_Access.get_event_edit_access(request)
@@ -3228,6 +3248,7 @@ def event_feedback(request, event_id):
 
             context = {
                 'is_branch':True,
+                'user_data':user_data,
                 'all_sc_ag':sc_ag, 
                 'event_id':event_id, 
                 'event_feedbacks':event_feedbacks
@@ -3456,8 +3477,8 @@ def member_details(request,ieee_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
 
-def custom_404(request,exception):
+def custom_404(request):
     return render(request,'404.html',status=404)
 
-def custom_500(request,exception):
+def custom_500(request):
     return render(request,'500.html',status=500)

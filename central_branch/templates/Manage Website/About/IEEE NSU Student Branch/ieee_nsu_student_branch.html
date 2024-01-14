@@ -221,7 +221,7 @@
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="about_details">{{ieee_nsu_student_branch.about_nsu_student_branch}}</textarea>
+                                    name="about_details">{{ieee_nsu_student_branch.about_nsu_student_branch|default:""}}</textarea>
                                     <p id="aboutCharacterCount" style="color: red;">Required</p>
                                 </div>
                                 <br>
@@ -258,7 +258,7 @@
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="chapters_details">{{ieee_nsu_student_branch.chapters_description}}</textarea>
+                                    name="chapters_details">{{ieee_nsu_student_branch.chapters_description|default:""}}</textarea>
                                     <p id="chaptersCharacterCount" style="color: red;">Required</p>
                                 </div>
                                 <br>
@@ -292,7 +292,7 @@
                                     autocomplete="off"
                                     required
                                     name="ras_read_more_link"
-                                    value="{{ieee_nsu_student_branch.ras_read_more_link}}"/>
+                                    value="{{ieee_nsu_student_branch.ras_read_more_link|default:""}}"/>
                                 </div>
                                 <br> 
 
@@ -325,7 +325,7 @@
                                     autocomplete="off"
                                     required
                                     name="pes_read_more_link"
-                                    value="{{ieee_nsu_student_branch.pes_read_more_link}}"/>
+                                    value="{{ieee_nsu_student_branch.pes_read_more_link|default:""}}"/>
                                 </div> 
                                 <br>
 
@@ -358,7 +358,7 @@
                                     autocomplete="off"
                                     required
                                     name="ias_read_more_link"
-                                    value="{{ieee_nsu_student_branch.ias_read_more_link}}"/>
+                                    value="{{ieee_nsu_student_branch.ias_read_more_link|default:""}}"/>
                                 </div> 
                                 <br>
 
@@ -391,7 +391,7 @@
                                     autocomplete="off"
                                     required
                                     name="wie_read_more_link"
-                                    value="{{ieee_nsu_student_branch.wie_read_more_link}}"/>
+                                    value="{{ieee_nsu_student_branch.wie_read_more_link|default:""}}"/>
                                 </div> 
 
 
@@ -407,7 +407,7 @@
                                     <textarea 
                                     class="form-control" 
                                     type="text"
-                                    name="creative_team_details">{{ieee_nsu_student_branch.creative_team_description}}</textarea>
+                                    name="creative_team_details">{{ieee_nsu_student_branch.creative_team_description|default:""}}</textarea>
                                     <p id="creativeTeamCharacterCount" style="color: red;">Required</p>
 
                                 </div>
@@ -424,7 +424,7 @@
                                     <textarea  
                                     class="form-control" 
                                     type="text"
-                                    name="mission_details">{{ieee_nsu_student_branch.mission_description}}</textarea>
+                                    name="mission_details">{{ieee_nsu_student_branch.mission_description|default:""}}</textarea>
                                     <p id="missionCharacterCount" style="color: red;">Required</p>
                                 </div>
                                 <br>
@@ -461,7 +461,7 @@
                                     <textarea  
                                     class="form-control" 
                                     type="text"
-                                    name="vision_details">{{ieee_nsu_student_branch.vision_description}}</textarea>
+                                    name="vision_details">{{ieee_nsu_student_branch.vision_description|default:""}}</textarea>
                                     <p id="visionCharacterCount" style="color: red;">Required</p>
                                 </div>
                                 <br>
@@ -498,7 +498,7 @@
                                     <textarea  
                                     class="form-control" 
                                     type="text"
-                                    name="events_details">{{ieee_nsu_student_branch.events_description}}</textarea>
+                                    name="events_details">{{ieee_nsu_student_branch.events_description|default:""}}</textarea>
                                     <p id="eventsCharacterCount" style="color: red;">Required</p>
                                     {% comment %} <br>
 
@@ -528,7 +528,7 @@
                                     autocomplete="off"
                                     required
                                     name="join_now_link"
-                                    value="{{ieee_nsu_student_branch.join_now_link}}"/>
+                                    value="{{ieee_nsu_student_branch.join_now_link|default:""}}"/>
                                 </div>
 
                                 <br>
@@ -543,7 +543,7 @@
                                     <textarea  
                                     class="form-control" 
                                     type="text"
-                                    name="achievements_details">{{ieee_nsu_student_branch.achievements_description}}</textarea>
+                                    name="achievements_details">{{ieee_nsu_student_branch.achievements_description|default:""}}</textarea>
                                     <p id="achievementsCharacterCount" style="color: red;">Required</p>
                                 </div>
 
