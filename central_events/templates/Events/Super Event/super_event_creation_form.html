@@ -6,6 +6,7 @@
     <title>Create Event | IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     {% block common_css %}
         {% include "common_css.html" %}
     {% endblock common_css %}
@@ -44,6 +45,31 @@
                 width: 100%; /* Make the button full width on smaller screens */
             }
         }
+
+
+        h1{
+            text-align:center;
+            font-size:30px;
+            font-weight:bold;
+        }
+    
+        label{
+            font-size:20px;
+        }
+        
+
+        .app-body{
+            justify-content:center; 
+            margin-left:15%;
+            margin-right:15%;
+        }
+        
+        @media (max-width: 760px) {
+            .app-body {
+                margin-left: 5%;
+                margin-right: 5%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -75,26 +101,28 @@
         <!--navbar content-->
         
         <!-- ############ PAGE START-->
-        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+        <div ui-view class="app-body" id="view">
             <br>
             <br>
+
+            <!--TabView for event creation-->
+        
+            <div>
+                {% block super_event_creation_form %}
+                    {% include "Events/Super Event/super_event_details_form_content.html" %}
+                {% endblock super_event_creation_form %}
+                <div>
+                    {% for message in messages %}
+                        <p>{{message}}</p>
+                    {% endfor %}
+                    <p></p>
+                </div>
+            </div>
+            <!--End of TabView-->
         </div>
         <!--PAGE END-->
 
-        <!--TabView for event creation-->
-        
-        <div>
-            {% block super_event_creation_form %}
-                {% include "Events/Super Event/super_event_details_form_content.html" %}
-            {% endblock super_event_creation_form %}
-            <div>
-                {% for message in messages %}
-                    <p>{{message}}</p>
-                {% endfor %}
-                <p></p>
-            </div>
-        </div>
-        <!--End of TabView-->
+
 
         <!--Theme Switcher-->
         {% block theme_switcher %}
