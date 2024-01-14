@@ -384,7 +384,7 @@
                 <div class="bar"></div>
 
 
-                <!--Featured Events-->
+                <!--Mega Events-->
                 <div class="row m-0 box-container" style="transition: .3s ease-in-out; ">
                     {% for events,banner_image in featured_events.items %}
                     <div style="border-radius: 7px;"
@@ -411,14 +411,14 @@
                                         </div>
 
                                         <h3 class="gdlr-blog-title event_name">
-                                            <a href="{% url 'main_website:event_details' events.id %}">{{events.event_name}}</a>
+                                            <a href="{% url 'main_website:event_details' events.id %}" id="gdlr-blog-title">gdfugbjkdsfcb sc ubuhx fxvfusefgs fgefuygfuvsfusdvfsgcfu ergfcuyvfuih cbdr8y</a>
                                         </h3>
                                         <div class="clear"></div>
                                     </header>
 
                                     <div class="description-container"
                                         style="display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; text-overflow: ellipsis; -webkit-line-clamp: 2;">
-                                        <p class="card-text">{{events.event_description|safe}}</p>
+                                        <p class="card-text">gdfugbjkdsfcb sc ubuhx fxvfusefgs fgefuygfuvsfusdvfsgcfu ergfcuyvfuih cbdr8y gdfugbjkdsfcb sc ubuhx fxvfusefgs fgefuygfuvsfusdvfsgcfu ergfcuyvfuih cbdr8y</p>
                                     </div>
                                     <a href="{% url 'main_website:event_details' events.id %}" class="excerpt-read-more">Read More</a>
                                 </div>
@@ -435,6 +435,8 @@
             </div>
 
         </section>
+        <!-- Mega events starts  -->
+
         <br><br>
         <!-- featured events starts  -->
         <section>
@@ -473,7 +475,7 @@
                                         </div>
 
                                         <h3 class="gdlr-blog-title event_name">
-                                            <a href="{% url 'main_website:event_details' events.id %}">{{events.event_name}}</a>
+                                            <a href="{% url 'main_website:event_details' events.id %}"  id="gdlr-blog-title">{{events.event_name}}</a>
                                         </h3>
                                         <div class="clear"></div>
                                     </header>
@@ -722,6 +724,14 @@
     {% include "common_js_includes.html" %}
     {% endblock %}
     <script src="{% static '/js/event_script.js'%}"></script>
+    <script>
+        var element = document.getElementById('gdlr-blog-title');
+        var maxLength = 20; // Set your desired maximum length
+      
+        if (element.textContent.length > maxLength) {
+            element.textContent = element.textContent.substring(0, maxLength) + '...';
+        }
+      </script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Set the initial page to 1
