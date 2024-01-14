@@ -11,6 +11,7 @@ class SC_AG_Members(models.Model):
     
     class Meta:
         verbose_name="Society, Chapter & Affinity Group Member"
+        ordering = ['position__rank']
     
     def __str__(self) -> str:
         return str(self.member)
