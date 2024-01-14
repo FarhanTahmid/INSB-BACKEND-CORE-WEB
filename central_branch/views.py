@@ -558,6 +558,7 @@ def branch_panel_officers_tab(request,panel_id):
 
         
         context={
+            'panel_edit_access':Branch_View_Access.get_create_panel_access(request),
             'user_data':user_data,
             'all_sc_ag':sc_ag,
             'panel_id':panel_id,
@@ -618,6 +619,7 @@ def branch_panel_volunteers_tab(request,panel_id):
     
         
         context={
+            'panel_edit_access':Branch_View_Access.get_create_panel_access(request),
             'user_data':user_data,
             'all_sc_ag':sc_ag,
             'panel_id':panel_id,
@@ -696,6 +698,7 @@ def branch_panel_alumni_tab(request,panel_id):
                     return redirect('central_branch:panel_details_alumni',panel_id)
         
         context={
+            'panel_edit_access':Branch_View_Access.get_create_panel_access(request),
             'user_data':user_data,
             'all_sc_ag':sc_ag,
             'panel_id':panel_id,

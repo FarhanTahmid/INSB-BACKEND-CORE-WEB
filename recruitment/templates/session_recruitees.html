@@ -200,7 +200,17 @@
         <canvas id="doughnut" data-colors='["#00629B", "#e30b0b"]'></canvas>
       </div>
     </div>
-  
+    
+    <br>
+    <!--Messages-->
+    <div style="justify-content:center; text-align:center;">
+      {% if messages %}
+          {% for message in messages %}
+              <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+          {% endfor %}
+      {% endif %}
+    </div>
+  <!--Messages End-->
   
     <!--END OF STAT-->
     <br>
