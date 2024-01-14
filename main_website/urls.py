@@ -59,4 +59,5 @@ urlpatterns = [
     path('join_insb',views.join_insb, name="join_insb"),
     
     # path('hello',views.test_view,name="404"),
+    path('mega_event_description_page',views.mega_event_description_page,name="mega_event_description_page"),
 ]

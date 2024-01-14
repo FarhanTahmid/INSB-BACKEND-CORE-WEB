@@ -1,6 +1,7 @@
 import imp
 from django.urls import path,include
 from . import views
+from .views import UpdatePositionAjax
 
 app_name='central_branch'
 
@@ -92,6 +93,16 @@ urlpatterns = [
     path('event_details/<int:event_id>/edit/content/',views.event_edit_content_form_tab,name='event_edit_content_form_tab'),
     #Super Event Creation Form
     path('events/create_super_event/',views.super_event_creation,name="super_event_creation"), 
+
+    #Good Luck Arman, Fix this
+    path('events/super_event_table/',views.super_event_table,name="super_event_table"), 
+
+    #Good Luck Arman, Fix this
+    path('events/super_event_edit/',views.super_event_edit,name="super_event_edit"), 
+
+    #Good Luck Arman, Fix this
+    path('events/super_event_add_event/',views.super_event_add_event,name="super_event_add_event"), 
+
     #Event preview
     path('event_details/<int:event_id>/preview/',views.event_preview,name='event_preview'),
     #Event Feedback
@@ -99,6 +110,8 @@ urlpatterns = [
     #Members list
     path('members/',views.insb_members_list,name="members_list"),
     #Members details list
-    path('member_details/<int:ieee_id>',views.member_details,name="member_details")
+    path('member_details/<int:ieee_id>',views.member_details,name="member_details"),
 
+    # get dynamic data in JS position edit
+    path('get_position_data/',UpdatePositionAjax.as_view(),name="update_position")
 ]

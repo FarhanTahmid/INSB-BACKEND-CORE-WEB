@@ -311,7 +311,9 @@
             }
         }
 
-
+        .gdlr-blog-grid .excerpt-read-more{
+            margin-top: 0;
+        }
     </style>
 </head>
 
@@ -375,8 +377,67 @@
          </div>
         <br><br>
 
-        <!-- about Ras and logo ends  -->
+        <!-- mega events  -->
+        <section>
+            <div class="container">
+                <h2 style="font-weight: bold;">MEGA EVENTS</h2>
+                <div class="bar"></div>
 
+
+                <!--Mega Events-->
+                <div class="row m-0 box-container" style="transition: .3s ease-in-out; ">
+                    {% for events,banner_image in featured_events.items %}
+                    <div style="border-radius: 7px;"
+                        class="col-lg-3 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box mega_event">
+                        <article id="post-2255"
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style"
+                            style="border: 1px solid black;">
+                            <div class="gdlr-standard-style">
+                                <div class="gdlr-blog-thumbnail">
+                                    <a href="{% url 'main_website:event_details' events.id %}">
+                                        <img class="article-image"
+                                            src="{{media_url}}{{banner_image}}"
+                                            alt="Mega Event Banner" width="100%" />
+                                    </a>
+                                </div>
+
+                                <div class="gdlr-blog-grid-content" style="overflow: hidden;">
+                                    <header class="post-header">
+                                        <div class="gdlr-blog-info">
+                                            <div class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By {{events.event_organiser.short_form}}
+                                            </div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <h3 class="gdlr-blog-title event_name">
+                                            <a href="{% url 'main_website:event_details' events.id %}" id="gdlr-blog-title">gdfugbjkdsfcb sc ubuhx fxvfusefgs fgefuygfuvsfusdvfsgcfu ergfcuyvfuih cbdr8y</a>
+                                        </h3>
+                                        <div class="clear"></div>
+                                    </header>
+
+                                    <div class="description-container"
+                                        style="display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; text-overflow: ellipsis; -webkit-line-clamp: 2;">
+                                        <p class="card-text">gdfugbjkdsfcb sc ubuhx fxvfusefgs fgefuygfuvsfusdvfsgcfu ergfcuyvfuih cbdr8y gdfugbjkdsfcb sc ubuhx fxvfusefgs fgefuygfuvsfusdvfsgcfu ergfcuyvfuih cbdr8y</p>
+                                    </div>
+                                    <a href="{% url 'main_website:event_details' events.id %}" class="excerpt-read-more">Read More</a>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    {% endfor %}     
+                </div>
+
+                <div class="text-center"> <!-- Add 'text-center' class here -->
+                    <button class="see-all-events-button load-mega-events"><b><i class="fa-regular fa-calendar"></i> Load More</b></button>
+                </div>
+
+            </div>
+
+        </section>
+        <!-- Mega events starts  -->
+
+        <br><br>
         <!-- featured events starts  -->
         <section>
             <div class="container">
@@ -397,7 +458,7 @@
                                     <a href="{% url 'main_website:event_details' events.id %}">
                                         <img class="article-image"
                                             src="{{media_url}}{{banner_image}}"
-                                            alt="Event Image" width="100%" />
+                                            alt="Event Banner" width="100%" />
                                     </a>
                                 </div>
 
@@ -408,13 +469,13 @@
                                                 <span class="gdlr-sep">/</span>{{events.event_date|date:"M"}}.{{events.event_date.day}}{% if event.event_date.day == 1 %}st{% elif event.event_date.day == 2 %}nd {% elif event.event_date.day == 3 %}rd{% else %}th{% endif %}, {{events.event_date.year}}
                                             </div>
                                             <div class="blog-info blog-author gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span>By Org. {{events.event_organiser.short_form}}
+                                                <span class="gdlr-sep">/</span>By {{events.event_organiser.short_form}}
                                             </div>
                                             <div class="clear"></div>
                                         </div>
 
                                         <h3 class="gdlr-blog-title event_name">
-                                            <a href="{% url 'main_website:event_details' events.id %}">{{events.event_name}}</a>
+                                            <a href="{% url 'main_website:event_details' events.id %}"  id="gdlr-blog-title">{{events.event_name}}</a>
                                         </h3>
                                         <div class="clear"></div>
                                     </header>
@@ -663,6 +724,51 @@
     {% include "common_js_includes.html" %}
     {% endblock %}
     <script src="{% static '/js/event_script.js'%}"></script>
+    <script>
+        var element = document.getElementById('gdlr-blog-title');
+        var maxLength = 20; // Set your desired maximum length
+      
+        if (element.textContent.length > maxLength) {
+            element.textContent = element.textContent.substring(0, maxLength) + '...';
+        }
+      </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Set the initial page to 1
+            let currentPage = 1;
+    
+            // Get the total number of cards
+            const totalCards = document.querySelectorAll('.mega_event').length;
+    
+            // Show/hide cards based on the current page
+            function updateCardsVisibility() {
+                const cards = document.querySelectorAll('.mega_event');
+                const cardsPerPage = 4;
+    
+                for (let i = 0; i < cards.length; i++) {
+                    if (i < currentPage * cardsPerPage) {
+                        cards[i].style.display = 'block';
+                    } else {
+                        cards[i].style.display = 'none';
+                    }
+                }
+    
+                // Hide the "Load More" button if all cards are shown
+                if (currentPage * cardsPerPage >= totalCards) {
+                    document.querySelector('.see-all-events-button.load-mega-events').style.display = 'none';
+                }
+            }
+    
+            // Initial update to show only the first page
+            updateCardsVisibility();
+    
+            // Handle "Load More" button click
+            document.querySelector('.see-all-events-button.load-mega-events').addEventListener('click', function () {
+                currentPage++;
+                updateCardsVisibility();
+            });
+        });
+    </script>
     <script>
         // Get the height of the columns and set the maximum height
         window.addEventListener('load', function () {

@@ -11,6 +11,7 @@
     {% endblock common_css %}
     <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
 
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <style>
         body, html {
@@ -200,7 +201,7 @@
                     <div class="btn-group dropdown">
                         <button class="btn  btn-outline b-accent text-accent  dropdown-toggle" data-toggle="dropdown">Create New Positions & Teams</button>
                         <div class="dropdown-menu dropdown-menu-scale info pull-right">
-                            <button class="dropdown-item" data-toggle="modal" data-target="#m-s-i" ui-toggle-class="bounce" ui-target="#animate">Create New Position</button>
+                            <button class="dropdown-item" data-toggle="modal" data-target="#m-s-i" ui-toggle-class="bounce" ui-target="#animate">Manage Positions</button>
                             <button class="dropdown-item" data-toggle="modal" data-target="#m-s-j" ui-toggle-class="bounce" ui-target="#animate">Create New Team</button>
                         </div>
                     </div>
@@ -624,6 +625,7 @@
                             </form>
                             <div class="modal-footer">
                             <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-primary p-x-md" data-dismiss="modal" data-toggle="modal" data-target="#m-s-ep" ui-toggle-class="bounce" ui-target="#animate">Edit Existing Positions</button>
                             <input type="submit" class="btn btn-success p-x-md" name="create_position" value="Create Position"></input>                  
                             </div>
                         </div><!-- /.modal-content -->
@@ -632,6 +634,152 @@
             </div>
             <!--Position Modal Ends-->
             {% endif %}
+
+            <!--Position Edit modals here-->
+            {% if panel_edit_access %}
+            <!--Create Position Edit Modal-->
+            <div id="m-s-ep" class="modal fade animate" data-backdrop="true">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="modal-dialog" id="animate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Edit Existing Position</h5>
+                            </div>
+                            <div class="modal-body text-left p-lg">
+                                <p><span style="color:red;">****</span>Rank is a number that sets the order of the hierarchy of the positions. 1 is the highest rank in Position.</p>      
+                            </div>
+                            <div style="margin-left:10px;"> 
+                                <!-- Form Fields of the Positions -->
+
+                                <select class="form-control w-75" name="position_to_edit" id="position_to_edit">
+                                    <option value="">-----------</option>
+                                    {% for i in all_positions %}
+                                    <option value="{{i.id}}">{{i.role}}</option>
+                                    {% endfor %}
+                                </select>
+                                
+                                <div class="modal-body text-left p-lg">
+                                    <p>Edit Role attributes.</p>        
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="id_role_name">Role Name:</label>
+                                        <input class="form-control w-75" type="text" id="id_role_name" name="position_name">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="id_role_rank">Rank:</label>
+                                        <input class="form-control w-75" type="number" id="id_role_rank" name="position_rank">
+                                    </div>
+                                </div>
+                                <br>
+                                <!--Checkboxes-->
+                                <div class="form-group row" style="margin-left:5px;">
+                                    <div class="col-md-6">
+                                        <label for="id_faculty_check" class="col-sm  form-control-label">Is this a Faculty Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="faculty_position_check" type="checkbox" id="id_faculty_check">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="executive_check" class="col-sm  form-control-label">Is this a Executive Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="executive_position_check" type="checkbox" id="executive_check">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" style="margin-left:5px;">
+                                    <div class="col-md-6">
+                                        <label for="co_ordinator_check" class="col-sm  form-control-label">Is this a Co-Ordinator Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="coordinator_position_check" type="checkbox" id="co_ordinator_check">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="officer_check" class="col-sm  form-control-label">Is this a Officer Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="officer_position_check" type="checkbox" id="officer_check">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" style="margin-left:5px;">
+                                    <div class="col-md-6">
+                                        <label for="core_check" class="col-sm  form-control-label">Is this a Core-volunteer Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="core_volunteer_position_check" type="checkbox" id="core_check">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="volunteer_check" class="col-sm  form-control-label">Is this a Volunteer Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="volunteer_position_check" type="checkbox" id="volunteer_check">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" style="margin-left:5px;">
+                                    <div class="col-md-12">
+                                        <label for="mentor_check" class="col-sm  form-control-label">Is this a Mentor Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="mentor_position_check" type="checkbox" id="mentor_check">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                    
+                            <br>
+                            <div>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-danger p-x-md" name="delete_position" value="Delete Position"></input>                               
+                            <input type="submit" class="btn btn-success p-x-md" name="update_position" value="Update Position"></input>                               
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </form>
+            </div>
+            <!--Position Edit Modal Ends-->
+            {% endif %}
+
         </div>
         <!--PAGE END-->
 
@@ -648,6 +796,82 @@
         {% include "common_js.html" %}
     {% endblock common_js %}
 
+    <!--Ajax Function to override Form data with select option change-->
+    <script>
+        $(document).ready(function () {
+            $("#position_to_edit").change(function () {
+                var selectedRoleID = $(this).val();
+                // Make an AJAX request to retrieve data for the selected role
+                $.ajax({
+                    url: "{% url 'central_branch:update_position' %}",
+                    type: "GET",
+                    data: {'role_id': selectedRoleID},
+                    success: function (data) {
+                        // Update other form fields based on the received data
+                        $("#id_role_name").val(data.role);
+                        $("#id_role_rank").val(data.rank);
+                        // Update Checkbox fields as needed
+                        if(data.is_faculty){
+                            $("#id_faculty_check").prop('checked', true);
+                        }
+                        else{
+                            $("#id_faculty_check").prop('checked', false);
+
+                        }
+                        if(data.is_eb_member){
+                            $("#executive_check").prop('checked', true);
+
+                        }
+                        else{
+                            $("#executive_check").prop('checked', false);
+
+                        }
+                        if(data.is_officer){
+                            $("#officer_check").prop('checked', true);
+
+                        }
+                        else{
+                            $("#officer_check").prop('checked', false);
+
+                        }
+                        if(data.is_co_ordinator){
+                            $("#co_ordinator_check").prop('checked', true);
+
+                        }
+                        else{
+                            $("#co_ordinator_check").prop('checked', false);
+
+                        }
+                        if(data.is_mentor){
+                            $("#mentor_check").prop('checked', true);
+
+                        }
+                        else{
+                            $("#mentor_check").prop('checked', false);
+                        }
+                        if(data.is_core_volunteer){
+                            $("#core_check").prop('checked', true);
+
+                        }else{
+                            $("#core_check").prop('checked', false);
+
+                        }
+                        if(data.is_volunteer){
+                            $("#volunteer_check").prop('checked', true);
+
+                        }else{
+                            $("#volunteer_check").prop('checked', false);
+
+                        }
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
+                    }
+                });
+            });
+        });
+    </script>
+    <!---->
     <script>
         function searchTable() {
             // Declare variables

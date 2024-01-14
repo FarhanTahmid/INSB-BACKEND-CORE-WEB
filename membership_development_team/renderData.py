@@ -385,5 +385,13 @@ class MDT_DATA:
                 if is_active:
                     member.is_active_member = True
                     member.save()
+    
+    def loadMdtFirstCoordinator():
+        laod_team_official=MDT_DATA.get_all_team_members()
+        co_ordinators=laod_team_official[0]
+        if(len(co_ordinators)>0):
+            return co_ordinators[0]
+        return False
+        
             
 
