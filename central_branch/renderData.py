@@ -1142,11 +1142,13 @@ class Branch:
 
         try:
             about_ieee = About_IEEE.objects.get(id=1)
+            #getting the path of the image from the filesystem
             path = settings.MEDIA_ROOT+str(image_path)
-
+            #checking to see if the image exists in filesytem. If yes then delete it from filesystem
             if os.path.exists(path):
                 os.remove(path)
 
+            #checking to see which image is requested to be deleted
             if(image_id == 'about_image'):
                 about_ieee.about_image = None
             elif(image_id == 'community_image'):
@@ -1158,6 +1160,7 @@ class Branch:
             elif(image_id == "quality_image"):
                 about_ieee.quality_image = None
 
+            #saving before returning
             about_ieee.save()
             return True
 
@@ -1171,16 +1174,20 @@ class Branch:
 
         try:
             ieee_bangladesh_section = IEEE_Bangladesh_Section.objects.get(id=1)
+            #getting the path of the image from the local machine
             path = settings.MEDIA_ROOT+str(image_path)
 
+            #checking to see if the image exists in filesytem. If yes then delete it from filesystem
             if os.path.exists(path):
                 os.remove(path)
 
+            #checking to see which image is requested to be deleted
             if(image_id == 'ieee_bangladesh_logo'):
                 ieee_bangladesh_section.ieee_bangladesh_logo = None
             elif(image_id == 'member_and_volunteer_picture'):
                 ieee_bangladesh_section.member_and_volunteer_picture = None
             
+            #saving before returning
             ieee_bangladesh_section.save()
             return True
 
@@ -1194,11 +1201,14 @@ class Branch:
 
         try:
             ieee_nsu_student_branch = IEEE_NSU_Student_Branch.objects.get(id=1)
+            #getting the path of the image from the local machine
             path = settings.MEDIA_ROOT+str(image_path)
-
+            
+            #checking to see if the image exists in filesytem. If yes then delete it from filesystem
             if os.path.exists(path):
                 os.remove(path)
 
+            #checking to see which image is requested to be deleted
             if(image_id == 'about_image'):
                 ieee_nsu_student_branch.about_image = None
             elif(image_id == 'ras_image'):
@@ -1214,6 +1224,7 @@ class Branch:
             elif(image_id == 'vision_image'):
                 ieee_nsu_student_branch.ras_image = None
             
+            #saving before returning
             ieee_nsu_student_branch.save()
             return True
 

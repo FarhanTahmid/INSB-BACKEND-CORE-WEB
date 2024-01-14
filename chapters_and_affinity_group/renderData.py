@@ -473,22 +473,22 @@ class Sc_Ag:
         try:
             #getting the specific society using the primary
             sc_ag = SC_AG_Info.get_sc_ag_details(request,primary)
-            #getting the path of the image from the local machine
+            #getting the path of the image from the filesystem
             path = settings.MEDIA_ROOT+str(image_path)
+
+            #checking to see if the image exists in filesytem. If yes then delete it from filesystem
+            if os.path.exists(path):
+                os.remove(path)
 
             #checking to see which image is requested to be deleted
             if(image_id == 'sc_ag_logo'):
                 sc_ag.logo = None
-                os.remove(path)
             elif(image_id == 'background_image'):
                 sc_ag.background_image = None
-                os.remove(path)
             elif(image_id == 'mission_picture'):
                 sc_ag.mission_picture = None
-                os.remove(path)
             elif(image_id == "vision_picture"):
                 sc_ag.vision_picture = None
-                os.remove(path)
             
             #saving before returning
             sc_ag.save()
