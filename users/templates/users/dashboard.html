@@ -350,13 +350,13 @@
 								</div>
 							</div>
 					
-							{% if forloop.counter|divisibleby:3 and not forloop.last %}
+							{% comment %} {% if forloop.counter|divisibleby:3 and not forloop.last %}
 								</div><div class="row mt-2 mx-auto">
 							{% endif %}
 					
 							{% if forloop.last and not forloop.counter|divisibleby:3 %}
 								</div>
-							{% endif %}
+							{% endif %} {% endcomment %}
 						{% endfor %}
 					</div>
 				</div>
@@ -393,13 +393,13 @@
 								</div>
 							</div>
 					
-							{% if loop.index|divisibleby:3 and not loop.last %}
+							{% comment %} {% if loop.index|divisibleby:3 and not loop.last %}
 								</div><div class="row mt-2">
 							{% endif %}
 					
 							{% if loop.last and not loop.index|divisibleby:3 %}
 								</div>
-							{% endif %}
+							{% endif %} {% endcomment %}
 						{% endfor %}
 					</div>
 					
