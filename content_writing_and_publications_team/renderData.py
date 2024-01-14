@@ -1,3 +1,5 @@
+import os
+from django.conf import settings
 from central_branch.renderData import Branch
 from django.shortcuts import get_object_or_404
 from users.models import Members
@@ -188,7 +190,9 @@ class ContentWritingTeam:
         ''' This function is used to delete a file of CWP Team. It takes a file id as parameter '''
         try:
             doc = Content_Team_Document.objects.get(id=file_id)
-            doc.document.delete()
+            path = settings.MEDIA_ROOT+str(doc.document)
+            if os.path.exists(path):
+                os.remove(path)
             doc.delete()
             return True
         except Exception as e:

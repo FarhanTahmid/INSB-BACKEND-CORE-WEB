@@ -1142,24 +1142,25 @@ class Branch:
 
         try:
             about_ieee = About_IEEE.objects.get(id=1)
+            #getting the path of the image from the filesystem
             path = settings.MEDIA_ROOT+str(image_path)
+            #checking to see if the image exists in filesytem. If yes then delete it from filesystem
+            if os.path.exists(path):
+                os.remove(path)
 
+            #checking to see which image is requested to be deleted
             if(image_id == 'about_image'):
                 about_ieee.about_image = None
-                os.remove(path)
             elif(image_id == 'community_image'):
                 about_ieee.community_image = None
-                os.remove(path)
             elif(image_id == 'innovations_and_developments_image'):
                 about_ieee.innovations_and_developments_image = None
-                os.remove(path)
             elif(image_id == "students_and_member_activities_image"):
                 about_ieee.students_and_member_activities_image = None
-                os.remove(path)
             elif(image_id == "quality_image"):
                 about_ieee.quality_image = None
-                os.remove(path)
-            
+
+            #saving before returning
             about_ieee.save()
             return True
 
@@ -1173,15 +1174,20 @@ class Branch:
 
         try:
             ieee_bangladesh_section = IEEE_Bangladesh_Section.objects.get(id=1)
+            #getting the path of the image from the local machine
             path = settings.MEDIA_ROOT+str(image_path)
 
+            #checking to see if the image exists in filesytem. If yes then delete it from filesystem
+            if os.path.exists(path):
+                os.remove(path)
+
+            #checking to see which image is requested to be deleted
             if(image_id == 'ieee_bangladesh_logo'):
                 ieee_bangladesh_section.ieee_bangladesh_logo = None
-                os.remove(path)
             elif(image_id == 'member_and_volunteer_picture'):
                 ieee_bangladesh_section.member_and_volunteer_picture = None
-                os.remove(path)
             
+            #saving before returning
             ieee_bangladesh_section.save()
             return True
 
@@ -1195,30 +1201,30 @@ class Branch:
 
         try:
             ieee_nsu_student_branch = IEEE_NSU_Student_Branch.objects.get(id=1)
+            #getting the path of the image from the local machine
             path = settings.MEDIA_ROOT+str(image_path)
+            
+            #checking to see if the image exists in filesytem. If yes then delete it from filesystem
+            if os.path.exists(path):
+                os.remove(path)
 
+            #checking to see which image is requested to be deleted
             if(image_id == 'about_image'):
                 ieee_nsu_student_branch.about_image = None
-                os.remove(path)
             elif(image_id == 'ras_image'):
                 ieee_nsu_student_branch.ras_image = None
-                os.remove(path)
             elif(image_id == 'pes_image'):
                 ieee_nsu_student_branch.pes_image = None
-                os.remove(path)
             elif(image_id == 'ias_image'):
                 ieee_nsu_student_branch.ias_image = None
-                os.remove(path)
             elif(image_id == 'wie_image'):
                 ieee_nsu_student_branch.wie_image = None
-                os.remove(path)
             elif(image_id == 'mission_image'):
                 ieee_nsu_student_branch.mission_image = None
-                os.remove(path)
             elif(image_id == 'vision_image'):
                 ieee_nsu_student_branch.ras_image = None
-                os.remove(path)
             
+            #saving before returning
             ieee_nsu_student_branch.save()
             return True
 
@@ -1234,21 +1240,19 @@ class Branch:
             ieee_region_10 = IEEE_Region_10.objects.get(id=1)
             path = settings.MEDIA_ROOT+str(image_path)
 
+            if os.path.exists(path):
+                os.remove(path)
+
             if(image_id == 'ieee_region_10_picture'):
                 ieee_region_10.ieee_region_10_image = None
-                os.remove(path)
             elif(image_id == 'young_professionals_picture'):
                 ieee_region_10.young_professionals_image = None
-                os.remove(path)
             elif(image_id == 'membership_development_picture'):
                 ieee_region_10.membership_development_image = None
-                os.remove(path)
             elif(image_id == 'background_picture'):
                 ieee_region_10.background_picture_parallax = None
-                os.remove(path)
             elif(image_id == 'events_and_conference_picture'):
                 ieee_region_10.events_and_conference_image = None
-                os.remove(path)
 
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
