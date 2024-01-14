@@ -19,11 +19,10 @@ class PanelMembers(admin.ModelAdmin):
     list_display=[
         'member','ex_member','tenure','position','team'
     ]
-    # def get_queryset(self, request):
-    #     qs = super().get_queryset(request)
-    #     qs = qs.filter(tenure__current=True).order_by("position__rank")
-    #     return qs
-    ordering = ['position__rank']
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        qs = qs.filter(tenure__current=True).order_by("position__rank")
+        return qs
 
 @admin.register(ResetPasswordTokenTable)
 class ResetPasswordTokenTable(admin.ModelAdmin):

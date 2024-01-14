@@ -81,15 +81,14 @@ class Panel_Members(models.Model):
     position=models.ForeignKey(Roles_and_Position,on_delete=models.CASCADE)
     team=models.ForeignKey(Teams,null=True,blank=True,on_delete=models.CASCADE)
 
-    # class PanelMembersManager(models.Manager):
-    #     def get_queryset(self):
-    #         return super().get_queryset().filter(tenure__current=True).order_by("position__rank")
+    class PanelMembersManager(models.Manager):
+        def get_queryset(self):
+            return super().get_queryset().filter(tenure__current=True).order_by("position__rank")
 
-    # objects = PanelMembersManager()
+    objects = PanelMembersManager()
     
     class Meta:
         verbose_name="Panel Members (Whole Tenure)"
-        ordering = ["position__rank"]
     
     def __str__(self) -> str:
         return str(self.member) 
