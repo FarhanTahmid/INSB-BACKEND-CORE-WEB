@@ -1402,6 +1402,10 @@ def join_insb(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
+    
+def mega_event_description_page(request):
+        return render(request, 'mega_event_description_page.html')
+    
 # def test_view(request):
 #     #loading all the teams of Branch
 #     branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
@@ -1411,3 +1415,4 @@ def join_insb(request):
 #         }
  
 #     return render(request,"test.html",context=context)
+    
