@@ -3254,7 +3254,7 @@ def insb_members_list(request):
             if request.POST.get("site_register"):
                 return redirect('membership_development_team:site_registration')
             
-        members=Members.objects.order_by('position')
+        members=Members.objects.all()
         totalNumber=Members.objects.all().count()
         has_view_permission=True
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
