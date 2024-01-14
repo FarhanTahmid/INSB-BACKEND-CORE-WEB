@@ -197,69 +197,6 @@
 								<div id="recruitment-statistics" data-colors='["#33a186","#3980c0","#33a186","#3980c0","#33a186","#3980c0"]' onload="initializeChart()" class="apex-chart"></div>
 							</div>
 						</div>
-					   <!--<div class="col-xl-4">
-						   <div class="">
-								<div>
-									<div class="d-flex justify-content-between align-items-center">
-										<div class="d-flex">
-											<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
-											<div class="flex-1 ms-2">
-												<p class="mb-0">Product Order</p>
-												<h5 class="mt-1 mb-0 font-size-16">43,541.58</h5>
-											</div>
-										</div>
-										<div>
-											<span class="badge badge-soft-primary">25.4%<i class="mdi mdi-arrow-down ms-2"></i></span>
-										</div>
-									</div>
-								</div>
-
-								<div class="mt-3 border-top pt-3">
-									<div class="d-flex justify-content-between align-items-center">
-										<div class="d-flex">
-											<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
-											<div class="flex-1 ms-2">
-												<p class="mb-0">Product Pending</p>
-												<h5 class="mt-1 mb-0 font-size-16">17,351.12</h5>
-											</div>
-										</div>
-										<div>
-											<span class="badge badge-soft-primary">17.4%<i class="mdi mdi-arrow-down ms-2"></i></span>
-										</div>
-									</div>
-								</div>
-
-								<div class="mt-3 border-top pt-3">
-									<div class="d-flex justify-content-between align-items-center">
-										<div class="d-flex">
-											<i class="mdi mdi-circle font-size-10 mt-1 text-success"></i>
-											<div class="flex-1 ms-2">
-												<p class="mb-0">Product Cancelled</p>
-												<h5 class="mt-1 mb-0 font-size-16">32,569.74</h5>
-											</div>
-										</div>
-										<div>
-											<span class="badge badge-soft-success">16.3%<i class="mdi mdi-arrow-up ms-1"></i></span>
-										</div>
-									</div>
-								</div>
-
-								<div class="mt-3 border-top pt-3">
-									<div class="d-flex justify-content-between align-items-center">
-										<div class="d-flex">
-											<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
-											<div class="flex-1 ms-2">
-												<p class="mb-0">Product Delivered</p>
-												<h5 class="mt-1 mb-0 font-size-16">67,356.24</h5>
-											</div>
-										</div>
-										<div>
-											<span class="badge badge-soft-primary">65.7%<i class="mdi mdi-arrow-up ms-1"></i></span>
-										</div>
-									</div>
-								</div>
-						   </div>
-					   </div>-->
 					   
 				   	</div>
 
@@ -319,17 +256,13 @@
 						</div>
 					</div>
 				</div>
-				
-
 			</div>
 		</div>
-
 	</div>
 	<br>
 	<div class="row">
 		<div class="col-xl-12">
 			<div class="row">
-				
 				<div class="col-lg-6 col-md-6">
 					<div class="card">
 						<div class="card-body">
@@ -377,131 +310,100 @@
 						</div>
 					</div>
 				</div> 
-
 			</div>
 		</div>
-
 	</div>
 	<br>
+
 	<div class="row">
-		<div class="col-xl-12">
-			<div class="row">
-				<div class="col-xl-6">
-					<div class="card">
-						<div class="card-body">
-							<div class="d-flex flex-wrap align-items-center"  style="justify-content: center;">
-								<br><br><br>
-								<h3 class="card-title mb-0">Events</h3>
-								<div class="ms-auto">
-									<!--<div class="dropdown">
-										<a class="dropdown-toggle text-reset" href="#" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-											<span class="text-muted font-size-12"> Sort By:</span> <span class="fw-medium"><i class="mdi mdi-chevron-down ms-1"></i></span>
-										</a>
-										<div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-											<a class="dropdown-item" href="#">Monthly</a>
-											<a class="dropdown-item" href="#">Yearly</a>
-										</div>
-									</div>-->
-								</div>
-							</div>
-
-							<div class="text-center mt-4">
-								<canvas onload = "initializeCircleChart()" class="mx-auto" id="sales-category" height="281" data-colors='["#023E8A","#0077B6", "#0096C7", "#00B4DB", "#48CAE4","#90E0EF","#ADE8F4"]'></canvas>
-							</div>
-							
-							<br>
-							<div class="row mt-2 mx-auto">
-								{% for key, value in event_percentage.items %}
-									<div class="col-sm-4">
-										<div class="px-2">
-											<div class="d-flex align-items-center mt-sm-0 mt-2 justify-content-center">
-												<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
-												<div class="flex-grow-1 ms-2">
-													<p class="mb-0 text-truncate" style="max-width: 100px;">
-														{{ key }}:&nbsp;
-														<!-- Adjust max-width as needed -->
-													</p>
-												</div>
-												<div class="flex-shrink-0">
-													<span class="fw-bold">{{ value }}%</span>
-												</div>
-											</div>
-										</div>
-									</div>
-							
-									{% if forloop.counter|divisibleby:3 and not forloop.last %}
-										</div><div class="row mt-2 mx-auto">
-									{% endif %}
-							
-									{% if forloop.last and not forloop.counter|divisibleby:3 %}
-										</div>
-									{% endif %}
-								{% endfor %}
-							</div>
-							
-								
-								
-							
+		<div class="col-xl-6">
+			<div class="card">
+				<div class="card-body">
+					<div class="d-flex flex-wrap align-items-center"  style="justify-content: center;">
+						<br><br><br>
+						<h3 class="card-title mb-0">Events</h3>
+						<div class="ms-auto">
 						</div>
 					</div>
-				
-				</div>
-				<div class="col-xl-6">
-					<div class="card">
-						<div class="card-body">
-							<div class="d-flex flex-wrap align-items-center"  style="justify-content: center;">
-								<br><br><br>
-								<h3 class="card-title mb-0">Ratios</h3>
-								<div class="ms-auto">
-									<!--<div class="dropdown">
-										<a class="dropdown-toggle text-reset" href="#" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-											<span class="text-muted font-size-12"> Sort By:</span> <span class="fw-medium"><i class="mdi mdi-chevron-down ms-1"></i></span>
-										</a>
-										<div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-											<a class="dropdown-item" href="#">Monthly</a>
-											<a class="dropdown-item" href="#">Yearly</a>
-										</div>
-									</div>-->
-								</div>
-							</div>
 
-							<div class="text-center mt-4">
-								<canvas onload = "initializeCircleChart2()" class="mx-auto" id="Category2" height="281" data-colors='["#3367d6","#4285f4","#7baaf7","#c6dafc"]'></canvas>
-							</div>
-							
-							<br>
-							<div class="row mt-2">
-								{% for key, value in gender_active_inactive_users_dic.items %}
-									<div class="col">
-										<div class="px-2">
-											<div class="d-flex align-items-center mt-sm-0 mt-2">
-												<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
-												<div class="flex-grow-1 ms-2">
-													<p class="mb-0 text-truncate">{{ key }}: &nbsp;</p>
-												</div>
-												<div class="flex-shrink-0">
-													<span class="fw-bold">{{ value }}%</span>
-												</div>
-											</div>
+					<div class="text-center mt-4">
+						<canvas onload = "initializeCircleChart()" class="mx-auto" id="sales-category" height="281" data-colors='["#023E8A","#0077B6", "#0096C7", "#00B4DB", "#48CAE4","#90E0EF","#ADE8F4"]'></canvas>
+					</div>
+					
+					<br>
+					<div class="row mt-2 mx-auto">
+						{% for key, value in event_percentage.items %}
+							<div class="col-sm-4">
+								<div class="px-2">
+									<div class="d-flex align-items-center mt-sm-0 mt-2 justify-content-center">
+										<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
+										<div class="flex-grow-1 ms-2">
+											<p class="mb-0 text-truncate" style="max-width: 100px;">
+												{{ key }}:&nbsp;
+												<!-- Adjust max-width as needed -->
+											</p>
+										</div>
+										<div class="flex-shrink-0">
+											<span class="fw-bold">{{ value }}%</span>
 										</div>
 									</div>
-							
-									{% if loop.index|divisibleby:3 and not loop.last %}
-										</div><div class="row mt-2">
-									{% endif %}
-							
-									{% if loop.last and not loop.index|divisibleby:3 %}
-										</div>
-									{% endif %}
-								{% endfor %}
+								</div>
 							</div>
-							
-						</div>
+					
+							{% if forloop.counter|divisibleby:3 and not forloop.last %}
+								</div><div class="row mt-2 mx-auto">
+							{% endif %}
+					
+							{% if forloop.last and not forloop.counter|divisibleby:3 %}
+								</div>
+							{% endif %}
+						{% endfor %}
 					</div>
 				</div>
+			</div>
+		</div>
+		<div class="col-xl-6">
+			<div class="card">
+				<div class="card-body">
+					<div class="d-flex flex-wrap align-items-center"  style="justify-content: center;">
+						<br><br><br>
+						<h3 class="card-title mb-0">Ratios</h3>
+						<div class="ms-auto">
+						</div>
+					</div>
 
-
-
+					<div class="text-center mt-4">
+						<canvas onload = "initializeCircleChart2()" class="mx-auto" id="Category2" height="281" data-colors='["#3367d6","#4285f4","#7baaf7","#c6dafc"]'></canvas>
+					</div>
+					
+					<br>
+					<div class="row mt-2">
+						{% for key, value in gender_active_inactive_users_dic.items %}
+							<div class="col">
+								<div class="px-2">
+									<div class="d-flex align-items-center mt-sm-0 mt-2">
+										<i class="mdi mdi-circle font-size-10 mt-1 text-primary"></i>
+										<div class="flex-grow-1 ms-2">
+											<p class="mb-0 text-truncate">{{ key }}: &nbsp;</p>
+										</div>
+										<div class="flex-shrink-0">
+											<span class="fw-bold">{{ value }}%</span>
+										</div>
+									</div>
+								</div>
+							</div>
+					
+							{% if loop.index|divisibleby:3 and not loop.last %}
+								</div><div class="row mt-2">
+							{% endif %}
+					
+							{% if loop.last and not loop.index|divisibleby:3 %}
+								</div>
+							{% endif %}
+						{% endfor %}
+					</div>
+					
+				</div>
 			</div>
 		</div>
 	</div>
