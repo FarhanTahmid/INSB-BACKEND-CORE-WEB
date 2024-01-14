@@ -30,7 +30,7 @@ from django.contrib import messages
 from central_events.models import Events
 from central_events.forms import EventForm
 from events_and_management_team.renderData import Events_And_Management_Team
-from port.models import Chapters_Society_and_Affinity_Groups
+from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position
 from users.models import Alumni_Members
 from django.views.decorators.clickjacking import xframe_options_exempt
 from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
@@ -287,6 +287,82 @@ def sc_ag_panel_details(request,primary,panel_pk):
                                           is_core_volunteer=core_volunteer_position_check,is_volunteer=volunteer_position_check)):
                     return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
             
+            # update existing positions
+            if(request.POST.get('update_position')):
+                mentor_position_check=request.POST.get('mentor_position_check')
+                if mentor_position_check is None:
+                    mentor_position_check=False
+                else:
+                    mentor_position_check=True
+                    
+                officer_position_check=request.POST.get('officer_position_check')
+                if officer_position_check is None:
+                    officer_position_check=False
+                else:
+                    officer_position_check=True
+                    
+                coordinator_position_check=request.POST.get('coordinator_position_check')
+                if coordinator_position_check is None:
+                    coordinator_position_check=False
+                else:
+                    coordinator_position_check=True
+                
+                executive_position_check=request.POST.get('executive_position_check')
+                if executive_position_check is None:
+                    executive_position_check=False
+                else:
+                    executive_position_check=True
+                
+                faculty_position_check=request.POST.get('faculty_position_check')
+                if faculty_position_check is None:
+                    faculty_position_check=False
+                else:
+                    faculty_position_check=True
+
+                core_volunteer_position_check = request.POST.get('core_volunteer_position_check')
+                if core_volunteer_position_check is None:
+                    core_volunteer_position_check = False
+                else:
+                    core_volunteer_position_check = True
+
+                volunteer_position_check = request.POST.get('volunteer_position_check')
+                if volunteer_position_check is None:
+                    volunteer_position_check = False
+                else:
+                    volunteer_position_check = True
+                    
+                position_name=request.POST['position_name']
+                position_rank=request.POST['position_rank']
+                position_id=request.POST.get('position_to_edit')
+                
+                # update Position
+                try:    
+                    if(Roles_and_Position.objects.filter(id=int(position_id)).update(
+                        role=position_name,rank=position_rank,
+                        is_eb_member=False,is_sc_ag_eb_member=executive_position_check,is_officer=officer_position_check,is_co_ordinator=coordinator_position_check,
+                        is_faculty=faculty_position_check,is_mentor=mentor_position_check,is_core_volunteer=core_volunteer_position_check,is_volunteer=volunteer_position_check
+                    )):
+                        messages.success(request,f"Position {position_name} was updated!")
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+                except Exception as e:
+                    logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+                    ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                    messages.warning(request,"Something went wrong! Please Try again!")
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+            # delete positions
+            if(request.POST.get('delete_position')):
+                position_name=request.POST['position_name']
+                position_id=request.POST.get('position_to_edit')
+                try:
+                    if(Roles_and_Position.objects.filter(id=int(position_id)).delete()):
+                        messages.warning(request,f'The position {position_name} has been deleted.')
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+                except Exception as e:
+                    logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+                    ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                    messages.warning(request,"Something went wrong! Please Try again!")
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+            
             #Create New TEam
             if(request.POST.get('create_team')):
                 team_name=request.POST['team_name']
@@ -307,6 +383,7 @@ def sc_ag_panel_details(request,primary,panel_pk):
             'sc_ag_eb_positions':SC_AG_Info.get_sc_ag_executive_positions(request=request,sc_ag_primary=primary),
             'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
             'member_details_access':SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary),
+            'all_positions':PortData.get_all_positions_of_everyone(request=request,sc_ag_primary=primary)
         }
         return render(request,'Panels/sc_ag_executive_members_tab.html',context=context)
     except Exception as e:
