@@ -105,6 +105,7 @@ class Portal_Joining_Requests(models.Model):
     
     class Meta:
         verbose_name='Portal Joining Requests'
+        ordering = ["position__rank"]
     
     def __str__(self) -> str:
         return str(self.ieee_id)

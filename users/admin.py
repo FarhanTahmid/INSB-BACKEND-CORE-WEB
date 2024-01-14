@@ -5,7 +5,7 @@ from . models import Members,Alumni_Members,ResetPasswordTokenTable,User_IP_Addr
 @admin.register(Members)
 class Members(admin.ModelAdmin):
     list_display=['ieee_id','name','gender','email_ieee','team','position','facebook_url','email_nsu','is_active_member','user_profile_picture']
-
+    ordering = ['position__rank']
 @admin.register(Alumni_Members)
 class Alumni_Members(admin.ModelAdmin):
     list_display=[
@@ -19,6 +19,10 @@ class PanelMembers(admin.ModelAdmin):
     list_display=[
         'member','ex_member','tenure','position','team'
     ]
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        qs = qs.filter(tenure__current=True).order_by("position__rank")
+        return qs
 
 @admin.register(ResetPasswordTokenTable)
 class ResetPasswordTokenTable(admin.ModelAdmin):
