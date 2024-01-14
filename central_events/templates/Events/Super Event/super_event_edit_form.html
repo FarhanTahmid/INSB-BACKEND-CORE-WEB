@@ -18,7 +18,6 @@
 
 
     <style>
-
         body, html {
             margin: 0;
             align-items: center;
@@ -31,11 +30,11 @@
             align-items: center;
             height: 100%;
         }
-        
+
         .btn-container {
             text-align: center;
         }
-        
+
         .btn {
             max-width: 100%;
             width: auto;
@@ -44,7 +43,7 @@
             word-wrap: break-word; /* Break long words if necessary */
             font-size: 16px; /* Adjust the font size as needed */
         }
-        
+
         /* Media query for smaller screens (adjust the breakpoint as needed) */
         @media (max-width: 768px) {
             .btn {
@@ -151,9 +150,9 @@
         <!--Tab view end-->
         <br>
 
-        {% comment %} {% block content_form %}
-            {% include "Events/content_team_event_form_add_notes_content.html" %}
-        {% endblock content_form %} {% endcomment %}
+        {% block super_event_edit_form %}
+            {% include "Events/Super Event/super_event_edit_form_content.html" %}
+        {% endblock super_event_edit_form %}
                             
                             
 

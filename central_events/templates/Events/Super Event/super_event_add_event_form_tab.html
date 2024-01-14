@@ -151,9 +151,9 @@
         <!--Tab view end-->
         <br>
 
-        {% comment %} {% block content_form %}
-            {% include "Events/content_team_event_form_add_notes_content.html" %}
-        {% endblock content_form %} {% endcomment %}
+        {% block super_event_add_event_form %}
+            {% include "Events/Super Event/super_event_add_event_form_tab_content.html" %}
+        {% endblock super_event_add_event_form %}
                             
                             
 
