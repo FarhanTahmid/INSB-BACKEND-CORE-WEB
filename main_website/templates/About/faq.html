@@ -189,13 +189,19 @@
             cursor: pointer;
         }
 
-        .body-wrapper.float-menu .faq .accordion_list .accordion.active .list label::before {
+      /*  .body-wrapper.float-menu .faq .accordion_list .accordion.active .list label::before {
             content: '+';
             margin-right: 10px;
             font-size: 24px;
             font-weight: 700;
         }
-
+        */
+        .body-wrapper.float-menu .faq .accordion_list .accordion .list label::before {
+            content: '+';
+            margin-right: 10px;
+            font-size: 24px;
+            font-weight: 700;
+        }
         input[type="checkbox"] {
             display: none;
         }
@@ -551,17 +557,31 @@
 
     </div>
     <!-- Faq -->
-    <script type="text/javascript">
-        const faqlink = document.querySelectorAll('.body-wrapper.float-menu .faq .faq_list .faq_q .list');
+    
 
-        faqlink.forEach(e => {
+
+
+    {% comment %} <script type="text/javascript">
+        const faqlink = document.querySelectorAll('.body-wrapper.float-menu .faq .faq_list .faq_q .list');
+        const faqid = document.querySelectorAll('.body-wrapper.float-menu .faq .accordion_list .accordion');
+
+        faqlink.forEach((e, index) => {
             e.addEventListener('click', () => {
                 document.querySelector('.active')?.classList.remove('active');
                 e.classList.add('active');
-
-
+        
+                // Hide all accordions
+                faqid.forEach((accordion) => {
+                    accordion.classList.remove('active');
+                });
+        
+                // Show the corresponding accordion
+                faqid[index].classList.add('active');
             });
         });
+        
+        // Open the first accordion when the page loads
+        faqlink[0].click();
         {% for category in all_categories %}
         function faq_id{{forloop.counter}}() {
             const faqid = [...document.querySelectorAll('.body-wrapper.float-menu .faq .accordion_list .accordion')];
@@ -574,10 +594,67 @@
                 }
             }
 
-        }
+        } 
+
+        
         {% endfor %}
 
-    </script>
+    </script> {% endcomment %}
+
+
+
+     <script type="text/javascript">
+       const faqlink = document.querySelectorAll('.body-wrapper.float-menu .faq .faq_list .faq_q .list');
+        const faqid = document.querySelectorAll('.body-wrapper.float-menu .faq .accordion_list .accordion');
+    
+        faqlink.forEach((e, index) => {
+            e.addEventListener('click', () => {
+                event.preventDefault();
+                // Remove 'active' class from all faqlink elements
+                faqlink.forEach(link => link.classList.remove('active'));
+                // Add 'active' class to the clicked faqlink element
+                e.classList.add('active');
+    
+                // Hide all accordions
+                faqid.forEach((accordion) => {
+                    accordion.classList.remove('active');
+                });
+    
+                // Show the corresponding accordion based on the clicked category
+                faqid[index].classList.add('active');
+            });
+        });
+    
+        // Open the first accordion when the page loads
+        faqlink[0].click();
+        
+      {% for category in all_categories %}
+        function faq_id{{forloop.counter}}() {
+            const faqid = [...document.querySelectorAll('.body-wrapper.float-menu .faq .accordion_list  .accordion ')];
+    
+            for (let i = 0; i < faqid.length; i++) {
+                if (i === {{forloop.counter}} - 1) { // Adjust the indexing
+                    faqid[i].classList.add('active');
+                } else {
+                    faqid[i].classList.remove('active');
+                }
+            }
+        }
+        {% endfor %}
+       
+          
+      
+        
+    </script> 
+
+
+    
+
+
+
+
+
+
     <script>var ms_grabbing_curosr = 'images/grabbing.cur', ms_grab_curosr = 'images/grab.cur';</script>
     <script type="text/javascript">
         (function (url) {
