@@ -144,89 +144,21 @@
         <!--Page Start-->
         <section class="centering">
             <section class="max_width toolcard_container">
-               <div class="toolcard">
-                <div class="toolcard_logo">
-                    <img src="https://ieeensusb.org/wp-content/uploads/2021/04/INSB-main-logo.png" alt="">
-                </div>
-                    <h5>INSB Logo (square)</h5>
-                    <h6>Color codes</h6>
-                    <div class="toolcard_p">
-                        <p>Blue #137AAC</p>
-                        <p>Yellow #FEC937</p>
-                        <p>White #F7FAFC</p>
+                {% for i in all_toolkits %}
+                    <div class="toolcard">
+                        <div class="toolcard_logo">
+                            <img src="/media_files/{{i.picture}}" alt="{{i.title}}">
+                        </div>
+                        <h5>{{i.title}}</h5>
+                        <h6>Color codes</h6>
+                        <div class="toolcard_p text-center">
+                            {{i.color_codes | safe}}
+                        </div>
+                        <a href="{% url 'main_website:toolkit' %}" onclick="downloadImage('/media_files/{{i.picture}}', '{{i.title}}.png');">Download PNG</a>
                     </div>
-                    <a href="#">Download PNG</a>
-               </div>
-               <div class="toolcard">
-                <div class="toolcard_logo">
-                    <img src="https://ieeensusb.org/wp-content/uploads/2021/04/INSB-2.png" alt="">
-                </div>
-                    <h5>INSB Logo (rectangle)</h5>
-                    <h6>Color codes</h6>
-                    <div class="toolcard_p">
-                    <p>Blue #137AAC</p>
-                    <p>Yellow #FEC937</p>
-                    <p>White #F7FAFC</p>
-                    </div>
-                    <a href="#">Download PNG</a>
-               </div>
-               <div class="toolcard">
-                <div class="toolcard_logo">
-                    <img src="https://ieeensusb.org/wp-content/uploads/2021/03/ias-1.png" alt="">
-                </div>
-                    <h5>INSB IAS SBC</h5>
-                    <h6>Color codes</h6>
-                    <div class="toolcard_p">
-                    <p>Blue #137AAC</p>
-                    <p>Yellow #FEC937</p>
-                    <p>Green #14924D</p>
-                    </div>
-                    <a href="#">Download PNG</a>
-               </div>
-               <div class="toolcard">
-                <div class="toolcard_logo">
-                    <img src="https://ieeensusb.org/wp-content/uploads/2021/04/PES-1.png" alt="">
-                </div>
-                    <h5>INSB PES SBC</h5>
-                    <h6>Color codes</h6>
-                    <div class="toolcard_p">
-                    <p>Blue #137AAC</p>
-                    <p>Yellow #FEC937</p>
-                    <p>Green #679B41</p>
-                    </div>
-                    <a href="#">Download PNG</a>
-               </div>
-               <div class="toolcard">
-                <div class="toolcard_logo">
-                    <img src="https://ieeensusb.org/wp-content/uploads/2021/04/Ras-1.png" alt="">
-                </div>
-                    <h5>INSB RAS SBC</h5>
-                    <h6>Color codes</h6>
-                    <div class="toolcard_p">
-                    <p>Purple #602568</p>
-                    <p>Old brick #961A32</p>
-                    <p>White #F7FAFC</p>
-                    </div>
-                    <a href="#">Download PNG</a>
-               </div>
-               <div class="toolcard">
-                <div class="toolcard_logo">
-                    <img src="https://ieeensusb.org/wp-content/uploads/2021/04/WIE.png" alt="">
-                </div>
-                    <h5>INSB WIE AG</h5>
-                    <h6>Color codes</h6>
-                    <div class="toolcard_p">
-                    <p>Blue #11689B</p>
-                    <p>Eminence #FEC937</p>
-                    <p>White #FFFFFF</p>
-                    </div>
-                    <a href="#">Download PNG</a>
-               </div>
+                {% endfor %}
             </section>
         </section>
-
-        <!--Page End-->
-
 
         <!--Footer-->
         {% block footer %}
@@ -234,6 +166,16 @@
         {% endblock footer %}
 
     </div>
+    <script>
+        function downloadImage(imageUrl, fileName) {
+            var a = document.createElement('a');
+            a.href = imageUrl;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
     {% block common_js %}
     {% include "common_js_includes.html" %}
     {% endblock %}

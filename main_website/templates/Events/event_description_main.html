@@ -4,6 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{% static 'upload/logo.gif' %}"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -38,12 +39,7 @@
             grid-template-columns: 2fr 1fr;
             grid-gap: 50px;
             margin-top: 15px;
-        }
-
-        .banner_image {
-            object-fit: fill;
-            border-radius: 8px;
-            box-shadow: 5px 5px 10px #5e5e5e;
+            align-items: end;
         }
 
         .event_header h2 {
@@ -71,21 +67,22 @@
             display: flex;
             flex-direction: column;
             margin: 15px 20px;
-            padding: 20px 20px;
+            padding: 12px 20px;
             background: #f7f7f7;
         }
 
         .inner_box h6 {
-            color: #000;
             margin-bottom: 5px;
         }
 
         .adjust_placement {
+            color: 	#75787B;
             margin-left: 32px;
             margin-bottom: -2px;
         }
 
         .read_more_btn {
+            font-size: 14px!important;
             text-decoration: none;
             color: #00629B;
         }
@@ -93,7 +90,7 @@
         .register_btn {
             text-decoration: none;
             margin: 15px 20px;
-            padding: 28px 20px;
+            padding: 17px 20px;
             display: flex;
             flex-direction: column;
             background: #002855;
@@ -109,7 +106,6 @@
             display: flex;
             justify-content: center;
             gap: 2%;
-            padding: 5%;
         }
 
         .below_banner {
@@ -128,7 +124,9 @@
         .register-bottom-for-tablet-view {
             display: none;
         }
-
+        .current-menu-item{
+            font-size: 30px;
+        }
         #name {
             grid-area: name;
         }
@@ -190,19 +188,18 @@
             width: 100%;
             height: 200px;
             overflow: hidden;
-            border-radius: 5px;
-            box-shadow: 5px 5px 5px rgb(117, 117, 117);
+            border-radius: 3px;
         }
 
         .pic-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: all 0.3s;
+            transition: all 0.5s;
         }
 
         .pic-container img:hover {
-            scale: 1.5;
+            scale: 1.1;
         }
 
         /*btn hover effects*/
@@ -222,6 +219,87 @@
             background: #ffffff;
             color: #002855;
             border: 2px solid #002855;
+        }
+
+
+        .leave_reply_section{
+            display: flex;
+            flex-direction: column;
+        }
+        .leave_reply_section h2{
+            font-family: 'Poppins', sans-serif;
+            font-size: 35px;
+            color: #002855;
+        }
+        .leave_reply_section .bar{
+            background-color: #FFC72C;
+            height: 5px;
+            width: 100px;
+            border-radius: 5px;
+        }
+        .leave_reply_section .leave_reply_box{
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            row-gap: 15px;
+        }
+        .leave_reply_section .leave_reply_box input{
+            background-color: #75787b22;
+            color: #000;
+            border: none;
+            border-radius: 3px;
+            padding: 0 10px;
+            height: 45px;
+        }
+        .leave_reply_section .leave_reply_box select{
+            background-color: #75787b22;
+            color: #000;
+            border: none;
+            border-radius: 3px;
+            padding: 0 10px;
+            height: 45px;
+        }
+        .leave_reply_section .leave_reply_box textarea{
+            background-color: #75787b22;
+            color: #000;
+            border: none;
+            border-radius: 3px;
+            min-height: 100px;
+            padding: 10px 10px;
+            max-width: 100%;
+            max-height: 250px;
+        }
+        .leave_reply_section .leave_reply_box input:focus{
+            border: none;
+        }
+        .leave_reply_section .leave_reply_box .btn{
+            display: flex;
+            justify-content: flex-end;
+            margin-right: -30px;
+        }
+        .leave_reply_section .leave_reply_box .btn input[type=submit]{
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            background: #002855;
+            color: white;
+            width: 150px;
+            border: 2px solid #002855;
+            transition: all 0.3s;
+        }
+        .leave_reply_section .leave_reply_box .btn input[type=submit]:hover{
+            background: #ffffff;
+            color: #002855;
+            border: 2px solid #002855;
+        }
+        .event_banner{
+            width: 100%;
+            height: 394px;
+            overflow: hidden;
+        }
+        .banner_image {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
         }
 
         /*media queries*/
@@ -274,6 +352,9 @@
             .gallery {
                 grid-template-columns: 1fr;
             }
+            .event_banner{
+                height: 270px;
+            }
         }
 
         @media screen and (max-width: 425px) {
@@ -284,68 +365,88 @@
             .pic-container {
                 width: 100%;
             }
+            .event_banner{
+                height: 200px;
+            }
         }
-        .leave_reply_section{
-            display: flex;
-            flex-direction: column;
+
+
+        .modal.message-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
         }
-        .leave_reply_section h2{
-            font-family: 'Poppins', sans-serif;
-            font-size: 35px;
-            color: #002855;
-        }
-        .leave_reply_section .bar{
-            background-color: #FFC72C;
-            height: 5px;
-            width: 100px;
+        
+        .modal-content.message-modal-content {
+            background-color: #fff;
+            width: 450px;
+            height: 115px;
+            position: relative;
             border-radius: 5px;
-        }
-        .leave_reply_section .leave_reply_box{
-            margin-top: 15px;
             display: flex;
-            flex-direction: column;
-            row-gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+            animation: unfold 1.25s ease-in-out forwards;
         }
-        .leave_reply_section .leave_reply_box input{
-            background-color: #75787b22;
-            color: #000;
-            border: none;
-            border-radius: 3px;
-            padding: 0 10px;
-            height: 45px;
+        
+        .modal-content-items.message-modal-content-items {
+            opacity: 0;
+            animation: fadeIn 1.25s 1s ease-in-out forwards;
         }
-        .leave_reply_section .leave_reply_box textarea{
-            background-color: #75787b22;
-            color: #000;
-            border: none;
-            border-radius: 3px;
-            min-height: 100px;
-            padding: 10px 10px;
-            max-width: 100%;
-            max-height: 250px;
+        
+        .message {
+            margin-top: 20px;
+            font-size: 16px;
         }
-        .leave_reply_section .leave_reply_box input:focus{
-            border: none;
+        .m-3 {
+            margin: 1rem 0!important;
         }
-        .leave_reply_section .leave_reply_box .btn{
-            display: flex;
-            justify-content: flex-end;
-            margin-right: -30px;
+        /* Media query for screens below 360px */
+        @media screen and (max-width: 360px) {
+            .message {
+                font-size: 14px; /* Adjust the font size as needed */
+            }
         }
-        .leave_reply_section .leave_reply_box .btn input[type=submit]{
-            font-family: 'Poppins', sans-serif;
-            font-size: 12px;
-            background: #002855;
-            color: white;
-            width: 150px;
-            border: 2px solid #002855;
-            transition: all 0.3s;
+        
+        /* Styling for the close button */
+        .close.message-close {
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
         }
-        .leave_reply_section .leave_reply_box .btn input[type=submit]:hover{
-            background: #ffffff;
-            color: #002855;
-            border: 2px solid #002855;
+        
+        @keyframes unfold {
+            0% {
+                width: 0;
+                height: 5px;
+            }
+            50% {
+                width: 450px;
+                height: 5px;
+            }
+            100% {
+                width: 450px;
+                height: 115px;
+            }
         }
+        
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
     </style>
 </head>
 
@@ -362,6 +463,19 @@
         {% endif %}
 
 
+        <!--Messages-->
+        {% for message in messages  %}
+            <div id="myMessageModal{{ loop.index }}" class="modal message-modal">
+                <div class="modal-content message-modal-content">
+                    <div class="modal-content-items message-modal-content-items">
+                        <span class="close message-close" onclick="closeModal({{ loop.index }})">&times;</span>
+                        <p class="message">{{ message }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <!--Messages End-->
+
         <section class="event_description_container">
             <section class="event_description_content">
                 <section class="centering">
@@ -369,14 +483,14 @@
                         <!--Page Start-->
                         <section class="banner_section">
                             <div>
-                                <div>
+                                <div class="event_banner">
                                     <!--Event Banner Image-->
                                     {% if event_banner_image %}
                                     <img src="{{media_url}}{{event_banner_image}}" alt="" class="banner_image">
                                     {% else %}
                                     {% endif %}
                                 </div>
-                                <div class="event_header" style="text-transform: uppercase;">
+                                <div class="event_header" style="text-transform: uppercase;    margin-bottom: 15px;">
                                     <!--Event Date and Time-->
                                     <h4 style="color: #BA0C2F;">{{event.event_date | date:"l, F d Y"}}</h4>
                                 </div>
@@ -391,11 +505,18 @@
                             <div class="register-bottom-for-pc">
                                 <!--Register Box-->
                                 <div class="box">
+                                    {% if event.event_time %}
+                                    <div class="inner_box">
+                                        <h6><i class="fa-regular fa-clock" style="color: #E87722;"></i><span
+                                                style="margin-left: 10px;">Time</span></h6>
+                                        <h6 class="adjust_placement">{{event.event_time}}</h6>
+                                    </div>
+                                    {% endif %}
                                     <div class="inner_box">
                                         <h6><i class="fa-solid fa-wallet" style="color: #E87722;"></i><span
                                                 style="margin-left: 10px;">COST</span></h6>
                                         {% if event.registration_fee %}
-                                        <h6 class="adjust_placement">{{event.registration_fee_amount}}</h6>
+                                        <h6 class="adjust_placement">BDT {{event.registration_fee_amount}}</h6>
                                         {% else %}
                                         <h6 class="adjust_placement" style="color: #5e5e5e;">Free</h6>
                                         {% endif %}
@@ -404,7 +525,7 @@
                                         <h6><i class="fa-solid fa-circle-info" style="color: #E87722;"></i><span
                                                 style="margin-left: 10px;">MORE INFO</span></h6>
                                         <!--READ MORE LINK-->
-                                        <h6 class="adjust_placement"><a href="#" class="read_more_btn">Read More</a></h6>
+                                        <h6 class="adjust_placement"><a href="{{event.more_info_link}}" class="read_more_btn">Read More</a></h6>
                                     </div>
                                     <div class="register">
                                         <!--Registration button-->
@@ -419,13 +540,16 @@
                                         EVENT</h6>
                                     <hr style="width:80%;margin-left:10% ;margin-top: -1%; border: solid .5px #ebebeb;">
                                     <div class="socialmedia_icon">
-                                        <a href=""><i class="fa-brands fa-square-facebook" 
-                                                style="color: #3b5996;font-size: 34px;"></i></a>
-                                        <a href=""><i class="fa-brands fa-square-twitter"
-                                                style="color: #00b2ee;font-size: 34px;"></i></a>
-                                        <a href=""><i class="fa-brands fa-linkedin"
+                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="popup" 
+                                        onclick="window.open('https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}','popup','width=600,height=600'); return false;"><i class="fa-brands fa-square-facebook" style="color: #3b5996;font-size: 34px;"></i></a>
+                                        
+                                        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="popup"
+                                        onclick="window.open('https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}','popup','width=600,height=600'); return false;"><i class="fa-brands fa-x-twitter" style="color: #000;font-size: 34px;"></i></a>
+                                        
+                                        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{request.build_absolute_uri}}" target="popup"
+                                        onclick="window.open('https://www.linkedin.com/shareArticle?mini=true&url={{request.build_absolute_uri}}','popup','width=600,height=600'); return false;"><i class="fa-brands fa-linkedin"
                                                 style="color: #457399;font-size: 34px;"></i></a>
-                                        <a href=""><i class="fa-solid fa-square-envelope"
+                                        <a href="mailto:?subject=Join {{event.event_name}} organized by {{event.event_organiser}} &amp;body=Check out this event details here {{request.build_absolute_uri}}."><i class="fa-solid fa-square-envelope"
                                                 style="color: #ff5d5e;font-size: 34px;"></i></a>
                                     </div>
                                 </div>
@@ -453,11 +577,18 @@
                         <section class="register-bottom-for-tablet-view">
                             <!--Register Box-->
                             <div class="box">
+                                {% if event.event_time %}
+                                <div class="inner_box">
+                                    <h6><i class="fa-regular fa-clock" style="color: #E87722;"></i><span
+                                            style="margin-left: 10px;">Time</span></h6>
+                                    <h6 class="adjust_placement">{{event.event_time}}</h6>
+                                </div>
+                                {% endif %}
                                 <div class="inner_box">
                                     <h6><i class="fa-solid fa-wallet" style="color: 		#E87722;"></i><span
                                             style="margin-left: 10px;">COST</span></h6>
                                     {% if event.registration_fee %}
-                                    <h6 class="adjust_placement">{{event.registration_fee_amount}}</h6>
+                                    <h6 class="adjust_placement">BDT {{event.registration_fee_amount}}</h6>
                                     {% else %}
                                     <h6 class="adjust_placement" style="color: #5e5e5e;">Free</h6>
                                     {% endif %}
@@ -466,7 +597,7 @@
                                     <h6><i class="fa-solid fa-circle-info" style="color: 		#E87722;"></i><span
                                             style="margin-left: 10px;">MORE INFO</span></h6>
                                     <!--READ MORE LINK-->
-                                    <h6 class="adjust_placement"><a href="" class="read_more_btn">Read More</a></h6>
+                                    <h6 class="adjust_placement"><a href="{{event.more_info_link}}" class="read_more_btn">Read More</a></h6>
                                 </div>
                                 <div class="register">
                                     <!--Registration button-->
@@ -480,13 +611,17 @@
                                     EVENT</h6>
                                 <hr style="width:80%;margin-left:10% ;margin-top: -1%; border: solid .5px #ebebeb;">
                                 <div class="socialmedia_icon">
-                                    <a href=""><i class="fa-brands fa-square-facebook icon"
-                                            style="color: #3b5996;"></i></a>
-                                    <a href=""><i class="fa-brands fa-square-twitter icon"
-                                            style="color: #00b2ee;"></i></a>
-                                    <a href=""><i class="fa-brands fa-linkedin icon" style="color: #457399;"></i></a>
-                                    <a href=""><i class="fa-solid fa-square-envelope icon"
-                                            style="color: #ff5d5e;"></i></a>
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="popup" 
+                                    onclick="window.open('https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}','popup','width=600,height=600'); return false;"><i class="fa-brands fa-square-facebook" style="color: #3b5996;font-size: 34px;"></i></a>
+                                    
+                                    <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="popup"
+                                    onclick="window.open('https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}','popup','width=600,height=600'); return false;"><i class="fa-brands fa-x-twitter" style="color: #000;font-size: 34px;"></i></a>
+                                    
+                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{request.build_absolute_uri}}" target="popup"
+                                    onclick="window.open('https://www.linkedin.com/shareArticle?mini=true&url={{request.build_absolute_uri}}','popup','width=600,height=600'); return false;"><i class="fa-brands fa-linkedin"
+                                            style="color: #457399;font-size: 34px;"></i></a>
+                                    <a href="mailto:?subject=Join {{event.event_name}} organized by {{event.event_organiser}} &amp;body=Check out this event details here {{request.build_absolute_uri}}."><i class="fa-solid fa-square-envelope"
+                                            style="color: #ff5d5e;font-size: 34px;"></i></a>
                                 </div>
                             </div>
                         </section>
@@ -494,13 +629,19 @@
                         {% if is_live %}
                         <!--Leave a reply section-->
                         <section class="leave_reply_section">
-                            <h2>Leave a reply</h2>
+                            <h2>Leave a Feedback</h2>
                             <div class="bar"></div>
                             <form method="post" class="leave_reply_box">
+                                {% csrf_token %}
                                 <input type="text" name="name" placeholder="Name" required>
                                 <input type="email" name="email" placeholder="Email" required>
-                                <input type="text" name="url" placeholder="Website" required>
-                                <textarea name="comment" placeholder="Your comment here...." required></textarea>
+                                <select name="satisfaction" required>
+                                    <option value="" selected disabled>How satisfied were you?</option>
+                                    <option value="very_satisfied">Very Satisfied</option>
+                                    <option value="satisfied">Satisfied</option>
+                                    <option value="not_satisfied">Not Satisfied</option>
+                                </select>
+                                <textarea name="comment" maxlength="300" placeholder="Your comment here...." required></textarea>
                                 <div class="btn">
                                     <input type="submit" value="submit">
                                 </div>
@@ -524,6 +665,30 @@
     {% block common_js %}
     {% include "common_js_includes.html" %}
     {% endblock %}
+
+
+
+    <script>
+        // Function to display the modal
+        function openModal() {
+            document.getElementById('myMessageModal').style.display = 'flex';
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById('myMessageModal').style.display = 'none';
+        }
+
+        // Close the modal when clicking outside the modal content
+        window.onclick = function(event) {
+            var modal = document.getElementById('myMessageModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        };
+        // Open the modal when the page loads (you can trigger this in your JavaScript when you want to show the modal)
+        openModal();
+    </script>
 </body>
 
 </html>

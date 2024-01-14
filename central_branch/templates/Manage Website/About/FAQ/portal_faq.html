@@ -1,327 +1,415 @@
-
-{% block about_base %}
-{% include "Manage Website/About/about_base.html" %}
-{% endblock about_base %}
-{% block manage_ieee_bangladesh_section %}
+{% block manage_portal_faq %}
+<!DOCTYPE html>
 {% load static %}
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
+        <!-- CKEditor CDN -->
+        <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
 
-<!-- CKEditor CDN -->
-<script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+        {% block common_css %}
+            {% include "common_css.html" %}
+        {% endblock common_css %}
 
-<style>
-    .circle-btn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 45px; /* Set minimum width */
-        height: 45px; /* Set minimum height */
-        background-color: transparent; /* Set to transparent or any other color for the inside */
-        border: 2px solid #78BE20; /* Border color is green */
-        border-radius: 50%;
-        color: #78BE20; /* Text color is green */
-        font-size: 24px; /* Adjust the font size as needed */
-        cursor: pointer;
-        transition: background-color 0.3s, color 0.3s; /* Add smooth transition effect */
-    }
+        <style>
+            body, html {
+                
+                margin: 0;
+                
+                align-items: center;
+                justify-content: center;
+            }
 
-    .circle-btn:hover {
-        background-color: #78BE20; /* Hover background color is green */
-        color: #fff; /* Hover text color is white */
-    }
-
-    .plus-sign::before {
-        content: '+';
-    }
-    .faq-set {
-        margin-top: 40px; /* Adjust the margin as needed */
-    }
-
-    @media only screen and (max-width: 768px) {
-      
-        .custom-file {
-            margin-bottom: 10px;
-        }
-    }
-
-    #gallery-selected-images-container {
-        max-width: 100%; /* Set the maximum width for the image container */
-    }
-    
-    #gallery-selected-images {
-        width: 200px; /* Set the width to 100% */
-        height: auto; /* Set the height to 150px */
-        object-fit: cover; /* Maintain aspect ratio and cover the container */
-        margin-top:10px;
-    }
-
-    .image-container-item{
-        width: 100%;
-        height: auto;
-        border-radius: 8px;
-        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-        transition: box-shadow 0.3s ease;
-    }
-
-    .image-container-item:hover {
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
-    }
-
-    .image-container {
-        position: relative;
-        display: inline-block;
-    }
-
-    .cross-button {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        cursor: pointer;
-        background-color: white; /* Set the background color to white */
-        border: none;
-        padding: 0;
-        width: 25px; /* Set the width and height to create a circle */
-        height: 25px;
-        border-radius: 50%; /* Make it a circle */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 2rem; /* Adjust font size */
-        color: black; /* Set the initial color */
-        z-index: 2;
-        transition: background-color 0.3s ease, color 0.3s ease; /* Add transitions for color and background-color changes */
-        line-height: 1; /* Ensure line height does not affect vertical alignment */
-    }
-
-
-    .cross-button:hover {
-        color: gray; /* Change color on hover */
-    }
-
-
-    .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
-        max-width: 80%; 
-        height: 90%; 
-        z-index: 1500;
-    }
-    @media screen and (max-width:700px){
-        .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
-            max-width:100%;
-        }
-    }
-
-</style>
-
-<body>
-    <div class="app" id="app">
-        <div ui-view class="app-body" style="justify-content:center; margin-left:27%; margin-right:15%;" id="view">
-
-            <br>
-            <h4 style="justify-content:center;text-align:center;"><b>Question Answers </b></h2>
-            <br>
-
-            <div class="btn-container">
-                <button class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#previewModal">Preview</button>
-            </div>
-            <br>
-
-            <!-- Preview Event Modal -->
-            <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" style="z-index: 1500;">
-                <div class="modal-dialog modal-dialog-centered modal-lg preview_modal_box" role="document">
-                    <div class="modal-content" style="width: 100%; height: 100%;">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="previewModalLabel">Preview</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <iframe src="https://ieeensusb.org/ieee/" style="width: 100%; height: 100%;" loading="lazy"></iframe>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            .row {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+            }
+            .row {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+            }
+            .btn-container {
+                text-align: center;
+            }
             
-            <!--Messages-->
-            <div class="container">
-                {% for message in messages  %}
-                    <p>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{message}}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    </p>
-                {% endfor %}
-            </div>
-            <!--Messages End-->
+            .btn {
+                max-width: 100%;
+                width: auto;
+                display: inline-block;
+                white-space: normal; /* Allow text to wrap within the button */
+                word-wrap: break-word; /* Break long words if necessary */
+                font-size: 16px; /* Adjust the font size as needed */
+            }
             
-            <div class="container">          
-                <div class="box">
-                    <br>
-                    <form id="myForm" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="box-body">
-                    
-                            <div class="form-group row">
-                                <label for="captions" class="col-sm-3 form-control-label">Add Categories:</label>
-                                <div class="col-sm-7">
-                                    <!-- Add input field for captions here if needed -->
-                                </div>
-                                <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                    <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddCategoryModal"></button>
-                                </div>
-                            </div>
-                            
-                            <hr>
-                        <div id="captions-container" class="mt-3">
-                                <label class="mb-0">Categories:</label> 
-                                {% for title in all_titles%}
-                                <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                                    <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal{{title.pk}}">{{title.title}}</a>
-                                    </div>
-                                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForCategories"  onclick="openModal('{{title.pk}}')">✖</button>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                                
+            /* Media query for smaller screens (adjust the breakpoint as needed) */
+            @media (max-width: 768px) {
+                .btn {
+                    width: 100%; /* Make the button full width on smaller screens */
+                }
+            }
 
-                                
-                            </div>
-            
-                            <br>
-                            <div class="footer" style="position:right;">
-                            </div>
-                        </div>
+
+            .circle-btn {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 45px; /* Set minimum width */
+                height: 45px; /* Set minimum height */
+                background-color: transparent; /* Set to transparent or any other color for the inside */
+                border: 2px solid #78BE20; /* Border color is green */
+                border-radius: 50%;
+                color: #78BE20; /* Text color is green */
+                font-size: 24px; /* Adjust the font size as needed */
+                cursor: pointer;
+                transition: background-color 0.3s, color 0.3s; /* Add smooth transition effect */
+            }
         
+            .circle-btn:hover {
+                background-color: #78BE20; /* Hover background color is green */
+                color: #fff; /* Hover text color is white */
+            }
+        
+            .plus-sign::before {
+                content: '+';
+            }
+            .faq-set {
+                margin-top: 40px; /* Adjust the margin as needed */
+            }
+        
+            @media only screen and (max-width: 768px) {
+            
+                .custom-file {
+                    margin-bottom: 10px;
+                }
+            }
+        
+        
+            .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+                max-width: 80%; 
+                height: 90%; 
+                z-index: 1500;
+            }
+            @media screen and (max-width:700px){
+                .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+                    max-width:100%;
+                }
+            }
+            
+            h1{
+                text-align:center;
+                font-size:30px;
+                font-weight:bold;
+            }
+        
+            label{
+                font-size:20px;
+            }
+
+            .app-body{
+                justify-content:center; 
+                margin-left:15%;
+                margin-right:15%;
+            }
+            
+            @media (max-width: 760px) {
+                .app-body {
+                    margin-left: 5%;
+                    margin-right: 5%;
+                }
+            }
+        </style>
+    </head>
+
+
+    <body>
+        <div class="app" id="app">
+
+            <!-- aside -->
+            <div id="aside" class="app-aside modal nav-dropdown">
+
+                {% block sidebar %}
+                    {% include 'users/sidebar.html' %}
+                {% endblock %}
+
+            </div>
+            <!-- aside end -->
+
+            <!-- navbar content -->
+            <div id="content" class="app-content box-shadow-z0" role="main">
+                {% block navbar %}
+                    {% include 'Manage Website/manage_web_navbar.html' %}
+                {% endblock navbar %}
+
+            </div>
+            <!--navbar content-->
+
+            <div ui-view class="app-body" id="view">
+
+                <div class="container">
+                    <br>
+                    <br>
+                    <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
+                    <h6>Note:</h6>
+                    <ol style="justify-content:center;margin-bottom:15px;"><b>
+                    <li>Make a category for that Q&A by clicking on the (+) icon</li>
+                    <li>You can view or add Q&A by clicking on the created category</li>
+                    <li>You can add as many Q&As as you want</li>
+                    <li>Don’t forget to save the changes by clicking the update button</li>
+
+                    </ol></b>
+                </div>
                     
-                    </form> 
-                    {% comment %} <form id="myForm" method="POST" enctype="multipart/form-data">
 
-                    </form> {% endcomment %}
+                <!--Start from here-->
+                <br>
+                <br>
+                <h2 style="text-align: center;margin-bottom:15px;">Manage the <b>About Section</b> of the Central Website of <span style="color:#00629B;"><b>IEEE NSU Student Branch</b></span></h2>
+                <br>
+                {% block publications_tab %}
+                {% include "Manage Website/About/about_tabs.html" %}
+                {% endblock publications_tab %}
 
+                <br>
+                <h4 style="justify-content:center;text-align:center;"><b>Question Answers </b></h2>
+                <br>
 
-                    <!--for deleting categories-->
-                    <div class="modal fade" id="ConfirmDeleteModalForCategories" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-top" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form method="POST">
-                                <div class="modal-body">
-                                    
-                                        {% csrf_token %}
-                                        <p><input id="delete_category" name="delete_category" type="hidden"></p>
-                                        Are you sure you want to delete this category?
-                                 
-                                </div>
-                                <div class="modal-footer">
-                                    <input type="submit" class="btn btn-outline-danger" value="Confirm" name="category_delete">
-                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                                </div>
-                            </form>
+                <div class="btn-container">
+                    <button class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#previewModal">Preview</button>
+                </div>
+                <br>
+
+                <!-- Preview Modal -->
+                <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" style="z-index: 1500;">
+                    <div class="modal-dialog modal-dialog-centered modal-lg preview_modal_box" role="document">
+                        <div class="modal-content" style="width: 100%; height: 100%;">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="previewModalLabel">Preview</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="{% url 'central_branch:faq_preview' %}" style="width: 100%; height: 100%;" loading="lazy"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
-                    
-                <div>
-            </div>
-
-         
-            <!-- Updated Modal for adding captions -->
-            <div class="modal fade" id="AddCategoryModal" tabindex="-1" role="dialog" aria-labelledby="AddCategoryModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="AddCategoryModalLabel">Add Category Name:</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="POST">
-                                {% csrf_token %}
+                </div>
+                
+                <!--for error messages-->
+                <div class="container">
+                    <br>
+                    {% for message in messages  %}
+                        <p>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <p style="margin: 0;">{{message}}</p>
+                            </div>
+                        </p>
+                    {% endfor %}
+                    <br>
+                </div>
+                <!--for error messages end-->
+                
+                <div class="container">          
+                    <div class="box">
+                        <br>
+                        <form id="myForm" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="box-body">
+                        
+                                <div class="form-group row">
+                                    <label for="captions" class="col-sm-3 form-control-label">Add Categories:</label>
+                                    <div class="col-sm-7">
+                                        <!-- Add input field for captions here if needed -->
+                                    </div>
+                                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddCategoryModal"></button>
+                                    </div>
+                                </div>
                                 
-                                <div class="form-group">
-                                    <label>Category: </label> 
-                                        <input
-                                            placeholder="Title"
-                                            class="form-control"
-                                            type="text"
-                                            autocomplete="off"
-                                            required
-                                            name="category_title" 
-                                        />
-                                    <br>
+                                <hr>
+                            <div id="captions-container" class="mt-3">
+                                    <label class="mb-0">Categories:</label> 
+                                    {% for title in all_titles%}
+                                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                                        <div class="col-sm-11">
+                                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal{{title.pk}}">{{title.title}}</a>
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForCategories"  onclick="openModal('{{title.pk}}')">✖</button>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
                                     
+
                                     
                                 </div>
+                
+                                <br>
+                                <div class="footer" style="position:right;">
+                                </div>
+                            </div>
+            
+                        
+                        </form> 
+                        {% comment %} <form id="myForm" method="POST" enctype="multipart/form-data">
 
+                        </form> {% endcomment %}
+
+
+                        <!--for deleting categories-->
+                        <div class="modal fade" id="ConfirmDeleteModalForCategories" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-top" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form method="POST">
+                                    <div class="modal-body">
+                                        
+                                            {% csrf_token %}
+                                            <p><input id="delete_category" name="delete_category" type="hidden"></p>
+                                            Are you sure you want to delete this category?
+                                    
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="submit" class="btn btn-outline-danger" value="Confirm" name="category_delete">
+                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </form>
+                                </div>
+                            </div>
                         </div>
-                        <div class="modal-footer">
-                            <!-- Change the button label and name attribute -->
-                            <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_category" value="Add">
-                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                        
+                    <div>
+                </div>
+
+            
+                <!-- Updated Modal for adding captions -->
+                <div class="modal fade" id="AddCategoryModal" tabindex="-1" role="dialog" aria-labelledby="AddCategoryModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="AddCategoryModalLabel">Add Category Name:</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    
+                                    <div class="form-group">
+                                        <label>Category: </label> 
+                                            <input
+                                                placeholder="Title"
+                                                class="form-control"
+                                                type="text"
+                                                autocomplete="off"
+                                                required
+                                                name="category_title" 
+                                            />
+                                        <br>
+                                        
+                                        
+                                    </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <!-- Change the button label and name attribute -->
+                                <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_category" value="Add">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                            </div>
+                            </form>
                         </div>
-                        </form>
                     </div>
                 </div>
-            </div>
 
 
 
-            {% for key,value in saved_question_answers.items %}
-            <div class="modal fade" id="EditCaptionModal{{key.pk}}" tabindex="-1" role="dialog" aria-labelledby="EditCaptionModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editCaptionModalLabel{{key.pk}}">Edit Category</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Display existing caption in a textarea for editing -->
-                            <form method="POST" id="form-1">
-                                {% csrf_token %}
-                                <div class="form-group">
-                                    <label>Name: </label> 
-                                        <input
-                                            placeholder="Title"
-                                            class="form-control"
-                                            type="text"
-                                            autocomplete="off"
-                                            required
-                                            name="saved_title"
-                                            value = "{{key.title}}"
-                                        />
-                                    <br>
-                                
+                {% for key,value in saved_question_answers.items %}
+                <div class="modal fade" id="EditCaptionModal{{key.pk}}" tabindex="-1" role="dialog" aria-labelledby="EditCaptionModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editCaptionModalLabel{{key.pk}}">Edit Category</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Display existing caption in a textarea for editing -->
+                                <form method="POST" id="form-1">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label>Name: </label> 
+                                            <input
+                                                placeholder="Title"
+                                                class="form-control"
+                                                type="text"
+                                                autocomplete="off"
+                                                required
+                                                name="saved_title"
+                                                value = "{{key.title}}"
+                                            />
+                                        <br>
                                     
-                                    <div class="row">
-                                        <label for="captions" class="col-sm-3 form-control-label">Add FAQ:</label>
-                                        <div class="col-sm-7">
-                                            <!-- Add input field for captions here if needed -->
                                         
+                                        <div class="row">
+                                            <label for="captions" class="col-sm-3 form-control-label">Add FAQ:</label>
+                                            <div class="col-sm-7">
+                                                <!-- Add input field for captions here if needed -->
+                                            
+                                            </div>
+                                            <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                                <button type="button" id="addFieldsBtn{{key.id}}" class="circle-btn plus-sign" ></button>
+                                            </div>    
                                         </div>
-                                        <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                            <button type="button" id="addFieldsBtn{{key.id}}" class="circle-btn plus-sign" ></button>
-                                        </div>    
-                                    </div>
-                                    <hr>
+                                        <hr>
 
-                                    {% if value|length > 0 %}
-                                        {% for question_answer in value %}
+                                        {% if value|length > 0 %}
+                                            {% for question_answer in value %}
+                                            <div class="faq_container" id="container{{key.id}}">
+                                                <div class="faq-set {{key.id}}">
+                                                    <label for="question">Question:</label>
+                                                    <input
+                                                        placeholder="Title"
+                                                        class="form-control"
+                                                        type="text"
+                                                        autocomplete="off"
+                                                        required
+                                                        name="faq_question"
+                                                        id="question"
+                                                        value="{{question_answer.question}}"
+                                                    />
+                                                    <br>
+                                                    <label for="answer">Answer:</label>
+                                                    <textarea id="answer" class="form-control" rows="3" name="faq_question_answer">{{question_answer.answer|default:""}}</textarea>
+                                                    <input type = "hidden"  id="category_id" name="category_id" value="{{key.id}}">
+                                                    <input type = "hidden"   id="delete_FAQ"  name="delete_FAQ" value="{{question_answer.pk}}">
+                                                    <hr>
+                                                    <button type="button" class="btn btn-danger deleteBtn" data-toggle="modal" data-target="#ConfirmDeleteModalForQuestions"  onclick="deleteFAQ('{{key.id}}','{{question_answer.pk}}')">Delete</button>
+                                                </div>
+                                            
+                                        
+                                            </div>
+                                            {% endfor %}
+                                        {% else %}
                                         <div class="faq_container" id="container{{key.id}}">
                                             <div class="faq-set {{key.id}}">
                                                 <label for="question">Question:</label>
@@ -338,184 +426,165 @@
                                                 <br>
                                                 <label for="answer">Answer:</label>
                                                 <textarea id="answer" class="form-control" rows="3" name="faq_question_answer">{{question_answer.answer|default:""}}</textarea>
-                                                <input type = "hidden"  id="category_id" name="category_id" value="{{key.id}}">
-                                                <input type = "hidden"   id="delete_FAQ"  name="delete_FAQ" value="{{question_answer.pk}}">
+                                                <input type = "hidden" value="{{key.pk}}" name="category_id">
+                                                <input type = "hidden" value="{{question_answer.pk}}" name="delete_id">
                                                 <hr>
-                                                <button type="button" class="btn btn-danger deleteBtn" data-toggle="modal" data-target="#ConfirmDeleteModalForQuestions"  onclick="deleteFAQ('{{key.id}}','{{question_answer.pk}}')">Delete</button>
                                             </div>
                                         
                                     
                                         </div>
-                                        {% endfor %}
-                                    {% else %}
-                                    <div class="faq_container" id="container{{key.id}}">
-                                        <div class="faq-set {{key.id}}">
-                                            <label for="question">Question:</label>
-                                            <input
-                                                placeholder="Title"
-                                                class="form-control"
-                                                type="text"
-                                                autocomplete="off"
-                                                required
-                                                name="faq_question"
-                                                id="question"
-                                                value="{{question_answer.question}}"
-                                            />
-                                            <br>
-                                            <label for="answer">Answer:</label>
-                                            <textarea id="answer" class="form-control" rows="3" name="faq_question_answer">{{question_answer.answer|default:""}}</textarea>
-                                            <input type = "hidden" value="{{key.pk}}" name="category_id">
-                                            <input type = "hidden" value="{{question_answer.pk}}" name="delete_id">
-                                            <hr>
-                                        </div>
-                                    
-                                
+                                        {% endif %}
+
                                     </div>
-                                    {% endif %}
-
-                                </div>
-                                <div class="modal-footer">
-                                    <input type="submit" name = "update_faq" class="btn btn-outline-primary txt-primary buttons" value="Update">
-                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                                </div>
-                            </form>
+                                    <div class="modal-footer">
+                                        <input type="submit" name = "update_faq" class="btn btn-outline-primary txt-primary buttons" value="Update">
+                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            {% endfor %}     
-            
-            
-            <!--for deleting questions-->
-            <div class="modal fade" id="ConfirmDeleteModalForQuestions" tabindex="1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content" style="box-shadow: 0 29px 52px rgba(0,0,0,0.40), 0 25px 16px rgba(0,0,0,0.20);">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                {% endfor %}     
+                
+                
+                <!--for deleting questions-->
+                <div class="modal fade" id="ConfirmDeleteModalForQuestions" tabindex="1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content" style="box-shadow: 0 29px 52px rgba(0,0,0,0.40), 0 25px 16px rgba(0,0,0,0.20);">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form method="POST">
+                            <div class="modal-body">
+                                
+                                    {% csrf_token %}
+                                    <p><input id="category_id_delete" name="category_id_delete" type="hidden"></p>
+                                    <p><input id="question_answer_id_delete" name="question_answer_id_delete" type="hidden"></p>
+                                    Are you sure you want to delete this ?
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <input type="submit" class="btn btn-outline-danger" value="Confirm" name="faq_question_answer_delete">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
                         </div>
-                        <form method="POST">
-                        <div class="modal-body">
-                            
-                                {% csrf_token %}
-                                <p><input id="category_id_delete" name="category_id_delete" type="hidden"></p>
-                                <p><input id="question_answer_id_delete" name="question_answer_id_delete" type="hidden"></p>
-                                Are you sure you want to delete this ?
-                            
-                        </div>
-                        <div class="modal-footer">
-                            <input type="submit" class="btn btn-outline-danger" value="Confirm" name="faq_question_answer_delete">
-                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                        </div>
-                    </form>
                     </div>
                 </div>
+            
+
+                <!-- Confirmation modal for delete -->
+                
             </div>
-          
 
-            <!-- Confirmation modal for delete -->
-            
-
-
-            
-            
-
+            <!--Theme Switcher-->
+            {% block theme_switcher %}
+                {% include "theme_switcher.html" %}
+            {% endblock theme_switcher %}
         </div>
-    </div>
 
-</body>
-<script>
-    function openModal(id) {
-        // Set data in the modal
-        var inputElement = document.getElementById('delete_category');    
-        inputElement.value=id;
-    }
-    function deleteFAQ(id,id2) {
-        // Set data in the modal
-        var inputElement = document.getElementById('category_id_delete');    
-        inputElement.value=id;
-        var inputElement2 = document.getElementById('question_answer_id_delete'); 
-        inputElement2.value = id2;
-    }
-</script>
+        {% block common_js %}
+            {% include "common_js.html" %}
+        {% endblock common_js %}
 
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-<script>
-    {% for key,value in saved_question_answers.items %}
-    document.getElementById('addFieldsBtn{{key.id}}').addEventListener('click', function() {
-        // Create new question and answer fields
-        var faqSet = document.createElement('div');
-        faqSet.className = 'faq-set {{key.id}}';
-
-        var newQuestionLabel = document.createElement('label');
-        newQuestionLabel.textContent = 'Question:';
-        newQuestionLabel.htmlFor = 'question';
-
-        var newQuestion = document.createElement('input');
-        newQuestion.type = 'text';
-        newQuestion.className = 'form-control';
-        newQuestion.placeholder = 'Title';
-        newQuestion.id = 'question';
-        newQuestion.name = 'faq_question';
-
-        var newAnswerLabel = document.createElement('label');
-        newAnswerLabel.textContent = 'Answer:';
-        newAnswerLabel.htmlFor = 'answer';
-
-        var newAnswer = document.createElement('textarea');
-        newAnswer.className = 'form-control';
-        newAnswer.rows = '3';
-        newAnswer.id = 'answer';
-        newAnswer.name = 'faq_question_answer';
-
-
-        var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
         
-        
-        // Append new fields and labels to the faq-set container
-        faqSet.appendChild(newQuestionLabel);
-        faqSet.appendChild(newQuestion);
-        faqSet.appendChild(document.createElement('br'));
-        faqSet.appendChild(newAnswerLabel);
-        faqSet.appendChild(newAnswer);
-        faqSet.appendChild(document.createElement('hr'));
-
-        // Append the faq-set to the main container
-        document.getElementById('container{{key.id}}').appendChild(faqSet);
-    });
-    {% endfor %}
-</script>
-
- <!-- Add Bootstrap JS and Popper.js scripts here -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
- {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>  {% endcomment %}
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script>
+            function openModal(id) {
+                // Set data in the modal
+                var inputElement = document.getElementById('delete_category');    
+                inputElement.value=id;
+            }
+            function deleteFAQ(id,id2) {
+                // Set data in the modal
+                var inputElement = document.getElementById('category_id_delete');    
+                inputElement.value=id;
+                var inputElement2 = document.getElementById('question_answer_id_delete'); 
+                inputElement2.value = id2;
+            }
+        </script>
 
 
-{% comment %} 
-<script>
-    $(document).ready(function () {
-        // Handle the click event for the "Cancel" button in the inner modal
-        $('#confirmationModal .closeChild').on('click', function () {
-            $('#confirmationModal').modal('hide'); // Hide the inner modal
-            $('body').removeClass('modal-open'); // Remove the modal-open class from the body
-            $('.modal-backdrop').remove(); // Remove the modal backdrop
-        });
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-        // Handle the hidden.bs.modal event for the inner modal
-        $('#confirmationModal').on('hidden.bs.modal', function () {
-            $('body').addClass('modal-open'); // Restore the modal-open class to the body
-        });
-    });
-</script> {% endcomment %}
-{% endblock manage_ieee_bangladesh_section %}
+        <script>
+            {% for key,value in saved_question_answers.items %}
+            document.getElementById('addFieldsBtn{{key.id}}').addEventListener('click', function() {
+                // Create new question and answer fields
+                var faqSet = document.createElement('div');
+                faqSet.className = 'faq-set {{key.id}}';
+
+                var newQuestionLabel = document.createElement('label');
+                newQuestionLabel.textContent = 'Question:';
+                newQuestionLabel.htmlFor = 'question';
+
+                var newQuestion = document.createElement('input');
+                newQuestion.type = 'text';
+                newQuestion.className = 'form-control';
+                newQuestion.placeholder = 'Title';
+                newQuestion.id = 'question';
+                newQuestion.name = 'faq_question';
+
+                var newAnswerLabel = document.createElement('label');
+                newAnswerLabel.textContent = 'Answer:';
+                newAnswerLabel.htmlFor = 'answer';
+
+                var newAnswer = document.createElement('textarea');
+                newAnswer.className = 'form-control';
+                newAnswer.rows = '3';
+                newAnswer.id = 'answer';
+                newAnswer.name = 'faq_question_answer';
+
+
+                var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+                
+                
+                // Append new fields and labels to the faq-set container
+                faqSet.appendChild(newQuestionLabel);
+                faqSet.appendChild(newQuestion);
+                faqSet.appendChild(document.createElement('br'));
+                faqSet.appendChild(newAnswerLabel);
+                faqSet.appendChild(newAnswer);
+                faqSet.appendChild(document.createElement('hr'));
+
+                // Append the faq-set to the main container
+                document.getElementById('container{{key.id}}').appendChild(faqSet);
+            });
+            {% endfor %}
+        </script>
+
+        <!-- Add Bootstrap JS and Popper.js scripts here -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>  {% endcomment %}
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+        {% comment %} 
+        <script>
+            $(document).ready(function () {
+                // Handle the click event for the "Cancel" button in the inner modal
+                $('#confirmationModal .closeChild').on('click', function () {
+                    $('#confirmationModal').modal('hide'); // Hide the inner modal
+                    $('body').removeClass('modal-open'); // Remove the modal-open class from the body
+                    $('.modal-backdrop').remove(); // Remove the modal backdrop
+                });
+
+                // Handle the hidden.bs.modal event for the inner modal
+                $('#confirmationModal').on('hidden.bs.modal', function () {
+                    $('body').addClass('modal-open'); // Restore the modal-open class to the body
+                });
+            });
+        </script> {% endcomment %}
+    </body>
+</html>
+{% endblock manage_portal_faq %}

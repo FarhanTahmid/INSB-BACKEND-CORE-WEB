@@ -3,53 +3,76 @@
 <section class="text-center dark-grey-text">
     <hr>
     <!-- Section heading -->
-    <h3 class="font-weight-bold mb-1">Branch Councelor</h3>
+    <h3 class="font-weight-bold mb-1">Branch Counselor</h3>
     <hr>
 
-    <!-- Grid row -->
-    <div class="container d-flex justify-content-center align-items-center m-2">
-        <div class="row">
-    
-            <!--Grid column-->
-            {% for i in branch_counselor %}
-            <div class="col-lg-4 col-md-12 mb-4">
-                <!--Card-->
-                
-                <div class="card testimonial-card">
-                    <!--Background color-->
-                    <div class="card-up info-color"></div>
-                    <!--Avatar-->
-                    <div class="avatar mx-auto white" style="height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                        <img src="/media_files/{{i.member.user_profile_picture}}" class="rounded-bottom-pill" style="object-fit: cover; width: 100%; height: 100%;"
-                        onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';"
-                        >                    
+    <div class="text-center dark-grey-text">
+        <!-- Grid row -->
+        <div class="row d-flex justify-content-center align-items-center m-2">        
+                <!--Grid column-->
+                {% for i in branch_counselor %}
+                <div class="col-lg-4 col-md-12 mb-4">
+                    <!--Card-->
+                    {% if i.member %}
+                    <div class="card testimonial-card">
+                        <!--Background color-->
+                        <div class="card-up info-color"></div>
+                        <!--Avatar-->
+                        <div class="avatar mx-auto white" style="height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                            <img src="/media_files/{{i.member.user_profile_picture}}" class="rounded-bottom-pill" style="object-fit: cover; width: 100%; height: 100%;"
+                            onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';"
+                            >                    
+                        </div>
+                        <div class="card-body">
+                            <!--Name-->
+                            <h4 class="font-weight-bold mb-4">{{i.member.name}}{{i.ex_member.name}}</h4>
+                            <hr>
+                            <!--Quotation-->
+                            <p style="text-align:center;margin-left:3vh;" class="dark-grey-text mt-4"><b>{{i.position}}</b></p>
+                            <ul class="list-unstyled d-flex justify-content-center mt-3 mb-0">
+                                <li><a href="{{i.member.linkedin_url}}" target="_blank"><i class="fab fa-linkedin-in mx-2 icon-gray"></i></a></li>
+                                <li><a href="{{i.member.facebook_url}}" target="_blank"><i class="fab fa-facebook-f mx-2 icon-gray"></i></a></li>
+                                <li><a href="mailto:{{i.member.email_ieee}}" target="_blank"><i class="fas fa-envelope mx-2 icon-gray"></i></a></li>
+                            </ul>
+                            
+                            
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <!--Name-->
-                        <h4 class="font-weight-bold mb-4">{{i.member.name}}{{i.ex_member.name}}</h4>
-                        <hr>
-                        <!--Quotation-->
-                        <p style="text-align:center;margin-left:3vh;" class="dark-grey-text mt-4"><b>{{i.position}}</b></p>
-                        <ul class="list-unstyled d-flex justify-content-center mt-3 mb-0">
-                            <li><a href="{{i.member.linkedin_url}}" target="_blank"><i class="fab fa-linkedin-in mx-2 icon-gray"></i></a></li>
-                            <li><a href="{{i.member.facebook_url}}" target="_blank"><i class="fab fa-facebook-f mx-2 icon-gray"></i></a></li>
-                            <li><a href="mailto:{{i.member.email_ieee}}" target="_blank"><i class="fas fa-envelope mx-2 icon-gray"></i></a></li>
-                        </ul>
-                        <ul class="list-unstyled d-flex justify-content-center mt-3 mb-0">
-                            <li><i class="fas fa-phone mx-2 icon-gray"></i>{{i.member.contact_no}}</li>
-                        </ul>
-                        
+                    {% else %}
+                    <div class="card testimonial-card">
+                        <!--Background color-->
+                        <div class="card-up info-color"></div>
+                        <!--Avatar-->
+                        <div class="avatar mx-auto white" style="height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                            <img src="/media_files/{{i.ex_member.picture}}" class="rounded-bottom-pill" style="object-fit: cover; width: 100%; height: 100%;"
+                            onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';"
+                            >                    
+                        </div>
+                        <div class="card-body">
+                            <!--Name-->
+                            <h4 class="font-weight-bold mb-4">{{i.ex_member.name}}</h4>
+                            <hr>
+                            <!--Quotation-->
+                            <p style="text-align:center;margin-left:3vh;" class="dark-grey-text mt-4"><b>{{i.position}}</b></p>
+                            <ul class="list-unstyled d-flex justify-content-center mt-3 mb-0">
+                                <li><a href="{{i.ex_member.linkedin_link}}" target="_blank"><i class="fab fa-linkedin-in mx-2 icon-gray"></i></a></li>
+                                <li><a href="{{i.ex_member.facebook_link}}" target="_blank"><i class="fab fa-facebook-f mx-2 icon-gray"></i></a></li>
+                                <li><a href="mailto:{{i.ex_member.email}}" target="_blank"><i class="fas fa-envelope mx-2 icon-gray"></i></a></li>
+                            </ul>
+                            
+                        </div>
                     </div>
+                    {% endif %}
+                    
+                    
+
+                    <!--Card-->
                 </div>
+                {% endfor %}
                 
-                
-                <!--Card-->
-            </div>
-            {% endfor %}
-            
-            <!--Grid column-->
-        
+                <!--Grid column-->
         </div>
     </div>
+    
 </section>
 {% endblock panel_member_branch_counselor %}

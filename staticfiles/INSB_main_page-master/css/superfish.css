@@ -82,7 +82,7 @@
 /*- no submenu indicator on top level -*/
 .sf-menu li a.sf-with-ul:after {
 	content: '\f107';
-	font-family: 'Poppins', sans-serif;
+	font-family: 'FontAwesome';
 	position: absolute;
 	top: 12px;
 	right: 0px;

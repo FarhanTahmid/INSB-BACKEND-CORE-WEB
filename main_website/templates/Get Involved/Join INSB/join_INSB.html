@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join INSB - IEEE NSU Student Branch</title>
+
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+
+
+    <!--Common CSS-->
+    {% block common_css %}
+    {% include "common_css_includes.html" %}
+    {% endblock common_css %}
+
+
+    <style>
+        .centering {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            margin: 20px 0 109px 0;
+        }
+
+        .max-width {
+            max-width: 1140px;
+            /* margin: 30px 15px; */
+        }
+
+        .join_container .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .join_container h1 {
+            color: #002855;
+            font-weight: 600;
+            position: relative;
+            margin-bottom: -20px;
+            margin-top: 30px;
+            z-index: 2;
+            border: 1px solid white;
+        }
+
+        .gif {
+            max-width: 500px;
+            max-height: 500px;
+            overflow: hidden;
+            transition: all .6s ease-in-out;
+        }
+
+        .gif img {
+            width: 100%;
+            height: 100%;
+            /* position: relative; */
+            object-fit: cover;
+            /* bottom: -55px; */
+            /* scale: 1.5; */
+
+        }
+
+        /*media queries*/
+        @media screen and (max-width: 1199px) {
+            .max-width {
+                max-width: 850px;
+            }
+
+            .gif img {
+                left: 37px;
+            }
+        }
+
+        @media screen and (max-width: 991px) {
+            .max-width {
+                max-width: 650px;
+            }
+
+            .join_container h1 {
+                margin-bottom: -50px;
+            }
+        }
+
+        @media screen and (max-width: 630px) {
+            .max-width {
+                max-width: 90%;
+            }
+
+            .join_container h1 {
+                margin-bottom: -10px;
+            }
+
+            .gif img {
+                scale: 1.6;
+                left: 23px;
+            }
+        }
+
+        @media screen and (max-width: 425px) {
+            .max-width {
+                max-width: 80%;
+            }
+
+            .join_container h1 {
+                font-size: 25px;
+            }
+
+            .gif img {
+                bottom: -25px;
+            }
+        }
+    </style>
+</head>
+
+<body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+    <div class="body-wrapper  float-menu">
+
+        {% block header %}
+        {% include 'header.html' %}
+        {% endblock header %}
+
+
+        {% block wave_design %}
+        {% include 'wave.html' %}
+        {% endblock wave_design %}
+
+        <!--Page start-->
+        <section class="centering">
+            <div class="max-width join_container">
+                <div class="container">
+                    <div class="gif"><img src="{% static 'upload/hourglass.gif' %}" alt=""></div>
+                    <div class="join_msg">
+                        <h1>Recruitment process will be announced soon</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--Page end-->
+
+        {% block footer %}
+        {% include "footer_block.html" %}
+        {% endblock footer %}
+    </div>
+
+    {% block common_js %}
+    {% include "common_js_includes.html" %}
+    {% endblock %}
+</body>
+
+</html>

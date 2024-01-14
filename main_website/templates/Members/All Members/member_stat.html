@@ -27,13 +27,13 @@
     // Specify the configuration items and data for the chart
     option1 = {
         title: {
-          text: 'Member Statistics of IEEE NSU Student Branch',
+          text: 'Member Statistics',
           subtext: 'Based on IEEE NSU SB Portal Data since 2023',
           left: 'center'
         },
         tooltip: {
           trigger: 'item',
-          formatter: '{a} <br/>{b} : {c} ({d}%)'
+          formatter: '{b} : {c} ({d}%)'
         },
         legend: {
           left: 'center',
@@ -46,7 +46,7 @@
           ]
         },
         toolbox: {
-          show: true,
+          show: false,
           feature: {
             mark: { show: true },
             dataView: { show: true, readOnly: false },
@@ -66,8 +66,8 @@
             data: [
               { value: "{{male_count}}", name: 'Male Members' },
               { value: "{{female_count}}", name: 'Female Members' },
-              { value: "{{female_count}}", name: 'Active Members' },
-              { value: "{{female_count}}", name: 'Inactive Members' },
+              { value: "{{active_count}}", name: 'Active Members' },
+              { value: "{{inactive_count}}", name: 'Inactive Members' },
             ]
           }
         ]
@@ -84,7 +84,7 @@
     // Specify the configuration items and data for the chart
     option2 = {
       title: {
-        text: 'Recruitment Statistics of IEEE NSU Student Branch',
+        text: 'Recruitment Statistics',
         subtext: 'Based on IEEE NSU SB Portal Data since 2023',
         left: 'center'
       },
@@ -95,7 +95,7 @@
         }
       },
       toolbox: {
-        show: true,
+        show: false,
         feature: {
           mark: { show: true },
           dataView: { show: true, readOnly: false },

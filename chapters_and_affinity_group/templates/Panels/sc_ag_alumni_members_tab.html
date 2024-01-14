@@ -192,12 +192,14 @@
             {% endif %}
             <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">Panel Duration:<span style="color:#00629B;"> {{tenure_time}} </span></b></h5>
             <br>
+            {% if panel_edit_access %}
             <div style="justify-content:center;text-align:center;">  
                 <div class="btn-container">
                     <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-f" ui-toggle-class="bounce" ui-target="#animate">Delete Panel</button>
                     <button type="submit" class="btn btn-outline b-info text-info" data-toggle="modal" data-target="#m-s-g" ui-toggle-class="bounce" ui-target="#animate">Panel Settings</button>
                 </div>
             </div>
+            {% endif %}
             <br>
             <br>
 
@@ -224,9 +226,11 @@
                     <div class="box">
                         <div class="box-header">
                             
+                            {% if panel_edit_access %}
                             <div style="text-align:right;">
-                            <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-d" ui-toggle-class="bounce" ui-target="#animate">Add Alumni Member</button>
+                                <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-d" ui-toggle-class="bounce" ui-target="#animate">Add Alumni Member</button>
                             </div>
+                            {% endif %}
                             <small>This table holds the data of the Alumni Members that are not registered in the INSB Database but are in the Panel</small>
                             <br>
                             <label style="margin-left:5px;">Search:</label>
@@ -240,7 +244,9 @@
                                 <th style="text-align:center;">Email</th>
                                 <th style="text-align:center;">Contact No</th>
                                 <th style="text-align:center;">Position</th>
+                                {% if panel_edit_access %}
                                 <th style="text-align:center;">Remove Member?</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
@@ -251,13 +257,15 @@
                                     <td>{{ member.ex_member.email  }}</td>
                                     <td>{{member.ex_member.contact_no}}</td>
                                     <td>{{member.position}}</td>
+                                    {% if panel_edit_access %}
                                     <td>
-                                    <form method="POST">
-                                        {% csrf_token %}
-                                            <input class="btn btn-outline b-danger text-danger" name="remove_member_alumni" type="submit" value="Remove Member">
-                                            <input type="hidden" name="remove_alumni_member" value={{member.pk}}>
-                                        </form>
-                                    </td>
+                                        <form method="POST">
+                                            {% csrf_token %}
+                                                <input class="btn btn-outline b-danger text-danger" name="remove_member_alumni" type="submit" value="Remove Member">
+                                                <input type="hidden" name="remove_alumni_member" value={{member.pk}}>
+                                            </form>
+                                        </td>
+                                    {% endif %}
                                 </tr>
                                 {% endfor %}
                             </tbody>

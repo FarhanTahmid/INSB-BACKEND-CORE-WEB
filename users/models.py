@@ -24,7 +24,7 @@ class Members(models.Model):
     
     ieee_id=models.BigIntegerField(primary_key=True,blank=False,null=False)
     name=models.CharField(null=False,blank=False,max_length=100)
-    nsu_id=models.BigIntegerField(null=False, blank=False)
+    nsu_id=models.BigIntegerField(null=True, blank=True)
     email_ieee=models.EmailField(null=True,blank=True)
     email_personal=models.EmailField(null=True,blank=True)
     email_nsu=models.EmailField(null=True,blank=True)
@@ -40,14 +40,15 @@ class Members(models.Model):
     position=models.ForeignKey(Roles_and_Position,default=13,on_delete=models.CASCADE) #Default=13 means the position of a general member, check roles and positions table
     session=models.ForeignKey(recruitment_session,null=True,blank=True,on_delete=models.CASCADE) #recruitment session
     last_renewal_session=models.ForeignKey(Renewal_Sessions,null=True,blank=True,on_delete=models.CASCADE) #last renewal session    
-    is_active_member = models.BooleanField(null=False,blank=False,default=False)
+    is_active_member = models.BooleanField(null=False,blank=False,default=True)
     class Meta:
         verbose_name='INSB Registered Members'
+        ordering = ['position__rank']
     
     def __str__(self) -> str:
         return str(self.ieee_id)
     def get_absolute_url(self):
-        return reverse('registered member',kwargs={'member_id':self.iee_id})
+        return reverse('registered member',kwargs={'member_id':self.ieee_id})
 
 
 '''This table will be used to get the data of the EX Panel Members of IEEE NSU SB '''
@@ -62,7 +63,7 @@ class Alumni_Members(models.Model):
     ieee_collaboratec=models.URLField(null=True,blank=True,max_length=100)
     
     class Meta:
-        verbose_name='Ex Panel Members'
+        verbose_name='Alumni Members'
     
     def __str__(self) -> str:
         return str(self.pk)
@@ -79,12 +80,19 @@ class Panel_Members(models.Model):
     ex_member=models.ForeignKey(Alumni_Members,on_delete=models.CASCADE,null=True,blank=True)
     position=models.ForeignKey(Roles_and_Position,on_delete=models.CASCADE)
     team=models.ForeignKey(Teams,null=True,blank=True,on_delete=models.CASCADE)
+
+    class PanelMembersManager(models.Manager):
+        def get_queryset(self):
+            return super().get_queryset().filter(tenure__current=True).order_by("position__rank")
+
+    objects = PanelMembersManager()
     
     class Meta:
         verbose_name="Panel Members (Whole Tenure)"
     
     def __str__(self) -> str:
         return str(self.member) 
+    
 
 class ResetPasswordTokenTable(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)

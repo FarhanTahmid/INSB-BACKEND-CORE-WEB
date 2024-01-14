@@ -262,13 +262,13 @@
                                 {% for member in sc_ag_eb_members %}
                                 <tr>
                                     {% if member_details_access %}
-                                    <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.member.ieee_id %}">{{member.member.ieee_id}}</a></td>
+                                    <td>{{member.member.ieee_id}}</a></td>
                                     {% else %}
                                     <td>{{member.member.ieee_id}}</td>
                                     {% endif %}
-                                    <td>{{ member.member.name  }}</td>
-                                    <td>{{member.member.email_ieee}}</td>
-                                    <td>{{member.position}}</td>
+                                    <td>{{ member.member.name }}{{member.ex_member.name}}</td>
+                                    <td>{{member.member.email_ieee}}{{ member.ex_member.email  }}</td>
+                                    <td>{{member.position}}{{member.ex_member.position}}</td>
                                     {% if panel_edit_access %}
                                     <td>
                                         <form method="POST">
@@ -508,7 +508,13 @@
                             </div>
                             
                             <div class="modal-body text-left p-lg">
-                                <p>Remember, choose the attributes of the position carefully.<br>The attributes will effect in permissions and view accesses.</p>        
+                                <p>Remember, choose the attributes of the position carefully.<br>The attributes will effect in permissions and view accesses.</p>
+                                <ul>
+                                    <li>A Faculty Member Position (If you want to add the person in Executive Body) is: <span style="color:red;">Is Faculty + Is EB Member</span></li>
+                                    <li>A Mentor Position (If you want to add the person in Executive Body) is: <span style="color:red;">Is Mentor + Is EB Member</span></li>
+                                    <li>A Co-Ordinator Position is: <span style="color:red;">Is Co-Ordinator + Is Officer</span></li>
+                                    <li>A Core Volunteer Position is: <span style="color:red;">Is Core-Volunteer + Is Volunteer</span></li>
+                                </ul>        
                             </div>
                             <br>
                             <form method="post">
@@ -570,6 +576,31 @@
                                 </div>
 
                                 <div class="form-group row" style="margin-left:5px;">
+                                    <div class="col-md-6">
+                                        <label for="inputieeeid3" class="col-sm  form-control-label">Is this a Core-volunteer Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="core_volunteer_position_check" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="inputieeeid3" class="col-sm  form-control-label">Is this a Volunteer Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="volunteer_position_check" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" style="margin-left:5px;">
                                     <div class="col-md-12">
                                         <label for="inputieeeid3" class="col-sm  form-control-label">Is this a Mentor Position?</label>
                                         <span style="margin-right:30vh;">
@@ -582,6 +613,9 @@
                                         </span>
                                     </div>
                                 </div>
+
+                                
+
                             </form>
                             <div class="modal-footer">
                             <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>

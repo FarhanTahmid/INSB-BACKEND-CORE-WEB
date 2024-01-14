@@ -2,12 +2,12 @@ import os
 from bs4 import BeautifulSoup
 from django.http import Http404
 from insb_port import settings
-from main_website.models import About_IEEE, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link,FAQ_Question_Category,FAQ_Questions
+from main_website.models import About_IEEE, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link,FAQ_Question_Category,FAQ_Questions,HomePage_Thoughts,IEEE_Bangladesh_Section_Gallery
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
 from system_administration.models import MDT_Data_Access
-from central_events.models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_Category
+from central_events.models import Event_Feedback, SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_Category
 from events_and_management_team.models import Venue_List, Permission_criteria
 from system_administration.render_access import Access_Render
 from system_administration.system_error_handling import ErrorHandling
@@ -107,12 +107,11 @@ class Branch:
         
         '''This function returns all the teams in the database'''
         try:
-            teams=Teams.objects.all().values('primary','team_name') #returns a list of dictionaryies with the id and team name
+            teams=Teams.objects.filter(team_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1)).values('primary','team_name') #returns a list of dictionaryies with the id and team name
             return teams
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error("Can not return all teams. Something went wrong!")
             return False
     
     def load_team_members(team_primary):
@@ -146,7 +145,7 @@ class Branch:
             messages.error("Can not register super event in database. Something went wrong!")
             return False
     
-    def register_event_page1(super_event_id,event_name,event_type_list,event_description,event_date,event_organiser=None):
+    def register_event_page1(super_event_id,event_name,event_type_list,event_description,event_date,event_time,event_organiser=None):
             '''This method creates an event and registers data which are provided in event page1. Returns the id of the event if the method can create a new event successfully
             TAKES SUPER EVENT NAME, EVENT NAME, EVENT DESCRIPTION AS STRING. TAKES PROBABLE & FINAL DATE ALSO AS INPUT'''
             if event_organiser==None:
@@ -162,6 +161,7 @@ class Branch:
                             new_event=Events.objects.create(
                             event_name=event_name,
                             event_description=event_description,
+                            event_time = event_time,
                             event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
                             new_event.save()
@@ -178,6 +178,7 @@ class Branch:
                             event_name=event_name,
                             event_description=event_description,
                             event_date=event_date,
+                            event_time=event_time,
                             event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
                             new_event.save()
@@ -199,6 +200,7 @@ class Branch:
                             super_event_id=get_super_event_id,
                             event_name=event_name,
                             event_description=event_description,
+                            event_time=event_time,
                             event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
                             new_event.save()
@@ -216,6 +218,7 @@ class Branch:
                             event_name=event_name,
                             event_description=event_description,
                             event_date=event_date,
+                            event_time=event_time,
                             event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
                             new_event.save()
@@ -370,8 +373,8 @@ class Branch:
                 else:
                     pass
 
-    def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
-                             flagship_event,registration_fee,registration_fee_amount,form_link,is_featured_event):
+    def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_date, event_time, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
+                             flagship_event,registration_fee,registration_fee_amount,more_info_link,form_link,is_featured_event):
         ''' Update event details and save to database '''
 
         try:
@@ -411,10 +414,12 @@ class Branch:
             event.event_type.clear()
             #Add the event types from event_type_list
             event.event_type.add(*event_type_list)
+            event.event_time=event_time
             event.publish_in_main_web = publish_event
             event.flagship_event = flagship_event
             event.registration_fee = registration_fee
             event.registration_fee_amount = registration_fee_amount
+            event.more_info_link = more_info_link
             event.form_link = form_link
             event.is_featured = is_featured_event
             event.save()
@@ -470,6 +475,22 @@ class Branch:
             return True
         except:
             return False
+        
+    def add_feedback(event_id, name, email, satisfaction, comment):
+        try:
+            allowed_values = ['very_satisfied', 'satisfied', 'not_satisfied']
+            if satisfaction not in allowed_values:
+                return False
+            feedback = Event_Feedback(event_id=Events.objects.get(id=event_id), name=name, email=email, satisfaction=satisfaction, comment=comment)
+            feedback.save()
+            return True
+        except:
+            return False
+        
+    def get_all_feedbacks(event_id):
+        event_feedbacks = Event_Feedback.objects.filter(event_id=Events.objects.get(id=event_id))
+
+        return event_feedbacks
 
     # def load_ex_com_panel_list():
     #     panels=Executive_commitee.objects.all().order_by('-pk')
@@ -537,7 +558,7 @@ class Branch:
         '''This function loads all the EB panel members from the branch.
         Checks if the position of the member is True for is_eb_member and if member exists in current EB Panel'''
         get_current_panel=Branch.load_current_panel()
-        members=Members.objects.all()
+        members=Members.objects.all().order_by('position')
         eb_panel=[]
         for member in members:
             if member.position.is_eb_member:
@@ -1095,21 +1116,22 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
-    def checking_length(about_details, community_details, start_with_ieee_details, collaboration_details,
-                        publications_details, events_and_conferences_details, achievements_details, innovations_and_developments_details,
-                        students_and_member_activities_details, quality_details):
+    def checking_length(*descriptions):
+        '''This function checks the length of the description fields. If any one exceed 2000 or if any one is
+            empty then data won't be saved.'''
+        
         try:
-            about_details = Branch.process_ckeditor_content(about_details)
+            #assinging checking length
+            max_length = 2000
 
+            for description in descriptions:
+                #removing html tags to check true length of each fields
+                filtered_description = Branch.process_ckeditor_content(description)
+                #checking to see the length. Returns true if length is more than 700 or is 0
+                if(len(filtered_description)> max_length or len(filtered_description) == 0):
+                    return True
                 
-            if (len(about_details)> 500 or len(community_details)>500 or len(start_with_ieee_details)>500 
-                or len(collaboration_details)>500 or len(publications_details) > 500 or len(events_and_conferences_details) >500
-                or len(achievements_details)>500 or 
-                len(about_details) == 0 or len(innovations_and_developments_details)==0 or len(students_and_member_activities_details)==0
-                or len(quality_details)==0):
-                return True
-            else:
-                    return False
+            return False
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1120,24 +1142,25 @@ class Branch:
 
         try:
             about_ieee = About_IEEE.objects.get(id=1)
+            #getting the path of the image from the filesystem
             path = settings.MEDIA_ROOT+str(image_path)
+            #checking to see if the image exists in filesytem. If yes then delete it from filesystem
+            if os.path.exists(path):
+                os.remove(path)
 
+            #checking to see which image is requested to be deleted
             if(image_id == 'about_image'):
                 about_ieee.about_image = None
-                os.remove(path)
             elif(image_id == 'community_image'):
                 about_ieee.community_image = None
-                os.remove(path)
             elif(image_id == 'innovations_and_developments_image'):
                 about_ieee.innovations_and_developments_image = None
-                os.remove(path)
             elif(image_id == "students_and_member_activities_image"):
                 about_ieee.students_and_member_activities_image = None
-                os.remove(path)
             elif(image_id == "quality_image"):
                 about_ieee.quality_image = None
-                os.remove(path)
-            
+
+            #saving before returning
             about_ieee.save()
             return True
 
@@ -1151,15 +1174,20 @@ class Branch:
 
         try:
             ieee_bangladesh_section = IEEE_Bangladesh_Section.objects.get(id=1)
+            #getting the path of the image from the local machine
             path = settings.MEDIA_ROOT+str(image_path)
 
+            #checking to see if the image exists in filesytem. If yes then delete it from filesystem
+            if os.path.exists(path):
+                os.remove(path)
+
+            #checking to see which image is requested to be deleted
             if(image_id == 'ieee_bangladesh_logo'):
                 ieee_bangladesh_section.ieee_bangladesh_logo = None
-                os.remove(path)
             elif(image_id == 'member_and_volunteer_picture'):
                 ieee_bangladesh_section.member_and_volunteer_picture = None
-                os.remove(path)
             
+            #saving before returning
             ieee_bangladesh_section.save()
             return True
 
@@ -1173,30 +1201,30 @@ class Branch:
 
         try:
             ieee_nsu_student_branch = IEEE_NSU_Student_Branch.objects.get(id=1)
+            #getting the path of the image from the local machine
             path = settings.MEDIA_ROOT+str(image_path)
+            
+            #checking to see if the image exists in filesytem. If yes then delete it from filesystem
+            if os.path.exists(path):
+                os.remove(path)
 
+            #checking to see which image is requested to be deleted
             if(image_id == 'about_image'):
                 ieee_nsu_student_branch.about_image = None
-                os.remove(path)
             elif(image_id == 'ras_image'):
                 ieee_nsu_student_branch.ras_image = None
-                os.remove(path)
             elif(image_id == 'pes_image'):
                 ieee_nsu_student_branch.pes_image = None
-                os.remove(path)
             elif(image_id == 'ias_image'):
                 ieee_nsu_student_branch.ias_image = None
-                os.remove(path)
             elif(image_id == 'wie_image'):
                 ieee_nsu_student_branch.wie_image = None
-                os.remove(path)
             elif(image_id == 'mission_image'):
                 ieee_nsu_student_branch.mission_image = None
-                os.remove(path)
             elif(image_id == 'vision_image'):
                 ieee_nsu_student_branch.ras_image = None
-                os.remove(path)
             
+            #saving before returning
             ieee_nsu_student_branch.save()
             return True
 
@@ -1212,21 +1240,19 @@ class Branch:
             ieee_region_10 = IEEE_Region_10.objects.get(id=1)
             path = settings.MEDIA_ROOT+str(image_path)
 
+            if os.path.exists(path):
+                os.remove(path)
+
             if(image_id == 'ieee_region_10_picture'):
                 ieee_region_10.ieee_region_10_image = None
-                os.remove(path)
             elif(image_id == 'young_professionals_picture'):
                 ieee_region_10.young_professionals_image = None
-                os.remove(path)
             elif(image_id == 'membership_development_picture'):
                 ieee_region_10.membership_development_image = None
-                os.remove(path)
             elif(image_id == 'background_picture'):
                 ieee_region_10.background_picture_parallax = None
-                os.remove(path)
             elif(image_id == 'events_and_conference_picture'):
                 ieee_region_10.events_and_conference_image = None
-                os.remove(path)
 
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -1430,3 +1456,132 @@ class Branch:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
+        
+    def save_homepage_thoughts(author,thought):
+
+        '''This function saves the thoughts that the author gave on portal to display on main
+            web page'''
+        
+        try:
+            #saving them in database
+            homepage_thought = HomePage_Thoughts.objects.create(author = author, quote = thought)
+            homepage_thought.save()
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def get_all_homepage_thoughts():
+
+        '''This function returns all the thoughts registered in database'''
+
+        try:
+            #returning all the thoughts as a list
+            return HomePage_Thoughts.objects.all().order_by('pk')
+        
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def update_saved_thoughts(author,thought,id):
+
+        '''This function updates the registerd thoughts'''
+
+        try:
+            #getting the object from id and updating it with new data
+            homepage_thought = HomePage_Thoughts.objects.get(id=id)
+            homepage_thought.quote = thought
+            homepage_thought.author = author
+            homepage_thought.save()
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def delete_thoughts(id):
+        
+        '''This function deletes the thought from the database'''
+
+        try:
+            #getting the object from id and deleting it
+            homepage_thought = HomePage_Thoughts.objects.get(id=id)
+            homepage_thought.delete()
+            return True
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False  
+        
+    def update_profile_picture(picture,ieee_id):
+
+        '''This function updates the profile picture of user'''
+        try:
+            get_user=Members.objects.get(ieee_id = ieee_id)
+            #get the previous profile picture of the user to delete it
+            previous_profile_picture=settings.MEDIA_ROOT+str(get_user.user_profile_picture)
+            if(previous_profile_picture!=(settings.MEDIA_ROOT+'user_profile_pictures/default_profile_picture.png')):
+                #removing previous one from system
+                os.remove(previous_profile_picture)
+                #saving new one
+                get_user.user_profile_picture = picture
+                get_user.save()
+            else:
+                get_user.user_profile_picture = picture
+                get_user.save()
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def save_ieee_bangladesh_section_images(image_list):
+
+        '''This function saves the images to the database'''
+
+        try:
+            #iterating through image list and saving them
+            for image in image_list:
+
+                #creating image object and saving one image at a time
+                Image = IEEE_Bangladesh_Section_Gallery.objects.create(picture = image)
+                Image.save()
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def get_all_ieee_bangladesh_section_images():
+
+        '''This function returns all images of IEEE Bangladesh Section as list if there is any'''
+        try:
+            return IEEE_Bangladesh_Section_Gallery.objects.all()
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def delete_ieee_bangladesh_section_gallery_image(id):
+
+        '''This function deletes the image from the database and os'''
+
+        try:
+            #deleting the file from the system and the model 
+            image = IEEE_Bangladesh_Section_Gallery.objects.get(id=id)
+            path = settings.MEDIA_ROOT+str(image.picture)
+            os.remove(path)
+            image.delete()
+
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+
+

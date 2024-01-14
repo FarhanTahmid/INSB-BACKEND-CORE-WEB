@@ -1,9 +1,9 @@
 from .models import HomePageTopBanner,BannerPictureWithStat
 from django.http import HttpResponseServerError
-from users.models import Members,User_IP_Address
+from users.models import Members,User_IP_Address,Panel_Members
 from membership_development_team.renderData import MDT_DATA
 from central_events.models import Events,InterBranchCollaborations
-from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position
+from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
 from graphics_team.models import Graphics_Banner_Image
 from media_team.models import Media_Images
 from datetime import datetime
@@ -23,11 +23,11 @@ class HomepageItems:
 
         ''' This function returns all the events with its banner picture depending on the value of flag being True or False'''
             
-            #when flag is true we are trying to fetch all events, else latest upcoming five events
+            #when flag is true we are trying to fetch all events, else latest five events
         
         try:
             #getting current date to compare with events date that are upcoming
-            current_datetime = timezone.now()
+            #current_datetime = timezone.now()
             #getting which societies event to load
             society = SC_AG_Info.get_sc_ag_details(request,primary)
             #declaring dictionart to store event object as key and graphic banner object as value
@@ -46,15 +46,15 @@ class HomepageItems:
                     ####################################################################################################################
             else:
                 if primary == 1:
-                    #when false getting upcoming five events
-                    events = Events.objects.filter(publish_in_main_web= True,event_date__gt=current_datetime).order_by('event_date')[:5]
+                    #when false getting latest five events
+                    events = Events.objects.filter(publish_in_main_web= True).order_by('-event_date')[:5]
                 else:
                     #when False getting events 5 events which are upcoming, is published and is of particular society
-                    events = Events.objects.filter(publish_in_main_web= True,event_organiser = society,event_date__gt=current_datetime).order_by('event_date')#[:5]
+                    events = Events.objects.filter(publish_in_main_web= True,event_organiser = society).order_by('event_date')#[:5]
                     ####getting collaborated events###if dont want collaborated event remove bottom section and uncommment the list here -----------------------here
                     collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
                     #joining both the events list of collbarated and their own organised events
-                    events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True,event_date__gt=current_datetime)).order_by('event_date')[:5]
+                    events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('-event_date')[:5]
                     ####################################################################################################################
 
             #using this loop, assigning the event with its corresponding banner picture in the dictionary as key and value
@@ -113,7 +113,7 @@ class HomepageItems:
     def getHomepageBannerItems():
         
         try:
-            return HomePageTopBanner.objects.all()
+            return HomePageTopBanner.objects.all().order_by('pk')
             
         except Exception as e:
             print(e)
@@ -218,7 +218,6 @@ class HomepageItems:
         
         try:
             address = request.META.get('HTTP_X_FORWARDED_FOR')
-            print(address)
             if address:
                 ip = address.split(',')[-1].strip()
             else:
@@ -267,11 +266,17 @@ class HomepageItems:
         '''This function returns the faculty advisor for the particular society otherwise return none''' 
         
         try:
-            #getting the particular society object
-            society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
+            
             try:
-                #getting the faculty advisor of the particular society
-                faculty = SC_AG_Members.objects.get(sc_ag = society,position = Roles_and_Position.objects.get(is_faculty = True,role_of = society))
+                #getting the particular society object
+                society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
+                #getting position
+                position = Roles_and_Position.objects.get(is_faculty = True,role_of = society,is_sc_ag_eb_member = True)
+                #getting current tenure
+                current_tenure = Panels.objects.get(current = True, panel_of = society)
+                #getting the faculty
+                faculty = Panel_Members.objects.get(tenure = current_tenure,position =position)
+
             except:
                 #else returning None
                 faculty = None
@@ -288,23 +293,26 @@ class HomepageItems:
         '''This function returns a list of eb memebers for the particular society'''
         
         try:
-            #assingning empty eb_member list
-            eb_members=[]
-            #getting the particular society object
-            society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
-            #getting the list of roles of the eb members which is ordered by roles
-            roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society).order_by('role_of')
-            #for each roles gettiing the corresponding member of that role
-            for role in roles:
+            try:
+                #assingning empty eb_member list
+                eb_members=[]
+                #getting the particular society object
+                society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
+                #getting current tenure
+                current_tenure = Panels.objects.get(current = True, panel_of = society)
+                #getting all th eb roles
+                roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society,is_mentor = True).order_by('rank','role','role_of')
+                for role in roles:
                     try:
-                        #getting the member of the particular society whose role matches with the role iteration in the list
-                        member = SC_AG_Members.objects.get(sc_ag = society,position = role)
+                        #getting the member of the particular society whose role matches with the role iteration in the list and is if current panel
+                        member = Panel_Members.objects.get(tenure = current_tenure,position = role)
+                        eb_members.append(member)
                     except:
-                        #if no member is found assigning none
-                        member = None
-                    #appending the member found in the list
-                    eb_members.append(member)
-            return eb_members
+                        pass
+                return eb_members
+            except:
+                #returning empty list
+                return eb_members
         except Exception as e:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

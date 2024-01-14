@@ -12,10 +12,10 @@ urlpatterns = [
     path('events/<int:event_id>/', views.event_details, name="event_details"),
     
     #SOCIETY AG URLS
-    path('ras_sbc/',views.rasPage,name="ras_home"),
-    path('pes_sbc/',views.pesPage,name="pes_home"),
-    path('ias_sbc/',views.iasPage,name="ias_home"),
-    path('wie_sbc/',views.wiePage,name="wie_home"),
+    path('ieee_nsu_ras_sbc/',views.rasPage,name="ras_home"),
+    path('ieee_nsu_pes_sbc/',views.pesPage,name="pes_home"),
+    path('ieee_nsu_ias_sbc/',views.iasPage,name="ias_home"),
+    path('ieee_nsu_wie_sbc/',views.wiePage,name="wie_home"),
     path('events/<int:primary>',views.events_for_sc_ag,name="events_for_sc_ag"),
 
     #Achievements
@@ -55,4 +55,8 @@ urlpatterns = [
     path('contact',views.contact, name="contact"),
     # Toolkit
     path('toolkit',views.toolkit, name="toolkit"),
+    # Join_INSB
+    path('join_insb',views.join_insb, name="join_insb"),
+    
+    # path('hello',views.test_view,name="404"),
 ]

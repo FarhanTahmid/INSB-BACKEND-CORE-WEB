@@ -1,3 +1,5 @@
+import os
+from django.conf import settings
 from central_branch.renderData import Branch
 from django.shortcuts import get_object_or_404
 from users.models import Members
@@ -94,16 +96,6 @@ class ContentWritingTeam:
             return True
         except:
             return False
-
-    def cwp_manage_team_access(ieee_id):
-        try:
-            user = CWP_Data_Access.objects.get(ieee_id = ieee_id)
-            if(user.manage_team_access):
-                return True
-            else:
-                return False
-        except:
-            return False
         
     def creating_note(title,note,event_id):
 
@@ -198,7 +190,9 @@ class ContentWritingTeam:
         ''' This function is used to delete a file of CWP Team. It takes a file id as parameter '''
         try:
             doc = Content_Team_Document.objects.get(id=file_id)
-            doc.document.delete()
+            path = settings.MEDIA_ROOT+str(doc.document)
+            if os.path.exists(path):
+                os.remove(path)
             doc.delete()
             return True
         except Exception as e:

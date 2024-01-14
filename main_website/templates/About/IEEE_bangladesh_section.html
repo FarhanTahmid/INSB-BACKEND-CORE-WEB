@@ -168,10 +168,15 @@
             color: #f9f9f9;
             position: relative;
             top: -134px;
-        }
-        .achievement-card a:hover {
-            color: #FFC72C;
-        }
+            transition: all 0.3s;
+          }
+          .achievement-card:hover a{
+            color: #ffc72c;
+          }
+          
+          .achievement-card a:hover {
+            color: #fff;
+          }
         .achievement-card h4 {
             margin: 0px 20px;
             color: #f9f9f9;
@@ -366,11 +371,11 @@
                     </div>
                     <div class="bar"></div>
                     <div>
-                        <p>{{ieee_bangladesh_section.about_ieee_bangladesh|safe}}</p>
+                        <p>{{ieee_bangladesh_section.about_ieee_bangladesh|default:""|safe}}</p>
                     </div>
                     <!--links-->
                     <div class="ieee-bd-btn">
-                        <a href="{{ieee_bangladesh_section.ieee_bd_link}}">IEEEBD.net</a>
+                        <a href="{{ieee_bangladesh_section.ieee_bd_link|default:""}}">IEEEBD.net</a>
                     </div>
                 </div>
             </section>
@@ -386,7 +391,7 @@
                     </div>
                     <div class="bar"></div>
                     <div>
-                        <p>{{ieee_bangladesh_section.member_and_volunteer_description|safe}}</p>
+                        <p>{{ieee_bangladesh_section.member_and_volunteer_description|default:""|safe}}</p>
                     </div>
                     <div>
                         {% for page_link in page_links.members_and_volunteers_link %}
@@ -413,7 +418,7 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>{{ieee_bangladesh_section.benefits_description|safe}}</p>
+                        <p>{{ieee_bangladesh_section.benefits_description|default:""|safe}}</p>
                     </div>
                     <div>
                         {% for page_link in page_links.benefits_link %}
@@ -430,7 +435,7 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>{{ieee_bangladesh_section.student_branches_description|safe}}</p>
+                        <p>{{ieee_bangladesh_section.student_branches_description|default:""|safe}}</p>
                     </div>
                     <div>
                         {% for page_link in page_links.student_branches_link %}
@@ -456,7 +461,7 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>{{ieee_bangladesh_section.affinity_groups_description|safe}}</p>
+                        <p>{{ieee_bangladesh_section.affinity_groups_description|default:""|safe}}</p>
                     </div>
                     <div>
                         {% for page_link in page_links.affinity_groups_link %}
@@ -473,7 +478,7 @@
                     </div>
                     <div class="bar" style="background-color: #ffffff;"></div>
                     <div>
-                        <p>{{ieee_bangladesh_section.community_and_society_description|safe}}</p>
+                        <p>{{ieee_bangladesh_section.community_and_society_description|default:""|safe}}</p>
                     </div>
                     <div>
                         {% for page_link in page_links.community_and_society_link %}
@@ -495,54 +500,20 @@
                 </div>
                 <div class="bar"></div>
                 <div>
-                    <p>{{ieee_bangladesh_section.achievements_description|safe}}</p>
+                    <p>{{ieee_bangladesh_section.achievements_description|default:""|safe}}</p>
                 </div>
                 <div class="achievement-container">
+                    {% for page_link in page_links.achievement_link %}
                     <div class="achievement-card">
                         <div>
                             <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
                                 alt="">
                                 <!--links-->
-                            <h4>IEEE NSU Achievements</h4>
-                            <a href="#">Read More</a>
+                            <h4>{{page_link.title}}</h4>
+                            <a href="{{page_link.link}}">Read More</a>
                         </div>
                     </div>
-                    <div class="achievement-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                                <!--links-->
-                            <h4>IEEE BUET Achievements</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
-                    <div class="achievement-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                                <!--links-->
-                            <h4>IEEE AIUB Achievements</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
-                    <div class="achievement-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                                <!--links-->
-                            <h4>Achievements of DUET</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
-                    <div class="achievement-card">
-                        <div>
-                            <img src="https://olc-wordpress-assets.s3.amazonaws.com/uploads/2021/04/OLC-Awards-Thumbnail-1200x800.jpg"
-                                alt="">
-                                <!--links-->
-                            <h4>Achievements of Milestone</h4>
-                            <a href="#">Read More</a>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </section>
         </section>
@@ -556,24 +527,11 @@
                 </div>
                 <div class="bar"></div>
                 <div class="pic-container">
+                    {% for image in all_images %}
                     <div class="pic-box">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2021/03/group.jpg" style="width:100%" alt="">
-                        {% comment %} <a href="https://ieeensusb.org/wp-content/uploads/2021/03/group.jpg"
-                            data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img
-                                src="https://ieeensusb.org/wp-content/uploads/2021/03/group.jpg" alt="" /></a> {% endcomment %}
+                        <img src="{{media_url}}{{image.picture}}" style="width:100%" alt="Gallery Image">
                     </div>
-                    <div class="pic-box">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2021/03/group-2.jpg" style="width:100%" alt="">
-                        {% comment %} <a href="https://ieeensusb.org/wp-content/uploads/2021/03/group-2.jpg"
-                            data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img
-                                src="https://ieeensusb.org/wp-content/uploads/2021/03/group-2.jpg" alt="" /></a> {% endcomment %}
-                    </div>
-                    <div class="pic-box">
-                        <img src="https://ieeensusb.org/wp-content/uploads/2021/03/group-3.jpg" style="width:100%" alt="">
-                        {% comment %} <a href="https://ieeensusb.org/wp-content/uploads/2021/03/group-3.jpg"
-                            data-fancybox-group="gdlr-gal-1" data-rel="fancybox"><img
-                                src="https://ieeensusb.org/wp-content/uploads/2021/03/group-3.jpg" alt="" /></a> {% endcomment %}
-                    </div>
+                    {% endfor %}
                 </div>
                 <div id="myModal" class="modal">
                     <span class="close" onclick="closeModal()">&times;</span>
@@ -594,23 +552,23 @@
                     <div class="contact-details">
                         <div>
                             <p>Chair</p>
-                            <p>: {{ieee_bangladesh_section.chair_name}}</p>
+                            <p>: {{ieee_bangladesh_section.chair_name|default:""}}</p>
                          </div>
                         <div>
                             <p>Email</p>
-                            <p>: {{ieee_bangladesh_section.chair_email}}</p>
+                            <p>: {{ieee_bangladesh_section.chair_email|default:""}}</p>
                         </div>
                         <div>
                             <p>Secretary</p>
-                            <p>: {{ieee_bangladesh_section.secretary_name}}</p>
+                            <p>: {{ieee_bangladesh_section.secretary_name|default:""}}</p>
                         </div>
                         <div>
                             <p>Email</p>
-                            <p>: {{ieee_bangladesh_section.secretary_email}}</p>
+                            <p>: {{ieee_bangladesh_section.secretary_email|default:""}}</p>
                         </div>
                         <div>
-                            <p>{{ieee_bangladesh_section.office_secretary_name}}</p>
-                            <p> :  {{ieee_bangladesh_section.office_secretary_number}}</p>
+                            <p>{{ieee_bangladesh_section.office_secretary_name|default:""}}</p>
+                            <p> :  {{ieee_bangladesh_section.office_secretary_number|default:""}}</p>
                         </div>
                     </div>
             </section>

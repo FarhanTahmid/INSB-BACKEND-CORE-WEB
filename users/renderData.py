@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import DatabaseError
 from PIL import Image
 from recruitment.models import recruitment_session,recruited_members
-from central_events.models import Events,Event_Category
+from central_events.models import Events,Event_Category,InterBranchCollaborations
 from system_administration.render_access import Access_Render
 from datetime import datetime
 from django.db.models import Q
@@ -22,6 +22,8 @@ import traceback
 import logging
 from system_administration.system_error_handling import ErrorHandling
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
+import calendar
+from datetime import datetime
 
 
 class LoggedinUser:
@@ -247,43 +249,68 @@ def getTypeOfEventStats(request,primary):
     event_stats_values=[]
     #getting the society
     society = SC_AG_Info.get_sc_ag_details(request,primary)
-    #getting event type of societies
-    all_event_type=Event_Category.objects.filter(event_category_for = society)
-    #getting all events of NSU SB
-    all_events_number = Events.objects.filter(event_organiser = society).count()
-    #initializing empty dictionary which holds the events category as key and the
-    #number of events of that category occured as value which is calculated in percentage
+    #intialiing empty lists and dictionaries
+    dic={}
     event_percentage ={}
-    for i in all_event_type:
-        event_count = Events.objects.filter(event_type = i.pk).count()
-        try:
-            #calculating the percentage and rounding it to 1 decimal place
-            percentage = (event_count/all_events_number*1.0)*100
-            percentage = round(percentage,1)
+    event_stats_keys=[]
+    event_stats_values=[]
+    #getting all events of society
+    all_events_of_society = Events.objects.filter(publish_in_main_web = True,event_organiser = society)
+    #getting the collaborated events of this society
+    collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
+    #joining them
+    all_events_with_collbaration = all_events_of_society.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True))
+    #appending in dictionary the event type as key and the number found
+    for event in all_events_with_collbaration:
+        for event_cate in event.event_type.all():
+            if event_cate.event_category not in dic:
+                dic[event_cate.event_category]=0
+            dic[event_cate.event_category]+=1
+    #finding the number of all events with collaboration
+    all_events_with_collbaration_count = len(all_events_with_collbaration)
+    #now appending the key and value in corresponding lists and dictionary
+    for key,value in dic.items():
+        percentage = (value/all_events_with_collbaration_count*1.0)*100
+        percentage = round(percentage,1)
+        event_stats_keys.append(key)
+        event_stats_values.append(value)
+        event_percentage.update({key:percentage})
 
-            #assigning the values of keys and values in the dictionary
-            event_stats_keys.append(i.event_category)
-            event_stats_values.append(event_count)
-            event_percentage.update({i.event_category:percentage})
-      
-        except:
-            print("error occured")
     return event_stats_keys,event_stats_values,event_percentage
 
 
-def getEventNumberStat():
+def getEventNumberStat(request,primary):
 
-    '''Returns a dictionary that counts the number of all events that occured over the past
-    5 years including current year'''
-
+    '''Returns two list. First is the year list and second one is the event number
+        that occured in those years'''
+    #getting the society
+    society = SC_AG_Info.get_sc_ag_details(request,primary)
+    #initializing empty list
     event_num = []
     #getting current year
     year = datetime.date.today().year
+    #getting all events of society
+    all_events_of_society = Events.objects.filter(publish_in_main_web = True,event_organiser = society)
+    #getting the collaborated events of this society
+    collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
+    all_events_with_collbaration = all_events_of_society.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True))
+    #making query set as list
+    events = list(all_events_with_collbaration)
+    #iterating over the year
     for i in range(5):
-        #iterating over past five year including this year
-        #the count variables counts the number of events that occured in a specific year
+        #variable to count
         count=0
-        count = Events.objects.filter(event_date__year=(year-i)).count()
+        #making a copy to avoid iterating issue
+        events_copy = events.copy()
+        for event in events_copy:
+            #when event year is found removing increasing count value and removing it from list 
+            #to loawer time complexity
+            try:
+                if event.event_date.year == year-i:
+                    count+=1
+                    events.remove(event)
+            except:
+                pass
         #assiging the number of events occured in a year to the list
         event_num.append(count)
     #reversing list to get the oldest count first and lasted count last
@@ -316,7 +343,13 @@ def getHitCountMonthly():
     daily = []
     days_of_month=[]
 
-    for i in range(31):
+    current_date = datetime.datetime.now()
+    year = current_date.year
+    month = current_date.month
+    # Get the number of days in the current month
+    num_days_in_month = calendar.monthrange(year, month)[1]
+  
+    for i in range(num_days_in_month):
         #getting number of people on each day from database
         number_of_people_per_day = User_IP_Address.objects.filter(Q(created_at__day=(i+1)), Q(created_at__month=datetime.datetime.now().month), Q(created_at__year=datetime.datetime.now().year)).count()   
         if number_of_people_per_day>0:
@@ -342,7 +375,7 @@ def getHitCountYearly():
         #TODO: need styling
         if number_of_people_per_month>0:
             monthly.append(number_of_people_per_month)
-            month_names.append(getMonthName(i+1)[0:3])
+        month_names.append(getMonthName(i+1)[0:3])
     year = datetime.datetime.now().year
     return year,month_names,monthly
 
@@ -564,15 +597,16 @@ class PanelMembersData:
         except Exception as e:
             PanelMembersData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error(request,"Can not add alumni to Branch Panel. Something went wrong!")
+            messages.error(request,"Can not add alumni to the Panel. Something went wrong!")
             return False
-            
+    
+           
             
     def remove_alumns_from_branch_panel(request,member_to_remove,panel_id):
-        '''Removes Alumni Member from Branch panel. Gets the tenure id, and the Member id from Panel Members table'''
+        '''Removes Alumni Member from Branch panel. Gets the panel id, and the Member id from Panel Members table'''
         try:
             member_to_remove = Panel_Members.objects.get(pk=member_to_remove,tenure=panel_id)
-            messages.error(request,f"{member_to_remove.ex_member.name} was removed from the panel.")
+            messages.warning(request,f"{member_to_remove.ex_member.name} was removed from the panel.")
             member_to_remove.delete()
             return True
         except Exception as e:

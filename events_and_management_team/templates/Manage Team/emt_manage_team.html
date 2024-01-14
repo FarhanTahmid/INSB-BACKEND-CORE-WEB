@@ -240,7 +240,7 @@
 
 
             <!--View Access-->
-            <h4 style="justify-content:center;text-align:center;margin-bottom:30px;"><span style="color:#00629B;"><b> View Permission</b> </span>Controls for <span style="color:#00629B;"><b>Content Writing & Publications Team</b></span></h4>
+            <h4 style="justify-content:center;text-align:center;margin-bottom:30px;"><span style="color:#00629B;"><b> View Permission</b> </span>Controls for <span style="color:#00629B;"><b>Event & Management Team</b></span></h4>
 
             <!--View Permission Table-->
             <div class="box">
@@ -275,7 +275,7 @@
                                     {% csrf_token %}
                                     <td>
                                         
-                                        {% if data_access.manage_team_access %}
+                                        {% if data_access.manage_team_data_access %}
                                         <input type="checkbox" checked="True" class="checkbox" value="manage_team_access" name="manage_team_access">
                                         <label for="manage_team_access">Manage Team Access
                                         </label><br>

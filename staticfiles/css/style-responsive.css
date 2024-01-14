@@ -4,23 +4,26 @@ html body {
 
 #gdlr-responsive-navigation {
 	display: none;
+	z-index: 100;
+	overflow: auto;
+	height: 100%;
+
 }
 
 /*--- tablet ---*/
 @media only screen and (max-width: 1050px) {
 	body .gdlr-navigation-wrapper .gdlr-main-menu>li>a {
 		padding-left: 20px;
+		
 	}
 
 	.gdlr-header-wrapper.header-style-6-wrapper .gdlr-navigation-wrapper .gdlr-main-menu>li>a {
 		font-size: 13px;
+		
 	}
 }
 
 @media only screen and (max-width: 959px) {
-	body .container {
-		max-width: 768px;
-	}
 
 	body .body-wrapper.gdlr-boxed-style {
 		max-width: 808px;
@@ -60,12 +63,14 @@ html body {
 		margin-top: 10px;
 		line-height: 0;
 		text-align: center;
+		
 	}
 
 	body .gdlr-navigation {
 		display: inline-block;
 		line-height: 1.7;
 		text-align: left;
+		
 	}
 
 	body .gdlr-logo-right-text {
@@ -76,6 +81,7 @@ html body {
 
 	body .gdlr-navigation-wrapper .gdlr-main-menu>li>a {
 		padding-bottom: 25px;
+		
 	}
 
 	.gdlr-header-wrapper.header-style-2-wrapper .gdlr-logo {
@@ -86,14 +92,17 @@ html body {
 		float: none;
 		margin-left: 47px;
 		margin-top: 3px;
+		
 	}
 
 	.gdlr-header-wrapper.header-style-2-wrapper .gdlr-navigation-wrapper .gdlr-main-menu>li>a {
 		padding-bottom: 20px;
+		
 	}
 
 	.gdlr-header-wrapper.header-style-2-wrapper #gdlr-responsive-navigation .dl-trigger {
 		right: 35px;
+		
 	}
 
 	.header-style-3-wrapper .gdlr-logo-right-text {
@@ -105,18 +114,17 @@ html body {
 
 	.header-style-3-wrapper .gdlr-navigation-wrapper .gdlr-main-menu>li>a {
 		padding-left: 25px;
+		
 	}
 
 	.header-style-7-wrapper .gdlr-navigation-wrapper {
 		line-height: 0;
+		
 	}
 }
 
 /*--- mobile landscape style ---*/
 @media only screen and (max-width: 767px) {
-	body .container {
-		max-width: 420px;
-	}
 
 	body .body-wrapper.gdlr-boxed-style {
 		max-width: 460px;
@@ -161,12 +169,14 @@ html body {
 		float: none;
 		text-align: center;
 		padding: 3px 0px;
+		
 	}
 
 	body .top-navigation-right {
 		float: none;
 		text-align: center;
 		padding: 3px 0px;
+	
 	}
 
 	body .gdlr-logo {
@@ -179,9 +189,10 @@ html body {
 
 	#gdlr-responsive-navigation {
 		display: block;
-		height: 0px;
 		position: static;
 		float: none;
+
+
 	}
 
 	#gdlr-responsive-navigation .dl-trigger {
@@ -189,6 +200,7 @@ html body {
 		right: 15px;
 		top: 20px;
 		margin-top: 0px;
+
 	}
 
 	.dl-menuwrapper>.dl-menu,
@@ -200,6 +212,7 @@ html body {
 
 	.gdlr-navigation-wrapper {
 		display: none;
+
 	}
 
 	/*--- page item ---*/
@@ -335,6 +348,7 @@ html body {
 	/*--- header style ---*/
 	.gdlr-header-wrapper.header-style-2-wrapper #gdlr-responsive-navigation .dl-trigger {
 		right: 35px;
+
 	}
 
 	.gdlr-header-wrapper.header-style-2-wrapper .gdlr-logo {
@@ -372,6 +386,7 @@ html body {
 
 	.header-style-7-wrapper .gdlr-navigation-wrapper {
 		display: none;
+
 	}
 
 	.header-style-7-wrapper .gdlr-logo-inner {
@@ -382,9 +397,6 @@ html body {
 
 /*--- mobile portrait style ---*/
 @media only screen and (max-width: 419px) {
-	body .container {
-		max-width: 300px;
-	}
 
 	body .body-wrapper.gdlr-boxed-style {
 		max-width: 340px;

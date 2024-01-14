@@ -11,7 +11,7 @@
                         <div class="gdlr-item-title-container container">
                             <div class="gdlr-item-title-head">
                                 <h3 class="gdlr-item-title gdlr-skin-title gdlr-skin-border">
-                                    Testimonial</h3>
+                                    Thoughts</h3>
                             </div>
                         </div>
                     </div>
@@ -20,45 +20,16 @@
                             <div class="flexslider" data-type="carousel"
                                 data-nav-container="gdlr-testimonial-item" data-columns="1">
                                 <ul class="slides">
+                                    {% for thought in all_thoughts %}
                                     <li class="testimonial-item">
                                         <div class="testimonial-content gdlr-skin-content">
-                                            <p>Nulla vitae elit libero, a pharetra augue. Vivamus
-                                                sagittis lacus vel augue laoreet rutrum faucibus
-                                                dolor auctor. Donec id elit non mi porta gravida at
-                                                eget metus. Maecenas faucibus mollis interdum.</p>
+                                            <p>{{thought.quote}}</p>
                                         </div>
                                         <div class="testimonial-info"><span
-                                                class="testimonial-author gdlr-skin-link-color">John
-                                                Smoth<span>, </span></span><span
-                                                class="testimonial-position gdlr-skin-info">Furniture
-                                                Fact</span></div>
+                                                class="testimonial-author gdlr-skin-link-color">{{thought.author}}<span></span></span><span
+                                                class="testimonial-position gdlr-skin-info"></span></div>
                                     </li>
-                                    <li class="testimonial-item">
-                                        <div class="testimonial-content gdlr-skin-content">
-                                            <p>Nulla vitae elit libero, a pharetra augue. Vivamus
-                                                sagittis lacus vel augue laoreet rutrum faucibus
-                                                dolor auctor. Donec id elit non mi porta gravida at
-                                                eget metus. Maecenas faucibus mollis interdum.</p>
-                                        </div>
-                                        <div class="testimonial-info"><span
-                                                class="testimonial-author gdlr-skin-link-color">Paul
-                                                Johnson<span>, </span></span><span
-                                                class="testimonial-position gdlr-skin-info">Apple</span>
-                                        </div>
-                                    </li>
-                                    <li class="testimonial-item">
-                                        <div class="testimonial-content gdlr-skin-content">
-                                            <p>Nulla vitae elit libero, a pharetra augue. Vivamus
-                                                sagittis lacus vel augue laoreet rutrum faucibus
-                                                dolor auctor. Donec id elit non mi porta gravida at
-                                                eget metus. Maecenas faucibus mollis interdum.</p>
-                                        </div>
-                                        <div class="testimonial-info"><span
-                                                class="testimonial-author gdlr-skin-link-color">Alan
-                                                Smith<span>, </span></span><span
-                                                class="testimonial-position gdlr-skin-info">Wooden
-                                                Corp.</span></div>
-                                    </li>
+                                    {% endfor %}
                                 </ul>
                             </div>
                         </div>

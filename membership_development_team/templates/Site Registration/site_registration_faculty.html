@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>IEEE NSU Student Branch | Site Registration Form - Faculty</title>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"
+        ></script>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+            crossorigin="anonymous"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+            integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="stylesheet" href="{% static 'site_registration_form.css' %}" />
+        <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+    </head>
+
+    <body>
+        
+        <!-- header start -->
+        <section class="banner">
+            <div class="container">
+                
+                <div class="row">
+                    
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                    <div class="container p-2 bg-white my-5 rounded">
+                        <div class="logo">
+                            <img src="{% static 'INSB.png' %}" alt="logo" style="width:10%;">
+                        </div>
+                        <div class="d-flex flex-column justify-content-center">
+                            <h1
+                                class="text-center fw-bold mt-3 text-uppercase text-black"
+                            >
+                                IEEE NSU SB Portal Website Registration Form<br> (Faculty Only)
+                            </h1>
+                        </div>
+                
+                        <div class="p-2 mb-4">
+                            <br>
+                            <h4
+                                class="p-3 mb-4" style="font-weight:bold;"
+                            >
+                                Read the instructions given below carefully Before you submit your Registration Request:
+                            </h3>
+                            <ul>
+                                <li style="font-size:15px">To apply for the site registration please fill this form up only if you are a Faculty Member Affiliated with IEEE NSU Student Branch</li>
+                                <li style="font-size:15px">These datas are being collected to set you up for the upcoming INSB Portal Website.</li>
+                                <li style="font-size:15px">Do not share any critical information or Passwords here.</li>
+                                <li style="font-size:15px">If you have any further queries, please contact the System Administrators</li>
+                            </ul>
+                            <br>
+                            
+                            
+                            <div class="px-0 px-md-5">
+                                <div class="row my-3">
+                                    <div class="col-md-2 mt-1">Name: <span style="color:red">*</span></div>
+                                    <div class="col-md-8">
+                                        <input
+                                            placeholder="Enter Your Name"
+                                            class="form-control w-75"
+                                            type="text"
+                                            autocomplete="off"
+                                            required
+                                            name="name" 
+                                        />
+                                    </div>
+                                </div>
+                                <div class="row my-3">
+                                    <div class="col-md-2 mt-1">IEEE ID: <span style="color:red">*</span></div>
+                                    <div class="col-md-8">
+                                        <input
+                                            placeholder="Enter Your IEEE ID"
+                                            class="form-control w-50"
+                                            type="number"
+                                            autocomplete="off"
+                                            required
+                                            name="ieee_id" 
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="row my-3">
+                                    <div class="row my-3">
+                                        <div class="col-md-2 mt-1">Email (Personal): <span style="color:red">*</span></div>
+                                        <div class="col-md-8">
+                                            <input
+                                               
+                                                class="form-control w-75"
+                                                type="email"
+                                                autocomplete="on"
+                                                id="email_personal" name="email_personal" required placeholder="Enter Email Associated with Your IEEE ID" 
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="row my-3">
+                                        <div class="col-md-2 mt-1">Email (NSU): <span style="color:red">*</span></div>
+                                        <div class="col-md-8">
+                                            <input
+                                                class="form-control w-75"
+                                                type="email"
+                                                autocomplete="on"
+                                                id="email_nsu" name="email_nsu" required placeholder="Enter Your NSU Email" 
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="row my-3">
+                                        <div class="col-md-2 mt-1">Email (IEEE):</div>
+                                        <div class="col-md-8">
+                                            <input
+                                                class="form-control w-75"
+                                                type="email"
+                                                autocomplete="on"
+                                                id="email_ieee" name="email_ieee" placeholder="Enter Your IEEE Email" 
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="row my-3">
+                                        <div class="col-md-2 mt-1">Home Address: <span style="color:red">*</span></div>
+                                        <div class="col-md-8">
+                                            <input
+                                                required
+                                                class="form-control w-75"
+                                                type="text"
+                                                autocomplete="on"
+                                                id="home_address" name="home_address" required placeholder="Enter Your Home Address" 
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="row my-3">
+                                        <div class="col-md-2 mt-1">Department: <span style="color:red">*</span></div>
+                                        <div class="col-md-8">
+                                            <input
+                                                required
+                                                class="form-control w-50"
+                                                type="text"
+                                                autocomplete="on"
+                                                id="major" name="major" placeholder="Department" 
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row my-3">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-4 mt-1">
+                                                Contact No:<span style="color:red">*</span>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <input
+                                                    required
+                                                    class="form-control w-80"
+                                                    type="text"
+                                                    name="contact_no" autocomplete="off" placeholder="Enter your Contact no"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-4 mt-1">
+                                                Date of Birth:<span style="color:red">*</span>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <input
+                                                    required
+                                                    class="form-control w-80"
+                                                    type="date"
+                                                    name="date_of_birth" autocomplete="off"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row-my-3" style="margin-top:20px;">
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-4 mt-1">
+                                                    Profile Picture:<span style="color:red">*</span>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <input
+                                                        required
+                                                        class="form-control w-80"
+                                                        type="file"
+                                                        name="user_picture" autocomplete="off"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row my-3">
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-4 mt-1">
+                                                    Facebook Account Link: <span style="color:red">*</span>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <input
+                                                        required
+                                                        class="form-control w-80"
+                                                        type="url"
+                                                        name="facebook_url" autocomplete="off" placeholder="Enter URL to Your Facebook Account"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-4 mt-1">
+                                                    Linkedin Account Link: <span style="color:red">*</span>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <input
+                                                        required
+                                                        class="form-control w-80"
+                                                        type="url"
+                                                        name="linkedin_url" autocomplete="off" placeholder="Enter URL to Your Linkedin Account"
+                                                    
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <div class="row my-3">
+                                        <div class="col-md-2 mt-1">Gender: <span style="color:red">*</span></div>
+                                        <div class="col-md-8 mt-2 mt-md-0">
+                                            <input
+                                                required
+                                                class="form-check-input"
+                                                type="radio"
+                                                name="gender"
+                                                id="male"
+                                                value="Male"
+                                               
+                                            />
+                                            <label class="me-4" for="male"
+                                                >Male</label
+                                            >
+    
+                                            <input
+                                                class="form-check-input"
+                                                type="radio"
+                                                name="gender"
+                                                id="female"
+                                                value="Female"
+                                            />
+                                            <label class="me-4" for="female"
+                                                >Female</label
+                                            >
+    
+                                            <input
+                                                class="form-check-input"
+                                                type="radio"
+                                                name="gender"
+                                                id="other"
+                                                value="Other"
+                                            />
+                                            <label for="other">Other</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        <div class="p-2 mb-4">
+                            <div class="py-3 text-center">
+                                <button
+                                    class="btn btn-success"
+                                    type="button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#update"
+                                    
+                                >
+                                    Place Site Registration Request
+                                </button>
+                            </div>
+                        
+                            <div class="py-3 text-center">
+                            
+                                {% for message in messages %}
+                                    <p class="message">{{message}}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- Update Modal -->
+    <div
+        class="modal fade"
+        id="update"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabindex="-1"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">
+                        Confirmation
+                    </h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">
+                    <h3>Are you sure you want to Submit your Request?</h3>
+                    <p class="mt-3">
+                        These informations you provided will be forwarded to INSB Membership Development Team to Register you in the Database<br>
+                        You can access the site After your application is Accepted. Please Enter correct IEEE ID and IEEE Email to avoid any error with your Membership in our Portal<br>
+                        Please wait some moment after you place your request.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Close
+                    </button>
+                    <input
+                        type="submit"
+                        class="btn btn-success"
+                        data-bs-dismiss="modal"
+                        name="apply"
+                        value="Place Request"
+                    >
+                </div>
+
+            </form>
+            </div>
+        </div>
+    </div>
+
+    </section>
+</form>
+
+        <!--search session start -->
+
+        <!-- Student copy start -->
+
+        <!-- Footer Start -->
+
+        <footer class="py-3 right-bg text-white text-center">
+            <small>&copy; All Rights Reserved by IEEE NSU STUDENT BRANCH</small>
+        </footer>
+        <!-- footer end -->
+    </body>
+</html>

@@ -105,7 +105,7 @@
         .chapter-card img {
             width: 100%;
             height: 218px;
-            object-fit: contain;
+            object-fit: cover;
             background-color: #fff;
             transition: all 1s;
         }
@@ -241,7 +241,28 @@
             color: #FFC72C;
         }
         /*join us*/
-
+        .event-mark {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #E87722!important;
+            margin: 2px 1px;
+        }
+        .events-list li a{
+            color: #E87722!important;
+        }
+        .event-box h5 {
+            margin-bottom: 5px;
+            color: #002855;
+            font-weight: bold;
+        }
+        .next-btn, .prev-btn{
+            background-color: 	#FFC72C!important;
+            background-image: radial-gradient(circle, #ffc72c, #fbb325, #f69f21, #f08b20, #e87722);
+        }
+        .day:hover{
+            background-color: 	#002855!important;
+        }
         /*media queries*/
         @media screen and (max-width: 1199px) {
             .max-width {
@@ -350,11 +371,11 @@
             }
             .chapter-card {
                 width: 100%;
-                height: 150px;
+                height: 270px;
                 font-size: 15px;
             }
             .chapter-card img {
-                height: 87px;
+                height: 216px;
             }
             .chapter-card h4 {
                 font-size: 15px;
@@ -391,7 +412,7 @@
                     </div>
                     <div class="bar"></div>
                     <div>
-                        <p>{{ieee_nsu_student_branch.about_nsu_student_branch|safe}}</p>
+                        <p>{{ieee_nsu_student_branch.about_nsu_student_branch|default:""|safe}}</p>
                     </div>
                 </div>
             </section>
@@ -406,12 +427,13 @@
                 </div>
                 <div class="bar"></div>
                 <div>
-                    <p>{{ieee_nsu_student_branch.chapters_description|safe}}</p>
+                    <p>{{ieee_nsu_student_branch.chapters_description|default:""|safe}}</p>
                 </div>
                 <div class="chapter-container">
                     <div class="chapter-card RAS">
-                        <div><img src="{{media_url}}{{ieee_nsu_student_branch.ras_image}}"
-                                alt=""></div>
+                        <div>
+                            <a href="{{ieee_nsu_student_branch.ras_read_more_link}}"><img src="{{media_url}}{{ieee_nsu_student_branch.ras_image}}"
+                                alt=""></div></a>
                         <div>
                             <h4>IEEE NSU RAS SBC</h4>
                         </div>
@@ -420,7 +442,8 @@
                         </div>
                     </div>
                     <div class="chapter-card PES">
-                        <div> <img src="{{media_url}}{{ieee_nsu_student_branch.pes_image}}" alt="">
+                        <div> 
+                            <a href="{{ieee_nsu_student_branch.pes_read_more_link}}"><img src="{{media_url}}{{ieee_nsu_student_branch.pes_image}}" alt=""></a>
                         </div>
                         <div>
                             <h4>IEEE NSU PES SBC</h4>
@@ -430,7 +453,7 @@
                         </div>
                     </div>
                     <div class="chapter-card IAS">
-                        <div> <img src="{{media_url}}{{ieee_nsu_student_branch.ias_image}}" alt="">
+                        <div> <a href="{{ieee_nsu_student_branch.ias_read_more_link}}"><img src="{{media_url}}{{ieee_nsu_student_branch.ias_image}}" alt=""></a>
                         </div>
                         <div>
                             <h4>IEEE NSU IAS SBC</h4>
@@ -440,8 +463,8 @@
                         </div>
                     </div>
                     <div class="chapter-card WIE">
-                        <div> <img src="{{media_url}}{{ieee_nsu_student_branch.wie_image}}"
-                                alt="">
+                        <div> <a href="{{ieee_nsu_student_branch.wie_read_more_link}}"><img src="{{media_url}}{{ieee_nsu_student_branch.wie_image}}"
+                                alt=""></a>
                         </div>
                         <div>
                             <h4>IEEE NSU WIE SBC</h4>
@@ -463,7 +486,7 @@
                 </div>
                 <div class="bar"></div>
                 <div>
-                    <p>{{ieee_nsu_student_branch.creative_team_description|safe}}</p>
+                    <p>{{ieee_nsu_student_branch.creative_team_description|default:""|safe}}</p>
                 </div>
                 <div class="creative-container">
                     <div class="creative-box">
@@ -516,10 +539,11 @@
                     </div>
                     <div class="bar" style="background: white;"></div>
                     <div>
-                        <p>{{ieee_nsu_student_branch.mission_description|safe}}</p>
+                        <p>{{ieee_nsu_student_branch.mission_description|default:""|safe}}</p>
                     </div>
                 </div>
-                <div>
+                <div style="    height: 350px;
+                width: 100%;">
                     <img src="{{media_url}}{{ieee_nsu_student_branch.mission_image}}" alt="">
                 </div>
             </section>
@@ -529,7 +553,8 @@
         <!--vision section-->
         <section class="centering" style="background-color: #f9f9f9; margin: 10px 0;">
             <section class="vision max-width">
-                <div>
+                <div style="    height: 350px;
+                width: 100%;">
                     <img src="{{media_url}}{{ieee_nsu_student_branch.vision_image}}" alt="">
                 </div>
                 <div style="padding: 20px;">
@@ -538,7 +563,7 @@
                     </div>
                     <div class="bar" style="background: white;"></div>
                     <div>
-                        <p>{{ieee_nsu_student_branch.vision_description|safe}}</p>
+                        <p>{{ieee_nsu_student_branch.vision_description|default:""|safe}}</p>
                     </div>
                 </div>
             </section>
@@ -554,10 +579,10 @@
                     </div>
                     <div class="bar"></div>
                     <div>
-                        <p>{{ieee_nsu_student_branch.events_description|safe}}</p>
+                        <p>{{ieee_nsu_student_branch.events_description|default:""|safe}}</p>
                     </div>
                     <div class="events-btn">
-                        <button><i class="fa-solid fa-angles-right" style="color: #f9f9f9;"></i> All Events</button>
+                        <a href="{% url 'main_website:event_homepage' %}"><button><i class="fa-solid fa-angles-right" style="color: #f9f9f9;"></i> All Events</button></a>
                     </div>
                 </div>
 
@@ -566,7 +591,7 @@
                     <h4 style="margin-bottom: 30px; font-weight: bolder; color: #000;"><span
                             style="border-bottom: 4px solid #fecd13;">EVENT C</span>ALENDER</h4>
                     <div class="calendar">
-                        <div class="header" style="padding: 20px;">
+                        <div class="header" style="padding: 20px; background-image: linear-gradient(to right top, #002855, #00487a, #006a9e, #008fc1, #00b5e2);">
                             <div style="cursor: pointer;" class="prev-btn"><i class="fa-solid fa-chevron-left"></i>
                             </div>
                             <span class="month-year"></span>
@@ -575,13 +600,14 @@
                         </div>
                         <div class="days-of-week"
                             style="display: flex; justify-content: space-around; padding: 10px 0px; font-weight: bold;">
-                            <span class="day-of-week">Sun</span>
                             <span class="day-of-week">Mon</span>
                             <span class="day-of-week">Tue</span>
                             <span class="day-of-week">Wed</span>
                             <span class="day-of-week">Thu</span>
                             <span class="day-of-week">Fri</span>
                             <span class="day-of-week">Sat</span>
+                            <span class="day-of-week">Sun</span>
+
                         </div>
                         <div class="days" style="padding: 15px 0px; font-weight: bold;">
                             <span style="color:red; height:20px"></span>
@@ -612,7 +638,7 @@
                     </div>
                 </div>
                 <div class="join-btn">
-                    <button>Join Now</button>
+                    <a href="{{ieee_nsu_student_branch.join_now_link|default:""}}"><button>Join Now</button></a>
                 </div>
             </section>
         </section>
@@ -626,7 +652,7 @@
                 </div>
                 <div class="bar"></div>
                 <div>
-                    <p>{{ieee_nsu_student_branch.achievements_description|safe}}</p>
+                    <p>{{ieee_nsu_student_branch.achievements_description|default:""|safe}}</p>
                 </div>
             </section>
         </section>

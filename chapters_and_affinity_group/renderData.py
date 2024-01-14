@@ -191,7 +191,7 @@ class Sc_Ag:
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error(request,"Can not Delete Panel. Something went wrong!")
+            messages.warning(request,"Can not Delete Panel. Something went wrong!")
             return False
             
         
@@ -258,7 +258,7 @@ class Sc_Ag:
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error(request,"Can not add Member to panel. Something went wrong!")
+            messages.warning(request,"Can not add Member to panel. Something went wrong!")
             return False
     
     def remove_sc_ag_member_from_panel(request,panel_id,member_ieee_id,sc_ag_primary):
@@ -269,12 +269,12 @@ class Sc_Ag:
                 member_in_sc_ag=SC_AG_Members.objects.filter(sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),member=Members.objects.get(ieee_id=member_ieee_id))
                 member_in_sc_ag.update(team=None,position=None)
                 i.delete()
-            messages.error(request,f"{i.member.name} was removed from the panel!")
+                messages.warning(request,f"{i.member.name} was removed from the panel!")
             return True
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error(request,"Can not remove member from panel. Something went wrong!")
+            # ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.warning(request,"Can not remove member from panel. Something went wrong! If you are trying to remove an alumni member from Panel, please remove it from Alumni Members Tab")
             return False
     
     def generate_renewal_excel_sheet(request,sc_ag_primary,renewal_session_id):
@@ -389,6 +389,7 @@ class Sc_Ag:
                     event_details_edit_access=kwargs['event_details_edit_access'],
                     panel_edit_access=kwargs['panel_edit_access'],
                     membership_renewal_access=kwargs['membership_renewal_access'],
+                    manage_web_access=kwargs['manage_web_access'],
                     manage_access=kwargs['manage_access']
                 )
                 messages.success(kwargs['request'],f"Data Access for {kwargs['member']} was updated!")
@@ -424,7 +425,7 @@ class Sc_Ag:
                         what_is_this_description,why_join_it,what_activites_it_has,how_to_join,
                         short_form,short_form_alternative_details,primary_color_code_details,secondary_color_code_details,
                         text_color_code_details,pageTitle_details,secondParagraph_details,
-                        email,facebook_link):
+                        email,facebook_link,mission_vision_color_code_details):
         
 
         ''''This function saves the data for the main website of societies and affinity groups'''
@@ -434,7 +435,7 @@ class Sc_Ag:
 
             #saving all the informations
             sc_ag.about_description =about_description
-            sc_ag.sc_ag_logo = about_image
+            sc_ag.logo = about_image
             sc_ag.background_image = background_image
             sc_ag.mission_description = mission_description
             sc_ag.mission_picture = mission_image
@@ -453,6 +454,7 @@ class Sc_Ag:
             sc_ag.secondary_paragraph = secondParagraph_details
             sc_ag.email = email
             sc_ag.facebook_link = facebook_link
+            sc_ag.mission_vision_color_code = mission_vision_color_code_details
 
             sc_ag.save()
 
@@ -471,22 +473,22 @@ class Sc_Ag:
         try:
             #getting the specific society using the primary
             sc_ag = SC_AG_Info.get_sc_ag_details(request,primary)
-            #getting the path of the image from the local machine
+            #getting the path of the image from the filesystem
             path = settings.MEDIA_ROOT+str(image_path)
+
+            #checking to see if the image exists in filesytem. If yes then delete it from filesystem
+            if os.path.exists(path):
+                os.remove(path)
 
             #checking to see which image is requested to be deleted
             if(image_id == 'sc_ag_logo'):
-                sc_ag.sc_ag_logo = None
-                os.remove(path)
+                sc_ag.logo = None
             elif(image_id == 'background_image'):
                 sc_ag.background_image = None
-                os.remove(path)
             elif(image_id == 'mission_picture'):
                 sc_ag.mission_picture = None
-                os.remove(path)
             elif(image_id == "vision_picture"):
                 sc_ag.vision_picture = None
-                os.remove(path)
             
             #saving before returning
             sc_ag.save()
@@ -500,7 +502,7 @@ class Sc_Ag:
     def checking_length(request,about_details,mission_description,vision_description,
                         what_is_this_description,why_join_it,what_activites_it_has,how_to_join):
         
-        '''This function checks the length of the description fields. If any one exceed 500 or if any one is
+        '''This function checks the length of the description fields. If any one exceed 700 or if any one is
             empty then data won't be saved.'''
         
         try:
@@ -513,7 +515,7 @@ class Sc_Ag:
             what_activites_it_has = Sc_Ag.process_ckeditor_content(what_activites_it_has)
             how_to_join = Sc_Ag.process_ckeditor_content(how_to_join)
             #assinging checking length
-            length = 700
+            length = 2000
 
             #checking to see the length. Returns true if length is more than 700 or is 0
             if (len(about_details)> length or len(mission_description)>length or len(vision_description)> length

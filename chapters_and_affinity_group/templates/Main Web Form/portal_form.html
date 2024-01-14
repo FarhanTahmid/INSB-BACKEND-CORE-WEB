@@ -78,6 +78,18 @@
             font-size:20px;
         }
   
+        .app-body{
+            justify-content:center; 
+            margin-left:15%;
+            margin-right:15%;
+        }
+        
+        @media (max-width: 760px) {
+            .app-body {
+                margin-left: 5%;
+                margin-right: 5%;
+            }
+        }
 
         .circle-btn {
             display: flex;
@@ -140,7 +152,7 @@
         </div>
         <!--navbar content-->
         <!-- ############ PAGE START-->
-        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+        <div ui-view class="app-body" id="view">
 
             <div class="container">
                 <br>
@@ -155,7 +167,7 @@
                     <li>You can view the image by clicking on it  </li>
                     <li>For color scheme, use hexcodes (e.g. "#002855").</li>
                     <li>You can see your changes by clicking the preview button </li>
-                    <li><b>Don’t forget to save the changes by clicking save button, before deleting images or changing page!</b> </li>
+                    <li>Don’t forget to save the changes by clicking save button, even before deleting or uploading picture and changing page! </li>
                 </ol></b>
 
 
@@ -165,7 +177,7 @@
                 </div>
                 <br>
     
-                <!-- Preview Event Modal -->
+                <!-- Preview Modal -->
                 <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" style="z-index: 1500;">
                     <div class="modal-dialog modal-dialog-centered modal-lg preview_modal_box" role="document">
                         <div class="modal-content" style="width: 100%; height: 100%;">
@@ -176,7 +188,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <iframe src="https://ieeensusb.org/ieee/" style="width: 100%; height: 100%;" loading="lazy"></iframe>
+                                <iframe src="{% url 'chapters_and_affinity_group:manage_main_website_preview' primary %}" style="width: 100%; height: 100%;" loading="lazy"></iframe>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -187,16 +199,18 @@
 
                 <br>
 
+                <!--for error messages-->
                 {% for message in messages  %}
                     <p>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{message}}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
+                            <p style="margin: 0;">{{message}}</p>
                         </div>
                     </p>
-                {% endfor %}
+                  {% endfor %}
+                <!--for error messages end-->
                 
             </div>
                    
@@ -230,7 +244,7 @@
                                 name="pageTitle" 
                                 placeholder="Enter your page title" 
                                 maxlength="100"
-                                value="{{sc_ag_info.page_title}}">
+                                value="{{sc_ag_info.page_title|default:""}}">
                             </div>
                             <br>
                         
@@ -239,10 +253,10 @@
                                 <input
                                 class="form-control"
                                 type="text"
-                                name="secondParagraph_details"
+                                name="secondParagraph"
                                 placeholder="Enter your page subtitle" 
                                 maxlength="100" 
-                                value="{{sc_ag_info.secondary_paragraph}}"
+                                value="{{sc_ag_info.secondary_paragraph|default:""}}"
                                 >
                             </div>
 
@@ -270,17 +284,17 @@
                             <div class="form-group">
                                 <label for="images">Logo Image:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="about-image-input" name="sc_ag_logo"  accept="image/*">
+                                    <input type="file" class="custom-file-input" id="about-image-input" name="logo"  accept="image/*">
                                     <label class="custom-file-label bg-light" for="about-image-input">Choose file</label>
                                 </div>
                                 <br>
-                                {% if sc_ag_info.sc_ag_logo %}
+                                {% if sc_ag_info.logo %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal1">Logo</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.sc_ag_logo}}', 'sc_ag_logo')">✖</button>
+                                        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.logo}}', 'sc_ag_logo')">✖</button>
                                     </div>
                                 </div>
                                 {% endif %}
@@ -532,6 +546,19 @@
                             <br>
 
                             <div class="form-group">
+                                <label>Mission Vision Color Code</label>
+                                <input 
+                                type="text" 
+                                class="form-control"
+                                name="mission_vision_color_code" 
+                                placeholder="Mission Vision Color Code" 
+                                maxlength="7" 
+                                value = "{{sc_ag_info.mission_vision_color_code| default:""}}"
+                                >
+                            </div>
+                            <br>
+
+                            <div class="form-group">
                                 <label>Text Color Code</label>
                                 <input 
                                 type="text" 
@@ -576,7 +603,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <img src="{{media_url}}{{sc_ag_info.sc_ag_logo}}" class="img-fluid w-100" alt="Image">
+                            <img src="{{media_url}}{{sc_ag_info.logo}}" class="img-fluid w-100" alt="Image">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
@@ -746,7 +773,7 @@
             if (characterCount === 0) {
                 characterCountElement.style.color = "red";
                 characterCountElement.innerText = "Required";
-            } else if (characterCount > 500) {
+            } else if (characterCount > 1500) {
                 characterCountElement.style.color = "red";
                 characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
             } else {
@@ -789,7 +816,7 @@
 
         // Call the function for each image section when the page loads
         window.onload = function () {
-            checkSavedImage("about-image-input", "{{ sc_ag_info.sc_ag_logo }}");
+            checkSavedImage("about-image-input", "{{ sc_ag_info.logo }}");
             checkSavedImage("background-image-input", "{{ sc_ag_info.background_image }}");
             checkSavedImage("mission-image-input", "{{ sc_ag_info.mission_picture }}");
             checkSavedImage("vision-image-input", "{{ sc_ag_info.vision_picture }}");

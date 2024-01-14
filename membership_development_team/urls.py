@@ -25,4 +25,8 @@ urlpatterns = [
    path("insb_site_registration_form/success",views.confirmation_of_form_submission,name="confirmation"),
    path("insb_members/site_registration/request_details/<int:ieee_id>",views.site_registration_request_details,name="site_registration_request_details"),
    path("get_site_registration_stats/",views.getSiteRegistrationRequestStats,name="site_registration_stats"),
+   path("insb_site_registration_form/faculty",views.site_registration_faculty,name="site_registration_faculty"),
+   path("insb_site_registration_form/faculty/success",views.site_registration_faculty_confirmation,name="site_registration_faculty_confirmation"),
+
+
 ]

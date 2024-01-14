@@ -1,6 +1,6 @@
 from central_branch.renderData import Branch
 from users.models import Members
-from port.models import Teams,Roles_and_Position
+from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups
 from system_administration.models import Graphics_Data_Access
 import os
 import logging
@@ -14,30 +14,24 @@ class GraphicsTeam:
 
     logger=logging.getLogger(__name__)
 
-    def get_co_ordinator():
-        roles = Roles_and_Position.objects.get(is_co_ordinator=True)
-        members = Members.objects.filter(position=roles,team=GraphicsTeam.get_team_id())
-        print(members)
-        return members
-
-    def get_officer():
-        roles = Roles_and_Position.objects.get(is_officer = True,is_co_ordinator=False)
-        members = Members.objects.filter(position = roles,team=GraphicsTeam.get_team_id())
-        
-        print(roles,members)
-        return members
-
-    def get_volunteers():
+    def get_team_members_with_positions():
         team_members=GraphicsTeam.load_team_members()
+        co_ordinators=[]
+        incharges=[]
         core_volunteer=[]
         team_volunteer=[]
         for i in team_members:
-            if(i.position.is_volunteer):
+            if(i.position.is_officer):
+                if(i.position.is_co_ordinator):
+                    co_ordinators.append(i)
+                else:
+                    incharges.append(i)
+            elif(i.position.is_volunteer):
                 if(i.position.is_core_volunteer):
                     core_volunteer.append(i)
                 else:
                     team_volunteer.append(i)
-        return core_volunteer,team_volunteer
+        return co_ordinators,incharges,core_volunteer,team_volunteer
 
     def get_member_with_postion(position):
         '''Returns Graphics Team Members with positions'''
@@ -69,13 +63,12 @@ class GraphicsTeam:
         
         '''Gets the team id from the database only for Media Team. Not the right approach'''
         
-        team=Teams.objects.get(team_name="Graphics")
+        team=Teams.objects.get(primary=10)
         return team
 
     def add_member_to_team(ieee_id,position):
-        team_id=GraphicsTeam.get_team_id().id
-        Members.objects.filter(ieee_id=ieee_id).update(team=Teams.objects.get(id=team_id),position=Roles_and_Position.objects.get(id=position))
-
+        Branch.add_member_to_team(ieee_id=ieee_id,position=position,team_primary=10)
+        
     def graphics_manage_team_access_modifications(manage_team_access, event_access, ieee_id):
         try:
             Graphics_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access, event_access=event_access)
@@ -144,7 +137,8 @@ class GraphicsTeam:
 
             image = Graphics_Banner_Image.objects.get(event_id = Events.objects.get(pk = event_id),selected_image = image_url)
             path = settings.MEDIA_ROOT+str(image.selected_image)
-            os.remove(path)
+            if os.path.exists(path):
+                os.remove(path)
             image.delete()
             return True
         except Exception as e:

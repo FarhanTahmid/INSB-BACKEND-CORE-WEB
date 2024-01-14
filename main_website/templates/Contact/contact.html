@@ -115,9 +115,12 @@
       color: white;
       font-size: 30px;
       background: #75787B;
-      padding: 30px;
+      padding: 40px;
       border-radius: 50%;
       transition: all .5s;
+    }
+    .mobile-icon{
+      padding: 40px 43px;
     }
 
     .address-icon:hover,
@@ -257,7 +260,7 @@
 
       .even-col {
         grid-template-columns: 1fr;
-        max-width: 650px;
+        max-width: 100%;
       }
 
       .even-col iframe {
@@ -265,7 +268,7 @@
       }
     }
 
-    @media screen and (max-width: 630px) {
+    @media screen and (max-width: 675px) {
       .contact-card-container{
         grid-template-columns: 1fr;
       }
@@ -275,12 +278,6 @@
 
       .even-col {
         max-width: 100%;
-      }
-    }
-
-    @media screen and (max-width: 425px) {
-      .max-width {
-        max-width: 80%;
       }
     }
 
@@ -352,7 +349,6 @@
     }
 
     .section-C .container {
-      width: 90%;
       margin: auto auto;
       display: grid;
       height: auto;
@@ -469,6 +465,79 @@
         height: 360px;
       }
     }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+  
+    .modal-content {
+      background-color: #fff;
+      width: 450px;
+      height: 115px;
+      position: relative;
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px;
+      animation: unfold 1.25s ease-in-out forwards;
+    }
+  
+    .modal-content-items {
+      opacity: 0;
+      animation: fadeIn 1.25s 1s ease-in-out forwards;
+    }
+  
+  .message {
+      margin-top: 20px;
+      font-size: 16px;
+    }
+  
+    /* Media query for screens below 360px */
+    @media screen and (max-width: 360px) {
+      .message {
+          font-size: 14px; /* Adjust the font size as needed */
+    }
+    }
+  
+    /* Styling for the close button */
+    .close {
+      cursor: pointer;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+  
+    @keyframes unfold {
+      0% {
+          width: 0;
+          height: 5px;
+      }
+      50% {
+          width: 450px;
+          height: 5px;
+      }
+      100% {
+          width: 450px;
+          height: 115px;
+      }
+    }
+  
+    @keyframes fadeIn {
+      0% {
+          opacity: 0;
+      }
+      100% {
+          opacity: 1;
+      }
+    }
   </style>
 </head>
 
@@ -480,6 +549,20 @@
     {% block wave_design %}
     {% include 'wave.html' %}
     {% endblock wave_design %}
+
+    <div class="container">
+
+      {% for message in messages  %}
+          <div id="myMessageModal{{ loop.index }}" class="modal">
+              <div class="modal-content">
+                  <div class="modal-content-items">
+                      <span class="close" onclick="closeModal({{ loop.index }})">&times;</span>
+                      <p class="message">{{ message }}</p>
+                  </div>
+              </div>
+          </div>
+      {% endfor %}
+    </div>
 
     <!-- Contact start -->
     <!-- Contact card start -->
@@ -524,9 +607,12 @@
           <div>
             <h4>Social Media</h4>
           </div>
-          <div class="social-media-icons"><a href="#"><i class="fa-brands fa-facebook"></i></a><a href="#"><i
-                class="fa-brands fa-linkedin-in"></i></a><a href="#"><i class="fa-brands fa-instagram"></i></a><a
-              href="#"><i class="fa-brands fa-x-twitter"></i></a><a href="#"><i class="fa-brands fa-youtube"></i></a>
+          <div class="social-media-icons" style="margin-top:-25px;">
+            <a href="https://www.facebook.com/ieeensusb/" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+            <a href="https://www.linkedin.com/company/ieeensusb/" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="https://www.instagram.com/ieeensusb/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://twitter.com/ieeensusb/" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="https://www.youtube.com/@IEEENSUStudentBranch" target="_blank"><i class="fa-brands fa-youtube"></i></a>
           </div>
         </div>
       </section>
@@ -552,15 +638,16 @@
             </div>
             <div class="bar"></div>
             <div class="contact-us">
-              <form method="post" class="contact-us-form">
+              <form method="POST" class="contact-us-form">
+                {% csrf_token %}
                 <p>Your Name</p>
-                <input type="text" name="name" placeholder="Name" required>
+                <input type="text" name="user_name" placeholder="Name" required>
                 <p>Your Email</p>
-                <input type="email" name="email" placeholder="Email" required>
+                <input type="email" name="user_email" placeholder="Email" required>
                 <p>Your Message</p>
-                <textarea name="message" placeholder="Your message here...." style="min-height: 150px;" maxlength="1000" required></textarea>
+                <textarea name="user_message" placeholder="Your message here...." style="min-height: 150px;" maxlength="1500" required></textarea>
                 <div class="contact-btn">
-                  <input type="submit" value="submit">
+                  <input type="submit" value="submit" name="submit">
                 </div>
               </form>
             </div>
@@ -644,6 +731,29 @@
     document.addEventListener("DOMContentLoaded", function () { // On DOM Load initiate the effect
       if (txt.length) setTimeout(typeWriter, typingSpeed + 250);
     });
+  </script>
+
+  <!--Logic to handle my message modal-->
+  <script>
+    // Function to display the modal
+    function openModal() {
+        document.getElementById('myMessageModal').style.display = 'flex';
+    }
+
+    // Function to close the modal
+    function closeModal() {
+        document.getElementById('myMessageModal').style.display = 'none';
+    }
+
+    // Close the modal when clicking outside the modal content
+    window.onclick = function(event) {
+        var modal = document.getElementById('myMessageModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    };
+    // Open the modal when the page loads (you can trigger this in your JavaScript when you want to show the modal)
+    openModal();
   </script>
 
   {% block common_js %}

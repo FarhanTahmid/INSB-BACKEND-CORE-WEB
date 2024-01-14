@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Access Denied | IEEE NSU Student Branch</title>
+  <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- for ios 7 style, multi-resolution icon of 152x152 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
+  <link rel="apple-touch-icon" href="{% static 'logos/logo.png' %}">
+  <meta name="apple-mobile-web-app-title" content="Flatkit">
+  <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="shortcut icon" sizes="196x196" href="{% static 'logos/logo.png' %}">
+  
+  <!-- style -->
+  <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+  <link rel="stylesheet" href="{% static '/assets/animate.css/animate.min.css'%}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/glyphicons/glyphicons.css'%}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/font-awesome/css/font-awesome.min.css'%}" type="text/css" />
+  <link rel="stylesheet" href="{% static '/assets/material-design-icons/material-design-icons.css'%}" type="text/css" />
+
+  <link rel="stylesheet" href="{% static '/assets/bootstrap/dist/css/bootstrap.min.css'%}" type="text/css" />
+  <!-- build:css ../assets/styles/app.min.css -->
+  <link rel="stylesheet" href="{% static '/assets/styles/app.css'%}" type="text/css" />
+  <!-- endbuild -->
+  <link rel="stylesheet" href="{% static '/assets/styles/font.css'%}" type="text/css" />
+</head>
+<body>
+  <div class="app" id="app">
+
+<!-- ############ LAYOUT START-->
+
+<!-- ############ Main Content of PAGE START-->
+<div ui-view class="app-body" id="view">
+
+  <div class="text-center pos-rlt p-y-md">
+    <h1 class="text-shadow m-0 text-white text-4x">
+      <span class="text-2x font-bold block m-t-lg" style="color:#BA0C2F">Not Registered!</span>
+    </h1>
+    <h2 class="h1 m-y-lg text-black">OOPS!</h2>
+    <p class="h5 m-y-lg text-u font-bold text-black" style="font-size:25px;">Sorry! You currently are not a registered Admin.</p>
+    <p style="font-size:20px;">Please refer to <b>Web Team</b> regarding this issue</p>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="submit" name="Logout" value="Logout" class="btn btn-outline-danger">
+    </form>
+  </div>
+
+
+<!-- ############ LAYOUT END-->
+
+  </div>
+<!-- build:js scripts/app.html.js -->
+<!-- jQuery -->
+  <script src="{% static '/libs/jquery/jquery/dist/jquery.js'%}"></script>
+  <script src="{% static '/libs/jquery/screenfull/dist/screenfull.min.js'%}"></script>
+
+
+<!-- Bootstrap -->
+  <script src="{% static '/libs/jquery/tether/dist/js/tether.min.js'%}"></script>
+  <script src="{% static '/libs/jquery/bootstrap/dist/js/bootstrap.js'%}"></script>
+<!-- core -->
+  <script src="{% static '/libs/jquery/underscore/underscore-min.js'%}"></script>
+  <script src="{% static '/libs/jquery/jQuery-Storage-API/jquery.storageapi.min.js'%}"></script>
+  <script src="{% static '/libs/jquery/PACE/pace.min.js'%}"></script>
+
+  {% comment %} <script src="{% static 'script/config.lazyload.js'%}"></script> {% endcomment %}
+
+  <script src="{% static 'script/palette.js'%}"></script>
+  <script src="{% static 'script/ui-load.js'%}"></script>
+  <script src="{% static 'script/ui-jp.js' %}"></script>
+  <script src="{% static 'script/ui-include.js'%}"></script>
+  <script src="{% static 'script/ui-device.js'%}"></script>
+  <script src="{% static 'script/ui-form.js'%}"></script>
+  <script src="{% static 'script/ui-nav.js'%}"></script>
+  <script src="{% static 'script/ui-screenfull.js'%}"></script>
+  <script src="{% static 'script/ui-scroll-to.js'%}"></script>
+  <script src="{% static 'script/ui-toggle-class.js'%}"></script>
+  {% comment %} <script src="{% static 'script/screenfull.min.js'%}"></script> {% endcomment %}
+  <script src="{% static 'script/app.js'%}"></script>
+
+
+<!-- endbuild -->
+
+</body>
+</html>

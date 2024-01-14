@@ -63,7 +63,18 @@
             max-width: 200px;
           }
 
+          .app-body{
+            justify-content:center; 
+            margin-left:15%;
+            margin-right:15%;
+          }
           
+          @media (max-width: 760px) {
+              .app-body {
+                  margin-left: 5%;
+                  margin-right: 5%;
+              }
+          }
         
     </style>
 </head>
@@ -100,26 +111,28 @@
         <!--navbar content-->
         
         <!-- ############ PAGE START-->
-        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+        <div ui-view class="app-body" id="view">
 
 
             <br>
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"><span><b>Messages</b></span> for <span style="color:#00629B;">{% if sc_ag_info %}{{sc_ag_info.short_form}}{% else %}INSB{% endif %}</b></span></h2>
             
+            <!--for error messages-->
             <div class="container">
               <br>
               {% for message in messages  %}
                   <p>
                       <div class="alert alert-success alert-dismissible fade show" role="alert">
-                          {{message}}
                           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                           </button>
+                          <p style="margin: 0;">{{message}}</p>
                       </div>
                   </p>
                 {% endfor %}
                 <br>
-            </div>
+          </div>
+          <!--for error messages end-->
              
 
             <!--Events Table-->
@@ -147,9 +160,6 @@
                     <div class="tb_search">
                       <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search.." class="form-control">
                     </div>
-                    <div style="text-align: left;">
-                      <input type="submit" value="Submit" name="reponded" class="btn btn-outline b-success text-success mb-2" >
-                    </div> 
                   </div>
                   
                   <div class="table-responsive">
@@ -186,6 +196,11 @@
                       </form>
                       <tbody>
                     </table>
+                    <br>
+
+                    <div class="form-group text-center">
+                      <input type="submit" value="Submit" name="reponded" class="btn btn-outline b-success text-success mb-2" >
+                    </div> 
                   </div>
                   
                   <!--		Start Pagination -->

@@ -192,12 +192,21 @@
             {% endif %}
             <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">Panel Duration:<span style="color:#00629B;"> {{tenure_time}} </span></b></h5>
             <br>
+            {% if panel_edit_access %}
             <div style="justify-content:center;text-align:center;">  
                 <div class="btn-container">
                     <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-f" ui-toggle-class="bounce" ui-target="#animate">Delete Panel</button>
                     <button type="submit" class="btn btn-outline b-info text-info" data-toggle="modal" data-target="#m-s-g" ui-toggle-class="bounce" ui-target="#animate">Panel Settings</button>
+                    <div class="btn-group dropdown">
+                        <button class="btn  btn-outline b-accent text-accent  dropdown-toggle" data-toggle="dropdown">Create New Positions & Teams</button>
+                        <div class="dropdown-menu dropdown-menu-scale info pull-right">
+                            <button class="dropdown-item" data-toggle="modal" data-target="#m-s-i" ui-toggle-class="bounce" ui-target="#animate">Create New Position</button>
+                            <button class="dropdown-item" data-toggle="modal" data-target="#m-s-j" ui-toggle-class="bounce" ui-target="#animate">Create New Team</button>
+                        </div>
+                    </div>
                 </div>
             </div>
+            {% endif %}
             <br>
             <br>
 
@@ -226,9 +235,11 @@
                 <div class="box">
                     <div class="box-header">
                         
+                        {% if panel_edit_access %}
                         <div style="text-align:right;">
-                        <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add Executive Member</button>
+                            <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Add Executive Member</button>
                         </div>
+                        {% endif %}
                         <small>This table holds the data of Executive Members in the panel</small>
                         <small style="color:green;"><span style="color:red;">* </span>Make this panel the current Panel from Panel Settings if we wish to add members in the current team as well.</small>
                         <br>
@@ -243,24 +254,28 @@
                             <th style="text-align:center;">Name</th>
                             <th style="text-align:center;">IEEE Email</th>
                             <th style="text-align:center;">Current Position</th>
+                            {% if panel_edit_access %}
                             <th style="text-align:center;">Remove Member?</th>
+                            {% endif %}
                         </tr>
                         </thead>
                         <tbody>
                         
                             {% for member in eb_member %}
                             <tr>
-                                <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.member.ieee_id %}">{{member.member.ieee_id}}</a></td>
+                                <td>{{member.member.ieee_id}}</td>
                                 <td>{{ member.member.name  }}</td>
                                 <td>{{member.member.email_ieee}}</td>
                                 <td>{{member.position}}</td>
+                                {% if panel_edit_access %}
                                 <td>
-                                <form method="POST">
-                                    {% csrf_token %}
-                                        <input class="btn btn-outline b-danger text-danger" name="remove_member" type="submit" value="Remove Member">
-                                        <input type="hidden" name="remove_panel_member" value={{member.member.ieee_id}}>
-                                    </form>
-                                </td>
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                            <input class="btn btn-outline b-danger text-danger" name="remove_member" type="submit" value="Remove Member">
+                                            <input type="hidden" name="remove_panel_member" value={{member.member.ieee_id}}>
+                                        </form>
+                                    </td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -270,6 +285,7 @@
                 <!--Table Ends-->
                 <br>
                 <br>
+                {% if panel_edit_access %}
                 <!--Add modal-->
                 <div id="m-s-a" class="modal" data-backdrop="true">
                     <div class="modal-dialog modal-lg">
@@ -338,7 +354,9 @@
                 </div>
                 <!--Add modal ends-->
             <!--Executive Members End-->
+                {% endif %}
             
+            {% if panel_edit_access %}
             <!-- Delete Panel modal -->
             <div id="m-s-f" class="modal fade animate" data-backdrop="true">
                 <form method="POST">
@@ -361,6 +379,9 @@
                 </form>
             </div>
             <!-- / .modal -->
+            {% endif %}
+
+            {% if panel_edit_access %}
             <!--Current Panel Modal-->
             <div id="m-s-g" class="modal fade animate" data-backdrop="true">
                 <form method="POST">
@@ -444,6 +465,173 @@
                 </form>
             </div>
             <!-- / .modal -->
+            {% endif %}
+
+            {% if panel_edit_access %}
+            <!--Create team Modal-->
+            <div id="m-s-j" class="modal fade animate" data-backdrop="true">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="modal-dialog" id="animate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Create New Team</h5>
+                            </div>
+                            
+                            <div class="modal-body text-left p-lg">
+                                <p>Create a new Team here for your IEEE NSU SB.</p>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md">
+                                            <label>Team Name</label>
+                                            <input placeholder="Give a Team Name" class="form-control w-75" type="text" name="team_name"/>
+                                        </div>
+                                    </div>
+                                </form>        
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <input type="submit" class="btn btn-success p-x-md" name="create_team" value="Create Team"></input>                  
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </form>
+            </div>
+            <!--Team Modal Ends-->
+            {% endif %}
+
+            {% if panel_edit_access %}
+            <!--Create Position Modal-->
+            <div id="m-s-i" class="modal fade animate" data-backdrop="true">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="modal-dialog" id="animate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Create New Position</h5>
+                            </div>
+                            
+                            <div class="modal-body text-left p-lg">
+                                <p>Remember, choose the attributes of the position carefully.<br>The attributes will effect in permissions and view accesses.</p>
+                                <ul>
+                                    <li>A Faculty Member Position (If you want to add the person in Executive Body) is: <span style="color:red;">Is Faculty + Is EB Member</span></li>
+                                    <li>A Mentor Position (If you want to add the person in Executive Body) is: <span style="color:red;">Is Mentor + Is EB Member</span></li>
+                                    <li>A Co-Ordinator Position is: <span style="color:red;">Is Co-Ordinator + Is Officer</span></li>
+                                    <li>A Core Volunteer Position is: <span style="color:red;">Is Core-Volunteer + Is Volunteer</span></li>
+                                </ul>        
+                            </div>
+                            <br>
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="row" style="margin-left:5px;">
+                                    <div class="col-md">
+                                        <label>Position Name</label>
+                                        <input placeholder="Give a Position Name" class="form-control w-75" type="text" name="position_name"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row" style="margin-left:5px;">
+                                    <div class="col-md-6">
+                                        <label for="inputieeeid3" class="col-sm  form-control-label">Is this a Faculty Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="faculty_position_check" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="inputieeeid3" class="col-sm  form-control-label">Is this a Executive Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="executive_position_check" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" style="margin-left:5px;">
+                                    <div class="col-md-6">
+                                        <label for="inputieeeid3" class="col-sm  form-control-label">Is this a Co-Ordinator Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="coordinator_position_check" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="inputieeeid3" class="col-sm  form-control-label">Is this a Officer Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="officer_position_check" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" style="margin-left:5px;">
+                                    <div class="col-md-6">
+                                        <label for="inputieeeid3" class="col-sm  form-control-label">Is this a Core-volunteer Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="core_volunteer_position_check" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="inputieeeid3" class="col-sm  form-control-label">Is this a Volunteer Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="volunteer_position_check" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" style="margin-left:5px;">
+                                    <div class="col-md-12">
+                                        <label for="inputieeeid3" class="col-sm  form-control-label">Is this a Mentor Position?</label>
+                                        <span style="margin-right:30vh;">
+                                            <div class="col-sm-10">
+                                                <label class="ui-switch">
+                                                <input name="mentor_position_check" type="checkbox">
+                                                    <i></i>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                
+
+                            </form>
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <input type="submit" class="btn btn-success p-x-md" name="create_position" value="Create Position"></input>                  
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </form>
+            </div>
+            <!--Position Modal Ends-->
+            {% endif %}
         </div>
         <!--PAGE END-->
 
