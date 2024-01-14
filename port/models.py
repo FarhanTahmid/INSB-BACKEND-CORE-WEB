@@ -65,6 +65,7 @@ class Roles_and_Position(models.Model):
     id=models.IntegerField(null=False,blank=False,default=0,primary_key=True)
     role=models.CharField(max_length=40,null=False,blank=False)
     role_of=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
+    rank = models.IntegerField(null=True,blank=True,default=0)
     is_eb_member = models.BooleanField(default=False)
     is_sc_ag_eb_member=models.BooleanField(default=False)
     is_officer=models.BooleanField(default=False)
