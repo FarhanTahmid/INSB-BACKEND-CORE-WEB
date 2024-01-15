@@ -110,7 +110,7 @@
                             overflow: hidden;
                             -webkit-box-orient: vertical;
                             text-overflow: ellipsis;
-                            -webkit-line-clamp: 2;">
+                            -webkit-line-clamp: 1;">
                                 <p class="card-text">{{key.event_description | safe }}</p>
                             </div>
                             <a href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}" class="excerpt-read-more">Read More</a>

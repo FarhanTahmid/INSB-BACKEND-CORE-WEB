@@ -51,6 +51,9 @@ class Teams(models.Model):
     team_of=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
     is_active=models.BooleanField(null=True,blank=True,default=True)
     
+    class Meta:
+        verbose_name="Registered Team"
+        ordering=['-is_active','team_name']
     def __str__(self) -> str:
         return self.team_name   
 
@@ -77,7 +80,7 @@ class Roles_and_Position(models.Model):
     
     class Meta:
         verbose_name='Registered positions'
-        ordering=['rank']
+        ordering=['-rank']
     def __str__(self) -> str:
         return self.role
 
