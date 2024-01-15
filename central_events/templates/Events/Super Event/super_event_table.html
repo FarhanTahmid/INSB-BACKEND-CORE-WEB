@@ -3,7 +3,11 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Events | IEEE NSU Student Branch</title>
+    {% if is_branch %}
+    <title>Mega Events | IEEE NSU Student Branch</title>
+    {% else %}
+    <title>Mega Events | {{sc_ag_info.group_name}}</title>
+    {% endif %}
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
     {% block common_css %}
@@ -95,15 +99,15 @@
         <!-- navbar content -->
         
           <div id="content" class="app-content box-shadow-z0" role="main">
-            {% comment %} {% if is_branch %} {% endcomment %}
+            {% if is_branch %}
               {% block navbar %}
                   {% include 'navbar.html' %}
               {% endblock navbar %}
-            {% comment %} {% else %}
+            {% else %}
               {% block sc_ag_navbar %}
                 {% include 'sc_ag_navbar.html' %}
               {% endblock sc_ag_navbar %}
-            {% endif %} {% endcomment %}
+            {% endif %}
           </div>
         
         
@@ -115,11 +119,11 @@
 
 
             <br>
-            {% comment %} {% if is_branch %} {% endcomment %}
+            {% if is_branch %}
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to the <span><b>Mega Events</b></span> of <span style="color:#00629B;">IEEE NSU Student Branch</b></span></h2>
-            {% comment %} {% else %}
+            {% else %}
             <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Welcome to the <span><b>Mega Events</b></span> of <span style="color:#00629B;">{{sc_ag_info.group_name}}</b></span></h2>
-            {% endif %} {% endcomment %}
+            {% endif %}
 
             <!--for error messages-->
             <div class="container">
@@ -138,20 +142,20 @@
             </div>
             <!--for error messages end-->
 
-            {% comment %} {% if has_access_to_create_event %} {% endcomment %}
+            {% if has_access_to_create_event %}
               <div class="container" style="justify-content:center;text-align:center;"> 
 
                 
                 
                 <div class="btn-container">
-                  {% comment %} {% if is_branch %} {% endcomment %}
-                  <a href="{% url 'central_branch:super_event_creation' %}" class="btn btn-outline b-success text-success" style="margin-bottom:15px";>Create a New Mega Event</a>
-                  {% comment %} {% else %}
-                  <a href="{% url 'chapters_and_affinity_group:super_event_creation' sc_ag_info.primary %}" class="btn btn-outline b-success text-success" style="margin-bottom:15px";>Create a New Mega Event</a>
-                  {% endif %} {% endcomment %}
+                  {% if is_branch %}
+                  <a href="{% url 'central_branch:mega_event_creation' %}" class="btn btn-outline b-success text-success" style="margin-bottom:15px";>Create a New Mega Event</a>
+                  {% else %}
+                  <a href="{% url 'chapters_and_affinity_group:mega_event_creation' sc_ag_info.primary %}" class="btn btn-outline b-success text-success" style="margin-bottom:15px";>Create a New Mega Event</a>
+                  {% endif %}
                 </div>
               </div> 
-            {% comment %} {% endif %} {% endcomment %}
+            {% endif %}
              
 
             <!--Events Table-->
@@ -190,15 +194,15 @@
                         </tr>
                       </thead>
                       <tbody>
-                        {% for key, value in events.items %}
+                        {% for mega_event in mega_events %}
                         <tr>
                           <td>{{ forloop.counter }}</td>
-                            {% comment %} {% if is_branch %} {% endcomment %}
-                            <td><a class="event_name_column_content" style="color:blue;" href="{% url 'central_branch:event_edit_form' key.id %}">{{key.event_name }}</a></td>
-                            {% comment %} {% else %}
-                            <td><a class="event_name_column_content" style="color:blue;" href="{% url 'chapters_and_affinity_group:event_edit_form' sc_ag_info.primary key.id %}">{{key.event_name }}</a></td>
-                            {% endif %} {% endcomment %}
-                            <td>{{ key.event_organiser.group_name }}</td>
+                            {% if is_branch %}
+                            <td><a class="event_name_column_content" style="color:blue;" href="{% url 'central_branch:mega_event_edit' mega_event.pk %}">{{mega_event.super_event_name}}</a></td>
+                            {% else %}
+                            <td><a class="event_name_column_content" style="color:blue;" href="{% url 'chapters_and_affinity_group:mega_event_edit' sc_ag_info.primary mega_event.pk %}">{{mega_event.super_event_name}}</a></td>
+                            {% endif %}
+                            <td>{{mega_event.mega_event_of.group_name}}</td>
                             
                            
                         </tr>

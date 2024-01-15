@@ -3,7 +3,11 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    {% if is_branch %}
     <title>Membership Renewal | Membership Development Team</title>
+    {% else %}
+    <title>Membership Renewal | {{sc_ag_info.short_form}}</title>
+    {% endif %}
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
     {% block common_css %}

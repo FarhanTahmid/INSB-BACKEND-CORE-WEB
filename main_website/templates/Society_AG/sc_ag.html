@@ -378,54 +378,54 @@
         <br><br>
 
         <!-- mega events  -->
+        {% if has_mega_events %}
         <section>
             <div class="container">
                 <h2 style="font-weight: bold;">MEGA EVENTS</h2>
                 <div class="bar"></div>
 
-
                 <!--Mega Events-->
                 <div class="row m-0 box-container" style="transition: .3s ease-in-out; ">
-                    {% for events,banner_image in featured_events.items %}
-                    <div style="border-radius: 7px;"
-                        class="col-lg-3 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box mega_event">
+                    {% for events in all_mega_events %}
+                    <div style="border-radius: 7px;" class="col-lg-4 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box_mega">
                         <article id="post-2255"
-                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style"
-                            style="border: 1px solid black;">
-                            <div class="gdlr-standard-style">
+                            class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
+                            <div class="gdlr-standard-style" style="height:500px;">
                                 <div class="gdlr-blog-thumbnail">
-                                    <a href="{% url 'main_website:event_details' events.id %}">
-                                        <img class="article-image"
-                                            src="{{media_url}}{{banner_image}}"
-                                            alt="Mega Event Banner" width="100%" />
-                                    </a>
+                                    <a href="{% if events.id %}{% url 'main_website:mega_event_description_page' events.id %}{% endif %}"> <img
+                                            class="article-image"
+                                            src="{{media_url}}{{events.banner_image}}"
+                                            alt="event_banner" width="100%" /></a>
                                 </div>
 
                                 <div class="gdlr-blog-grid-content" style="overflow: hidden;">
                                     <header class="post-header">
                                         <div class="gdlr-blog-info">
-                                            <div class="blog-info blog-author gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span>By {{events.event_organiser.short_form}}
-                                            </div>
+                                        
+                                            <div
+                                                class="blog-info blog-author gdlr-skin-info">
+                                                <span class="gdlr-sep">/</span>By {{events.mega_event_of.group_name}}</div>
                                             <div class="clear"></div>
                                         </div>
 
-                                        <h3 class="gdlr-blog-title event_name">
-                                            <a href="{% url 'main_website:event_details' events.id %}" id="gdlr-blog-title">gdfugbjkdsfcb sc ubuhx fxvfusefgs fgefuygfuvsfusdvfsgcfu ergfcuyvfuih cbdr8y</a>
-                                        </h3>
+                                        <h3 class="gdlr-blog-title event_name"><a href="{% if  events.id %}{% url 'main_website:mega_event_description_page'  events.id  %}{% endif %}">{{events.super_event_name}}</a></h3>
                                         <div class="clear"></div>
                                     </header>
+                                    <!-- entry-header -->
 
-                                    <div class="description-container"
-                                        style="display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; text-overflow: ellipsis; -webkit-line-clamp: 2;">
-                                        <p class="card-text">gdfugbjkdsfcb sc ubuhx fxvfusefgs fgefuygfuvsfusdvfsgcfu ergfcuyvfuih cbdr8y gdfugbjkdsfcb sc ubuhx fxvfusefgs fgefuygfuvsfusdvfsgcfu ergfcuyvfuih cbdr8y</p>
+                                    <div class="description-container" style="display: -webkit-box;
+                                    overflow: hidden;
+                                    -webkit-box-orient: vertical;
+                                    text-overflow: ellipsis;
+                                    -webkit-line-clamp: 2;">
+                                        <p class="card-text">{{events.super_event_description | safe }}</p>
                                     </div>
-                                    <a href="{% url 'main_website:event_details' events.id %}" class="excerpt-read-more">Read More</a>
+                                    <a href="{% if  events.id %}{% url 'main_website:mega_event_description_page'  events.id  %}{% endif %}" class="excerpt-read-more">Read More</a>
                                 </div>
                             </div>
                         </article>
                     </div>
-                    {% endfor %}     
+                    {% endfor %}
                 </div>
 
                 <div class="text-center"> <!-- Add 'text-center' class here -->
@@ -435,6 +435,8 @@
             </div>
 
         </section>
+        {% endif %}
+        
         <!-- Mega events starts  -->
 
         <br><br>

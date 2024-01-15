@@ -2,7 +2,7 @@ from .models import HomePageTopBanner,BannerPictureWithStat
 from django.http import HttpResponseServerError
 from users.models import Members,User_IP_Address,Panel_Members
 from membership_development_team.renderData import MDT_DATA
-from central_events.models import Events,InterBranchCollaborations
+from central_events.models import Events,InterBranchCollaborations,SuperEvents
 from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
 from graphics_team.models import Graphics_Banner_Image
 from media_team.models import Media_Images
@@ -336,6 +336,69 @@ class HomepageItems:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
 
-    
+    def get_all_mega_events(primary):
+
+        '''This function returns all mega_events of particular society that are published'''
+
+        try:
+            if primary == 1:
+                return SuperEvents.objects.filter(publish_mega_event = True)
+            else:
+                mega_events= SuperEvents.objects.filter(publish_mega_event = True,mega_event_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
+                if(mega_events.exists()):
+                    return mega_events
+                else:
+                    return False
+        except Exception as e:
+            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def get_mega_event(mega_event_id):
+
+        '''this function returns the mega event of specific id'''
+        try:
+            return SuperEvents.objects.get(id = mega_event_id)
+        except SuperEvents.DoesNotExist:
+            return False
+        except Exception as e:
+            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False 
+        
+    def get_other_mega_event(mega_event_id):
+
+        '''This function return other mega even apart from this one'''
+
+        try:
+            return SuperEvents.objects.filter(publish_mega_event=True).exclude(id=mega_event_id).order_by('-start_date')[:6]
+        except Exception as e:
+            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+    def all_events_of_mega_event(mega_event,primary):
+
+        '''This function returns all events of mega event'''
+        try:
+
+            society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
+            events = Events.objects.filter(super_event_id = SuperEvents.objects.get(mega_event_of = society),publish_in_main_web=True)
+          
+            dic = {}
+            #using this loop, assigning the event with its corresponding banner picture in the dictionary as key and value
+            for i in events:
+                #getting the event banner image using load_event_banner_image funtion
+                event_selected_image = HomepageItems.load_event_banner_image(i.pk)
+                if event_selected_image == None:
+                    #else assigning '#'
+                    dic[i] = "#"
+                else:
+                    #if not none assigning banner image as value to the event which is the key
+                    dic[i]=event_selected_image
+            return dic
+        except Exception as e:
+            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
 
         

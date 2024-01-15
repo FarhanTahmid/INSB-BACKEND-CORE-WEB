@@ -3,7 +3,11 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    {% if is_branch %}
     <title>Create Event | IEEE NSU Student Branch</title>
+    {% else %}
+    <title>Create Event | {{sc_ag_info.group_name}}</title>
+    {% endif %}
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
     {% block common_css %}

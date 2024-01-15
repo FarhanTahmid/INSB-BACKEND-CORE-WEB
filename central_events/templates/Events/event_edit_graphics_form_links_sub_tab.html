@@ -3,7 +3,11 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    {% if is_branch %}
     <title>Update Event | IEEE NSU Student Branch</title>
+    {% else %}
+    <title>Update Event | {{sc_ag_info.group_name}}</title>
+    {% endif %}
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
     
     <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />

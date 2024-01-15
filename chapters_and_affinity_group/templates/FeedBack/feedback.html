@@ -3,7 +3,11 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>{{sc_ag_info.short_form}} | IEEE NSU Student Branch</title>
+    {% if sc_ag_info %}
+    <title>Feedbacks | {{sc_ag_info.short_form}}</title>
+    {% else %}
+    <title>Feedbacks | IEEE NSU Student Branch</title>
+    {% endif %}
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
     {% block common_css %}
@@ -196,12 +200,12 @@
                       </form>
                       <tbody>
                     </table>
-                    <br>
-
-                    <div class="form-group text-center">
-                      <input type="submit" value="Submit" name="reponded" class="btn btn-outline b-success text-success mb-2" >
-                    </div> 
                   </div>
+                  
+                  <br>
+                  <div class="form-group text-center">
+                    <input type="submit" value="Submit" name="reponded" class="btn btn-outline b-success text-success mb-2" >
+                  </div> 
                   
                   <!--		Start Pagination -->
                   <div class='pagination-container'>

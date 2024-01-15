@@ -30,7 +30,6 @@ urlpatterns = [
     path('<str:primary>/events/create_event/',views.event_creation_form_page,name='event_creation_form1'),
     path('<str:primary>/events/create_event/<int:event_id>/page-2', views.event_creation_form_page2, name="event_creation_form2"),
     path('<str:primary>/events/create_event/<int:event_id>/page-3', views.event_creation_form_page3, name="event_creation_form3"),
-    path('<str:primary>/events/create_super_event/',views.super_event_creation,name="super_event_creation"),    
     path('<str:primary>/event_details/<int:event_id>/edit/',views.event_edit_form,name='event_edit_form'),
     #Event media tab page
     path('<str:primary>/event_details/<int:event_id>/edit/media',views.event_edit_media_form_tab,name='event_edit_media_form_tab'),
@@ -49,5 +48,13 @@ urlpatterns = [
     #Manage Main Website Preview
     path('<str:primary>/manage_main_website/preview',views.manage_main_website_preview,name="manage_main_website_preview"), 
     #Feed Back
-    path('<str:primary>/feedbacks',views.feedbacks,name="feedbacks")
+    path('<str:primary>/feedbacks',views.feedbacks,name="feedbacks"),
+    #Mega Event Creation Form
+    path('<str:primary>/events/create_mega_event/',views.mega_event_creation,name="mega_event_creation"), 
+    #Mega Events homepage
+    path('<str:primary>/events/mega_events/',views.mega_events,name="mega_events"), 
+    #Mega Events edit
+    path('<str:primary>/events/mega_event_edit/<int:mega_event_id>/',views.mega_event_edit,name="mega_event_edit"), 
+    #Add Events to Mega Event
+    path('<str:primary>/events/mega_event_add_event/<int:mega_event_id>/',views.mega_event_add_event,name="mega_event_add_event"), 
 ]
