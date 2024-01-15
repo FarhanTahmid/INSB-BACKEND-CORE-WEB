@@ -143,6 +143,55 @@ class Branch:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
+        
+    def update_mega_event(mega_event_id,super_event_name,super_event_description,start_date,end_date,publish_mega_event,banner_image):
+        try:
+            mega_event = SuperEvents.objects.get(id=mega_event_id)
+            mega_event.super_event_name = super_event_name
+            mega_event.super_event_description = super_event_description
+            if publish_mega_event == 'on':
+                mega_event.publish_mega_event = True
+            else:
+                mega_event.publish_mega_event = False
+            if start_date:
+                mega_event.start_date = start_date
+            else:
+                mega_event.start_date = None
+            if end_date:
+                mega_event.end_date = end_date
+            else:
+                mega_event.end_date = None
+
+            if banner_image is not None:
+                file = mega_event.banner_image
+                if not file:
+                    mega_event.banner_image = banner_image
+                else:
+                    path = settings.MEDIA_ROOT+str(file)
+                    if os.path.exists(path):
+                        os.remove(path)
+                    mega_event.banner_image = banner_image
+            mega_event.save()
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def delete_mega_event_banner(mega_event_id):
+        try:
+            mega_event = SuperEvents.objects.get(id=mega_event_id)
+            path = settings.MEDIA_ROOT+str(mega_event.banner_image)
+            if os.path.exists(path):
+                os.remove(path)
+            mega_event.banner_image = None
+            mega_event.save()
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+
     
     def register_event_page1(super_event_id,event_name,event_type_list,event_description,event_date,event_time,event_organiser=None):
             '''This method creates an event and registers data which are provided in event page1. Returns the id of the event if the method can create a new event successfully
