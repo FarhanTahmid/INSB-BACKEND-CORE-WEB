@@ -2523,7 +2523,7 @@ def mega_event_creation(request):
                     super_event_description = request.POST.get('super_event_description')
                     start_date = request.POST.get('probable_date')
                     end_date = request.POST.get('final_date')
-                    banner_image = request.FILES.get('image')
+                    banner_image = request.FILES['image']
                     if(Branch.register_mega_events(1,super_event_name,super_event_description,start_date,end_date,banner_image)):
                         messages.success(request,"New Mega Event Added Successfully")
                     else:
@@ -2609,6 +2609,7 @@ def mega_event_edit(request,mega_event_id):
                     else:
                         messages.warning(request,'Something went wrong while deleting the image')
                     return redirect('central_branch:mega_event_edit',mega_event_id)
+                
                 elif request.POST.get('delete_event'):
                     if(Branch.delete_mega_event(mega_event_id)):
                         messages.info(request,'Mega event deleted successfully')
