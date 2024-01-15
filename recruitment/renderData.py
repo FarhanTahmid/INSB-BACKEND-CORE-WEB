@@ -76,7 +76,10 @@ class Recruitment:
     
     def getRecruitedMemberDetails(nsu_id,session_id):
         '''This function extracts all the datas from the passes nsu_id'''
-        return recruited_members.objects.get(nsu_id=nsu_id,session_id=session_id)
+        try:
+            return recruited_members.objects.get(nsu_id=nsu_id,session_id=session_id)
+        except recruited_members.DoesNotExist:
+            return False
     
     
     def deleteMember(nsu_id,session_id):

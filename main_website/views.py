@@ -1437,6 +1437,8 @@ def mega_event_description_page(request,mega_event_id):
                 other_mega_event =  HomepageItems.get_other_mega_event(mega_event_id)
             
                 context={
+                    'page_title':mega_event.super_event_name,
+                    'page_subtitle':mega_event.mega_event_of,
                     'mega_event':mega_event,
                     'media_url':settings.MEDIA_URL,
                     'all_events_of_mega_event':all_events_of_mega_events,
