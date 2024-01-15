@@ -291,6 +291,11 @@ def rasPage(request):
     try:
         #getting RAS object
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 3)
+        # get mega events
+        all_mega_events=HomepageItems.get_all_mega_events(primary=3)
+        has_mega_events=True
+        if(all_mega_events==False):
+            has_mega_events=False
         #getting featured events of RAS   
         featured_events = HomepageItems.get_featured_events_for_societies(3)
         
@@ -328,8 +333,9 @@ def rasPage(request):
             'faculty_advisor':faculty_advisor,
             'eb_members':eb_members,
             'page_title':society.page_title,
-            'page_subtitle':society.secondary_paragraph
-
+            'page_subtitle':society.secondary_paragraph,
+            'all_mega_events':all_mega_events,
+            'has_mega_events':has_mega_events,
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
     except Exception as e:
@@ -343,6 +349,11 @@ def pesPage(request):
     try:
         #getting object of PES
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 2)
+        all_mega_events=HomepageItems.get_all_mega_events(primary=2)
+        has_mega_events=True
+        if(all_mega_events==False):
+            has_mega_events=False
+            
         #getting featured events of PES   
         featured_events = HomepageItems.get_featured_events_for_societies(2)
 
@@ -375,8 +386,9 @@ def pesPage(request):
             'faculty_advisor':faculty_advisor,
             'eb_members':eb_members,
             'page_title':society.page_title,
-            'page_subtitle':society.secondary_paragraph
-
+            'page_subtitle':society.secondary_paragraph,
+            'all_mega_events':all_mega_events,
+            'has_mega_events':has_mega_events,
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
     
@@ -391,6 +403,10 @@ def iasPage(request):
     try:
         #getting object of IAS
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 4)
+        all_mega_events=HomepageItems.get_all_mega_events(primary=4)
+        has_mega_events=True
+        if(all_mega_events==False):
+            has_mega_events=False
         #getting featured events of IAS   
         featured_events = HomepageItems.get_featured_events_for_societies(4)
 
@@ -422,7 +438,9 @@ def iasPage(request):
             'faculty_advisor':faculty_advisor,
             'eb_members':eb_members,
             'page_title':society.page_title,
-            'page_subtitle':society.secondary_paragraph
+            'page_subtitle':society.secondary_paragraph,
+            'all_mega_events':all_mega_events,
+            'has_mega_events':has_mega_events,
 
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
@@ -437,6 +455,10 @@ def wiePage(request):
     try:
         #getting object of WIE
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 5)
+        all_mega_events=HomepageItems.get_all_mega_events(primary=5)
+        has_mega_events=True
+        if(all_mega_events==False):
+            has_mega_events=False
         #getting featured events of WIE    
         featured_events = HomepageItems.get_featured_events_for_societies(5)
 
@@ -469,7 +491,9 @@ def wiePage(request):
             'faculty_advisor':faculty_advisor,
             'eb_members':eb_members,
             'page_title':society.page_title,
-            'page_subtitle':society.secondary_paragraph
+            'page_subtitle':society.secondary_paragraph,
+            'all_mega_events':all_mega_events,
+            'has_mega_events':has_mega_events,
 
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
@@ -1409,7 +1433,7 @@ def mega_event_description_page(request,mega_event_id):
             return cv.custom_404
         else:
             if(mega_event.publish_mega_event):
-                all_events_of_mega_events = HomepageItems.all_events_of_mega_event(mega_event,1)
+                all_events_of_mega_events = HomepageItems.all_events_of_mega_event(mega_event,mega_event.mega_event_of.primary)
                 other_mega_event =  HomepageItems.get_other_mega_event(mega_event_id)
             
                 context={

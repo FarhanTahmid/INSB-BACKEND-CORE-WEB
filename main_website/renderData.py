@@ -344,8 +344,11 @@ class HomepageItems:
             if primary == 1:
                 return SuperEvents.objects.filter(publish_mega_event = True)
             else:
-                return SuperEvents.objects.filter(publish_mega_event = True,mega_event_of = primary)
-        
+                mega_events= SuperEvents.objects.filter(publish_mega_event = True,mega_event_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
+                if(mega_events.exists()):
+                    return mega_events
+                else:
+                    return False
         except Exception as e:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -368,7 +371,7 @@ class HomepageItems:
         '''This function return other mega even apart from this one'''
 
         try:
-            return SuperEvents.objects.filter(publish_mega_event=True).exclude(id=mega_event_id)
+            return SuperEvents.objects.filter(publish_mega_event=True).exclude(id=mega_event_id).order_by('-start_date')[:6]
         except Exception as e:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
