@@ -191,6 +191,20 @@ class Branch:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
+        
+    def delete_mega_event(mega_event_id):
+        try:
+            mega_event = SuperEvents.objects.get(id=mega_event_id)
+            events = Events.objects.filter(super_event_id=mega_event)
+            for event in events:
+                event.super_event_id = None
+                event.save()
+            mega_event.delete()
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
 
     
     def register_event_page1(super_event_id,event_name,event_type_list,event_description,event_date,event_time,event_organiser=None):
