@@ -2542,6 +2542,22 @@ def super_event_creation(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
 
+#Good Luck Arman, Fix this
+@login_required
+def super_event_table(request):              
+    return render(request,"Events/Super Event/super_event_table.html")
+
+#Good Luck Arman, Fix this
+@login_required
+def super_event_edit(request):              
+    return render(request,"Events/Super Event/super_event_edit_form.html")
+
+#Good Luck Arman, Fix this
+@login_required
+def super_event_add_event(request):              
+    return render(request,"Events/Super Event/super_event_add_event_form_tab.html")
+    
+
 @login_required
 def event_creation_form_page(request):
     

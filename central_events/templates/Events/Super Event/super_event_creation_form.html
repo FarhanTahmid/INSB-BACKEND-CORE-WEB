@@ -6,6 +6,7 @@
     <title>Create Event | IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     {% block common_css %}
         {% include "common_css.html" %}
     {% endblock common_css %}
@@ -44,6 +45,31 @@
                 width: 100%; /* Make the button full width on smaller screens */
             }
         }
+
+
+        h1{
+            text-align:center;
+            font-size:30px;
+            font-weight:bold;
+        }
+    
+        label{
+            font-size:20px;
+        }
+        
+
+        .app-body{
+            justify-content:center; 
+            margin-left:15%;
+            margin-right:15%;
+        }
+        
+        @media (max-width: 760px) {
+            .app-body {
+                margin-left: 5%;
+                margin-right: 5%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -75,26 +101,58 @@
         <!--navbar content-->
         
         <!-- ############ PAGE START-->
-        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
-            <br>
-            <br>
+        <div ui-view class="app-body" id="view">
+            
+            <div class="container">
+                <br>
+                <br>
+                <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span
+                    style="color:#00629B;">{{event_name}}</b></span></h2><br>
+                
+            
+                <h6>Note:</h6>
+                <ol style="justify-content:center;margin-bottom:15px;"><b>
+                    <li>If you want to add new venues, <span><b>update</b></span> any changes made first or <b>add</b> the venues first to prevent data loss</li>
+                        <li>If you don't want to submit a form link, then just erase the value None from the text field if it appears</li>
+                </ol></b>
+
+                <!--for error messages-->
+                <div class="container">
+                    <br>
+                    {% for message in messages  %}
+                        <p>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <p style="margin: 0;">{{message}}</p>
+                            </div>
+                        </p>
+                    {% endfor %}
+                    <br>
+                </div>
+                <!--for error messages end-->
+
+            </div>
+
+            <!--TabView for event creation-->
+        
+            <div>
+                {% block super_event_creation_form %}
+                    {% include "Events/Super Event/super_event_details_form_content.html" %}
+                {% endblock super_event_creation_form %}
+                {% comment %} <div>
+                    {% for message in messages %}
+                        <p>{{message}}</p>
+                    {% endfor %}
+                    <p></p>
+                </div> {% endcomment %}
+            </div>
+            <!--End of TabView-->
         </div>
         <!--PAGE END-->
 
-        <!--TabView for event creation-->
-        
-        <div>
-            {% block super_event_creation_form %}
-                {% include "Events/Super Event/super_event_details_form_content.html" %}
-            {% endblock super_event_creation_form %}
-            <div>
-                {% for message in messages %}
-                    <p>{{message}}</p>
-                {% endfor %}
-                <p></p>
-            </div>
-        </div>
-        <!--End of TabView-->
+
 
         <!--Theme Switcher-->
         {% block theme_switcher %}

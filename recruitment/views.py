@@ -39,7 +39,7 @@ def recruitment_home(request):
 
         #Checking user access
         user=request.user
-        has_access=(MDT_DATA.recruited_member_details_view_access(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
+        has_access=(MDT_DATA.recruitment_session_view_access_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
         if has_access:
             numberOfSessions = renderData.Recruitment.loadSession()
             
@@ -146,7 +146,7 @@ def recruitee_details(request,session_id,nsu_id):
                 data = renderData.Recruitment.getRecruitedMemberDetails(nsu_id=nsu_id,session_id=session_id)
                 # this parses the date in -DD-MM-YY Format for html
                 # this dob does not change any internal data, it is used just to convert the string type from database to load in to html
-                dob = datetime.datetime.strptime(str(
+                dob = datetime.strptime(str(
                     data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
                 address=data.home_address
                 
@@ -325,8 +325,9 @@ def recruitee_details(request,session_id,nsu_id):
                         messages.info(
                             request, "Something went wrong! Please Try again!")
                         return redirect('recruitment:recruitee_details',session_id, nsu_id)
+            return render(request,'recruited_member_details.html',context)
         else:
-            return render(request,'access_denied.html',context)
+            return render(request,'access_denied.html', {'user_data':user_data, 'all_sc_ag':sc_ag})
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

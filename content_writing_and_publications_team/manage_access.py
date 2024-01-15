@@ -32,9 +32,14 @@ class CWPTeam_Render_Access:
             faculty_advisor_access=False
             if(Access_Render.faculty_advisor_access(username=username)):
                 faculty_advisor_access=True
+
+            # generate branch team coordinator access
+            branch_team_coordinator_access=False
+            if(Access_Render.team_co_ordinator_access(team_id=ContentWritingTeam.get_team().id, username=username)):
+                branch_team_coordinator_access=True
             
             # if any of this is true, grant access
-            if(system_manager_access or branch_eb_access or faculty_advisor_access):
+            if(system_manager_access or branch_eb_access or faculty_advisor_access or branch_team_coordinator_access):
                 return True
             else:
                 return False
@@ -55,13 +60,13 @@ class CWPTeam_Render_Access:
             #Check if the member exits
             if(get_member.exists()):
                 #The member exists. Now check if it has manage team access
-                if(get_member[0].manage_team_access or CWPTeam_Render_Access.get_common_access(request) or Access_Render.team_co_ordinator_access(team_id=ContentWritingTeam.get_team().id, username=username)):
+                if(get_member[0].manage_team_access or CWPTeam_Render_Access.get_common_access(request)):
                     return True
                 else:
                     return False
             else:
                 #The member does not exist in the permissions table
-                if(CWPTeam_Render_Access.get_common_access(request) or Access_Render.team_co_ordinator_access(team_id=ContentWritingTeam.get_team().id, username=username)):
+                if(CWPTeam_Render_Access.get_common_access(request)):
                     return True
                 else:
                     return False
@@ -91,7 +96,10 @@ class CWPTeam_Render_Access:
                     return False
             else:
                 #The member does not exist in the permissions table
-                return False
+                if(CWPTeam_Render_Access.get_common_access(request)):
+                    return True
+                else:
+                    return False
         except Exception as e:
             if(CWPTeam_Render_Access.get_common_access(request)):
                 return True
