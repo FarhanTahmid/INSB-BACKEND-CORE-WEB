@@ -987,44 +987,48 @@ def mega_event_add_event(request,primary,mega_event_id):
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
 
-        mega_event = Branch.get_mega_event(mega_event_id,primary)
-        all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(primary)
-        events_of_mega_Event = Branch.get_events_of_mega_event(mega_event)
+        has_access = SC_Ag_Render_Access.access_for_event_details_edit(request,primary)
+        if has_access:
+            mega_event = Branch.get_mega_event(mega_event_id,primary)
+            all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(primary)
+            events_of_mega_Event = Branch.get_events_of_mega_event(mega_event)
 
-        if request.method == "POST":
+            if request.method == "POST":
 
-            if request.POST.get('add_event_to_mega_event'):
+                if request.POST.get('add_event_to_mega_event'):
 
-                event_list = request.POST.getlist('selected_events')
-                if Branch.add_events_to_mega_event(event_list,mega_event,1):
-                    messages.success(request,f"Events Added Successfully to {mega_event.super_event_name}")
-                else:
-                    messages.error(request,"Error occured!")
+                    event_list = request.POST.getlist('selected_events')
+                    if Branch.add_events_to_mega_event(event_list,mega_event,1):
+                        messages.success(request,f"Events Added Successfully to {mega_event.super_event_name}")
+                    else:
+                        messages.error(request,"Error occured!")
 
-                return redirect("chapters_and_affinity_group:mega_event_add_event",primary,mega_event_id)
-            
-            if request.POST.get('remove'):
+                    return redirect("chapters_and_affinity_group:mega_event_add_event",primary,mega_event_id)
+                
+                if request.POST.get('remove'):
 
-                event_id = request.POST.get('remove_event')
-                if Branch.delete_event_from_mega_event(event_id):
-                    messages.success(request,f"Event deleted Successfully from {mega_event.super_event_name}")
-                else:
-                    messages.error(request,"Error occured!")
+                    event_id = request.POST.get('remove_event')
+                    if Branch.delete_event_from_mega_event(event_id):
+                        messages.success(request,f"Event deleted Successfully from {mega_event.super_event_name}")
+                    else:
+                        messages.error(request,"Error occured!")
 
-                return redirect("chapters_and_affinity_group:mega_event_add_event",primary,mega_event_id)
+                    return redirect("chapters_and_affinity_group:mega_event_add_event",primary,mega_event_id)
 
-        context = {
-            'primary':primary,
-            'is_branch':False,
-            'user_data':user_data,
-            'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info,
-            'mega_event':mega_event,
-            'events':all_insb_events_with_interbranch_collaborations,
-            'events_of_mega_event':events_of_mega_Event,
-        }
+            context = {
+                'primary':primary,
+                'is_branch':False,
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'mega_event':mega_event,
+                'events':all_insb_events_with_interbranch_collaborations,
+                'events_of_mega_event':events_of_mega_Event,
+            }
 
-        return render(request,"Events/Super Event/super_event_add_event_form_tab.html",context)
+            return render(request,"Events/Super Event/super_event_add_event_form_tab.html",context)
+        else:
+            return render(request,'access_denied.html', {'user_data':user_data, 'all_sc_ag':sc_ag})
     
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
