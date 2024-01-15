@@ -1322,7 +1322,7 @@ def event_edit_graphics_form_tab(request, primary, event_id):
 
 def event_edit_graphics_form_links_sub_tab(request,primary,event_id):
 
-    ''' This function loads the content tab page of events '''
+    ''' This function loads the graphics tab page of events '''
 
      #Initially loading the events whose  links and images were previously uploaded
     #and can be editible
