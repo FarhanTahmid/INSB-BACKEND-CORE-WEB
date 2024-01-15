@@ -140,33 +140,33 @@ def event_details(request,event_id):
                 messages.warning(request,'Sorry you couldn\'t read us at the moment. Please try again later.')
 
             return redirect('main_website:event_details', event_id)
-        
-        get_event = Events.objects.get(id = event_id)
-        
-        # get host
-        if(get_event.publish_in_main_web):
-            event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
-            event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
+        try:
+            get_event = Events.objects.get(id = event_id)
+            
+            # get host
+            if(get_event.publish_in_main_web):
+                event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
+                event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
-            context = {
-                'is_live':True, #This enables the header and footer along with the wavy
-                'page_title':get_event.event_name,
-                'page_subtitle':get_event.event_organiser,
-                "event":get_event,
-                'media_url':settings.MEDIA_URL,
-                'event_banner_image' : event_banner_image,
-                'event_gallery_images' : event_gallery_images,
-                'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
-            }
-            return render(request,"Events/event_description_main.html", context)
+                context = {
+                    'is_live':True, #This enables the header and footer along with the wavy
+                    'page_title':get_event.event_name,
+                    'page_subtitle':get_event.event_organiser,
+                    "event":get_event,
+                    'media_url':settings.MEDIA_URL,
+                    'event_banner_image' : event_banner_image,
+                    'event_gallery_images' : event_gallery_images,
+                    'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+                }
+                return render(request,"Events/event_description_main.html", context)
+        except Events.DoesNotExist:
+            return cv.custom_404
         else:
             return redirect('main_website:event_homepage')
-    except:
-        return redirect('main_website:event_homepage')
-    # except Exception as e:
-    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-    #     return cv.custom_500(request)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
 
 
 # ###################### ACHIEVEMENTS ##############################
@@ -1405,20 +1405,23 @@ def mega_event_description_page(request,mega_event_id):
         
     try:
         mega_event = HomepageItems.get_mega_event(mega_event_id)
-        if(mega_event.publish_mega_event):
-            all_events_of_mega_events = HomepageItems.all_events_of_mega_event(mega_event,1)
-            other_mega_event =  HomepageItems.get_other_mega_event(mega_event_id)
-        
-            context={
-                'mega_event':mega_event,
-                'media_url':settings.MEDIA_URL,
-                'all_events_of_mega_event':all_events_of_mega_events,
-                'other_mega_event':other_mega_event,
-            }
-
-            return render(request, 'Events/mega_event_description_page.html',context)
-        else:
+        if(mega_event==False):
             return cv.custom_404
+        else:
+            if(mega_event.publish_mega_event):
+                all_events_of_mega_events = HomepageItems.all_events_of_mega_event(mega_event,1)
+                other_mega_event =  HomepageItems.get_other_mega_event(mega_event_id)
+            
+                context={
+                    'mega_event':mega_event,
+                    'media_url':settings.MEDIA_URL,
+                    'all_events_of_mega_event':all_events_of_mega_events,
+                    'other_mega_event':other_mega_event,
+                }
+
+                return render(request, 'Events/mega_event_description_page.html',context)
+            else:
+                return cv.custom_404
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

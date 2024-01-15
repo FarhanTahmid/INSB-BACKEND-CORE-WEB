@@ -356,6 +356,8 @@ class HomepageItems:
         '''this function returns the mega event of specific id'''
         try:
             return SuperEvents.objects.get(id = mega_event_id)
+        except SuperEvents.DoesNotExist:
+            return False
         except Exception as e:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
