@@ -864,7 +864,7 @@ def mega_event_edit(request,primary,mega_event_id):
                     else:
                         messages.warning(request,'Something went wrong while updating the event details')
 
-                    return redirect('central_branch:mega_event_edit', mega_event_id)
+                    return redirect('chapters_and_affinity_group:mega_event_edit', mega_event_id)
                 elif request.POST.get('delete_image'):
                     if(Branch.delete_mega_event_banner(mega_event_id)):
                         messages.success(request,'Banner Image removed successfully')
@@ -875,7 +875,7 @@ def mega_event_edit(request,primary,mega_event_id):
                         messages.info(request,'Mega event deleted successfully')
                     else:
                         messages.warning(request,'Something went wrong while deleting the event')
-                return redirect('central_branch:mega_event_edit',mega_event_id)
+                return redirect('chapters_and_affinity_group:mega_event_edit',mega_event_id)
 
             if mega_event.banner_image:
                 image_number = 1
