@@ -377,7 +377,7 @@ class HomepageItems:
         try:
 
             society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
-            events = Events.objects.filter(super_event_id = SuperEvents.objects.get(mega_event_of = society))
+            events = Events.objects.filter(super_event_id = SuperEvents.objects.get(mega_event_of = society),publish_in_main_web=True)
           
             dic = {}
             #using this loop, assigning the event with its corresponding banner picture in the dictionary as key and value

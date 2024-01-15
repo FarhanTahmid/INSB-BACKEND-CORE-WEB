@@ -264,7 +264,7 @@
                         </div>
                         <!--mega Card start-->
                         <div style="font-weight: bold; color: #002855; font-size: 15px;">
-                            <p><i class="fa-solid fa-angles-right"></i> OUR EVENTS</p>
+                            <p><i class="fa-solid fa-angles-right"></i> ORGANISED EVENTS</p>
                         </div>
                         <div class="mega-card-container">
                             {% for  key,value in all_events_of_mega_event.items %}
@@ -278,8 +278,8 @@
                                     <p><a href="{% url 'main_website:event_details' key.id %}">{{key.event_name}}</a></p>
                                 </div>
                                 <div style="color: #000000;">
-                                    {% if key.event_date%}
-                                    <p><i class="fa-regular fa-clock"></i>{{event_date}}</p>
+                                    {% if key.event_date %}
+                                    <p><i class="fa-regular fa-clock"></i>{{key.event_date}}</p>
                                     {% endif %}
                                 </div>
                             </div>

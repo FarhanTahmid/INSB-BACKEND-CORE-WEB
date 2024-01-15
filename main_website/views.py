@@ -1404,20 +1404,21 @@ def join_insb(request):
 def mega_event_description_page(request,mega_event_id):
         
     try:
-
         mega_event = HomepageItems.get_mega_event(mega_event_id)
-        all_events_of_mega_events = HomepageItems.all_events_of_mega_event(mega_event,1)
-        other_mega_event =  HomepageItems.get_other_mega_event(mega_event_id)
+        if(mega_event.publish_mega_event):
+            all_events_of_mega_events = HomepageItems.all_events_of_mega_event(mega_event,1)
+            other_mega_event =  HomepageItems.get_other_mega_event(mega_event_id)
         
-        context={
-            'mega_event':mega_event,
-            'media_url':settings.MEDIA_URL,
-            'all_events_of_mega_event':all_events_of_mega_events,
-            'other_mega_event':other_mega_event,
-        }
+            context={
+                'mega_event':mega_event,
+                'media_url':settings.MEDIA_URL,
+                'all_events_of_mega_event':all_events_of_mega_events,
+                'other_mega_event':other_mega_event,
+            }
 
-        return render(request, 'Events/mega_event_description_page.html',context)
-
+            return render(request, 'Events/mega_event_description_page.html',context)
+        else:
+            return cv.custom_404
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
