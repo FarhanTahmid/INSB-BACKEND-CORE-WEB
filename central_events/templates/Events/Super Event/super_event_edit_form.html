@@ -94,15 +94,15 @@
 
       <!-- navbar content -->
       <div id="content" class="app-content box-shadow-z0" role="main">
-          {% comment %} {% if is_branch %} {% endcomment %}
+          {% if is_branch %}
             {% block navbar %}
                 {% include 'navbar.html' %}
             {% endblock navbar %}
-          {% comment %} {% else %}
+          {% else %}
             {% block sc_ag_navbar %}
               {% include 'sc_ag_navbar.html' %}
             {% endblock sc_ag_navbar %}
-          {% endif %} {% endcomment %}
+          {% endif %}
         </div>
       <!--navbar content-->
       

@@ -85,7 +85,7 @@
         <div class="box">
             <div class="box-header" style="text-align:center;">
                 <br>
-                <h1>Super Event Creation Form</h1>
+                <h1>Mega Event Creation Form</h1>
             </div>
             {% comment %} <!--Error Message-->
             <div class="py-3 text-center">
@@ -144,7 +144,7 @@
                         {% if is_branch %}
                         <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger">Cancel</a>
                         {% else %}
-                        <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger">Cancel</a>
+                        <a href="{% url 'chapters_and_affinity_group:mega_events' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger">Cancel</a>
                         {% endif %}
                         <input type="submit" value="Submit" name="Submit" class="btn btn-outline b-success text-success">
                     </div>

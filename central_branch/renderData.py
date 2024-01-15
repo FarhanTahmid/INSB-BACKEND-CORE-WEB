@@ -128,21 +128,20 @@ class Branch:
 
         return team_members
     
-    def register_super_events(super_event_name,super_event_description,start_date,end_date):
+    def register_mega_events(event_organiser,super_event_name,super_event_description,start_date,end_date,banner_image):
         
-        '''This function registers the super event'''
+        '''This function registers the mega event'''
 
         try:
             if end_date=='':
-                saving_data = SuperEvents(super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date)
+                saving_data = SuperEvents(mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=event_organiser),super_event_name=super_event_name,super_event_description=super_event_description,banner_image=banner_image)
                 saving_data.save()
             else:
-                saving_data = SuperEvents(super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date,end_date=end_date)
+                saving_data = SuperEvents(mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=event_organiser),super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date,end_date=end_date,banner_image=banner_image)
                 saving_data.save()
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error("Can not register super event in database. Something went wrong!")
             return False
     
     def register_event_page1(super_event_id,event_name,event_type_list,event_description,event_date,event_time,event_organiser=None):
