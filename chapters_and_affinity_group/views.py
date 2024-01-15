@@ -27,7 +27,7 @@ from django.contrib.auth.decorators import login_required
 from membership_development_team.models import Renewal_Sessions,Renewal_requests
 from central_branch.view_access import Branch_View_Access
 from django.contrib import messages
-from central_events.models import Events
+from central_events.models import Events, SuperEvents
 from central_events.forms import EventForm
 from events_and_management_team.renderData import Events_And_Management_Team
 from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position
@@ -840,7 +840,7 @@ def event_control_homepage(request,primary):
         return cv.custom_500(request)
     
 @login_required
-def super_event_creation(request, primary):
+def mega_event_creation(request, primary):
 
     '''function for creating super event'''
 
@@ -872,14 +872,158 @@ def super_event_creation(request, primary):
                     super_event_description = request.POST.get('super_event_description')
                     start_date = request.POST.get('probable_date')
                     end_date = request.POST.get('final_date')
-                    Branch.register_super_events(super_event_name,super_event_description,start_date,end_date)
-                    messages.info(request,"New Super Event Added Successfully")
-                    return redirect('chapters_and_affinity_group:event_control_homepage', primary)
+                    banner_image = request.FILES.get('image')
+                    if(Branch.register_mega_events(primary,super_event_name,super_event_description,start_date,end_date,banner_image)):
+                        messages.info(request,"New Mega Event Added Successfully")
+                    else:
+                        messages.warning(request,"Something went wrong while creating the event")
+                    return redirect('chapters_and_affinity_group:mega_events', primary)
                 
             return render(request,"Events/Super Event/super_event_creation_form.html", context)
         else:
-            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
+            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag, 'user_data':user_data })
         
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
+    
+@login_required
+def mega_events(request,primary):
+    try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        has_access_to_create_event = SC_Ag_Render_Access.access_for_create_event(request,primary)
+        mega_events = SuperEvents.objects.filter(mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)).order_by('-pk')
+
+        context = {
+            'is_branch':False,
+            'mega_events':mega_events,
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'has_access_to_create_event':has_access_to_create_event
+        }
+
+        return render(request,"Events/Super Event/super_event_table.html",context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
+    
+@login_required
+def mega_event_edit(request,primary,mega_event_id):
+    try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+
+        has_access = SC_Ag_Render_Access.access_for_event_details_edit(request,primary)
+        if has_access:
+            mega_event = SuperEvents.objects.get(id=mega_event_id)
+
+            if request.method == 'POST':
+                if request.POST.get('Submit'):
+                    super_event_name = request.POST.get('super_event_name')
+                    super_event_description = request.POST.get('super_event_description')
+                    start_date = request.POST.get('probable_date')
+                    end_date = request.POST.get('final_date')
+                    publish_mega_event = request.POST.get('publish_event')
+                    banner_image = request.FILES.get('image')
+
+                    if(Branch.update_mega_event(mega_event_id,super_event_name,super_event_description,start_date,end_date,publish_mega_event,banner_image)):
+                        messages.success(request,'Event details updated successfully')
+                    else:
+                        messages.warning(request,'Something went wrong while updating the event details')
+
+                    return redirect('chapters_and_affinity_group:mega_event_edit', mega_event_id)
+                elif request.POST.get('delete_image'):
+                    if(Branch.delete_mega_event_banner(mega_event_id)):
+                        messages.success(request,'Banner Image removed successfully')
+                    else:
+                        messages.warning(request,'Something went wrong while deleting the image')
+                elif request.POST.get('delete_event'):
+                    if(Branch.delete_mega_event(mega_event_id)):
+                        messages.info(request,'Mega event deleted successfully')
+                    else:
+                        messages.warning(request,'Something went wrong while deleting the event')
+                return redirect('chapters_and_affinity_group:mega_event_edit',mega_event_id)
+
+            if mega_event.banner_image:
+                image_number = 1
+            else:
+                image_number = 0
+
+            context = {
+                'primary':primary,
+                'is_branch':False,
+                'mega_event':mega_event,
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'allowed_image_upload':1-image_number
+            }
+
+            return render(request,"Events/Super Event/super_event_edit_form.html",context)
+        else:
+            return redirect('chapters_and_affinity_group:mega_events')
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
+    
+@login_required
+def mega_event_add_event(request,primary,mega_event_id):
+    try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+
+        mega_event = Branch.get_mega_event_id(mega_event_id,primary)
+        all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(primary)
+        events_of_mega_Event = Branch.get_events_of_mega_event(mega_event)
+
+        if request.method == "POST":
+
+            if request.POST.get('add_event_to_mega_event'):
+
+                event_list = request.POST.getlist('selected_events')
+                if Branch.add_events_to_mega_event(event_list,mega_event,1):
+                    messages.success(request,f"Events Added Successfully to {mega_event.super_event_name}")
+                else:
+                    messages.error(request,"Error occured!")
+
+                return redirect("chapters_and_affinity_group:mega_event_add_event",primary,mega_event_id)
+            
+            if request.POST.get('remove'):
+
+                event_id = request.POST.get('remove_event')
+                if Branch.delete_event_from_mega_event(event_id):
+                    messages.success(request,f"Event deleted Successfully from {mega_event.super_event_name}")
+                else:
+                    messages.error(request,"Error occured!")
+
+                return redirect("chapters_and_affinity_group:mega_event_add_event",primary,mega_event_id)
+
+        context = {
+            'primary':primary,
+            'is_branch':False,
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'mega_event':mega_event,
+            'events':all_insb_events_with_interbranch_collaborations,
+            'events_of_mega_event':events_of_mega_Event,
+        }
+
+        return render(request,"Events/Super Event/super_event_add_event_form_tab.html",context)
+    
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1347,7 +1491,7 @@ def event_edit_graphics_form_tab(request, primary, event_id):
 
 def event_edit_graphics_form_links_sub_tab(request,primary,event_id):
 
-    ''' This function loads the content tab page of events '''
+    ''' This function loads the graphics tab page of events '''
 
      #Initially loading the events whose  links and images were previously uploaded
     #and can be editible
@@ -1774,3 +1918,4 @@ def event_feedback(request, primary, event_id):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
+    

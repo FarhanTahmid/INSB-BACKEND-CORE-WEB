@@ -33,7 +33,7 @@
                     </div>
                     <br>
                     <div class="form-group">
-                        <label>Super Event of</label>    
+                        <label>Mega Event of</label>    
                         <select multiple class="form-control" name="super_event">
                         <option selected value="null">--------------------</option>
                         {% for super_event in super_events %}
@@ -79,11 +79,11 @@
                     <br>  
                     <div style="text-align: center;">
                         {% if is_branch %}
-                        <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger" style="margin-bottom:15px">Cancel</a>
+                        <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger" style="margin-bottom:15px;">Cancel</a>
                         {% else %}
-                        <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger" style="margin-bottom:15px">Cancel</a>
+                        <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger" style="margin-bottom:15px;">Cancel</a>
                         {% endif %}
-                        <input type="submit" name="next" class="btn btn-outline b-success text-success" value="Continue to Collaborations Tab" style="margin-bottom:15px">
+                        <input type="submit" name="next" class="btn btn-outline b-success text-success" value="Continue to Collaborations Tab" style="margin-bottom:15px;">
                     </div>
                     <br> 
                 </div>

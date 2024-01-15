@@ -91,8 +91,15 @@ urlpatterns = [
     path('event_details/<int:event_id>/edit/graphics/links/',views.event_edit_graphics_form_links_sub_tab,name='event_edit_graphics_form_links_sub_tab'),
     #Event content tab page
     path('event_details/<int:event_id>/edit/content/',views.event_edit_content_form_tab,name='event_edit_content_form_tab'),
-    #Super Event Creation Form
-    path('events/create_super_event/',views.super_event_creation,name="super_event_creation"), 
+    #Mega Event Creation Form
+    path('events/create_mega_event/',views.mega_event_creation,name="mega_event_creation"), 
+    #Mega Events homepage
+    path('events/mega_events/',views.mega_events,name="mega_events"), 
+    #Mega Events edit
+    path('events/mega_event_edit/<int:mega_event_id>/',views.mega_event_edit,name="mega_event_edit"), 
+    #Add Events to Mega Event
+    path('events/mega_event_add_event/<int:mega_event_id>/',views.mega_event_add_event,name="mega_event_add_event"), 
+
     #Event preview
     path('event_details/<int:event_id>/preview/',views.event_preview,name='event_preview'),
     #Event Feedback

@@ -24,7 +24,7 @@
 
         /* You can customize the shadow properties */
     }
-    .form-control-label {
+    .form-control-label.slider-checkbox {
         display: inline-block;
         margin-right: 10px; /* Add margin for spacing between elements */
     }
@@ -53,7 +53,7 @@
         {% csrf_token %}
             <div class="box-body">
                 <div class="publish-switch">
-                    <label class="form-control-label">Publish Event:</label>
+                    <label class="form-control-label slider-checkbox">Publish Event:</label>
                     <span>                                            
                         <label class="ui-switch m-t-xs m-r">
                             <input name="publish_event" type="checkbox" {% if is_event_published %} checked {% endif %}>
@@ -81,7 +81,7 @@
                 </div>
                 <br>
                 <div class="form-group">
-                    <label>Super Event of</label>    
+                    <label>Mega Event of</label>    
                     <select multiple class="form-control" name="super_event">
                         <option value="null" {% if event_details.super_event_id is none %}selected{% endif %}>--------------------</option>
                         {% for super_event in super_events %}
@@ -185,7 +185,7 @@
                 <br>
                 <div class="form-group">
                     <div class="registration-fee-switch">
-                        <label class="form-control-label">Registration Fee:</label>
+                        <label class="form-control-label slider-checkbox">Registration Fee:</label>
                         <span>                                            
                             <label class="ui-switch m-t-xs m-r">
                                 <input name="registration_fee" type="checkbox" id="registrationCheckbox" {% if is_registration_fee_required %} checked {% endif %}>
@@ -212,7 +212,7 @@
 
                 <div class="form-group">
                     <div class="flagship-event-switch">
-                        <label class="form-control-label">Is Featured Event:</label>
+                        <label class="form-control-label slider-checkbox">Is Featured Event:</label>
                         <span>                                            
                             <label class="ui-switch m-t-xs m-r">
                                 <input name="is_featured_event" type="checkbox" id="Checkbox" {% if is_featured_event %} checked {% endif %}>
@@ -224,7 +224,7 @@
 
                 <div class="form-group">
                     <div class="flagship-event-switch">
-                        <label class="form-control-label">Flagship:</label>
+                        <label class="form-control-label slider-checkbox">Flagship:</label>
                         <span>                                            
                             <label class="ui-switch m-t-xs m-r">
                                 <input name="flagship_event" type="checkbox" id="Checkbox" {% if is_flagship_event%} checked {% endif %}>

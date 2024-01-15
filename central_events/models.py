@@ -5,6 +5,7 @@ from django.core.files.storage import FileSystemStorage
 from logistics_and_operations_team.models import Logistic_Item_List
 from port.models import Chapters_Society_and_Affinity_Groups
 from ckeditor.fields import RichTextField
+from django_resized import ResizedImageField
 
 
 # Create your models here.
@@ -34,13 +35,16 @@ class Event_Category(models.Model):
 #Super event table. A super event is like IEEE Day events. Lots of events are done under this
 #Super events primary key is the auto generated id
 class SuperEvents(models.Model):
+    mega_event_of=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE,default=5)#Default is set to 5 to keep branch as default organizer of events
     super_event_name=models.CharField(null=False,blank=False,max_length=150)
-    super_event_description=models.CharField(null=True,blank=True,max_length=500)
+    super_event_description=models.TextField(null=True,blank=True)
     start_date=models.DateField(null=True,blank=True,auto_now_add=False)
     end_date=models.DateField(null=True,blank=True,auto_now_add=False)
+    banner_image=ResizedImageField(null=True,blank=True,upload_to='Mega Event Banner Images/')
+    publish_mega_event=models.BooleanField(null=False,blank=False,default=False)
 
     class Meta:
-        verbose_name="Super Event"
+        verbose_name="Mega Event"
     def __str__(self) -> str:
         return str(self.pk)
     def get_absolute_url(self):

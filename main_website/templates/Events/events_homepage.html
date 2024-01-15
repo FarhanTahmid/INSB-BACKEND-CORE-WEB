@@ -133,11 +133,16 @@
         {% endblock stats %}
         </section>
 
+        <!--Mega Event Card with no search bar and load more option-->
+
+        {% block event_container_mega %}
+            {% include 'Events/mega_event_card_block.html' %}
+        {% endblock event_container_mega %} 
 
         <!--Event card with search function and load more option-->
         {% block event_container %}
             {% include 'Events/event_card_block.html' %}
-        {% endblock event_container %}
+        {% endblock event_container %} 
 
         <!--Footer-->
         {% block footer %}

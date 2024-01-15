@@ -3,7 +3,11 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    {% if is_branch %}
     <title>Update Event | IEEE NSU Student Branch</title>
+    {% else %}
+    <title>Update Event | {{sc_ag_info.group_name}}</title>
+    {% endif %}
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
     
     <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
@@ -134,22 +138,16 @@
 
                 <br>
 
-                <!--for error messages-->
-                <div class="container">
-                    <br>
-                    {% for message in messages  %}
-                        <p>
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                <p style="margin: 0;">{{message}}</p>
-                            </div>
-                        </p>
-                    {% endfor %}
-                    <br>
-                </div>
-                <!--for error messages end-->
+                {% for message in messages  %}
+                    <p>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{message}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </p>
+                {% endfor %}
 
                 <br>
             </div>

@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8" />
     {% if is_branch %}
-    <title>Update Event | IEEE NSU Student Branch</title>
+    <title>Update Mega Event | IEEE NSU Student Branch</title>
     {% else %}
-    <title>Update Event | {{sc_ag_info.group_name}}</title>
+    <title>Update Mega Event | {{sc_ag_info.group_name}}</title>
     {% endif %}
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
     
@@ -66,6 +66,7 @@
         label{
             font-size:20px;
         }
+        
 
         .app-body{
             justify-content:center; 
@@ -79,7 +80,6 @@
                 margin-right: 5%;
             }
         }
-        
     </style>
 </head>
 <body>
@@ -98,11 +98,11 @@
 
       <!-- navbar content -->
       <div id="content" class="app-content box-shadow-z0" role="main">
-          {% if is_branch %}
+        {% if is_branch %}
             {% block navbar %}
                 {% include 'navbar.html' %}
             {% endblock navbar %}
-          {% else %}
+        {% else %}
             {% block sc_ag_navbar %}
               {% include 'sc_ag_navbar.html' %}
             {% endblock sc_ag_navbar %}
@@ -120,52 +120,23 @@
           <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
           <h6>Note:</h6>
           <ol style="justify-content:center;margin-bottom:15px;"><b>
-          <li>Provide the drive link of the folder for this event by clicking on the (+) icon</li>
-          <li>You can add as many links as you want, and you can update or delete them</li>
+          <li>Add events for the {{mega_event.super_event_name}} by clicking on the (+) icon</li>
           <li>Make sure to save any changes you make before leaving</li>
           </ol></b>
 
           <br>
-
-            <!--for error messages-->
-            <div class="container">
-                <br>
-                {% for message in messages  %}
-                    <p>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <p style="margin: 0;">{{message}}</p>
-                        </div>
-                    </p>
-                  {% endfor %}
-                  <br>
-            </div>
-            <!--for error messages end-->
-
-            <br>
         </div>
           
-          <!--Tab view for Events-->
-          <!--Tab view Start-->
-          {% block event_edit_tab %}
-              {% include "Events/event_edit_tabs.html" %}
-          {% endblock event_edit_tab %}
-          <!--Tab view end-->
-          <br>
+        <!--Tab view for Events-->
+        <!--Tab view Start-->
+        {% block super_event_edit_tab %}
+            {% include "Events/Super Event/super_event_edit_tabs.html" %}
+        {% endblock super_event_edit_tab %}
+        <!--Tab view end-->
 
-          <!--Tab view for Events Graphics Sub Tab-->
-          <!--Tab view Start-->
-          {% block event_edit_graphics_sub_tab %}
-              {% include "Events/event_edit_graphics_sub_tabs.html" %}
-          {% endblock event_edit_graphics_sub_tab %}
-          <!--Tab view end-->
-          <br>
-
-          {% block graphics_team_edit_form_add_links %}
-              {% include "Events/graphics_team_event_form_add_links_content.html" %}
-          {% endblock graphics_team_edit_form_add_links %}
+        {% block super_event_add_event_form %}
+            {% include "Events/Super Event/super_event_add_event_form_tab_content.html" %}
+        {% endblock super_event_add_event_form %}
                             
                             
 

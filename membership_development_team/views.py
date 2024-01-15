@@ -84,7 +84,7 @@ def insb_members_list(request):
                         member.save()
                     messages.success(request,"All Members Account Status were Updated!")
                     return redirect('membership_development_team:members_list')        
-            members=Members.objects.order_by('position')
+            members=Members.objects.all()
             totalNumber=Members.objects.all().count()
             has_view_permission=True
             

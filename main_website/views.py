@@ -78,6 +78,7 @@ def event_homepage(request):
         date_and_event = HomepageItems.get_event_for_calender(request,1)
         upcoming_event = HomepageItems.get_upcoming_event(request,1)
         upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
+        all_mega_events = HomepageItems.get_all_mega_events(1)
         
         # prepare event stat list for event category with numbers
         get_event_stat=userData.getTypeOfEventStats(request,1)
@@ -113,6 +114,7 @@ def event_homepage(request):
             'data':event_stat,
             'years':get_years,
             'yearly_event_count':get_yearly_event_count,
+            'all_mega_events':all_mega_events,
         }
 
         return render(request,'Events/events_homepage.html',context)
@@ -1171,10 +1173,6 @@ def member_profile(request, ieee_id):
             member_data = MDT_DATA.get_member_data(ieee_id=ieee_id)
             sc_ag_position_data = SC_AG_Members.objects.filter(member=ieee_id)
 
-            #Easter EGG :)
-            if member_data.ieee_id == 98955436:
-                member_data.date_of_birth = "What are you up to?"
-
             context = {
                 'page_title':'Member Details',
                 'branch_teams': branch_teams,
@@ -1402,6 +1400,29 @@ def join_insb(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
+    
+def mega_event_description_page(request,mega_event_id):
+        
+    try:
+
+        mega_event = HomepageItems.get_mega_event(mega_event_id)
+        all_events_of_mega_events = HomepageItems.all_events_of_mega_event(mega_event,1)
+        other_mega_event =  HomepageItems.get_other_mega_event(mega_event_id)
+        
+        context={
+            'mega_event':mega_event,
+            'media_url':settings.MEDIA_URL,
+            'all_events_of_mega_event':all_events_of_mega_events,
+            'other_mega_event':other_mega_event,
+        }
+
+        return render(request, 'Events/mega_event_description_page.html',context)
+
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
+    
 # def test_view(request):
 #     #loading all the teams of Branch
 #     branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
@@ -1411,3 +1432,4 @@ def join_insb(request):
 #         }
  
 #     return render(request,"test.html",context=context)
+    
