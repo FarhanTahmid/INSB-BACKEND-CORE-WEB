@@ -159,7 +159,12 @@ def recruitee_details(request,session_id,nsu_id):
                 if(recruited_members.objects.filter(pk__gt=current_member.pk,session_id=session_id).exists()):
                     has_next_member=True
                     next_member=recruited_members.objects.filter(recruitment_time__gt=current_member.recruitment_time,session_id=session_id).order_by('recruitment_time').first()
-                    next_member_nsu_id=next_member.nsu_id
+                    if(next_member is not None):
+                        next_member_nsu_id=next_member.nsu_id
+                        has_next_member=True
+                    else:
+                        next_member_nsu_id=None
+                        has_next_member=False
                 else:
                     next_member_nsu_id=None
                     has_next_member=False
