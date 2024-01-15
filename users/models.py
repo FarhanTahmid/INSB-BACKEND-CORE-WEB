@@ -38,7 +38,7 @@ class Members(models.Model):
     gender=models.CharField(null=True,blank=True,max_length=7)
     facebook_url=models.URLField(null=True,blank=True,max_length=500)
     linkedin_url=models.URLField(null=True,blank=True,max_length=500)
-    user_profile_picture=models.ImageField(null=False,blank=False,default='user_profile_pictures/default_profile_picture.png',upload_to='user_profile_pictures/')
+    user_profile_picture=models.ImageField(null=True,blank=True,upload_to='user_profile_pictures/')
     team=models.ForeignKey(Teams,null=True,blank=True,on_delete=models.CASCADE)
     position=models.ForeignKey(Roles_and_Position,default=13,on_delete=models.CASCADE) #Default=13 means the position of a general member, check roles and positions table
     session=models.ForeignKey(recruitment_session,null=True,blank=True,on_delete=models.CASCADE) #recruitment session
@@ -46,7 +46,7 @@ class Members(models.Model):
     is_active_member = models.BooleanField(null=False,blank=False,default=True)
     class Meta:
         verbose_name='INSB Registered Members'
-        ordering = ['position__rank']
+        ordering = ['-position__rank']
     
     def __str__(self) -> str:
         return str(self.ieee_id)
