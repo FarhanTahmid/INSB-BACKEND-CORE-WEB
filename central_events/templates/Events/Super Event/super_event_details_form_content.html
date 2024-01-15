@@ -94,7 +94,7 @@
                 {% endfor %}
             </div> {% endcomment %}
 
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="box-body">
                     <div class="form-group">
@@ -126,7 +126,7 @@
                     <br>
                     <!-- img field -->
                     <div class="form-group">
-                        <label for="images">Upload Image:</label>
+                        <label for="images">Upload Image <span style="color:red">*<span></label>
                         <div class="custom-file">
 
                             <input type="file" class="custom-file-input" id="graphics-image-input" name="image" accept="image/*">
@@ -142,7 +142,7 @@
                     <br>
                     <div style="text-align: center;">
                         {% if is_branch %}
-                        <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger">Cancel</a>
+                        <a href="{% url 'central_branch:mega_events' %}" class="btn btn-outline b-danger text-danger">Cancel</a>
                         {% else %}
                         <a href="{% url 'chapters_and_affinity_group:mega_events' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger">Cancel</a>
                         {% endif %}

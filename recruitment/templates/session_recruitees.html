@@ -200,17 +200,7 @@
         <canvas id="doughnut" data-colors='["#00629B", "#e30b0b"]'></canvas>
       </div>
     </div>
-    
-    <br>
-    <!--Messages-->
-    <div style="justify-content:center; text-align:center;">
-      {% if messages %}
-          {% for message in messages %}
-              <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
-          {% endfor %}
-      {% endif %}
-    </div>
-  <!--Messages End-->
+  
   
     <!--END OF STAT-->
     <br>
@@ -252,7 +242,7 @@
               <th>Contact No.</th>
               <th>Major</th>
               <th>Recruitment Time (GMT +6:00)</th>
-              <th>Recruited By</th>
+              <th>Unique Code</th>
               <th>Comment</th>
               <th>Payment Status</th>
           </tr>
@@ -267,7 +257,7 @@
                   <td>{{ count.contact_no }}</td>
                   <td>{{ count.major }}</td>
                   <td>{{ count.recruitment_time }}</td>
-                  <td>{{ count.recruited_by }}</td>
+                  <td>{{ count.unique_code }}</td>
                   <td>{{ count.comment }}</td>
                   {% if count.ieee_payment_status %}
                     <td><img src="/static/admin/img/icon-yes.svg" alt="True"></td>

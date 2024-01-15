@@ -98,7 +98,7 @@ urlpatterns = [
     #Mega Events edit
     path('events/mega_event_edit/<int:mega_event_id>/',views.mega_event_edit,name="mega_event_edit"), 
     #Add Events to Mega Event
-    path('events/mega_event_add_event/',views.super_event_add_event,name="mega_event_add_event"), 
+    path('events/mega_event_add_event/<int:mega_event_id>/',views.mega_event_add_event,name="mega_event_add_event"), 
 
     #Event preview
     path('event_details/<int:event_id>/preview/',views.event_preview,name='event_preview'),
