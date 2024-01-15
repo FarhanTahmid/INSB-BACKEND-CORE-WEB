@@ -137,6 +137,14 @@ class Branch:
                 saving_data = SuperEvents(mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=event_organiser),super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date,banner_image=banner_image)
                 saving_data.save()
                 return True
+            elif start_date=='':
+                saving_data = SuperEvents(mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=event_organiser),super_event_name=super_event_name,super_event_description=super_event_description,end_date=end_date,banner_image=banner_image)
+                saving_data.save()
+                return True
+            elif start_date=='' and end_date=='':
+                saving_data = SuperEvents(mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=event_organiser),super_event_name=super_event_name,super_event_description=super_event_description,banner_image=banner_image)
+                saving_data.save()
+                return True
             else:
                 saving_data = SuperEvents(mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=event_organiser),super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date,end_date=end_date,banner_image=banner_image)
                 saving_data.save()
