@@ -436,7 +436,7 @@ def send_email(request):
         user_data=current_user.getUserData() #getting user data as dictionary file
 
         user = request.user
-        has_access=(Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username)
+        has_access=(Access_Render.team_co_ordinator_access(team_id=PRT_Data.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username)
                 or PRT_Data.prt_manage_email_access(user.username))
         
         if(has_access):

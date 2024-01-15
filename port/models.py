@@ -77,6 +77,7 @@ class Roles_and_Position(models.Model):
     
     class Meta:
         verbose_name='Registered positions'
+        ordering=['rank']
     def __str__(self) -> str:
         return self.role
 

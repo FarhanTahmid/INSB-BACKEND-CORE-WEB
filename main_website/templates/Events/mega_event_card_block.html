@@ -1,0 +1,158 @@
+{% load static %}
+
+<!--YOU MUST IMPORT THE event.css IN THE HTML FILE YOU ARE USING THIS BLOCK. JS IS INTEGRATED IN THIS BLOCK -->
+
+{% block event_container_mega %}
+
+<style>
+    .load-more-button-mega {
+      background-color: #002855;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius:7px;
+      transition: .3s ease-in-out;
+      font-weight:bold; 
+    }
+
+    .load-more-button-mega:hover{
+        background-color: #FFC72C;
+    }
+    .gdlr-blog-grid .excerpt-read-more{
+        color: #002855;
+    }
+    .gdlr-blog-grid .excerpt-read-more:hover{
+        color: #FFC72C;
+    }
+    .article-image {
+        width: 100%; /* Make the image fill the container */
+        height: 250px; /* Fix the image height to 250px */
+        object-fit: cover; /* Maintain aspect ratio and cover the container */
+      }
+      .search_event{
+        width: 100%;
+        max-width: 1140px;
+        margin: 60px auto 30px auto;
+        border: 2px solid #fecd13;
+        border-radius: 10px;
+        padding: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+      @media screen and (max-width: 1200px) {
+        .search_event {
+            width: 90%;
+            max-width: 960px;
+        }
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+<!-- Search Section -->
+<h3 style="text-align: center; margin: 40px 0px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">OUR MEGA E</span>VENTS</h3>
+
+
+<!--EVENT CARD CONTAINER-->
+
+<section class="event">
+    <div class="event-container container" style="padding:0px; "> 
+        
+        <div class="row m-0 box-container" style="transition: .3s ease-in-out; ">
+            {% for key, value in all_events.items %}
+            <div style="border-radius: 7px;" class="col-lg-4 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box_mega">
+                <article id="post-2255"
+                    class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
+                    <div class="gdlr-standard-style" style="height:500px;">
+                        <div class="gdlr-blog-thumbnail">
+                            <a href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}"> <img
+                                    class="article-image"
+                                    src="{{media_url}}{{value}}"
+                                    alt="event_banner" width="100%" /></a>
+                        </div>
+
+                        <div class="gdlr-blog-grid-content" style="overflow: hidden;">
+                            <header class="post-header">
+                                <div class="gdlr-blog-info">
+                                   
+                                    <div
+                                        class="blog-info blog-author gdlr-skin-info">
+                                        <span class="gdlr-sep">/</span>By {{key.event_organiser.group_name}}</div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <h3 class="gdlr-blog-title event_name"><a href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}">{{key.event_name}}</a></h3>
+                                <div class="clear"></div>
+                            </header>
+                            <!-- entry-header -->
+
+                            <div class="description-container" style="display: -webkit-box;
+                            overflow: hidden;
+                            -webkit-box-orient: vertical;
+                            text-overflow: ellipsis;
+                            -webkit-line-clamp: 2;">
+                                <p class="card-text">{{key.event_description | safe }}</p>
+                            </div>
+                            <a href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}" class="excerpt-read-more">Read More</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+    <div class="text-center mt-4 mb-5">
+          <button class="load-more-button-mega load-more">LOAD MORE</button>
+    </div>
+        
+    </div>
+</section>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    var element = document.getElementById('gdlr-blog-title');
+    var maxLength = 40; // Set your desired maximum length
+  
+    if (element.textContent.length > maxLength) {
+        element.textContent = element.textContent.substring(0, maxLength) + '...';
+    }
+  </script>
+
+<!-- event load more button -->
+<script>
+    $(document).ready(function () {
+        var visibleCount = 3; // Initial number of elements to show
+        var totalElements = $(".event_box_mega").length; // Total number of elements
+
+        // Hide all elements first
+        $(".event_box_mega").hide();
+
+        // Show the initial set of elements
+        $(".event_box_mega:lt(" + visibleCount + ")").show();
+
+        // Hide the "Load More" button if there are no more elements to show
+        if (visibleCount >= totalElements) {
+            $(".load-more-button-mega").hide();
+        }
+
+        // Handle "Load More" button click
+        $(".load-more-button-mega").on("click", function () {
+            visibleCount += 3; // Increase the count by 3 (or any desired number)
+
+            // Show the next set of elements
+            $(".event_box_mega:lt(" + visibleCount + ")").show();
+
+            // Hide the "Load More" button if there are no more elements to show
+            if (visibleCount >= totalElements) {
+                $(".load-more-button-mega").hide();
+            }
+        });
+    });
+    
+</script>
+
+
+{% endblock event_container_mega %}

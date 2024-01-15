@@ -1171,10 +1171,6 @@ def member_profile(request, ieee_id):
             member_data = MDT_DATA.get_member_data(ieee_id=ieee_id)
             sc_ag_position_data = SC_AG_Members.objects.filter(member=ieee_id)
 
-            #Easter EGG :)
-            if member_data.ieee_id == 98955436:
-                member_data.date_of_birth = "What are you up to?"
-
             context = {
                 'page_title':'Member Details',
                 'branch_teams': branch_teams,
@@ -1402,6 +1398,10 @@ def join_insb(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
+    
+def mega_event_description_page(request):
+        return render(request, 'mega_event_description_page.html')
+    
 # def test_view(request):
 #     #loading all the teams of Branch
 #     branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
@@ -1411,3 +1411,4 @@ def join_insb(request):
 #         }
  
 #     return render(request,"test.html",context=context)
+    

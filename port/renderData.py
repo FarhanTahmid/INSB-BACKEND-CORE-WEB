@@ -152,7 +152,17 @@ class PortData:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"An internal Database error occured loading the Positions for Volunteer Members!")
             return False
+    def get_all_positions_of_everyone(request,sc_ag_primary):
+        try:
+            all_positions=Roles_and_Position.objects.filter(role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary))
+            return all_positions
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"An internal Database error occured loading all Positions!")
+            return False
         
+           
     def get_teams_of_sc_ag_with_id(request,sc_ag_primary):
         '''Returns the Active teams of all Branch+Sc AG'''
         try:
