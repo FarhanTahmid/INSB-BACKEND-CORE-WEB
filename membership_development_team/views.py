@@ -1079,20 +1079,25 @@ def site_registration_request_home(request):
         sc_ag=PortData.get_all_sc_ag(request=request)
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
-        # Getting all the requests for portal site
-        get_requests=Portal_Joining_Requests.objects.all().order_by('application_status','-pk')
-        #form link for site registration
-        form_link=f"{request.META['HTTP_HOST']}/portal/membership_development_team/insb_site_registration_form"
-        form_link_faculty=f"{request.META['HTTP_HOST']}/portal/membership_development_team/insb_site_registration_form/faculty"
-        context={
-            'user_data':user_data,
-            'all_sc_ag':sc_ag,
-            'requests':get_requests,
-            'form_link':form_link,
-            'form_link_faculty':form_link_faculty,
-        }
-        
-        return render(request,'Site Registration/site_registration_home.html',context)
+        user = request.user
+        has_access=(Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
+        if has_access:
+            # Getting all the requests for portal site
+            get_requests=Portal_Joining_Requests.objects.all().order_by('application_status','-pk')
+            #form link for site registration
+            form_link=f"{request.META['HTTP_HOST']}/portal/membership_development_team/insb_site_registration_form"
+            form_link_faculty=f"{request.META['HTTP_HOST']}/portal/membership_development_team/insb_site_registration_form/faculty"
+            context={
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'requests':get_requests,
+                'form_link':form_link,
+                'form_link_faculty':form_link_faculty,
+            }
+            
+            return render(request,'Site Registration/site_registration_home.html',context)
+        else:
+            return render(request,'access_denied.html', {'user_data':user_data, 'all_sc_ag':sc_ag})
     
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
