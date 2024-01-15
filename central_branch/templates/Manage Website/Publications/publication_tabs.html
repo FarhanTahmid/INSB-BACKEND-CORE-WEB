@@ -16,15 +16,21 @@
         const currentPageUrl = window.location.href;
       
         // Find the links in the navigation bar
-        const navLinks = document.querySelectorAll(".tab a");
+        const tabs = document.querySelectorAll(".tabs li");
       
-        // Loop through the links and add a "active" class to the matching link
-        navLinks.forEach(function (link) {
+        // Loop through the tabs and add a "active" class to the matching tab
+        tabs.forEach(function (tab) {
+          const link = tab.querySelector("a");
           if (link.href === currentPageUrl) {
             link.classList.add("active");
           }
+          
+          // Add click event listener to the entire tab
+          tab.addEventListener("click", function() {
+            window.location.href = link.href;
+          });
         });
-      });
+    });
 </script>
 
 <div class="tabs-container" style="display: flex; flex-direction: column;">

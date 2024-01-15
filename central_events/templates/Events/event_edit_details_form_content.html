@@ -81,7 +81,7 @@
                 </div>
                 <br>
                 <div class="form-group">
-                    <label>Super Event of</label>    
+                    <label>Mega Event of</label>    
                     <select multiple class="form-control" name="super_event">
                         <option value="null" {% if event_details.super_event_id is none %}selected{% endif %}>--------------------</option>
                         {% for super_event in super_events %}
@@ -224,7 +224,7 @@
 
                 <div class="form-group">
                     <div class="flagship-event-switch">
-                        <label class="form-control-label">Flagship:</label>
+                        <label class="form-control-label slider-checkbox">Flagship:</label>
                         <span>                                            
                             <label class="ui-switch m-t-xs m-r">
                                 <input name="flagship_event" type="checkbox" id="Checkbox" {% if is_flagship_event%} checked {% endif %}>
