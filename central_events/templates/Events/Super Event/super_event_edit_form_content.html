@@ -127,7 +127,7 @@
                         <label class="form-control-label slider-checkbox">Publish Event:</label>
                         <span>                                            
                             <label class="ui-switch m-t-xs m-r">
-                                <input name="publish_event" type="checkbox" {% if is_event_published %} checked {% endif %}>
+                                <input name="publish_event" type="checkbox" {% if mega_event.publish_mega_event %} checked {% endif %}>
                                     <i></i>
                             </label>                
                         </span>
@@ -141,18 +141,19 @@
                             class="form-control w-100" 
                             placeholder="Event Name"
                             autocomplete="off"
-                            required/>
+                            required
+                            value="{{mega_event.super_event_name}}"/>
                     </div>
                     <br>
                     <div class="form-group">
                         <label>Description <span style="color:red">*<span></label>
                         <textarea type="text" name="super_event_description" placeholder="Write within 500 words"
-                            class="form-control" rows="10"></textarea>
+                            class="form-control" rows="10">{{mega_event.super_event_description|safe}}</textarea>
                     </div>
                     <br>
                     <div class="form-group">
                         <label for="">Add a Probable Date For the Event</label>
-                        <input type="date" name="probable_date" class="form-control w-100" />
+                        <input type="date" name="probable_date" class="form-control w-100" value="{{mega_event.start_date|date:"Y-m-d"}}" />
                     </div>
                     <br>
                     <div class="form-group">

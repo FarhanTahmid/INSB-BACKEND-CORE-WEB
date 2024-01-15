@@ -2497,9 +2497,9 @@ def event_control_homepage(request):
     
 
 @login_required
-def super_event_creation(request):
+def mega_event_creation(request):
 
-    '''function for creating super event'''
+    '''function for creating mega event'''
 
     try:
         has_access = Branch_View_Access.get_create_event_access(request)
@@ -2523,9 +2523,10 @@ def super_event_creation(request):
                     super_event_description = request.POST.get('super_event_description')
                     start_date = request.POST.get('probable_date')
                     end_date = request.POST.get('final_date')
-                    Branch.register_super_events(super_event_name,super_event_description,start_date,end_date)
-                    messages.success(request,"New Super Event Added Successfully")
-                    return redirect('central_branch:event_control')
+                    banner_image = request.FILES.get('image')
+                    Branch.register_mega_events(1,super_event_name,super_event_description,start_date,end_date,banner_image)
+                    messages.success(request,"New Mega Event Added Successfully")
+                    return redirect('central_branch:mega_events')
                 
             context={
                 'user_data':user_data,
@@ -2542,15 +2543,52 @@ def super_event_creation(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
 
-#Good Luck Arman, Fix this
 @login_required
-def super_event_table(request):              
-    return render(request,"Events/Super Event/super_event_table.html")
+def mega_events(request):
+    try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        #calling it regardless to run the page
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,5)
+        is_branch = True
+        has_access_to_create_event = Branch_View_Access.get_create_event_access(request)
 
-#Good Luck Arman, Fix this
+        mega_events = SuperEvents.objects.all().order_by('-pk')
+
+        context = {
+            'is_branch':True,
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'is_branch' : is_branch,
+            'mega_events':mega_events,
+            'has_access_to_create_event':has_access_to_create_event
+        }
+
+        return render(request,"Events/Super Event/super_event_table.html",context)         
+
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
+
+
 @login_required
-def super_event_edit(request):              
-    return render(request,"Events/Super Event/super_event_edit_form.html")
+def mega_event_edit(request,mega_event_id):
+    try:
+        mega_event = SuperEvents.objects.get(id=mega_event_id)
+
+        context = {
+            'is_branch':True,
+            'mega_event':mega_event
+        }
+
+        return render(request,"Events/Super Event/super_event_edit_form.html",context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
 
 #Good Luck Arman, Fix this
 @login_required

@@ -27,7 +27,7 @@ from django.contrib.auth.decorators import login_required
 from membership_development_team.models import Renewal_Sessions,Renewal_requests
 from central_branch.view_access import Branch_View_Access
 from django.contrib import messages
-from central_events.models import Events
+from central_events.models import Events, SuperEvents
 from central_events.forms import EventForm
 from events_and_management_team.renderData import Events_And_Management_Team
 from port.models import Chapters_Society_and_Affinity_Groups
@@ -763,7 +763,7 @@ def event_control_homepage(request,primary):
         return cv.custom_500(request)
     
 @login_required
-def super_event_creation(request, primary):
+def mega_event_creation(request, primary):
 
     '''function for creating super event'''
 
@@ -795,14 +795,66 @@ def super_event_creation(request, primary):
                     super_event_description = request.POST.get('super_event_description')
                     start_date = request.POST.get('probable_date')
                     end_date = request.POST.get('final_date')
-                    Branch.register_super_events(super_event_name,super_event_description,start_date,end_date)
-                    messages.info(request,"New Super Event Added Successfully")
-                    return redirect('chapters_and_affinity_group:event_control_homepage', primary)
+                    banner_image = request.FILES.get('image')
+                    Branch.register_mega_events(primary,super_event_name,super_event_description,start_date,end_date,banner_image)
+                    messages.info(request,"New Mega Event Added Successfully")
+                    return redirect('chapters_and_affinity_group:mega_events', primary)
                 
             return render(request,"Events/Super Event/super_event_creation_form.html", context)
         else:
-            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag })
+            return render(request, 'access_denied.html', { 'all_sc_ag':sc_ag, 'user_data':user_data })
         
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
+    
+@login_required
+def mega_events(request,primary):
+    try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        has_access_to_create_event = SC_Ag_Render_Access.access_for_create_event(request,primary)
+        mega_events = SuperEvents.objects.filter(mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)).order_by('-pk')
+
+        context = {
+            'is_branch':False,
+            'mega_events':mega_events,
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'has_access_to_create_event':has_access_to_create_event
+        }
+
+        return render(request,"Events/Super Event/super_event_table.html",context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
+    
+@login_required
+def mega_event_edit(request,primary,mega_event_id):
+    try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+        mega_event = SuperEvents.objects.get(id=mega_event_id)
+
+        context = {
+            'primary':primary,
+            'is_branch':False,
+            'mega_event':mega_event,
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+        }
+
+        return render(request,"Events/Super Event/super_event_edit_form.html",context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1697,3 +1749,4 @@ def event_feedback(request, primary, event_id):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
+    
