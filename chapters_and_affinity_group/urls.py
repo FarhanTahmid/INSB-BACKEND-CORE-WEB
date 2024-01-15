@@ -56,5 +56,5 @@ urlpatterns = [
     #Mega Events edit
     path('<str:primary>/events/mega_event_edit/<int:mega_event_id>/',views.mega_event_edit,name="mega_event_edit"), 
     #Add Events to Mega Event
-    #path('<str:primary>/events/mega_event_add_event/',views.super_event_add_event,name="mega_event_add_event"), 
+    path('<str:primary>/events/mega_event_add_event/<int:mega_event_id>/',views.mega_event_add_event,name="mega_event_add_event"), 
 ]

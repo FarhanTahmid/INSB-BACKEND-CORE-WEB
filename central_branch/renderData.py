@@ -1583,4 +1583,71 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
 
+    def get_mega_event_id(id,primary):
+
+        '''This function returns the mega_event_id'''
+
+        try:
+            society = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
+            return SuperEvents.objects.get(id = id,mega_event_of = society)
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def add_events_to_mega_event(event_list,mega_event,primary):
+
+        '''This function add the events to the mega events'''
+
+        try:
+            all_events_of_society = Branch.load_all_inter_branch_collaborations_with_events(primary)
+            #iterating over the event id found
+            for i in all_events_of_society:
+                #getting that event object and assigning it to that specific event
+                event = Events.objects.get(id = i.id)
+
+                if str(event.id) in event_list:
+                    event.super_event_id = mega_event
+                else:
+                    event.super_event_id = None
+                event.save()
+            return True
+        
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def get_events_of_mega_event(mega_event):
+
+        '''This function returns all the events of the specific mega event'''
+
+        try:
+
+            return Events.objects.filter(super_event_id = mega_event)
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+
+    def delete_event_from_mega_event(id):
+        
+        '''This function removes the event from the mega event'''
+
+        try:
+            #retriving the specific event and setting its super_event_id to none
+            event = Events.objects.get(pk = id)
+            event.super_event_id = None
+            event.save()
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+
+        
+        
+
 
