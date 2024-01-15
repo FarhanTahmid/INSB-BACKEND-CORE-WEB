@@ -894,6 +894,58 @@ def mega_event_edit(request,primary,mega_event_id):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
+    
+@login_required
+def mega_event_add_event(request,primary,mega_event_id):
+    try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+
+        mega_event = Branch.get_mega_event_id(mega_event_id,primary)
+        all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(primary)
+        events_of_mega_Event = Branch.get_events_of_mega_event(mega_event)
+
+        if request.method == "POST":
+
+            if request.POST.get('add_event_to_mega_event'):
+
+                event_list = request.POST.getlist('selected_events')
+                if Branch.add_events_to_mega_event(event_list,mega_event,1):
+                    messages.success(request,f"Events Added Successfully to {mega_event.super_event_name}")
+                else:
+                    messages.error(request,"Error occured!")
+
+                return redirect("chapters_and_affinity_group:mega_event_add_event",primary,mega_event_id)
+            
+            if request.POST.get('remove'):
+
+                event_id = request.POST.get('remove_event')
+                if Branch.delete_event_from_mega_event(event_id):
+                    messages.success(request,f"Event deleted Successfully from {mega_event.super_event_name}")
+                else:
+                    messages.error(request,"Error occured!")
+
+                return redirect("chapters_and_affinity_group:mega_event_add_event",primary,mega_event_id)
+
+        context = {
+            'primary':primary,
+            'is_branch':False,
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'sc_ag_info':get_sc_ag_info,
+            'mega_event':mega_event,
+            'events':all_insb_events_with_interbranch_collaborations,
+            'events_of_mega_event':events_of_mega_Event,
+        }
+
+        return render(request,"Events/Super Event/super_event_add_event_form_tab.html",context)
+    
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
 
 @login_required
 def event_creation_form_page(request,primary):

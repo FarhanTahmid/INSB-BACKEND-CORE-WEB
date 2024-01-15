@@ -85,16 +85,16 @@
                 <hr>
                 <div id="events-container" class="mt-3">
                     <label>Events:</label> 
-                    {% comment %} {% for note,value in all_notes_content.items %} {% endcomment %}
+                    {% for event in events_of_mega_event %}
                     <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                         <div class="col-sm-11">
-                            <a href="#" class="btn btn-link btn-block">Sample</a>
+                            <a href="#" class="btn btn-link btn-block">{{event.event_name}}</a>
                         </div>
                         <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('')">✖</button>
+                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{event.pk}}')">✖</button>
                         </div>
                     </div>
-                    {% comment %} {% endfor %} {% endcomment %}
+                    {% endfor %}
                 </div>
                 
                     
@@ -113,15 +113,9 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="z-index=10000000;">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add member to Executive Panel!</h5>
+                <h5 class="modal-title">Add Events to {{mega_event.super_event_name}}</h5>
             </div>
-            <div class="modal-body p-lg">
-                <h6>Note:</h6>
-                <ol style="justify-content:center;margin-bottom:15px;"><b>
-                    <li>If you want to add new venues, <span><b>update</b></span> any changes made first or <b>add</b> the venues first to prevent data loss</li>
-                        <li>If you don't want to submit a form link, then just erase the value None from the text field if it appears</li>
-                </ol></b>
-            </div>
+
 
             <!--Search table-->
             <form method="POST">
@@ -164,18 +158,31 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {% for key, value in events.items %}
                                     <tr>
-                                        <td>asdfsfsdf</td>
-                                        <td>hdfhdhdh</td>
-                                        <td>htthrehethe</td>
-                                        <td>sdfdscdff</td>
-                                        <td>sdfdscdff</td>
+                                      <td>{{ forloop.counter }}</td>
+                                        {% if is_branch %}
+                                        <td><a class="event_name_column_content" style="color:blue;" href="{% url 'central_branch:event_edit_form' key.id %}">{{key.event_name }}</a></td>
+                                        {% else %}
+                                        <td><a class="event_name_column_content" style="color:blue;" href="{% url 'chapters_and_affinity_group:event_edit_form' sc_ag_info.primary key.id %}">{{key.event_name }}</a></td>
+                                        {% endif %}
+                                        <td>{{ key.event_organiser.group_name }}</td>
                                         <td>
-                                            <input type="checkbox" id="select" name="member_select" value={{member.ieee_id}}>
+                                          {% for collabs in value %}
+                                          <ul style="list-style-type: none; text-align:left;">
+                                                <li>{{ collabs }}</li>
+                                          </ul>
+                                        
+                                          {% endfor %}
+                                        </td>
+                                        <td>{{ key.event_date }}</td>
+                                        <td>
+                                            <input type="checkbox" name="selected_events" {% if key.super_event_id.pk == mega_event.pk%} value="{{ key.pk }}" checked {% else %} value="{{ key.pk }}"{% endif %}>
                                         </td>
                                     </tr>
+                                    {% endfor %}
                                     
-                                <tbody>
+                                  <tbody>
                             </table>
                         </div>
                         <!--		Start Pagination -->
@@ -194,7 +201,7 @@
                 <!--Events table end-->
             
                 <div class="modal-footer">
-                    <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_event_type" value="Add">
+                    <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_event_to_mega_event" value="Add">
                     <button  class="btn btn-outline-danger" data-dismiss="modal">Cancel</button> 
                 </div>
             </form>
@@ -208,6 +215,8 @@
 <!-- Confirmation modal for delete -->
 <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-dialog-top" role="document">
+    <form method="POST">
+        {% csrf_token %}
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
@@ -215,18 +224,18 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+        
         <div class="modal-body">
-            <form method="POST">
-                {% csrf_token %}
-            <p><input id="remove_note" name= "remove_note" type="hidden"></p>
-            Are you sure you want to delete the note?
+            
+            <p><input id="remove_event" name= "remove_event" type="hidden"></p>
+            Are you sure you want to remove the event?
         </div>
         <div class="modal-footer">
             <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
         </div>
-        </form>
     </div>
+    </form>
 </div>
 </div>
 
@@ -235,7 +244,7 @@
 <script>
     function openModal(remove_note) {
         // Set data in the modal
-        var inputElement = document.getElementById('remove_note');    
+        var inputElement = document.getElementById('remove_event');    
         inputElement.value=remove_note;
     }
 </script>
