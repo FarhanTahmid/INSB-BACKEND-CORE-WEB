@@ -366,7 +366,7 @@ class HomepageItems:
         '''This function return other mega even apart from this one'''
 
         try:
-            return SuperEvents.objects.all().exclude(id=mega_event_id)
+            return SuperEvents.objects.filter(publish_mega_event=True).exclude(id=mega_event_id)
         except Exception as e:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
