@@ -630,7 +630,7 @@ class Branch:
         '''This function loads all the EB panel members from the branch.
         Checks if the position of the member is True for is_eb_member and if member exists in current EB Panel'''
         get_current_panel=Branch.load_current_panel()
-        members=Members.objects.all().order_by('position')
+        members=Members.objects.all()
         eb_panel=[]
         for member in members:
             if member.position.is_eb_member:
@@ -819,7 +819,7 @@ class Branch:
     def load_panel_members_by_panel_id(panel_id):
         '''This load all the info associated with a panel from Panel members Table'''
         try:
-            get_panel_members=Panel_Members.objects.filter(tenure=panel_id).all().order_by('position')
+            get_panel_members=Panel_Members.objects.filter(tenure=panel_id).all()
             return get_panel_members
         except:
             raise Http404("The requested page does not exist.")

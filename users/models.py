@@ -46,7 +46,7 @@ class Members(models.Model):
     is_active_member = models.BooleanField(null=False,blank=False,default=True)
     class Meta:
         verbose_name='INSB Registered Members'
-        ordering = ['-position__rank']
+        ordering = ['position__rank']
     
     def __str__(self) -> str:
         return str(self.ieee_id)
@@ -110,16 +110,10 @@ class Panel_Members(models.Model):
     ex_member=models.ForeignKey(Alumni_Members,on_delete=models.CASCADE,null=True,blank=True)
     position=models.ForeignKey(Roles_and_Position,on_delete=models.CASCADE)
     team=models.ForeignKey(Teams,null=True,blank=True,on_delete=models.CASCADE)
-
-    class PanelMembersManager(models.Manager):
-        def get_queryset(self):
-            return super().get_queryset().filter(tenure__current=True).order_by("position__rank")
-
-    objects = PanelMembersManager()
     
     class Meta:
         verbose_name="Panel Members (Whole Tenure)"
-    
+        ordering=['position__rank']
     def __str__(self) -> str:
         return str(self.member) 
     
