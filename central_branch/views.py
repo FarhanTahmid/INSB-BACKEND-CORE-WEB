@@ -2651,7 +2651,7 @@ def mega_event_add_event(request,mega_event_id):
         #calling it regardless to run the page
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,1)
 
-        mega_event = Branch.get_mega_event_id(mega_event_id,1)
+        mega_event = Branch.get_mega_event(mega_event_id)
         all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(1)
         events_of_mega_Event = Branch.get_events_of_mega_event(mega_event)
 
