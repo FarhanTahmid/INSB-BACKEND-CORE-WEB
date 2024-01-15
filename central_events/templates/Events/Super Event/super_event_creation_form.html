@@ -3,7 +3,11 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Create Event | IEEE NSU Student Branch</title>
+    {% if is_branch %}
+    <title>Create Mega Event | IEEE NSU Student Branch</title>
+    {% else %}
+    <title>Create Mega Event | {{sc_ag_info.group_name}}</title>
+    {% endif %}
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -112,8 +116,17 @@
             
                 <h6>Note:</h6>
                 <ol style="justify-content:center;margin-bottom:15px;"><b>
-                    <li>If you want to add new venues, <span><b>update</b></span> any changes made first or <b>add</b> the venues first to prevent data loss</li>
-                        <li>If you don't want to submit a form link, then just erase the value None from the text field if it appears</li>
+                    <li>All ( * ) marked fields are mandatory to be filled</li>
+                    <li>Maximum 1 picture can be uploaded in dedicated sections</li>
+                    <li>Don’t forget to save the changes by clicking save button</li>
+                       {% comment %} All ( * ) marked fields are mandatory to be filled
+ Keep in mind your description does not exceed the character count
+Maximum 1 picture can be uploaded in dedicated sections
+To replace a picture, delete the previous one and add a new one
+You can view the image by clicking on it
+You can add as many links as you want
+You can see your changes by clicking the preview button
+Don’t forget to save the changes by clicking save button {% endcomment %}
                 </ol></b>
 
                 <!--for error messages-->
