@@ -120,7 +120,7 @@
                 <h1>Mega Event Edit Form</h1>
             </div>
 
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="box-body">
                     <div class="publish-switch">
@@ -158,7 +158,7 @@
                     <br>
                     <div class="form-group">
                         <label for="">Add Final Date For the Event (If finalised)</label>
-                        <input type="date" name="final_date" class="form-control w-100" />
+                        <input type="date" name="final_date" class="form-control w-100" value="{{mega_event.end_date|date:"Y-m-d"}}"/>
                     </div>
                     <br>
                     <!-- img field -->
@@ -178,13 +178,86 @@
                     <br>
                     <div style="text-align: center;">
                         <input type="submit" value="Submit" name="Submit" class="btn btn-outline b-success text-success" style="margin-bottom:15px;">
-                        {% comment %} {% if is_branch %} {% endcomment %}
-                        <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger" style="margin-bottom:15px;">Cancel</a>
-                        {% comment %} {% else %}
-                        <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger">Cancel</a>
-                        {% endif %} {% endcomment %}
+                        {% if is_branch %}
+                        <a href="{% url 'central_branch:mega_events' %}" class="btn btn-outline b-danger text-danger" style="margin-bottom:15px;">Cancel</a>
+                        {% else %}
+                        <a href="{% url 'chapters_and_affinity_group:mega_events' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger" style="margin-bottom:15px;">Cancel</a>
+                        {% endif %}
                     </div>
+                    <hr>
                     <br>
+                    {% if mega_event.banner_image %}
+                <div class="image-container">
+                    <img
+                    src="{{media_url}}{{ mega_event.banner_image}}"
+                    alt="Image"
+                    class="img-fluid image-container-item"
+                    data-toggle="modal"
+                    data-target="#fullViewModal"
+                    />
+                
+                    <!-- Full View Modal -->
+                    <div
+                    id="fullViewModal"
+                    class="modal fade"
+                    tabindex="-1"
+                    role="dialog"
+                    aria-labelledby="fullViewModalLabel"
+                    aria-hidden="true"
+                    >
+                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="fullViewModalLabel">Image Full View</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                
+                        <div class="modal-body">
+                            <img
+                            src="{{media_url}}{{mega_event.banner_image}}"
+                            alt="Image"
+                            class="img-fluid"
+                            style="width: 100%; margin: 0 auto; display: block;"
+                            />
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                
+                    <!-- Cross button to trigger modal -->
+                    <button type="button" class="cross-button" data-toggle="modal" data-target="#deleteModal" onclick="openModal('{{mega_event.banner_image}}')">
+                    &times; <!-- Use the "times" symbol (X) as a close icon -->
+                    </button>
+                
+                    <!-- Confirm Delete Modal -->
+                    <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <p><input id="graphics_image_id" name= "remove_image" type="hidden"></p>
+                                <p>Are you sure you want to delete this image?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="submit" class="btn btn-outline-danger buttons" value="Delete" name="delete_image">
+                                <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                {% endif %}
                 </div>
             </form>
         </div>

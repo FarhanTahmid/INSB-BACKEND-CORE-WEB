@@ -796,8 +796,10 @@ def mega_event_creation(request, primary):
                     start_date = request.POST.get('probable_date')
                     end_date = request.POST.get('final_date')
                     banner_image = request.FILES.get('image')
-                    Branch.register_mega_events(primary,super_event_name,super_event_description,start_date,end_date,banner_image)
-                    messages.info(request,"New Mega Event Added Successfully")
+                    if(Branch.register_mega_events(primary,super_event_name,super_event_description,start_date,end_date,banner_image)):
+                        messages.info(request,"New Mega Event Added Successfully")
+                    else:
+                        messages.warning(request,"Something went wrong while creating the event")
                     return redirect('chapters_and_affinity_group:mega_events', primary)
                 
             return render(request,"Events/Super Event/super_event_creation_form.html", context)
@@ -843,18 +845,51 @@ def mega_event_edit(request,primary,mega_event_id):
 
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-        mega_event = SuperEvents.objects.get(id=mega_event_id)
 
-        context = {
-            'primary':primary,
-            'is_branch':False,
-            'mega_event':mega_event,
-            'user_data':user_data,
-            'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info,
-        }
+        has_access = SC_Ag_Render_Access.access_for_event_details_edit(request,primary)
+        if has_access:
+            mega_event = SuperEvents.objects.get(id=mega_event_id)
 
-        return render(request,"Events/Super Event/super_event_edit_form.html",context)
+            if request.method == 'POST':
+                if request.POST.get('Submit'):
+                    super_event_name = request.POST.get('super_event_name')
+                    super_event_description = request.POST.get('super_event_description')
+                    start_date = request.POST.get('probable_date')
+                    end_date = request.POST.get('final_date')
+                    publish_mega_event = request.POST.get('publish_event')
+                    banner_image = request.FILES.get('image')
+
+                    if(Branch.update_mega_event(mega_event_id,super_event_name,super_event_description,start_date,end_date,publish_mega_event,banner_image)):
+                        messages.success(request,'Event details updated successfully')
+                    else:
+                        messages.warning(request,'Something went wrong while updating the event details')
+
+                    return redirect('central_branch:mega_event_edit', mega_event_id)
+                elif request.POST.get('delete_image'):
+                    if(Branch.delete_mega_event_banner(mega_event_id)):
+                        messages.success(request,'Banner Image removed successfully')
+                    else:
+                        messages.warning(request,'Something went wrong while deleting the image')
+                    return redirect('central_branch:mega_event_edit',mega_event_id)
+
+            if mega_event.banner_image:
+                image_number = 1
+            else:
+                image_number = 0
+
+            context = {
+                'primary':primary,
+                'is_branch':False,
+                'mega_event':mega_event,
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'allowed_image_upload':1-image_number
+            }
+
+            return render(request,"Events/Super Event/super_event_edit_form.html",context)
+        else:
+            return redirect('chapters_and_affinity_group:mega_events')
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
