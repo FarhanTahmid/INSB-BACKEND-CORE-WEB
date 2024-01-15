@@ -941,18 +941,19 @@ def mega_event_edit(request,primary,mega_event_id):
                     else:
                         messages.warning(request,'Something went wrong while updating the event details')
 
-                    return redirect('chapters_and_affinity_group:mega_event_edit', mega_event_id)
+                    return redirect('chapters_and_affinity_group:mega_event_edit',primary, mega_event_id)
                 elif request.POST.get('delete_image'):
                     if(Branch.delete_mega_event_banner(mega_event_id)):
                         messages.success(request,'Banner Image removed successfully')
                     else:
                         messages.warning(request,'Something went wrong while deleting the image')
+                    return redirect('chapters_and_affinity_group:mega_event_edit',primary, mega_event_id)
                 elif request.POST.get('delete_event'):
                     if(Branch.delete_mega_event(mega_event_id)):
                         messages.info(request,'Mega event deleted successfully')
                     else:
                         messages.warning(request,'Something went wrong while deleting the event')
-                return redirect('chapters_and_affinity_group:mega_event_edit',mega_event_id)
+                    return redirect('chapters_and_affinity_group:mega_events',primary)
 
             if mega_event.banner_image:
                 image_number = 1
@@ -971,7 +972,7 @@ def mega_event_edit(request,primary,mega_event_id):
 
             return render(request,"Events/Super Event/super_event_edit_form.html",context)
         else:
-            return redirect('chapters_and_affinity_group:mega_events')
+            return redirect('chapters_and_affinity_group:mega_events',primary)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
