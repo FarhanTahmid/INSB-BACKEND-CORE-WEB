@@ -2640,7 +2640,6 @@ def mega_event_edit(request,mega_event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
 
-#Good Luck Arman, Fix this
 @login_required
 def mega_event_add_event(request,mega_event_id):    
 
@@ -2650,47 +2649,50 @@ def mega_event_add_event(request,mega_event_id):
         sc_ag=PortData.get_all_sc_ag(request=request)
         #calling it regardless to run the page
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,1)
+        has_access = Branch_View_Access.get_event_edit_access(request)
+        if has_access:
+            mega_event = SuperEvents.objects.get(id=mega_event_id)
+            all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(1)
+            events_of_mega_Event = Branch.get_events_of_mega_event(mega_event)
 
-        mega_event = Branch.get_mega_event_id(mega_event_id,1)
-        all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(1)
-        events_of_mega_Event = Branch.get_events_of_mega_event(mega_event)
+            if request.method == "POST":
 
-        if request.method == "POST":
+                if request.POST.get('add_event_to_mega_event'):
 
-            if request.POST.get('add_event_to_mega_event'):
+                    event_list = request.POST.getlist('selected_events')
+                    if Branch.add_events_to_mega_event(event_list,mega_event,1):
+                        messages.success(request,f"Events Added Successfully to {mega_event.super_event_name}")
+                    else:
+                        messages.error(request,"Error occured!")
 
-                event_list = request.POST.getlist('selected_events')
-                if Branch.add_events_to_mega_event(event_list,mega_event,1):
-                    messages.success(request,f"Events Added Successfully to {mega_event.super_event_name}")
-                else:
-                    messages.error(request,"Error occured!")
+                    return redirect("central_branch:mega_event_add_event",mega_event_id)
+                
+                if request.POST.get('remove'):
 
-                return redirect("central_branch:mega_event_add_event",mega_event_id)
-            
-            if request.POST.get('remove'):
+                    event_id = request.POST.get('remove_event')
+                    if Branch.delete_event_from_mega_event(event_id):
+                        messages.success(request,f"Event deleted Successfully from {mega_event.super_event_name}")
+                    else:
+                        messages.error(request,"Error occured!")
 
-                event_id = request.POST.get('remove_event')
-                if Branch.delete_event_from_mega_event(event_id):
-                    messages.success(request,f"Event deleted Successfully from {mega_event.super_event_name}")
-                else:
-                    messages.error(request,"Error occured!")
-
-                return redirect("central_branch:mega_event_add_event",mega_event_id)
-            
+                    return redirect("central_branch:mega_event_add_event",mega_event_id)
+                
 
 
-        context = {
-            'is_branch':True,
-            'user_data':user_data,
-            'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info,
-            'mega_event':mega_event,
-            'events':all_insb_events_with_interbranch_collaborations,
-            'events_of_mega_event':events_of_mega_Event,
+            context = {
+                'is_branch':True,
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'mega_event':mega_event,
+                'events':all_insb_events_with_interbranch_collaborations,
+                'events_of_mega_event':events_of_mega_Event,
 
-        }
+            }
 
-        return render(request,"Events/Super Event/super_event_add_event_form_tab.html",context)
+            return render(request,"Events/Super Event/super_event_add_event_form_tab.html",context)
+        else:
+            return render(request,'access_denied2.html', {'user_data':user_data, 'all_sc_ag':sc_ag})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)

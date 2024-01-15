@@ -452,7 +452,7 @@ class PanelMembersData:
         try:
             # get panel
             get_panel=Panels.objects.get(pk=panel)
-            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk)).order_by('position')
+            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk))
             eb_member=[]
             for i in get_panel_members:
                 if(i.member is not None):
@@ -469,7 +469,7 @@ class PanelMembersData:
         try:
             # get panel
             get_panel=Panels.objects.get(pk=panel)
-            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk)).order_by('position')
+            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk))
             officer_member=[]
             for i in get_panel_members:
                 if(i.position.is_officer):
@@ -499,7 +499,7 @@ class PanelMembersData:
         try:
             # get panel
             get_panel=Panels.objects.get(pk=panel)
-            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk)).order_by('position')
+            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk))
             volunteer_member=[]
             for i in get_panel_members:
                 if(not i.position.is_officer and not i.position.is_eb_member and not i.position.is_co_ordinator and not i.position.is_faculty and not i.position.is_mentor and not i.position.is_sc_ag_eb_member):
@@ -515,7 +515,7 @@ class PanelMembersData:
         try:
             # get panel
             get_panel=Panels.objects.get(pk=panel)
-            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk)).order_by('position')
+            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk))
             alumni_member=[]
             for i in get_panel_members:
                 if(i.member is None): #as alumni member has no registered IEEE ID

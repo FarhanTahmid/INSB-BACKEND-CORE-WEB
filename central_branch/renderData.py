@@ -133,16 +133,16 @@ class Branch:
         '''This function registers the mega event'''
 
         try:
-            if end_date=='':
+            if start_date=='' and end_date=='':
+                saving_data = SuperEvents(mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=event_organiser),super_event_name=super_event_name,super_event_description=super_event_description,banner_image=banner_image)
+                saving_data.save()
+                return True
+            elif end_date=='':
                 saving_data = SuperEvents(mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=event_organiser),super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date,banner_image=banner_image)
                 saving_data.save()
                 return True
             elif start_date=='':
                 saving_data = SuperEvents(mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=event_organiser),super_event_name=super_event_name,super_event_description=super_event_description,end_date=end_date,banner_image=banner_image)
-                saving_data.save()
-                return True
-            elif start_date=='' and end_date=='':
-                saving_data = SuperEvents(mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=event_organiser),super_event_name=super_event_name,super_event_description=super_event_description,banner_image=banner_image)
                 saving_data.save()
                 return True
             else:
@@ -630,7 +630,7 @@ class Branch:
         '''This function loads all the EB panel members from the branch.
         Checks if the position of the member is True for is_eb_member and if member exists in current EB Panel'''
         get_current_panel=Branch.load_current_panel()
-        members=Members.objects.all().order_by('position')
+        members=Members.objects.all()
         eb_panel=[]
         for member in members:
             if member.position.is_eb_member:
@@ -819,7 +819,7 @@ class Branch:
     def load_panel_members_by_panel_id(panel_id):
         '''This load all the info associated with a panel from Panel members Table'''
         try:
-            get_panel_members=Panel_Members.objects.filter(tenure=panel_id).all().order_by('position')
+            get_panel_members=Panel_Members.objects.filter(tenure=panel_id).all()
             return get_panel_members
         except:
             raise Http404("The requested page does not exist.")
@@ -1656,13 +1656,12 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
 
-    def get_mega_event_id(id,primary):
+    def get_mega_event(mega_event_id,primary):
 
-        '''This function returns the mega_event_id'''
+        '''This function returns the mega_event'''
 
         try:
-            society = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
-            return SuperEvents.objects.get(id = id,mega_event_of = society)
+            return SuperEvents.objects.get(id = mega_event_id,mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
 
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)

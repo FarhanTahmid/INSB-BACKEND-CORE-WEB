@@ -222,7 +222,8 @@ class PortData:
         '''Creates Positions in the Roles and Positions Table with Different attributes for sc ag and branch as well'''
         try:
             # get the last object of the model
-            get_the_last_object=Roles_and_Position.objects.all().last()
+            get_the_last_object=Roles_and_Position.objects.all().order_by('id').last()
+            print(get_the_last_object.pk)
             # The logic of creating new position is to assign the id = las objects id + 1.
             # this ensures that ids never conflict with each other
             check_if_same_position_exists=Roles_and_Position.objects.filter(role=role,role_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),

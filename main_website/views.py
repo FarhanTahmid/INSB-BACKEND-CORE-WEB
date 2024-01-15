@@ -25,7 +25,7 @@ from .models import *
 from django.contrib import messages
 from central_branch.renderData import Branch
 from central_branch import views as cv
-
+from central_events.models import InterBranchCollaborations,IntraBranchCollaborations
 logger=logging.getLogger(__name__)
 
 # Create your views here.
@@ -143,6 +143,17 @@ def event_details(request,event_id):
         try:
             get_event = Events.objects.get(id = event_id)
             
+            get_inter_branch_collab=InterBranchCollaborations.objects.filter(event_id=get_event.pk)
+            get_intra_branch_collab=IntraBranchCollaborations.objects.filter(event_id=get_event.pk).first()
+            
+            has_interbranch_collab=False
+            has_intrabranch_collab=False
+            
+            if(get_inter_branch_collab is not None):
+                has_interbranch_collab=True
+            if(get_intra_branch_collab is not None):
+                has_intrabranch_collab=True
+                        
             # get host
             if(get_event.publish_in_main_web):
                 event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
@@ -157,6 +168,10 @@ def event_details(request,event_id):
                     'event_banner_image' : event_banner_image,
                     'event_gallery_images' : event_gallery_images,
                     'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+                    'has_interbranch_collab':has_interbranch_collab,
+                    'has_intrabranch_collab':has_intrabranch_collab,
+                    'inter_collaborations':get_inter_branch_collab,
+                    'intra_collab':get_intra_branch_collab,
                 }
                 return render(request,"Events/event_description_main.html", context)
         except Events.DoesNotExist:
@@ -655,10 +670,7 @@ def write_blogs(request):
             'all_sc_ag':load_all_sc_ag,
             'blog_categories':load_all_blog_category,
             'page_title':"Write a Blog",
-            'page_subtitle':"""Empower your voice in the realm of knowledge! 
-                            Dive into the fascinating worlds of science & technology. 
-                            Illuminate the path to a sustainable future through the lens of power and energy.<br>
-                            Let your thoughts spark innovation and ignite conversations – we are waiting for your unique perspective!""",
+            'page_subtitle':"""Unleash your intellect on the realms of science and technology, guiding us towards a sustainable future with your insights on power and energy.""",
             
         }
         return render(request,"Get Involved/Write Blog/write_blog.html",context=context)
@@ -767,9 +779,7 @@ def add_research_form(request):
                     return redirect('main_website:add_research')                   
         context={
             'page_title':"Add Research Papers",
-            'page_subtitle':"""Join the thriving academic community at IEEE NSU Student Branch by sharing your research papers with fellow students and scholars! 
-            Contribute to the collective knowledge pool, showcase your expertise, and collaborate by submitting your work to our platform. 
-            Together, let's make a lasting impact in the world of research and innovation!""",
+            'page_subtitle':"""Participate in the IEEE NSU Student Branch's academic community, share your research papers, and collaborate for impactful innovation.""",
             'research_categories':research_categories,
             'all_sc_ag':load_all_sc_ag,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
