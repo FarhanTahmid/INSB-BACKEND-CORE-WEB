@@ -1656,12 +1656,12 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
 
-    def get_mega_event(mega_event_id):
+    def get_mega_event(mega_event_id,primary):
 
         '''This function returns the mega_event'''
 
         try:
-            return SuperEvents.objects.get(id = mega_event_id)
+            return SuperEvents.objects.get(id = mega_event_id,mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
 
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)

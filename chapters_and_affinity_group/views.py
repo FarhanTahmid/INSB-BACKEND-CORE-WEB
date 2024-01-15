@@ -926,7 +926,7 @@ def mega_event_edit(request,primary,mega_event_id):
 
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request,primary)
         if has_access:
-            mega_event = Branch.get_mega_event(mega_event_id)
+            mega_event = Branch.get_mega_event(mega_event_id,primary)
 
             if request.method == 'POST':
                 if request.POST.get('Submit'):
@@ -987,7 +987,7 @@ def mega_event_add_event(request,primary,mega_event_id):
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
 
-        mega_event = Branch.get_mega_event(mega_event_id)
+        mega_event = Branch.get_mega_event(mega_event_id,primary)
         all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(primary)
         events_of_mega_Event = Branch.get_events_of_mega_event(mega_event)
 
