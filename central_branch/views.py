@@ -3633,6 +3633,7 @@ def member_details(request,ieee_id):
                         return redirect('central_branch:member_details',ieee_id)
                     except Members.DoesNotExist:
                         messages.info(request,"Sorry! Something went wrong! Try Again.")
+                        return redirect('central_branch:member_details',ieee_id)
                 
                 elif(recruitment_session_value==None):
                     try:
@@ -3698,8 +3699,9 @@ def member_details(request,ieee_id):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        return custom_500(request)
+        return redirect('central_branch:member_details',ieee_id)
 
+        
 def custom_404(request):
     return render(request,'404.html',status=404)
 
