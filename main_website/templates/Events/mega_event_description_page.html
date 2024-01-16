@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Mega Event - {{mega.title}}</title>
+    <title>Mega Event - {{mega_event.super_event_name}}</title>
 
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
     <link rel="icon" href="{% static 'upload/logo.gif' %}" />
@@ -233,26 +233,30 @@
                     <!--Left part of the page start-->
                     <div class="mega_content">
                         <!--mega Banner-->
-                        <div class="mega-banner"><img src="https://img.taste.com.au/pLPG_hJV/taste/2021/05/lemon-dream-dessert-more-must-see-videos-171595-2.jpg" alt="mega_event_banner"></div>
+                        <div class="mega-banner"><img src="{{media_url}}{{mega_event.banner_image}}" alt="mega_event_banner"></div>
                         <!--mega Title-->
                         <div class="mega-title">
-                            <h3>Spac</h3>
+                            <h3>{{mega_event.super_event_name}}</h3>
                         </div>
                         <div>
                             <hr>
                         </div>
                         <!--mega Publisher-->
                         <div class="mega_time_and_category" style="font-weight: 500;">
-                            <p>Published from: Junayed</p>
-                            <p><i class="fa-regular fa-clock"></i> Event date: {{blog.date}}
-                            <i class="fa-regular fa-clock"></i> Final date: {{blog.date}}</p>
+                            <p>Published from: {{mega_event.mega_event_of.group_name}}</p>
+                            {% if mega_event.start_date %}
+                            <p><i class="fa-regular fa-clock"></i> Event date: {{mega_event.start_date}}</p>
+                            {% endif %}
+                            {% if mega_event.end_date %}
+                            <p><i class="fa-regular fa-clock"></i> Final date: {{mega_event.end_date}}</p>
+                            {% endif %}
                         </div>
                         <div>
                             <hr>
                         </div>
                         <!--mega Description-->
                         <div class="mega_description">
-                            <p>loera iohfoi ehfioefh epahfiehfieohf efefgegloera iohfoi ehfioefh epahfiehfieohf efefgegloera iohfoi ehfioefh epahfiehfieohf efefgegloera iohfoi ehfioefh epahfiehfieohf efefgegloera iohfoi ehfioefh epahfiehfieohf efefgegloera iohfoi ehfioefh epahfiehfieohf efefgegloera iohfoi ehfioefh epahfiehfieohf efefgeg</p>
+                            <p>{{mega_event.super_event_description | safe}}</p>
                             
                         </div>
                         <div>
@@ -260,126 +264,27 @@
                         </div>
                         <!--mega Card start-->
                         <div style="font-weight: bold; color: #002855; font-size: 15px;">
-                            <p><i class="fa-solid fa-angles-right"></i> OUR EVENTS</p>
+                            <p><i class="fa-solid fa-angles-right"></i> ORGANISED EVENTS</p>
                         </div>
                         <div class="mega-card-container">
+                            {% for  key,value in all_events_of_mega_event.items %}
                             <div class="mega-card">
                                 <div class="mega-card-banner">
-                                    <a href=""><img
-                                        src="https://img.taste.com.au/pLPG_hJV/taste/2021/05/lemon-dream-dessert-more-must-see-videos-171595-2.jpg"
+                                    <a href="{% url 'main_website:event_details' key.id %}"><img
+                                        src="{{media_url}}{{value}}"
                                         alt="event_thumbnail"></a>
                                 </div>
                                 <div style="margin-top: 10px;">
-                                    <p><a href="">Event name</a></p>
+                                    <p><a href="{% url 'main_website:event_details' key.id %}">{{key.event_name}}</a></p>
                                 </div>
                                 <div style="color: #000000;">
-                                    <p><i class="fa-regular fa-clock"></i>Event Date:10/24</p>
+                                    {% if key.event_date %}
+                                    <p><i class="fa-regular fa-clock"></i>{{key.event_date}}</p>
+                                    {% endif %}
                                 </div>
                             </div>
-                            <div class="mega-card">
-                                <div class="mega-card-banner">
-                                    <a href=""><img
-                                        src="https://img.taste.com.au/pLPG_hJV/taste/2021/05/lemon-dream-dessert-more-must-see-videos-171595-2.jpg"
-                                        alt="event_thumbnail"></a>
-                                </div>
-                                <div style="margin-top: 10px;">
-                                    <p><a href="">Event name</a></p>
-                                </div>
-                                <div style="color: #000000;">
-                                    <p><i class="fa-regular fa-clock"></i>Event Date:10/24</p>
-                                </div>
-                            </div>
-                            <div class="mega-card">
-                                <div class="mega-card-banner">
-                                    <a href=""><img
-                                        src="https://img.taste.com.au/pLPG_hJV/taste/2021/05/lemon-dream-dessert-more-must-see-videos-171595-2.jpg"
-                                        alt="event_thumbnail"></a>
-                                </div>
-                                <div style="margin-top: 10px;">
-                                    <p><a href="">Event name</a></p>
-                                </div>
-                                <div style="color: #000000;">
-                                    <p><i class="fa-regular fa-clock"></i>Event Date:10/24</p>
-                                </div>
-                            </div>
-                            <div class="mega-card">
-                                <div class="mega-card-banner">
-                                    <a href=""><img
-                                        src="https://img.taste.com.au/pLPG_hJV/taste/2021/05/lemon-dream-dessert-more-must-see-videos-171595-2.jpg"
-                                        alt="event_thumbnail"></a>
-                                </div>
-                                <div style="margin-top: 10px;">
-                                    <p><a href="">Event name</a></p>
-                                </div>
-                                <div style="color: #000000;">
-                                    <p><i class="fa-regular fa-clock"></i>Event Date:10/24</p>
-                                </div>
-                            </div>
-                            <div class="mega-card">
-                                <div class="mega-card-banner">
-                                    <a href=""><img
-                                        src="https://img.taste.com.au/pLPG_hJV/taste/2021/05/lemon-dream-dessert-more-must-see-videos-171595-2.jpg"
-                                        alt="event_thumbnail"></a>
-                                </div>
-                                <div style="margin-top: 10px;">
-                                    <p><a href="">Event name</a></p>
-                                </div>
-                                <div style="color: #000000;">
-                                    <p><i class="fa-regular fa-clock"></i>Event Date:10/24</p>
-                                </div>
-                            </div>
-                            <div class="mega-card">
-                                <div class="mega-card-banner">
-                                    <a href=""><img
-                                        src="https://img.taste.com.au/pLPG_hJV/taste/2021/05/lemon-dream-dessert-more-must-see-videos-171595-2.jpg"
-                                        alt="event_thumbnail"></a>
-                                </div>
-                                <div style="margin-top: 10px;">
-                                    <p><a href="">Event name</a></p>
-                                </div>
-                                <div style="color: #000000;">
-                                    <p><i class="fa-regular fa-clock"></i>Event Date:10/24</p>
-                                </div>
-                            </div>
-                            <div class="mega-card">
-                                <div class="mega-card-banner">
-                                    <a href=""><img
-                                        src="https://img.taste.com.au/pLPG_hJV/taste/2021/05/lemon-dream-dessert-more-must-see-videos-171595-2.jpg"
-                                        alt="event_thumbnail"></a>
-                                </div>
-                                <div style="margin-top: 10px;">
-                                    <p><a href="">Event name</a></p>
-                                </div>
-                                <div style="color: #000000;">
-                                    <p><i class="fa-regular fa-clock"></i>Event Date:10/24</p>
-                                </div>
-                            </div>
-                            <div class="mega-card">
-                                <div class="mega-card-banner">
-                                    <a href=""><img
-                                        src="https://img.taste.com.au/pLPG_hJV/taste/2021/05/lemon-dream-dessert-more-must-see-videos-171595-2.jpg"
-                                        alt="event_thumbnail"></a>
-                                </div>
-                                <div style="margin-top: 10px;">
-                                    <p><a href="">Event name</a></p>
-                                </div>
-                                <div style="color: #000000;">
-                                    <p><i class="fa-regular fa-clock"></i>Event Date:10/24</p>
-                                </div>
-                            </div>
-                            <div class="mega-card">
-                                <div class="mega-card-banner">
-                                    <a href=""><img
-                                        src="https://img.taste.com.au/pLPG_hJV/taste/2021/05/lemon-dream-dessert-more-must-see-videos-171595-2.jpg"
-                                        alt="event_thumbnail"></a>
-                                </div>
-                                <div style="margin-top: 10px;">
-                                    <p><a href="">Event name</a></p>
-                                </div>
-                                <div style="color: #000000;">
-                                    <p><i class="fa-regular fa-clock"></i>Event Date:10/24</p>
-                                </div>
-                            </div>
+                            {% endfor %}
+                            
                             
                         </div>
                         <!--mega Card end-->
@@ -395,16 +300,15 @@
                         <div>
                             <p style="font-size: 20px; font-weight:400; color: #75787B;">Other Mega Events</p>
                         </div>
+                        {% for mega_event in other_mega_event%}
                         <div>
                             <hr>
                         </div>
                         <!--other mega event-->
                         <div>
-                            <p><a href=""><i class="fa-solid fa-chevron-right" style="font-size: 12px;"></i></i>asdajkhgw</a></p>
+                            <p><a href="{% url 'main_website:mega_event_description_page' mega_event.id %}"><i class="fa-solid fa-chevron-right" style="font-size: 12px;"></i></i>{{mega_event.super_event_name}}</a></p>
                         </div>
-                        <div>
-                            <hr>
-                        </div>
+                        {% endfor %}
                         
                         
                     </div>

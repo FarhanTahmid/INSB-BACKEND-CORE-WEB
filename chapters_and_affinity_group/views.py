@@ -30,7 +30,7 @@ from django.contrib import messages
 from central_events.models import Events, SuperEvents
 from central_events.forms import EventForm
 from events_and_management_team.renderData import Events_And_Management_Team
-from port.models import Chapters_Society_and_Affinity_Groups
+from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position
 from users.models import Alumni_Members
 from django.views.decorators.clickjacking import xframe_options_exempt
 from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
@@ -287,6 +287,82 @@ def sc_ag_panel_details(request,primary,panel_pk):
                                           is_core_volunteer=core_volunteer_position_check,is_volunteer=volunteer_position_check)):
                     return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
             
+            # update existing positions
+            if(request.POST.get('update_position')):
+                mentor_position_check=request.POST.get('mentor_position_check')
+                if mentor_position_check is None:
+                    mentor_position_check=False
+                else:
+                    mentor_position_check=True
+                    
+                officer_position_check=request.POST.get('officer_position_check')
+                if officer_position_check is None:
+                    officer_position_check=False
+                else:
+                    officer_position_check=True
+                    
+                coordinator_position_check=request.POST.get('coordinator_position_check')
+                if coordinator_position_check is None:
+                    coordinator_position_check=False
+                else:
+                    coordinator_position_check=True
+                
+                executive_position_check=request.POST.get('executive_position_check')
+                if executive_position_check is None:
+                    executive_position_check=False
+                else:
+                    executive_position_check=True
+                
+                faculty_position_check=request.POST.get('faculty_position_check')
+                if faculty_position_check is None:
+                    faculty_position_check=False
+                else:
+                    faculty_position_check=True
+
+                core_volunteer_position_check = request.POST.get('core_volunteer_position_check')
+                if core_volunteer_position_check is None:
+                    core_volunteer_position_check = False
+                else:
+                    core_volunteer_position_check = True
+
+                volunteer_position_check = request.POST.get('volunteer_position_check')
+                if volunteer_position_check is None:
+                    volunteer_position_check = False
+                else:
+                    volunteer_position_check = True
+                    
+                position_name=request.POST['position_name']
+                position_rank=request.POST['position_rank']
+                position_id=request.POST.get('position_to_edit')
+                
+                # update Position
+                try:    
+                    if(Roles_and_Position.objects.filter(id=int(position_id)).update(
+                        role=position_name,rank=position_rank,
+                        is_eb_member=False,is_sc_ag_eb_member=executive_position_check,is_officer=officer_position_check,is_co_ordinator=coordinator_position_check,
+                        is_faculty=faculty_position_check,is_mentor=mentor_position_check,is_core_volunteer=core_volunteer_position_check,is_volunteer=volunteer_position_check
+                    )):
+                        messages.success(request,f"Position {position_name} was updated!")
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+                except Exception as e:
+                    logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+                    ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                    messages.warning(request,"Something went wrong! Please Try again!")
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+            # delete positions
+            if(request.POST.get('delete_position')):
+                position_name=request.POST['position_name']
+                position_id=request.POST.get('position_to_edit')
+                try:
+                    if(Roles_and_Position.objects.filter(id=int(position_id)).delete()):
+                        messages.warning(request,f'The position {position_name} has been deleted.')
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+                except Exception as e:
+                    logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+                    ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                    messages.warning(request,"Something went wrong! Please Try again!")
+                    return redirect('chapters_and_affinity_group:sc_ag_panel_details',primary,panel_pk)
+            
             #Create New TEam
             if(request.POST.get('create_team')):
                 team_name=request.POST['team_name']
@@ -307,6 +383,7 @@ def sc_ag_panel_details(request,primary,panel_pk):
             'sc_ag_eb_positions':SC_AG_Info.get_sc_ag_executive_positions(request=request,sc_ag_primary=primary),
             'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
             'member_details_access':SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary),
+            'all_positions':PortData.get_all_positions_of_everyone(request=request,sc_ag_primary=primary)
         }
         return render(request,'Panels/sc_ag_executive_members_tab.html',context=context)
     except Exception as e:
@@ -781,6 +858,7 @@ def mega_event_creation(request, primary):
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
                 'is_branch':is_branch,
+                'allowed_image_upload':1
             }
 
             if request.method == "POST":
@@ -796,8 +874,10 @@ def mega_event_creation(request, primary):
                     start_date = request.POST.get('probable_date')
                     end_date = request.POST.get('final_date')
                     banner_image = request.FILES.get('image')
-                    Branch.register_mega_events(primary,super_event_name,super_event_description,start_date,end_date,banner_image)
-                    messages.info(request,"New Mega Event Added Successfully")
+                    if(Branch.register_mega_events(primary,super_event_name,super_event_description,start_date,end_date,banner_image)):
+                        messages.info(request,"New Mega Event Added Successfully")
+                    else:
+                        messages.warning(request,"Something went wrong while creating the event")
                     return redirect('chapters_and_affinity_group:mega_events', primary)
                 
             return render(request,"Events/Super Event/super_event_creation_form.html", context)
@@ -843,18 +923,113 @@ def mega_event_edit(request,primary,mega_event_id):
 
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-        mega_event = SuperEvents.objects.get(id=mega_event_id)
 
-        context = {
-            'primary':primary,
-            'is_branch':False,
-            'mega_event':mega_event,
-            'user_data':user_data,
-            'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info,
-        }
+        has_access = SC_Ag_Render_Access.access_for_event_details_edit(request,primary)
+        if has_access:
+            mega_event = Branch.get_mega_event(mega_event_id,primary)
 
-        return render(request,"Events/Super Event/super_event_edit_form.html",context)
+            if request.method == 'POST':
+                if request.POST.get('Submit'):
+                    super_event_name = request.POST.get('super_event_name')
+                    super_event_description = request.POST.get('super_event_description')
+                    start_date = request.POST.get('probable_date')
+                    end_date = request.POST.get('final_date')
+                    publish_mega_event = request.POST.get('publish_event')
+                    banner_image = request.FILES.get('image')
+
+                    if(Branch.update_mega_event(mega_event_id,super_event_name,super_event_description,start_date,end_date,publish_mega_event,banner_image)):
+                        messages.success(request,'Event details updated successfully')
+                    else:
+                        messages.warning(request,'Something went wrong while updating the event details')
+
+                    return redirect('chapters_and_affinity_group:mega_event_edit',primary, mega_event_id)
+                elif request.POST.get('delete_image'):
+                    if(Branch.delete_mega_event_banner(mega_event_id)):
+                        messages.success(request,'Banner Image removed successfully')
+                    else:
+                        messages.warning(request,'Something went wrong while deleting the image')
+                    return redirect('chapters_and_affinity_group:mega_event_edit',primary, mega_event_id)
+                elif request.POST.get('delete_event'):
+                    if(Branch.delete_mega_event(mega_event_id)):
+                        messages.info(request,'Mega event deleted successfully')
+                    else:
+                        messages.warning(request,'Something went wrong while deleting the event')
+                    return redirect('chapters_and_affinity_group:mega_events',primary)
+
+            if mega_event.banner_image:
+                image_number = 1
+            else:
+                image_number = 0
+
+            context = {
+                'primary':primary,
+                'is_branch':False,
+                'mega_event':mega_event,
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'allowed_image_upload':1-image_number
+            }
+
+            return render(request,"Events/Super Event/super_event_edit_form.html",context)
+        else:
+            return redirect('chapters_and_affinity_group:mega_events',primary)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
+    
+@login_required
+def mega_event_add_event(request,primary,mega_event_id):
+    try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
+
+        has_access = SC_Ag_Render_Access.access_for_event_details_edit(request,primary)
+        if has_access:
+            mega_event = Branch.get_mega_event(mega_event_id,primary)
+            all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(primary)
+            events_of_mega_Event = Branch.get_events_of_mega_event(mega_event)
+
+            if request.method == "POST":
+
+                if request.POST.get('add_event_to_mega_event'):
+
+                    event_list = request.POST.getlist('selected_events')
+                    if Branch.add_events_to_mega_event(event_list,mega_event,1):
+                        messages.success(request,f"Events Added Successfully to {mega_event.super_event_name}")
+                    else:
+                        messages.error(request,"Error occured!")
+
+                    return redirect("chapters_and_affinity_group:mega_event_add_event",primary,mega_event_id)
+                
+                if request.POST.get('remove'):
+
+                    event_id = request.POST.get('remove_event')
+                    if Branch.delete_event_from_mega_event(event_id):
+                        messages.success(request,f"Event deleted Successfully from {mega_event.super_event_name}")
+                    else:
+                        messages.error(request,"Error occured!")
+
+                    return redirect("chapters_and_affinity_group:mega_event_add_event",primary,mega_event_id)
+
+            context = {
+                'primary':primary,
+                'is_branch':False,
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'mega_event':mega_event,
+                'events':all_insb_events_with_interbranch_collaborations,
+                'events_of_mega_event':events_of_mega_Event,
+            }
+
+            return render(request,"Events/Super Event/super_event_add_event_form_tab.html",context)
+        else:
+            return render(request,'access_denied.html', {'user_data':user_data, 'all_sc_ag':sc_ag})
+    
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1322,7 +1497,7 @@ def event_edit_graphics_form_tab(request, primary, event_id):
 
 def event_edit_graphics_form_links_sub_tab(request,primary,event_id):
 
-    ''' This function loads the content tab page of events '''
+    ''' This function loads the graphics tab page of events '''
 
      #Initially loading the events whose  links and images were previously uploaded
     #and can be editible

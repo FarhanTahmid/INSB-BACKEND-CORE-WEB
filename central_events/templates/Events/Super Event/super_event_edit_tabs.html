@@ -37,10 +37,10 @@
     <ul class="tabs" style="display: flex; margin-right: 0px; justify-content: center;">
         {% if is_branch %}
         <li class="tab"><a href="{% url 'central_branch:mega_event_edit' mega_event.pk %}">Edit</a></li>
-        <li class="tab" style="border-right: 1px solid #00629B;"><a href="{% url 'central_branch:mega_event_add_event' %}">Add Events</a></li>
+        <li class="tab" style="border-right: 1px solid #00629B;"><a href="{% url 'central_branch:mega_event_add_event' mega_event.pk %}">Add Events</a></li>
         {% else %}
         <li class="tab"><a href="{% url 'chapters_and_affinity_group:mega_event_edit' primary mega_event.pk %}">Edit</a></li>
-        <li class="tab" style="border-right: 1px solid #00629B;"><a href="{% url 'chapters_and_affinity_group:mega_event_edit' primary mega_event.pk%}">Add Events</a></li>
+        <li class="tab" style="border-right: 1px solid #00629B;"><a href="{% url 'chapters_and_affinity_group:mega_event_add_event' primary mega_event.pk%}">Add Events</a></li>
         {% endif %}
     </ul>
     <br>

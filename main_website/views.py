@@ -25,7 +25,7 @@ from .models import *
 from django.contrib import messages
 from central_branch.renderData import Branch
 from central_branch import views as cv
-
+from central_events.models import InterBranchCollaborations,IntraBranchCollaborations
 logger=logging.getLogger(__name__)
 
 # Create your views here.
@@ -78,6 +78,7 @@ def event_homepage(request):
         date_and_event = HomepageItems.get_event_for_calender(request,1)
         upcoming_event = HomepageItems.get_upcoming_event(request,1)
         upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
+        all_mega_events = HomepageItems.get_all_mega_events(1)
         
         # prepare event stat list for event category with numbers
         get_event_stat=userData.getTypeOfEventStats(request,1)
@@ -113,6 +114,7 @@ def event_homepage(request):
             'data':event_stat,
             'years':get_years,
             'yearly_event_count':get_yearly_event_count,
+            'all_mega_events':all_mega_events,
         }
 
         return render(request,'Events/events_homepage.html',context)
@@ -138,33 +140,48 @@ def event_details(request,event_id):
                 messages.warning(request,'Sorry you couldn\'t read us at the moment. Please try again later.')
 
             return redirect('main_website:event_details', event_id)
-        
-        get_event = Events.objects.get(id = event_id)
-        
-        # get host
-        if(get_event.publish_in_main_web):
-            event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
-            event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
+        try:
+            get_event = Events.objects.get(id = event_id)
+            
+            get_inter_branch_collab=InterBranchCollaborations.objects.filter(event_id=get_event.pk)
+            get_intra_branch_collab=IntraBranchCollaborations.objects.filter(event_id=get_event.pk).first()
+            
+            has_interbranch_collab=False
+            has_intrabranch_collab=False
+            
+            if(get_inter_branch_collab is not None):
+                has_interbranch_collab=True
+            if(get_intra_branch_collab is not None):
+                has_intrabranch_collab=True
+                        
+            # get host
+            if(get_event.publish_in_main_web):
+                event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
+                event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
-            context = {
-                'is_live':True, #This enables the header and footer along with the wavy
-                'page_title':get_event.event_name,
-                'page_subtitle':get_event.event_organiser,
-                "event":get_event,
-                'media_url':settings.MEDIA_URL,
-                'event_banner_image' : event_banner_image,
-                'event_gallery_images' : event_gallery_images,
-                'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
-            }
-            return render(request,"Events/event_description_main.html", context)
+                context = {
+                    'is_live':True, #This enables the header and footer along with the wavy
+                    'page_title':get_event.event_name,
+                    'page_subtitle':get_event.event_organiser,
+                    "event":get_event,
+                    'media_url':settings.MEDIA_URL,
+                    'event_banner_image' : event_banner_image,
+                    'event_gallery_images' : event_gallery_images,
+                    'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+                    'has_interbranch_collab':has_interbranch_collab,
+                    'has_intrabranch_collab':has_intrabranch_collab,
+                    'inter_collaborations':get_inter_branch_collab,
+                    'intra_collab':get_intra_branch_collab,
+                }
+                return render(request,"Events/event_description_main.html", context)
+        except Events.DoesNotExist:
+            return cv.custom_404
         else:
             return redirect('main_website:event_homepage')
-    except:
-        return redirect('main_website:event_homepage')
-    # except Exception as e:
-    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-    #     return cv.custom_500(request)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
 
 
 # ###################### ACHIEVEMENTS ##############################
@@ -289,6 +306,11 @@ def rasPage(request):
     try:
         #getting RAS object
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 3)
+        # get mega events
+        all_mega_events=HomepageItems.get_all_mega_events(primary=3)
+        has_mega_events=True
+        if(all_mega_events==False):
+            has_mega_events=False
         #getting featured events of RAS   
         featured_events = HomepageItems.get_featured_events_for_societies(3)
         
@@ -326,8 +348,9 @@ def rasPage(request):
             'faculty_advisor':faculty_advisor,
             'eb_members':eb_members,
             'page_title':society.page_title,
-            'page_subtitle':society.secondary_paragraph
-
+            'page_subtitle':society.secondary_paragraph,
+            'all_mega_events':all_mega_events,
+            'has_mega_events':has_mega_events,
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
     except Exception as e:
@@ -341,6 +364,11 @@ def pesPage(request):
     try:
         #getting object of PES
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 2)
+        all_mega_events=HomepageItems.get_all_mega_events(primary=2)
+        has_mega_events=True
+        if(all_mega_events==False):
+            has_mega_events=False
+            
         #getting featured events of PES   
         featured_events = HomepageItems.get_featured_events_for_societies(2)
 
@@ -373,8 +401,9 @@ def pesPage(request):
             'faculty_advisor':faculty_advisor,
             'eb_members':eb_members,
             'page_title':society.page_title,
-            'page_subtitle':society.secondary_paragraph
-
+            'page_subtitle':society.secondary_paragraph,
+            'all_mega_events':all_mega_events,
+            'has_mega_events':has_mega_events,
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
     
@@ -389,6 +418,10 @@ def iasPage(request):
     try:
         #getting object of IAS
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 4)
+        all_mega_events=HomepageItems.get_all_mega_events(primary=4)
+        has_mega_events=True
+        if(all_mega_events==False):
+            has_mega_events=False
         #getting featured events of IAS   
         featured_events = HomepageItems.get_featured_events_for_societies(4)
 
@@ -420,7 +453,9 @@ def iasPage(request):
             'faculty_advisor':faculty_advisor,
             'eb_members':eb_members,
             'page_title':society.page_title,
-            'page_subtitle':society.secondary_paragraph
+            'page_subtitle':society.secondary_paragraph,
+            'all_mega_events':all_mega_events,
+            'has_mega_events':has_mega_events,
 
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
@@ -435,6 +470,10 @@ def wiePage(request):
     try:
         #getting object of WIE
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 5)
+        all_mega_events=HomepageItems.get_all_mega_events(primary=5)
+        has_mega_events=True
+        if(all_mega_events==False):
+            has_mega_events=False
         #getting featured events of WIE    
         featured_events = HomepageItems.get_featured_events_for_societies(5)
 
@@ -467,7 +506,9 @@ def wiePage(request):
             'faculty_advisor':faculty_advisor,
             'eb_members':eb_members,
             'page_title':society.page_title,
-            'page_subtitle':society.secondary_paragraph
+            'page_subtitle':society.secondary_paragraph,
+            'all_mega_events':all_mega_events,
+            'has_mega_events':has_mega_events,
 
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
@@ -629,10 +670,7 @@ def write_blogs(request):
             'all_sc_ag':load_all_sc_ag,
             'blog_categories':load_all_blog_category,
             'page_title':"Write a Blog",
-            'page_subtitle':"""Empower your voice in the realm of knowledge! 
-                            Dive into the fascinating worlds of science & technology. 
-                            Illuminate the path to a sustainable future through the lens of power and energy.<br>
-                            Let your thoughts spark innovation and ignite conversations – we are waiting for your unique perspective!""",
+            'page_subtitle':"""Unleash your intellect on the realms of science and technology, guiding us towards a sustainable future with your insights on power and energy.""",
             
         }
         return render(request,"Get Involved/Write Blog/write_blog.html",context=context)
@@ -741,9 +779,7 @@ def add_research_form(request):
                     return redirect('main_website:add_research')                   
         context={
             'page_title':"Add Research Papers",
-            'page_subtitle':"""Join the thriving academic community at IEEE NSU Student Branch by sharing your research papers with fellow students and scholars! 
-            Contribute to the collective knowledge pool, showcase your expertise, and collaborate by submitting your work to our platform. 
-            Together, let's make a lasting impact in the world of research and innovation!""",
+            'page_subtitle':"""Participate in the IEEE NSU Student Branch's academic community, share your research papers, and collaborate for impactful innovation.""",
             'research_categories':research_categories,
             'all_sc_ag':load_all_sc_ag,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
@@ -1399,8 +1435,33 @@ def join_insb(request):
         return cv.custom_500(request)
 
     
-def mega_event_description_page(request):
-        return render(request, 'mega_event_description_page.html')
+def mega_event_description_page(request,mega_event_id):
+        
+    try:
+        mega_event = HomepageItems.get_mega_event(mega_event_id)
+        if(mega_event==False):
+            return cv.custom_404
+        else:
+            if(mega_event.publish_mega_event):
+                all_events_of_mega_events = HomepageItems.all_events_of_mega_event(mega_event,mega_event.mega_event_of.primary)
+                other_mega_event =  HomepageItems.get_other_mega_event(mega_event_id)
+            
+                context={
+                    'page_title':mega_event.super_event_name,
+                    'page_subtitle':mega_event.mega_event_of,
+                    'mega_event':mega_event,
+                    'media_url':settings.MEDIA_URL,
+                    'all_events_of_mega_event':all_events_of_mega_events,
+                    'other_mega_event':other_mega_event,
+                }
+
+                return render(request, 'Events/mega_event_description_page.html',context)
+            else:
+                return cv.custom_404
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
     
 # def test_view(request):
 #     #loading all the teams of Branch

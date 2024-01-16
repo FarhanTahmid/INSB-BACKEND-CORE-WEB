@@ -3,7 +3,11 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Update Event | IEEE NSU Student Branch</title>
+    {% if is_branch %}
+    <title>Update Mega Event | IEEE NSU Student Branch</title>
+    {% else %}
+    <title>Update Mega Event | {{sc_ag_info.group_name}}</title>
+    {% endif %}
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
     
     <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
@@ -94,15 +98,15 @@
 
       <!-- navbar content -->
       <div id="content" class="app-content box-shadow-z0" role="main">
-          {% comment %} {% if is_branch %} {% endcomment %}
+        {% if is_branch %}
             {% block navbar %}
                 {% include 'navbar.html' %}
             {% endblock navbar %}
-          {% comment %} {% else %}
+        {% else %}
             {% block sc_ag_navbar %}
               {% include 'sc_ag_navbar.html' %}
             {% endblock sc_ag_navbar %}
-          {% endif %} {% endcomment %}
+          {% endif %}
         </div>
       <!--navbar content-->
       
@@ -116,8 +120,7 @@
           <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span style="color:#00629B;">{{event_name}}</b></span></h2>
           <h6>Note:</h6>
           <ol style="justify-content:center;margin-bottom:15px;"><b>
-          <li>Provide the captions for the event by clicking on the (+) icon</li>
-          <li>You can add as many captions as you want, and you can update or delete them</li>
+          <li>Add events for the {{mega_event.super_event_name}} by clicking on the (+) icon</li>
           <li>Make sure to save any changes you make before leaving</li>
           </ol></b>
 
