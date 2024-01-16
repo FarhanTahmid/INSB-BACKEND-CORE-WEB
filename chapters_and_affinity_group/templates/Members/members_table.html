@@ -54,8 +54,7 @@
                 <td>{{member.team}}</td>
                 {% if has_access_to_view_member_details %}
                 <td>
-                    <button class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#deleteModal" style="margin-bottom:15px">Remove Member</button>
-                    <input type="hidden" name="remove_sc_ag_member"  value="{{member.member.ieee_id}}" class="has-value">
+                    <button class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#deleteModal" onclick="open_delete_modal('{{member.member.ieee_id}}')" style="margin-bottom:15px">Remove Member</button>
                 </td>
                 {% endif %}
             </tr>
@@ -80,8 +79,8 @@
                     <p>Are you sure you want to remove this member?</p>
                 </div>
                 <div class="modal-footer">
-                    <input id="remove_sc_ag_member" class="btn btn-outline b-danger text-danger has-value" name="remove_member" type="submit" value="Remove Member">
-                    
+                    <input class="btn btn-outline b-danger text-danger has-value" name="remove_member" type="submit" value="Remove Member">
+                    <input type="hidden" id="remove_sc_ag_member" name="remove_sc_ag_member"  value="" class="has-value">
                     <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
             </form>
@@ -102,7 +101,7 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title">Add Member To !</h5>
+            <h5 class="modal-title">Add Member To {{sc_ag_info.short_form}}!</h5>
         </div>
         <div class="modal-body p-lg">
           <p>Do select the Position of the Member Carefully!</p>
@@ -172,7 +171,6 @@
         
             <div class="modal-footer">
             <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-        
                 <input type="submit" class="btn primary p-x-md" name="add_sc_ag_member" value="Add Member"></input>  
             </div>
         </form>
@@ -188,9 +186,6 @@
     function open_delete_modal(ieee_id){
         var element = document.getElementById("remove_sc_ag_member");
         element.value = ieee_id;
-
-
-
     }
 </script>
 
