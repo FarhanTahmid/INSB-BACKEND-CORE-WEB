@@ -63,7 +63,7 @@
 .home{
   display: flex;
   /* background: url("logo-removebg.png"); */
-  background-image: linear-gradient(90deg, #0e7eaa, #0b1261);
+  /* background-image: linear-gradient(90deg, #0e7eaa, #0b1261); */
   height: 100vh;
   color: #FDF5DF;
   min-height: 500px;
