@@ -39,7 +39,7 @@ class SC_Ag_Render_Access:
             else:
                 return False
         except Exception as e:
-            SC_Ag_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            # SC_Ag_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             return False
     
     def access_for_member_details(request,sc_ag_primary):
@@ -65,7 +65,7 @@ class SC_Ag_Render_Access:
                 return True
             else:
                 SC_Ag_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-                ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                # ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
                 return False
         
     def access_for_create_event(request,sc_ag_primary):
@@ -91,7 +91,7 @@ class SC_Ag_Render_Access:
                 return True
             else:
                 SC_Ag_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-                ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                # ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
                 return False
     
     def access_for_event_details_edit(request,sc_ag_primary):
@@ -117,7 +117,7 @@ class SC_Ag_Render_Access:
                 return True
             else:
                 SC_Ag_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-                ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                # ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
                 return False
     
     def access_for_panel_edit_access(request,sc_ag_primary):
@@ -143,7 +143,7 @@ class SC_Ag_Render_Access:
                 return True
             else:
                 SC_Ag_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-                ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                # ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
                 return False
     
     def access_for_membership_renewal_access(request,sc_ag_primary):
@@ -169,7 +169,7 @@ class SC_Ag_Render_Access:
                 return True
             else:
                 SC_Ag_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-                ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                # ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
                 return False
     
     def access_for_manage_access(request,sc_ag_primary):
@@ -195,7 +195,7 @@ class SC_Ag_Render_Access:
                 return True
             else:
                 SC_Ag_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-                ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                # ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
                 return False
             
     def access_for_manage_web(request,sc_ag_primary):
@@ -221,7 +221,7 @@ class SC_Ag_Render_Access:
                 return True
             else:
                 SC_Ag_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-                ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                # ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
                 return False
     
     

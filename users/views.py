@@ -294,7 +294,7 @@ def change_password(request):
                 else:
                     messages.error(request,"Your password must be greater than 6 characters!")
             else:
-                messages.warning(request,"Your old password does not match!")
+                messages.warning(request,"Your old password is not correct!")
             
             return redirect('users:change_password')    
             
