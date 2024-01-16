@@ -55,7 +55,11 @@ class SC_Ag_Render_Access:
                 else:
                     return False
             else:
-                return False
+                #The member does not exist in the permissions table
+                if(SC_Ag_Render_Access.get_sc_ag_common_access(request,sc_ag_primary)):
+                    return True
+                else:
+                    return False
         except Exception as e:
             if(SC_Ag_Render_Access.get_sc_ag_common_access(request=request,sc_ag_primary=sc_ag_primary)):
                 return True
@@ -77,7 +81,11 @@ class SC_Ag_Render_Access:
                 else:
                     return False
             else:
-                return False
+                #The member does not exist in the permissions table
+                if(SC_Ag_Render_Access.get_sc_ag_common_access(request,sc_ag_primary)):
+                    return True
+                else:
+                    return False
         except Exception as e:
             if(SC_Ag_Render_Access.get_sc_ag_common_access(request=request,sc_ag_primary=sc_ag_primary)):
                 return True
@@ -99,7 +107,11 @@ class SC_Ag_Render_Access:
                 else:
                     return False
             else:
-                return False
+                #The member does not exist in the permissions table
+                if(SC_Ag_Render_Access.get_sc_ag_common_access(request,sc_ag_primary)):
+                    return True
+                else:
+                    return False
         except Exception as e:
             if(SC_Ag_Render_Access.get_sc_ag_common_access(request=request,sc_ag_primary=sc_ag_primary)):
                 return True
@@ -121,7 +133,11 @@ class SC_Ag_Render_Access:
                 else:
                     return False
             else:
-                return False
+                #The member does not exist in the permissions table
+                if(SC_Ag_Render_Access.get_sc_ag_common_access(request,sc_ag_primary)):
+                    return True
+                else:
+                    return False
         except Exception as e:
             if(SC_Ag_Render_Access.get_sc_ag_common_access(request=request,sc_ag_primary=sc_ag_primary)):
                 return True
@@ -143,7 +159,11 @@ class SC_Ag_Render_Access:
                 else:
                     return False
             else:
-                return False
+                #The member does not exist in the permissions table
+                if(SC_Ag_Render_Access.get_sc_ag_common_access(request,sc_ag_primary)):
+                    return True
+                else:
+                    return False
         except Exception as e:
             if(SC_Ag_Render_Access.get_sc_ag_common_access(request=request,sc_ag_primary=sc_ag_primary)):
                 return True
@@ -165,7 +185,11 @@ class SC_Ag_Render_Access:
                 else:
                     return False
             else:
-                return False
+                #The member does not exist in the permissions table
+                if(SC_Ag_Render_Access.get_sc_ag_common_access(request,sc_ag_primary)):
+                    return True
+                else:
+                    return False
         except Exception as e:
             if(SC_Ag_Render_Access.get_sc_ag_common_access(request=request,sc_ag_primary=sc_ag_primary)):
                 return True
@@ -187,7 +211,11 @@ class SC_Ag_Render_Access:
                 else:
                     return False
             else:
-                return False
+                #The member does not exist in the permissions table
+                if(SC_Ag_Render_Access.get_sc_ag_common_access(request,sc_ag_primary)):
+                    return True
+                else:
+                    return False
         except Exception as e:
             if(SC_Ag_Render_Access.get_sc_ag_common_access(request=request,sc_ag_primary=sc_ag_primary)):
                 return True

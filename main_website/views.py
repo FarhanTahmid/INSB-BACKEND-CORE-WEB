@@ -1440,10 +1440,10 @@ def mega_event_description_page(request,mega_event_id):
     try:
         mega_event = HomepageItems.get_mega_event(mega_event_id)
         if(mega_event==False):
-            return cv.custom_404
+            return cv.custom_404(request)
         else:
             if(mega_event.publish_mega_event):
-                all_events_of_mega_events = HomepageItems.all_events_of_mega_event(mega_event,mega_event.mega_event_of.primary)
+                all_events_of_mega_events = HomepageItems.all_events_of_mega_event(mega_event)
                 other_mega_event =  HomepageItems.get_other_mega_event(mega_event_id)
             
                 context={
@@ -1457,7 +1457,7 @@ def mega_event_description_page(request,mega_event_id):
 
                 return render(request, 'Events/mega_event_description_page.html',context)
             else:
-                return cv.custom_404
+                return cv.custom_404(request)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

@@ -2634,7 +2634,7 @@ def mega_event_edit(request,mega_event_id):
 
             return render(request,"Events/Super Event/super_event_edit_form.html",context)
         else:
-            return redirect('central_branch:mega_events')
+            return redirect('main_website:mega_event_description_page', mega_event_id)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -3490,29 +3490,39 @@ def event_feedback(request, event_id):
 def insb_members_list(request):
     
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
 
-        '''This function is responsible to display all the member data in the page'''
-        if request.method=="POST":
-            if request.POST.get("site_register"):
-                return redirect('membership_development_team:site_registration')
-            
-        members=Members.objects.all()
-        totalNumber=Members.objects.all().count()
-        has_view_permission=True
-        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-        user_data=current_user.getUserData() #getting user data as dictionary file
+        #Loading Access Permission
+        user=request.user
+        has_access=(renderData.MDT_DATA.insb_member_details_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
+        if has_access:
 
-        context={
-            'is_branch':True,
-            'all_sc_ag':sc_ag,
-            'members':members,
-            'totalNumber':totalNumber,
-            'has_view_permission':has_view_permission,
-            'user_data':user_data
-        }
-        
-        return render(request,'INSB Members/members_list.html',context=context)
+            '''This function is responsible to display all the member data in the page'''
+            if request.method=="POST":
+                if request.POST.get("site_register"):
+                    return redirect('membership_development_team:site_registration')
+                
+            members=Members.objects.all()
+            totalNumber=Members.objects.all().count()
+            has_view_permission=True
+            current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+            user_data=current_user.getUserData() #getting user data as dictionary file
+
+            context={
+                'is_branch':True,
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'members':members,
+                'totalNumber':totalNumber,
+                'has_view_permission':has_view_permission,
+                'user_data':user_data
+            }
+            
+            return render(request,'INSB Members/members_list.html',context=context)
+        else:
+            return render(request,'access_denied2.html', {'user_data':user_data, 'all_sc_ag':sc_ag})
     
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
