@@ -1,54 +1,119 @@
-<!doctype html>
 {% load static %}
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Website Updating</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
     <link rel="stylesheet" href="{% static 'login.css' %}">
-  </head>
-  <body>
+    <title>Website Under Maintenance</title>
+    <style>
+      body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
 
-    <div style="justify-content:center;text-align:center;margin-top:150px;">
-        <div  class="container bg-light" style="width:50%;height:50%; margin:auto;">
-            <div class="logo_container">
-                <img src="{% static 'INSB.png' %}" alt="logo" style="width:30%;height:30%;">
-            </div>
-            <div class="text_container">
-                <br>
-                <div class="text-3"><h3><span id="typing"></span></h3></div>
-            </div>
-            <div class="button-container">
-                <br><br>
-                <a href="{% url "port:homepage" %}" class="btn btn-primary">IEEE NSU SB Portal</a>
-            </div>
-        </div>
+.content-container {
+  display: flex;
+  flex-direction: column;
+    text-align: center;
+    max-width: 600px;
+    margin: 125px auto;
+    padding: 20px;
+    box-sizing: border-box;
+    align-items: center;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    box-shadow: 1px 2px 5px #000;
+    border-radius: 5px;
+    /* Floating Animation */
+    animation: floatAnimation 2s infinite ease-in-out;
+}
+
+p {
+    margin: 20px 0;
+    font-size: 22px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    color: #fff;
+    line-break: 1.5;
+}
+
+a {
+    display: block;
+    padding: 10px;
+    background-color: #002855;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid #002855;
+    width: 150px;
+    font-weight: 600;
+
+    font-size: 15px;
+    transition: all 0.5s;
+    /* Opening Animation */
+    animation: openAnimation 1s ease-out;
+}
+a:hover{
+  border: 1px solid #FFC72C	;
+  background-color: #fff;
+  color: #002855;
+
+}
+
+@keyframes openAnimation {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+@keyframes floatAnimation {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+
+}
+
+    </style>
+  </head>
+<body>
+
+    <div class="content-container">
+        <img src="{% static 'upload/com.gif' %}" alt="Under Maintenance">
+        <p id="typing"></p>
+        <a href="{% url "port:homepage" %}">IEEE NSU SB Portal</a>
     </div>
-      
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script>
-        const textElement = document.getElementById('typing');
-        const text = "The website is being updated at this moment! We will be back shortly. Thanks for staying with us.";
-        let index = 0;
-      
-        function typeText() {
-          if (index < text.length) {
-            textElement.textContent += text.charAt(index);
-            index++;
-            setTimeout(typeText, 50); // Adjust the typing speed by changing the timeout value (e.g., 50ms)
-          }
+      const textElement = document.getElementById('typing');
+      const text = "The website is retaliating. The IEEE NSU SB web team are on the case and will have it solved shortly. Thank you for your patience.";
+      let index = 0;
+    
+      function typeText() {
+        if (index < text.length) {
+          textElement.textContent += text.charAt(index);
+          index++;
+          setTimeout(typeText, 40); // Adjust the typing speed by changing the timeout value (e.g., 50ms)
         }
-      
-        // Start the typing effect when the page loads
-        window.onload = typeText;
-      </script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  </body>
+      }
+    
+      // Start the typing effect when the page loads
+      window.onload = typeText;
+    </script>
+</body>
 </html>
+
