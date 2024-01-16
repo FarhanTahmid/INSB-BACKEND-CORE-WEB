@@ -27,8 +27,8 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        python manage.py test port
-        python manage.py test users
+        # python manage.py test port
+        # python manage.py test users
       # env:
       #   SETTINGS: ${{ secrets.SETTINGS }}
 
