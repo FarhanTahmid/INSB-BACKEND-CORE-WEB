@@ -39,7 +39,7 @@ class Branch_View_Access:
             else:
                 return False
         except Exception as ex:
-            messages.error(request,"Error loading Data Access")
+            # messages.error(request,"Error loading Data Access")
             logger.info(ex, exc_info=True)
             return False
         
@@ -55,7 +55,7 @@ class Branch_View_Access:
             else:
                 return False
         except Exception as ex:
-            messages.error(request,"Error loading Data Access")
+            # messages.error(request,"Error loading Data Access")
             logger.info(ex, exc_info=True)
             return False
 
@@ -71,7 +71,7 @@ class Branch_View_Access:
             else:
                 return False
         except Exception as ex:
-            messages.error(request,"Error loading Data Access")
+            # messages.error(request,"Error loading Data Access")
             logger.info(ex, exc_info=True)
             return False
 
@@ -87,7 +87,7 @@ class Branch_View_Access:
             else:
                 return False
         except Exception as ex:
-            messages.error(request,"Error loading Data Access")
+            # messages.error(request,"Error loading Data Access")
             logger.info(ex, exc_info=True)
             return False
         
@@ -103,7 +103,7 @@ class Branch_View_Access:
             else:
                 return False
         except Exception as ex:
-            messages.error(request,"Error loading Data Access")
+            # messages.error(request,"Error loading Data Access")
             logger.info(ex, exc_info=True)
             return False
 
