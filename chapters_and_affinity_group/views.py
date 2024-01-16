@@ -973,7 +973,7 @@ def mega_event_edit(request,primary,mega_event_id):
 
             return render(request,"Events/Super Event/super_event_edit_form.html",context)
         else:
-            return redirect('chapters_and_affinity_group:mega_events',primary)
+            return redirect('main_website:mega_event_description_page',mega_event_id)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
