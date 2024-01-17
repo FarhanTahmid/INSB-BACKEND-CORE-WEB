@@ -56,28 +56,35 @@ class Members(models.Model):
     
     def save(self, *args, **kwargs):
         if self.user_profile_picture:
-            img = Image.open(BytesIO(self.user_profile_picture.read()))
-            print(img.format)
-            if hasattr(img, '_getexif'):
-                exif = img._getexif()
-                if exif:
-                    for tag, label in ExifTags.TAGS.items():
-                        if label == 'Orientation':
-                            orientation = tag
-                            break
-                    if orientation in exif:
-                        if exif[orientation] == 3:
-                            img = img.rotate(180, expand=True)
-                        elif exif[orientation] == 6:
-                            img = img.rotate(270, expand=True)
-                        elif exif[orientation] == 8:
-                            img = img.rotate(90, expand=True)
+            print(self.user_profile_picture)
+            if os.path.isfile(settings.MEDIA_ROOT+str(self.user_profile_picture)):
 
-            img.thumbnail((1080,1080), Image.ANTIALIAS)
-            output = BytesIO()
-            img.save(output, format=img.format, quality=85)
-            output.seek(0)
-            self.user_profile_picture = File(output, self.user_profile_picture.name) 
+                img = Image.open(BytesIO(self.user_profile_picture.read()))
+                print(img.format)
+                
+                if hasattr(img, '_getexif'):
+                    exif = img._getexif()
+                    if exif:
+                        for tag, label in ExifTags.TAGS.items():
+                            if label == 'Orientation':
+                                orientation = tag
+                                break
+                        if orientation in exif:
+                            if exif[orientation] == 3:
+                                img = img.rotate(180, expand=True)
+                            elif exif[orientation] == 6:
+                                img = img.rotate(270, expand=True)
+                            elif exif[orientation] == 8:
+                                img = img.rotate(90, expand=True)
+
+                img.thumbnail((1080,1080), Image.ANTIALIAS)
+                output = BytesIO()
+                img.save(output, format=img.format, quality=85)
+                output.seek(0)
+                self.user_profile_picture = File(output, self.user_profile_picture.name)
+
+            else:
+                self.user_profile_picture ='user_profile_pictures/default_profile_picture.png' 
 
         return super().save(*args, **kwargs)
 
