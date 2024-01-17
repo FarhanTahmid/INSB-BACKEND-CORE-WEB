@@ -25,7 +25,7 @@ import os
 load_dotenv()
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*%*n1(qq^95t^+bl96wxty9h6qc4)h%ts27fv9egh8v0tj%60h'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -212,11 +212,12 @@ handler500='central_branch.views.custom_500'
 
 #EMAIL SETTINGS
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST='smtp.gmail.com'
-EMAIL_PORT=587
+EMAIL_HOST='mail.ieeensusb.org'
+EMAIL_PORT='465'
 EMAIL_HOST_USER=os.environ.get('EMAIL_USER')
 EMAIL_HOST_PASSWORD=os.environ.get('EMAIL_PASSWORD')
-EMAIL_USE_TLS=True
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS=False
 
 # RESIZING IMAGE
 DJANGORESIZED_DEFAULT_SIZE = [1920, 1080]

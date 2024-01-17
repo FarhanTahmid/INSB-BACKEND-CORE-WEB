@@ -973,7 +973,7 @@ def mega_event_edit(request,primary,mega_event_id):
 
             return render(request,"Events/Super Event/super_event_edit_form.html",context)
         else:
-            return redirect('chapters_and_affinity_group:mega_events',primary)
+            return redirect('main_website:mega_event_description_page',mega_event_id)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1765,7 +1765,7 @@ def manage_main_website(request, primary):
                     #passing the fields data to the function to check length before saving
                     if Sc_Ag.checking_length(request,about_details,mission_description,vision_description,what_is_this_description,
                                why_join_it,what_activites_it_has,how_to_join):
-                        messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                        messages.error(request,"Please ensure your word limit is within 1500 and you have filled out all descriptions")
                         return redirect("chapters_and_affinity_group:manage_main_website",primary)
                     #passing the fields data to save the data in the database
                     if Sc_Ag.main_website_info(request,primary,about_details,about_image,background_image,

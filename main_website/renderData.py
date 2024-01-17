@@ -301,7 +301,7 @@ class HomepageItems:
                 #getting current tenure
                 current_tenure = Panels.objects.get(current = True, panel_of = society)
                 #getting all th eb roles
-                roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society).order_by('rank','role','role_of')
+                roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society,is_faculty=False).order_by('rank','role','role_of')
                 for role in roles:
                     try:
                         #getting the member of the particular society whose role matches with the role iteration in the list and is if current panel
@@ -376,13 +376,12 @@ class HomepageItems:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
-    def all_events_of_mega_event(mega_event,primary):
+    def all_events_of_mega_event(mega_event):
 
         '''This function returns all events of mega event'''
         try:
 
-            society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
-            events = Events.objects.filter(super_event_id = SuperEvents.objects.get(mega_event_of = society),publish_in_main_web=True)
+            events = Events.objects.filter(super_event_id = SuperEvents.objects.get(id = mega_event.id),publish_in_main_web=True)
           
             dic = {}
             #using this loop, assigning the event with its corresponding banner picture in the dictionary as key and value
