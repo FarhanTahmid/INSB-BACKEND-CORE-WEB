@@ -5,6 +5,9 @@ from django_resized import ResizedImageField
 from PIL import Image
 from ckeditor.fields import RichTextField
 from users.models import Members
+from PIL import Image, ExifTags
+from io import BytesIO
+from django.core.files import File
 # Create your models here.
     
 # Tables for Homepage
@@ -141,13 +144,47 @@ class IEEE_Bangladesh_Section(models.Model):
     secretary_name = models.CharField(null=True,blank=True,max_length=150)
     secretary_email = models.CharField(null=True,blank=True,max_length=200)
     office_secretary_name = models.CharField(null=True,blank=True,max_length=150)
-    office_secretary_number = models.CharField(null=True,blank=True,max_length=200)
+    office_secretary_number = models.CharField(null=True,blank=True,max_length=200)   
 
     class Meta:
         verbose_name="IEEE Bangladesh Section"
+
+    def _process_image(self, image_field):
+        if image_field:
+            img = Image.open(BytesIO(image_field.read()))
+
+            if hasattr(img, '_getexif'):
+                exif = img._getexif()
+                if exif:
+                    for tag, label in ExifTags.TAGS.items():
+                        if label == 'Orientation':
+                            orientation = tag
+                            break
+                    if orientation in exif:
+                        if exif[orientation] == 3:
+                            img = img.rotate(180, expand=True)
+                        elif exif[orientation] == 6:
+                            img = img.rotate(270, expand=True)
+                        elif exif[orientation] == 8:
+                            img = img.rotate(90, expand=True)
+
+            img.thumbnail((1080, 1080), Image.ANTIALIAS)
+            output = BytesIO()
+            img.save(output, format=img.format, quality=85)
+            output.seek(0)
+            setattr(self, image_field.name, File(output, image_field))
+
     def save(self, *args, **kwargs):
         # Override the save method to ensure only one instance exists
         self.id = 1  # Set the primary key to 1 to always update the same row
+
+        # Process the background_image
+        self._process_image(self.ieee_bangladesh_logo)
+        self._process_image(self.member_and_volunteer_picture)
+         # Process other image fields as needed
+        # Example: self._process_image(self.mission_picture)
+        #          self._process_image(self.vision_picture)
+
         super(IEEE_Bangladesh_Section, self).save(*args, **kwargs)
     def __str__(self) -> str:
         return str(self.pk)
@@ -180,9 +217,46 @@ class About_IEEE(models.Model):
 
     class Meta:
         verbose_name="About IEEE"
+
+    def _process_image(self, image_field):
+        if image_field:
+            img = Image.open(BytesIO(image_field.read()))
+
+            if hasattr(img, '_getexif'):
+                exif = img._getexif()
+                if exif:
+                    for tag, label in ExifTags.TAGS.items():
+                        if label == 'Orientation':
+                            orientation = tag
+                            break
+                    if orientation in exif:
+                        if exif[orientation] == 3:
+                            img = img.rotate(180, expand=True)
+                        elif exif[orientation] == 6:
+                            img = img.rotate(270, expand=True)
+                        elif exif[orientation] == 8:
+                            img = img.rotate(90, expand=True)
+
+            img.thumbnail((1080, 1080), Image.ANTIALIAS)
+            output = BytesIO()
+            img.save(output, format=img.format, quality=85)
+            output.seek(0)
+            setattr(self, image_field.name, File(output, image_field))
+
     def save(self, *args, **kwargs):
         # Override the save method to ensure only one instance exists
         self.id = 1  # Set the primary key to 1 to always update the same row
+        
+        # Process the background_image
+        self._process_image(self.about_image)
+        self._process_image(self.community_image)
+        self._process_image(self.innovations_and_developments_image)
+        self._process_image(self.students_and_member_activities_image)
+        self._process_image(self.quality_image)
+         # Process other image fields as needed
+        # Example: self._process_image(self.mission_picture)
+        #          self._process_image(self.vision_picture)
+        
         super(About_IEEE, self).save(*args, **kwargs)
     def __str__(self) -> str:
         return str(self.pk)
@@ -195,6 +269,31 @@ class IEEE_Bangladesh_Section_Gallery(models.Model):
         verbose_name="IEEE Bangladesh Section Gallery"
     def __str__(self) -> str:
         return self.pk
+    def save(self, *args, **kwargs):
+        if self.selected_image:
+            img = Image.open(BytesIO(self.selected_image.read()))
+            if hasattr(img, '_getexif'):
+                exif = img._getexif()
+                if exif:
+                    for tag, label in ExifTags.TAGS.items():
+                        if label == 'Orientation':
+                            orientation = tag
+                            break
+                    if orientation in exif:
+                        if exif[orientation] == 3:
+                            img = img.rotate(180, expand=True)
+                        elif exif[orientation] == 6:
+                            img = img.rotate(270, expand=True)
+                        elif exif[orientation] == 8:
+                            img = img.rotate(90, expand=True)
+
+            img.thumbnail((1080,1080), Image.ANTIALIAS)
+            output = BytesIO()
+            img.save(output, format=img.format, quality=85)
+            output.seek(0)
+            self.selected_image = File(output, self.selected_image.name) 
+
+        return super().save(*args, **kwargs)
 
 class HomePage_Thoughts(models.Model):
 
@@ -276,9 +375,48 @@ class IEEE_NSU_Student_Branch(models.Model):
 
     class Meta:
         verbose_name="IEEE NSU Student Branch"
+
+    def _process_image(self, image_field):
+        if image_field:
+            img = Image.open(BytesIO(image_field.read()))
+
+            if hasattr(img, '_getexif'):
+                exif = img._getexif()
+                if exif:
+                    for tag, label in ExifTags.TAGS.items():
+                        if label == 'Orientation':
+                            orientation = tag
+                            break
+                    if orientation in exif:
+                        if exif[orientation] == 3:
+                            img = img.rotate(180, expand=True)
+                        elif exif[orientation] == 6:
+                            img = img.rotate(270, expand=True)
+                        elif exif[orientation] == 8:
+                            img = img.rotate(90, expand=True)
+
+            img.thumbnail((1080, 1080), Image.ANTIALIAS)
+            output = BytesIO()
+            img.save(output, format=img.format, quality=85)
+            output.seek(0)
+            setattr(self, image_field.name, File(output, image_field))
+
     def save(self, *args, **kwargs):
         # Override the save method to ensure only one instance exists
         self.id = 1  # Set the primary key to 1 to always update the same row
+
+        # Process the background_image
+        self._process_image(self.about_image)
+        self._process_image(self.ras_image)
+        self._process_image(self.pes_image)
+        self._process_image(self.ias_image)
+        self._process_image(self.wie_image)
+        self._process_image(self.mission_image)
+        self._process_image(self.vision_image)
+         # Process other image fields as needed
+        # Example: self._process_image(self.mission_picture)
+        #          self._process_image(self.vision_picture)
+
         super(IEEE_NSU_Student_Branch, self).save(*args, **kwargs)
     def __str__(self) -> str:
         return str(self.pk)
@@ -326,9 +464,46 @@ class IEEE_Region_10(models.Model):
 
     class Meta:
         verbose_name="IEEE Region 10"
+
+    def _process_image(self, image_field):
+        if image_field:
+            img = Image.open(BytesIO(image_field.read()))
+
+            if hasattr(img, '_getexif'):
+                exif = img._getexif()
+                if exif:
+                    for tag, label in ExifTags.TAGS.items():
+                        if label == 'Orientation':
+                            orientation = tag
+                            break
+                    if orientation in exif:
+                        if exif[orientation] == 3:
+                            img = img.rotate(180, expand=True)
+                        elif exif[orientation] == 6:
+                            img = img.rotate(270, expand=True)
+                        elif exif[orientation] == 8:
+                            img = img.rotate(90, expand=True)
+
+            img.thumbnail((1080, 1080), Image.ANTIALIAS)
+            output = BytesIO()
+            img.save(output, format=img.format, quality=85)
+            output.seek(0)
+            setattr(self, image_field.name, File(output, image_field))
+
     def save(self, *args, **kwargs):
         # Override the save method to ensure only one instance exists
         self.id = 1  # Set the primary key to 1 to always update the same row
+
+        # Process the background_image
+        self._process_image(self.ieee_region_10_image)
+        self._process_image(self.young_professionals_image)
+        self._process_image(self.membership_development_image)
+        self._process_image(self.background_picture_parallax)
+        self._process_image(self.events_and_conference_image)
+         # Process other image fields as needed
+        # Example: self._process_image(self.mission_picture)
+        #          self._process_image(self.vision_picture)
+
         super(IEEE_Region_10, self).save(*args, **kwargs)
     def __str__(self) -> str:
         return str(self.pk)
@@ -357,4 +532,3 @@ class FAQ_Questions(models.Model):
         verbose_name="FAQ Questions"
     def __str__(self) -> str:
         return self.title.title
-
