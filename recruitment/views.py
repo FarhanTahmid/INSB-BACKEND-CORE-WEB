@@ -370,7 +370,7 @@ def recruit_member(request, session_id):
                         ieee_payment_status = True
                     time = datetime.now()
                     # getting all data from form and registering user upon validation
-                    if(recruited_members.objects.filter(nsu_id=request.POST['nsu_id'],session_id=Session.id)):
+                    if(recruited_members.objects.filter(nsu_id=request.POST['nsu_id'],session_id=Session.id).exists()):
                         messages.info(request,f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database under this same recruitment session!")
                         return redirect('recruitment:recruit_member',Session.id)
                     else:
