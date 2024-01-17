@@ -1326,6 +1326,10 @@ class Branch:
             elif(image_id == 'events_and_conference_picture'):
                 ieee_region_10.events_and_conference_image = None
 
+            #saving before returning
+            ieee_region_10.save()
+            return True
+
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
