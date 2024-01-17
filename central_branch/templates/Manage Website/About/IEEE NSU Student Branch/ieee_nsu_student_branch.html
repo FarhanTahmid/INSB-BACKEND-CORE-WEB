@@ -409,7 +409,7 @@
                                     class="form-control" 
                                     type="text"
                                     name="creative_team_details">{{ieee_nsu_student_branch.creative_team_description|default:""}}</textarea>
-                                    <p id="creativeTeamCharacterCount" style="color: red;">Required</p>
+                                    <p id="creative_teamCharacterCount" style="color: red;">Required</p>
 
                                 </div>
                             
@@ -641,7 +641,7 @@
                 
 
                 // Attach a function to the change event for each CKEditor instance
-                ["about", "chapters", "creative_team_details",  "achievements", "mission", "vision", "events"]
+                ["about", "chapters", "creative_team",  "achievements", "mission", "vision", "events"]
                     .forEach(function (editorId) {
                         var editor = CKEDITOR.instances[editorId + '_details'];
 
