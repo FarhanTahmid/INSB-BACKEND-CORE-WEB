@@ -503,7 +503,7 @@
                         <label for="{{forloop.parentloop.counter}}_{{forloop.counter}}">{{question_answer.question}}</label>
                         <div class="content">
                             <p>
-                            {{question_answer.answer}}
+                            {{question_answer.answer | safe}}
                             </p>
                         </div>
                     </li>
