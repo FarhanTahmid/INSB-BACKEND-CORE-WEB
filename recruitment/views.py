@@ -333,7 +333,7 @@ def recruitee_details(request,session_id,nsu_id):
         return cv.custom_500(request)
 
 @login_required
-def recruit_member(request, session_name):
+def recruit_member(request, session_id):
 
     try:
 
@@ -345,16 +345,16 @@ def recruit_member(request, session_name):
         user=request.user
         has_access=(MDT_DATA.recruited_member_details_view_access(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
         if has_access:
-            getSessionId = renderData.Recruitment.getSessionid(
-                session_name=session_name)
+            Session = renderData.Recruitment.getSessionid(
+                session_id=session_id)
             form = StudentForm
 
             context = {
                 'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'form': form,
-                'session_name': session_name,
-                'session_id': getSessionId['session'][0]['id']
+                'session_name': Session.session,
+                'session_id': Session.id
             }
 
             # this method is for the POST from the recruitment form
@@ -370,9 +370,9 @@ def recruit_member(request, session_name):
                         ieee_payment_status = True
                     time = datetime.now()
                     # getting all data from form and registering user upon validation
-                    if(recruited_members.objects.filter(nsu_id=request.POST['nsu_id'],session_id=getSessionId['session'][0]['id']).exists()):
+                    if(recruited_members.objects.filter(nsu_id=request.POST['nsu_id'],session_id=Session.id)):
                         messages.info(request,f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database under this same recruitment session!")
-                        return redirect('recruitment:recruit_member',session_name)
+                        return redirect('recruitment:recruit_member',Session.id)
                     else:
                         try:
 
@@ -392,7 +392,7 @@ def recruit_member(request, session_name):
                                 home_address=request.POST['home_address'],
                                 major=request.POST.get('major'),
                                 graduating_year=request.POST['graduating_year'],
-                                session_id=getSessionId['session'][0]['id'],
+                                session_id=Session.id,
                                 recruitment_time=time,
                                 recruited_by=request.POST['recruited_by'],
                                 cash_payment_status=cash_payment_status,
@@ -404,14 +404,14 @@ def recruit_member(request, session_name):
                             
                             #send an email now to the recruited member
                             email_status=email_sending.send_email_to_recruitees_upon_recruitment(
-                                recruited_member.first_name,recruited_member.nsu_id,recruited_member.email_personal,session_name,unique_code)
+                                recruited_member.first_name,recruited_member.nsu_id,recruited_member.email_personal,Session.session,unique_code)
                             
                             if(email_status)==False:
                                 messages.warning(request,"The system could not send email to the recruited member due to some errors! Please contact the system administrator")
                             elif(email_status):
                                 messages.success(request,"A new member was recruited! E-mail was sent to the recruited member!")
                                 
-                            return redirect('recruitment:recruitee', getSessionId['session'][0]['id'])
+                            return redirect('recruitment:recruitee', session_id)
 
                         except IntegrityError:  # Checking if same id exist and handling the exception
                             messages.info(
@@ -436,7 +436,7 @@ def recruit_member(request, session_name):
 
 
 @login_required
-def generateExcelSheet(request, session_name):
+def generateExcelSheet(request, session_id):
     '''This method generates the excel files for different sessions'''
 
     try:
@@ -446,15 +446,17 @@ def generateExcelSheet(request, session_name):
         has_access=(MDT_DATA.recruited_member_details_view_access(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
         if has_access:
             date=datetime.now()
+            # getting the session to find members recruited in that particular session
+            getSession = renderData.Recruitment.getSessionid(session_id=session_id)
             response = HttpResponse(
                 content_type='application/ms-excel')  # eclaring content type for the excel files
-            response['Content-Disposition'] = f'attachment; filename=Recruitment Session - {session_name}---' +\
+            response['Content-Disposition'] = f'attachment; filename=Recruitment Session - {getSession.session}---' +\
                 str(date.strftime('%m/%d/%Y')) + \
                 '.xls'  # making files downloadable with name of session and timestamp
             # adding encoding to the workbook
             workBook = xlwt.Workbook(encoding='utf-8')
             # opening an worksheet to work with the columns
-            workSheet = workBook.add_sheet(f'Recruitment-{session_name}')
+            workSheet = workBook.add_sheet(f'Recruitment-{getSession.session}')
 
             # generating the first row
             row_num = 0
@@ -472,11 +474,8 @@ def generateExcelSheet(request, session_name):
             # reverting font style to default
             font_style = xlwt.XFStyle()
 
-            # getting the session to find members recruited in that particular session
-            getSession = renderData.Recruitment.getSessionid(session_name=session_name)
-
             # getting all the values of members as rows with same session
-            rows = recruited_members.objects.filter(session_id=getSession['session'][0]['id']).values_list('nsu_id',
+            rows = recruited_members.objects.filter(session_id=session_id).values_list('nsu_id',
                                                                                                         'first_name', 'middle_name', 'last_name',
                                                                                                         'email_personal','email_nsu',
                                                                                                         'contact_no',
