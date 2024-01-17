@@ -2634,7 +2634,7 @@ def mega_event_edit(request,mega_event_id):
 
             return render(request,"Events/Super Event/super_event_edit_form.html",context)
         else:
-            return redirect('central_branch:mega_events')
+            return redirect('main_website:mega_event_description_page', mega_event_id)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -3490,6 +3490,8 @@ def event_feedback(request, event_id):
 def insb_members_list(request):
     
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
 
         '''This function is responsible to display all the member data in the page'''
@@ -3499,12 +3501,14 @@ def insb_members_list(request):
             
         members=Members.objects.all()
         totalNumber=Members.objects.all().count()
-        has_view_permission=True
+        user=request.user
+        has_view_permission=renderData.MDT_DATA.insb_member_details_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username)
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
 
         context={
             'is_branch':True,
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'members':members,
             'totalNumber':totalNumber,
