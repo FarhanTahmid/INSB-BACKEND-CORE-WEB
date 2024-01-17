@@ -13,7 +13,7 @@ class Media_Link(models.Model):
     logo_link = models.URLField(null=True,blank=True,max_length=300)
 class Media_Images(models.Model):
     event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
-    selected_images=ResizedImageField(null=True,blank=True,default=None,upload_to='Event Selected Images/')
+    selected_images=models.ImageField(null=True,blank=True,default=None,upload_to='Event Selected Images/')
 
     def _process_image(self, image_field):
         if image_field:
