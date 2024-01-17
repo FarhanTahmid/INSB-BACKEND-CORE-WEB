@@ -12,7 +12,7 @@ class Graphics_Link(models.Model):
     graphics_link=models.URLField(null=True,blank=True,max_length=300)
 class Graphics_Banner_Image(models.Model):
     event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
-    selected_image=ResizedImageField(null=True,blank=True,default=None,upload_to='Event Banner Image/')
+    selected_image=models.ImageField(null=True,blank=True,default=None,upload_to='Event Banner Image/')
 
     def _process_image(self, image_field):
         if image_field:
