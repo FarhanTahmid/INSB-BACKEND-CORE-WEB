@@ -236,7 +236,7 @@
                         {% csrf_token %}
                         
                         <tr>
-                            <td style="color:#00629B;"><a href="">{{ member.ieee_id }}</a></td>
+                            <td style="color:#00629B;"><a href="{% url 'membership_development_team:member_details' member.ieee_id %}" target="_blank">{{ member.ieee_id }}</a></td>
                             <td>{{ member.name }}</td>
                             <td>{{ member.email_ieee }}</td>
                             <td>
@@ -325,7 +325,7 @@
                                             
                                                 {% for member in insb_members %}
                                                 <tr>
-                                                    <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.ieee_id %}">{{member.ieee_id}}</a></td>
+                                                    <td><a style="text-decoration:none;color:#00629B;" href="{% url 'membership_development_team:member_details' member.ieee_id %}" target="_blank">{{member.ieee_id}}</a></td>
                                                     <td>{{ member.name  }}</td>
                                                     <td>{{ member.email_ieee }}</td>
                                                     <td>{{ member.position }}</td>
