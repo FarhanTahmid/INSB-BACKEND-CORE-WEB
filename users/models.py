@@ -17,6 +17,7 @@ from port.models import Panels
 from PIL import Image, ExifTags
 from io import BytesIO
 from django.core.files import File
+import os
 
 # from membership_development_team.models import Renewal_Sessions
 # Create your models here.
@@ -56,7 +57,7 @@ class Members(models.Model):
     def save(self, *args, **kwargs):
         if self.user_profile_picture:
             img = Image.open(BytesIO(self.user_profile_picture.read()))
-            
+            print(img.format)
             if hasattr(img, '_getexif'):
                 exif = img._getexif()
                 if exif:
@@ -74,7 +75,7 @@ class Members(models.Model):
 
             img.thumbnail((1080,1080), Image.ANTIALIAS)
             output = BytesIO()
-            img.save(output, format='JPEG', quality=85)
+            img.save(output, format=img.format, quality=85)
             output.seek(0)
             self.user_profile_picture = File(output, self.user_profile_picture.name) 
 
