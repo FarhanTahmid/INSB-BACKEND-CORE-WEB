@@ -141,7 +141,7 @@ class Access_Render:
     def system_administrator_staffuser_access(username):
         try:
             access=User.objects.get(username=username)
-            if(access.is_staff()):
+            if(access.is_staff):
                 return True
             else:
                 return False

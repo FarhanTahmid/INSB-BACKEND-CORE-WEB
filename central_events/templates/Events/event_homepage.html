@@ -142,23 +142,23 @@
             </div>
             <!--for error messages end-->
 
-            {% if has_access_to_create_event %}
-              <div class="container" style="justify-content:center;text-align:center;"> 
-
-                
-                
-                <div class="btn-container">
+            <div class="container" style="justify-content:center;text-align:center;">    
+              <div class="btn-container">
                   {% if is_branch %}
                   <a href="{% url 'central_branch:mega_events' %}" class="btn btn-outline b-success text-success" style="margin-bottom:15px";>Mega Events</a>
-                  <a href="{% url 'central_branch:event_creation_form1' %}" class="btn btn-outline b-primary text-primary" style="margin-bottom:15px";>Create a New Event</a>
                   {% else %}
                   <a href="{% url 'chapters_and_affinity_group:mega_events' sc_ag_info.primary %}" class="btn btn-outline b-success text-success" style="margin-bottom:15px";>Mega Events</a>
+                  {% endif %}
+                  {% if has_access_to_create_event %}
+                  {% if is_branch %}
+                  <a href="{% url 'central_branch:event_creation_form1' %}" class="btn btn-outline b-primary text-primary" style="margin-bottom:15px";>Create a New Event</a>
+                  {% else %}
                   <a href="{% url 'chapters_and_affinity_group:event_creation_form1' sc_ag_info.primary %}" class="btn btn-outline b-primary text-primary" style="margin-bottom:15px";>Create a New Event</a>
                   {% endif %}
                   <button type="button" class="btn btn-outline-success buttons" data-toggle="modal" data-target="#EventTypeModal" style="margin-bottom:15px;">Create a New Event Type</button>
+                  {% endif %}
                 </div>
               </div> 
-            {% endif %}
              
 
             <!--Events Table-->
