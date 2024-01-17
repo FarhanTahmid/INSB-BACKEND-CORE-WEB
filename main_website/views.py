@@ -149,7 +149,7 @@ def event_details(request,event_id):
             has_interbranch_collab=False
             has_intrabranch_collab=False
             
-            if(get_inter_branch_collab is not None):
+            if(len(get_inter_branch_collab) > 0):
                 has_interbranch_collab=True
             if(get_intra_branch_collab is not None):
                 has_intrabranch_collab=True
