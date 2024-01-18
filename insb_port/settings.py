@@ -125,16 +125,21 @@ if(os.environ.get('SETTINGS')=='dev'):
     }
 if(os.environ.get('SETTINGS')=='prod'):
     DATABASES = {
-        'default': {
+        # 'default': {
                     
-            # Postgres in Vascel-dev
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('PROD_DATABASE_NAME'),
-            'USER': os.environ.get('PROD_DATABASE_USER'),
-            'PASSWORD': os.environ.get('PROD_DATABASE_PASSWORD'),
-            'HOST':os.environ.get('PROD_DATABASE_HOST'),
-            'PORT':'',
-        }
+        #     # Postgres in Vascel-dev
+        #     'ENGINE': 'django.db.backends.postgresql',
+        #     'NAME': os.environ.get('PROD_DATABASE_NAME'),
+        #     'USER': os.environ.get('PROD_DATABASE_USER'),
+        #     'PASSWORD': os.environ.get('PROD_DATABASE_PASSWORD'),
+        #     'HOST':os.environ.get('PROD_DATABASE_HOST'),
+        #     'PORT':'',
+        # }
+        'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3', # This is where you put the name of the db file. 
+                 # If one doesn't exist, it will be created at migration time.
+    }
     }
 
 # Password validation

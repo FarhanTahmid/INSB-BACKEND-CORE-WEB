@@ -139,6 +139,8 @@ def team_details(request,primary,name):
         #load data of current team Members
         team_members=Branch.load_team_members(primary)
         #load all the roles and positions from database
+        #creating team object
+        team = Teams.objects.get(primary = primary)
         positions=Branch.load_roles_and_positions()
         # Excluding position of EB, Faculty and SC-AG members
         for i in positions:
@@ -215,7 +217,7 @@ def team_details(request,primary,name):
             'user_data':user_data,
             'all_sc_ag':sc_ag,
             'team_id':primary,
-            'team_name':name,
+            'team_name':team.team_name,
             'team_members':team_members,
             'positions':positions,
             'insb_members':insb_members,

@@ -56,12 +56,8 @@ class Members(models.Model):
     
     def save(self, *args, **kwargs):
         if self.user_profile_picture:
-            print(self.user_profile_picture)
             if os.path.isfile(settings.MEDIA_ROOT+str(self.user_profile_picture)):
-
                 img = Image.open(BytesIO(self.user_profile_picture.read()))
-                print(img.format)
-                
                 if hasattr(img, '_getexif'):
                     exif = img._getexif()
                     if exif:
@@ -82,7 +78,6 @@ class Members(models.Model):
                 img.save(output, format=img.format, quality=85)
                 output.seek(0)
                 self.user_profile_picture = File(output, self.user_profile_picture.name)
-
             else:
                 self.user_profile_picture ='user_profile_pictures/default_profile_picture.png' 
 
