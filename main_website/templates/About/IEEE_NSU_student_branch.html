@@ -533,7 +533,7 @@
         <!--mission section-->
         <section class="centering" style="background-color: #f9f9f9; margin-bottom: 20px;">
             <section class="mission max-width">
-                <div style="padding: 20px;">
+                <div style="padding: 20px;" id="textMissionColumn">
                     <div style="margin-bottom: -10px;">
                         <h2>Mission</h2>
                     </div>
@@ -543,7 +543,7 @@
                     </div>
                 </div>
                 <div style="    height: 350px;
-                width: 100%;">
+                width: 100%;" id="imageMissionColumn">
                     <img src="{{media_url}}{{ieee_nsu_student_branch.mission_image}}" alt="">
                 </div>
             </section>
@@ -554,10 +554,10 @@
         <section class="centering" style="background-color: #f9f9f9; margin: 10px 0;">
             <section class="vision max-width">
                 <div style="    height: 350px;
-                width: 100%;">
+                width: 100%;" id="imageVisionColumn">
                     <img src="{{media_url}}{{ieee_nsu_student_branch.vision_image}}" alt="">
                 </div>
-                <div style="padding: 20px;">
+                <div style="padding: 20px;" id="textVisionColumn">
                     <div style="margin-bottom: -10px;">
                         <h2>Vision</h2>
                     </div>
@@ -670,7 +670,30 @@
         {% endblock %}
 
     </div>
-
+    <script>
+        // Get the height of the columns and set the maximum height
+        window.addEventListener('load', function () {
+            var imageMissionColumn = document.getElementById('imageMissionColumn');
+            var textMissionColumn = document.getElementById('textMissionColumn');
+    
+            // Set the height of the shorter column to match the taller one
+            var maxHeight = Math.max(imageMissionColumn.offsetHeight, textMissionColumn.offsetHeight);
+            imageMissionColumn.style.height = maxHeight + 'px';
+            textMissionColumn.style.height = maxHeight + 'px';
+        });
+    </script>
+    <script>
+        // Get the height of the columns and set the maximum height
+        window.addEventListener('load', function () {
+            var imageMissionColumn = document.getElementById('imageVisionColumn');
+            var textMissionColumn = document.getElementById('textVisionColumn');
+    
+            // Set the height of the shorter column to match the taller one
+            var maxHeight = Math.max(imageVisionColumn.offsetHeight, textVisionColumn.offsetHeight);
+            imageVisionColumn.style.height = maxHeight + 'px';
+            textVisionColumn.style.height = maxHeight + 'px';
+        });
+    </script>
 <script> 
   // Dummy events data for demonstration, this is the calendar event load function
 
