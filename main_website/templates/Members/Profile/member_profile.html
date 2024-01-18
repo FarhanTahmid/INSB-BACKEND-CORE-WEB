@@ -251,6 +251,7 @@
                             <div class="information_1">
                                 <div class="name">{{member.name}}</div>
                                 <div class="ieee_id">{{member.ieee_id}}</div>
+                                <div>Recruitment Session : {{member.session.session}}</div>
                                 <div class="another_icons">
                                 {% if member.facebook_url %}
                                 <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
@@ -286,7 +287,6 @@
                                     {% endif %}
                                 </div>
                                 <div class="designation">
-                                    {% if member.team %}
                                     <div class="des-r1">
                                         <div class="des-r2">
                                             <div class="circle"></div>
@@ -298,7 +298,6 @@
                                             <div class="team">Team: {{member.team}}</div>
                                         </div>
                                     </div>
-                                    {% endif %}
                                     {% for sc_ag in sc_ag_position_data %}
                                     <div class="des-r1">
                                         <div class="des-r2">
