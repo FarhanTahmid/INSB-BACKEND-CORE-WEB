@@ -28,9 +28,16 @@ load_dotenv()
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if(os.environ.get('SETTINGS')=='dev'):
+    DEBUG = True
+else:
+    DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+if(os.environ.get('SETTINGS')=='dev'):
+    ALLOWED_HOSTS = ['*']
+else:
+    ALLOWED_HOSTS = ['ieeensusb.org','portal.ieeensusb.org']
+
 
 LOGIN_URL='/portal/users/login'
 
@@ -139,7 +146,7 @@ if(os.environ.get('SETTINGS')=='prod'):
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'db.sqlite3', # This is where you put the name of the db file. 
                  # If one doesn't exist, it will be created at migration time.
-    }
+        }
     }
 
 # Password validation
