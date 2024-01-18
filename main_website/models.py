@@ -267,7 +267,7 @@ class IEEE_NSU_Student_Branch(models.Model):
     mission_description = models.TextField(null=True,blank=True)
     mission_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE_NSU_Student_Branch/Mission_Image/")
     vision_description = models.TextField(null=True,blank=True)
-    vision_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE_NSU Student_Branch/Vision_Image/")
+    vision_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE_NSU_Student_Branch/Vision_Image/")
     events_description = models.TextField(null=True,blank=True)
     join_now_link = models.CharField(null=True,blank=True,max_length=200)
     achievements_description = models.TextField(null=True,blank=True)
