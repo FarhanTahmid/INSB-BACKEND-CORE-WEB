@@ -5,7 +5,7 @@ from ckeditor.fields import RichTextField
 # Create your models here.
 class Content_Team_Document(models.Model):
     event_id = models.ForeignKey(Events,on_delete=models.CASCADE)
-    document = models.FileField(blank=True,null=True,upload_to='Content Team Documents/')
+    document = models.FileField(blank=True,null=True,upload_to='Content_Team_Documents/')
 
     class Meta:
         verbose_name="Content Team Document"

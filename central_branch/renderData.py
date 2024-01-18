@@ -1294,7 +1294,7 @@ class Branch:
             elif(image_id == 'mission_image'):
                 ieee_nsu_student_branch.mission_image = None
             elif(image_id == 'vision_image'):
-                ieee_nsu_student_branch.ras_image = None
+                ieee_nsu_student_branch.vision_image = None
             
             #saving before returning
             ieee_nsu_student_branch.save()
@@ -1601,7 +1601,7 @@ class Branch:
             get_user=Members.objects.get(ieee_id = ieee_id)
             #get the previous profile picture of the user to delete it
             previous_profile_picture=settings.MEDIA_ROOT+str(get_user.user_profile_picture)
-            if(previous_profile_picture!=(settings.MEDIA_ROOT+'user_profile_pictures/default_profile_picture.png')):
+            if os.path.isfile(previous_profile_picture):
                 #removing previous one from system
                 os.remove(previous_profile_picture)
                 #saving new one
