@@ -1294,7 +1294,7 @@ class Branch:
             elif(image_id == 'mission_image'):
                 ieee_nsu_student_branch.mission_image = None
             elif(image_id == 'vision_image'):
-                ieee_nsu_student_branch.ras_image = None
+                ieee_nsu_student_branch.vision_image = None
             
             #saving before returning
             ieee_nsu_student_branch.save()
