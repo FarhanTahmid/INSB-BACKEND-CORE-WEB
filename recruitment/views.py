@@ -400,7 +400,8 @@ def recruit_member(request, session_id):
                             )
                             unique_code=renderData.Recruitment.generateUniqueCode(nsu_id=recruited_member.nsu_id,session=recruited_member.session_id,request=request)
                             recruited_member.unique_code=unique_code
-                            recruited_member.save()  # Saving the member to the database
+                            print(unique_code)
+                            # recruited_member.save()  # Saving the member to the database
                             
                             #send an email now to the recruited member
                             email_status=email_sending.send_email_to_recruitees_upon_recruitment(
