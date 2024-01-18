@@ -139,9 +139,9 @@ def team_details(request,primary,name):
         #load data of current team Members
         team_members=Branch.load_team_members(primary)
         #load all the roles and positions from database
+        positions=Branch.load_roles_and_positions()
         #creating team object
         team = Teams.objects.get(primary = primary)
-        positions=Branch.load_roles_and_positions()
         # Excluding position of EB, Faculty and SC-AG members
         for i in positions:
             if(i.is_eb_member or i.is_faculty or i.is_sc_ag_eb_member):
