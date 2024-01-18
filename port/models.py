@@ -22,11 +22,11 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
     page_title = models.TextField(null=True,blank=True,default="",verbose_name="Page Title")
     secondary_paragraph = models.TextField(null=True,blank=True,default="",verbose_name="Second Paragraph")
     about_description = models.TextField(null=True,blank=True,default="",verbose_name="About")
-    background_image = models.ImageField(null=True,blank=True,upload_to="main_website_files/societies & ag/background image/",verbose_name="Background Image")
+    background_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies_&_ag/background_image/",verbose_name="Background Image")
     mission_description = models.TextField(null=True,blank=True,default="",verbose_name="Mission")
-    mission_picture = models.ImageField(null=True,blank=True,upload_to="main_website_files/societies & ag/mission picture/",verbose_name="Mission Image")
+    mission_picture = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies_&_ag/mission_picture/",verbose_name="Mission Image")
     vision_description = models.TextField(null=True,blank=True,default="",verbose_name="Vission")
-    vision_picture = models.ImageField(null=True,blank=True,upload_to="main_website_files/societies & ag/vision picture/",verbose_name="Vision Image")
+    vision_picture = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies_&_ag/vision_picture/",verbose_name="Vision Image")
     what_is_this_description = models.TextField(null=True,blank=True,default="",verbose_name=f"What is it about ?")
     why_join_it = models.TextField(null=True,blank=True,default="",verbose_name=f"Why join it ?")
     what_activites_it_has = models.TextField(null=True,blank=True,default="",verbose_name="What activities we usually do ?")
@@ -38,40 +38,6 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
         verbose_name="Chapters-Societies-Affinity Group"
     def __str__(self) -> str:
         return str(self.group_name) 
-    
-    def _process_image(self, image_field):
-        if image_field:
-            img = Image.open(BytesIO(image_field.read()))
-
-            if hasattr(img, '_getexif'):
-                exif = img._getexif()
-                if exif:
-                    for tag, label in ExifTags.TAGS.items():
-                        if label == 'Orientation':
-                            orientation = tag
-                            break
-                    if orientation in exif:
-                        if exif[orientation] == 3:
-                            img = img.rotate(180, expand=True)
-                        elif exif[orientation] == 6:
-                            img = img.rotate(270, expand=True)
-                        elif exif[orientation] == 8:
-                            img = img.rotate(90, expand=True)
-
-            img.thumbnail((1080, 1080), Image.ANTIALIAS)
-            output = BytesIO()
-            img.save(output, format=img.format, quality=85)
-            output.seek(0)
-            setattr(self, image_field.name, File(output, image_field))
-
-    def save(self, *args, **kwargs):
-        
-        self._process_image(self.background_image)
-        self._process_image(self.mission_picture)
-        self._process_image(self.vision_picture)
-
-        return super().save(*args, **kwargs)
-
 class Teams(models.Model):
     '''
     The main theory of the model is:
