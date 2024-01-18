@@ -162,7 +162,7 @@ class HomepageItems:
                 society = SC_AG_Info.get_sc_ag_details(request,primary)
                 #getting collaborated events
                 collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
-                events = Events.objects.filter(publish_in_main_web= True,event_organiser = society).order_by('-event_date')
+                events = Events.objects.filter(publish_in_main_web= True,event_organiser = society)
                 #joining both the events list of collbarated and their own organised events
                 all_events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('-event_date')   
             #decalring empty dictionary for getting the event date and event

@@ -200,7 +200,7 @@
                                 <label for="name">Full Name</label>
                                 <input class="input" type="text" name="name" value="{{ user_data.name }}" required><br>                   
                                 <label for="address">Address</label>
-                                <input class="input" type="text" name="address" value="{{ user_data.home_address }}" required><br>
+                                <input class="input" type="text" name="address" value="{{ user_data.home_address }}"><br>
                                 <label for="email_personal">Email</label>
                                 <input class="input" type="email" name="email_personal" value="{{ user_data.email_personal }}" required><br>
                                 <label for="email_nsu">NSU Email</label>
@@ -216,13 +216,13 @@
                                 <label for="dob">Date of Birth</label>
                                 <input class="input" type="date" name="dob" value="{{ user_data.dob | safe}}" required><br>
                                 <label for="gender">Gender</label>
-                                <input class="input" type="text" name="gender" value="{{ user_data.gender }}" required><br>
+                                <input class="input" type="text" name="gender" placeholder="Male or Female" value="{{ user_data.gender }}" required><br>
                                 <label for="email_ieee">IEEE Mail</label>
                                 <input class="input" type="email" name="email_ieee" value="{{ user_data.email_ieee }}"><br>
                                 <label for="major">Major in NSU</label>
                                 <input class="input" type="text" name="major" value="{{ user_data.major }}" required><br>
                                 <label for="facebook_url">Facebook Profile Link</label>
-                                <input class="input" type="url" name="facebook_url" value="{{ user_data.facebook_url }}" required><br>
+                                <input class="input" type="url" name="facebook_url" value="{{ user_data.facebook_url }}"><br>
                             </div>
                             {% endif %}
                         </div>
