@@ -148,7 +148,10 @@ class IEEE_Bangladesh_Section(models.Model):
 
     class Meta:
         verbose_name="IEEE Bangladesh Section"
-
+    def save(self, *args, **kwargs):
+        # Override the save method to ensure only one instance exists
+        self.id = 1  # Set the primary key to 1 to always update the same row
+        super(IEEE_Bangladesh_Section, self).save(*args, **kwargs)
     def __str__(self) -> str:
         return str(self.pk)
     
@@ -180,7 +183,10 @@ class About_IEEE(models.Model):
 
     class Meta:
         verbose_name="About IEEE"
-
+    def save(self, *args, **kwargs):
+        # Override the save method to ensure only one instance exists
+        self.id = 1  # Set the primary key to 1 to always update the same row
+        super(About_IEEE, self).save(*args, **kwargs)
     def __str__(self) -> str:
         return str(self.pk)
     
@@ -274,6 +280,10 @@ class IEEE_NSU_Student_Branch(models.Model):
 
     class Meta:
         verbose_name="IEEE NSU Student Branch"
+    def save(self, *args, **kwargs):
+        # Override the save method to ensure only one instance exists
+        self.id = 1  # Set the primary key to 1 to always update the same row
+        super(IEEE_NSU_Student_Branch, self).save(*args, **kwargs)
     def __str__(self) -> str:
         return str(self.pk)
     
@@ -320,6 +330,10 @@ class IEEE_Region_10(models.Model):
 
     class Meta:
         verbose_name="IEEE Region 10"
+    def save(self, *args, **kwargs):
+        # Override the save method to ensure only one instance exists
+        self.id = 1  # Set the primary key to 1 to always update the same row
+        super(IEEE_Region_10, self).save(*args, **kwargs)
     def __str__(self) -> str:
         return str(self.pk)
     
