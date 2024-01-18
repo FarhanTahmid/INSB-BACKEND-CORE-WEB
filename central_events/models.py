@@ -40,7 +40,7 @@ class SuperEvents(models.Model):
     super_event_description=models.TextField(null=True,blank=True)
     start_date=models.DateField(null=True,blank=True,auto_now_add=False)
     end_date=models.DateField(null=True,blank=True,auto_now_add=False)
-    banner_image=ResizedImageField(null=True,blank=True,upload_to='Mega Event Banner Images/')
+    banner_image=ResizedImageField(null=True,blank=True,upload_to='Mega_Event_Banner_Images/')
     publish_mega_event=models.BooleanField(null=False,blank=False,default=False)
 
     class Meta:
@@ -137,7 +137,7 @@ class Event_Logistic_Items(models.Model):
         logistic_item_id=models.ForeignKey(Logistic_Item_List,null=True,blank=True,on_delete=models.CASCADE)
         buying_status=models.BooleanField(null=False,blank=False,default=False)
         spending_amount=models.FloatField(null=True,blank=True)
-        item_reciept=models.FileField(upload_to='Logistic Reciepts/',null=True,blank=True)
+        item_reciept=models.FileField(upload_to='Logistic_Reciepts/',null=True,blank=True)
 
 #Table for Media Links and Images
 class Media_Links(models.Model):
@@ -145,7 +145,7 @@ class Media_Links(models.Model):
     media_link=models.URLField(null=True,blank=True,max_length=300)
 class Media_Selected_Images(models.Model):
     event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
-    selected_image=models.ImageField(upload_to='Event Selected Images/',null=True,blank=True,default=None)
+    selected_image=models.ImageField(upload_to='Event_Selected_Images/',null=True,blank=True,default=None)
 
 ######################################################################################    
 
@@ -156,7 +156,7 @@ class Graphics_Links(models.Model):
     graphics_link=models.URLField(null=True,blank=True,max_length=300)
 class Graphics_Files(models.Model):
     event_id=models.ForeignKey(Events,on_delete=models.CASCADE)
-    graphics_file=models.FileField(null=True,blank=True,upload_to='Graphics Items/')
+    graphics_file=models.FileField(null=True,blank=True,upload_to='Graphics_Items/')
 ######################################################################################
     
 class Event_Feedback(models.Model):

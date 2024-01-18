@@ -130,10 +130,10 @@ class Magazines(models.Model):
     
 class IEEE_Bangladesh_Section(models.Model):
     about_ieee_bangladesh = models.TextField(null=True,blank=True)
-    ieee_bangladesh_logo = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Bangladesh Section/logo/")
+    ieee_bangladesh_logo = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE_Bangladesh_Section/logo/")
     ieee_bd_link = models.URLField(null=True,blank=True,max_length=200)
     member_and_volunteer_description = models.TextField(null=True,blank=True)
-    member_and_volunteer_picture = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Bangladesh Section/member_volunteer_picture/")
+    member_and_volunteer_picture = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE_Bangladesh_Section/member_volunteer_picture/")
     benefits_description = models.TextField(null=True,blank=True)
     student_branches_description = models.TextField(null=True,blank=True)
     affinity_groups_description = models.TextField(null=True,blank=True)
@@ -149,64 +149,27 @@ class IEEE_Bangladesh_Section(models.Model):
     class Meta:
         verbose_name="IEEE Bangladesh Section"
 
-    def _process_image(self, image_field):
-        if image_field:
-            img = Image.open(BytesIO(image_field.read()))
-
-            if hasattr(img, '_getexif'):
-                exif = img._getexif()
-                if exif:
-                    for tag, label in ExifTags.TAGS.items():
-                        if label == 'Orientation':
-                            orientation = tag
-                            break
-                    if orientation in exif:
-                        if exif[orientation] == 3:
-                            img = img.rotate(180, expand=True)
-                        elif exif[orientation] == 6:
-                            img = img.rotate(270, expand=True)
-                        elif exif[orientation] == 8:
-                            img = img.rotate(90, expand=True)
-
-            img.thumbnail((1080, 1080), Image.ANTIALIAS)
-            output = BytesIO()
-            img.save(output, format=img.format, quality=85)
-            output.seek(0)
-            setattr(self, image_field.name, File(output, image_field))
-
-    def save(self, *args, **kwargs):
-        # Override the save method to ensure only one instance exists
-        self.id = 1  # Set the primary key to 1 to always update the same row
-
-        # Process the background_image
-        self._process_image(self.ieee_bangladesh_logo)
-        self._process_image(self.member_and_volunteer_picture)
-         # Process other image fields as needed
-        # Example: self._process_image(self.mission_picture)
-        #          self._process_image(self.vision_picture)
-
-        super(IEEE_Bangladesh_Section, self).save(*args, **kwargs)
     def __str__(self) -> str:
         return str(self.pk)
     
 class About_IEEE(models.Model):
     about_ieee = models.TextField(null=True,blank=True)
-    about_image = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/About Image/")
+    about_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/About_Image/")
     learn_more_link = models.URLField(null=True,blank=True,max_length=200)
     mission_and_vision_link = models.URLField(null=True,blank=True,max_length=200)
     community_description = models.TextField(null=True,blank=True)
-    community_image = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Community Image/")
+    community_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Community_Image/")
     start_with_ieee_description = models.TextField(null=True,blank=True)
     collaboration_description = models.TextField(null=True,blank=True)
     publications_description = models.TextField(null=True,blank=True)
     events_and_conferences_description = models.TextField(null=True,blank=True)
     achievements_description = models.TextField(null=True,blank=True)
     innovations_and_developments_description = models.TextField(null=True,blank=True)
-    innovations_and_developments_image = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Innovation Development Image/")
+    innovations_and_developments_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Innovation_Development_Image/")
     students_and_member_activities_description = models.TextField(null=True,blank=True)
-    students_and_member_activities_image = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Student Member Activity Image/")
+    students_and_member_activities_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Student_Member_Activity_Image/")
     quality_description = models.TextField(null=True,blank=True)
-    quality_image = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Quality Image/")
+    quality_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE/Quality_Image/")
     join_now_link = models.URLField(null=True,blank=True,max_length=200)
     asia_pacific_link = models.URLField(null=True,blank=True,max_length=200)
     ieee_computer_organization_link = models.URLField(null=True,blank=True,max_length=200)
@@ -218,82 +181,18 @@ class About_IEEE(models.Model):
     class Meta:
         verbose_name="About IEEE"
 
-    def _process_image(self, image_field):
-        if image_field:
-            img = Image.open(BytesIO(image_field.read()))
-
-            if hasattr(img, '_getexif'):
-                exif = img._getexif()
-                if exif:
-                    for tag, label in ExifTags.TAGS.items():
-                        if label == 'Orientation':
-                            orientation = tag
-                            break
-                    if orientation in exif:
-                        if exif[orientation] == 3:
-                            img = img.rotate(180, expand=True)
-                        elif exif[orientation] == 6:
-                            img = img.rotate(270, expand=True)
-                        elif exif[orientation] == 8:
-                            img = img.rotate(90, expand=True)
-
-            img.thumbnail((1080, 1080), Image.ANTIALIAS)
-            output = BytesIO()
-            img.save(output, format=img.format, quality=85)
-            output.seek(0)
-            setattr(self, image_field.name, File(output, image_field))
-
-    def save(self, *args, **kwargs):
-        # Override the save method to ensure only one instance exists
-        self.id = 1  # Set the primary key to 1 to always update the same row
-        
-        # Process the background_image
-        self._process_image(self.about_image)
-        self._process_image(self.community_image)
-        self._process_image(self.innovations_and_developments_image)
-        self._process_image(self.students_and_member_activities_image)
-        self._process_image(self.quality_image)
-         # Process other image fields as needed
-        # Example: self._process_image(self.mission_picture)
-        #          self._process_image(self.vision_picture)
-        
-        super(About_IEEE, self).save(*args, **kwargs)
     def __str__(self) -> str:
         return str(self.pk)
     
 class IEEE_Bangladesh_Section_Gallery(models.Model):
 
-    picture = models.ImageField(null=False,blank=False,upload_to="main_website_files/About/IEEE Bangladesh Section/Gallery/")
+    picture = ResizedImageField(null=False,blank=False,upload_to="main_website_files/About/IEEE_Bangladesh_Section/Gallery/")
 
     class Meta:
         verbose_name="IEEE Bangladesh Section Gallery"
     def __str__(self) -> str:
         return self.pk
-    def save(self, *args, **kwargs):
-        if self.selected_image:
-            img = Image.open(BytesIO(self.selected_image.read()))
-            if hasattr(img, '_getexif'):
-                exif = img._getexif()
-                if exif:
-                    for tag, label in ExifTags.TAGS.items():
-                        if label == 'Orientation':
-                            orientation = tag
-                            break
-                    if orientation in exif:
-                        if exif[orientation] == 3:
-                            img = img.rotate(180, expand=True)
-                        elif exif[orientation] == 6:
-                            img = img.rotate(270, expand=True)
-                        elif exif[orientation] == 8:
-                            img = img.rotate(90, expand=True)
 
-            img.thumbnail((1080,1080), Image.ANTIALIAS)
-            output = BytesIO()
-            img.save(output, format=img.format, quality=85)
-            output.seek(0)
-            self.selected_image = File(output, self.selected_image.name) 
-
-        return super().save(*args, **kwargs)
 
 class HomePage_Thoughts(models.Model):
 
@@ -354,70 +253,27 @@ class Page_Link(models.Model):
     
 class IEEE_NSU_Student_Branch(models.Model):
     about_nsu_student_branch = models.TextField(null=True,blank=True)
-    about_image = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/About Image/")
+    about_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE_NSU_Student_Branch/About_Image/")
     chapters_description = models.TextField(null=True,blank=True)
-    ras_image = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/RAS Image/")
+    ras_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE_NSU_Student_Branch/RAS_Image/")
     ras_read_more_link = models.CharField(null=True,blank=True,max_length=200)
-    pes_image = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/PES Image/")
+    pes_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE_NSU_Student_Branch/PES_Image/")
     pes_read_more_link = models.CharField(null=True,blank=True,max_length=200)
-    ias_image = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/IAS Image/")
+    ias_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE_NSU_Student_Branch/IAS_Image/")
     ias_read_more_link = models.CharField(null=True,blank=True,max_length=200)
-    wie_image = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/WIE Image/")
+    wie_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE_NSU_Student_Branch/WIE_Image/")
     wie_read_more_link = models.CharField(null=True,blank=True,max_length=200)
     creative_team_description = models.TextField(null=True,blank=True)
     mission_description = models.TextField(null=True,blank=True)
-    mission_image = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/Mission Image/")
+    mission_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE_NSU_Student_Branch/Mission_Image/")
     vision_description = models.TextField(null=True,blank=True)
-    vision_image = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE NSU Student Branch/Vision Image/")
+    vision_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE_NSU Student_Branch/Vision_Image/")
     events_description = models.TextField(null=True,blank=True)
     join_now_link = models.CharField(null=True,blank=True,max_length=200)
     achievements_description = models.TextField(null=True,blank=True)
 
     class Meta:
         verbose_name="IEEE NSU Student Branch"
-
-    def _process_image(self, image_field):
-        if image_field:
-            img = Image.open(BytesIO(image_field.read()))
-
-            if hasattr(img, '_getexif'):
-                exif = img._getexif()
-                if exif:
-                    for tag, label in ExifTags.TAGS.items():
-                        if label == 'Orientation':
-                            orientation = tag
-                            break
-                    if orientation in exif:
-                        if exif[orientation] == 3:
-                            img = img.rotate(180, expand=True)
-                        elif exif[orientation] == 6:
-                            img = img.rotate(270, expand=True)
-                        elif exif[orientation] == 8:
-                            img = img.rotate(90, expand=True)
-
-            img.thumbnail((1080, 1080), Image.ANTIALIAS)
-            output = BytesIO()
-            img.save(output, format=img.format, quality=85)
-            output.seek(0)
-            setattr(self, image_field.name, File(output, image_field))
-
-    def save(self, *args, **kwargs):
-        # Override the save method to ensure only one instance exists
-        self.id = 1  # Set the primary key to 1 to always update the same row
-
-        # Process the background_image
-        self._process_image(self.about_image)
-        self._process_image(self.ras_image)
-        self._process_image(self.pes_image)
-        self._process_image(self.ias_image)
-        self._process_image(self.wie_image)
-        self._process_image(self.mission_image)
-        self._process_image(self.vision_image)
-         # Process other image fields as needed
-        # Example: self._process_image(self.mission_picture)
-        #          self._process_image(self.vision_picture)
-
-        super(IEEE_NSU_Student_Branch, self).save(*args, **kwargs)
     def __str__(self) -> str:
         return str(self.pk)
     
@@ -443,19 +299,19 @@ class VolunteerOfTheMonth(models.Model):
     
 class IEEE_Region_10(models.Model):
     ieee_region_10_description = models.TextField(null=True,blank=True)
-    ieee_region_10_image = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Region 10/Region 10 Image/")
+    ieee_region_10_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE_Region_10/Region_10_Image/")
     ieee_region_10_history_link = models.CharField(null=True,blank=True,max_length=200)
     young_professionals_description = models.TextField(null=True,blank=True)
-    young_professionals_image = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Region 10/Young Professionals Image/")
+    young_professionals_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE_Region_10/Young_Professionals_Image/")
     women_in_engineering_ddescription = models.TextField(null=True,blank=True)
     student_and_member_activities_description = models.TextField(null=True,blank=True)
     educational_activities_and_involvements_description = models.TextField(null=True,blank=True)
     industry_relations_description = models.TextField(null=True,blank=True)
     membership_development_description = models.TextField(null=True,blank=True)
-    membership_development_image = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Region 10/Membership Development Image/")
-    background_picture_parallax = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Region 10/Parallax Background Image/")
+    membership_development_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE_Region_10/Membership_Development_Image/")
+    background_picture_parallax = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE_Region_10/Parallax_Background_Image/")
     events_and_conference_description = models.TextField(null=True,blank=True)
-    events_and_conference_image = models.ImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE Region 10/Events and Conference Image/")
+    events_and_conference_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/About/IEEE_Region_10/Events_and_Conference_Image/")
     home_page_link = models.CharField(null=True,blank=True,max_length=200)
     website_link = models.CharField(null=True,blank=True,max_length=200)
     membership_inquiry_link = models.CharField(null=True,blank=True,max_length=200)
@@ -464,47 +320,6 @@ class IEEE_Region_10(models.Model):
 
     class Meta:
         verbose_name="IEEE Region 10"
-
-    def _process_image(self, image_field):
-        if image_field:
-            img = Image.open(BytesIO(image_field.read()))
-
-            if hasattr(img, '_getexif'):
-                exif = img._getexif()
-                if exif:
-                    for tag, label in ExifTags.TAGS.items():
-                        if label == 'Orientation':
-                            orientation = tag
-                            break
-                    if orientation in exif:
-                        if exif[orientation] == 3:
-                            img = img.rotate(180, expand=True)
-                        elif exif[orientation] == 6:
-                            img = img.rotate(270, expand=True)
-                        elif exif[orientation] == 8:
-                            img = img.rotate(90, expand=True)
-
-            img.thumbnail((1080, 1080), Image.ANTIALIAS)
-            output = BytesIO()
-            img.save(output, format=img.format, quality=85)
-            output.seek(0)
-            setattr(self, image_field.name, File(output, image_field))
-
-    def save(self, *args, **kwargs):
-        # Override the save method to ensure only one instance exists
-        self.id = 1  # Set the primary key to 1 to always update the same row
-
-        # Process the background_image
-        self._process_image(self.ieee_region_10_image)
-        self._process_image(self.young_professionals_image)
-        self._process_image(self.membership_development_image)
-        self._process_image(self.background_picture_parallax)
-        self._process_image(self.events_and_conference_image)
-         # Process other image fields as needed
-        # Example: self._process_image(self.mission_picture)
-        #          self._process_image(self.vision_picture)
-
-        super(IEEE_Region_10, self).save(*args, **kwargs)
     def __str__(self) -> str:
         return str(self.pk)
     
