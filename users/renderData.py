@@ -375,6 +375,8 @@ def getHitCountYearly():
         #TODO: need styling
         if number_of_people_per_month>0:
             monthly.append(number_of_people_per_month)
+        else:
+            monthly.append(0) 
         month_names.append(getMonthName(i+1)[0:3])
     year = datetime.datetime.now().year
     return year,month_names,monthly
