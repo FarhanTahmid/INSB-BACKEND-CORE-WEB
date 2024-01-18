@@ -134,7 +134,7 @@ def manage_team(request):
                 'positions':position,
                 
             }
-            return render(request,"logistics_and_operations_team\Manage Team\manage_team.html",context=context)
+            return render(request,"logistics_and_operations_team/Manage Team/manage_team.html",context=context)
         else:
             return render(request,"logistics_and_operations_team/access_denied.html", {'all_sc_ag':sc_ag,'user_data':user_data,})
         

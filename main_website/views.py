@@ -149,7 +149,7 @@ def event_details(request,event_id):
             has_interbranch_collab=False
             has_intrabranch_collab=False
             
-            if(get_inter_branch_collab is not None):
+            if(len(get_inter_branch_collab) > 0):
                 has_interbranch_collab=True
             if(get_intra_branch_collab is not None):
                 has_intrabranch_collab=True
@@ -803,6 +803,7 @@ def magazines(request):
         context={
             'page_title':"Magazines",
             'all_magazines':get_all_magazines,
+            'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         }
         return render(request,"Publications/Magazines/magazine.html",context=context)
     

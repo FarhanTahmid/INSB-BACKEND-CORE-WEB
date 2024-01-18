@@ -17,6 +17,7 @@ from port.models import Panels
 from PIL import Image, ExifTags
 from io import BytesIO
 from django.core.files import File
+import os
 
 # from membership_development_team.models import Renewal_Sessions
 # Create your models here.
@@ -53,30 +54,40 @@ class Members(models.Model):
     def get_absolute_url(self):
         return reverse('registered member',kwargs={'member_id':self.ieee_id})
     
+    def get_image_url(self):
+        return self.user_profile_picture
+    
     def save(self, *args, **kwargs):
-        if self.user_profile_picture:
-            img = Image.open(BytesIO(self.user_profile_picture.read()))
-            
-            if hasattr(img, '_getexif'):
-                exif = img._getexif()
-                if exif:
-                    for tag, label in ExifTags.TAGS.items():
-                        if label == 'Orientation':
-                            orientation = tag
-                            break
-                    if orientation in exif:
-                        if exif[orientation] == 3:
-                            img = img.rotate(180, expand=True)
-                        elif exif[orientation] == 6:
-                            img = img.rotate(270, expand=True)
-                        elif exif[orientation] == 8:
-                            img = img.rotate(90, expand=True)
 
-            img.thumbnail((1080,1080), Image.ANTIALIAS)
-            output = BytesIO()
-            img.save(output, format='JPEG', quality=85)
-            output.seek(0)
-            self.user_profile_picture = File(output, self.user_profile_picture.name) 
+        try:
+            this_instance = Members.objects.get(pk=self.pk)
+            if this_instance.user_profile_picture:
+                if this_instance.user_profile_picture != self.user_profile_picture:
+                    if os.path.isfile(this_instance.user_profile_picture.path):
+                        os.remove(this_instance.user_profile_picture.path)
+                        img = Image.open(BytesIO(self.user_profile_picture.read()))
+                        if hasattr(img, '_getexif'):
+                            exif = img._getexif()
+                            if exif:
+                                for tag, label in ExifTags.TAGS.items():
+                                    if label == 'Orientation':
+                                        orientation = tag
+                                        break
+                                if orientation in exif:
+                                    if exif[orientation] == 3:
+                                        img = img.rotate(180, expand=True)
+                                    elif exif[orientation] == 6:
+                                        img = img.rotate(270, expand=True)
+                                    elif exif[orientation] == 8:
+                                        img = img.rotate(90, expand=True)
+
+                        img.thumbnail((1080,1080), Image.ANTIALIAS)
+                        output = BytesIO()
+                        img.save(output, format=img.format, quality=85)
+                        output.seek(0)
+                        self.user_profile_picture = File(output, self.user_profile_picture.name)
+        except Members.DoesNotExist:
+            pass     
 
         return super().save(*args, **kwargs)
 

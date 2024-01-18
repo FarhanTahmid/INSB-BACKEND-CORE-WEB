@@ -1765,7 +1765,7 @@ def manage_main_website(request, primary):
                     #passing the fields data to the function to check length before saving
                     if Sc_Ag.checking_length(request,about_details,mission_description,vision_description,what_is_this_description,
                                why_join_it,what_activites_it_has,how_to_join):
-                        messages.error(request,"Please ensure your word limit is within 700 and you have filled out all descriptions")
+                        messages.error(request,"Please ensure your word limit is within 1500 and you have filled out all descriptions")
                         return redirect("chapters_and_affinity_group:manage_main_website",primary)
                     #passing the fields data to save the data in the database
                     if Sc_Ag.main_website_info(request,primary,about_details,about_image,background_image,

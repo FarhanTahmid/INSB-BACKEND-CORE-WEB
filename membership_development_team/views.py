@@ -1375,7 +1375,7 @@ def site_registration_faculty(request):
                 except Exception as e:
                     print(e)
                     messages.warning(request,"Something went wrong! Please Try again!")
-        return render(request,"Site Registration\site_registration_faculty.html")
+        return render(request,"Site Registration/site_registration_faculty.html")
     
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)

@@ -125,16 +125,21 @@ if(os.environ.get('SETTINGS')=='dev'):
     }
 if(os.environ.get('SETTINGS')=='prod'):
     DATABASES = {
-        'default': {
+        # 'default': {
                     
-            # Postgres in Vascel-dev
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('PROD_DATABASE_NAME'),
-            'USER': os.environ.get('PROD_DATABASE_USER'),
-            'PASSWORD': os.environ.get('PROD_DATABASE_PASSWORD'),
-            'HOST':os.environ.get('PROD_DATABASE_HOST'),
-            'PORT':'',
-        }
+        #     # Postgres in Vascel-dev
+        #     'ENGINE': 'django.db.backends.postgresql',
+        #     'NAME': os.environ.get('PROD_DATABASE_NAME'),
+        #     'USER': os.environ.get('PROD_DATABASE_USER'),
+        #     'PASSWORD': os.environ.get('PROD_DATABASE_PASSWORD'),
+        #     'HOST':os.environ.get('PROD_DATABASE_HOST'),
+        #     'PORT':'',
+        # }
+        'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3', # This is where you put the name of the db file. 
+                 # If one doesn't exist, it will be created at migration time.
+    }
     }
 
 # Password validation
@@ -212,11 +217,12 @@ handler500='central_branch.views.custom_500'
 
 #EMAIL SETTINGS
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST='smtp.gmail.com'
-EMAIL_PORT=587
+EMAIL_HOST='mail.ieeensusb.org'
+EMAIL_PORT='465'
 EMAIL_HOST_USER=os.environ.get('EMAIL_USER')
 EMAIL_HOST_PASSWORD=os.environ.get('EMAIL_PASSWORD')
-EMAIL_USE_TLS=True
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS=False
 
 # RESIZING IMAGE
 DJANGORESIZED_DEFAULT_SIZE = [1920, 1080]

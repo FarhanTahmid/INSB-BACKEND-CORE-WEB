@@ -188,8 +188,8 @@
 
     <div style="justify-content:center;text-align:center;">  
         <div class="btn-container">
-          <a href="{% url "recruitment:recruit_member" session.session %}" class="btn btn-outline b-primary text-primary">Recruit New Member</a>
-          <a href="{% url "recruitment:export_excel" session.session %}" class="btn btn-outline b-success text-success">Generate Excel Sheet For this Session</a>
+          <a href="{% url "recruitment:recruit_member" pk %}" class="btn btn-outline b-primary text-primary">Recruit New Member</a>
+          <a href="{% url "recruitment:export_excel" pk %}" class="btn btn-outline b-success text-success">Generate Excel Sheet For this Session</a>
         </div>
     </div>
     <!--DONUT CHART FOR PAYMENT COMPLETION STATISTICS-->

@@ -238,11 +238,13 @@
                                         style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                 </a>
                                 {% endif %}
+                                {% if member.email_ieee %}
                                 <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
                                     href="mailto:{{member.email_ieee}}" target="_blank">
                                     <i class="fa fa-envelope" aria-hidden="true"
                                         style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                 </a>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="information">
@@ -250,16 +252,27 @@
                                 <div class="name">{{member.name}}</div>
                                 <div class="ieee_id">{{member.ieee_id}}</div>
                                 <div class="another_icons">
-                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
-                                        <i class="fa fa-facebook" aria-hidden="true"
-                                            style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
-                                    </a>
-                                    <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="#" target="_blank">
-                                        <i class="fa fa-linkedin" aria-hidden="true"
-                                            style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
-                                    </a>
+                                {% if member.facebook_url %}
+                                <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="{{member.facebook_url}}" target="_blank">
+                                    <i class="fa fa-facebook" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                </a>
+                                {% endif %}
+                                {% if member.linkedin_url %}
+                                <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="{{member.linkedin_url}}" target="_blank">
+                                    <i class="fa fa-linkedin" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                </a>
+                                {% endif %}
+                                {% if member.email_ieee %}
+                                <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
+                                    href="mailto:{{member.email_ieee}}" target="_blank">
+                                    <i class="fa fa-envelope" aria-hidden="true"
+                                        style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                </a>
+                                {% endif %}
                                 </div>
                             </div>
                             <div class="light_bar"></div>
@@ -270,9 +283,6 @@
                                     {% endif %}
                                     {% if member.email_nsu %}
                                     <div class="nsu_email">NSU Email: {{member.email_nsu}}</div>
-                                    {% endif %}
-                                    {% if member.ieee_id == 98955436 %}
-                                    <div class="birthday">Birth Date: What are you up to?</div>
                                     {% endif %}
                                 </div>
                                 <div class="designation">

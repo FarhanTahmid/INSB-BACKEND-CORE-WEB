@@ -301,7 +301,7 @@ class HomepageItems:
                 #getting current tenure
                 current_tenure = Panels.objects.get(current = True, panel_of = society)
                 #getting all th eb roles
-                roles = Roles_and_Position.objects.filter(is_faculty=False,is_sc_ag_eb_member = True,role_of = society).order_by('rank','role','role_of')
+                roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society,is_faculty=False).order_by('rank','role','role_of')
                 for role in roles:
                     try:
                         #getting the member of the particular society whose role matches with the role iteration in the list and is if current panel

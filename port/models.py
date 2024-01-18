@@ -1,6 +1,9 @@
 from django.db import models
 from ckeditor.fields import RichTextField
 from django_resized import ResizedImageField
+from PIL import Image, ExifTags
+from io import BytesIO
+from django.core.files import File
 
 # Create your models here.
 class Chapters_Society_and_Affinity_Groups(models.Model):
@@ -19,11 +22,11 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
     page_title = models.TextField(null=True,blank=True,default="",verbose_name="Page Title")
     secondary_paragraph = models.TextField(null=True,blank=True,default="",verbose_name="Second Paragraph")
     about_description = models.TextField(null=True,blank=True,default="",verbose_name="About")
-    background_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies & ag/background image/",verbose_name="Background Image")
+    background_image = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies_&_ag/background_image/",verbose_name="Background Image")
     mission_description = models.TextField(null=True,blank=True,default="",verbose_name="Mission")
-    mission_picture = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies & ag/mission picture/",verbose_name="Mission Image")
+    mission_picture = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies_&_ag/mission_picture/",verbose_name="Mission Image")
     vision_description = models.TextField(null=True,blank=True,default="",verbose_name="Vission")
-    vision_picture = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies & ag/vision picture/",verbose_name="Vision Image")
+    vision_picture = ResizedImageField(null=True,blank=True,upload_to="main_website_files/societies_&_ag/vision_picture/",verbose_name="Vision Image")
     what_is_this_description = models.TextField(null=True,blank=True,default="",verbose_name=f"What is it about ?")
     why_join_it = models.TextField(null=True,blank=True,default="",verbose_name=f"Why join it ?")
     what_activites_it_has = models.TextField(null=True,blank=True,default="",verbose_name="What activities we usually do ?")
@@ -35,7 +38,6 @@ class Chapters_Society_and_Affinity_Groups(models.Model):
         verbose_name="Chapters-Societies-Affinity Group"
     def __str__(self) -> str:
         return str(self.group_name) 
-
 class Teams(models.Model):
     '''
     The main theory of the model is:
