@@ -27,9 +27,10 @@ class Recruitment:
     
     
     
-    def getSessionid(session_name):
-        """Returns the id of the session"""
-        return{'session':recruitment_session.objects.filter(session=session_name).values('id')}
+    def getSessionid(session_id):
+        """Returns the session"""
+        print(session_id)
+        return recruitment_session.objects.get(id=session_id)
     
     
     
