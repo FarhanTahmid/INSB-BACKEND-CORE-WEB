@@ -181,7 +181,10 @@
                             </div>
                         </div>
                         <label for="image-upload">Update your profile picture</label> 
-                        <input class="input-img" name="profile_picture" type="file" id="image-upload" accept="image/*"><br>
+                        <input class="input-img" name="profile_picture" type="file" id="image-upload" accept="image/*">
+                        <p id="error-message" style="color: red;"></p>
+
+                        <br>
                         <div class="profile_info">
                             {% if user_data.is_admin_user %}
                             <div>
@@ -251,7 +254,24 @@
 
     </div>
     <!-- app end-->
-
+    <script>
+        document.getElementById('image-upload').addEventListener('change', function() {
+          var fileInput = this;
+          var errorMessage = document.getElementById('error-message');
+    
+          if (fileInput.files.length > 0) {
+            var fileSize = fileInput.files[0].size; // in bytes
+            var maxSize = {{picture_max_size}}; // 4 MB in bytes
+    
+            if (fileSize > maxSize) {
+              errorMessage.textContent = 'File size exceeds 4 MB. Please choose a smaller file.';
+              fileInput.value = ''; // Clear the input to prevent uploading the large file
+            } else {
+              errorMessage.textContent = ''; // Clear any previous error message
+            }
+          }
+        });
+      </script>
     {% block common_js %}
     {% include "common_js.html" %}
     {% endblock common_js %}

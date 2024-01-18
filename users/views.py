@@ -331,11 +331,15 @@ def update_information(request):
                 if('profile_picture' in request.FILES):
                     #Get the image file
                     file=request.FILES.get('profile_picture')
-                    change_pro_pic=current_user.change_profile_picture(file) #Calling function to change profile picture of the user
-                    if(change_pro_pic==False):
-                        return DatabaseError
+                    if(file.size>(4*1024*1024)):
+                        messages.warning(request,"Maximum File size of 4 MB exceeded!")
+                        return redirect('users:update_information')
                     else:
-                        messages.info(request,"Profile Picture was changed successfully!")
+                        change_pro_pic=current_user.change_profile_picture(file) #Calling function to change profile picture of the user
+                        if(change_pro_pic==False):
+                            return DatabaseError
+                        else:
+                            messages.info(request,"Profile Picture was changed successfully!")
             except MultiValueDictKeyError:
                 messages.info(request,"Please select a file first!")
 
@@ -388,6 +392,7 @@ def update_information(request):
         context={
             'user_data' : profile_data,
             'all_sc_ag':sc_ag,
+            'picture_max_size':4*1024*1024,
         }
 
         return render(request,"users/update_information.html", context)
