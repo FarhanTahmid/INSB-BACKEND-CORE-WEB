@@ -571,7 +571,7 @@
                         <div class="card executive-body-profile text-center">
                             <div class="executive-body-profile-img-container">
                                 <img class="executive-body-profile-images img-fluid"
-                                    src="{{media_url}}{{faculty_advisor.member.user_profile_picture}}" alt="">
+                                    src="{{media_url}}{{faculty_advisor.member.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
                             </div>
                             <div class="executive-body-profile-content">
                                 <p><b>{{faculty_advisor.member.name}}</b></p>
@@ -604,7 +604,7 @@
                         <div class="card executive-body-profile text-center">
                             <div class="executive-body-profile-img-container">
                                 <img class="executive-body-profile-images img-fluid"
-                                    src="{{media_url}}{{members.member.user_profile_picture}}" alt="">
+                                    src="{{media_url}}{{members.member.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
                             </div>
                             <div class="executive-body-profile-content">
                                 <p><b>{{members.member.name}}</b></p>
