@@ -181,9 +181,7 @@
         }
 
         @media screen and (max-width: 425px) {
-            .max-width {
-                max-width: 80%;
-            }
+
         }
 
         .blog-card::after {
@@ -207,6 +205,11 @@
         }
         .blog-card-container p{
             font-weight: 400;
+        }
+        .share_box{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
     </style>
 </head>
@@ -292,6 +295,30 @@
 
                     <!--Right part of the page start-->
                     <div class="aside">
+                        <div class="share_box">
+                            <!--Share event box-->
+                            <h6
+                                style="text-align: center;  font-weight: bolder; margin-bottom: -15px; color: #002855;">
+                                SHARE THIS
+                                BLOG </h6>
+                            <hr style="width: 50%; border: solid .5px #ebebeb;">
+                            <div class="socialmedia_icon">
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="popup" 
+                                onclick="window.open('https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}','popup','width=600,height=600'); return false;"><i class="fa-brands fa-square-facebook" style="color: #3b5996;font-size: 34px;"></i></a>
+                                
+                                <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="popup"
+                                onclick="window.open('https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}','popup','width=600,height=600'); return false;"><i class="fa-brands fa-x-twitter" style="color: #000;font-size: 34px;"></i></a>
+                                
+                                <a href="https://www.linkedin.com/shareArticle?mini=true&url={{request.build_absolute_uri}}" target="popup"
+                                onclick="window.open('https://www.linkedin.com/shareArticle?mini=true&url={{request.build_absolute_uri}}','popup','width=600,height=600'); return false;"><i class="fa-brands fa-linkedin"
+                                        style="color: #457399;font-size: 34px;"></i></a>
+                                <a href="mailto:?subject=Join {{event.event_name}} organized by {{event.event_organiser}} &amp;body=Check out this event details here {{request.build_absolute_uri}}."><i class="fa-solid fa-square-envelope"
+                                        style="color: #ff5d5e;font-size: 34px;"></i></a>
+                            </div>
+                        </div>
+                        <div>
+                            <hr style="width: 100%; border: 1px solid #000;">
+                        </div>
                         <div>
                             <p style="font-size: 20px; font-weight:400; color: #75787B;">Recent News</p>
                         </div>
