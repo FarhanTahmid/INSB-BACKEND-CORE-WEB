@@ -251,7 +251,10 @@
                             <div class="information_1">
                                 <div class="name">{{member.name}}</div>
                                 <div class="ieee_id">{{member.ieee_id}}</div>
+                                {% if member.session.session %}
                                 <div>Recruitment Session : {{member.session.session}}</div>
+                                {% else %}
+                                {% endif %}
                                 <div class="another_icons">
                                 {% if member.facebook_url %}
                                 <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
