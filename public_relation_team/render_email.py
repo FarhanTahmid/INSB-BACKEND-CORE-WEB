@@ -288,11 +288,11 @@ class PRT_Email_System:
 
                         #Removing those file and deleting the object from database after sending email
                         email_attachements = Email_Attachements.objects.filter(email_name = email_name)
-                        for i in email_attachements:
-                            path = settings.MEDIA_ROOT+str(i.email_content)
-                            os.remove(path)
-                            i.delete()
-                            i.save()
+                        if len(email_attachements)>0:
+                            for i in email_attachements:
+                                path = settings.MEDIA_ROOT+str(i.email_content)
+                                os.remove(path)
+                                i.delete()
                         return True
                     
                     
