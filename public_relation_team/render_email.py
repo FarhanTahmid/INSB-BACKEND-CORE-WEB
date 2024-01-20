@@ -291,11 +291,10 @@ class PRT_Email_System:
                         if len(email_attachements)>0:
                             for i in email_attachements:
                                 path = settings.MEDIA_ROOT+str(i.email_content)
-                                os.remove(path)
                                 i.delete()
+                                os.remove(path)          
                         return True
-                    
-                    
+
                     else:
         
                         email=EmailMultiAlternatives(subject,mail_body,
