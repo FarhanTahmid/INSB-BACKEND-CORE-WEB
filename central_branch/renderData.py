@@ -86,14 +86,23 @@ class Branch:
         '''This function adds new event category according to the group''' 
 
         try:
+            #lower letter casing
             event_type_lower = event_type.lower()
-            try:
-                registered_event_category = Event_Category.objects.get(event_category = event_type_lower,event_category_for=Chapters_Society_and_Affinity_Groups.objects.get(primary = group_number))
-                registered_event_category = registered_event_category.event_category.lower()
-                if event_type_lower == registered_event_category:
-                    return False 
-            except:
-                new_event_type = Event_Category.objects.create(event_category=event_type_lower,event_category_for = Chapters_Society_and_Affinity_Groups.objects.get(primary = group_number))
+            event_type_lower_with_no_space = event_type_lower.replace(" ","") 
+            #creating a new list
+            catagories = []
+            #getting all catagories of particular society
+            registered_event_categories = Event_Category.objects.filter(event_category_for=Chapters_Society_and_Affinity_Groups.objects.get(primary = group_number))
+            #making all the catagories to lower casing
+            for catagory in registered_event_categories:
+                word = catagory.event_category.lower()
+                word = word.replace(" ","")
+                catagories.append(word)
+            #if same exists then preventing addition
+            if event_type_lower_with_no_space in catagories:
+                return False 
+            else:
+                new_event_type = Event_Category.objects.create(event_category=event_type,event_category_for = Chapters_Society_and_Affinity_Groups.objects.get(primary = group_number))
                 new_event_type.save()
                 return True
         except Exception as e:
