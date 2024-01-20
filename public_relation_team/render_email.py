@@ -292,6 +292,7 @@ class PRT_Email_System:
                             path = settings.MEDIA_ROOT+str(i.email_content)
                             os.remove(path)
                             i.delete()
+                            i.save()
                         return True
                     
                     
