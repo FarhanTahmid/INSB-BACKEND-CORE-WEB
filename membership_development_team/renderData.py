@@ -417,24 +417,21 @@ class MDT_DATA:
                     #assigning unique id
                     scheduled_email_id = f"{members.nsu_id}_{scheduled_email_date_time}"
                     #providing email details
-                    subject="Birthday Greetings! from IEEE"
+                    subject="Birthday Greetings from IEEE NSU Student Branch."
                     mail_body =f"""
-🎉 Happy Birthday! 🎂
-
+                    
 Dear {members.name},
 
-Wishing you a day filled with joy, laughter, and unforgettable moments as you celebrate another fantastic year of life! 🥳🎈 On behalf of the entire IEEE NSU team, we extend our warmest birthday wishes to you.
+Wishing you a very happy birthday on behalf of IEEE NSU Student Branch. On your birthday we wish you all the success and happiness on your upcoming future and prospects.\n
 
-May this special day bring you happiness, success, and the realization of your dreams. Your contributions to the IEEE NSU family have been invaluable, and we are grateful to have you as a cherished member of our team.
+Birthdays are always special for every individual and having your grace brings not only bliss but your contributions are what makes IEEE NSU SB thrive for more. May it be a joyful celebration of your achievements and a reminder of the positive impact you've made. Wishing you continued success, happiness, and fulfillment in every step of your journey.
+Enjoy every moment of your special day and make wonderful memories that will last a lifetime. Here's to another year of growth, friendship, and success!\n
 
-May the year ahead be filled with exciting opportunities, meaningful connections, and achievements that surpass your expectations. Your dedication and passion inspire us all, and we look forward to achieving great milestones together.
-
-Enjoy every moment of your special day and make wonderful memories that will last a lifetime. Here's to another year of growth, friendship, and success!
-
+Once again,\n
 Happy Birthday! 🎉🎂
 
 Best regards,
-IEEE NSU Team
+From every individuals of IEEE NSU SB community.
                     """
                     email_list = []
                     email_list.append(members.email_nsu)
