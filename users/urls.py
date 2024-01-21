@@ -13,8 +13,10 @@ urlpatterns = [
     #path('', include('django.contrib.auth.urls')),
     #loginpage
     path('login',views.login, name='login'),
+    # signup user validation
+    path('signup/validation/',views.signup_user_validation,name="signup_validation"),
     #signup page
-    path('signup',views.signup,name='signup'),
+    path('signup/<int:ieee_id>/<str:token>/',views.signup,name='signup'),
     #dashboard
     path('dashboard',views.dashboard,name='dashboard'),
     #logoutUser

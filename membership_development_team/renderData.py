@@ -422,17 +422,17 @@ class MDT_DATA:
                     
 Dear {members.name},
 
-Wishing you a very happy birthday on behalf of IEEE NSU Student Branch. On your birthday we wish you all the success and happiness on your upcoming future and prospects.\n
+Wishing you a very happy birthday on behalf of IEEE NSU Student Branch. On your birthday we wish you all the success and happiness on your upcoming future and prospects.
 
 Birthdays are always special for every individual and having your grace brings not only bliss but your contributions are what makes IEEE NSU SB thrive for more. May it be a joyful celebration of your achievements and a reminder of the positive impact you've made. Wishing you continued success, happiness, and fulfillment in every step of your journey.
-Enjoy every moment of your special day and make wonderful memories that will last a lifetime. Here's to another year of growth, friendship, and success!\n
+Enjoy every moment of your special day and make wonderful memories that will last a lifetime. Here's to another year of growth, friendship, and success!
 
-Once again,\n
+Once again,
 Happy Birthday! 🎉🎂
 
 Best regards,
-From every individuals of IEEE NSU SB community.
-                    """
+From every individuals of IEEE NSU SB community."""
+
                     email_list = []
                     email_list.append(members.email_nsu)
                     email_list.append(members.email_personal)

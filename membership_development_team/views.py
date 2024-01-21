@@ -1257,7 +1257,7 @@ def site_registration_form(request):
     try:
 
         load_all_teams=Teams.objects.all()
-        positions=Roles_and_Position.objects.all()
+        positions=PortData.get_all_positions_of_everyone(request,sc_ag_primary=1)
         
         context={
             'team_data':load_all_teams,
