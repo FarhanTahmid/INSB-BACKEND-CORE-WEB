@@ -38,17 +38,7 @@ class EmailHandler:
         
         subject="Signup Link - IEEE NSU SB Portal"
         
-        message=f"""
-        Dear {member.name},
-        Your Portal signup link is:
-        {site_domain}/portal/users/signup/{member.ieee_id}/{token}/
-        Please, do not share this link anywhere else.
-        
-        Thank you.
-        
-        This message was generated from IEEE NSU SB Portal System. If you are not supposed to recieve this email, please contact our Website Development Team.
-        
-        """
+        message=f"Dear {member.name},\nYour Portal signup link is:\n{site_domain}/portal/users/signup/{member.ieee_id}/{token}/\nPlease, do not share this link anywhere else.\nThank you.\n\nThis message was generated from IEEE NSU SB Portal System. If you are not supposed to recieve this email, please contact our Website Development Team."
         email_from = settings.EMAIL_HOST_USER
 
         recipient_list = [member.email_personal]
