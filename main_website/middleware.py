@@ -11,7 +11,8 @@ class BlockMainWebMiddleWare:
         self.get_response=get_response
         
     def __call__(self,request):
-        if(Access_Render.system_administrator_superuser_access(username=request.user.username) or Access_Render.system_administrator_staffuser_access(username=request.user.username)):
+        if(Access_Render.system_administrator_superuser_access(username=request.user.username) or Access_Render.system_administrator_staffuser_access(username=request.user.username)
+           or Access_Render.eb_access(username=request.user.username) or Access_Render.sc_ag_eb_access(username=request.user.username)):
             return self.get_response(request)
         else:
             
