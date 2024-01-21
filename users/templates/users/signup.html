@@ -19,12 +19,9 @@
             <img src="{% static 'INSB.png' %}" alt="logo">
         </div>
         <div class="Form d-grid p-3">
-              <form method="POST" action='signup'>
+              <form method="POST">
                 {% csrf_token %}
-                <div class="d-grid pt-3">
-                    <input type="text" placeholder="Enter IEEE ID" autocomplete="off" class="Form-cont form-control border usernameInp my-1 p-3" Required name='ieee_id'>
-                </div>
-
+                
                 <div class="d-grid pt-3">
                     <input type="Password" placeholder="Enter Password" id="myInput" autocomplete="off" class="Form-cont form-control border passwordInp my-1 p-3" Required name='password'>
                 </div>
@@ -36,9 +33,7 @@
                 
 
                 <div class="d-grid pt-3">
-                   <button type="submit" class="log-btn btn-outline-dark" onclick='users:login'>
-                        Signup
-                   </button>
+                   <input type="submit" class="log-btn btn-outline-dark" value="Login" name="login">
                 </div>
                    <br>
                 {% for message in messages %}

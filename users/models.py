@@ -104,6 +104,16 @@ class ResetPasswordTokenTable(models.Model):
     def __str__(self) -> str:
         return str(self.pk)
     
+class UserSignupTokenTable(models.Model):
+    user=models.ForeignKey(Members,on_delete=models.CASCADE)
+    token=models.CharField(max_length=100,null=False,blank=False)
+    
+    class Meta:
+        verbose_name="User Signup Token"
+    
+    def __str__(self) -> str:
+        return str(self.pk)
+    
 '''This class is for the number of daily hits on the page'''
 class User_IP_Address(models.Model):
     ip_address = models.GenericIPAddressField(blank=True,null=True)

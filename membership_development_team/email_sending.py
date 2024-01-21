@@ -35,7 +35,7 @@ def send_email_on_site_registration_verification_to_user(request,new_member_name
         subject="Site Registration Request Approved"
         #Getting the site domain
         site_domain=request.META['HTTP_HOST']
-        message=f"Dear {new_member_name}, Welcome aboard!\nYour request to join IEEE NSU SB's Portal has been Approved! Please redirect to the site to Signup With your IEEE ID using this link: {site_domain}/portal/users/signup\nThank You."
+        message=f"Dear {new_member_name}, Welcome aboard!\nYour request to join IEEE NSU SB's Portal has been Approved! Please redirect to the site to Signup With your IEEE ID using this link: {site_domain}/portal/users/signup/validation/\nThank You."
         email_from=settings.EMAIL_HOST_USER
         recipient_list=[new_member_personal_mail,]
         send_mail(
