@@ -269,3 +269,9 @@ class PortData:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"Error Creating Team. Something went wrong!")
             return False
+        
+    def get_sc_ag_current_panel(request,sc_ag_primary):
+        # returns the object of current panels of sc ag
+        current_panel=Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),current=True).first()
+        return current_panel
+        

@@ -36,6 +36,11 @@ urlpatterns = [
     path('team/<int:team_primary>',views.team_intros,name="team_intro"),
     path('member_profile/<str:ieee_id>',views.member_profile, name="member_profile"),
 
+    # sc_ag_panels
+    path('panels/sc_ag/<int:sc_ag_primary>/',views.sc_ag_current_panel_members,name="sc_ag_current_panel"),
+    path('panels/sc_ag/<int:sc_ag_primary>/<int:panel_pk>/<str:panel_year>',views.sc_ag_panel_members,name="sc_ag_panel_members"),
+    
+    
     # Publications
     path('blogs',views.blogs,name="blogs"),
     path('blogs/<int:pk>',views.blog_description, name="blog_description"),
