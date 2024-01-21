@@ -24,6 +24,7 @@ from system_administration.system_error_handling import ErrorHandling
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 import calendar
 from datetime import datetime
+from port.renderData import PortData
 
 
 class LoggedinUser:
@@ -616,7 +617,35 @@ class PanelMembersData:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"Can not remove alumni from Branch Panel. Something went wrong!")
             return False
+    
+    def get_sc_ag_members_from_current_panel(request,sc_ag_primary):
+        # returns all the members of the current panel of sc_ag
+        try:
+            get_current_panel_of_sc_ag=PortData.get_sc_ag_current_panel(request=request,sc_ag_primary=sc_ag_primary)
+            if(get_current_panel_of_sc_ag is not None):
+                get_current_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_current_panel_of_sc_ag.pk))
+                return get_current_panel_members
+            else:
+                return None      
+        except Exception as e:
+            PanelMembersData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            # ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return None
+    
+    def get_sc_ag_members_from_panel(request,panel_pk):
+        # returns all the members of the given panel
+        try:
+            get_all_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=panel_pk))
 
+            if get_all_members is not None:
+                return get_all_members
+            else:
+                return None
+        except Exception as e:
+            PanelMembersData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            # ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return None
+        
 class Alumnis:
     logger=logging.getLogger(__name__)
     
@@ -663,5 +692,3 @@ class Alumnis:
             Alumnis.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
-
-      

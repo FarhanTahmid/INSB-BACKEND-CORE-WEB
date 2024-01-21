@@ -5,9 +5,11 @@ from port.models import Teams,Roles_and_Position
 from system_administration.models import MDT_Data_Access
 from system_administration.render_access import Access_Render
 from datetime import date
-from datetime import datetime
+from datetime import datetime,timedelta,time
 from central_branch import renderData
-
+from django_celery_beat.models import ClockedSchedule,PeriodicTask
+import json
+from zoneinfo import ZoneInfo
 
 class MDT_DATA:
     
@@ -392,6 +394,65 @@ class MDT_DATA:
         if(len(co_ordinators)>0):
             return co_ordinators[0]
         return False
+    
+    def wish_members_birthday(self):
+
+        '''This function will run everday around 11:50pm to check which members
+        have birthday on the following day to greet them'''
+        #gettting tomorrows date
+        tomorrow = datetime.now() + timedelta(days=1)
+        #getting our time zone
+        my_timezone = ZoneInfo("Asia/Dhaka")
+        #scheduling it to be sent at 12:00 AM
+        scheduled_email_date_time = datetime.combine(datetime.today(), time(0,0)).replace(tzinfo=None).astimezone(my_timezone)
+        #getting all members
+        all_members = Members.objects.all()
+        #creating instance of schedule 
+        clocked,created = ClockedSchedule.objects.get_or_create(clocked_time=scheduled_email_date_time)
+
+        for members in all_members:  
+            if members.date_of_birth:
+                #only getting registered if there are birthdays tomorrow
+                if members.date_of_birth.day == tomorrow.day and members.date_of_birth.month == tomorrow.month:
+                    #assigning unique id
+                    scheduled_email_id = f"{members.nsu_id}_{scheduled_email_date_time}"
+                    #providing email details
+                    subject="Birthday Greetings from IEEE NSU Student Branch."
+                    mail_body =f"""
+                    
+Dear {members.name},
+
+Wishing you a very happy birthday on behalf of IEEE NSU Student Branch. On your birthday we wish you all the success and happiness on your upcoming future and prospects.\n
+
+Birthdays are always special for every individual and having your grace brings not only bliss but your contributions are what makes IEEE NSU SB thrive for more. May it be a joyful celebration of your achievements and a reminder of the positive impact you've made. Wishing you continued success, happiness, and fulfillment in every step of your journey.
+Enjoy every moment of your special day and make wonderful memories that will last a lifetime. Here's to another year of growth, friendship, and success!\n
+
+Once again,\n
+Happy Birthday! 🎉🎂
+
+Best regards,
+From every individuals of IEEE NSU SB community.
+                    """
+                    email_list = []
+                    email_list.append(members.email_nsu)
+                    email_list.append(members.email_personal)
+                    to_email_list = json.dumps(email_list)
+
+                    PeriodicTask.objects.create(
+                        clocked = clocked,
+                        name = scheduled_email_id,
+                        task = "users.tasks.send_birthday_wish_email",
+                        args =json.dumps([to_email_list,subject,mail_body]),
+                        one_off = True,
+                        enabled = True,
+                    )
+
+               
+        
+
+
+
+                
         
             
 

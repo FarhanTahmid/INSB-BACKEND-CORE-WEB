@@ -1464,13 +1464,157 @@ def mega_event_description_page(request,mega_event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
     
-# def test_view(request):
-#     #loading all the teams of Branch
-#     branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
-#     context={
-#             'page_title':"Lost?!",
-#             'branch_teams':branch_teams,
-#         }
- 
-#     return render(request,"test.html",context=context)
+def sc_ag_current_panel_members(request,sc_ag_primary):
     
+    # get sc ag
+    sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)
+    
+    # get all the panels of sc ag
+    get_all_panels=Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).order_by('-year')
+
+    # get current panel of sc ag
+    current_panel=PortData.get_sc_ag_current_panel(request=request,sc_ag_primary=sc_ag_primary)
+    
+    context={
+        'has_current_panel':True,
+        'sc_ag':sc_ag,
+        'page_title':"Current Executive Committee",
+        'page_subtitle':sc_ag.group_name,
+        'panels':get_all_panels,
+        
+    }
+    if(current_panel is not None):
+        get_current_panel_members=PanelMembersData.get_sc_ag_members_from_current_panel(request,sc_ag_primary=sc_ag_primary)
+
+        if get_current_panel_members is not None:
+            sc_ag_faculty_members=[]
+            sc_ag_chair=[]
+            sc_ag_eb_members=[]
+            sc_ag_officer_members=[]
+            sc_ag_volunteer_members=[]
+            
+            for members in get_current_panel_members:
+                if members.position.is_faculty:
+                    sc_ag_faculty_members.append(members)
+                elif members.position.is_sc_ag_eb_member:
+                    if members.position.role=="Chair":
+                        sc_ag_chair.append(members)
+                    else:
+                        sc_ag_eb_members.append(members)
+                elif members.position.is_officer:
+                    sc_ag_officer_members.append(members)
+                elif members.position.is_volunteer:
+                    sc_ag_volunteer_members.append(members)
+            
+            has_faculty_members=False
+            has_chair=False
+            has_eb_members=False
+            has_officer_member=False
+            has_volunteer_member=False
+            
+            if(len(sc_ag_faculty_members)>0):
+                has_faculty_members=True
+            if(len(sc_ag_chair)>0):
+                has_chair=True
+            if(len(sc_ag_eb_members)>0):
+                has_eb_members=True
+            if(len(sc_ag_officer_members)>0):
+                has_officer_member=True
+            if(len(sc_ag_volunteer_members)>0):
+                has_volunteer_member=True
+            
+            context['has_sc_ag_faculty_advisor']=has_faculty_members
+            context['has_branch_chair']=has_chair
+            context['has_branch_eb']=has_eb_members
+            context['has_officer_member']=has_officer_member
+            context['has_volunteer_member']=has_volunteer_member
+            
+            context['sc_ag_faculty_advisors']=sc_ag_faculty_members
+            context['chair']=sc_ag_chair
+            context['eb']=sc_ag_eb_members
+            context['officer_member']=sc_ag_officer_members
+            context['volunteer_members']=sc_ag_volunteer_members
+          
+    else:
+        get_the_latest_panel=Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).order_by('-year').first()
+        return redirect('main_website:sc_ag_panel_members',sc_ag_primary,get_the_latest_panel.pk,get_the_latest_panel.year)
+
+    return render(request,"Members/Panel/SC_AG/sc_ag_panel_members.html",context=context)
+
+
+def sc_ag_panel_members(request,sc_ag_primary,panel_pk,panel_year):
+    
+    # get sc ag
+    sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)
+    
+    # get all the panels of sc ag
+    get_all_panels=Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).order_by('-year')
+
+
+    # get the panel
+    get_panel=Panels.objects.get(pk=panel_pk)
+    
+    # get panel_members
+    get_panel_members=PanelMembersData.get_sc_ag_members_from_panel(request,panel_pk)
+    
+    
+    context={
+        'page_title':f"Executive Panel: {panel_year}",
+        'page_subtitle':sc_ag.group_name,
+        'has_current_panel':True,
+        'sc_ag':sc_ag,
+        'panels':get_all_panels,
+
+    }
+    
+    if get_panel_members is not None:
+        sc_ag_faculty_members=[]
+        sc_ag_chair=[]
+        sc_ag_eb_members=[]
+        sc_ag_officer_members=[]
+        sc_ag_volunteer_members=[]
+        
+        for members in get_panel_members:
+            if members.position.is_faculty:
+                sc_ag_faculty_members.append(members)
+            elif members.position.is_sc_ag_eb_member:
+                if members.position.role=="Chair":
+                    sc_ag_chair.append(members)
+                else:
+                    sc_ag_eb_members.append(members)
+            elif members.position.is_officer:
+                sc_ag_officer_members.append(members)
+            elif members.position.is_volunteer:
+                sc_ag_volunteer_members.append(members)
+        
+        has_faculty_members=False
+        has_chair=False
+        has_eb_members=False
+        has_officer_member=False
+        has_volunteer_member=False
+        
+        if(len(sc_ag_faculty_members)>0):
+            has_faculty_members=True
+        if(len(sc_ag_chair)>0):
+            has_chair=True
+        if(len(sc_ag_eb_members)>0):
+            has_eb_members=True
+        if(len(sc_ag_officer_members)>0):
+            has_officer_member=True
+        if(len(sc_ag_volunteer_members)>0):
+            has_volunteer_member=True
+            
+        context['has_sc_ag_faculty_advisor']=has_faculty_members
+        context['has_branch_chair']=has_chair
+        context['has_branch_eb']=has_eb_members
+        context['has_officer_member']=has_officer_member
+        context['has_volunteer_member']=has_volunteer_member
+        
+        context['sc_ag_faculty_advisors']=sc_ag_faculty_members
+        context['chair']=sc_ag_chair
+        context['eb']=sc_ag_eb_members
+        context['officer_member']=sc_ag_officer_members
+        context['volunteer_members']=sc_ag_volunteer_members
+    
+    
+    return render(request,"Members/Panel/SC_AG/sc_ag_panel_members.html",context=context)
