@@ -1218,9 +1218,6 @@ def member_profile(request, ieee_id):
             has_branch_prev_position=False
             if branch_prev_position_data.count() > 0:
                 has_branch_prev_position = True
-            has_sc_ag_prev_position = False
-            if len(sc_ag_previous_position_data) > 0:
-                has_sc_ag_prev_position = True
 
             has_current_branch_position = True
             #if there is no current position but there is a previous position then don't display text
@@ -1236,7 +1233,6 @@ def member_profile(request, ieee_id):
                 'media_url':settings.MEDIA_URL,
                 'has_branch_current_position':has_current_branch_position,
                 'has_branch_prev_position':has_branch_prev_position,
-                'has_sc_ag_prev_position':has_sc_ag_prev_position,
                 'branch_prev_positions':branch_prev_position_data,
                 'sc_ag_prev_positions':sc_ag_previous_position_data,
             }
