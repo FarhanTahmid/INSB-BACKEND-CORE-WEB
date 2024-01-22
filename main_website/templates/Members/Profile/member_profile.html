@@ -297,8 +297,19 @@
                                         </div>
                                         <div class="des-r3">
                                             <div class="title">IEEE NSU Student Branch</div>
-                                            <div class="position">Position: {{member.position}}</div>
-                                            <div class="team">Team: {{member.team}}</div>
+                                            {% if has_branch_current_position %}
+                                            <div class="position">Current Position: {{member.position}}</div>
+                                            <div class="team">Current Team: {{member.team}}</div>
+                                            <br>
+                                            {% endif %}
+                                            {% if has_branch_prev_position %}
+                                                {% for branch_prev_position in branch_prev_positions %}
+                                                <div class="tenure">Tenure: {{branch_prev_position.tenure}}</div>
+                                                <div class="position">Position: {{branch_prev_position.position}}</div>
+                                                <div class="team">Team: {{branch_prev_position.team}}</div>
+                                                <br>
+                                                {% endfor %}
+                                            {% endif %}
                                         </div>
                                     </div>
                                     {% for sc_ag in sc_ag_position_data %}
@@ -309,8 +320,24 @@
                                         </div>
                                         <div class="des-r3">
                                             <div class="title">{{sc_ag.sc_ag.short_form}}</div>
-                                            <div class="position">Position: {{sc_ag.position}}</div>
-                                            <div class="team">Team: {{sc_ag.team}}</div>
+                                            {% if sc_ag.position != None %}
+                                            <div class="position">Current Position: {{sc_ag.position}}</div>
+                                            <div class="team">Current Team: {{sc_ag.team}}</div>
+                                            <br>
+                                            {% elif sc_ag.position == None and not has_sc_ag_prev_position %}
+                                            <div class="position">Current Position: None</div>
+                                            <div class="team">Current Team: None</div>
+                                            <br>
+                                            {% endif %}
+                                            {% if has_sc_ag_prev_position %}
+                                                {% for key, value in sc_ag_prev_positions.items %}
+                                                    {% if key == sc_ag.sc_ag.primary %}
+                                                    <div class="tenure">Tenure: {{value.0.tenure}}</div>
+                                                    <div class="position">Position: {{value.0.position}}</div>
+                                                    <div class="team">Team: {{value.0.team}}</div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
                                         </div>
                                     </div>
                                     {% endfor %}

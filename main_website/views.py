@@ -9,7 +9,7 @@ from port.renderData import PortData
 from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
 from .renderData import HomepageItems
 from django.conf import settings
-from users.models import User_IP_Address,Members
+from users.models import Panel_Members, User_IP_Address,Members
 from users.models import User_IP_Address
 import logging
 from datetime import datetime
@@ -1201,12 +1201,31 @@ def all_members(request):
 
 def member_profile(request, ieee_id):
 
-    try:
-        try:
+    # try:
+    #     try:
             #loading all the teams of Branch
             branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
             member_data = MDT_DATA.get_member_data(ieee_id=ieee_id)
-            sc_ag_position_data = SC_AG_Members.objects.filter(member=ieee_id)
+            sc_ag_position_data = SC_AG_Members.objects.filter(member=ieee_id).order_by('sc_ag__primary')
+
+            branch_prev_position_data = Panel_Members.objects.filter(member=Members.objects.get(ieee_id=ieee_id),tenure__panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1),tenure__current=False).order_by('-tenure__year')
+            sc_ag_previous_position_data = {}
+            sc_ag = PortData.get_all_sc_ag(request)
+            for s in sc_ag:
+                position_data = Panel_Members.objects.filter(member=Members.objects.get(ieee_id=ieee_id),tenure__panel_of=s,tenure__current=False).order_by('-tenure__year')
+                if position_data.count() > 0:
+                    sc_ag_previous_position_data.update({s.primary:position_data})
+
+            has_branch_prev_position=False
+            if branch_prev_position_data.count() > 0:
+                has_branch_prev_position = True
+            has_sc_ag_prev_position = False
+            if len(sc_ag_previous_position_data) > 0:
+                has_sc_ag_prev_position = True
+
+            has_current_branch_position = True
+            if has_branch_prev_position and member_data.team is None:
+                has_current_branch_position = False
 
             context = {
                 'page_title':'Member Details',
@@ -1214,16 +1233,21 @@ def member_profile(request, ieee_id):
                 'member':member_data,
                 'sc_ag_position_data':sc_ag_position_data,
                 'media_url':settings.MEDIA_URL,
+                'has_branch_current_position':has_current_branch_position,
+                'has_branch_prev_position':has_branch_prev_position,
+                'has_sc_ag_prev_position':has_sc_ag_prev_position,
+                'branch_prev_positions':branch_prev_position_data,
+                'sc_ag_prev_positions':sc_ag_previous_position_data,
             }
 
             return render(request, 'Members/Profile/member_profile.html', context)
-        except:
-            return redirect('main_website:all_members')
+        # except:
+        #     return redirect('main_website:all_members')
         
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        return cv.custom_500(request)
+    # except Exception as e:
+    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+    #     return cv.custom_500(request)
 
 def ieee_bd_section(request):
 
