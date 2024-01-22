@@ -282,7 +282,7 @@ class PortData:
         return previous_position
     
     def get_sc_ag_previous_position_data(request,ieee_id):
-        '''Returns a dictionary of all previous position data for a member for all sc_ag'''
+        '''Returns a dictionary of all previous position data for a sc_ag member for all sc_ag'''
 
         #list for storing all previous sc_ag position data into a dict
         sc_ag_previous_positions = {}
