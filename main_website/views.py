@@ -1201,20 +1201,19 @@ def all_members(request):
 
 def member_profile(request, ieee_id):
 
-    # try:
-    #     try:
+    try:
+        try:
             #loading all the teams of Branch
             branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+            #get current branch position data
             member_data = MDT_DATA.get_member_data(ieee_id=ieee_id)
+            #get current sc_ag position data for all sc_ag
             sc_ag_position_data = SC_AG_Members.objects.filter(member=ieee_id).order_by('sc_ag__primary')
 
-            branch_prev_position_data = Panel_Members.objects.filter(member=Members.objects.get(ieee_id=ieee_id),tenure__panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1),tenure__current=False).order_by('-tenure__year')
-            sc_ag_previous_position_data = {}
-            sc_ag = PortData.get_all_sc_ag(request)
-            for s in sc_ag:
-                position_data = Panel_Members.objects.filter(member=Members.objects.get(ieee_id=ieee_id),tenure__panel_of=s,tenure__current=False).order_by('-tenure__year')
-                if position_data.count() > 0:
-                    sc_ag_previous_position_data.update({s.primary:position_data})
+            #get previous branch position data
+            branch_prev_position_data = PortData.get_branch_previous_position_data(ieee_id)
+            #get previous sc_ag position data for all sc_ag
+            sc_ag_previous_position_data = PortData.get_sc_ag_previous_position_data(request,ieee_id)
 
             has_branch_prev_position=False
             if branch_prev_position_data.count() > 0:
@@ -1224,6 +1223,8 @@ def member_profile(request, ieee_id):
                 has_sc_ag_prev_position = True
 
             has_current_branch_position = True
+            #if there is no current position but there is a previous position then don't display text
+            #otherwise show it
             if has_branch_prev_position and member_data.team is None:
                 has_current_branch_position = False
 
@@ -1241,13 +1242,13 @@ def member_profile(request, ieee_id):
             }
 
             return render(request, 'Members/Profile/member_profile.html', context)
-        # except:
-        #     return redirect('main_website:all_members')
+        except:
+            return redirect('main_website:all_members')
         
-    # except Exception as e:
-    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-    #     return cv.custom_500(request)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
 
 def ieee_bd_section(request):
 
