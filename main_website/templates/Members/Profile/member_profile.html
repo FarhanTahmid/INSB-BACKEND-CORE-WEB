@@ -219,7 +219,7 @@
             <div class="card_container">
                 <div class="card_content">
                     <div class="profile_image">
-                        <img src="{{media_url}}{{member.user_profile_picture}}" alt="" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                        <img src="{{media_url}}{{member.user_profile_picture}}" alt="Profile picture of {{member.name}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
                     </div>
                     <div class="profile_details">
                         <div class="social_links">
@@ -283,89 +283,89 @@
                             <div class="information_2">
                                 <div class="info">
                                     {% if member.email_ieee %}
-                                    <div class="ieee_email">IEEE Email: {{member.email_ieee}}</div>
+                                        <div class="ieee_email">IEEE Email: {{member.email_ieee}}</div>
                                     {% endif %}
                                     {% if member.email_nsu %}
-                                    <div class="nsu_email">NSU Email: {{member.email_nsu}}</div>
+                                        <div class="nsu_email">NSU Email: {{member.email_nsu}}</div>
                                     {% endif %}
                                 </div>
                                 <div class="designation">
                                     {% if has_branch_current_position %}
-                                    <div class="des-r1">
-                                        <div class="des-r2">
-                                            <div class="circle"></div>
-                                            <div class="line"></div>
+                                        <div class="des-r1">
+                                            <div class="des-r2">
+                                                <div class="circle"></div>
+                                                <div class="line"></div>
+                                            </div>
+                                            <div class="des-r3">
+                                                <div class="title">IEEE NSU Student Branch</div>
+                                                <div class="position">Current Position: {{member.position}}</div>
+                                                <div class="team">Current Team: {{member.team}}</div>
+                                                <br>
+                                            </div>
                                         </div>
-                                        <div class="des-r3">
-                                            <div class="title">IEEE NSU Student Branch</div>
-                                            <div class="position">Current Position: {{member.position}}</div>
-                                            <div class="team">Current Team: {{member.team}}</div>
-                                            <br>
-                                        </div>
-                                    </div>
                                     {% endif %}
                                     {% if has_branch_prev_position %}
-                                    {% for branch_prev_position in branch_prev_positions %}
-                                    <div class="des-r1">
-                                        <div class="des-r2">
-                                            <div class="circle"></div>
-                                            <div class="line"></div>
-                                        </div>
-                                        <div class="des-r3">
-                                            <div class="title">IEEE NSU Student Branch</div>
-                                            <div class="tenure">Tenure: {{branch_prev_position.tenure}}</div>
-                                            <div class="position">Position: {{branch_prev_position.position}}</div>
-                                            <div class="team">Team: {{branch_prev_position.team}}</div>
-                                            <br>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
+                                        {% for branch_prev_position in branch_prev_positions %}
+                                            <div class="des-r1">
+                                                <div class="des-r2">
+                                                    <div class="circle"></div>
+                                                    <div class="line"></div>
+                                                </div>
+                                                <div class="des-r3">
+                                                    <div class="title">IEEE NSU Student Branch</div>
+                                                    <div class="tenure">Tenure: {{branch_prev_position.tenure}}</div>
+                                                    <div class="position">Position: {{branch_prev_position.position}}</div>
+                                                    <div class="team">Team: {{branch_prev_position.team}}</div>
+                                                    <br>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
                                     {% endif %}
                                     {% for sc_ag in sc_ag_position_data %}
-                                    {% if sc_ag.position != None %}
-                                    <div class="des-r1">
-                                        <div class="des-r2">
-                                            <div class="circle"></div>
-                                            <div class="line"></div>
-                                        </div>
-                                        <div class="des-r3">
-                                            <div class="title">{{sc_ag.sc_ag.short_form}}</div>
-                                            <div class="position">Current Position: {{sc_ag.position}}</div>
-                                            <div class="team">Current Team: {{sc_ag.team}}</div>
-                                            <br>
-                                        </div>
-                                    </div>
-                                    {% elif sc_ag.position == None and sc_ag.sc_ag.primary not in sc_ag_prev_positions %}
-                                    <div class="des-r1">
-                                        <div class="des-r2">
-                                            <div class="circle"></div>
-                                            <div class="line"></div>
-                                        </div>
-                                        <div class="des-r3">
-                                            <div class="title">{{sc_ag.sc_ag.short_form}}</div>
-                                            <div class="position">Current Position: None</div>
-                                            <div class="team">Current Team: None</div>
-                                            <br>
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                    {% for key, value in sc_ag_prev_positions.items %}
-                                    {% if key == sc_ag.sc_ag.primary %}
-                                    <div class="des-r1">
-                                        <div class="des-r2">
-                                            <div class="circle"></div>
-                                            <div class="line"></div>
-                                        </div>
-                                        <div class="des-r3">
-                                            <div class="title">{{sc_ag.sc_ag.short_form}}</div>
-                                            <div class="tenure">Tenure: {{value.0.tenure}}</div>
-                                            <div class="position">Position: {{value.0.position}}</div>
-                                            <div class="team">Team: {{value.0.team}}</div>
-                                            <br>
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                    {% endfor %}
+                                        {% if sc_ag.position != None %}
+                                            <div class="des-r1">
+                                                <div class="des-r2">
+                                                    <div class="circle"></div>
+                                                    <div class="line"></div>
+                                                </div>
+                                                <div class="des-r3">
+                                                    <div class="title">{{sc_ag.sc_ag.short_form}}</div>
+                                                    <div class="position">Current Position: {{sc_ag.position}}</div>
+                                                    <div class="team">Current Team: {{sc_ag.team}}</div>
+                                                    <br>
+                                                </div>
+                                            </div>
+                                        {% elif sc_ag.position == None and sc_ag.sc_ag.primary not in sc_ag_prev_positions %}
+                                            <div class="des-r1">
+                                                <div class="des-r2">
+                                                    <div class="circle"></div>
+                                                    <div class="line"></div>
+                                                </div>
+                                                <div class="des-r3">
+                                                    <div class="title">{{sc_ag.sc_ag.short_form}}</div>
+                                                    <div class="position">Current Position: None</div>
+                                                    <div class="team">Current Team: None</div>
+                                                    <br>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% for key, value in sc_ag_prev_positions.items %}
+                                            {% if key == sc_ag.sc_ag.primary %}
+                                                <div class="des-r1">
+                                                    <div class="des-r2">
+                                                        <div class="circle"></div>
+                                                        <div class="line"></div>
+                                                    </div>
+                                                    <div class="des-r3">
+                                                        <div class="title">{{sc_ag.sc_ag.short_form}}</div>
+                                                        <div class="tenure">Tenure: {{value.0.tenure}}</div>
+                                                        <div class="position">Position: {{value.0.position}}</div>
+                                                        <div class="team">Team: {{value.0.team}}</div>
+                                                        <br>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
                                     {% endfor %}
                                 </div>
                             </div>
