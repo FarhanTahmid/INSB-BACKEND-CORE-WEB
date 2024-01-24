@@ -4,9 +4,13 @@
 
 <style>
 
-    {% comment %} .achievement_card{
-        height: 425px;
-    } {% endcomment %}
+    .row{
+        justify-content: center;
+    }
+    .container{
+        padding-right: 0;
+        padding-left: 0;
+    }
 
     .card-img-top {
         object-fit: cover;
@@ -44,13 +48,13 @@
                 <a href="{{i.publication_link}}"><img class="card-img-top" src="/media_files/{{i.research_banner_picture}}" alt=""></a>
 
                 <div class="position-absolute">
-                    <span style="background-color: {{i.primary_color_code}};" class=" text-white px-3 py-2 rounded h6">{{i.group.short_form}}</span>
+                    <span style="background-color: {{i.primary_color_code}};" class=" text-white px-3 py-2 rounded h6">{{i.category}}</span>
                 </div>
 
                 <div class="card-body">
-                    <a href="{{i.publication_link}}"><h5 class="card-title fw-bold mt-2">{{i.title}}</h5></a>-<span> <b> {{i.category}}</b></span>
+                    <a href="{{i.publication_link}}"><h5 class="card-title fw-bold mt-2">{{i.title}}</h5></a> <span style="font-style: italic;">{{i.author_names | safe}}</span> 
                     <div class="description-container">
-                        <p class="card-text">{{i.short_description|safe}}</p>
+                        <p class="card-text">{{i.short_description | safe}}</p>
                     </div>
                     <a href="#" class="read-more-link" >Read More</a>
 
