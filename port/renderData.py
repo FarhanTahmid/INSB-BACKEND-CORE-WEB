@@ -1,6 +1,6 @@
 from .models import Chapters_Society_and_Affinity_Groups,Roles_and_Position,Teams,Panels
 from django.contrib import messages
-from users.models import Panel_Members
+from users.models import Members, Panel_Members
 from datetime import datetime
 import sqlite3
 import logging
@@ -274,4 +274,26 @@ class PortData:
         # returns the object of current panels of sc ag
         current_panel=Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary),current=True).first()
         return current_panel
+    
+    def get_branch_previous_position_data(ieee_id):
+        '''Returns all previous position data for a member'''
         
+        previous_position = Panel_Members.objects.filter(member=Members.objects.get(ieee_id=ieee_id),tenure__panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1),tenure__current=False).order_by('-tenure__year')
+        return previous_position
+    
+    def get_sc_ag_previous_position_data(request,ieee_id):
+        '''Returns a dictionary of all previous position data for a sc_ag member for all sc_ag'''
+
+        #list for storing all previous sc_ag position data into a dict
+        sc_ag_previous_positions = {}
+        #get all sc_ag info
+        all_sc_ag = PortData.get_all_sc_ag(request)
+        #loop each sc_ag and check if there is a previous position
+        for sc_ag in all_sc_ag:
+            #get position data for each sc_ag
+            position_data = Panel_Members.objects.filter(member=Members.objects.get(ieee_id=ieee_id),tenure__panel_of=sc_ag,tenure__current=False).order_by('-tenure__year')
+            #if a position exists then add it in the dict
+            if position_data.count() > 0:
+                sc_ag_previous_positions.update({sc_ag.primary:position_data})
+
+        return sc_ag_previous_positions

@@ -16,7 +16,7 @@ urlpatterns = [
     path('ieee_nsu_pes_sbc/',views.pesPage,name="pes_home"),
     path('ieee_nsu_ias_sbc/',views.iasPage,name="ias_home"),
     path('ieee_nsu_wie_sbc/',views.wiePage,name="wie_home"),
-    path('events/<int:primary>',views.events_for_sc_ag,name="events_for_sc_ag"),
+    path('event_details/<int:primary>',views.events_for_sc_ag,name="events_for_sc_ag"),
 
     #Achievements
     path('achievements/',views.achievements,name="achievements"),
