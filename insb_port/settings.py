@@ -140,7 +140,7 @@ if(os.environ.get('SETTINGS')=='prod'):
             'NAME': os.environ.get('PROD_DATABASE_NAME'),
             'USER': os.environ.get('PROD_DATABASE_USER'),
             'PASSWORD': os.environ.get('PROD_DATABASE_PASSWORD'),
-            'HOST': 'localhost',
+            'HOST': os.environ.get('PROD_DATABASE_HOST'),
             'PORT': '3306',
             
         }
