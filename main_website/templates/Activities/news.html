@@ -105,9 +105,7 @@
             {% include "Activities/news_card_container.html" %}
         {% endblock news_card_container %}
 
-        <div class="text-center">
-            <div class="btn btn-outline-primary px-5 py-2 mb-5"  id="loadMore">Load more</div>
-        </div>
+
 
 
         <!--Online News Section-->
@@ -223,36 +221,6 @@
         });
     </script>
 
-    <!-- News load more script -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-        var contents = document.getElementsByClassName("content");
-        var loadMore = document.getElementById("loadMore");
-
-        var startIndex = 0;
-        var itemsToShow = 2;
-
-        function showNextItems() {
-            for (var i = startIndex; i < startIndex + itemsToShow; i++) {
-            if (contents[i]) {
-                contents[i].classList.add('d-block')
-            }
-            }
-            startIndex += itemsToShow;
-            
-            if (startIndex >= contents.length) {
-            loadMore.textContent = "No Content";
-            loadMore.classList.add("noContent");
-            loadMore.removeEventListener("click", showNextItems);
-            }
-        }
-
-        loadMore.addEventListener("click", showNextItems);
-
-        showNextItems();
-        });
-
-    </script>
 
 
 </body>
