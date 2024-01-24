@@ -9,7 +9,7 @@ from port.renderData import PortData
 from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
 from .renderData import HomepageItems
 from django.conf import settings
-from users.models import User_IP_Address,Members
+from users.models import Panel_Members, User_IP_Address,Members
 from users.models import User_IP_Address
 import logging
 from datetime import datetime
@@ -1205,8 +1205,25 @@ def member_profile(request, ieee_id):
         try:
             #loading all the teams of Branch
             branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+            #get current branch position data
             member_data = MDT_DATA.get_member_data(ieee_id=ieee_id)
-            sc_ag_position_data = SC_AG_Members.objects.filter(member=ieee_id)
+            #get current sc_ag position data for all sc_ag
+            sc_ag_position_data = SC_AG_Members.objects.filter(member=ieee_id).order_by('sc_ag__primary')
+
+            #get previous branch position data
+            branch_prev_position_data = PortData.get_branch_previous_position_data(ieee_id)
+            #get previous sc_ag position data for all sc_ag
+            sc_ag_previous_position_data = PortData.get_sc_ag_previous_position_data(request,ieee_id)
+
+            has_branch_prev_position=False
+            if branch_prev_position_data.count() > 0:
+                has_branch_prev_position = True
+
+            has_current_branch_position = True
+            #if there is no current position but there is a previous position then don't display text
+            #otherwise show it
+            if has_branch_prev_position and member_data.team is None:
+                has_current_branch_position = False
 
             context = {
                 'page_title':'Member Details',
@@ -1214,6 +1231,10 @@ def member_profile(request, ieee_id):
                 'member':member_data,
                 'sc_ag_position_data':sc_ag_position_data,
                 'media_url':settings.MEDIA_URL,
+                'has_branch_current_position':has_current_branch_position,
+                'has_branch_prev_position':has_branch_prev_position,
+                'branch_prev_positions':branch_prev_position_data,
+                'sc_ag_prev_positions':sc_ag_previous_position_data,
             }
 
             return render(request, 'Members/Profile/member_profile.html', context)
