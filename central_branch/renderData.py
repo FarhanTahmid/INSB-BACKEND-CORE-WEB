@@ -127,7 +127,7 @@ class Branch:
         '''This function loads all the team members from the database and also checks if the member is included in the current panel'''
         team=Teams.objects.get(primary=team_primary)
         team_id=team.id
-        get_users=Members.objects.order_by('position').filter(team=team_id)
+        get_users=Members.objects.order_by('-position').filter(team=team_id)
         get_current_panel=Branch.load_current_panel()
         team_members=[]
         if(get_current_panel is not None):
