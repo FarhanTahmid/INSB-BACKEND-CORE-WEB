@@ -140,7 +140,7 @@ if(os.environ.get('SETTINGS')=='prod'):
             'NAME': os.environ.get('PROD_DATABASE_NAME'),
             'USER': os.environ.get('PROD_DATABASE_USER'),
             'PASSWORD': os.environ.get('PROD_DATABASE_PASSWORD'),
-            'HOST': 'localhost',
+            'HOST': os.environ.get('PROD_DATABASE_HOST'),
             'PORT': '3306',
             
         }
@@ -236,7 +236,11 @@ DJANGORESIZED_DEFAULT_QUALITY = 80
 DJANGORESIZED_DEFAULT_KEEP_META = True
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
 
-CELERY_BROKER_URL = "amqps://mrhkupcx:Es-Dd6MKxkwapnb1zMlwybTaYGwflFLB@lionfish.rmq.cloudamqp.com/mrhkupcx"
+if(os.environ.get('SETTINGS')=='prod'):
+    CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_PROD')
+else:
+    CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_DEV')
+
 CELERY_RESULT_BACKEND = "django-db"
 CELERY_RESULT_EXTENDED = True
 CELERY_TASK_SERIALIZER = 'json'
