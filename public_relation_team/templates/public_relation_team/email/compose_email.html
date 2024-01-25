@@ -34,6 +34,9 @@
 
   <!--Internal CSS-->
   <!--Internal CSS End-->
+
+  <!-- CKEditor CDN -->
+  <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
 </head>
 <body>
   <div class="app" id="app">
@@ -182,6 +185,7 @@
                         <label class="col-sm-2 form-control-label">Body:</label>
                         <div class="col-sm-10">
                           <textarea class="form-control" required rows="20" name="body"></textarea>
+                          <p id="bodyCharacterCount" style="color: red;">Required</p>
                         </div>
                       </div>
 
@@ -317,6 +321,45 @@
 <!-- ############ LAYOUT END-->
 
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Replace the textareas with CKEditor instances
+        CKEDITOR.replace('body');
+
+        // Attach a function to the change event for each CKEditor instance
+        ["body"]
+            .forEach(function (editorId) {
+                var editor = CKEDITOR.instances[editorId];
+
+                editor.on('change', function () {
+                    // Update character count display for each CKEditor instance
+                    updateCharacterCount(editorId);
+                });
+
+                // Update character count initially
+                updateCharacterCount(editorId);
+            });
+    });
+
+    function updateCharacterCount(editorId) {
+        var editorContent = CKEDITOR.instances[editorId].getData();
+    
+        // Count each character (including spaces)
+        var characterCount = editorContent.length;
+    
+        var characterCountElement = document.getElementById(editorId + 'CharacterCount');
+    
+        // Check conditions and update text color and content
+        if (characterCount === 0) {
+            characterCountElement.style.color = "red";
+            characterCountElement.innerText = "Required";
+        } else {
+            characterCountElement.style.color = "black";
+            characterCountElement.innerText = "Character Count: " + characterCount;
+        }
+    }
+</script>
 <!-- build:js scripts/app.html.js -->
 <!-- jQuery -->
 <script src="{% static 'script/jquery.js'%}"></script>
