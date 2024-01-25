@@ -121,17 +121,11 @@
 
     @media screen and (max-width: 800px) {
         .column{
-            flex: 50%;
-            max-width: 50%;
-        }
-    }
-
-    @media screen and (max-width: 500px) {
-        .column{
             flex: 100%;
             max-width: 100%;
         }
     }
+
     .centering .button .photo-btn{
         background-color: aliceblue;
         border: 1px solid black;
@@ -320,7 +314,7 @@
   <div class="gallery-content active" id="photoGallery">
     <div class="row">
       <div class="column">
-        {% for i in all_images %}
+        {% for i in first_column_images %}
         <div class="img-hover-zoom">
           <img
             src="/media_files/{{i.image}}"
@@ -331,7 +325,7 @@
         {% endfor %}
       </div>
       <div class="column">
-        {% for i in all_images %}
+        {% for i in second_column_images %}
         <div class="img-hover-zoom">
           <img
             src="/media_files/{{i.image}}"
@@ -342,7 +336,7 @@
         {% endfor %}
       </div>
       <div class="column">
-        {% for i in all_images %}
+        {% for i in third_column_images %}
         <div class="img-hover-zoom">
           <img
             src="/media_files/{{i.image}}"
@@ -353,7 +347,7 @@
         {% endfor %}
       </div>
       <div class="column">
-        {% for i in all_images %}
+        {% for i in fourth_column_images %}
         <div class="img-hover-zoom">
           <img
             src="/media_files/{{i.image}}"

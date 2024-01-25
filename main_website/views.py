@@ -821,12 +821,17 @@ def gallery(request):
         all_images=GalleryImages.objects.all().order_by('-pk')
         all_videos=GalleryVideos.objects.all().order_by('-pk')
 
+        divided_image = HomepageItems.diving_gallery_images(all_images)
+
         context={
             'page_title':"Gallery",
             'all_images':all_images,
             'all_videos':all_videos,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
-
+            'first_column_images': divided_image[0],
+            'second_column_images': divided_image[1],
+            'third_column_images': divided_image[2],
+            'fourth_column_images': divided_image[3],
         }
         return render(request, 'Publications/Gallery/gallery.html',context=context)
     
