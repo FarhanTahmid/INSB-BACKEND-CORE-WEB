@@ -344,7 +344,7 @@ class HomepageItems:
             if primary == 1:
                 return SuperEvents.objects.filter(publish_mega_event = True)
             else:
-                mega_events= SuperEvents.objects.filter(publish_mega_event = True,mega_event_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
+                mega_events= SuperEvents.objects.filter(publish_mega_event = True,mega_event_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)).order_by('-start_date' , '-end_date', 'pk')
                 if(mega_events.exists()):
                     return mega_events
                 else:
@@ -399,5 +399,41 @@ class HomepageItems:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
-
         
+    def diving_gallery_images(all_images):
+
+        '''This function returns all images in 4 different lists'''
+        try:
+            # initializing four empty list for storing all images in 4 different lists
+            first_column = []
+            second_column = []
+            third_column = []
+            fourth_column = []
+            # four different starting indexes
+            i = 0
+            j = 1
+            k = 2
+            l = 3
+            # two dimentional array of images of size(n X 4) where each column of image is getting stored in each list
+            while i < len(all_images):
+                first_column.append(all_images[i])
+                i += 4
+            while j < len(all_images):
+                second_column.append(all_images[j])
+                j += 4
+            while k < len(all_images):
+                third_column.append(all_images[k])
+                k += 4
+            while l < len(all_images):
+                fourth_column.append(all_images[l])
+                l += 4
+            
+            # returning the four lists as a tuple
+            return first_column, second_column, third_column, fourth_column
+            
+        except Exception as e:
+            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+
+                
