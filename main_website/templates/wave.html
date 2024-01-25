@@ -141,7 +141,7 @@
 </style>
 <section class="wavy">
     <div class="title">
-        <h2 class="tt" style="justify-content:center;text-align:center;">{{page_title}}</h2>
+        <h2 id="title" class="tt" style="justify-content:center;text-align:center;">{{page_title}}</h2>
         <h2 class="sub" style="font-size:20px; font-weight:300; text-align:center;">{{page_subtitle|safe}}</h2>
     </div>
     <div class="wave wave1"></div>
@@ -149,4 +149,18 @@
     <div class="wave wave3"></div>
     <div class="wave wave4"></div>
 </section>
+<script>
+    // Get the h2 element
+    var h2Element = document.getElementById('title');
+
+    // Check if the character length exceeds 80
+    if (h2Element.textContent.length > 55) {
+        // If it does, set the font size to 25
+        h2Element.style.fontSize = '25px';
+    }
+    if (h2Element.textContent.length > 80) {
+        // If it does, set the font size to 25
+        h2Element.style.fontSize = '23px';
+    }
+</script>
 {% endblock wave_design %}
