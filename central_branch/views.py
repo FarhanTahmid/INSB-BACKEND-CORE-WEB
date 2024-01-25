@@ -759,13 +759,14 @@ def manage_research(request):
                     MainWebsiteRenderData.delete_research_paper(request=request)
                     return redirect('central_branch:manage_research')
             else:
-                form=ResearchPaperForm
-                form2=ResearchCategoryForm
+                add_research_form=ResearchPaperForm
+                add_research_category_form=ResearchCategoryForm
             context={
                 'user_data':user_data,
                 'all_sc_ag':sc_ag,
-                'form':form,
-                'form2':form2,'all_researches':researches,
+                'form':add_research_form,
+                'form2':add_research_category_form,
+                'all_researches':researches,
             }
             return render(request,"Manage Website/Publications/Research Paper/manage_research_paper.html",context=context)
         else:
