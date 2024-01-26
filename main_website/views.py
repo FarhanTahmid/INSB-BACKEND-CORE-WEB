@@ -53,6 +53,7 @@ def homepage(request):
             'media_url':settings.MEDIA_URL,
             'all_member_count':HomepageItems.getAllIEEEMemberCount(),
             'event_count':HomepageItems.getEventCount(),
+            'achievement_count':HomepageItems.getAchievementCount(),
             'recent_news':get_recent_news,
             'recent_blogs':get_recent_blogs,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
