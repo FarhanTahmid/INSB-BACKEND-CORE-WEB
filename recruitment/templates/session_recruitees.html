@@ -192,6 +192,18 @@
           <a href="{% url "recruitment:export_excel" pk %}" class="btn btn-outline b-success text-success">Generate Excel Sheet For this Session</a>
         </div>
     </div>
+    <!--Messages-->
+    <div style="justify-content:center; text-align:center;">
+      {% if messages %}
+      <br>
+          {% for message in messages %}
+              <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+          {% endfor %}
+      <br>
+      {% endif %}
+    </div>
+    <!--Messages-->
+
     <!--DONUT CHART FOR PAYMENT COMPLETION STATISTICS-->
     <br>
     <div style="justify-content:center;text-align:center;">

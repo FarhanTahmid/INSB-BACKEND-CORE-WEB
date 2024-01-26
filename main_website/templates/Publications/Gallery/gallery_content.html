@@ -121,17 +121,11 @@
 
     @media screen and (max-width: 800px) {
         .column{
-            flex: 50%;
-            max-width: 50%;
-        }
-    }
-
-    @media screen and (max-width: 500px) {
-        .column{
             flex: 100%;
             max-width: 100%;
         }
     }
+
     .centering .button .photo-btn{
         background-color: aliceblue;
         border: 1px solid black;
@@ -319,9 +313,8 @@
   </div>
   <div class="gallery-content active" id="photoGallery">
     <div class="row">
-      {% for i in all_images %}
       <div class="column">
-        
+        {% for i in first_column_images %}
         <div class="img-hover-zoom">
           <img
             src="/media_files/{{i.image}}"
@@ -329,8 +322,41 @@
             alt=""
           />
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
+      <div class="column">
+        {% for i in second_column_images %}
+        <div class="img-hover-zoom">
+          <img
+            src="/media_files/{{i.image}}"
+            style="width: 100%"
+            alt=""
+          />
+        </div>
+        {% endfor %}
+      </div>
+      <div class="column">
+        {% for i in third_column_images %}
+        <div class="img-hover-zoom">
+          <img
+            src="/media_files/{{i.image}}"
+            style="width: 100%"
+            alt=""
+          />
+        </div>
+        {% endfor %}
+      </div>
+      <div class="column">
+        {% for i in fourth_column_images %}
+        <div class="img-hover-zoom">
+          <img
+            src="/media_files/{{i.image}}"
+            style="width: 100%"
+            alt=""
+          />
+        </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
   <div id="myModal" class="modal">

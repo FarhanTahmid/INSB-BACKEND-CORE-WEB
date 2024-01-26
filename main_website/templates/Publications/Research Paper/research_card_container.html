@@ -47,9 +47,9 @@
             <div class="card shadow achievement_card">
                 <a href="{{i.publication_link}}"><img class="card-img-top" src="/media_files/{{i.research_banner_picture}}" alt=""></a>
 
-                <div class="position-absolute">
+                {% comment %} <div class="position-absolute">
                     <span style="background-color: {{i.primary_color_code}};" class=" text-white px-3 py-2 rounded h6">{{i.category}}</span>
-                </div>
+                </div> {% endcomment %}
 
                 <div class="card-body">
                     <a href="{{i.publication_link}}"><h5 class="card-title fw-bold mt-2">{{i.title}}</h5></a> <span style="font-style: italic;">{{i.author_names | safe}}</span> 
