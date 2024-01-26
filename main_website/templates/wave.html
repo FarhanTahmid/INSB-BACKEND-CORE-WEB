@@ -18,7 +18,6 @@
         top: 80%;
         left: 0;
         width: 100%;
-        height: 100%;
         background: url("{% static 'upload/wave.png'%}");
         background-size: 1000px 100px;
         background-repeat-y: no-repeat;
@@ -37,7 +36,7 @@
         z-index: 9;
         opacity: 0.5;
         animation-delay: -5s;
-        bottom: 10px;
+        bottom: 0;
     }
 
     .wavy .wave.wave3 {
@@ -45,7 +44,7 @@
         z-index: 8;
         opacity: 0.2;
         animation-delay: -2s;
-        bottom: 15;
+        bottom: 0;
     }
 
     .wavy .wave.wave4 {
@@ -53,7 +52,7 @@
         z-index: 7;
         opacity: 0.7;
         animation-delay: -5s;
-        bottom: 20px;
+        bottom: 0;
     }
 
     .wavy .title {
@@ -106,26 +105,31 @@
         }
     }
     .wavy{
-        margin-top: 120px;
+        margin-top: 117px;
     }
     @media screen and (max-width: 1199px){
         .wavy{
-            margin-top: 238px;
+            margin-top: 231px;
         }
     }
     @media screen and (max-width: 1194px){
         .wavy{
-            margin-top: 188px;
+            margin-top: 187px;
         }
     }
     @media screen and (max-width: 1053px){
         .wavy{
-            margin-top: 187px;
+            margin-top: 181px;
         }
     }
     @media screen and (max-width: 960px){
         .wavy{
-            margin-top: 140px;
+            margin-top: 186px;
+        }
+    }
+    @media screen and (max-width: 959px){
+        .wavy{
+            margin-top: 137px;
         }
     }
     @media screen and (max-width: 899px){
@@ -135,18 +139,46 @@
     }
     @media screen and (max-width: 767px){
         .wavy{
-            margin-top: 0;
+            margin-top: -3px;
         }
     }
+
 </style>
 <section class="wavy">
     <div class="title">
-        <h2 class="tt" style="justify-content:center;text-align:center;">{{page_title}}</h2>
-        <h2 class="sub" style="font-size:20px; font-weight:300; text-align:center;">{{page_subtitle|safe}}</h2>
+        <h2 id="title" class="tt" style="justify-content:center;text-align:center;">{{page_title}}</h2>
+        <h2 id="subtitle" class="sub" style="font-size:20px; font-weight:300; text-align:center;">{{page_subtitle|safe}}</h2>
     </div>
     <div class="wave wave1"></div>
     <div class="wave wave2"></div>
     <div class="wave wave3"></div>
     <div class="wave wave4"></div>
 </section>
+<script>
+    // Get the h2 element
+    var h2Element = document.getElementById('title');
+
+    // Check if the character length exceeds 80
+    if (h2Element.textContent.length > 55) {
+        // If it does, set the font size to 25
+        h2Element.style.fontSize = '25px';
+    }
+    if (h2Element.textContent.length > 80) {
+        // If it does, set the font size to 25
+        h2Element.style.fontSize = '23px';
+    }
+
+    // Get the h2 element
+    var pElement = document.getElementById('subtitle');
+
+    // Check if the character length exceeds 80
+    if (pElement.textContent.length > 55) {
+        // If it does, set the font size to 25
+        pElement.style.fontSize = '18px';
+    }
+    if (pElement.textContent.length > 80) {
+        // If it does, set the font size to 25
+        pElement.style.fontSize = '17px';
+    }
+</script>
 {% endblock wave_design %}
