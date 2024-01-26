@@ -1,4 +1,4 @@
-from .models import HomePageTopBanner,BannerPictureWithStat
+from .models import HomePageTopBanner,BannerPictureWithStat,Achievements
 from django.http import HttpResponseServerError
 from users.models import Members,User_IP_Address,Panel_Members
 from membership_development_team.renderData import MDT_DATA
@@ -150,6 +150,10 @@ class HomepageItems:
         '''Gets all the event Count'''
         return Events.objects.all().count()
 
+    def getAchievementCount():
+        ''''Gets all the achievement count'''
+        return Achievements.objects.all().count()
+    
     def get_event_for_calender(request,primary):
 
         '''This function returns the events to show them on calender'''
