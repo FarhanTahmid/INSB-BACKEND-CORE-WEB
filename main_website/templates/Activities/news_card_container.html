@@ -54,36 +54,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mt-5 content">
-            <div class="card shadow achievement_card">
-                <a href="{% url 'main_website:news_description' i.pk %}"><img class="card-img-top" src="/media_files/{{i.news_picture}}" alt="news_thumbnail"></a>
-
-                <div class="card-body">
-                    <a href="{% url 'main_website:news_description' i.pk %}"><h5 class="card-title fw-bold mt-2">{{i.news_title}}<br></h5></a>
-                    <div class="description-container">
-                        <p class="card-text">{{i.news_description|safe}}</p>
-                    </div>
-                    <a href="#" class="read-more-link" >Read More</a>
-
-                    
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mt-5 content">
-            <div class="card shadow achievement_card">
-                <a href="{% url 'main_website:news_description' i.pk %}"><img class="card-img-top" src="/media_files/{{i.news_picture}}" alt="news_thumbnail"></a>
-
-                <div class="card-body">
-                    <a href="{% url 'main_website:news_description' i.pk %}"><h5 class="card-title fw-bold mt-2">{{i.news_title}}<br></h5></a>
-                    <div class="description-container">
-                        <p class="card-text">{{i.news_description|safe}}</p>
-                    </div>
-                    <a href="#" class="read-more-link" >Read More</a>
-
-                    
-                </div>
-            </div>
-        </div>
         {% endfor %}
     </div>
 </div>
