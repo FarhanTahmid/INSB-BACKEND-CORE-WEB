@@ -247,8 +247,14 @@ def recruitee_details(request,session_id,nsu_id):
                         recruited_member_email=request.POST['email_personal']
                         recruitment_session_name=recruitment_session.objects.get(id=session_id)
                         
+                        # updating unique code
+                        unique_code=renderData.Recruitment.generateUniqueCode(nsu_id=nsu_id,session=session_id,request=request)
+                        recruited_member=recruited_members.objects.get(nsu_id=nsu_id)
+                        recruited_member.unique_code=unique_code
+                        recruited_member.save()  # Saving the member to the database
+                        
                         email_sending_status=email_sending.send_email_to_recruitees_upon_recruitment(
-                            name=name,nsu_id=nsu_id,recruited_member_email=recruited_member_email,recruitment_session=recruitment_session_name
+                            name=name,nsu_id=nsu_id,recruited_member_email=recruited_member_email,recruitment_session=recruitment_session_name,unique_code=unique_code
                         )
                         if(email_sending_status):
                             messages.success(request,f"Email was successfully sent to {recruited_member_email}.")
@@ -400,7 +406,6 @@ def recruit_member(request, session_id):
                             )
                             unique_code=renderData.Recruitment.generateUniqueCode(nsu_id=recruited_member.nsu_id,session=recruited_member.session_id,request=request)
                             recruited_member.unique_code=unique_code
-                            print(unique_code)
                             recruited_member.save()  # Saving the member to the database
                             
                             #send an email now to the recruited member
@@ -419,7 +424,7 @@ def recruit_member(request, session_id):
                                 request, f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database! It is prohibited to recruit another member with same NSU ID under one recruitment session.")
                             return render(request, "recruitment_form.html", context=context)
 
-                        except:  # Handling all errors
+                        except Exception as e:  # Handling all errors
                             messages.warning(request, "Something went Wrong! Please try again")
                             return render(request, "recruitment_form.html", context=context)
                         
