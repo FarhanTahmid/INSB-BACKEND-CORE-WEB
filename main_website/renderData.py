@@ -385,7 +385,7 @@ class HomepageItems:
         '''This function returns all events of mega event'''
         try:
 
-            events = Events.objects.filter(super_event_id = SuperEvents.objects.get(id = mega_event.id),publish_in_main_web=True)
+            events = Events.objects.filter(super_event_id = SuperEvents.objects.get(id = mega_event.id),publish_in_main_web=True).order_by('-event_date')
           
             dic = {}
             #using this loop, assigning the event with its corresponding banner picture in the dictionary as key and value
