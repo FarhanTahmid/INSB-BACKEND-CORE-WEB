@@ -348,7 +348,7 @@ class HomepageItems:
             if primary == 1:
                 return SuperEvents.objects.filter(publish_mega_event = True)
             else:
-                mega_events= SuperEvents.objects.filter(publish_mega_event = True,mega_event_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)).order_by('-start_date')
+                mega_events= SuperEvents.objects.filter(publish_mega_event = True)
                 if(mega_events.exists()):
                     return mega_events
                 else:
