@@ -80,6 +80,62 @@
                 margin-right: 5%;
             }
         }
+        .image-button {
+            display: inline-block;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+        
+        /* Add additional styling for image appearance, such as size and alignment */
+        .image-button img {
+            height:50px;
+            width: 50px; /* Adjust as needed */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 5px; /* Add rounded corners if desired */
+        }
+        .btn-container {
+          text-align: center;
+        }
+        
+        .btn {
+          max-width: 100%;
+          width: auto;
+          display: inline-block;
+          white-space: normal; /* Allow text to wrap within the button */
+          word-wrap: break-word; /* Break long words if necessary */
+          font-size: 16px; /* Adjust the font size as needed */
+        }
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip-container.right {
+        float: right; /* Float the container to the right */
+        margin-right: 0; /* Reset the margin for the right-aligned button */
+        }
+        
+        .image-button:hover + .tooltip-text {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(10px); /* Adjust the distance from the link */
+        }
+        
+        .tooltip-text {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -130,7 +186,14 @@
           <br>
         </div>
           
-
+        <!--Back Arrow-->
+        <br>
+        <div class="tooltip-container">
+            <a href="{% url 'central_branch:mega_events' %}" class="image-button">
+                <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+            </a>
+            <span class="tooltip-text">Go back to Mega Events</span>
+        </div>
         <div class="btn-container">
             <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal" style="margin-bottom:15px">Delete Event</button>
         </div>
