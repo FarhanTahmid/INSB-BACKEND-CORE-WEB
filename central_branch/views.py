@@ -2560,7 +2560,7 @@ def mega_events(request):
         is_branch = True
         has_access_to_create_event = Branch_View_Access.get_create_event_access(request)
 
-        mega_events = SuperEvents.objects.all().order_by('-pk')
+        mega_events = SuperEvents.objects.all().order_by('-start_date')
 
         context = {
             'is_branch':True,
