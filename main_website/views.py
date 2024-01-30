@@ -192,7 +192,7 @@ def achievements(request):
     '''This view function loads all achievements'''
 
     try:
-        load_all_achievements=Achievements.objects.all().order_by('-award_winning_year')
+        load_all_achievements=Achievements.objects.all().order_by('-award_winning_datefield__year','-award_winning_datefield__month')
         context={
             'page_title':"Achievements",
             'achievements':load_all_achievements,
