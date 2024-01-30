@@ -221,6 +221,9 @@ class Branch:
             for event in events:
                 event.super_event_id = None
                 event.save()
+            mega_event_banner_image_path = settings.MEDIA_ROOT + str(mega_event.banner_image)
+            if os.path.isfile(mega_event_banner_image_path):
+                os.remove(mega_event_banner_image_path)
             mega_event.delete()
             return True
         except Exception as e:
