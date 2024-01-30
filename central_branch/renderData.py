@@ -21,6 +21,9 @@ from django.db.utils import IntegrityError
 import traceback
 import logging
 from system_administration.system_error_handling import ErrorHandling
+from graphics_team.models import Graphics_Banner_Image
+from media_team.models import Media_Images
+from content_writing_and_publications_team.models import Content_Team_Document
 
 
 class Branch:
@@ -982,7 +985,7 @@ class Branch:
 
     def load_all_mother_events():
         '''This method loads all the mother/Super events'''
-        return SuperEvents.objects.all().order_by('-pk')
+        return SuperEvents.objects.all()
     def load_all_inter_branch_collaboration_options():
         '''This loads all the chapters and Societies of the branch'''
         return Chapters_Society_and_Affinity_Groups.objects.all().order_by('primary')
@@ -1048,8 +1051,32 @@ class Branch:
     def delete_event(event_id):
         ''' This function deletes event from database '''
         try:
-            #Match event id and delete that event
-            Events.objects.get(id = event_id).delete()
+            #Getting the event instance
+            event = Events.objects.get(id = event_id)
+            try:
+                #getting banner image of the image and deleting it from if exists
+                graphics_image = Graphics_Banner_Image.objects.get(event_id = event)
+                image_path=settings.MEDIA_ROOT+str(graphics_image.selected_image)
+                if os.path.isfile(image_path):
+                    os.remove(image_path)
+            except:
+                pass
+            #getting media images of the event and deleting file from os
+            media_images = Media_Images.objects.filter(event_id = event)
+
+            for image in media_images:
+                img_path = settings.MEDIA_ROOT + str(image.selected_images)
+                if os.path.exists(img_path):
+                    os.remove(img_path)
+            
+            content_files = Content_Team_Document.objects.filter( event_id = event)
+            #getting content files from  db and removing them physically from server directory
+            for file in content_files:
+                doc_path = settings.MEDIA_ROOT + str(file.document)
+                if os.path.exists(doc_path):
+                    os.remove(doc_path)
+            #deleting the event along with its  related data from DB
+            event.delete()
             return True
         except:
             return False
