@@ -382,8 +382,8 @@ def update_information(request):
                 if('profile_picture' in request.FILES):
                     #Get the image file
                     file=request.FILES.get('profile_picture')
-                    if(file.size>(4*1024*1024)):
-                        messages.warning(request,"Maximum File size of 4 MB exceeded!")
+                    if(file.size>(2*1024*1024)):
+                        messages.warning(request,"Maximum File size of 2 MB exceeded!")
                         return redirect('users:update_information')
                     else:
                         change_pro_pic=current_user.change_profile_picture(file) #Calling function to change profile picture of the user
