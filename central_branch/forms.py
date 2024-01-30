@@ -7,8 +7,11 @@ class AchievementForm(forms.ModelForm):
     class Meta:
         model=Achievements
         fields=[
-            'award_name','award_winning_year','award_description','award_picture','award_of'
+            'award_name','award_winning_year','award_winning_datefield','award_description','award_picture','award_of'
         ]
+        widgets = {
+            'award_winning_datefield': forms.DateInput(attrs={'type': 'date'}),
+        }
     
     def save(self, commit=True):
         # Get the existing instance from the database
