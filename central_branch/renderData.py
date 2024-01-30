@@ -988,7 +988,7 @@ class Branch:
 
     def load_all_mother_events():
         '''This method loads all the mother/Super events'''
-        return SuperEvents.objects.all()
+        return SuperEvents.objects.all().order_by('-pk')
     def load_all_inter_branch_collaboration_options():
         '''This loads all the chapters and Societies of the branch'''
         return Chapters_Society_and_Affinity_Groups.objects.all().order_by('primary')
