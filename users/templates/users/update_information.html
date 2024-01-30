@@ -264,7 +264,7 @@
             var maxSize = {{picture_max_size}}; // 4 MB in bytes
     
             if (fileSize > maxSize) {
-              errorMessage.textContent = 'File size exceeds 4 MB. Please choose a smaller file.';
+              errorMessage.textContent = 'File size exceeds 2 MB. Please choose a smaller size photo or resize this!';
               fileInput.value = ''; // Clear the input to prevent uploading the large file
             } else {
               errorMessage.textContent = ''; // Clear any previous error message
