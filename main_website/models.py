@@ -15,7 +15,7 @@ class HomePageTopBanner(models.Model):
     banner_picture=ResizedImageField(null=False,blank=False,upload_to='main_website_files/homepage/banner_pictures')
     first_layer_text=models.CharField(null=False,blank=False,default="FOCUSING LIMELIGHT ON",max_length=50)
     first_layer_text_colored=models.CharField(null=False,blank=False,default="MASTERMINDS",max_length=20)
-    third_layer_text=models.TextField(null=False,blank=False,max_length=200)
+    third_layer_text=models.TextField(null=False,blank=False,max_length=300)
     button_text=models.CharField(null=False,blank=False,max_length=50,default="About INSB")
     button_url=models.CharField(null=False,blank=False,default="#",max_length=200)
     class Meta:
