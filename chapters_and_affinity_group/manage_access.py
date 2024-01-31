@@ -33,8 +33,13 @@ class SC_Ag_Render_Access:
             if(Access_Render.faculty_advisor_access(username=username)):
                 faculty_advisor_access=True
             
+            # generate branch eb access
+            branch_eb_access = False
+            if(Access_Render.eb_access(username=username)):
+                branch_eb_access=True
+            
             # if any of this is true, grant access
-            if(system_manager_access or sc_ag_eb_access or faculty_advisor_access):
+            if(system_manager_access or sc_ag_eb_access or faculty_advisor_access or branch_eb_access):
                 return True
             else:
                 return False
