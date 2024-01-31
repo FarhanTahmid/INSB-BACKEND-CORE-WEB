@@ -192,6 +192,7 @@
                             <th>SL</th>
                             <th>Event Name</th>
                             <th>Event Organiser</th>
+                            <th>Event Type</th>
                             <th>Collaboration With</th>
                             <th>Date of Event</th>
                             
@@ -208,11 +209,20 @@
                             {% endif %}
                             <td>{{ key.event_organiser.group_name }}</td>
                             <td>
+                            {% for types in key.event_type.all %}
+                              {% if forloop.last %}
+                              {{ types.event_category }} 
+                              {% else %}
+                              {{ types.event_category }},
+                              {% endif %}
+                            {% endfor %}
+                            </td>
+                            <td>
                               {% for collabs in value %}
                               <ul style="list-style-type: none; text-align:left;">
-                                    <li>{{ collabs }}</li>
+                                <li>{{ collabs }}</li>
                               </ul>
-                            
+                              
                               {% endfor %}
                             </td>
                             <td>{{ key.event_date }}</td>
