@@ -401,10 +401,8 @@ class MDT_DATA:
         have birthday on the following day to greet them'''
         #gettting tomorrows date
         tomorrow = datetime.now() + timedelta(days=1)
-        #getting our time zone
-        my_timezone = ZoneInfo("Asia/Dhaka")
         #scheduling it to be sent at 12:00 AM
-        scheduled_email_date_time = datetime.combine(datetime.today(), time(0,0)).replace(tzinfo=None).astimezone(my_timezone)
+        scheduled_email_date_time = datetime.combine(datetime.today(), time(0,0))
         #getting all members
         all_members = Members.objects.all()
         #creating instance of schedule 
