@@ -1762,7 +1762,7 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
        
-    def update_website_homepage_tab1(pk, banner_image, first_layer_text, first_layer_text_colored, third_layer_text, button_text, button_url):
+    def update_website_homepage_top_banner(pk, banner_image, first_layer_text, first_layer_text_colored, third_layer_text, button_text, button_url):
         try:
             homepage_top_banner = HomePageTopBanner.objects.get(id=pk)
 

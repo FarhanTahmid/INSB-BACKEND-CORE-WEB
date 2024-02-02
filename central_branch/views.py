@@ -1221,7 +1221,7 @@ def manage_website_homepage(request):
         return custom_500(request)
     
 @login_required
-def manage_website_homepage_tab1_update(request, pk):
+def manage_website_homepage_top_banner_update(request, pk):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
@@ -1241,12 +1241,12 @@ def manage_website_homepage_tab1_update(request, pk):
             button_text = request.POST['button_text']
             button_url = request.POST['button_url']
 
-            if(Branch.update_website_homepage_tab1(pk, banner_image, first_layer_text, first_layer_text_colored, third_layer_text, button_text, button_url)):
+            if(Branch.update_website_homepage_top_banner(pk, banner_image, first_layer_text, first_layer_text_colored, third_layer_text, button_text, button_url)):
                 messages.success(request, 'Updated Successfully!')
             else:
                 messages.warning(request, 'Something went wrong!')
-                
-            return redirect('central_branch:manage_website_home_tab1_update', pk)
+
+            return redirect('central_branch:manage_website_home_top_banner_update', pk)
 
         context = {
             'user_data':user_data,
