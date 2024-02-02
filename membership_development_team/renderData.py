@@ -397,12 +397,12 @@ class MDT_DATA:
     
     def wish_members_birthday(self):
 
-        '''This function will run everday around 12:00 pm to check which members
+        '''This function will run everday around 12:00 am to check which members
         have birthday on the following day to greet them'''
         #gettting todays date
         today = datetime.now()
         #scheduling it to be sent at 12:00 AM
-        scheduled_email_date_time = datetime.combine(datetime.today(), time(0,0))
+        scheduled_email_date_time = datetime.today.now()
         #getting all members
         all_members = Members.objects.all()
         #creating instance of schedule 
