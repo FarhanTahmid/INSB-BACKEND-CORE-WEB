@@ -32,6 +32,7 @@
         width: 300px;
         height: 300px;
         overflow: hidden;
+        background-color: #fff;
         border-radius: 10px 89px 50% 70%;
     }
     .slide .img img {
@@ -152,6 +153,19 @@
     function showSlide(index) {
         const slider = document.getElementById('slider');
         const slides = document.querySelectorAll('.slide');
+
+        // Check the number of slides
+        if (slides.length <= 1) {
+            // Hide buttons if there's only one slide
+            document.querySelector('.prev').style.display = 'none';
+            document.querySelector('.next').style.display = 'none';
+            return;
+        } else {
+            // Show buttons if there's more than one slide
+            document.querySelector('.prev').style.display = 'block';
+            document.querySelector('.next').style.display = 'block';
+        }
+
         if (index >= slides.length) {
             currentSlide = 0;
         } else if (index < 0) {
@@ -205,6 +219,9 @@
                 startX = e.touches[0].clientX;
             }
         });
+
+        // Initially hide buttons if there's only one slide
+        showSlide(currentSlide);
     });
 </script>
 
