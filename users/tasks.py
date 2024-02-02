@@ -21,7 +21,7 @@ def send_birthday_wish_email(to_email_list,to_subject,to_message):
 
 @shared_task
 def send_birthday_wish():
-    '''This function is to be set on admin panel to run every night at 11:50 ish '''
+    '''This function is to be set on admin panel to run every night at 12:00 '''
     temp = MDT_DATA()
     temp.wish_members_birthday()
     
