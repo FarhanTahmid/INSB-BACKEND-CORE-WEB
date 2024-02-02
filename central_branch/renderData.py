@@ -2,7 +2,7 @@ import os
 from bs4 import BeautifulSoup
 from django.http import Http404
 from insb_port import settings
-from main_website.models import About_IEEE, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link,FAQ_Question_Category,FAQ_Questions,HomePage_Thoughts,IEEE_Bangladesh_Section_Gallery
+from main_website.models import About_IEEE, HomePageTopBanner, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link,FAQ_Question_Category,FAQ_Questions,HomePage_Thoughts,IEEE_Bangladesh_Section_Gallery
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
@@ -1761,8 +1761,29 @@ class Branch:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
+       
+    def update_website_homepage_top_banner(pk, banner_image, first_layer_text, first_layer_text_colored, third_layer_text, button_text, button_url):
+        try:
+            homepage_top_banner = HomePageTopBanner.objects.get(id=pk)
 
-        
-        
+            if(banner_image):
+                img_path = settings.MEDIA_ROOT + str(homepage_top_banner.banner_picture)
+                if os.path.exists(img_path):
+                    os.remove(img_path)
+                homepage_top_banner.banner_picture = banner_image
+
+            homepage_top_banner.first_layer_text = first_layer_text
+            homepage_top_banner.first_layer_text_colored = first_layer_text_colored
+            homepage_top_banner.third_layer_text = third_layer_text
+            homepage_top_banner.button_text = button_text
+            homepage_top_banner.button_url = button_url
+
+            homepage_top_banner.save()
+
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
 
 
