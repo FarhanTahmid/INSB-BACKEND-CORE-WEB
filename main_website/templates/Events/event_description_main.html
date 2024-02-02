@@ -505,7 +505,11 @@
                                     {% if has_interbranch_collab %}
                                     <p style="color: #000; font-size:15px;"><i class="fa-solid fa-angles-right" style="color: #E87722;"></i>In collaboration with <span style="color: #E87722">
                                         {% for i in inter_collaborations %}
-                                        {{i.collaboration_with}} <span style="color:#002855">|</span> 
+                                            {% if forloop.last %}
+                                            {{i.collaboration_with}}
+                                            {% else %}
+                                            {{i.collaboration_with}} <span style="color:#002855">|</span>
+                                            {% endif %}
                                         {% endfor %} 
                                     </span></p>
                                     {% endif %}
