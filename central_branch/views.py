@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from central_events.models import Event_Category, Event_Venue, Events, SuperEvents
+from central_events.models import Event_Category, Event_Venue, Events, InterBranchCollaborations, IntraBranchCollaborations, SuperEvents
 from content_writing_and_publications_team.forms import Content_Form
 from content_writing_and_publications_team.renderData import ContentWritingTeam
 from events_and_management_team.renderData import Events_And_Management_Team
@@ -3314,6 +3314,17 @@ def event_preview(request, event_id):
         has_access = Branch_View_Access.get_event_edit_access(request)
         if(has_access):
             event = Events.objects.get(id=event_id)
+            get_inter_branch_collab=InterBranchCollaborations.objects.filter(event_id=event.pk)
+            get_intra_branch_collab=IntraBranchCollaborations.objects.filter(event_id=event.pk).first()
+            
+            has_interbranch_collab=False
+            has_intrabranch_collab=False
+            
+            if(len(get_inter_branch_collab) > 0):
+                has_interbranch_collab=True
+            if(get_intra_branch_collab is not None):
+                has_intrabranch_collab=True
+                
             event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
             event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
@@ -3322,7 +3333,11 @@ def event_preview(request, event_id):
                 'event' : event,
                 'media_url':settings.MEDIA_URL,
                 'event_banner_image' : event_banner_image,
-                'event_gallery_images' : event_gallery_images
+                'event_gallery_images' : event_gallery_images,
+                'has_interbranch_collab':has_interbranch_collab,
+                'has_intrabranch_collab':has_intrabranch_collab,
+                'inter_collaborations':get_inter_branch_collab,
+                'intra_collab':get_intra_branch_collab,
             }
 
             return render(request, 'Events/event_description_main.html', context)
