@@ -1203,7 +1203,6 @@ def manage_website_homepage(request):
             context={
                 'user_data':user_data,
                 'all_sc_ag':sc_ag,
-                'user_data':user_data,
                 'topBannerItems':topBannerItems,
                 'bannerPictureWithNumbers':existing_banner_picture_with_numbers,
                 'media_url':settings.MEDIA_URL,
@@ -1220,6 +1219,46 @@ def manage_website_homepage(request):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
+    
+@login_required
+def manage_website_homepage_top_banner_update(request, pk):
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    
+    has_access = Branch_View_Access.get_manage_web_access(request)
+    if has_access:
+        homepage_top_banner = HomePageTopBanner.objects.get(id=pk)
+
+        if request.method == 'POST':
+            banner_image = None
+            if request.FILES.get('banner_picture'):
+                banner_image = request.FILES['banner_picture']
+
+            first_layer_text = request.POST['first_layer_text']
+            first_layer_text_colored = request.POST['first_layer_text_colored']
+            third_layer_text = request.POST['third_layer_text']
+            button_text = request.POST['button_text']
+            button_url = request.POST['button_url']
+
+            if(Branch.update_website_homepage_top_banner(pk, banner_image, first_layer_text, first_layer_text_colored, third_layer_text, button_text, button_url)):
+                messages.success(request, 'Updated Successfully!')
+            else:
+                messages.warning(request, 'Something went wrong!')
+
+            return redirect('central_branch:manage_website_home_top_banner_update', pk)
+
+        context = {
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'homepage_top_banner':homepage_top_banner,
+            'media_url':settings.MEDIA_URL,
+        }
+
+        return render(request, 'Manage Website/Homepage/update_banner_picture_with_text.html',context)
+    else:
+        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
+
 
 @login_required
 def update_volunteer_of_month(request,pk):

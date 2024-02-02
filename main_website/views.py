@@ -985,7 +985,8 @@ def panel_members_page(request,year):
             'eb':branch_eb,
             'sc_ag_chair':sc_ag_chair,
             'has_current_panel':True,
-            'page_title':f"Executive Panel - {year}"
+            'page_title':f"Executive Panel - {year}",
+            'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         }
         return render(request,'Members/Panel/panel_members.html',context)
     
@@ -1481,6 +1482,7 @@ def mega_event_description_page(request,mega_event_id):
                     'media_url':settings.MEDIA_URL,
                     'all_events_of_mega_event':all_events_of_mega_events,
                     'other_mega_event':other_mega_event,
+                    'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
                 }
 
                 return render(request, 'Events/mega_event_description_page.html',context)
@@ -1508,6 +1510,7 @@ def sc_ag_current_panel_members(request,sc_ag_primary):
         'page_title':"Current Executive Committee",
         'page_subtitle':sc_ag.group_name,
         'panels':get_all_panels,
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         
     }
     if(current_panel is not None):
@@ -1591,7 +1594,7 @@ def sc_ag_panel_members(request,sc_ag_primary,panel_pk,panel_year):
         'has_current_panel':True,
         'sc_ag':sc_ag,
         'panels':get_all_panels,
-
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
     }
     
     if get_panel_members is not None:

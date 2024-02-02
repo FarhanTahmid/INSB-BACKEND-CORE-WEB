@@ -397,10 +397,10 @@ class MDT_DATA:
     
     def wish_members_birthday(self):
 
-        '''This function will run everday around 11:50pm to check which members
+        '''This function will run everday around 12:00 pm to check which members
         have birthday on the following day to greet them'''
-        #gettting tomorrows date
-        tomorrow = datetime.now() + timedelta(days=1)
+        #gettting todays date
+        today = datetime.now()
         #scheduling it to be sent at 12:00 AM
         scheduled_email_date_time = datetime.combine(datetime.today(), time(0,0))
         #getting all members
@@ -411,7 +411,7 @@ class MDT_DATA:
         for members in all_members:  
             if members.date_of_birth:
                 #only getting registered if there are birthdays tomorrow
-                if members.date_of_birth.day == tomorrow.day and members.date_of_birth.month == tomorrow.month:
+                if members.date_of_birth.day == today.day and members.date_of_birth.month == today.month:
                     #assigning unique id
                     scheduled_email_id = f"{members.nsu_id}_{scheduled_email_date_time}"
                     #providing email details
