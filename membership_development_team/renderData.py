@@ -402,7 +402,7 @@ class MDT_DATA:
         #gettting todays date
         today = datetime.now()
         #scheduling it to be sent at 12:00 AM
-        scheduled_email_date_time = datetime.today.now()
+        scheduled_email_date_time = today
         #getting all members
         all_members = Members.objects.all()
         #creating instance of schedule 
