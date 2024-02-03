@@ -10,4 +10,5 @@ urlpatterns = [
     path('event_page/',views.event_page,name="event_page"),
     path('event_page/<int:event_id>',views.event_form,name="event_form"),
     path('event_page/<int:event_id>/add_notes',views.event_form_add_notes,name="event_form_add_notes"),
+    path('content_page/',views.content_page,name="content_page"),
 ]
