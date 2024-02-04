@@ -9,15 +9,15 @@ def running_task():
     temp = MDT_DATA()
     temp.check_active_members()
 
-@shared_task
-def send_birthday_wish_email(to_email_list,to_subject,to_message):
-    email_from = settings.EMAIL_HOST_USER
-    to_email_list = json.loads(to_email_list)
-    email = EmailMultiAlternatives(to_subject,to_message,
-                                email_from,
-                                to_email_list,
-                                )
-    email.send()
+# @shared_task
+# def send_birthday_wish_email(to_email_list,to_subject,to_message):
+#     email_from = settings.EMAIL_HOST_USER
+#     to_email_list = json.loads(to_email_list)
+#     email = EmailMultiAlternatives(to_subject,to_message,
+#                                 email_from,
+#                                 to_email_list,
+#                                 )
+#     email.send()
 
 @shared_task
 def send_birthday_wish():
