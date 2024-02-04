@@ -9,6 +9,7 @@ from datetime import datetime,timedelta,time
 from central_branch import renderData
 from django_celery_beat.models import ClockedSchedule,PeriodicTask
 import json
+from django.utils import timezone
 class MDT_DATA:
     
     def get_member_data(ieee_id):
@@ -400,7 +401,8 @@ class MDT_DATA:
         #gettting todays date
         today = datetime.now()
         #scheduling it to be sent at 12:00 AM
-        scheduled_email_date_time = datetime.combine(datetime.today(), time(0,0))
+        scheduled_email_date_time = f'{today.year}-{today.month}-{today.day}T01:00'
+        scheduled_email_date_time = datetime.strptime(scheduled_email_date_time,'%Y-%m-%dT%H:%M')
         #getting all members
         all_members = Members.objects.all()
         #creating instance of schedule 
