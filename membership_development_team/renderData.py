@@ -401,7 +401,7 @@ class MDT_DATA:
         #gettting todays date
         today = datetime.now()
         #scheduling it to be sent at 12:00 AM
-        scheduled_email_date_time = f'{today.year}-{today.month}-{today.day}T00:50'
+        scheduled_email_date_time = f'{today.year}-{today.month}-{today.day}T01:00'
         scheduled_email_date_time = datetime.strptime(scheduled_email_date_time,'%Y-%m-%dT%H:%M')
         #getting all members
         all_members = Members.objects.all()
