@@ -1,208 +1,282 @@
-{% load static %}
-{% block create_content_form_add_notes_content %}
+{% load static %} {% block create_content_form_add_notes_content %}
 
 <style>
+  .circle-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px; /* Set minimum width */
+    height: 45px; /* Set minimum height */
+    background-color: transparent; /* Set to transparent or any other color for the inside */
+    border: 2px solid #78be20; /* Border color is green */
+    border-radius: 50%;
+    color: #78be20; /* Text color is green */
+    font-size: 24px; /* Adjust the font size as needed */
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s; /* Add smooth transition effect */
+  }
 
+  .circle-btn:hover {
+    background-color: #78be20; /* Hover background color is green */
+    color: #fff; /* Hover text color is white */
+  }
 
-    .circle-btn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 45px; /* Set minimum width */
-        height: 45px; /* Set minimum height */
-        background-color: transparent; /* Set to transparent or any other color for the inside */
-        border: 2px solid #78BE20; /* Border color is green */
-        border-radius: 50%;
-        color: #78BE20; /* Text color is green */
-        font-size: 24px; /* Adjust the font size as needed */
-        cursor: pointer;
-        transition: background-color 0.3s, color 0.3s; /* Add smooth transition effect */
-    }
-
-    .circle-btn:hover {
-        background-color: #78BE20; /* Hover background color is green */
-        color: #fff; /* Hover text color is white */
-    }
-
-    .plus-sign::before {
-        content: '+';
-    }
-    .tab a.active {
-        color: black;
-    }
-    
-  </style>
+  .plus-sign::before {
+    content: "+";
+  }
+</style>
 
 <div class="container">
+  <div class="box" style="border-radius: 6px">
+    <!--heading-->
+    <div class="box-header">
+      <h1 style="text-align: center; font-size: 30px">Add Content</h1>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="box-body">
+        <div class="form-group row align-items-center">
+            <!--add captions-->
+          <label for="captions" class="col-sm-3 form-control-label">Add Captions:</label>
 
 
-    <div class="box">
-        <br>
+          <div class="col-sm-7">
+            <!-- Add input field for captions here if needed -->
+          </div>
 
-        <div class="box-header">
-            <h1 style="text-align:center;font-size:30px;">Add Details</h1>
+
+          <!--add caption button-->
+          <div class="col-sm-2 d-flex align-items-center justify-content-center">
+            <button
+              type="button"
+              class="circle-btn plus-sign"
+              data-toggle="modal"
+              data-target="#AddCaptionModal"></button>
+          </div>
         </div>
 
-        
+        <hr>
 
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="box-body">
-                
-                <div class="form-group row align-items-center">
-                    <label for="captions" class="col-sm-3 form-control-label">Add Content Captions:</label>
-                    <div class="col-sm-7">
-                        <!-- Add input field for captions here if needed -->
-                    </div>
-                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddCaptionModal"></button>
-                    </div>
-                </div>
-                
-                <hr>
-                <div id="captions-container" class="mt-3">
-                    <label>Captions:</label> 
-                    {% for note,value in all_notes_content.items %}
-                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                        <div class="col-sm-11">
-                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal_{{note.pk}}">{{note.title}}</a>
-                        </div>
-                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{note.pk}}')">✖</button>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                
-                    
-        
-                <br>
-                <div class="footer" style="position:right;">
-                </div>
+        <div id="captions-container" class="mt-3">
+            <!--added captions-->
+          <label>Captions:</label>
+          {% for note,value in all_notes_content.items %}
+          <div class="row container-fluid bg-light mt-3" style="margin: auto">
+            <div class="col-sm-11">
+              <a
+                href="#"
+                class="btn btn-link btn-block"
+                data-toggle="modal"
+                data-target="#EditCaptionModal_{{note.pk}}">{{note.title}}</a>
             </div>
-        </form>
-    </div>
-</div>
+            <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                <!--delete caption button-->
+              <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                data-toggle="modal"
+                data-target="#ConfirmDeleteModal"
+                onclick="openModal('{{note.pk}}')">
+                ✖ </button>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
 
+        <div class="footer" style="position: right"></div>
+      </div>
+    </form>
+  </div>
+</div>
 
 <!-- Updated Modal for adding captions -->
-<div class="modal fade" id="AddCaptionModal" tabindex="-1" role="dialog" aria-labelledby="AddCaptionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addCaptionModalLabel">Add Caption</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="POST">
-                    {% csrf_token %}
-                    
-                    <div class="form-group">
-                        <label>Title:</label> 
-                            <input
-                                placeholder="Title"
-                                class="form-control"
-                                type="text"
-                                autocomplete="off"
-                                required
-                                name="title"
-                                value="" 
-                            />
-                            <br>
-                        <!-- Use form-control class for full-width textarea -->
-                        {{form_adding_note.media}}
-                        {{form_adding_note.as_p}}
-                    </div>
-            </div>
-            <div class="modal-footer">
-                <!-- Change the button label and name attribute -->
-                <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_note" value="Add">
-                <button type="button" class="btn btn-outline-danger txt-danger buttons" data-dismiss="modal">Cancel</button>
-            </div>
-            </form>
+<div
+  class="modal fade"
+  id="AddCaptionModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="AddCaptionModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addCaptionModalLabel">Add Caption</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="POST">
+        <div class="modal-body">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label>Title:</label>
+            <input
+              placeholder="Title"
+              class="form-control"
+              type="text"
+              autocomplete="off"
+              required
+              name="title"
+              value=""
+            />
+
+            <!-- Use form-control class for full-width textarea -->
+            {{form_adding_note.media}} {{form_adding_note.as_p}}
+          </div>
         </div>
+        <div class="modal-footer">
+          <!-- Change the button label and name attribute -->
+          <input
+            type="submit"
+            class="btn btn-outline-success txt-success buttons"
+            name="add_note"
+            value="Add"
+          />
+          <button
+            type="button"
+            class="btn btn-outline-danger txt-danger buttons"
+            data-dismiss="modal"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
 
-
 <!-- New modal for editing captions -->
-{% for note,value  in all_notes_content.items %}
-<div class="modal fade" id="EditCaptionModal_{{note.pk}}" tabindex="-1" role="dialog" aria-labelledby="EditCaptionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editCaptionModalLabel">Edit Caption</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Display existing caption in a textarea for editing -->
-                <form method="POST">
-                    {% csrf_token %}
-                    <input id="update_note_{{note.pk}}" name="update_note" value="{{note.pk}}" type="hidden">
-                    <div class="form-group">
-                        <label>Title: </label> 
-                            <input
-                                placeholder="Title"
-                                class="form-control"
-                                type="text"
-                                autocomplete="off"
-                                required
-                                name="title"
-                                value="{{note.title}}" 
-                            />
-                        <br>
-                           
-                        {{value.media}}
-                        {{value.as_p}}
-                            
-                    </div>
-            </div>
-            <div class="modal-footer">
-                <input type="submit" name="update" class="btn btn-outline-primary txt-primary" value="Update"></button>
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-            </div>
-            </form>
+{% for note,value in all_notes_content.items %}
+<div
+  class="modal fade"
+  id="EditCaptionModal_{{note.pk}}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="EditCaptionModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editCaptionModalLabel">Edit Caption</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- Display existing caption in a textarea for editing -->
+      <form method="POST">
+        <div class="modal-body">
+          {% csrf_token %}
+          <input
+            id="update_note_{{note.pk}}"
+            name="update_note"
+            value="{{note.pk}}"
+            type="hidden"
+          />
+          <div class="form-group">
+            <label>Title: </label>
+            <input
+              placeholder="Title"
+              class="form-control"
+              type="text"
+              autocomplete="off"
+              required
+              name="title"
+              value="{{note.title}}"
+            />
+
+            {{value.media}} {{value.as_p}}
+          </div>
         </div>
+        <div class="modal-footer">
+          <input
+            type="submit"
+            name="update"
+            class="btn btn-outline-primary txt-primary"
+            value="Update"
+          />
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            data-dismiss="modal"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
 {% endfor %}
 
-
 <!-- Confirmation modal for delete -->
-<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-dialog-top" role="document">
+<div
+  class="modal fade"
+  id="ConfirmDeleteModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="ConfirmDeleteModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-top" role="document">
     <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="POST">
         <div class="modal-body">
-            <form method="POST">
-                {% csrf_token %}
-            <p><input id="remove_note" name= "remove_note" type="hidden"></p>
-            Are you sure you want to delete the note?
+          {% csrf_token %}
+          <p><input id="remove_note" name="remove_note" type="hidden" /></p>
+          Are you sure you want to delete the caption?
         </div>
         <div class="modal-footer">
-            <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
-            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+          <input
+            type="submit"
+            name="remove"
+            class="btn btn-outline-danger"
+            value="Confirm"
+          />
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            data-dismiss="modal"
+          >
+            Cancel
+          </button>
         </div>
-        </form>
+      </form>
     </div>
-</div>
+  </div>
 </div>
 
 <script>
-    function openModal(remove_note) {
-        // Set data in the modal
-        var inputElement = document.getElementById('remove_note');    
-        inputElement.value=remove_note;
-    }
+  function openModal(remove_note) {
+    // Set data in the modal
+    var inputElement = document.getElementById("remove_note");
+    inputElement.value = remove_note;
+  }
 </script>
 
-{% endblock create_content_form_add_notes_content  %}
+{% endblock create_content_form_add_notes_content %}

@@ -3,14 +3,14 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Events | Content Writing & Publications Team</title>
+    <title>Content | Content Writing & Publications Team</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
 
 
     {% block common_css %} 
-    {% include "common_css.html" %} 
+     {% include "common_css.html" %} 
     {% endblock common_css %}
     <style>
       body,
@@ -69,144 +69,138 @@
           margin-right: 5%;
         }
       }
+
       .notes {
         font-weight: bold;
         margin: 66px 0px 66px;
       }
       .tooltip-container {
-            position: relative;
-            display: inline-block;
-        }
-        .tooltip-container.right {
+        position: relative;
+        display: inline-block;
+      }
+
+      .tooltip-container.right {
         float: right; /* Float the container to the right */
         margin-right: 0; /* Reset the margin for the right-aligned button */
-        }
+      }
         
-        .image-button:hover + .tooltip-text {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(10px); /* Adjust the distance from the link */
-        }
+      .image-button:hover + .tooltip-text {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(10px); /* Adjust the distance from the link */
+      }
         
-        .tooltip-text {
-            position: absolute;
-            top: 50%;
-            left: 100%;
-            transform: translateY(-50%);
-            white-space: nowrap;
-            background-color: #333;
-            color: #fff;
-            padding: 5px;
-            border-radius: 5px;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-        }
-        .image-button img {
-            height:50px;
-            width: 50px; /* Adjust as needed */
-            height: auto; /* Maintain aspect ratio */
-            border-radius: 5px; /* Add rounded corners if desired */
-        }
+      .tooltip-text {
+        position: absolute;
+        top: 50%;
+        left: 100%;
+        transform: translateY(-50%);
+        white-space: nowrap;
+        background-color: #333;
+        color: #fff;
+        padding: 5px;
+        border-radius: 5px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+      }
+
+      .image-button img {
+        height:50px;
+        width: 50px; /* Adjust as needed */
+        height: auto; /* Maintain aspect ratio */
+        border-radius: 5px; /* Add rounded corners if desired */
+      }
+
     </style>
   </head>
 
   <body>
-    <!-- ############ LAYOUT START-->
+    <!-- LAYOUT START-->
     <div class="app" id="app">
       <!-- aside -->
       <div id="aside" class="app-aside modal nav-dropdown">
         {% block sidebar %} 
-        {% include 'users/sidebar.html' %} 
+         {% include 'users/sidebar.html' %} 
         {% endblock %}
       </div>
-      <!-- aside end -->
 
-      <!-- navbar content -->
+
+      <!-- navbar -->
       <div id="content" class="app-content box-shadow-z0" role="main">
         {% block navbar %} 
-        {% include 'content_navbar.html' %}
-         {% endblock navbar %}
+         {% include 'content_navbar.html' %}
+        {% endblock navbar %}
       </div>
-      <!--navbar content-->
 
-      <!-- ############ PAGE START-->
+
+      <!--PAGE START-->
       <div ui-view class="app-body" id="view">
 
-          <div class="container">
+        <!--name-->
+        <div class="container">
               <h2
               style="
               justify-content: center;
               text-align: center;
-              margin-bottom: 15px;
-            "
-          >
-          <span style="color: #00629b">{{event_name}}</span>
-        </h2>
-        <div class="notes">
-            <h6>Note:</h6>
-            <ol style="justify-content: center; margin-bottom: 15px">
-                <li>
-                    Provide the captions for the event by clicking on the add
-                details (+) icon
-            </li>
-            <li>
-                You can add as many captions as you want, and you can update or
-                delete them
-            </li>
-            <li>
-                Make sure to save any changes made instantly to prevent data
-                loss
-            </li>
-        </ol>
-        
-        {% for message in messages %}
-        <div
-        class="alert alert-success alert-dismissible fade show"
-        role="alert"
-        >
-        {{message}}
-        <button
-        type="button"
-        class="close"
-        data-dismiss="alert"
-        aria-label="Close"
-        >
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-{% endfor %}
+              margin-bottom: 15px;">
+              <span style="color: #00629b">{{event_name}}</span>
+              </h2>
 
-<!--Tab view Start-->
-{% block create_content_form_tab %} 
-{% include "Content/create_content_form_tab.html" %} 
-{% endblock create_content_form_tab %}
+              <!--notes-->
+              <div class="notes">
+                <h6>Note:</h6>
+                <ol style="justify-content: center; margin-bottom: 15px">
+                    <li>Provide the captions for the event by clicking on the add details (+) icon</li>
+                    <li>You can add as many captions as you want, and you can update or delete them</li>
+                    <li>Make sure to save any changes made instantly to prevent data loss</li>
+                </ol>
+          
+                {% for message in messages %}
+                <div
+                class="alert alert-success alert-dismissible fade show"
+                role="alert"
+                >
+                {{message}}
+                <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+                >
+                <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                {% endfor %}
 
-            <div class="tooltip-container">
-                <a href="{% url 'content_writing_and_publications_team:content_page' %}" class="image-button">
-                    <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
-                </a>
-                <span class="tooltip-text">Go back to Content</span>
+                <!--Tab view-->
+                {% block create_content_form_tab %} 
+                {% include "Content/create_content_form_tab.html" %} 
+                {% endblock create_content_form_tab %}
+
+                <div class="tooltip-container">
+                    <a href="{% url 'content_writing_and_publications_team:content_page' %}" class="image-button">
+                        <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+                    </a>
+                    <span class="tooltip-text">Go back to Content</span>
+                </div>
             </div>
-          </div>
         </div>
 
         {% block create_content_form_add_notes_content %} 
-        {% include "Content/create_content_form_add_notes_content.html" %}
+         {% include "Content/create_content_form_add_notes_content.html" %}
         {% endblock create_content_form_add_notes_content %}
       </div>
-
-      <!--the container div class-->
     </div>
-    <!--Theme Switcher-->
 
+    <!--Theme Switcher-->
     {% block theme_switcher %} 
-    {% include "theme_switcher.html" %} 
+     {% include "theme_switcher.html" %} 
     {% endblock theme_switcher %}
 
     <!-- app end-->
     {% block common_js %} 
-    {% include "common_js.html" %} 
+     {% include "common_js.html" %} 
     {% endblock common_js %}
 
     <script src="{% static 'tab_view.js'%}"></script>

@@ -1,14 +1,20 @@
 {% load static %}
 {% block create_content_form_tab %}
 <style>
-    .tab a.active{
-        color:green;
-        background-color:yellow;
+    .tab a.active {
+        color: #000	;
+        background: #ffc72cd2;
     }
     .tabs li:hover{
         transition: all 0.3s ease-in-out;
     }
+    .tabs li{
+        border: 2px solid #00629B	;
+        color: #000;
+    }
+
 </style>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         // Get the current page's URL
@@ -32,10 +38,10 @@
     });
 </script>
 
-<div class="tabs-container" style="display: flex; flex-direction: column;">
-    <ul class="tabs" style="display: flex; margin-right: 0px; justify-content: center;">
+<div class="tabs-container">
+    <ul class="tabs" style="display: flex; justify-content: center;">
         <li class="tab"><a href="{% url 'content_writing_and_publications_team:create_content_form' %}">Content</a></li>
-        <li class="tab" style="border-right: 1px solid #00629B;"><a href="{% url 'content_writing_and_publications_team:create_content_form_add_notes' %}">Add Captions</a></li>
+        <li class="tab"><a href="{% url 'content_writing_and_publications_team:create_content_form_add_notes' %}">Add Captions</a></li>
     </ul>
     <br>
 </div>

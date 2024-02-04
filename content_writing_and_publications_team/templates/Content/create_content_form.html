@@ -3,38 +3,45 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Events | Content Writing & Publications Team</title>
+    <title>Content | Content Writing & Publications Team</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
 
     <!-- CKEditor CDN -->
     <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
 
-    {% block common_css %} {% include "common_css.html" %} {% endblock common_css %}
+    {% block common_css %} 
+     {% include "common_css.html" %} 
+    {% endblock common_css %}
 
     <style>
-      .wrapper {
-        margin: 0 15%;
-        max-width: 1080px;
-      }
-
       body {
         margin: auto;
         padding: 0%;
         /* font-family: 'Poppins' , sans-serif; */
       }
+
+      .wrapper {
+        margin: 0 15%;
+        max-width: 1080px;
+      }
+
       .notes {
         font-weight: bold;
         margin: 66px 0px 66px;
       }
+
       label {
         font-size: 20px;
       }
+
       .tooltip-container {
         position: relative;
         display: inline-block;
       }
+
       .tooltip-container.right {
         float: right; /* Float the container to the right */
         margin-right: 0; /* Reset the margin for the right-aligned button */
@@ -60,94 +67,106 @@
         visibility: hidden;
         transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
       }
+
       .image-button img {
         height: 50px;
         width: 50px; /* Adjust as needed */
         height: auto; /* Maintain aspect ratio */
         border-radius: 5px; /* Add rounded corners if desired */
       }
+
     </style>
   </head>
 
   <body>
     <!--LAYOUT START-->
     <div class="app" id="app">
+
+
       <!-- aside -->
       <div id="aside" class="app-aside modal nav-dropdown">
-        {% block sidebar %} {% include 'users/sidebar.html' %} {% endblock %}
+        {% block sidebar %} 
+         {% include 'users/sidebar.html' %} 
+        {% endblock %}
       </div>
 
-      <!-- navbar content -->
+
+      <!-- navbar -->
       <div id="content" class="app-content box-shadow-z0" role="main">
-        {% block navbar %} {% include 'content_navbar.html' %} {% endblock navbar %}
+        {% block navbar %} 
+         {% include 'content_navbar.html' %} 
+        {% endblock navbar %}
       </div>
+
 
       <!--PAGE START-->
       <div ui-view class="app-body wrapper" id="view">
         <div class="container">
-          <h2
-            style="
-              justify-content: center;
+          <!--event name-->
+          <h2 style=
+              "justify-content: center;
               text-align: center;
-              margin-bottom: 15px;
-            "
-          >
+              margin-bottom: 15px;">
             <span style="color: #00629b">{{event_name}}</span>
           </h2>
 
+          <!--notes-->
           <div class="notes">
             <h6>Note:</h6>
             <ol>
               <li>Provide the drive link for the documents</li>
-              <li>
-                Make sure to save any changes made instantly to prevent data
-                loss
-              </li>
+              <li>Make sure to save any changes made instantly to prevent data loss</li>
             </ol>
 
-            <!--Tab view Start-->
+            <!--Tab view-->
             {% block create_content_form_tab %} 
-            {% include "Content/create_content_form_tab.html" %} 
+             {% include "Content/create_content_form_tab.html" %} 
             {% endblock create_content_form_tab %}
 
             <!-- {% for message in messages %} -->
             <div
               class="alert alert-success alert-dismissible fade show"
-              role="alert"
-            >
+              role="alert">
               <!-- {{message}} -->
               <button
                 type="button"
                 class="close"
                 data-dismiss="alert"
-                aria-label="Close"
-              >
+                aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <!-- {% endfor %} -->
+
+            <!--back button-->
             <div class="tooltip-container">
               <a href="{% url 'content_writing_and_publications_team:content_page' %}" class="image-button">
                 <img
                   src="{% static 'back-arrow.png' %}"
-                  alt="Go back to session"
-                />
+                  alt="Go back to session"/>
               </a>
               <span class="tooltip-text">Go back to Content</span>
             </div>
           </div>
 
-          {% block content_form_content %} {% include "Content/create_content_form_content.html" %} {% endblock content_form_content %}
+
+          <!--form contents-->
+          {% block content_form_content %}
+           {% include "Content/create_content_form_content.html" %} 
+          {% endblock content_form_content %}
         </div>
-
-        <!--the container div class-->
       </div>
-      <!--Theme Switcher-->
 
-      {% block theme_switcher %} {% include "theme_switcher.html" %} {% endblock theme_switcher %}
+
+      <!--Theme Switcher-->
+      {% block theme_switcher %} 
+       {% include "theme_switcher.html" %} 
+      {% endblock theme_switcher %}
 
       <!-- app end-->
-      {% block common_js %} {% include "common_js.html" %} {% endblock common_js %}
+      {% block common_js %} 
+       {% include "common_js.html" %} 
+      {% endblock common_js %}
 
       <script src="{% static 'tab_view.js'%}"></script>
       <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -209,8 +228,6 @@
           }
         }
       </script>
-      <!-- </body>
-</html> -->
     </div>
   </body>
 </html>
