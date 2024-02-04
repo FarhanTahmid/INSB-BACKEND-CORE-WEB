@@ -314,3 +314,5 @@ def content_page(request):
         return render(request,"Content/content_page.html")
 def create_content_form(request):
         return render(request,"Content/create_content_form.html")
+def create_content_form_add_notes(request):
+        return render(request,"Content/create_content_form_add_notes.html")

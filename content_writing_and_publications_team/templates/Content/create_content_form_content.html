@@ -1,4 +1,9 @@
 {% load static %} {% block content_form_content %}
+<style>
+    .tab a.active {
+        color: black;
+    }
+</style>
 <div class="container">
   <div class="box">
         <div class="box-header">
@@ -12,7 +17,7 @@
         <div class="box-body">
 
             <div class="form-group">
-                <label>Content description <span style="color:red">*<span></label> 
+                <label>Content description: <span style="color:red">*<span></label> 
                 <textarea class="form-control" type="text" name="content_description_details"></textarea>
                 <p id="content_descriptionCharacterCount" style="color: red;"></p>
             </div>

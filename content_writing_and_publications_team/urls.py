@@ -12,4 +12,5 @@ urlpatterns = [
     path('event_page/<int:event_id>/add_notes',views.event_form_add_notes,name="event_form_add_notes"),
     path('content_page/',views.content_page,name="content_page"),
     path('create_content_form/',views.create_content_form,name="create_content_form"),
+    path('create_content_form_add_notes/',views.create_content_form_add_notes,name="create_content_form_add_notes"),
 ]
