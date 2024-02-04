@@ -8,6 +8,9 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
 
+    <!-- CKEditor CDN -->
+    <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+
     {% block common_css %} 
     {% include "common_css.html" %} 
     {% endblock common_css %}
@@ -27,6 +30,44 @@
         font-weight: bold;
         margin: 66px 0px 66px;
       }
+      label{
+        font-size: 20px;
+      }
+      .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip-container.right {
+        float: right; /* Float the container to the right */
+        margin-right: 0; /* Reset the margin for the right-aligned button */
+        }
+        
+        .image-button:hover + .tooltip-text {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(10px); /* Adjust the distance from the link */
+        }
+        
+        .tooltip-text {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+        }
+        .image-button img {
+            height:50px;
+            width: 50px; /* Adjust as needed */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 5px; /* Add rounded corners if desired */
+        }
     </style>
   </head>
 
@@ -49,17 +90,28 @@
 
       <!--PAGE START-->
       <div ui-view class="app-body wrapper" id="view">
+        <!-- <div class="tooltip-container">
+          {% if is_branch %}
+          <a href="#" class="image-button">
+              <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+          </a>
+          {% else %}
+          <a href="#" class="image-button">
+              <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+          </a>
+          {% endif %}
+          <span class="tooltip-text">Go back to Events</span>
+      </div> -->
         <div class="notes">
           <h6>Note:</h6>
           <ol>
             <li>Provide the drive link for the documents</li>
-            <li>You can also upload the document files</li>
             <li>Make sure to save any changes made instantly to prevent data loss</li>
           </ol>
 
-          {% for message in messages %}
+          <!-- {% for message in messages %} -->
           <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{message}}
+            <!-- {{message}} -->
             <button
               type="button"
               class="close"
@@ -69,7 +121,7 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          {% endfor %}
+          <!-- {% endfor %} -->
         </div>
 
         {% block content_form_content %}
@@ -97,5 +149,49 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          // Replace the textareas with CKEditor instances
+          CKEDITOR.replace('content_description_details');
+
+          // Attach a function to the change event for each CKEditor instance
+          ["content_description"]
+              .forEach(function (editorId) {
+                  var editor = CKEDITOR.instances[editorId + '_details'];
+
+                  editor.on('change', function () {
+                      // Update character count display for each CKEditor instance
+                      updateCharacterCount(editorId);
+                  });
+
+                  // Update character count initially
+                  updateCharacterCount(editorId);
+              });
+      });
+
+      function updateCharacterCount(editorId) {
+          var editorContent = CKEDITOR.instances[editorId + '_details'].getData();
+      
+          // Handle special space representations
+          var cleanedContent = editorContent.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+      
+          // Count each character (including spaces)
+          var characterCount = cleanedContent.length;
+      
+          var characterCountElement = document.getElementById(editorId + 'CharacterCount');
+      
+          // Check conditions and update text color and content
+          if (characterCount === 0) {
+              characterCountElement.style.color = "red";
+              characterCountElement.innerText = "Required";
+          } else if (characterCount > 1500) {
+              characterCountElement.style.color = "red";
+              characterCountElement.innerText = "Character Count: " + characterCount + " (Max character count exceeded)";
+          } else {
+              characterCountElement.style.color = "black";
+              characterCountElement.innerText = "Character Count: " + characterCount;
+          }
+      }
+  </script>
   </body>
 </html>
