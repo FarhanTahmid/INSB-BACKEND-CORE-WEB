@@ -308,3 +308,11 @@ def event_form_add_links(request,event_id):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
+
+
+def graphics_page(request):
+        return render(request,"Graphics/graphics_page.html")
+def create_graphics_form(request):
+        return render(request,"Graphics/create_graphics_form.html")
+def graphics_event_form_add_links(request):
+        return render(request,"Graphics/graphics_event_form_add_links.html")
