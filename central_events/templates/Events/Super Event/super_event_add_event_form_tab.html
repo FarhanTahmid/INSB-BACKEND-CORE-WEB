@@ -185,9 +185,16 @@
         <!--Back Arrow-->
         <br>
         <div class="tooltip-container">
+            {% if is_branch %}
             <a href="{% url 'central_branch:mega_events' %}" class="image-button">
                 <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
             </a>
+            {% else %}
+            <a href="{% url 'chapters_and_affinity_group:mega_events' sc_ag_info.primary %}" class="image-button">
+                <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+            </a>
+            {% endif %}
+            
             <span class="tooltip-text">Go back to Mega Events</span>
         </div>
         <!--Tab view for Events-->

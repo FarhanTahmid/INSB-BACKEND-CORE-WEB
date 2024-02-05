@@ -88,7 +88,11 @@
                     {% for event in events_of_mega_event %}
                     <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                         <div class="col-sm-11">
+                            {% if is_branch %}
                             <a href="{% url 'central_branch:event_edit_form' event.id %}" class="btn btn-link btn-block">{{event.event_name}}</a>
+                            {% else %}
+                            <a href="{% url 'chapters_and_affinity_group:event_edit_form' primary event.id %}" class="btn btn-link btn-block">{{event.event_name}}</a>
+                            {% endif %}
                         </div>
                         <div class="col-sm-1 d-flex align-items-center justify-content-center">
                             <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{event.pk}}')">✖</button>
