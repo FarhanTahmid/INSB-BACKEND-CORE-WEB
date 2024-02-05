@@ -2709,7 +2709,7 @@ def mega_event_add_event(request,mega_event_id):
                 if request.POST.get('add_event_to_mega_event'):
 
                     event_list = request.POST.getlist('selected_events')
-                    if Branch.add_events_to_mega_event(event_list,mega_event,1):
+                    if Branch.add_events_to_mega_event(event_list,mega_event):
                         messages.success(request,f"Events Added Successfully to {mega_event.super_event_name}")
                     else:
                         messages.error(request,"Error occured!")

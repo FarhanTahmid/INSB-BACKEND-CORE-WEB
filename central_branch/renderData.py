@@ -1730,7 +1730,7 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
-    def add_events_to_mega_event(event_list,mega_event,primary):
+    def add_events_to_mega_event(event_list,mega_event):
 
         '''This function add the events to the mega events'''
 
