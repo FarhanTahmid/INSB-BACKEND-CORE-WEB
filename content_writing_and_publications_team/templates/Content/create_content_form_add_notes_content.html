@@ -1,5 +1,6 @@
 {% load static %} {% block create_content_form_add_notes_content %}
-
+<!-- CKEditor CDN -->
+<script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
 <style>
   .circle-btn {
     display: flex;
@@ -30,7 +31,7 @@
   <div class="box" style="border-radius: 6px">
     <!--heading-->
     <div class="box-header">
-      <h1 style="text-align: center; font-size: 30px">Add Content</h1>
+      {% comment %} <h1 style="text-align: center; font-size: 30px">Add Captions</h1> {% endcomment %}
     </div>
 
     <form method="POST" enctype="multipart/form-data">
@@ -61,14 +62,14 @@
         <div id="captions-container" class="mt-3">
             <!--added captions-->
           <label>Captions:</label>
-          {% for note,value in all_notes_content.items %}
+          
           <div class="row container-fluid bg-light mt-3" style="margin: auto">
             <div class="col-sm-11">
               <a
                 href="#"
                 class="btn btn-link btn-block"
                 data-toggle="modal"
-                data-target="#EditCaptionModal_{{note.pk}}">{{note.title}}</a>
+                data-target="#EditCaptionModal_{{note.pk}}">Sample</a>
             </div>
             <div class="col-sm-1 d-flex align-items-center justify-content-center">
                 <!--delete caption button-->
@@ -82,7 +83,7 @@
                 ✖ </button>
             </div>
           </div>
-          {% endfor %}
+          
         </div>
 
         <div class="footer" style="position: right"></div>
@@ -130,7 +131,7 @@
             />
 
             <!-- Use form-control class for full-width textarea -->
-            {{form_adding_note.media}} {{form_adding_note.as_p}}
+            
           </div>
         </div>
         <div class="modal-footer">
@@ -155,7 +156,6 @@
 </div>
 
 <!-- New modal for editing captions -->
-{% for note,value in all_notes_content.items %}
 <div
   class="modal fade"
   id="EditCaptionModal_{{note.pk}}"
@@ -198,8 +198,13 @@
               name="title"
               value="{{note.title}}"
             />
-
-            {{value.media}} {{value.as_p}}
+            <br>
+            <label>Caption: </label>
+            <textarea 
+            class="form-control" 
+            type="text"
+            name="content_caption_details"></textarea>
+            <p id="content_captionCharacterCount" style="color: red;">Required</p>
           </div>
         </div>
         <div class="modal-footer">
@@ -221,7 +226,6 @@
     </div>
   </div>
 </div>
-{% endfor %}
 
 <!-- Confirmation modal for delete -->
 <div
@@ -278,5 +282,46 @@
     inputElement.value = remove_note;
   }
 </script>
+<!--Script for CKEditor Control-->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      // Replace the textareas with CKEditor instances
+      CKEDITOR.replace('content_caption_details');
 
+      // Attach a function to the change event for each CKEditor instance
+      ["content_caption"]
+          .forEach(function (editorId) {
+              var editor = CKEDITOR.instances[editorId + '_details'];
+
+              editor.on('change', function () {
+                  // Update character count display for each CKEditor instance
+                  updateCharacterCount(editorId);
+              });
+
+              // Update character count initially
+              updateCharacterCount(editorId);
+          });
+  });
+
+  function updateCharacterCount(editorId) {
+      var editorContent = CKEDITOR.instances[editorId + '_details'].getData();
+  
+      // Handle special space representations
+      var cleanedContent = editorContent.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+  
+      // Count each character (including spaces)
+      var characterCount = cleanedContent.length;
+  
+      var characterCountElement = document.getElementById(editorId + 'CharacterCount');
+  
+      // Check conditions and update text color and content
+      if (characterCount === 0) {
+          characterCountElement.style.color = "red";
+          characterCountElement.innerText = "Required";
+      } else {
+          characterCountElement.style.color = "black";
+          characterCountElement.innerText = "Character Count: " + characterCount;
+      }
+  }
+</script>
 {% endblock create_content_form_add_notes_content %}

@@ -75,7 +75,11 @@
         height: auto; /* Maintain aspect ratio */
         border-radius: 5px; /* Add rounded corners if desired */
       }
-
+      @media screen and (max-width: 700px) {
+        .wrapper{
+          margin: 0 3%;
+        }
+      }
     </style>
   </head>
 
@@ -217,12 +221,6 @@
           if (characterCount === 0) {
             characterCountElement.style.color = "red";
             characterCountElement.innerText = "Required";
-          } else if (characterCount > 1500) {
-            characterCountElement.style.color = "red";
-            characterCountElement.innerText =
-              "Character Count: " +
-              characterCount +
-              " (Max character count exceeded)";
           } else {
             characterCountElement.style.color = "black";
             characterCountElement.innerText =
