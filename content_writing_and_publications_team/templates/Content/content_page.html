@@ -7,6 +7,8 @@
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+    <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+
     <!--common CSS-->
     {% block common_css %}
      {% include "common_css.html" %}
@@ -50,84 +52,15 @@
         background-color: #5cb85c;
         color: white;
       }
-      
-      .form-control {
-        border-radius: 4px;
-      }
-
-      .table-responsive {
-        border-radius: 6px;
-      }
 
       .wrapper {
         margin: 0 20%;
         max-width: 900px;
       }
-
-      th {
-        background: #000000cf;
-        color: #ffffffed;
-      }
-
-      th,
-      td {
-        text-align: center;
-        font-weight: 600;
-      }
-
-      td a {
-        color: #00629b;
-      }
-
-      td a:hover {
-        color: #00b5e2;
-        text-decoration: underline;
-        transition: all 0.2s ease-in-out;
-      }
-      
-      .pagination-container {
-        margin-top: 10px;
-      }
-
-      .pagination {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: left;
-      }
-      
-      .pagination li {
-        display: inline-block;
-        margin-right: 3px;
-        padding: 4px 10px;
-        background-color: transparent;
-        color: #00629b;
-        cursor: pointer;
-        border-radius: 2px;
-        border: 2px solid #00629b;
-        font-weight: 600;
-      }
-      
-      .pagination li:hover {
-        cursor: pointer;
-      }
-      
-      .pagination li.active {
-        background-color: #00629b;
-        color: #ffffff;
-      }
-      
-      .num_rows {
-        display: flex;
-      }
       
       .rows_count {
         display: flex;
         justify-content: center;
-        color: #00629b;
-        font-size: 14px;
-        margin-top: 10px;
-        padding-bottom: 20px;
-        font-weight: 600;
       }
 
       @media screen and (max-width: 768px) {
