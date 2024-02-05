@@ -82,7 +82,7 @@
                 <br>
                 <div class="form-group">
                     <label>Mega Event of</label>    
-                    <select multiple class="form-control" name="super_event">
+                    <select class="form-control" name="super_event">
                         <option value="null" {% if event_details.super_event_id is none %}selected{% endif %}>--------------------</option>
                         {% for super_event in super_events %}
                             <option value="{{ super_event.id }}" 
