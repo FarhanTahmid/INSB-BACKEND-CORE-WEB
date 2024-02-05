@@ -2701,6 +2701,7 @@ def mega_event_add_event(request,mega_event_id):
         if has_access:
             mega_event = SuperEvents.objects.get(id=mega_event_id)
             all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(1)
+            filtered_events_with_collaborations = Branch.events_not_registered_to_mega_events(all_insb_events_with_interbranch_collaborations)
             events_of_mega_Event = Branch.get_events_of_mega_event(mega_event)
 
             if request.method == "POST":
@@ -2708,7 +2709,7 @@ def mega_event_add_event(request,mega_event_id):
                 if request.POST.get('add_event_to_mega_event'):
 
                     event_list = request.POST.getlist('selected_events')
-                    if Branch.add_events_to_mega_event(event_list,mega_event,1):
+                    if Branch.add_events_to_mega_event(event_list,mega_event):
                         messages.success(request,f"Events Added Successfully to {mega_event.super_event_name}")
                     else:
                         messages.error(request,"Error occured!")
@@ -2733,7 +2734,7 @@ def mega_event_add_event(request,mega_event_id):
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
                 'mega_event':mega_event,
-                'events':all_insb_events_with_interbranch_collaborations,
+                'events':filtered_events_with_collaborations,
                 'events_of_mega_event':events_of_mega_Event,
 
             }

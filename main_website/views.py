@@ -1233,7 +1233,8 @@ def member_profile(request, ieee_id):
                 has_current_branch_position = False
 
             context = {
-                'page_title':'Member Details',
+                'page_title':'Member Profile',
+                'page_subtitle': member_data.name,
                 'branch_teams': branch_teams,
                 'member':member_data,
                 'sc_ag_position_data':sc_ag_position_data,
