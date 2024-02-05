@@ -310,3 +310,9 @@ def event_form_add_notes(request,event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
+def content_page(request):
+        return render(request,"Content/content_page.html")
+def create_content_form(request):
+        return render(request,"Content/create_content_form.html")
+def create_content_form_add_notes(request):
+        return render(request,"Content/create_content_form_add_notes.html")

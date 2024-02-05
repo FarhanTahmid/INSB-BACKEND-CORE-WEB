@@ -101,7 +101,7 @@
                     <div class="border rounded shadow">
                         <div class="row m-0 p-3" style="background-color: #3780d3;">
                             <div class="col-md-4 d-flex align-items-center">
-                                <img class="img-fluid rounded-circle shadow" src="/media_files/{{i.member_picture}}" alt="">
+                                <img class="img-fluid rounded-circle shadow" src="/media_files/{{i.member_picture}}" alt=""  onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
                             </div>
                             <div class="col-md-8 mt-2">
                                 <h3 class="fw-bold text-capitalize  text-white">{{i.member_name}}</h3>
