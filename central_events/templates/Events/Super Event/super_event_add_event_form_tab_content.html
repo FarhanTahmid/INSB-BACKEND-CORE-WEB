@@ -177,7 +177,7 @@
                                         </td>
                                         <td>{{ key.event_date }}</td>
                                         <td>
-                                            <input type="checkbox" name="selected_events" {% if key.super_event_id.pk == mega_event.pk%} value="{{ key.pk }}" checked {% else %} value="{{ key.pk }}"{% endif %}>
+                                            <input type="checkbox" name="selected_events" value="{{ key.pk }}" >
                                         </td>
                                     </tr>
                                     {% endfor %}

@@ -939,7 +939,26 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error("Can not load intercollaboration details for each events. Something went wrong!")
             return False
+
+    def events_not_registered_to_mega_events(events_list):
+
+        '''This function returns only those events with collaboration those are not associated
+            with any mega events'''
+        try:
+            dic = {}
+            for key,value in events_list.items():
+
+                if key.super_event_id  is None or key.super_event_id == 0:
+                    dic[key] = value
+
+            return dic
         
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error("Can not load intercollaboration details for each events. Something went wrong!")
+            return False
+
     def load_event_published(event_id):
         '''This function will return wheather the event is published or not'''
 
@@ -1716,16 +1735,12 @@ class Branch:
         '''This function add the events to the mega events'''
 
         try:
-            all_events_of_society = Branch.load_all_inter_branch_collaborations_with_events(primary)
-            #iterating over the event id found
-            for i in all_events_of_society:
-                #getting that event object and assigning it to that specific event
-                event = Events.objects.get(id = i.id)
-
-                if str(event.id) in event_list:
-                    event.super_event_id = mega_event
-                else:
-                    event.super_event_id = None
+            for i in event_list:
+                #getting that event object and assigning it to that specific mega event
+                event = Events.objects.get(id = i)
+                #assigning event to that mega event
+                event.super_event_id = mega_event
+                #saving the event
                 event.save()
             return True
         
