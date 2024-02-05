@@ -34,12 +34,12 @@ class ErrorHandling:
             email_from=settings.EMAIL_HOST_USER
             recipient_list=[]
             # get all dev accounts
-            # all_dev_accounts=adminUsers.objects.all()
-            # for i in all_dev_accounts:
-            #     recipient_list.append(i.email)
-            # send_mail(
-            #     subject,message,email_from,recipient_list
-            # )
+            all_dev_accounts=adminUsers.objects.all()
+            for i in all_dev_accounts:
+                recipient_list.append(i.email)
+            send_mail(
+                subject,message,email_from,recipient_list
+            )
             return True
         except:
             return False
