@@ -18,6 +18,7 @@ class MainWebsiteRenderData:
                 award_name=request.POST['award_name'],
                 award_description=request.POST['award_description'],
                 award_winning_year=request.POST['award_winning_year'],
+                award_winning_datefield = request.POST['award_winning_datefield'],
                 award_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=get_sc_ag.primary),
                 award_picture=request.FILES.get('award_picture')
             )        
@@ -49,7 +50,7 @@ class MainWebsiteRenderData:
     def get_all_achievements(request):
         try:
             # load all achievements
-            all_achievements=Achievements.objects.all().order_by('-award_winning_year')
+            all_achievements=Achievements.objects.all().order_by('-award_winning_datefield__year','-award_winning_datefield__month')
             return all_achievements
         except Exception as e:
             MainWebsiteRenderData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)

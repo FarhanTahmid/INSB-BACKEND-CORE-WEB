@@ -40,7 +40,7 @@
         bottom: 0;
         left: 0;
         z-index: 1;
-        filter: blur(2px); /* Adjust the blur intensity as needed */
+        filter: blur(1.2px); /* Adjust the blur intensity as needed */
     }
     .overlay {
         position: absolute;
@@ -263,6 +263,7 @@
     let autoSwipeInterval;
 
     function showSlide() {
+        imageSlider.style.transition = 'transform 0.7s ease'; // Adjust the duration (1s) and easing as needed
         imageSlider.style.transform = `translateX(${-currentSlide * 100}%)`;
         fadeInCurrentSlide();
         updateIndicators();
@@ -292,7 +293,7 @@
     function startAutoSwipe() {
         autoSwipeInterval = setInterval(() => {
             nextSlide();
-        }, 10000); // Adjust the interval as needed (milliseconds)
+        }, 15000); // Adjust the interval as needed (milliseconds)
     }
 
     function stopAutoSwipe() {

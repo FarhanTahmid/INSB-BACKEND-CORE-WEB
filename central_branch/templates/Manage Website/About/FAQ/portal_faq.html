@@ -400,7 +400,7 @@
                                                     />
                                                     <br>
                                                     <label for="answer">Answer:</label>
-                                                    <textarea id="answer" class="form-control" rows="3" name="faq_question_answer">{{question_answer.answer|default:""}}</textarea>
+                                                    <textarea id="answer" class="form-control cked" rows="3" name="faq_question_answer">{{question_answer.answer|default:""}}</textarea>
                                                     <input type = "hidden"  id="category_id" name="category_id" value="{{key.id}}">
                                                     <input type = "hidden"   id="delete_FAQ"  name="delete_FAQ" value="{{question_answer.pk}}">
                                                     <hr>
@@ -426,7 +426,7 @@
                                                 />
                                                 <br>
                                                 <label for="answer">Answer:</label>
-                                                <textarea id="answer" class="form-control" rows="3" name="faq_question_answer">{{question_answer.answer|default:""}}</textarea>
+                                                <textarea id="answer" class="form-control cked" rows="3" name="faq_question_answer">{{question_answer.answer|default:""}}</textarea>
                                                 <input type = "hidden" value="{{key.pk}}" name="category_id">
                                                 <input type = "hidden" value="{{question_answer.pk}}" name="delete_id">
                                                 <hr>
@@ -492,8 +492,62 @@
             {% include "common_js.html" %}
         {% endblock common_js %}
 
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                function initCKEditor(textarea) {
+                    CKEDITOR.replace(textarea);
+                }
+                {% for key,value in saved_question_answers.items %}
+                document.getElementById('addFieldsBtn{{key.id}}').addEventListener('click', function() {
+                    // Create new question and answer fields
+                    var faqSet = document.createElement('div');
+                    faqSet.className = 'faq-set {{key.id}}';
+    
+                    var newQuestionLabel = document.createElement('label');
+                    newQuestionLabel.textContent = 'Question:';
+                    newQuestionLabel.htmlFor = 'question';
+    
+                    var newQuestion = document.createElement('input');
+                    newQuestion.type = 'text';
+                    newQuestion.className = 'form-control';
+                    newQuestion.placeholder = 'Title';
+                    newQuestion.id = 'question';
+                    newQuestion.name = 'faq_question';
+    
+                    var newAnswerLabel = document.createElement('label');
+                    newAnswerLabel.textContent = 'Answer:';
+                    newAnswerLabel.htmlFor = 'answer';
+    
+                    var newAnswer = document.createElement('textarea');
+                    newAnswer.className = 'form-control cked';
+                    newAnswer.rows = '3';
+                    newAnswer.id = 'answer';
+                    newAnswer.name = 'faq_question_answer';
+    
+    
+                    var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+                    
+                    
+                    // Append new fields and labels to the faq-set container
+                    faqSet.appendChild(newQuestionLabel);
+                    faqSet.appendChild(newQuestion);
+                    faqSet.appendChild(document.createElement('br'));
+                    faqSet.appendChild(newAnswerLabel);
+                    faqSet.appendChild(newAnswer);
+                    faqSet.appendChild(document.createElement('hr'));
+    
+                    // Append the faq-set to the main container
+                    document.getElementById('container{{key.id}}').appendChild(faqSet);
+                    // Initialize CKEditor for the new textarea
+                    initCKEditor(newAnswer);
+                });
+                {% endfor %}
 
-        
+                // Initialize CKEditor for existing textareas
+                var existingTextareas = document.querySelectorAll('.cked');
+                existingTextareas.forEach(initCKEditor);
+            });
+        </script>
         <script>
             function openModal(id) {
                 // Set data in the modal
@@ -508,57 +562,8 @@
                 inputElement2.value = id2;
             }
         </script>
-
-
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-        <script>
-            {% for key,value in saved_question_answers.items %}
-            document.getElementById('addFieldsBtn{{key.id}}').addEventListener('click', function() {
-                // Create new question and answer fields
-                var faqSet = document.createElement('div');
-                faqSet.className = 'faq-set {{key.id}}';
-
-                var newQuestionLabel = document.createElement('label');
-                newQuestionLabel.textContent = 'Question:';
-                newQuestionLabel.htmlFor = 'question';
-
-                var newQuestion = document.createElement('input');
-                newQuestion.type = 'text';
-                newQuestion.className = 'form-control';
-                newQuestion.placeholder = 'Title';
-                newQuestion.id = 'question';
-                newQuestion.name = 'faq_question';
-
-                var newAnswerLabel = document.createElement('label');
-                newAnswerLabel.textContent = 'Answer:';
-                newAnswerLabel.htmlFor = 'answer';
-
-                var newAnswer = document.createElement('textarea');
-                newAnswer.className = 'form-control';
-                newAnswer.rows = '3';
-                newAnswer.id = 'answer';
-                newAnswer.name = 'faq_question_answer';
-
-
-                var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-                
-                
-                // Append new fields and labels to the faq-set container
-                faqSet.appendChild(newQuestionLabel);
-                faqSet.appendChild(newQuestion);
-                faqSet.appendChild(document.createElement('br'));
-                faqSet.appendChild(newAnswerLabel);
-                faqSet.appendChild(newAnswer);
-                faqSet.appendChild(document.createElement('hr'));
-
-                // Append the faq-set to the main container
-                document.getElementById('container{{key.id}}').appendChild(faqSet);
-            });
-            {% endfor %}
-        </script>
-
         <!-- Add Bootstrap JS and Popper.js scripts here -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
         {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

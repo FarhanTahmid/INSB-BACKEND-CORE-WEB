@@ -17,6 +17,7 @@ from port.models import Panels
 from PIL import Image, ExifTags
 from io import BytesIO
 from django.core.files import File
+import os
 
 # from membership_development_team.models import Renewal_Sessions
 # Create your models here.
@@ -46,39 +47,15 @@ class Members(models.Model):
     is_active_member = models.BooleanField(null=False,blank=False,default=True)
     class Meta:
         verbose_name='INSB Registered Members'
-        ordering = ['-position__rank']
+        ordering = ['position__rank']
     
     def __str__(self) -> str:
         return str(self.ieee_id)
     def get_absolute_url(self):
         return reverse('registered member',kwargs={'member_id':self.ieee_id})
     
-    def save(self, *args, **kwargs):
-        if self.user_profile_picture:
-            img = Image.open(BytesIO(self.user_profile_picture.read()))
-            
-            if hasattr(img, '_getexif'):
-                exif = img._getexif()
-                if exif:
-                    for tag, label in ExifTags.TAGS.items():
-                        if label == 'Orientation':
-                            orientation = tag
-                            break
-                    if orientation in exif:
-                        if exif[orientation] == 3:
-                            img = img.rotate(180, expand=True)
-                        elif exif[orientation] == 6:
-                            img = img.rotate(270, expand=True)
-                        elif exif[orientation] == 8:
-                            img = img.rotate(90, expand=True)
-
-            img.thumbnail((1080,1080), Image.ANTIALIAS)
-            output = BytesIO()
-            img.save(output, format='JPEG', quality=85)
-            output.seek(0)
-            self.user_profile_picture = File(output, self.user_profile_picture.name) 
-
-        return super().save(*args, **kwargs)
+    def get_image_url(self):
+        return self.user_profile_picture
 
 
 '''This table will be used to get the data of the EX Panel Members of IEEE NSU SB '''
@@ -110,16 +87,10 @@ class Panel_Members(models.Model):
     ex_member=models.ForeignKey(Alumni_Members,on_delete=models.CASCADE,null=True,blank=True)
     position=models.ForeignKey(Roles_and_Position,on_delete=models.CASCADE)
     team=models.ForeignKey(Teams,null=True,blank=True,on_delete=models.CASCADE)
-
-    class PanelMembersManager(models.Manager):
-        def get_queryset(self):
-            return super().get_queryset().filter(tenure__current=True).order_by("position__rank")
-
-    objects = PanelMembersManager()
     
     class Meta:
         verbose_name="Panel Members (Whole Tenure)"
-    
+        ordering=['position__rank']
     def __str__(self) -> str:
         return str(self.member) 
     
@@ -130,6 +101,16 @@ class ResetPasswordTokenTable(models.Model):
     
     class Meta:
         verbose_name="User Reset Password Tokens"
+    def __str__(self) -> str:
+        return str(self.pk)
+    
+class UserSignupTokenTable(models.Model):
+    user=models.ForeignKey(Members,on_delete=models.CASCADE)
+    token=models.CharField(max_length=100,null=False,blank=False)
+    
+    class Meta:
+        verbose_name="User Signup Token"
+    
     def __str__(self) -> str:
         return str(self.pk)
     

@@ -6,6 +6,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -18,12 +19,9 @@
             <img src="{% static 'INSB.png' %}" alt="logo">
         </div>
         <div class="Form d-grid p-3">
-              <form method="POST" action='signup'>
+              <form method="POST">
                 {% csrf_token %}
-                <div class="d-grid pt-3">
-                    <input type="text" placeholder="Enter IEEE ID" autocomplete="off" class="Form-cont form-control border usernameInp my-1 p-3" Required name='ieee_id'>
-                </div>
-
+                
                 <div class="d-grid pt-3">
                     <input type="Password" placeholder="Enter Password" id="myInput" autocomplete="off" class="Form-cont form-control border passwordInp my-1 p-3" Required name='password'>
                 </div>
@@ -35,9 +33,7 @@
                 
 
                 <div class="d-grid pt-3">
-                   <button type="submit" class="log-btn btn-outline-dark" onclick='users:login'>
-                        Signup
-                   </button>
+                   <input type="submit" class="log-btn btn-outline-dark" value="Login" name="login">
                 </div>
                    <br>
                 {% for message in messages %}

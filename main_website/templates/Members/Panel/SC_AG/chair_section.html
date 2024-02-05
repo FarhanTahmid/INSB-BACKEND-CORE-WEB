@@ -1,0 +1,257 @@
+{% load static %}
+{% block panel_member_sc_ag_chair %}
+<style>
+    .sc_ag_chairDiv{
+        display: flex;
+        justify-content: center;
+    }
+    .profile-card-chair-sc-ag{
+        position: relative;
+        width: 250px;
+        height: auto;
+        overflow: hidden;
+        background: linear-gradient(0deg, rgba(0,40,85,1) 0%, rgba(0,98,155,1) 31%, rgba(0,181,226,1) 68%);
+        /* padding: 30px 30px 0 30px; */
+        border-radius: 10px 75px 10px 10px;
+        box-shadow: -5px 8px 45px rgba(51, 51, 51, 0.126);
+        transition: all .5s;
+        /* margin: 0 20px; */
+        border: 1px solid #002855;
+    }
+    /* .profile-card-chair-sc-ag:hover{
+        border-radius: 10px;
+        height: 260px;
+    } */
+    .profile-card-chair-sc-ag .img{
+        /* position: relative; */
+        width: 250px;
+        /* border-radius: 10px; */
+        height: 250px;
+        background-color: #fff;
+        border-radius: 10px 89px 50% 70%;
+        box-shadow: 4px -2px 16px 0px #626262;
+        top: -70px;
+        overflow: hidden;
+        transition: all .5s;
+    }
+    .profile-card-chair-sc-ag:hover{
+        border-radius: 10px;
+    }
+    .profile-card-chair-sc-ag:hover .img{
+        border-radius: 0;
+    }
+    .img img{
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        /* border-radius: 10px; */
+        transition: all .4s;
+    }
+    .profile-card-chair-sc-ag:hover img{
+        scale: 1.1;
+    }
+    .profile-card-chair-sc-ag .caption{
+        text-align: center;
+        /* transform: translateY(-65px); */
+        /* opacity: 1; */
+        position: relative;
+        /* pointer-events: all; */
+        padding: 10px;
+        /* top: -30px; */
+        transition: all .5s;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    /* .profile-card-chair-sc-ag:hover .profile-card-chair-sc-ag .caption{
+        opacity: 1;
+        pointer-events: all;
+    } */
+    .profile-card-chair-sc-ag .caption h3{
+        font-size: 21px;
+        color: #fff;
+        font-weight: 600;
+    }
+    .profile-card-chair-sc-ag .caption p{
+        font-size: 15px;
+        font-weight: 500;
+        color: #FFC72C;
+        margin: 2px 0 12px 0;
+    }
+    .profile-card-chair-sc-ag .caption .social-links i{
+        font-size: 21px;
+        margin: 0 3px;
+        cursor: pointer;
+        color:#75787B;
+        transition: all .4s;
+    }
+    .profile-card-chair-sc-ag .caption .social-links i:hover{
+        color: #fff;
+    }
+    .team_container_chair_sc_ag{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        max-width: 1140px;
+    }
+    .team_content_chair{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        column-gap: 30px;
+        row-gap: 100px;
+    }
+    .team_container_chair_sc_ag .text{
+        margin-top: 3rem!important;
+        margin-bottom: 5rem!important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .team_container_chair_sc_ag .text .title{
+        font-size: 35px;
+        font-weight: 600;
+        color: #000;
+        text-transform: uppercase;
+        text-align: center;
+    }
+    .team_container_chair_sc_ag .text .bar{
+        height: 5px;
+        width: 100px;
+        background-color: #FFC72C;
+        border-radius: 5px;
+    }
+</style>
+<!-- /* sc_ag_chair */ -->
+<div class="sc_ag_chairDiv">
+    <div class="team_container_chair_sc_ag">
+        <div class="text">
+            <h3 class="title">Chair</h3>
+            <div class="bar"></div>
+        </div>
+        <div class="team_content_chair">
+            {% for i in sc_ag_chair %}
+            {% if i.member %}
+            <div class="profile-card-chair-sc-ag">
+                <div class="img">
+                    <a href="{% url 'main_website:member_profile' i.member.ieee_id %}"><img src="/media_files/{{i.member.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';"></a>
+                </div>
+                <div class="caption">
+                    <h3>{{i.member.name}}{{i.ex_member.name}}</h3>
+                    <p>{{i.position}}, {{i.tenure.panel_of.short_form }}</p>
+                    <div class="social-links">
+                        {% if i.member.linkedin_url %}
+                        <a href="{{i.member.linkedin_url}}"><i class="fa-brands fa-linkedin"></i></a>
+                        {% endif %}
+                        {% if i.member.facebook_url %}
+                        <a href="{{i.member.facebook_url}}"><i class="fa-brands fa-facebook"></i></a>
+                        {% endif %}
+                        {% if i.member.email_ieee %}
+                        <a href="mailto:{{i.member.email_ieee}}"><i class="fa-solid fa-envelope"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="profile-card-chair-sc-ag">
+                <div class="img">
+                    <a href="{% url 'main_website:member_profile' i.ex_member.ieee_id %}"><img src="/media_files/{{i.ex_member.picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';"></a>
+                </div>
+                <div class="caption">
+                    <h3>{{i.ex_member.name}}</h3>
+                    <p>{{i.position}}, {{i.tenure.panel_of.short_form }}</p>
+                    <div class="social-links">
+                        {% if i.ex_member.linkedin_url %}
+                        <a href="{{i.ex_member.linkedin_url}}"><i class="fa-brands fa-linkedin"></i></a>
+                        {% endif %}
+                        {% if i.ex_member.facebook_url %}
+                        <a href="{{i.ex_member.facebook_url}}"><i class="fa-brands fa-facebook"></i></a>
+                        {% endif %}
+                        {% if i.ex_member.email_ieee %}
+                        <a href="mailto:{{i.ex_member.email_ieee}}"><i class="fa-solid fa-envelope"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% comment %} <section class="text-center dark-grey-text">
+
+    <hr>
+        
+        <h3 class="font-weight-bold mt-2 mb-4 pb-2">Chair</h3>
+        <!-- Section description -->
+    <hr>
+    
+    <!-- Grid row -->
+    <div class="row d-flex justify-content-center align-items-center m-2">
+
+        <!--Grid column-->
+        {% for i in sc_ag_chair %}
+            <div class="col-lg-4 col-md-12 mb-4">
+                <!--Card-->
+                
+                {% if i.member %}
+                <div class="card testimonial-card">
+                    <!--Background color-->
+                    <div class="card-up info-color"></div>
+                    <!--Avatar-->
+                    <div class="avatar mx-auto white" style="height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                        <img src="/media_files/{{i.member.user_profile_picture}}" class="rounded-bottom-pill" style="object-fit: cover; width: 100%; height: 100%;"
+                        onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';"
+                        >                    
+                    </div>
+                    <div class="card-body">
+                        <!--Name-->
+                        <h4 class="font-weight-bold mb-4">{{i.member.name}}{{i.ex_member.name}}</h4>
+                        <hr>
+                        <!--Quotation-->
+                        <p style="text-align:center;margin-left:3vh;" class="dark-grey-text mt-4"><b>{{i.position}}, {{i.tenure.panel_of.short_form }}</b></p>
+                        <ul class="list-unstyled d-flex justify-content-center mt-3 mb-0">
+                            <li><a href="{{i.member.linkedin_url}}" target="_blank"><i class="fab fa-linkedin-in mx-2 icon-gray"></i></a></li>
+                            <li><a href="{{i.member.facebook_url}}" target="_blank"><i class="fab fa-facebook-f mx-2 icon-gray"></i></a></li>
+                            <li><a href="mailto:{{i.member.email_ieee}}" target="_blank"><i class="fas fa-envelope mx-2 icon-gray"></i></a></li>
+                        </ul>
+                        
+                        
+                    </div>
+                </div>
+                {% else %}
+                <div class="card testimonial-card">
+                    <!--Background color-->
+                    <div class="card-up info-color"></div>
+                    <!--Avatar-->
+                    <div class="avatar mx-auto white" style="height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                        <img src="/media_files/{{i.ex_member.picture}}" class="rounded-bottom-pill" style="object-fit: cover; width: 100%; height: 100%;"
+                        onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';"
+                        >                    
+                    </div>
+                    <div class="card-body">
+                        <!--Name-->
+                        <h4 class="font-weight-bold mb-4">{{i.ex_member.name}}</h4>
+                        <hr>
+                        <!--Quotation-->
+                        <p style="text-align:center;margin-left:3vh;" class="dark-grey-text mt-4"><b>{{i.position}}, {{i.tenure.panel_of.short_form }}</b></p>
+                        <ul class="list-unstyled d-flex justify-content-center mt-3 mb-0">
+                            <li><a href="{{i.ex_member.linkedin_link}}" target="_blank"><i class="fab fa-linkedin-in mx-2 icon-gray"></i></a></li>
+                            <li><a href="{{i.ex_member.facebook_link}}" target="_blank"><i class="fab fa-facebook-f mx-2 icon-gray"></i></a></li>
+                            <li><a href="mailto:{{i.ex_member.email}}" target="_blank"><i class="fas fa-envelope mx-2 icon-gray"></i></a></li>
+                        </ul>
+                        
+                    </div>
+                </div>
+                {% endif %}
+                
+                
+                <!--Card-->
+            </div>
+            {% endfor %}
+        <!--Grid column-->         
+    </div>
+    <!-- Grid row -->
+
+</section> {% endcomment %}
+{% endblock panel_member_sc_ag_chair %}

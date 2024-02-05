@@ -336,7 +336,9 @@
         display: grid;
         grid-template-columns: 100%;
       }
-
+      .members-volunteers.max-width.Student .mem-vol-pic{
+        order: 2;
+      }
       .mem-vol-pic {
         width: 100%;
       }
@@ -386,7 +388,7 @@
 
     @media screen and (max-width: 544px) {
       .max-width {
-        max-width: 370px;
+        max-width: 90%;
         margin: auto;
       }
 
@@ -396,7 +398,9 @@
 
 
 
-
+      .mem-vol-pic img{
+        height: 255px;
+      }
 
       .achievement-card {
         height: 244px;
@@ -409,7 +413,6 @@
 
     @media screen and (max-width: 425px) {
       .max-width {
-        max-width: 80%;
         margin: 0% 5%;
       }
       .first_buttons{
@@ -608,7 +611,7 @@
 
     <section class="centering" style="background-color: #f9f9f9">
       <section class="members-volunteers max-width ">
-        <div>
+        <div class="details">
           <div style="margin-bottom: -38px">
             <h2>Innovations and Developments</h2>
           </div>
@@ -633,11 +636,11 @@
     </section>
 
     <section class="centering" style="background-color: #f9f9f9">
-      <section class="members-volunteers max-width">
+      <section class="members-volunteers max-width Student">
         <div class="mem-vol-pic">
           <img src="{{media_url}}{{about_ieee.students_and_member_activities_image}}" alt="" />
         </div>
-        <div>
+        <div class="details">
           <div style="margin-bottom: -38px">
             <h2>Students and Member Activities</h2>
           </div>

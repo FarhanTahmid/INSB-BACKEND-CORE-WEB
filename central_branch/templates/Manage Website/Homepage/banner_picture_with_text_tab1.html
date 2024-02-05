@@ -23,11 +23,11 @@
                     <div class="modal-body text-left p-lg">
                         
                         <p>View the Image given below to understand about the fields and fill the Form according to it.</p>
-                        <p><span style="color:red;">**</span>Fill the fields carefully as the Objects can not be updated! You will have to Delete the whole object if anything goes wrong!</p>
+                        
                         <!-- Thumbnail image (clickable) -->
                         <!--If you wish to change photo, make changes in both of the places-->
                         <div style="text-align:center;">
-                            <img src="{% static 'images/homepage_banner_tutorial.jpg'%}" alt="Thumbnail" width="250" height="150" onclick="openLightbox('{% static 'images/homepage_banner_tutorial.jpg' %}')">
+                            <img src="{% static 'images/homepage_banner_tutorial.png'%}" alt="Thumbnail" width="250" height="150" onclick="openLightbox('{% static 'images/homepage_banner_tutorial.png' %}')">
                         </div>
 
                         <!--Form start-->
@@ -188,7 +188,7 @@
             <tbody>
                 {% for i in topBannerItems %}
                     <tr>
-                    <td><a href="#" ><span style="color:blue;">{{i.button_text}}</span></a></td>
+                    <td><a href="{% url 'central_branch:manage_website_home_top_banner_update' i.pk %}" ><span style="color:blue;">{{i.button_text}}</span></a></td>
                     <td style="width: 250px; height: 150px;">
                         <img src="{{media_url}}{{i.banner_picture}}" alt="Your Image" style="width: 100%; height: 100%;">
                     </td>
@@ -198,6 +198,7 @@
                             <form method="POST">
                                 {% csrf_token %}
                                 <div class="btn-container">
+                                    <a class="btn btn-outline b-warn text-warn" href="{% url 'central_branch:manage_website_home_top_banner_update' i.pk %}">Update</a>
                                   <input type="submit" name="delete" class="btn btn-outline b-danger text-danger" value="Delete"></input>
                                   <input type="hidden" name="get_item" value="{{i.id}}"></input>
                                 </div>

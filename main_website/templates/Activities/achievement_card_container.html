@@ -19,6 +19,7 @@
         display: -webkit-box;
         -webkit-line-clamp: 2; /* Show 2 lines of text */
         -webkit-box-orient: vertical;
+        height: ;
     }
 
     .description-container {
@@ -27,6 +28,7 @@
         display: -webkit-box;
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
+        min-height: 45px;
     }
 
     .description-container.collapsed,
@@ -63,30 +65,23 @@
 </div>
 <br><br>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
 <script>
     $(document).ready(function () {
-        $(".read-more-link").click(function (event) {
-            event.preventDefault();
+        $(".read-more-link").click(function (e) {
+            e.preventDefault();
 
-            var cardBody = $(this).closest(".card-body");
-            var cardText = cardBody.find(".description-container");
-            var cardTitle = cardBody.find(".card-title");
-            var card = cardBody.closest(".card");
+            var cardBody = $(this).closest('.card-body');
+            var isCollapsed = cardBody.find('.card-title').hasClass('collapsed');
 
-            cardText.toggleClass("collapsed");
-            cardTitle.toggleClass("collapsed");
+            cardBody.find('.card-title').toggleClass('collapsed', !isCollapsed);
+            cardBody.find('.description-container').toggleClass('collapsed', !isCollapsed);
 
-            // Check if any card text is collapsed
-            var isCollapsed = card.find(".description-container.collapsed").length > 0;
-
-            // Set card height based on collapsed state
-            card.css("height", isCollapsed ? "auto" : "425px");
-
-            // Change the link text based on collapsed state
-            var linkText = isCollapsed ? "Read Less" : "Read More";
+            // Change "Read More" to "Read Less" based on the collapsed state
+            var linkText = isCollapsed ? "Read More" : "Read Less";
             $(this).text(linkText);
         });
     });
 </script>
-
 {% endblock achievement_card_container %}

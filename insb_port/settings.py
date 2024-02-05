@@ -25,12 +25,19 @@ import os
 load_dotenv()
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*%*n1(qq^95t^+bl96wxty9h6qc4)h%ts27fv9egh8v0tj%60h'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if(os.environ.get('SETTINGS')=='dev'):
+    DEBUG = True
+else:
+    DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+if(os.environ.get('SETTINGS')=='dev'):
+    ALLOWED_HOSTS = ['*']
+else:
+    ALLOWED_HOSTS = ['ieeensusb.org','portal.ieeensusb.org']
+
 
 LOGIN_URL='/portal/users/login'
 
@@ -125,16 +132,19 @@ if(os.environ.get('SETTINGS')=='dev'):
     }
 if(os.environ.get('SETTINGS')=='prod'):
     DATABASES = {
+        
+        # MySQL in Production
         'default': {
-                    
-            # Postgres in Vascel-dev
-            'ENGINE': 'django.db.backends.postgresql',
+            
+            'ENGINE': 'django.db.backends.mysql', 
             'NAME': os.environ.get('PROD_DATABASE_NAME'),
             'USER': os.environ.get('PROD_DATABASE_USER'),
             'PASSWORD': os.environ.get('PROD_DATABASE_PASSWORD'),
-            'HOST':os.environ.get('PROD_DATABASE_HOST'),
-            'PORT':'',
+            'HOST': os.environ.get('PROD_DATABASE_HOST'),
+            'PORT': '3306',
+            
         }
+        
     }
 
 # Password validation
@@ -212,11 +222,12 @@ handler500='central_branch.views.custom_500'
 
 #EMAIL SETTINGS
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST='smtp.gmail.com'
-EMAIL_PORT=587
+EMAIL_HOST='mail.ieeensusb.org'
+EMAIL_PORT='465'
 EMAIL_HOST_USER=os.environ.get('EMAIL_USER')
 EMAIL_HOST_PASSWORD=os.environ.get('EMAIL_PASSWORD')
-EMAIL_USE_TLS=True
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS=False
 
 # RESIZING IMAGE
 DJANGORESIZED_DEFAULT_SIZE = [1920, 1080]
@@ -225,7 +236,11 @@ DJANGORESIZED_DEFAULT_QUALITY = 80
 DJANGORESIZED_DEFAULT_KEEP_META = True
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
 
-CELERY_BROKER_URL = "amqps://mrhkupcx:Es-Dd6MKxkwapnb1zMlwybTaYGwflFLB@lionfish.rmq.cloudamqp.com/mrhkupcx"
+if(os.environ.get('SETTINGS')=='prod'):
+    CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_PROD')
+else:
+    CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_DEV')
+
 CELERY_RESULT_BACKEND = "django-db"
 CELERY_RESULT_EXTENDED = True
 CELERY_TASK_SERIALIZER = 'json'

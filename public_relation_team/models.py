@@ -21,7 +21,7 @@ class Manage_Team(models.Model):
     
 class Email_Attachements(models.Model):
     email_name = models.CharField(null=True,blank=True,max_length = 1000)
-    email_content=models.FileField(upload_to="Email Attachments/",blank=True,null=True,default=None)
+    email_content=models.FileField(upload_to="Email_Attachments/",blank=True,null=True,default=None)
 
     class Meta:
 

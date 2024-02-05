@@ -117,7 +117,7 @@
         <div class="box">
             <div class="box-header" style="text-align:center;">
                 <br>
-                <h1>Mega Event Edit Form</h1>
+                <h1>Edit {{mega_event.super_event_name}}</h1>
             </div>
 
             <form method="POST" enctype="multipart/form-data">
@@ -152,12 +152,12 @@
                     </div>
                     <br>
                     <div class="form-group">
-                        <label for="">Add a Probable Date For the Event</label>
-                        <input type="date" name="probable_date" class="form-control w-100" value="{{mega_event.start_date|date:"Y-m-d"}}" />
+                        <label for="">Add a Start Date For the Event</label>
+                        <input type="date" name="probable_date" required class="form-control w-100" value="{{mega_event.start_date|date:"Y-m-d"}}" />
                     </div>
                     <br>
                     <div class="form-group">
-                        <label for="">Add Final Date For the Event (If finalised)</label>
+                        <label for="">Add an End Date For the Event (If finalised)</label>
                         <input type="date" name="final_date" class="form-control w-100" value="{{mega_event.end_date|date:"Y-m-d"}}"/>
                     </div>
                     <br>

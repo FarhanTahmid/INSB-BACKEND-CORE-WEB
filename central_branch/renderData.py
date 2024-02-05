@@ -2,7 +2,7 @@ import os
 from bs4 import BeautifulSoup
 from django.http import Http404
 from insb_port import settings
-from main_website.models import About_IEEE, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link,FAQ_Question_Category,FAQ_Questions,HomePage_Thoughts,IEEE_Bangladesh_Section_Gallery
+from main_website.models import About_IEEE, HomePageTopBanner, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link,FAQ_Question_Category,FAQ_Questions,HomePage_Thoughts,IEEE_Bangladesh_Section_Gallery
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
@@ -21,6 +21,9 @@ from django.db.utils import IntegrityError
 import traceback
 import logging
 from system_administration.system_error_handling import ErrorHandling
+from graphics_team.models import Graphics_Banner_Image
+from media_team.models import Media_Images
+from content_writing_and_publications_team.models import Content_Team_Document
 
 
 class Branch:
@@ -86,14 +89,23 @@ class Branch:
         '''This function adds new event category according to the group''' 
 
         try:
+            #lower letter casing
             event_type_lower = event_type.lower()
-            try:
-                registered_event_category = Event_Category.objects.get(event_category = event_type_lower,event_category_for=Chapters_Society_and_Affinity_Groups.objects.get(primary = group_number))
-                registered_event_category = registered_event_category.event_category.lower()
-                if event_type_lower == registered_event_category:
-                    return False 
-            except:
-                new_event_type = Event_Category.objects.create(event_category=event_type_lower,event_category_for = Chapters_Society_and_Affinity_Groups.objects.get(primary = group_number))
+            event_type_lower_with_no_space = event_type_lower.replace(" ","") 
+            #creating a new list
+            catagories = []
+            #getting all catagories of particular society
+            registered_event_categories = Event_Category.objects.filter(event_category_for=Chapters_Society_and_Affinity_Groups.objects.get(primary = group_number))
+            #making all the catagories to lower casing
+            for catagory in registered_event_categories:
+                word = catagory.event_category.lower()
+                word = word.replace(" ","")
+                catagories.append(word)
+            #if same exists then preventing addition
+            if event_type_lower_with_no_space in catagories:
+                return False 
+            else:
+                new_event_type = Event_Category.objects.create(event_category=event_type,event_category_for = Chapters_Society_and_Affinity_Groups.objects.get(primary = group_number))
                 new_event_type.save()
                 return True
         except Exception as e:
@@ -118,7 +130,7 @@ class Branch:
         '''This function loads all the team members from the database and also checks if the member is included in the current panel'''
         team=Teams.objects.get(primary=team_primary)
         team_id=team.id
-        get_users=Members.objects.order_by('position').filter(team=team_id)
+        get_users=Members.objects.order_by('-position').filter(team=team_id)
         get_current_panel=Branch.load_current_panel()
         team_members=[]
         if(get_current_panel is not None):
@@ -133,16 +145,16 @@ class Branch:
         '''This function registers the mega event'''
 
         try:
-            if end_date=='':
+            if start_date=='' and end_date=='':
+                saving_data = SuperEvents(mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=event_organiser),super_event_name=super_event_name,super_event_description=super_event_description,banner_image=banner_image)
+                saving_data.save()
+                return True
+            elif end_date=='':
                 saving_data = SuperEvents(mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=event_organiser),super_event_name=super_event_name,super_event_description=super_event_description,start_date=start_date,banner_image=banner_image)
                 saving_data.save()
                 return True
             elif start_date=='':
                 saving_data = SuperEvents(mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=event_organiser),super_event_name=super_event_name,super_event_description=super_event_description,end_date=end_date,banner_image=banner_image)
-                saving_data.save()
-                return True
-            elif start_date=='' and end_date=='':
-                saving_data = SuperEvents(mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=event_organiser),super_event_name=super_event_name,super_event_description=super_event_description,banner_image=banner_image)
                 saving_data.save()
                 return True
             else:
@@ -209,6 +221,9 @@ class Branch:
             for event in events:
                 event.super_event_id = None
                 event.save()
+            mega_event_banner_image_path = settings.MEDIA_ROOT + str(mega_event.banner_image)
+            if os.path.isfile(mega_event_banner_image_path):
+                os.remove(mega_event_banner_image_path)
             mega_event.delete()
             return True
         except Exception as e:
@@ -630,7 +645,7 @@ class Branch:
         '''This function loads all the EB panel members from the branch.
         Checks if the position of the member is True for is_eb_member and if member exists in current EB Panel'''
         get_current_panel=Branch.load_current_panel()
-        members=Members.objects.all().order_by('position')
+        members=Members.objects.all()
         eb_panel=[]
         for member in members:
             if member.position.is_eb_member:
@@ -819,7 +834,7 @@ class Branch:
     def load_panel_members_by_panel_id(panel_id):
         '''This load all the info associated with a panel from Panel members Table'''
         try:
-            get_panel_members=Panel_Members.objects.filter(tenure=panel_id).all().order_by('position')
+            get_panel_members=Panel_Members.objects.filter(tenure=panel_id).all()
             return get_panel_members
         except:
             raise Http404("The requested page does not exist.")
@@ -973,7 +988,7 @@ class Branch:
 
     def load_all_mother_events():
         '''This method loads all the mother/Super events'''
-        return SuperEvents.objects.all()
+        return SuperEvents.objects.all().order_by('-pk')
     def load_all_inter_branch_collaboration_options():
         '''This loads all the chapters and Societies of the branch'''
         return Chapters_Society_and_Affinity_Groups.objects.all().order_by('primary')
@@ -1039,8 +1054,32 @@ class Branch:
     def delete_event(event_id):
         ''' This function deletes event from database '''
         try:
-            #Match event id and delete that event
-            Events.objects.get(id = event_id).delete()
+            #Getting the event instance
+            event = Events.objects.get(id = event_id)
+            try:
+                #getting banner image of the image and deleting it from if exists
+                graphics_image = Graphics_Banner_Image.objects.get(event_id = event)
+                image_path=settings.MEDIA_ROOT+str(graphics_image.selected_image)
+                if os.path.isfile(image_path):
+                    os.remove(image_path)
+            except:
+                pass
+            #getting media images of the event and deleting file from os
+            media_images = Media_Images.objects.filter(event_id = event)
+
+            for image in media_images:
+                img_path = settings.MEDIA_ROOT + str(image.selected_images)
+                if os.path.exists(img_path):
+                    os.remove(img_path)
+            
+            content_files = Content_Team_Document.objects.filter( event_id = event)
+            #getting content files from  db and removing them physically from server directory
+            for file in content_files:
+                doc_path = settings.MEDIA_ROOT + str(file.document)
+                if os.path.exists(doc_path):
+                    os.remove(doc_path)
+            #deleting the event along with its  related data from DB
+            event.delete()
             return True
         except:
             return False
@@ -1294,7 +1333,7 @@ class Branch:
             elif(image_id == 'mission_image'):
                 ieee_nsu_student_branch.mission_image = None
             elif(image_id == 'vision_image'):
-                ieee_nsu_student_branch.ras_image = None
+                ieee_nsu_student_branch.vision_image = None
             
             #saving before returning
             ieee_nsu_student_branch.save()
@@ -1325,6 +1364,10 @@ class Branch:
                 ieee_region_10.background_picture_parallax = None
             elif(image_id == 'events_and_conference_picture'):
                 ieee_region_10.events_and_conference_image = None
+
+            #saving before returning
+            ieee_region_10.save()
+            return True
 
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -1597,7 +1640,7 @@ class Branch:
             get_user=Members.objects.get(ieee_id = ieee_id)
             #get the previous profile picture of the user to delete it
             previous_profile_picture=settings.MEDIA_ROOT+str(get_user.user_profile_picture)
-            if(previous_profile_picture!=(settings.MEDIA_ROOT+'user_profile_pictures/default_profile_picture.png')):
+            if os.path.isfile(previous_profile_picture):
                 #removing previous one from system
                 os.remove(previous_profile_picture)
                 #saving new one
@@ -1656,13 +1699,12 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
 
-    def get_mega_event_id(id,primary):
+    def get_mega_event(mega_event_id,primary):
 
-        '''This function returns the mega_event_id'''
+        '''This function returns the mega_event'''
 
         try:
-            society = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
-            return SuperEvents.objects.get(id = id,mega_event_of = society)
+            return SuperEvents.objects.get(id = mega_event_id,mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
 
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -1719,8 +1761,29 @@ class Branch:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
+       
+    def update_website_homepage_top_banner(pk, banner_image, first_layer_text, first_layer_text_colored, third_layer_text, button_text, button_url):
+        try:
+            homepage_top_banner = HomePageTopBanner.objects.get(id=pk)
 
-        
-        
+            if(banner_image):
+                img_path = settings.MEDIA_ROOT + str(homepage_top_banner.banner_picture)
+                if os.path.exists(img_path):
+                    os.remove(img_path)
+                homepage_top_banner.banner_picture = banner_image
+
+            homepage_top_banner.first_layer_text = first_layer_text
+            homepage_top_banner.first_layer_text_colored = first_layer_text_colored
+            homepage_top_banner.third_layer_text = third_layer_text
+            homepage_top_banner.button_text = button_text
+            homepage_top_banner.button_url = button_url
+
+            homepage_top_banner.save()
+
+            return True
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
 
 

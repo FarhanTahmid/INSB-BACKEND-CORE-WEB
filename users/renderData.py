@@ -24,6 +24,7 @@ from system_administration.system_error_handling import ErrorHandling
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 import calendar
 from datetime import datetime
+from port.renderData import PortData
 
 
 class LoggedinUser:
@@ -216,7 +217,7 @@ def is_eb_or_admin(user):
 def get_all_registered_members(request):
     '''This function returns all the INSB members registered in the main database'''
     try:
-        get_members=Members.objects.filter().all().order_by('position')
+        get_members=Members.objects.filter().all().order_by('position__rank')
         return get_members
     except sqlite3.DatabaseError:
         messages.error(request,"An internal Database Error has occured!")
@@ -375,6 +376,8 @@ def getHitCountYearly():
         #TODO: need styling
         if number_of_people_per_month>0:
             monthly.append(number_of_people_per_month)
+        else:
+            monthly.append(0) 
         month_names.append(getMonthName(i+1)[0:3])
     year = datetime.datetime.now().year
     return year,month_names,monthly
@@ -452,7 +455,7 @@ class PanelMembersData:
         try:
             # get panel
             get_panel=Panels.objects.get(pk=panel)
-            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk)).order_by('position')
+            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk))
             eb_member=[]
             for i in get_panel_members:
                 if(i.member is not None):
@@ -469,7 +472,7 @@ class PanelMembersData:
         try:
             # get panel
             get_panel=Panels.objects.get(pk=panel)
-            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk)).order_by('position')
+            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk))
             officer_member=[]
             for i in get_panel_members:
                 if(i.position.is_officer):
@@ -499,7 +502,7 @@ class PanelMembersData:
         try:
             # get panel
             get_panel=Panels.objects.get(pk=panel)
-            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk)).order_by('position')
+            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk))
             volunteer_member=[]
             for i in get_panel_members:
                 if(not i.position.is_officer and not i.position.is_eb_member and not i.position.is_co_ordinator and not i.position.is_faculty and not i.position.is_mentor and not i.position.is_sc_ag_eb_member):
@@ -515,7 +518,7 @@ class PanelMembersData:
         try:
             # get panel
             get_panel=Panels.objects.get(pk=panel)
-            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk)).order_by('position')
+            get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_panel.pk))
             alumni_member=[]
             for i in get_panel_members:
                 if(i.member is None): #as alumni member has no registered IEEE ID
@@ -614,7 +617,35 @@ class PanelMembersData:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error(request,"Can not remove alumni from Branch Panel. Something went wrong!")
             return False
+    
+    def get_sc_ag_members_from_current_panel(request,sc_ag_primary):
+        # returns all the members of the current panel of sc_ag
+        try:
+            get_current_panel_of_sc_ag=PortData.get_sc_ag_current_panel(request=request,sc_ag_primary=sc_ag_primary)
+            if(get_current_panel_of_sc_ag is not None):
+                get_current_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=get_current_panel_of_sc_ag.pk))
+                return get_current_panel_members
+            else:
+                return None      
+        except Exception as e:
+            PanelMembersData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            # ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return None
+    
+    def get_sc_ag_members_from_panel(request,panel_pk):
+        # returns all the members of the given panel
+        try:
+            get_all_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=panel_pk))
 
+            if get_all_members is not None:
+                return get_all_members
+            else:
+                return None
+        except Exception as e:
+            PanelMembersData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            # ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return None
+        
 class Alumnis:
     logger=logging.getLogger(__name__)
     
@@ -661,5 +692,3 @@ class Alumnis:
             Alumnis.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
-
-      

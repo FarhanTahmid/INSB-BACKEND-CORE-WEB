@@ -147,7 +147,7 @@ def emt_data_access(request):
                 'positions':position
                 
             }
-            return render(request,'Manage Team\emt_manage_team.html',context=context)
+            return render(request,'Manage Team/emt_manage_team.html',context=context)
         else:
             return render(request,"emt_access_denied.html", {'all_sc_ag':sc_ag,'user_data':user_data,})
         

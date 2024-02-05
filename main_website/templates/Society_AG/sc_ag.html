@@ -35,7 +35,7 @@
         }
         .parallax {
             /* Set a specific height */
-            min-height: 250px;
+            min-height: 350px;
             /* Adjust the value as needed (0.8 is just an example) */
             position: relative;
             clip-path: inset(0);
@@ -567,70 +567,165 @@
                 <div class="bar"></div>
                 {% if faculty_advisor %}
                 <div class="row justify-content-center">
+                    {% if faculty_advisor.member %}
                     <div class="col-lg-3 col-md-6 col-sm-12 my-2">
                         <div class="card executive-body-profile text-center">
                             <div class="executive-body-profile-img-container">
                                 <img class="executive-body-profile-images img-fluid"
-                                    src="{{media_url}}{{faculty_advisor.member.user_profile_picture}}" alt="">
+                                    src="{{media_url}}{{faculty_advisor.member.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
                             </div>
                             <div class="executive-body-profile-content">
                                 <p><b>{{faculty_advisor.member.name}}</b></p>
                                 <p><small>Faculty Advisor, {{society.short_form_2}}</small></p>
                                 <div class="executive-body-profile-icons-container">
+                                    {% if faculty_advisor.member.email_nsu %}
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
                                         href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to={{faculty_advisor.member.email_nsu}}" target="_blank">
                                         <i class="fa fa-envelope" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
+                                    {% endif %}
+                                    {% if faculty_advisor.member.facebook_url %}
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
                                         href="{{faculty_advisor.member.facebook_url}}" target="_blank">
                                         <i class="fa fa-facebook" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
+                                    {% endif %}
+                                    {% if faculty_advisor.member.linkedin_url %}
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
                                         href="{{faculty_advisor.member.linkedin_url}}" target="_blank">
                                         <i class="fa fa-linkedin" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                {% endif %}
-                <div class="row justify-content-center">
-                    {% for members in eb_members %}
+                    {% else %}
                     <div class="col-lg-3 col-md-6 col-sm-12 my-2">
                         <div class="card executive-body-profile text-center">
                             <div class="executive-body-profile-img-container">
                                 <img class="executive-body-profile-images img-fluid"
-                                    src="{{media_url}}{{members.member.user_profile_picture}}" alt="">
+                                    src="{{media_url}}{{faculty_advisor.ex_member.picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
                             </div>
                             <div class="executive-body-profile-content">
-                                <p><b>{{members.member.name}}</b></p>
-                                <p><small>{{members.position.role}}, {{society.short_form_2}}</small></p>
+                                <p><b>{{faculty_advisor.ex_member.name}}</b></p>
+                                <p><small>Faculty Advisor, {{society.short_form_2}}</small></p>
                                 <div class="executive-body-profile-icons-container">
+                                    {% if faculty_advisor.ex_member.email %}
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to={{members.member.email_ieee}}" target="_blank">
+                                        href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to={{faculty_advisor.ex_member.email}}" target="_blank">
                                         <i class="fa fa-envelope" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
+                                    {% endif %}
+                                    {% if faculty_advisor.ex_member.facebook_link %}
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="{{members.member.facebook_url}}" target="_blank">
+                                        href="{{faculty_advisor.ex_member.facebook_link}}" target="_blank">
                                         <i class="fa fa-facebook" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
+                                    {% endif %}
+                                    {% if faculty_advisor.ex_member.linkedin_link %}
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
-                                        href="{{members.member.linkedin_url}}" target="_blank">
+                                        href="{{faculty_advisor.ex_member.linkedin_link}}" target="_blank">
                                         <i class="fa fa-linkedin" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {% endif %}
+                    
+                </div>
+                {% endif %}
+                <div class="row justify-content-center">
+                    {% for members in eb_members %}
+                        {% if members.member %}
+                        <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                            <div class="card executive-body-profile text-center">
+                                <div class="executive-body-profile-img-container">
+                                    <img class="executive-body-profile-images img-fluid"
+                                        src="{{media_url}}{{members.member.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                                </div>
+                                <div class="executive-body-profile-content">
+                                    <p><b>{{members.member.name}}</b></p>
+                                    <p><small>{{members.position.role}}, {{society.short_form_2}}</small></p>
+                                    <div class="executive-body-profile-icons-container">
+                                        {% if members.member.email_ieee %}
+                                        <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
+                                            href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to={{members.member.email_ieee}}" target="_blank">
+                                            <i class="fa fa-envelope" aria-hidden="true"
+                                                style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                        </a>
+                                        {% endif %}
+                                        {% if members.member.facebook_url %}
+                                        <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
+                                            href="{{members.member.facebook_url}}" target="_blank">
+                                            <i class="fa fa-facebook" aria-hidden="true"
+                                                style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                        </a>
+                                        {% endif %}
+                                        {% if members.member.linkedin_url %}
+                                        <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
+                                            href="{{members.member.linkedin_url}}" target="_blank">
+                                            <i class="fa fa-linkedin" aria-hidden="true"
+                                                style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="col-lg-3 col-md-6 col-sm-12 my-2">
+                            <div class="card executive-body-profile text-center">
+                                <div class="executive-body-profile-img-container">
+                                    <img class="executive-body-profile-images img-fluid"
+                                        src="{{media_url}}{{members.ex_member.picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                                </div>
+                                <div class="executive-body-profile-content">
+                                    <p><b>{{members.ex_member.name}}</b></p>
+                                    <p><small>{{members.position.role}}, {{society.short_form_2}}</small></p>
+                                    <div class="executive-body-profile-icons-container">
+                                        {% if members.ex_member.email %}
+                                        <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
+                                            href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to={{members.ex_member.email}}" target="_blank">
+                                            <i class="fa fa-envelope" aria-hidden="true"
+                                                style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                        </a>
+                                        {% endif %}
+                                        {% if members.ex_member.facebook_link %}
+                                        <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
+                                            href="{{members.ex_member.facebook_link}}" target="_blank">
+                                            <i class="fa fa-facebook" aria-hidden="true"
+                                                style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                        </a>
+                                        {% endif %}
+                                        {% if members.ex_member.linkedin_link %}
+                                        <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
+                                            href="{{members.ex_member.linkedin_link}}" target="_blank">
+                                            <i class="fa fa-linkedin" aria-hidden="true"
+                                                style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    
                     {% endfor %}
 
+                </div>
+                <!-- see all panels -->
+                <div class="text-center" style="margin-top: 30px;">
+                    <a href="{% url 'main_website:sc_ag_current_panel' society.primary %}" class="see-all-events-button"><b><i class="fa-solid fa-users"></i> See All
+                            Panels</b></a>
                 </div>
             </div>
         </section>

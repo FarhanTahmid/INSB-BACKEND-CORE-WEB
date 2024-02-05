@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from central_events.models import Event_Category, Event_Venue, Events, SuperEvents
+from central_events.models import Event_Category, Event_Venue, Events, InterBranchCollaborations, IntraBranchCollaborations, SuperEvents
 from content_writing_and_publications_team.forms import Content_Form
 from content_writing_and_publications_team.renderData import ContentWritingTeam
 from events_and_management_team.renderData import Events_And_Management_Team
@@ -140,6 +140,8 @@ def team_details(request,primary,name):
         team_members=Branch.load_team_members(primary)
         #load all the roles and positions from database
         positions=Branch.load_roles_and_positions()
+        #creating team object
+        team = Teams.objects.get(primary = primary)
         # Excluding position of EB, Faculty and SC-AG members
         for i in positions:
             if(i.is_eb_member or i.is_faculty or i.is_sc_ag_eb_member):
@@ -215,7 +217,7 @@ def team_details(request,primary,name):
             'user_data':user_data,
             'all_sc_ag':sc_ag,
             'team_id':primary,
-            'team_name':name,
+            'team_name':team.team_name,
             'team_members':team_members,
             'positions':positions,
             'insb_members':insb_members,
@@ -757,13 +759,14 @@ def manage_research(request):
                     MainWebsiteRenderData.delete_research_paper(request=request)
                     return redirect('central_branch:manage_research')
             else:
-                form=ResearchPaperForm
-                form2=ResearchCategoryForm
+                add_research_form=ResearchPaperForm
+                add_research_category_form=ResearchCategoryForm
             context={
                 'user_data':user_data,
                 'all_sc_ag':sc_ag,
-                'form':form,
-                'form2':form2,'all_researches':researches,
+                'form':add_research_form,
+                'form2':add_research_category_form,
+                'all_researches':researches,
             }
             return render(request,"Manage Website/Publications/Research Paper/manage_research_paper.html",context=context)
         else:
@@ -1200,7 +1203,6 @@ def manage_website_homepage(request):
             context={
                 'user_data':user_data,
                 'all_sc_ag':sc_ag,
-                'user_data':user_data,
                 'topBannerItems':topBannerItems,
                 'bannerPictureWithNumbers':existing_banner_picture_with_numbers,
                 'media_url':settings.MEDIA_URL,
@@ -1217,6 +1219,52 @@ def manage_website_homepage(request):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
+    
+@login_required
+def manage_website_homepage_top_banner_update(request, pk):
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        
+        has_access = Branch_View_Access.get_manage_web_access(request)
+        if has_access:
+            homepage_top_banner = HomePageTopBanner.objects.get(id=pk)
+
+            if request.method == 'POST':
+                banner_image = None
+                if request.FILES.get('banner_picture'):
+                    banner_image = request.FILES['banner_picture']
+
+                first_layer_text = request.POST['first_layer_text']
+                first_layer_text_colored = request.POST['first_layer_text_colored']
+                third_layer_text = request.POST['third_layer_text']
+                button_text = request.POST['button_text']
+                button_url = request.POST['button_url']
+
+                if(Branch.update_website_homepage_top_banner(pk, banner_image, first_layer_text, first_layer_text_colored, third_layer_text, button_text, button_url)):
+                    messages.success(request, 'Updated Successfully!')
+                else:
+                    messages.warning(request, 'Something went wrong!')
+
+                return redirect('central_branch:manage_website_home_top_banner_update', pk)
+
+            context = {
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'homepage_top_banner':homepage_top_banner,
+                'media_url':settings.MEDIA_URL,
+            }
+
+            return render(request, 'Manage Website/Homepage/update_banner_picture_with_text.html',context)
+        else:
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
+    
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
+
 
 @login_required
 def update_volunteer_of_month(request,pk):
@@ -2557,7 +2605,7 @@ def mega_events(request):
         is_branch = True
         has_access_to_create_event = Branch_View_Access.get_create_event_access(request)
 
-        mega_events = SuperEvents.objects.all().order_by('-pk')
+        mega_events = SuperEvents.objects.all().order_by('-start_date')
 
         context = {
             'is_branch':True,
@@ -2634,13 +2682,12 @@ def mega_event_edit(request,mega_event_id):
 
             return render(request,"Events/Super Event/super_event_edit_form.html",context)
         else:
-            return redirect('central_branch:mega_events')
+            return redirect('main_website:mega_event_description_page', mega_event_id)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
 
-#Good Luck Arman, Fix this
 @login_required
 def mega_event_add_event(request,mega_event_id):    
 
@@ -2650,47 +2697,50 @@ def mega_event_add_event(request,mega_event_id):
         sc_ag=PortData.get_all_sc_ag(request=request)
         #calling it regardless to run the page
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,1)
+        has_access = Branch_View_Access.get_event_edit_access(request)
+        if has_access:
+            mega_event = SuperEvents.objects.get(id=mega_event_id)
+            all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(1)
+            events_of_mega_Event = Branch.get_events_of_mega_event(mega_event)
 
-        mega_event = Branch.get_mega_event_id(mega_event_id,1)
-        all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(1)
-        events_of_mega_Event = Branch.get_events_of_mega_event(mega_event)
+            if request.method == "POST":
 
-        if request.method == "POST":
+                if request.POST.get('add_event_to_mega_event'):
 
-            if request.POST.get('add_event_to_mega_event'):
+                    event_list = request.POST.getlist('selected_events')
+                    if Branch.add_events_to_mega_event(event_list,mega_event,1):
+                        messages.success(request,f"Events Added Successfully to {mega_event.super_event_name}")
+                    else:
+                        messages.error(request,"Error occured!")
 
-                event_list = request.POST.getlist('selected_events')
-                if Branch.add_events_to_mega_event(event_list,mega_event,1):
-                    messages.success(request,f"Events Added Successfully to {mega_event.super_event_name}")
-                else:
-                    messages.error(request,"Error occured!")
+                    return redirect("central_branch:mega_event_add_event",mega_event_id)
+                
+                if request.POST.get('remove'):
 
-                return redirect("central_branch:mega_event_add_event",mega_event_id)
-            
-            if request.POST.get('remove'):
+                    event_id = request.POST.get('remove_event')
+                    if Branch.delete_event_from_mega_event(event_id):
+                        messages.success(request,f"Event deleted Successfully from {mega_event.super_event_name}")
+                    else:
+                        messages.error(request,"Error occured!")
 
-                event_id = request.POST.get('remove_event')
-                if Branch.delete_event_from_mega_event(event_id):
-                    messages.success(request,f"Event deleted Successfully from {mega_event.super_event_name}")
-                else:
-                    messages.error(request,"Error occured!")
-
-                return redirect("central_branch:mega_event_add_event",mega_event_id)
-            
+                    return redirect("central_branch:mega_event_add_event",mega_event_id)
+                
 
 
-        context = {
-            'is_branch':True,
-            'user_data':user_data,
-            'all_sc_ag':sc_ag,
-            'sc_ag_info':get_sc_ag_info,
-            'mega_event':mega_event,
-            'events':all_insb_events_with_interbranch_collaborations,
-            'events_of_mega_event':events_of_mega_Event,
+            context = {
+                'is_branch':True,
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'sc_ag_info':get_sc_ag_info,
+                'mega_event':mega_event,
+                'events':all_insb_events_with_interbranch_collaborations,
+                'events_of_mega_event':events_of_mega_Event,
 
-        }
+            }
 
-        return render(request,"Events/Super Event/super_event_add_event_form_tab.html",context)
+            return render(request,"Events/Super Event/super_event_add_event_form_tab.html",context)
+        else:
+            return render(request,'access_denied2.html', {'user_data':user_data, 'all_sc_ag':sc_ag})
         
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -3309,6 +3359,17 @@ def event_preview(request, event_id):
         has_access = Branch_View_Access.get_event_edit_access(request)
         if(has_access):
             event = Events.objects.get(id=event_id)
+            get_inter_branch_collab=InterBranchCollaborations.objects.filter(event_id=event.pk)
+            get_intra_branch_collab=IntraBranchCollaborations.objects.filter(event_id=event.pk).first()
+            
+            has_interbranch_collab=False
+            has_intrabranch_collab=False
+            
+            if(len(get_inter_branch_collab) > 0):
+                has_interbranch_collab=True
+            if(get_intra_branch_collab is not None):
+                has_intrabranch_collab=True
+                
             event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
             event_gallery_images = HomepageItems.load_event_gallery_images(event_id=event_id)
 
@@ -3317,7 +3378,11 @@ def event_preview(request, event_id):
                 'event' : event,
                 'media_url':settings.MEDIA_URL,
                 'event_banner_image' : event_banner_image,
-                'event_gallery_images' : event_gallery_images
+                'event_gallery_images' : event_gallery_images,
+                'has_interbranch_collab':has_interbranch_collab,
+                'has_intrabranch_collab':has_intrabranch_collab,
+                'inter_collaborations':get_inter_branch_collab,
+                'intra_collab':get_intra_branch_collab,
             }
 
             return render(request, 'Events/event_description_main.html', context)
@@ -3488,6 +3553,8 @@ def event_feedback(request, event_id):
 def insb_members_list(request):
     
     try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
 
         '''This function is responsible to display all the member data in the page'''
@@ -3497,12 +3564,14 @@ def insb_members_list(request):
             
         members=Members.objects.all()
         totalNumber=Members.objects.all().count()
-        has_view_permission=True
+        user=request.user
+        has_view_permission=renderData.MDT_DATA.insb_member_details_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username)
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
 
         context={
             'is_branch':True,
+            'user_data':user_data,
             'all_sc_ag':sc_ag,
             'members':members,
             'totalNumber':totalNumber,
@@ -3631,6 +3700,7 @@ def member_details(request,ieee_id):
                         return redirect('central_branch:member_details',ieee_id)
                     except Members.DoesNotExist:
                         messages.info(request,"Sorry! Something went wrong! Try Again.")
+                        return redirect('central_branch:member_details',ieee_id)
                 
                 elif(recruitment_session_value==None):
                     try:
@@ -3696,8 +3766,9 @@ def member_details(request,ieee_id):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        return custom_500(request)
+        return redirect('central_branch:member_details',ieee_id)
 
+        
 def custom_404(request):
     return render(request,'404.html',status=404)
 

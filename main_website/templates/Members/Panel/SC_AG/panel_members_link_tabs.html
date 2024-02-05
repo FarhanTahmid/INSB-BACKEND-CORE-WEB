@@ -1,0 +1,54 @@
+{% load static %}
+
+{% block panel_tabs %}
+<style>
+    .link-container {
+        width: 100%; /* Set the width of the container to 100% */
+      }
+      
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .links a {
+        margin: 5px; /* Add some spacing between the links */
+      }
+      
+      .links a:last-child {
+        margin-right: 0; /* Remove the margin from the last link */
+      }
+      .links a.active {
+            color: #FFA300;
+      }
+</style>
+<!--This is scrip is to get the link of the current page and cross match it with the navlink to change colors-->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      // Get the current page's URL
+      const currentPageUrl = window.location.href;
+    
+      // Find the links in the navigation bar
+      const navLinks = document.querySelectorAll(".links a");
+    
+      // Loop through the links and add a "active" class to the matching link
+      navLinks.forEach(function (link) {
+        if (link.href === currentPageUrl) {
+          link.classList.add("active");
+        }
+      });
+    });
+  </script>
+<div class="link-container">
+      <div class="links">
+          {% for panel in panels %}
+            {% if panel.current %}
+              <a href="{% url 'main_website:sc_ag_current_panel' sc_ag.primary %}" class="btn btn-outline-warning text-dark m-1">Current Executive Committee</a>
+            {% else %}
+              <a href="{% url 'main_website:sc_ag_panel_members' sc_ag.primary panel.pk panel.year %}" class="btn btn-outline-warning text-dark m-1">Executive Committee {{panel.year}}</a>
+            {% endif %}
+          {% endfor %}
+      </div>
+</div>
+{% endblock panel_tabs %}

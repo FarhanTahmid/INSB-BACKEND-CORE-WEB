@@ -303,7 +303,7 @@
                             
 
                             <div class="form-group">
-                                <label for="images">Background Image For Parallax Effect:</label>
+                                <label for="images">Group Picture:</label>
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="background-image-input" name="background_image" accept="image/*">
                                     <label class="custom-file-label bg-light" for="background-image-input">Choose file</label>
@@ -313,7 +313,7 @@
                                 {% if sc_ag_info.background_image %}
                                 <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                                     <div class="col-sm-11">
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal2">Background Image</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal2">Group Picture</a>
                                     </div>
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.background_image}}', 'background_image')">✖</button>
@@ -520,7 +520,7 @@
                             <br>
 
                             <div class="form-group">
-                                <label>Primary Color Code</label>
+                                <label>Primary Color Code (Determines button colors, gives underline colors in each section and contact field border color)</label>
                                 <input 
                                 type="text" 
                                 class="form-control"
@@ -533,7 +533,7 @@
                             <br>
 
                             <div class="form-group">
-                                <label>Secondary Color Code</label>
+                                <label>Secondary Color Code (Determines button hover color and "What Why Who How" heading colors)</label>
                                 <input 
                                 type="text" 
                                 class="form-control"
@@ -546,7 +546,7 @@
                             <br>
 
                             <div class="form-group">
-                                <label>Mission Vision Color Code</label>
+                                <label>Mission Vision Color Code (Determines box color of mission and vision section)</label>
                                 <input 
                                 type="text" 
                                 class="form-control"
@@ -559,7 +559,7 @@
                             <br>
 
                             <div class="form-group">
-                                <label>Text Color Code</label>
+                                <label>Text Color Code (Determines color to vision and mission heading)</label>
                                 <input 
                                 type="text" 
                                 class="form-control"

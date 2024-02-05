@@ -39,7 +39,7 @@
 
         <!-- Repeat the card -->
         {% for i in all_news %}
-        <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
+        <div class="col-lg-4 col-md-6 col-sm-12 mt-5 content">
             <div class="card shadow achievement_card">
                 <a href="{% url 'main_website:news_description' i.pk %}"><img class="card-img-top" src="/media_files/{{i.news_picture}}" alt="news_thumbnail"></a>
 
@@ -58,6 +58,9 @@
     </div>
 </div>
 <br><br>
+<div class="text-center">
+    <div class="btn btn-outline-primary px-5 py-2 mb-5"  id="loadMore">Load more</div>
+</div>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -84,5 +87,35 @@
         });
     });
 </script>
+    <!-- News load more script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        var contents = document.getElementsByClassName("content");
+        var loadMore = document.getElementById("loadMore");
+
+        var startIndex = 0;
+        var itemsToShow = 3;
+
+        function showNextItems() {
+            for (var i = startIndex; i < startIndex + itemsToShow; i++) {
+            if (contents[i]) {
+                contents[i].classList.add('d-block')
+            }
+            }
+            startIndex += itemsToShow;
+            
+            if (startIndex >= contents.length) {
+            loadMore.textContent = "No Content";
+            loadMore.classList.add("noContent");
+            loadMore.removeEventListener("click", showNextItems);
+            }
+        }
+
+        loadMore.addEventListener("click", showNextItems);
+
+        showNextItems();
+        });
+
+    </script>
 
 {% endblock news_card_container %}

@@ -8,7 +8,7 @@ from users import registerUser
 from django.db import connection
 from django.db.utils import IntegrityError
 from recruitment.models import recruited_members
-from . models import Members,ResetPasswordTokenTable
+from . models import Members,ResetPasswordTokenTable,UserSignupTokenTable
 import csv,datetime
 from django.db import DatabaseError
 from . import renderData
@@ -59,61 +59,112 @@ def login(request):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
+    
+    
+def signup_user_validation(request):
+    if(request.method=="POST"):
+        if(request.POST.get('signup')):
+            ieee_id=request.POST['ieee_id']
+            try:
+                getMember=Members.objects.get(ieee_id=ieee_id)
+                # check if member is already signed in
+                if User.objects.filter(username=ieee_id).exists():
+                    messages.info(request,"You are already signed up! Try Logging in instead.")
+                    return redirect('users:signup_validation')
 
-def signup(request):
+                # send a email with a token in signup link
+                token,mail_sent=email_handler.EmailHandler.send_email_for_signup(member=getMember,request=request)
+                
+                if(mail_sent):
+                    try:
+                        # delete previous instances of signup tokens for the particular user
+                        get_instace=UserSignupTokenTable.objects.filter(user=getMember)
+                        if(get_instace.exists()):
+                            get_instace.delete()
+                    except Exception as e:
+                        messages.warning(request,"Something went wrong! Please Try again.")
+                        return redirect('users:signup_validation')
+                    # register a new instance of request for the user
+                    new_signup_request=UserSignupTokenTable.objects.create(
+                        user=getMember,token=token
+                    )
+                    new_signup_request.save()
+                    messages.success(request,f"An email has been sent to your personal email. Your signup link is given there!")
+                    return redirect('users:signup_validation')
+                else:
+                    messages.warning(request,f"We can not process your request at this moment! Please try again.")
+                    return redirect('users:signup_validation')
+                    
+            except Members.DoesNotExist:
+                messages.warning(request,"Looks like you are not registered in our Central database yet!")
+                messages.warning(request,"If you are a member of IEEE NSU SB, please contact our Membership Development Team!")                    
+                return redirect('users:signup_validation')
+            
+    return render(request,"users/signup_user_valid.html")
+    
+
+def signup(request,ieee_id,token):
     
     '''Signs up user. only limited to IEEENSUSB Member. Checks if the member is registered in the main database'''
     
     try:
 
-        if request.method=="POST":
-            ieee_id=request.POST['ieee_id'] #here collecting the ieee account as the initiator for Login.
-            password=request.POST['password']
-            confirm_password=request.POST['confirm_password']
-            
-            #checking if password equals to confirm password
-            #the password length must be greater than 6.
-            
-            if(password==confirm_password):
-                if(len(password)>6):
+        # check if this is a valid link used
+        get_user_signup_link=UserSignupTokenTable.objects.filter(user=Members.objects.get(ieee_id=ieee_id),token=token)
+        # if the signuplink object exists
+        if(get_user_signup_link.exists()):
+            # if the token is equal to url token
+            if(get_user_signup_link[0].token==token):
+                
+                if request.method=="POST":
+                    password=request.POST['password']
+                    confirm_password=request.POST['confirm_password']
                     
-                    # Now find the Registered Member against the IEEE id. Matching the IEEE ID in MEMBERS table and finding their associated email with their IEEE account
-                    try:
-                        getMember=Members.objects.get(ieee_id=ieee_id)
-                        
-                        #checking if the member is already signed up
-                        if User.objects.filter(username=ieee_id).exists():
-                            messages.info(request,"You are already signed up! Try Logging in instead.")
-                        else:
+                    #checking if password equals to confirm password
+                    #the password length must be greater than 6.
+                    
+                    if(password==confirm_password):
+                        if(len(password)>6):
                             
-                            #creating account for the user
+                            # Now find the Registered Member against the IEEE id. Matching the IEEE ID in MEMBERS table and finding their associated email with their IEEE account
                             try:
-                                user = User.objects.create_user(username=ieee_id, email=getMember.email_personal,password=password)
-                                user.save()
-                                auth.login(request,user) #logging in user after signing up automatically
-                                return redirect('users:dashboard')
-                            except:
-                                messages.info(request,"Something went wrong! Try again")
+                                getMember=Members.objects.get(ieee_id=ieee_id)
+                                
+                                #checking if the member is already signed up
+                                if User.objects.filter(username=ieee_id).exists():
+                                    messages.info(request,"You are already signed up! Try Logging in instead.")
+                                else:
+                                    
+                                    #creating account for the user
+                                    try:
+                                        user = User.objects.create_user(username=ieee_id, email=getMember.email_personal,password=password)
+                                        user.save()
+                                        # delete the user signup link object
+                                        get_user_signup_link.delete()
+                                        auth.login(request,user) #logging in user after signing up automatically
+                                        return redirect('users:dashboard')
+                                    except:
+                                        messages.info(request,"Something went wrong! Try again")
+                                    
+                            except Members.DoesNotExist:
+                                #If the ieee id is not found:
+                                messages.info(request,"Looks like you are not registered in our Central database yet!")
+                                messages.info(request,"If you are a member of IEEE NSU SB, please contact our Membership Development Team!")                    
                             
-                    except Members.DoesNotExist:
-                        #If the ieee id is not found:
-                        
-                        messages.info(request,"Looks like you are not registered in our Central database yet!")
-                        messages.info(request,"If you are a member of IEEE NSU SB, please contact our Membership Development Team!")                    
+                            except ValueError:
+                                messages.info(request,"Please enter your IEEE ID as Numerical Values!")
+                        else:
+                            messages.info(request,"Your password must be greater than 6 characters!")
+                    else:
+                        messages.info(request,"Two passwords Did not match!")
                     
-                    except ValueError:
-                        messages.info(request,"Please enter your IEEE ID as Numerical Values!")
-                else:
-                    messages.info(request,"Your password must be greater than 6 characters!")
+                return render(request,'users/signup.html')
             else:
-                messages.info(request,"Two passwords Did not match!")
-            
-            
-            
+                return redirect('users:invalid_url')
+
+        else:
+            return redirect('users:invalid_url')
         
-        
-        return render(request,'users/signup.html')
-    
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -294,7 +345,7 @@ def change_password(request):
                 else:
                     messages.error(request,"Your password must be greater than 6 characters!")
             else:
-                messages.warning(request,"Your old password does not match!")
+                messages.warning(request,"Your old password is not correct!")
             
             return redirect('users:change_password')    
             
@@ -331,11 +382,15 @@ def update_information(request):
                 if('profile_picture' in request.FILES):
                     #Get the image file
                     file=request.FILES.get('profile_picture')
-                    change_pro_pic=current_user.change_profile_picture(file) #Calling function to change profile picture of the user
-                    if(change_pro_pic==False):
-                        return DatabaseError
+                    if(file.size>(2*1024*1024)):
+                        messages.warning(request,"Maximum File size of 2 MB exceeded!")
+                        return redirect('users:update_information')
                     else:
-                        messages.info(request,"Profile Picture was changed successfully!")
+                        change_pro_pic=current_user.change_profile_picture(file) #Calling function to change profile picture of the user
+                        if(change_pro_pic==False):
+                            return DatabaseError
+                        else:
+                            messages.info(request,"Profile Picture was changed successfully!")
             except MultiValueDictKeyError:
                 messages.info(request,"Please select a file first!")
 
@@ -388,6 +443,7 @@ def update_information(request):
         context={
             'user_data' : profile_data,
             'all_sc_ag':sc_ag,
+            'picture_max_size':4*1024*1024,
         }
 
         return render(request,"users/update_information.html", context)
@@ -431,7 +487,9 @@ def forgotPassword_getUsername(request):
                     if(mail_sent):
                         try:
                             # if the mail was sent to the user, delete all the previous tokens the user generated for password reset
-                            ResetPasswordTokenTable.objects.filter(user=getUser).delete()
+                            get_instace=ResetPasswordTokenTable.objects.filter(user=getUser)
+                            if(get_instace.exists()):
+                                get_instace.delete()
                         except Exception as e:
                             print(e)
                             messages.error(request,"An internal database error occured! Try again")
@@ -439,7 +497,7 @@ def forgotPassword_getUsername(request):
                         #create a new row for the user with the generated to cross match later
                         new_user_request=ResetPasswordTokenTable.objects.create(user=getUser,token=token)
                         new_user_request.save()
-                        messages.success(request,"An email has been sent to your email. Further intstructions for resetting your password are given there.")
+                        messages.success(request,"An email has been sent to your personal email. Further intstructions for resetting your password are given there.")
                         return redirect('users:fp_validation')
                     else:
                         #handles the error of if email was not send to the user.

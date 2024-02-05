@@ -7,8 +7,8 @@ from django.core.files.storage import FileSystemStorage
 
 
 ###### THIS BLOCK OF COODE IS FOR DECLARING DIRECTORIES TO STORE FILES#####
-permission_template=FileSystemStorage(location='Permission Templates')
-event_proposal_template=FileSystemStorage(location='Template-Event Proposal')
+permission_template=FileSystemStorage(location='Permission-Templates')
+event_proposal_template=FileSystemStorage(location='Template-Event-Proposal')
 ############################################################################
 
 

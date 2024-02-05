@@ -1,4 +1,4 @@
-from .models import HomePageTopBanner,BannerPictureWithStat
+from .models import HomePageTopBanner,BannerPictureWithStat,Achievements
 from django.http import HttpResponseServerError
 from users.models import Members,User_IP_Address,Panel_Members
 from membership_development_team.renderData import MDT_DATA
@@ -150,6 +150,10 @@ class HomepageItems:
         '''Gets all the event Count'''
         return Events.objects.all().count()
 
+    def getAchievementCount():
+        ''''Gets all the achievement count'''
+        return Achievements.objects.all().count()
+    
     def get_event_for_calender(request,primary):
 
         '''This function returns the events to show them on calender'''
@@ -164,7 +168,7 @@ class HomepageItems:
                 collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
                 events = Events.objects.filter(publish_in_main_web= True,event_organiser = society).order_by('-event_date')
                 #joining both the events list of collbarated and their own organised events
-                all_events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True)).order_by('-event_date')   
+                all_events = events.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True))   
             #decalring empty dictionary for getting the event date and event
             #key is the date and event object is the value
             date_and_events = {}
@@ -301,7 +305,7 @@ class HomepageItems:
                 #getting current tenure
                 current_tenure = Panels.objects.get(current = True, panel_of = society)
                 #getting all th eb roles
-                roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society,is_mentor = True).order_by('rank','role','role_of')
+                roles = Roles_and_Position.objects.filter(is_sc_ag_eb_member = True,role_of = society,is_faculty=False).order_by('rank','role','role_of')
                 for role in roles:
                     try:
                         #getting the member of the particular society whose role matches with the role iteration in the list and is if current panel
@@ -342,9 +346,9 @@ class HomepageItems:
 
         try:
             if primary == 1:
-                return SuperEvents.objects.filter(publish_mega_event = True)
+                return SuperEvents.objects.filter(publish_mega_event = True).order_by('-start_date')
             else:
-                mega_events= SuperEvents.objects.filter(publish_mega_event = True,mega_event_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
+                mega_events= SuperEvents.objects.filter(publish_mega_event = True).order_by('-start_date')
                 if(mega_events.exists()):
                     return mega_events
                 else:
@@ -376,13 +380,12 @@ class HomepageItems:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
-    def all_events_of_mega_event(mega_event,primary):
+    def all_events_of_mega_event(mega_event):
 
         '''This function returns all events of mega event'''
         try:
 
-            society = Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)
-            events = Events.objects.filter(super_event_id = SuperEvents.objects.get(mega_event_of = society),publish_in_main_web=True)
+            events = Events.objects.filter(super_event_id = SuperEvents.objects.get(id = mega_event.id),publish_in_main_web=True).order_by('-event_date')
           
             dic = {}
             #using this loop, assigning the event with its corresponding banner picture in the dictionary as key and value
@@ -400,5 +403,41 @@ class HomepageItems:
             HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
-
         
+    def diving_gallery_images(all_images):
+
+        '''This function returns all images in 4 different lists'''
+        try:
+            # initializing four empty list for storing all images in 4 different lists
+            first_column = []
+            second_column = []
+            third_column = []
+            fourth_column = []
+            # four different starting indexes
+            i = 0
+            j = 1
+            k = 2
+            l = 3
+            # two dimentional array of images of size(n X 4) where each column of image is getting stored in each list
+            while i < len(all_images):
+                first_column.append(all_images[i])
+                i += 4
+            while j < len(all_images):
+                second_column.append(all_images[j])
+                j += 4
+            while k < len(all_images):
+                third_column.append(all_images[k])
+                k += 4
+            while l < len(all_images):
+                fourth_column.append(all_images[l])
+                l += 4
+            
+            # returning the four lists as a tuple
+            return first_column, second_column, third_column, fourth_column
+            
+        except Exception as e:
+            HomepageItems.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+
+                

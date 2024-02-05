@@ -9,7 +9,7 @@ from port.renderData import PortData
 from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
 from .renderData import HomepageItems
 from django.conf import settings
-from users.models import User_IP_Address,Members
+from users.models import Panel_Members, User_IP_Address,Members
 from users.models import User_IP_Address
 import logging
 from datetime import datetime
@@ -25,7 +25,7 @@ from .models import *
 from django.contrib import messages
 from central_branch.renderData import Branch
 from central_branch import views as cv
-
+from central_events.models import InterBranchCollaborations,IntraBranchCollaborations
 logger=logging.getLogger(__name__)
 
 # Create your views here.
@@ -53,6 +53,7 @@ def homepage(request):
             'media_url':settings.MEDIA_URL,
             'all_member_count':HomepageItems.getAllIEEEMemberCount(),
             'event_count':HomepageItems.getEventCount(),
+            'achievement_count':HomepageItems.getAchievementCount(),
             'recent_news':get_recent_news,
             'recent_blogs':get_recent_blogs,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
@@ -143,6 +144,17 @@ def event_details(request,event_id):
         try:
             get_event = Events.objects.get(id = event_id)
             
+            get_inter_branch_collab=InterBranchCollaborations.objects.filter(event_id=get_event.pk)
+            get_intra_branch_collab=IntraBranchCollaborations.objects.filter(event_id=get_event.pk).first()
+            
+            has_interbranch_collab=False
+            has_intrabranch_collab=False
+            
+            if(len(get_inter_branch_collab) > 0):
+                has_interbranch_collab=True
+            if(get_intra_branch_collab is not None):
+                has_intrabranch_collab=True
+                        
             # get host
             if(get_event.publish_in_main_web):
                 event_banner_image = HomepageItems.load_event_banner_image(event_id=event_id)
@@ -157,6 +169,10 @@ def event_details(request,event_id):
                     'event_banner_image' : event_banner_image,
                     'event_gallery_images' : event_gallery_images,
                     'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+                    'has_interbranch_collab':has_interbranch_collab,
+                    'has_intrabranch_collab':has_intrabranch_collab,
+                    'inter_collaborations':get_inter_branch_collab,
+                    'intra_collab':get_intra_branch_collab,
                 }
                 return render(request,"Events/event_description_main.html", context)
         except Events.DoesNotExist:
@@ -176,7 +192,7 @@ def achievements(request):
     '''This view function loads all achievements'''
 
     try:
-        load_all_achievements=Achievements.objects.all().order_by('-award_winning_year')
+        load_all_achievements=Achievements.objects.all().order_by('-award_winning_datefield__year','-award_winning_datefield__month')
         context={
             'page_title':"Achievements",
             'achievements':load_all_achievements,
@@ -655,10 +671,7 @@ def write_blogs(request):
             'all_sc_ag':load_all_sc_ag,
             'blog_categories':load_all_blog_category,
             'page_title':"Write a Blog",
-            'page_subtitle':"""Empower your voice in the realm of knowledge! 
-                            Dive into the fascinating worlds of science & technology. 
-                            Illuminate the path to a sustainable future through the lens of power and energy.<br>
-                            Let your thoughts spark innovation and ignite conversations – we are waiting for your unique perspective!""",
+            'page_subtitle':"""Unleash your intellect on the realms of science and technology, guiding us towards a sustainable future with your insights on power and energy.""",
             
         }
         return render(request,"Get Involved/Write Blog/write_blog.html",context=context)
@@ -767,9 +780,7 @@ def add_research_form(request):
                     return redirect('main_website:add_research')                   
         context={
             'page_title':"Add Research Papers",
-            'page_subtitle':"""Join the thriving academic community at IEEE NSU Student Branch by sharing your research papers with fellow students and scholars! 
-            Contribute to the collective knowledge pool, showcase your expertise, and collaborate by submitting your work to our platform. 
-            Together, let's make a lasting impact in the world of research and innovation!""",
+            'page_subtitle':"""Participate in the IEEE NSU Student Branch's academic community, share your research papers, and collaborate for impactful innovation.""",
             'research_categories':research_categories,
             'all_sc_ag':load_all_sc_ag,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
@@ -793,6 +804,7 @@ def magazines(request):
         context={
             'page_title':"Magazines",
             'all_magazines':get_all_magazines,
+            'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         }
         return render(request,"Publications/Magazines/magazine.html",context=context)
     
@@ -810,12 +822,17 @@ def gallery(request):
         all_images=GalleryImages.objects.all().order_by('-pk')
         all_videos=GalleryVideos.objects.all().order_by('-pk')
 
+        divided_image = HomepageItems.diving_gallery_images(all_images)
+
         context={
             'page_title':"Gallery",
             'all_images':all_images,
             'all_videos':all_videos,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
-
+            'first_column_images': divided_image[0],
+            'second_column_images': divided_image[1],
+            'third_column_images': divided_image[2],
+            'fourth_column_images': divided_image[3],
         }
         return render(request, 'Publications/Gallery/gallery.html',context=context)
     
@@ -968,7 +985,8 @@ def panel_members_page(request,year):
             'eb':branch_eb,
             'sc_ag_chair':sc_ag_chair,
             'has_current_panel':True,
-            'page_title':f"Executive Panel - {year}"
+            'page_title':f"Executive Panel - {year}",
+            'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         }
         return render(request,'Members/Panel/panel_members.html',context)
     
@@ -1194,8 +1212,25 @@ def member_profile(request, ieee_id):
         try:
             #loading all the teams of Branch
             branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
+            #get current branch position data
             member_data = MDT_DATA.get_member_data(ieee_id=ieee_id)
-            sc_ag_position_data = SC_AG_Members.objects.filter(member=ieee_id)
+            #get current sc_ag position data for all sc_ag
+            sc_ag_position_data = SC_AG_Members.objects.filter(member=ieee_id).order_by('sc_ag__primary')
+
+            #get previous branch position data
+            branch_prev_position_data = PortData.get_branch_previous_position_data(ieee_id)
+            #get previous sc_ag position data for all sc_ag
+            sc_ag_previous_position_data = PortData.get_sc_ag_previous_position_data(request,ieee_id)
+
+            has_branch_prev_position=False
+            if branch_prev_position_data.count() > 0:
+                has_branch_prev_position = True
+
+            has_current_branch_position = True
+            #if there is no current position but there is a previous position then don't display text
+            #otherwise show it
+            if has_branch_prev_position and member_data.team is None:
+                has_current_branch_position = False
 
             context = {
                 'page_title':'Member Details',
@@ -1203,6 +1238,10 @@ def member_profile(request, ieee_id):
                 'member':member_data,
                 'sc_ag_position_data':sc_ag_position_data,
                 'media_url':settings.MEDIA_URL,
+                'has_branch_current_position':has_current_branch_position,
+                'has_branch_prev_position':has_branch_prev_position,
+                'branch_prev_positions':branch_prev_position_data,
+                'sc_ag_prev_positions':sc_ag_previous_position_data,
             }
 
             return render(request, 'Members/Profile/member_profile.html', context)
@@ -1430,10 +1469,10 @@ def mega_event_description_page(request,mega_event_id):
     try:
         mega_event = HomepageItems.get_mega_event(mega_event_id)
         if(mega_event==False):
-            return cv.custom_404
+            return cv.custom_404(request)
         else:
             if(mega_event.publish_mega_event):
-                all_events_of_mega_events = HomepageItems.all_events_of_mega_event(mega_event,mega_event.mega_event_of.primary)
+                all_events_of_mega_events = HomepageItems.all_events_of_mega_event(mega_event)
                 other_mega_event =  HomepageItems.get_other_mega_event(mega_event_id)
             
                 context={
@@ -1443,23 +1482,169 @@ def mega_event_description_page(request,mega_event_id):
                     'media_url':settings.MEDIA_URL,
                     'all_events_of_mega_event':all_events_of_mega_events,
                     'other_mega_event':other_mega_event,
+                    'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
                 }
 
                 return render(request, 'Events/mega_event_description_page.html',context)
             else:
-                return cv.custom_404
+                return cv.custom_404(request)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
     
-# def test_view(request):
-#     #loading all the teams of Branch
-#     branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
-#     context={
-#             'page_title':"Lost?!",
-#             'branch_teams':branch_teams,
-#         }
- 
-#     return render(request,"test.html",context=context)
+def sc_ag_current_panel_members(request,sc_ag_primary):
     
+    # get sc ag
+    sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)
+    
+    # get all the panels of sc ag
+    get_all_panels=Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).order_by('-year')
+
+    # get current panel of sc ag
+    current_panel=PortData.get_sc_ag_current_panel(request=request,sc_ag_primary=sc_ag_primary)
+    
+    context={
+        'has_current_panel':True,
+        'sc_ag':sc_ag,
+        'page_title':"Current Executive Committee",
+        'page_subtitle':sc_ag.group_name,
+        'panels':get_all_panels,
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+        
+    }
+    if(current_panel is not None):
+        get_current_panel_members=PanelMembersData.get_sc_ag_members_from_current_panel(request,sc_ag_primary=sc_ag_primary)
+
+        if get_current_panel_members is not None:
+            sc_ag_faculty_members=[]
+            sc_ag_chair=[]
+            sc_ag_eb_members=[]
+            sc_ag_officer_members=[]
+            sc_ag_volunteer_members=[]
+            
+            for members in get_current_panel_members:
+                if members.position.is_faculty:
+                    sc_ag_faculty_members.append(members)
+                elif members.position.is_sc_ag_eb_member:
+                    if members.position.role=="Chair":
+                        sc_ag_chair.append(members)
+                    else:
+                        sc_ag_eb_members.append(members)
+                elif members.position.is_officer:
+                    sc_ag_officer_members.append(members)
+                elif members.position.is_volunteer:
+                    sc_ag_volunteer_members.append(members)
+            
+            has_faculty_members=False
+            has_chair=False
+            has_eb_members=False
+            has_officer_member=False
+            has_volunteer_member=False
+            
+            if(len(sc_ag_faculty_members)>0):
+                has_faculty_members=True
+            if(len(sc_ag_chair)>0):
+                has_chair=True
+            if(len(sc_ag_eb_members)>0):
+                has_eb_members=True
+            if(len(sc_ag_officer_members)>0):
+                has_officer_member=True
+            if(len(sc_ag_volunteer_members)>0):
+                has_volunteer_member=True
+            
+            context['has_sc_ag_faculty_advisor']=has_faculty_members
+            context['has_branch_chair']=has_chair
+            context['has_branch_eb']=has_eb_members
+            context['has_officer_member']=has_officer_member
+            context['has_volunteer_member']=has_volunteer_member
+            
+            context['sc_ag_faculty_advisors']=sc_ag_faculty_members
+            context['chair']=sc_ag_chair
+            context['eb']=sc_ag_eb_members
+            context['officer_member']=sc_ag_officer_members
+            context['volunteer_members']=sc_ag_volunteer_members
+          
+    else:
+        get_the_latest_panel=Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).order_by('-year').first()
+        return redirect('main_website:sc_ag_panel_members',sc_ag_primary,get_the_latest_panel.pk,get_the_latest_panel.year)
+
+    return render(request,"Members/Panel/SC_AG/sc_ag_panel_members.html",context=context)
+
+
+def sc_ag_panel_members(request,sc_ag_primary,panel_pk,panel_year):
+    
+    # get sc ag
+    sc_ag=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)
+    
+    # get all the panels of sc ag
+    get_all_panels=Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).order_by('-year')
+
+
+    # get the panel
+    get_panel=Panels.objects.get(pk=panel_pk)
+    
+    # get panel_members
+    get_panel_members=PanelMembersData.get_sc_ag_members_from_panel(request,panel_pk)
+    
+    
+    context={
+        'page_title':f"Executive Panel: {panel_year}",
+        'page_subtitle':sc_ag.group_name,
+        'has_current_panel':True,
+        'sc_ag':sc_ag,
+        'panels':get_all_panels,
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
+    }
+    
+    if get_panel_members is not None:
+        sc_ag_faculty_members=[]
+        sc_ag_chair=[]
+        sc_ag_eb_members=[]
+        sc_ag_officer_members=[]
+        sc_ag_volunteer_members=[]
+        
+        for members in get_panel_members:
+            if members.position.is_faculty:
+                sc_ag_faculty_members.append(members)
+            elif members.position.is_sc_ag_eb_member:
+                if members.position.role=="Chair":
+                    sc_ag_chair.append(members)
+                else:
+                    sc_ag_eb_members.append(members)
+            elif members.position.is_officer:
+                sc_ag_officer_members.append(members)
+            elif members.position.is_volunteer:
+                sc_ag_volunteer_members.append(members)
+        
+        has_faculty_members=False
+        has_chair=False
+        has_eb_members=False
+        has_officer_member=False
+        has_volunteer_member=False
+        
+        if(len(sc_ag_faculty_members)>0):
+            has_faculty_members=True
+        if(len(sc_ag_chair)>0):
+            has_chair=True
+        if(len(sc_ag_eb_members)>0):
+            has_eb_members=True
+        if(len(sc_ag_officer_members)>0):
+            has_officer_member=True
+        if(len(sc_ag_volunteer_members)>0):
+            has_volunteer_member=True
+            
+        context['has_sc_ag_faculty_advisor']=has_faculty_members
+        context['has_branch_chair']=has_chair
+        context['has_branch_eb']=has_eb_members
+        context['has_officer_member']=has_officer_member
+        context['has_volunteer_member']=has_volunteer_member
+        
+        context['sc_ag_faculty_advisors']=sc_ag_faculty_members
+        context['chair']=sc_ag_chair
+        context['eb']=sc_ag_eb_members
+        context['officer_member']=sc_ag_officer_members
+        context['volunteer_members']=sc_ag_volunteer_members
+    
+    
+    return render(request,"Members/Panel/SC_AG/sc_ag_panel_members.html",context=context)

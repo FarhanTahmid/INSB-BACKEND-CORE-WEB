@@ -21,11 +21,11 @@
         }
         .card {
             width: 356.625px;
-            height: 497.719px;
+            /*height: 497.719px;*/
             background-color: #ffffff;
             box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
             margin: 20px;
-            border-radius: 15px;
+            border-radius: 6px;
             overflow: hidden;
             position: relative;
             transition: box-shadow 0.3s ease-in-out;
@@ -60,6 +60,7 @@
         .card_content h5 {
             font-size: 24px;
             margin-bottom: 8px;
+            height: 85px;
         }
 
         .card_content span {
@@ -82,13 +83,12 @@
             color: #002855;
         }
         .search_blog{
-            width: 100%;
-            max-width: 1140px;
-            margin: 60px auto 30px auto;
+            max-width: 1150px;
+            margin: 60px auto 10px auto;
             border: 2px solid #fecd13;
-            border-radius: 10px;
+            border-radius: 6px;
             padding: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
           }
           .search_blog input{
         width: 100%;
@@ -98,7 +98,7 @@
         background-color: #fff;
         color: #000;
         transition: all 0.3s;
-        border-radius: 10px;
+        border-radius: 4px;
       }
       .search_blog input:hover{
         background-color: #75787b25;
@@ -124,6 +124,9 @@
         }
     }
     
+    .card_time_writer{
+        height: 50px;
+    }
 
 </style>
 <!-- Search Section -->
@@ -149,10 +152,15 @@
                 </div>
                 <div class="card_content">
                     <a href="{% url 'main_website:blog_description' i.pk %}"><h5>{{i.title}}</h5></a>
-                    <i class="fa-regular fa-clock"></i>
+                    <div class="card_time_writer"><i class="fa-regular fa-clock"></i>
                     <span>{{i.date}}</span>
-                    <i class="fa-solid fa-align-left"></i><span> {{i.writer_name}}</span><br>
-                    <p>{{i.short_description | safe}}</p>
+                    <i class="fa-solid fa-align-left"></i><span> {{i.writer_name}}</span></div>
+                    <span style="display: -webkit-box;
+                    overflow: hidden;
+                    -webkit-box-orient: vertical;
+                    text-overflow: ellipsis;
+                    -webkit-line-clamp: 5;
+                    height: 110px;">{{i.short_description | safe}}</span>
                     <a href="{% url 'main_website:blog_description' i.pk %}">Read More</a>
         
                 </div>

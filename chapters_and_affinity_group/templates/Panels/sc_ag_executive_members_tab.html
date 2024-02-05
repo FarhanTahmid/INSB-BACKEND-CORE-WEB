@@ -139,7 +139,10 @@
             height: auto; /* Maintain aspect ratio */
             border-radius: 5px; /* Add rounded corners if desired */
         }
-        
+        .fix-modal.show{
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
@@ -631,7 +634,7 @@
             <!--Position Edit modals here-->
             {% if panel_edit_access %}
             <!--Create Position Edit Modal-->
-            <div id="m-s-ep" class="modal fade animate" data-backdrop="true">
+            <div id="m-s-ep" class="modal fade animate fix-modal" data-backdrop="true">
                 <form method="POST">
                     {% csrf_token %}
                     <div class="modal-dialog" id="animate">

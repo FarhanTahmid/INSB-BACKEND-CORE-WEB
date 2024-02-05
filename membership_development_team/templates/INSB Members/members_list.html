@@ -245,20 +245,22 @@
       {% endif %}
   </div>
   <!--Messages-->
+    {% if has_view_permission %}
     <div style="justify-content:center;text-align:center;">  
-        <div class="btn-container row">
-          <div style="margin-right:5px;">
-            <a href="{% url 'membership_development_team:export_excel' %}" class="btn btn-outline b-success text-success">Generate an Excel Sheet of All Registered INSB Members</a>
-          </div>
-          <div>
-            <form method="POST">
-              {% csrf_token %}
-              <input type="submit" name="refresh_member_status" class="btn btn-outline b-info text-info" value="Refresh Membership Status of INSB Members">
-            </form>          
-          </div>
-        
+      <div class="btn-container row">
+        <div style="margin-right:5px;">
+          <a href="{% url 'membership_development_team:export_excel' %}" class="btn btn-outline b-success text-success">Generate an Excel Sheet of All Registered INSB Members</a>
         </div>
-    </div>
+        <div>
+          <form method="POST">
+            {% csrf_token %}
+            <input type="submit" name="refresh_member_status" class="btn btn-outline b-info text-info" value="Refresh Membership Status of INSB Members">
+          </form>          
+        </div>
+      
+      </div>
+  </div>
+    {% endif %}
 
 
 <div style="justify-content:center;text-align:center; margin-top:30px;">  

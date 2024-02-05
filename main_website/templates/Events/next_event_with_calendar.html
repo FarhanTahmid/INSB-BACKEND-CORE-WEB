@@ -111,6 +111,14 @@
     max-height: 260px;
     object-fit: cover;
 }
+.slide-show{
+  width: 640px;
+}
+@media screen and (max-width: 1270px){
+  .slide-show{
+    width: 50vw!important;
+  }
+}
 @media screen and (max-width: 966px){
 .event_container {
     grid-template-columns: auto;
@@ -120,7 +128,7 @@
   margin: 35px 0px 20px 0px;
 }
 .slide-show{
-  width: 95vw;
+  width: 95vw!important;
 }
 }
 
@@ -131,7 +139,7 @@
       <div class="event_container">
           
           <div class="upnext">
-              <h4 style="margin-bottom: 30px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">UP N</span>EXT</h4>
+              <h4 style="margin-bottom: 30px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">LATEST EV</span>ENTS</h4>
               {% comment %} <img style="border: 1px solid rgb(205, 193, 193); padding: 5px; border-radius: 6px;" src="https://ieeensusb.org/wp-content/uploads/2021/03/157705762_257718782652594_8108325620051204445_n.jpg" width="100%" height="100%" alt=""> {% endcomment %}
               <!-- SLIDER EVENT FR -->
               <div class="slide-show">

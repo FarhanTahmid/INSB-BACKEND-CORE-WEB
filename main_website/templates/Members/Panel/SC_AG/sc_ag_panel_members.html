@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Panels - {{sc_ag.group_name}}</title>
+    <link rel="icon" href="{% static 'upload/logo.gif' %}"/>
+
+    <!--Common CSS-->
+    {% block common_css %}
+        {% include "common_css_includes.html" %}
+    {% endblock common_css %}
+
+
+
+    <style>
+        /* hover effects */
+        .card.testimonial-card {
+            transition: transform 2s ease;
+        }
+
+        .card.testimonial-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(5, 2, 17, 1)22;
+
+            transition: background-color 1s ease;
+        }
+        .card.testimonial-card .icon-gray {
+            color: #000000; /* Change to your desired icon hover color */
+        }
+
+        .card.testimonial-card:hover .icon-gray {
+            color: #333; /* Change to your desired icon hover color */
+        }
+        h3{
+            color:#00629B;
+        }
+        .gdlr-header-inner,
+        .gdlr-header-wrapper.header-style-2-wrapper .gdlr-header-inner-overlay {
+            background-color: 	#002855;
+        }
+
+        .gdlr-header-wrapper.header-style-3-wrapper,
+        .gdlr-header-wrapper.header-style-7-wrapper {
+            background-color: #002855;
+        }
+
+        .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+            background-color: #002855;
+        }
+
+        @media only screen and (max-width: 767px) {
+            .gdlr-header-wrapper.header-style-5-wrapper {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-6-wrapper {
+                background-color: #002855;
+            }
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button {
+            background-color: #002855;
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button:hover, #gdlr-responsive-navigation.dl-menuwrapper button.dl-active, #gdlr-responsive-navigation.dl-menuwrapper ul {
+            background-color: #002855;
+        }
+        .dl-menuwrapper li a {
+            display: block;
+            position: relative;
+            padding: 15px 20px;
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 300;
+            color: #fff;
+            outline: none;
+        }
+        .dl-menuwrapper li.dl-back:after, .dl-menuwrapper li > a:not(:only-child):after {
+            position: absolute;
+            top: 0;
+            line-height: 50px;
+            font-family: 'FontAwesome';
+            speak: none;
+            -webkit-font-smoothing: antialiased;
+            content: "\f105";
+            font-size: 16px;
+            color: #ffffff;
+        }
+        a{
+            text-decoration:none;
+        }
+    </style>
+
+</head>
+
+<body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+    <div class="body-wrapper  float-menu">
+        
+        <!--Navbar-->
+        {% block header %}
+            {% include 'header.html' %}
+        {% endblock header %}
+        
+        <!--Wave design-->
+        {% block wave_design %}
+            {% include 'wave.html' %}
+        {% endblock wave_design %}
+
+    <section>
+        <div class="container mt-5" style="margin-bottom:20vh;">
+            
+            <!--Link Tabs-->
+            {% block panel_tabs %}
+                {% include "Members/Panel/SC_AG/panel_members_link_tabs.html" %}
+            {% endblock panel_tabs %}
+
+            {% if has_current_panel %}
+
+                <!--Chapter Advisors starts-->
+                {% if has_sc_ag_faculty_advisor %}
+                    {% block sc_ag_faculty_advisors %}
+                        {% include "Members/Panel/SC_AG/faculty_advisor_section.html" %}
+                    {% endblock sc_ag_faculty_advisors %}
+                {% endif %}
+
+                <!--Chapter EB starts-->
+                {% if has_branch_chair %}
+                    {% block panel_member_branch_eb %}
+                        {% include "Members/Panel/SC_AG/eb_section.html" %}
+                    {% endblock panel_member_branch_eb %}
+                {% endif %}
+                
+                <!--Branch EB Ends-->
+
+                <!--Chapter officers-->
+                {% if has_officer_member %}
+                    {% block panel_member_officers %}
+                        {% include "Members/Panel/SC_AG/officer_section.html" %}
+                    {% endblock panel_member_officers %}
+                {% endif %}
+                <!--Chapter Chairs ends-->
+                {% if has_volunteer_member %}
+                    {% block panel_member_volunteers %}
+                        {% include "Members/Panel/SC_AG/volunteer_section.html" %}
+                    {% endblock panel_member_volunteers %}
+                {% endif %}
+            {% endif %}
+
+          </div>
+    </section>
+
+        
+    <!--Footer-->
+    {% block footer %}
+    {% include "footer_block.html" %}
+    {% endblock footer %}
+
+    </div>
+    <!-- body-wrapper -->
+    {% block common_js %}
+        {% include "common_js_includes.html" %}
+    {% endblock %}
+
+</body>
+
+</html>

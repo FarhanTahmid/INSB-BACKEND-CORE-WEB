@@ -35,6 +35,7 @@ urlpatterns = [
     
     #WEBSITE Management URL Path
     path('manage_website/homepage',views.manage_website_homepage,name="manage_website_home"),
+    path('manage_website/homepage/update/<int:pk>',views.manage_website_homepage_top_banner_update,name="manage_website_home_top_banner_update"),
     path('manage_website/homepage/volunteer_of_the_month/<int:pk>',views.update_volunteer_of_month,name="update_vom"),
     path('manage_website/achievements',views.manage_achievements,name="manage_achievements"),
     path('manage_website/achievements/update/<int:pk>',views.update_achievements,name="achievements_update"),

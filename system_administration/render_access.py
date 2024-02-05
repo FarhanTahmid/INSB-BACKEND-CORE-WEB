@@ -1,4 +1,4 @@
-from port.models import Roles_and_Position,Teams,Chapters_Society_and_Affinity_Groups
+from port.models import Chapters_Society_and_Affinity_Groups,Panels
 from users.models import Members,Panel_Members
 from chapters_and_affinity_group.models import SC_AG_Members
 from django.contrib.auth .models import User
@@ -141,9 +141,36 @@ class Access_Render:
     def system_administrator_staffuser_access(username):
         try:
             access=User.objects.get(username=username)
-            if(access.is_staff()):
+            if(access.is_staff):
                 return True
             else:
                 return False
         except:
             return False
+    
+    def belongs_to_sc_ag_panels(username):
+        try:
+            # get current panels of all sc_ags
+            current_panels=Panels.objects.filter(current=True).exclude(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
+
+            member_instances=[]
+            
+            for i in current_panels:
+                member=Panel_Members.objects.filter(member=Members.objects.get(ieee_id=username),tenure=Panels.objects.get(pk=i.pk))
+                if member.exists():
+                    member_instances.append(member)
+
+            if(len(member_instances)>0):
+                for member in member_instances:
+                    for i in member:
+                        if i.position.is_sc_ag_eb_member:
+                            return True
+                        else:
+                            return False
+            else:
+                return False
+        except:
+            return False
+    
+                
+            

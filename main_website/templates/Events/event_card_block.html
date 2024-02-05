@@ -101,7 +101,11 @@
                                     <div class="clear"></div>
                                 </div>
 
-                                <h3 class="gdlr-blog-title event_name"><a href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}">{{key.event_name}}</a></h3>
+                                <h3 class="gdlr-blog-title event_name" style="display: -webkit-box;
+                                overflow: hidden;
+                                -webkit-box-orient: vertical;
+                                text-overflow: ellipsis;
+                                -webkit-line-clamp: 2;"><a href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}" alt="{{key.event_name}}">{{key.event_name}}</a></h3>
                                 <div class="clear"></div>
                             </header>
                             <!-- entry-header -->
@@ -110,7 +114,7 @@
                             overflow: hidden;
                             -webkit-box-orient: vertical;
                             text-overflow: ellipsis;
-                            -webkit-line-clamp: 2;">
+                            -webkit-line-clamp: 1;">
                                 <p class="card-text">{{key.event_description | safe }}</p>
                             </div>
                             <a href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}" class="excerpt-read-more">Read More</a>

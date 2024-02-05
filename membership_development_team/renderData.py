@@ -5,10 +5,12 @@ from port.models import Teams,Roles_and_Position
 from system_administration.models import MDT_Data_Access
 from system_administration.render_access import Access_Render
 from datetime import date
-from datetime import datetime
+from datetime import datetime,timedelta,time
 from central_branch import renderData
-
-
+from django_celery_beat.models import ClockedSchedule,PeriodicTask
+import json
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 class MDT_DATA:
     
     def get_member_data(ieee_id):
@@ -392,6 +394,44 @@ class MDT_DATA:
         if(len(co_ordinators)>0):
             return co_ordinators[0]
         return False
-        
-            
+    
+    def wish_members_birthday(self):
 
+        '''This function will run everday at 12:00 am to check which members
+        have birthday on the following day to greet them'''
+        #gettting todays date
+        today = datetime.now()
+        #getting all members
+        all_members = Members.objects.all()
+        #creating instance of schedule 
+
+        for members in all_members:  
+            if members.date_of_birth:
+                #only getting registered if there are birthdays tomorrow
+                if members.date_of_birth.day == today.day and members.date_of_birth.month == today.month:
+                    #providing email details
+                    subject="Birthday Greetings from IEEE NSU Student Branch."
+                    mail_body =f"""
+                    
+Dear {members.name},
+
+Wishing you a very happy birthday on behalf of IEEE NSU Student Branch. On your birthday we wish you all the success and happiness on your upcoming future and prospects.
+
+Birthdays are always special for every individual and having your grace brings not only bliss but your contributions are what makes IEEE NSU SB thrive for more. May it be a joyful celebration of your achievements and a reminder of the positive impact you've made. Wishing you continued success, happiness, and fulfillment in every step of your journey.
+Enjoy every moment of your special day and make wonderful memories that will last a lifetime. Here's to another year of growth, friendship, and success!
+
+Once again,
+Happy Birthday! 🎉🎂
+
+Best regards,
+From every individuals of IEEE NSU SB community."""
+
+                    email_list = []
+                    email_list.append(members.email_nsu)
+                    email_list.append(members.email_personal)
+                    email_from = settings.EMAIL_HOST_USER
+                    email = EmailMultiAlternatives(subject,mail_body,
+                                email_from,
+                                email_list,
+                                )
+                    email.send()

@@ -27,9 +27,10 @@ class Recruitment:
     
     
     
-    def getSessionid(session_name):
-        """Returns the id of the session"""
-        return{'session':recruitment_session.objects.filter(session=session_name).values('id')}
+    def getSessionid(session_id):
+        """Returns the session"""
+        print(session_id)
+        return recruitment_session.objects.get(id=session_id)
     
     
     
@@ -123,22 +124,20 @@ class Recruitment:
             get_session=recruitment_session.objects.get(id=session)
             session_code='0'
             if('Spring' in get_session.session):
-                session_code='1'
+                session_code='a'
             elif('Summer' in get_session.session):
-                session_code='2'
+                session_code='b'
             elif('Fall' in get_session.session):
-                session_code='3'
+                session_code='c'
             
-            session_unique_code=session_code+(get_session.session[-4:])
-            nsu_id_code=nsu_id[3:7]
-            security_code=Recruitment.generate_random_string(length=4)
-            unique_code=nsu_id_code+security_code+session_unique_code
+            session_unique_code=(get_session.session[-2:])+session_code
+            nsu_id_code=nsu_id[:3]
+            security_code=Recruitment.generate_random_string()
+            unique_code=nsu_id_code+session_unique_code+str(security_code)
             return unique_code
             
         except Exception as e:
             print(e)
 
-    def generate_random_string(length=4):
-        characters = string.ascii_letters + string.digits
-        random_string = ''.join(random.choice(characters) for _ in range(length))
-        return random_string
+    def generate_random_string():
+        return random.randint(100, 999)
