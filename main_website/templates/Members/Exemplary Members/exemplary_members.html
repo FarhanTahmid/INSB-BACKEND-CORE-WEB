@@ -4,154 +4,80 @@
 
 <head>
 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>All Members - IEEE NSU SB</title>
     <link rel="icon" href="{% static 'upload/logo.gif' %}"/>
-    <!-- <meta name="mobile-web-app-capable" content="yes"> -->
+    <meta name="mobile-web-app-capable" content="yes">
+
     <!--Common CSS-->
     {% block common_css %}
         {% include "common_css_includes.html" %}
     {% endblock common_css %}
 
+    <!--Extra CSS-->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
     <style>
-        .card_section{
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        font-family: 'Poppins' , sans-serif;
-        flex-wrap: wrap;
-        width: 90%;
-        gap: 30px;
-        max-width: 1140px;
-        margin: 50px auto;
-    }
-    .container-card{
-        width: 505px;
-        background:linear-gradient(45deg, #00629bb5, #e2f4ff,#00629ba9,#00629bb5, #e2f4ff);
-        border-radius: 30px 3px 30px 3px;
-        display: flex;
-        flex-direction: column;
-        padding: 10px;
-        height: auto;
-        overflow: hidden;
-    }
-    .profile{
-        width: 100%;
-        /* height: 200px; */
-        border-radius: 20px 0px 0px 3px;
-        overflow: hidden;
-    }
-    .profile img{
-        object-fit: cover;
-        object-position: center;
-        width: 100%;
-        height: 100%;
-        transition: all 0.5s;
-    }
-    .profile:hover img{
-        scale: 1.1;
-    }
-    .info{
-        /* width: 250px; */
-        background: rgba(255, 255, 255, 0.466);
-        backdrop-filter: blur(40px);
-        /* border-radius: 0 0 2px 2px; */
-        border-radius: 0 0 20px 2px;
-        border: 1px solid rgba(255, 255, 255, 0.73);
-        padding: 10px 10px;
-
-    }
-    /* Define keyframes for the animation */
-@keyframes slideDown {
-    0% {
-        opacity: 0;
-        transform: scaleY(0);
-    }
-    100% {
-        opacity: 1;
-        transform: scaleY(1);
-    }
-}
-
-/* Apply the animation to the expanded class */
-.achievements {
-    display: none; /* Hidden by default */
-}
-
-    .achievements{
-        margin-top: 10px;
-        /* width: 250px; */
-        background: rgba(255, 255, 255, 0.466);
-        backdrop-filter: blur(40px);
-        /* border-radius: 0 0 2px 2px; */
-        border-radius: 0 0 20px 2px;
-        border: 1px solid rgba(255, 255, 255, 0.73);
-        padding: 10px 10px;
-        overflow: hidden;
-        display: none; /* Hidden by default */
-        transition: height 0.7s ease-in-out; /* Smooth transition */
-
-    }
-    /* Define keyframes for the animation */
-    /* Define keyframes for the animation */
-    
-
-    /* Apply the animation to the expanded class */
-    .achievements.expanded {
-        display: block;
-        /* Add animation to the expanded class */
-    }
-
-    .info h3{
-        padding: 0;
-        font-size: 18px;
-        font-weight: bold;
-    }
-    .info p{
-        font-size: 13px;
-    }
-    .info p , .info h3{
-        color: rgba(0, 0, 0, 0.822);
-    }
-    .info i{
-        color:	#75787B;
-        font-size: 20px;
-        transition: all 0.5s;
-    }
-    .info i:hover{
-        color: #000;
-    }
-    .view_achievement{
-        color: #002855;
-        transition: all 0.5s;
-    }
-    .view_achievement:hover{
-        color: 	#000;
-    }
-    .info a{
-        text-decoration: none;
-        color: black;
-    }
-
-    .card-wrap{
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .card.expanded {
-        height: auto;
-    }
-
-    @media screen and (max-width:400px) {
-        .card_section{
-
+        .gdlr-header-inner,
+        .gdlr-header-wrapper.header-style-2-wrapper .gdlr-header-inner-overlay {
+            background-color: 	#002855;
         }
-        .card-wrap{
-            grid-template-columns: 1fr;
+
+        .gdlr-header-wrapper.header-style-3-wrapper,
+        .gdlr-header-wrapper.header-style-7-wrapper {
+            background-color: #002855;
         }
-    }
+
+        .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+            background-color: #002855;
+        }
+
+        @media only screen and (max-width: 767px) {
+            .gdlr-header-wrapper.header-style-5-wrapper {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-6-wrapper {
+                background-color: #002855;
+            }
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button {
+            background-color: #002855;
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button:hover, #gdlr-responsive-navigation.dl-menuwrapper button.dl-active, #gdlr-responsive-navigation.dl-menuwrapper ul {
+            background-color: #002855;
+        }
+        .dl-menuwrapper li a {
+            display: block;
+            position: relative;
+            padding: 15px 20px;
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 300;
+            color: #fff;
+            outline: none;
+        }
+        .dl-menuwrapper li.dl-back:after, .dl-menuwrapper li > a:not(:only-child):after {
+            position: absolute;
+            top: 0;
+            line-height: 50px;
+            font-family: 'FontAwesome';
+            speak: none;
+            -webkit-font-smoothing: antialiased;
+            content: "\f105";
+            font-size: 16px;
+            color: #ffffff;
+        }
+        a{
+            text-decoration:none;
+        }
     </style>
 </head>
 
@@ -167,39 +93,51 @@
         {% endblock wave_design %}
 
         <!--Start adding from here-->
-        <section class="card_section">
-            {% for i in exemplary_members %}
-            <div class="container-card">
-                <div class="card-wrap">
-        
-                    <div class="profile"><img src="/media_files/{{i.member_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="{{i.member_name}} profile"></div>
-                    <div class="info">
-                    <h3>{{i.member_name}}</h3>
-                    <p><b>{{i.former_position}} {{i.activity_year}}</b></p>
-                    <p>{{i.current_activity}}</p>
-                    <p>
-                        {% if i.facebook_account_link %}
-                        <a href="{{i.facebook_account_link}}"><i class="fa-brands fa-facebook"></i></a>
-                        {% endif %}
-                        {% if i.email %}
-                        <a href="mailto:{{i.email}}"><i class="fa-solid fa-envelope"></i></a>
-                        {% endif %}
-                    </p>
-                    <p><b><a href="#" onclick="expandCard(event)" class="view_achievement">View Achievements</a></b></p>
 
+        <div class="container my-5">
+            <div class="row m-0">
+                {% for i in exemplary_members %}
+                <div class="col-md-6 my-3">
+                    <div class="border rounded shadow">
+                        <div class="row m-0 p-3" style="background-color: #3780d3;">
+                            <div class="col-md-4 d-flex align-items-center">
+                                <img class="img-fluid rounded-circle shadow" src="/media_files/{{i.member_picture}}" alt="">
+                            </div>
+                            <div class="col-md-8 mt-2">
+                                <h3 class="fw-bold text-capitalize  text-white">{{i.member_name}}</h3>
+                                <h6 class="fw-bold text-light mt-4">{{i.former_position}} {{i.activity_year}}</h6>
+                                <h6 class="text-light">{{i.current_activity}}</h6>
+
+                                <div class="my-4">
+                                    <a class="h4 me-2 text-light" href="{{i.facebook_account_link}}"><i class="fa-brands fa-facebook"></i></a>
+                                    <a class="h4 me-2 text-light" href="mailto:{{i.email}}"><i class="fa-solid fa-envelope"></i></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion" id="accordion_{{ forloop.counter }}">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-heading{{ forloop.counter }}">
+                                    <button style="background-color: #f0f0f1;" class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#member_{{ forloop.counter }}" aria-expanded="false" aria-controls="member_{{ forloop.counter }}">
+                                        View Some Achievements
+                                    </button>
+                                </h2>
+                                <div id="member_{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading{{ forloop.counter }}">
+                                    <div class="accordion-body">
+                                        {{ i.achievements | safe }}                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
-                <div class="achievements">
-                    {{ i.achievements | safe }}
-                </div>
-            </div>
-            {% endfor %}
-        </section>
-
+                {% endfor %}
                 
 
+                <!-- Just add more div here with class="col-md-6 my-3"-->
+            </div>
 
+        </div>
 
         {% block footer %}
             {% include "footer_block.html" %}
@@ -210,39 +148,5 @@
         {% include "common_js_includes.html" %}
     {% endblock %}
 </body>
-<script>
-    function expandCard(event) {
-        // Prevent the default behavior of the link
-        event.preventDefault();
-        
-        // Get the parent container of the clicked link
-        var container = event.target.closest('.container-card');
-        // Get the achievements div inside the container
-        var achievementsDiv = container.querySelector('.achievements');
-    
-        // Toggle the 'expanded' class to control the height
-        if (achievementsDiv.classList.contains('expanded')) {
-            // If already expanded, collapse smoothly
-            achievementsDiv.style.height = achievementsDiv.scrollHeight + 'px'; // Set height to current height
-            setTimeout(function() {
-                achievementsDiv.style.height = 0; // Set height to 0 after a short delay
-                achievementsDiv.classList.remove('expanded'); // Remove the 'expanded' class
-            }, 10); // Delay to ensure transition starts smoothly
-        } else {
-            // If not expanded, expand smoothly
-            var height = achievementsDiv.scrollHeight;
-            achievementsDiv.style.height = height + 'px'; // Set the height explicitly to start transition
-            achievementsDiv.classList.add('expanded'); // Add the 'expanded' class
-    
-            // Delay to allow browser to apply the class and transition
-            setTimeout(function() {
-                achievementsDiv.style.height = ''; // Reset height to auto to allow CSS transition
-            }, 10); // Delay to ensure transition starts smoothly
-        }
-    }
-    
-    
-</script>
-
 
 </html>
