@@ -60,7 +60,6 @@
         .card_content h5 {
             font-size: 24px;
             margin-bottom: 8px;
-            height: 85px;
         }
 
         .card_content span {
@@ -89,6 +88,8 @@
             border-radius: 6px;
             padding: 5px;
             box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+            display: grid;
+            grid-template-columns: 3fr 1fr;
           }
           .search_blog input{
         width: 100%;
@@ -102,6 +103,21 @@
       }
       .search_blog input:hover{
         background-color: #75787b25;
+      }
+      .search_blog select{
+        border-radius: 5px;
+        border: 1px solid #75787b80;
+        padding: 10px;
+        transition: all 0.3s;
+        font-size: 15px;
+        color: #000;
+        font-weight: 400;
+        text-transform: capitalize;
+      }
+      .search_blog select option{
+        font-size: 15px;
+        color: #000;
+        font-weight: 400;
       }
       @media screen and (max-width: 1200px) {
         .search_blog {
@@ -124,9 +140,6 @@
         }
     }
     
-    .card_time_writer{
-        height: 50px;
-    }
 
 </style>
 <!-- Search Section -->
@@ -139,6 +152,12 @@
     placeholder="Search Blogs.."
     title="Type in a name"
     />
+    <select name="filter">
+        <option value="date_latest" selected>Date Latest</option>
+        <option value="date_oldest">Date Oldest</option>
+        <option value="name">Name</option>
+        <option value="category">Category</option>
+    </select>
 </div>
 
 <!-- Cards starts here -->
@@ -146,7 +165,7 @@
     <div>
         <div class="card_container">
             {% for i in blogs %}
-            <div class="card">
+            <div class="card" data-category="{{ i.category }}">
                 <div class="image">
                     <a href="{% url 'main_website:blog_description' i.pk %}"><img src="media_files/{{i.blog_banner_picture}}" alt="blog_thumbnail"></a>
                 </div>
@@ -155,12 +174,12 @@
                     <div class="card_time_writer"><i class="fa-regular fa-clock"></i>
                     <span>{{i.date}}</span>
                     <i class="fa-solid fa-align-left"></i><span> {{i.writer_name}}</span></div>
+                    <i class="fa-regular fa-folder" style="font-size: 18px;"></i><span>Category- {{i.category}}</span>
                     <span style="display: -webkit-box;
                     overflow: hidden;
                     -webkit-box-orient: vertical;
                     text-overflow: ellipsis;
-                    -webkit-line-clamp: 5;
-                    height: 110px;">{{i.short_description | safe}}</span>
+                    -webkit-line-clamp: 5;">{{i.short_description | safe}}</span>
                     <a href="{% url 'main_website:blog_description' i.pk %}">Read More</a>
         
                 </div>
@@ -191,6 +210,57 @@
             }
         }
     }
+
+    // Add event listener to the select dropdown
+    document.querySelector("select[name='filter']").addEventListener("change", function() {
+        var filter = this.value;
+        var cardContainer = document.querySelector(".card_container");
+        var cards = Array.from(cardContainer.getElementsByClassName("card"));
+
+        switch(filter) {
+            case 'date_latest':
+                cards.sort(function(a, b) {
+                    return new Date(b.querySelector(".card_time_writer span").innerText) - new Date(a.querySelector(".card_time_writer span").innerText);
+                });
+                break;
+            case 'date_oldest':
+                cards.sort(function(a, b) {
+                    return new Date(a.querySelector(".card_time_writer span").innerText) - new Date(b.querySelector(".card_time_writer span").innerText);
+                });
+                break;
+            case 'name':
+                cards.sort(function(a, b) {
+                    var titleA = a.querySelector("h5").innerText.toUpperCase();
+                    var titleB = b.querySelector("h5").innerText.toUpperCase();
+                    if (titleA < titleB) {
+                        return -1;
+                    }
+                    if (titleA > titleB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+                break;
+            case 'category':
+                cards.sort(function(a, b) {
+                    var categoryA = a.getAttribute('data-category').toUpperCase();
+                    var categoryB = b.getAttribute('data-category').toUpperCase();
+                    if (categoryA < categoryB) {
+                        return -1;
+                    }
+                    if (categoryA > categoryB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+                break;
+        }
+
+        // Reorder cards in the container
+        cards.forEach(function(card) {
+            cardContainer.appendChild(card);
+        });
+    });
 </script>
 
 
