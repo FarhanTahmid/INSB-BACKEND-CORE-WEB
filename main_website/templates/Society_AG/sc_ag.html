@@ -390,7 +390,7 @@
                     <div style="border-radius: 7px;" class="col-lg-4 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box_mega mega_event">
                         <article id="post-2255"
                             class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
-                            <div class="gdlr-standard-style">
+                            <div class="gdlr-standard-style" style="height: 400px;">
                                 <div class="gdlr-blog-thumbnail">
                                     <a href="{% if events.id %}{% url 'main_website:mega_event_description_page' events.id %}{% endif %}"> <img
                                             class="article-image"
@@ -408,7 +408,11 @@
                                             <div class="clear"></div>
                                         </div>
 
-                                        <h3 class="gdlr-blog-title event_name"><a href="{% if  events.id %}{% url 'main_website:mega_event_description_page'  events.id  %}{% endif %}">{{events.super_event_name}}</a></h3>
+                                        <h3 class="gdlr-blog-title event_name" style="display: -webkit-box;
+                                        overflow: hidden;
+                                        -webkit-box-orient: vertical;
+                                        text-overflow: ellipsis;
+                                        -webkit-line-clamp: 2;"><a href="{% if  events.id %}{% url 'main_website:mega_event_description_page'  events.id  %}{% endif %}" id="gdlr-blog-title">{{events.super_event_name}}</a></h3>
                                         <div class="clear"></div>
                                     </header>
                                     <!-- entry-header -->
@@ -455,7 +459,7 @@
                         <article id="post-2255"
                             class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style"
                             style="border: 1px solid black;">
-                            <div class="gdlr-standard-style">
+                            <div class="gdlr-standard-style" style="height: 400px;">
                                 <div class="gdlr-blog-thumbnail">
                                     <a href="{% url 'main_website:event_details' events.id %}">
                                         <img class="article-image"
@@ -476,7 +480,11 @@
                                             <div class="clear"></div>
                                         </div>
 
-                                        <h3 class="gdlr-blog-title event_name">
+                                        <h3 class="gdlr-blog-title event_name" style="display: -webkit-box;
+                                        overflow: hidden;
+                                        -webkit-box-orient: vertical;
+                                        text-overflow: ellipsis;
+                                        -webkit-line-clamp: 2;">
                                             <a href="{% url 'main_website:event_details' events.id %}"  id="gdlr-blog-title">{{events.event_name}}</a>
                                         </h3>
                                         <div class="clear"></div>
