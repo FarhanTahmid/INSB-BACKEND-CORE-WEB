@@ -21,7 +21,7 @@
                     type="text"
                     autocomplete="off"
                     required
-                    name="event_name"/>
+                    name="content_title"/>
             </div>
 
 
@@ -42,7 +42,6 @@
                 type="url"
                 autocomplete="off"
                 id="field1"
-                value="{{drive_link_of_documents.documents_link}}"
                 name="drive_link_of_documents"/>
             </div>
 
@@ -62,34 +61,13 @@
               <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
           </div>
 
-          <!--save button-->
-          <div class="form-group text-center">
-            <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
-          </div>
-
            <hr>
 
-        
-          <!--files-->
-          <div flex-direction="column" justify-content="flex-end">
-              <label>Files:</label>
-              {% for document in documents %}
-              <div class="row container-fluid bg-light mt-3" style="margin:auto;">
-                  <div class="col-sm-11 text-left">
-                      <a href="{{media_url}}{{document.document}}" class="btn btn-link btn-block" target="_blank" rel="noopener noreferrer">{{document.document}}</a>
-                  </div>
-                  <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                      <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{document.pk}}')">✖</button>
-                  </div>
-              </div>
-              {% endfor %}
-          </div>
 
-            <!--save delete button-->
-            <div style="text-align: right;">
-                <input type="submit" name="save_content" class="btn btn-outline b-success text-success mb-2" value="Save">
-                <button type="button" class="btn btn-outline b-danger text-danger mb-2" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{document.pk}}')">Delete</button>
-            </div>
+          <!--create button-->
+          <div class="form-group text-center">
+            <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Create</button>
+          </div>
         </div>
         </form>
   </div>
@@ -156,7 +134,7 @@
       // Update the container with selected document links
       for (var i = 0; i < inputFiles.length; i++) {
           var documentLink = document.createElement('a');
-          documentLink.href = '#'; // Set the link href accordingly
+          //documentLink.href = '#'; // Set the link href accordingly
           documentLink.className = 'btn btn-link btn-block';
           documentLink.textContent = inputFiles[i].name;
           selectedDocumentsContainer.appendChild(documentLink);

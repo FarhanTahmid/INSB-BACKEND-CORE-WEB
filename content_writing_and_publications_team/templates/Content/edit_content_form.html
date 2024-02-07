@@ -124,6 +124,11 @@
               <li>Make sure to save any changes made instantly to prevent data loss</li>
             </ol>
 
+            <!--Tab view-->
+            {% block edit_content_form_tab %} 
+             {% include "Content/edit_content_form_tab.html" %} 
+            {% endblock edit_content_form_tab %}
+
             <!-- {% for message in messages %} -->
             <div
               class="alert alert-success alert-dismissible fade show"

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from central_events.forms import EventForm
 from central_events.models import Events
 from content_writing_and_publications_team.manage_access import CWPTeam_Render_Access
-from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
+from content_writing_and_publications_team.models import Content_Team_Content, Content_Team_Document, Content_Team_Documents_Link
 from insb_port import settings
 from port.renderData import PortData
 from users.models import Members
@@ -311,8 +311,28 @@ def event_form_add_notes(request,event_id):
         return cv.custom_500(request)
 
 def content_page(request):
-        return render(request,"Content/content_page.html")
+        all_contents = Content_Team_Content.objects.all()
+
+        context = {
+            'all_contents':all_contents
+        }
+
+        return render(request,"Content/content_page.html",context)
 def create_content_form(request):
+        
+        if request.method == 'POST':
+            title = request.POST.get('content_title')
+            description = request.POST.get('content_description_details')
+            documents_link = request.POST.get('drive_link_of_documents')
+
+            new_content = Content_Team_Content(title=title,description=description,documents_link=documents_link)
+            new_content.save()
+
+            if request.FILES.get('document'):
+                documents = request.FILES.getlist('document')
+
+            return redirect('content_writing_and_publications_team:content_page')
+
         return render(request,"Content/create_content_form.html")
 def create_content_form_add_notes(request):
         return render(request,"Content/create_content_form_add_notes.html")
