@@ -524,6 +524,7 @@ def events_for_sc_ag(request,primary):
     try:
 
         all_events = HomepageItems.load_all_events(request,True,primary)
+        all_mega_events=HomepageItems.get_all_mega_events(primary=primary)
         latest_five_events = HomepageItems.load_all_events(request,False,primary)
         date_and_event = HomepageItems.get_event_for_calender(request,primary)
         upcoming_event = HomepageItems.get_upcoming_event(request,primary)
@@ -557,6 +558,7 @@ def events_for_sc_ag(request,primary):
             'page_title': 'Events',
             'page_subtitle':society.short_form,
             'all_events':all_events,
+            'all_mega_events':all_mega_events,
             'media_url':settings.MEDIA_URL,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'latest_five_event':latest_five_events,
