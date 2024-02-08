@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from users.models import Members
 from port.models import Teams,Roles_and_Position
 from system_administration.models import CWP_Data_Access
-from .models import Content_Notes, Content_Team_Document, Content_Team_Documents_Link
+from .models import Content_Notes, Content_Team_Content, Content_Team_Content_Document, Content_Team_Document, Content_Team_Documents_Link
 import logging
 import traceback
 from system_administration.system_error_handling import ErrorHandling
@@ -198,5 +198,19 @@ class ContentWritingTeam:
         except Exception as e:
             ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            return False       
+            return False 
+
+    def create_content(title, description, documents_link, documents):
+        try:
+            new_content = Content_Team_Content(title=title,description=description,documents_link=documents_link)
+            new_content.save()
+
+            if documents:
+                for document in documents:
+                    Content_Team_Content_Document.objects.create(content_id=new_content, document=document)
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
         

@@ -1,4 +1,5 @@
-{% load static %} {% block edit_content_form_add_notes_content %}
+{% load static %} 
+{% block edit_content_form_add_notes_content %}
 <!-- CKEditor CDN -->
 <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
 <style>
@@ -63,13 +64,14 @@
             <!--added captions-->
           <label>Captions:</label>
           
+          {% for caption in captions %}
           <div class="row container-fluid bg-light mt-3" style="margin: auto">
             <div class="col-sm-11">
               <a
                 href="#"
                 class="btn btn-link btn-block"
                 data-toggle="modal"
-                data-target="#EditCaptionModal_{{note.pk}}">Sample</a>
+                data-target="#EditCaptionModal_{{caption.pk}}">{{caption.title}}</a>
             </div>
             <div class="col-sm-1 d-flex align-items-center justify-content-center">
                 <!--delete caption button-->
@@ -79,10 +81,11 @@
                 aria-label="Close"
                 data-toggle="modal"
                 data-target="#ConfirmDeleteModal"
-                onclick="openModal('{{note.pk}}')">
+                onclick="openModal('{{caption.pk}}')">
                 ✖ </button>
             </div>
           </div>
+          {% endfor %}
           
         </div>
 
@@ -129,6 +132,13 @@
               name="title"
               value=""
             />
+            <br>
+            <label>Caption: </label>
+            <textarea 
+            class="form-control" 
+            type="text"
+            name="add_content_caption_details"></textarea>
+            <p id="add_content_captionCharacterCount" style="color: red;">Required</p>
 
             <!-- Use form-control class for full-width textarea -->
             
@@ -139,7 +149,7 @@
           <input
             type="submit"
             class="btn btn-outline-success txt-success buttons"
-            name="add_note"
+            name="add_caption"
             value="Add"
           />
           <button
@@ -156,9 +166,10 @@
 </div>
 
 <!-- New modal for editing captions -->
+{% for caption in captions %}
 <div
   class="modal fade"
-  id="EditCaptionModal_{{note.pk}}"
+  id="EditCaptionModal_{{caption.pk}}"
   tabindex="-1"
   role="dialog"
   aria-labelledby="EditCaptionModalLabel"
@@ -182,9 +193,9 @@
         <div class="modal-body">
           {% csrf_token %}
           <input
-            id="update_note_{{note.pk}}"
-            name="update_note"
-            value="{{note.pk}}"
+            id="update_caption_{{caption.pk}}"
+            name="update_caption"
+            value="{{caption.pk}}"
             type="hidden"
           />
           <div class="form-group">
@@ -196,14 +207,14 @@
               autocomplete="off"
               required
               name="title"
-              value="{{note.title}}"
+              value="{{caption.title}}"
             />
             <br>
             <label>Caption: </label>
             <textarea 
             class="form-control" 
             type="text"
-            name="content_caption_details"></textarea>
+            name="content_caption_details_{{caption.pk}}">{{caption.caption|safe}}</textarea>
             <p id="content_captionCharacterCount" style="color: red;">Required</p>
           </div>
         </div>
@@ -226,6 +237,7 @@
     </div>
   </div>
 </div>
+{% endfor %}
 
 <!-- Confirmation modal for delete -->
 <div
@@ -252,7 +264,7 @@
       <form method="POST">
         <div class="modal-body">
           {% csrf_token %}
-          <p><input id="remove_note" name="remove_note" type="hidden" /></p>
+          <p><input id="remove_caption" name="remove_caption" type="hidden" /></p>
           Are you sure you want to delete the caption?
         </div>
         <div class="modal-footer">
@@ -276,20 +288,23 @@
 </div>
 
 <script>
-  function openModal(remove_note) {
+  function openModal(remove_caption) {
     // Set data in the modal
-    var inputElement = document.getElementById("remove_note");
-    inputElement.value = remove_note;
+    var inputElement = document.getElementById("remove_caption");
+    inputElement.value = remove_caption;
   }
 </script>
 <!--Script for CKEditor Control-->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
       // Replace the textareas with CKEditor instances
-      CKEDITOR.replace('content_caption_details');
+      CKEDITOR.replace('add_content_caption_details');
+      {% for caption in captions %}
+      CKEDITOR.replace('content_caption_details_{{caption.pk}}');
+      {% endfor %}
 
       // Attach a function to the change event for each CKEditor instance
-      ["content_caption"]
+      ["content_caption","add_content_caption"]
           .forEach(function (editorId) {
               var editor = CKEDITOR.instances[editorId + '_details'];
 

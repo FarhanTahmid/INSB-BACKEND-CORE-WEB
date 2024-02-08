@@ -44,6 +44,7 @@ class Content_Team_Content(models.Model):
         return str(self.pk)
     
 class Content_Team_Content_Document(models.Model):
+    content_id = models.ForeignKey(Content_Team_Content,on_delete=models.CASCADE)
     document = models.FileField(blank=True,null=True,upload_to='Content_Team_Documents/')
 
     class Meta:
@@ -52,7 +53,8 @@ class Content_Team_Content_Document(models.Model):
         return str(self.pk)
 
 class Content_Team_Content_Caption(models.Model):
-    title = models.CharField(null=True,blank=True,max_length=150)
+    content_id = models.ForeignKey(Content_Team_Content,on_delete=models.CASCADE)
+    title = models.CharField(null=False,blank=False,max_length=150)
     caption = RichTextField(null=True,blank=True)
 
     class Meta:

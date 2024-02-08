@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Content | Content Writing & Publications Team</title>
+    <title>Update Content | Content Writing & Publications Team</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -129,11 +129,11 @@
              {% include "Content/edit_content_form_tab.html" %} 
             {% endblock edit_content_form_tab %}
 
-            <!-- {% for message in messages %} -->
+            {% for message in messages %}
             <div
               class="alert alert-success alert-dismissible fade show"
               role="alert">
-              <!-- {{message}} -->
+                {{message}}
               <button
                 type="button"
                 class="close"
@@ -142,7 +142,7 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <!-- {% endfor %} -->
+            {% endfor %}
 
             <!--back button-->
             <div class="tooltip-container">
@@ -157,9 +157,9 @@
 
 
           <!--form contents-->
-          {% block content_form_content %}
-           {% include "Content/create_content_form_content.html" %} 
-          {% endblock content_form_content %}
+          {% block content_edit_form_content %}
+           {% include "Content/edit_content_form_content.html" %} 
+          {% endblock content_edit_form_content %}
         </div>
       </div>
 
