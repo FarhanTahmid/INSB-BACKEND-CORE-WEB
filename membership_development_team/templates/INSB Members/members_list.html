@@ -296,7 +296,9 @@
               <th data-priority="1">Email</th>
               <th data-priority="1">Current Position</th>
               <th data-priority="1">Current Team</th>
+              {% if has_view_permission %}
               <th data-priority="1">Contact No</th>
+              {% endif %}
             </tr>
           </thead>
           <tbody>
@@ -310,7 +312,9 @@
                   <td>{{ member.email_ieee }}</td>
                   <td>{{ member.position.role }}</td>
                   <td>{{ member.team.team_name }}</td>
+                  {% if has_view_permission %}
                   <td>{{ member.contact_no }}</td>
+                  {% endif %}
                                 
               </tr>
       

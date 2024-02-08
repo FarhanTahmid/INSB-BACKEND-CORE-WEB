@@ -21,7 +21,7 @@ from system_administration.render_access import Access_Render
 from django.core.mail import send_mail
 from . import email_sending
 from central_branch.renderData import Branch
-from users.renderData import LoggedinUser,PanelMembersData
+from users.renderData import LoggedinUser,PanelMembersData,member_login_permission
 from port.renderData import PortData
 from . models import Portal_Joining_Requests
 from system_administration.system_error_handling import ErrorHandling
@@ -31,7 +31,10 @@ from central_branch import views as cv
 
 logger=logging.getLogger(__name__)
 
+
 # Create your views here.
+@login_required
+@member_login_permission
 def md_team_homepage(request):
     '''Loads the data for homepage of MDT TEAM'''
 
@@ -61,6 +64,7 @@ def md_team_homepage(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def insb_members_list(request):
 
     try:
@@ -108,6 +112,7 @@ def insb_members_list(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def member_details(request,ieee_id):
     '''This function loads an editable member details view for particular IEEE ID'''
 
@@ -276,6 +281,7 @@ def member_details(request,ieee_id):
     
     
 @login_required
+@member_login_permission
 def membership_renewal(request):
     '''This view loads the renewal homepage'''
 
@@ -451,6 +457,7 @@ def membership_renewal_form_success(request,pk):
 
 
 @login_required
+@member_login_permission
 def getRenewalStats(request):
     
     # Returning different context for different seeked data
@@ -500,6 +507,7 @@ def getRenewalStats(request):
             return JsonResponse(context)
 
 @login_required
+@member_login_permission
 def renewal_session_data(request,pk):
     '''This view function loads all data for the renewal session including the members registered'''
 
@@ -587,6 +595,7 @@ def renewal_session_data(request,pk):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def sc_ag_renewal_session_data(request,pk,sc_ag_primary):
 
     try:
@@ -631,6 +640,7 @@ def sc_ag_renewal_session_data(request,pk,sc_ag_primary):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def renewal_request_details(request,pk,request_id):
     '''This function loads the datas for particular renewal requests'''
 
@@ -805,6 +815,7 @@ def renewal_request_details(request,pk,request_id):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 def generateExcelSheet_renewal_requestList(request,session_id):
     
     '''This method generates excel sheets only for renewal recruitment details for particular sessions'''
@@ -872,6 +883,7 @@ def generateExcelSheet_renewal_requestList(request,session_id):
     
     
 @login_required
+@member_login_permission
 def generateExcelSheet_membersList(request):
     '''This method generates the excel files for The Registered INSB members for MDT'''
 
@@ -936,6 +948,7 @@ def generateExcelSheet_membersList(request):
 
 
 @login_required
+@member_login_permission
 def data_access(request):
     '''This function mantains all the data access works'''
 
@@ -1070,6 +1083,7 @@ def data_access(request):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 def site_registration_request_home(request):
     
     '''This loads data for site joining request'''
@@ -1105,6 +1119,7 @@ def site_registration_request_home(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def getSiteRegistrationRequestStats(request):
     '''This function returns stats of portal registration application and the stats'''
     if request.method=="GET":
@@ -1124,6 +1139,7 @@ def getSiteRegistrationRequestStats(request):
         
 
 @login_required
+@member_login_permission
 def site_registration_request_details(request,ieee_id):
 
     try:

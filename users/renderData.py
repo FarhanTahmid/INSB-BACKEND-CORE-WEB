@@ -21,11 +21,14 @@ from port.models import Panels
 import traceback
 import logging
 from system_administration.system_error_handling import ErrorHandling
+from system_administration.render_access import Access_Render
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 import calendar
 from datetime import datetime
 from port.renderData import PortData
-
+from functools import wraps
+from django.contrib.auth.models import User,auth
+from django.shortcuts import render,redirect
 
 class LoggedinUser:
     
@@ -213,7 +216,25 @@ def is_eb_or_admin(user):
         return True
     else:
         return False
-    
+
+def member_login_permission(view_func):
+
+    '''This function checks if user is restricted to log in or not'''
+
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        user = request.user.username
+        if Access_Render.system_administrator_superuser_access(user) or Access_Render.system_administrator_staffuser_access(user) or Access_Render.faculty_advisor_access(user):
+            return view_func(request, *args, **kwargs)
+        else:
+            user = Members.objects.get(ieee_id = int(user))
+            if user.is_blocked:
+                auth.logout(request)
+                messages.error(request, 'Your account has been blocked by Administrator')
+                return redirect('users:login')
+            return view_func(request, *args, **kwargs)
+    return _wrapped_view
+
 def get_all_registered_members(request):
     '''This function returns all the INSB members registered in the main database'''
     try:

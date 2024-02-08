@@ -47,10 +47,13 @@ from recruitment.models import recruitment_session
 from membership_development_team.models import Renewal_Sessions,Renewal_requests
 from system_administration.render_access import Access_Render
 from django.views import View
+from users.renderData import member_login_permission
 
 # Create your views here.
 logger=logging.getLogger(__name__)
 
+@login_required
+@member_login_permission
 def central_home(request):
     try:
         current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -76,6 +79,8 @@ def central_home(request):
 
 
 #Panel and Team Management
+@login_required
+@member_login_permission
 def teams(request):
 
     try:
@@ -125,7 +130,8 @@ def teams(request):
         return custom_500(request)
     
 
-
+@login_required
+@member_login_permission
 def team_details(request,primary,name):
 
     try:
@@ -236,6 +242,7 @@ def team_details(request,primary,name):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_team(request,pk,team_name):
 
     try:
@@ -258,6 +265,7 @@ def manage_team(request,pk,team_name):
 
 #PANEL WORkS
 @login_required
+@member_login_permission
 def panel_home(request):
 
     try:
@@ -294,6 +302,7 @@ def panel_home(request):
 
 
 @login_required
+@member_login_permission
 def branch_panel_details(request,panel_id):
 
     try:
@@ -518,6 +527,7 @@ def branch_panel_details(request,panel_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def branch_panel_officers_tab(request,panel_id):
 
     try:
@@ -579,6 +589,7 @@ def branch_panel_officers_tab(request,panel_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def branch_panel_volunteers_tab(request,panel_id):
 
     try:
@@ -641,6 +652,7 @@ def branch_panel_volunteers_tab(request,panel_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def branch_panel_alumni_tab(request,panel_id):
 
     try:
@@ -719,6 +731,7 @@ def branch_panel_alumni_tab(request,panel_id):
 
 
 @login_required
+@member_login_permission
 def others(request):
     try:
         return render(request,"others.html")
@@ -728,6 +741,7 @@ def others(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_research(request):
 
     try:
@@ -777,6 +791,7 @@ def manage_research(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_research_request(request):
 
     try:
@@ -807,6 +822,7 @@ def manage_research_request(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def publish_research_request(request,pk):
 
     try:
@@ -847,6 +863,7 @@ def publish_research_request(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def update_researches(request,pk):
 
     try:
@@ -885,6 +902,7 @@ def update_researches(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_blogs(request):
 
     try:
@@ -938,6 +956,7 @@ def manage_blogs(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def update_blogs(request,pk):
 
     try:
@@ -977,6 +996,7 @@ def update_blogs(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def blog_requests(request):
 
     try:
@@ -1016,6 +1036,7 @@ def blog_requests(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def publish_blog_request(request,pk):
 
     try:
@@ -1060,6 +1081,7 @@ def publish_blog_request(request,pk):
 
 from main_website.models import HomePageTopBanner
 @login_required
+@member_login_permission
 def manage_website_homepage(request):
 
     try:
@@ -1221,6 +1243,7 @@ def manage_website_homepage(request):
         return custom_500(request)
     
 @login_required
+@member_login_permission
 def manage_website_homepage_top_banner_update(request, pk):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -1267,6 +1290,7 @@ def manage_website_homepage_top_banner_update(request, pk):
 
 
 @login_required
+@member_login_permission
 def update_volunteer_of_month(request,pk):
 
     try:
@@ -1298,6 +1322,7 @@ def update_volunteer_of_month(request,pk):
 
 
 @login_required
+@member_login_permission
 def manage_about(request):
 
     try:
@@ -1430,6 +1455,7 @@ def manage_about(request):
 
 
 @login_required
+@member_login_permission
 def ieee_region_10(request):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -1549,6 +1575,7 @@ def ieee_region_10(request):
 
 
 @login_required
+@member_login_permission
 def ieee_bangladesh_section(request):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -1675,6 +1702,7 @@ def ieee_bangladesh_section(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def ieee_nsu_student_branch(request):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -1760,6 +1788,7 @@ def ieee_nsu_student_branch(request):
         return custom_500(request)
     
 @login_required
+@member_login_permission
 @xframe_options_exempt
 def manage_about_preview(request):
     try:
@@ -1784,6 +1813,7 @@ def manage_about_preview(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 @xframe_options_exempt
 def ieee_region_10_preview(request):
     try:
@@ -1808,6 +1838,7 @@ def ieee_region_10_preview(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 @xframe_options_exempt
 def ieee_bangladesh_section_preview(request):
     try:
@@ -1832,6 +1863,7 @@ def ieee_bangladesh_section_preview(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 @xframe_options_exempt
 def ieee_nsu_student_branch_preview(request):
     try:
@@ -1853,6 +1885,7 @@ def ieee_nsu_student_branch_preview(request):
         return custom_500(request)
     
 @login_required
+@member_login_permission
 def faq(request):
 
     try:
@@ -1931,6 +1964,7 @@ def faq(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 @xframe_options_exempt
 def faq_preview(request):
     try:
@@ -1951,6 +1985,7 @@ def faq_preview(request):
 
 
 @login_required
+@member_login_permission
 def manage_achievements(request):
 
     try:
@@ -1999,6 +2034,7 @@ def manage_achievements(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def update_achievements(request,pk):
 
     try:
@@ -2038,6 +2074,7 @@ def update_achievements(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_news(request):
 
     try:
@@ -2083,6 +2120,7 @@ def manage_news(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def update_news(request,pk):
 
     try:
@@ -2120,6 +2158,7 @@ def update_news(request,pk):
 
 
 @login_required
+@member_login_permission
 def manage_magazines(request):
 
     try:
@@ -2170,6 +2209,7 @@ def manage_magazines(request):
 
 
 @login_required
+@member_login_permission
 def update_magazine(request,pk):
 
     try:
@@ -2203,6 +2243,7 @@ def update_magazine(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_gallery(request):
 
     try:
@@ -2263,6 +2304,7 @@ def manage_gallery(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def update_images(request,pk):
 
     try:
@@ -2301,6 +2343,7 @@ def update_images(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def update_videos(request,pk):
 
     try:
@@ -2339,6 +2382,7 @@ def update_videos(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_exemplary_members(request):
 
     try:
@@ -2384,6 +2428,7 @@ def manage_exemplary_members(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def update_exemplary_members(request,pk):
 
     try:
@@ -2420,6 +2465,7 @@ def update_exemplary_members(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_view_access(request):
 
     try:
@@ -2502,6 +2548,7 @@ def manage_view_access(request):
 # Create your views here.
 
 @login_required
+@member_login_permission
 def event_control_homepage(request):
     # This function loads all events and super events in the event homepage table
     
@@ -2545,6 +2592,7 @@ def event_control_homepage(request):
     
 
 @login_required
+@member_login_permission
 def mega_event_creation(request):
 
     '''function for creating mega event'''
@@ -2595,6 +2643,7 @@ def mega_event_creation(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def mega_events(request):
     try:
         current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -2626,6 +2675,7 @@ def mega_events(request):
 
 
 @login_required
+@member_login_permission
 def mega_event_edit(request,mega_event_id):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -2689,6 +2739,7 @@ def mega_event_edit(request,mega_event_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def mega_event_add_event(request,mega_event_id):    
 
     try:
@@ -2751,6 +2802,7 @@ def mega_event_add_event(request,mega_event_id):
     
 
 @login_required
+@member_login_permission
 def event_creation_form_page(request):
     
     #######load data to show in the form boxes#########
@@ -2833,6 +2885,7 @@ def event_creation_form_page(request):
         
 
 @login_required
+@member_login_permission
 def event_creation_form_page2(request,event_id):
     #loading all inter branch collaboration Options
 
@@ -2878,6 +2931,7 @@ def event_creation_form_page2(request,event_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def event_creation_form_page3(request,event_id):
     try:
         has_access = Branch_View_Access.get_create_event_access(request)
@@ -2926,6 +2980,7 @@ def event_creation_form_page3(request,event_id):
         return custom_500(request)
     
 @login_required
+@member_login_permission
 def get_updated_options_for_event_dashboard(request):
 
     try:
@@ -2953,6 +3008,7 @@ def get_updated_options_for_event_dashboard(request):
         return custom_500(request)
     
 @login_required
+@member_login_permission
 def event_edit_form(request, event_id):
 
     ''' This function loads the edit page of events '''
@@ -3086,6 +3142,7 @@ def event_edit_form(request, event_id):
 
 
 @login_required
+@member_login_permission
 def event_edit_media_form_tab(request, event_id):
 
     ''' This function loads the media tab page of events '''
@@ -3155,6 +3212,7 @@ def event_edit_media_form_tab(request, event_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def event_edit_graphics_form_tab(request, event_id):
 
     ''' This function loads the graphics tab page of events '''
@@ -3227,6 +3285,7 @@ def event_edit_graphics_form_tab(request, event_id):
         return custom_500(request)
     
 @login_required
+@member_login_permission
 def event_edit_graphics_form_links_sub_tab(request,event_id):
     ''' This function loads the graphics form link page of events '''
 
@@ -3290,6 +3349,7 @@ def event_edit_graphics_form_links_sub_tab(request,event_id):
 
 
 @login_required
+@member_login_permission
 def event_edit_content_form_tab(request,event_id):
     ''' This function loads the content tab page of events '''
 
@@ -3352,6 +3412,7 @@ def event_edit_content_form_tab(request,event_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 @xframe_options_exempt
 def event_preview(request, event_id):
     ''' This function displays a preview of an event regardless of it's published status '''
@@ -3396,6 +3457,7 @@ def event_preview(request, event_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_toolkit(request):
 
     try:
@@ -3441,6 +3503,7 @@ def manage_toolkit(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def update_toolkit(request,pk):
 
     try:
@@ -3478,6 +3541,7 @@ def update_toolkit(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def feedbacks(request):
 
     '''This view function loads the feedback page for the particular societies and affinity
@@ -3521,6 +3585,7 @@ def feedbacks(request):
         return custom_500(request)
     
 @login_required
+@member_login_permission
 def event_feedback(request, event_id):
 
     try:
@@ -3551,6 +3616,7 @@ def event_feedback(request, event_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def insb_members_list(request):
     
     try:
@@ -3588,6 +3654,7 @@ def insb_members_list(request):
         return custom_500(request)
     
 @login_required
+@member_login_permission
 def member_details(request,ieee_id):
     '''This function loads an editable member details view for particular IEEE ID'''
     try:
