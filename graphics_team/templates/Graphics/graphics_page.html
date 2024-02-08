@@ -165,7 +165,7 @@
             <tbody>
               {% for links in all_links %}
                 <tr>
-                  <td>1</td>
+                  <td>{{forloop.counter}}</td>
                   <td>
                     <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal{{links.pk}}">{{links.link_title}}</a>
                   </td>
