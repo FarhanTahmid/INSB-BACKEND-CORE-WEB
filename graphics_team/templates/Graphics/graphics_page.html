@@ -111,8 +111,21 @@
         </h2>
 
         <!--Create Content button-->
-        <a href="{% url 'graphics_team:create_graphics_form' %}" class="create_graphics_button"><span style="font-size: large">+</span>&nbspCreate Graphics</a>
-
+        <button  class="create_graphics_button" data-toggle="modal" data-target="#AddLinkModal"><span style="font-size: large">+</span>&nbspAdd Links</button>
+        <!--for error messages-->
+        <br>
+        {% for message in messages  %}
+            <p>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <p style="margin: 0;">{{message}}</p>
+                </div>
+            </p>
+        {% endfor %}
+        <br>
+        <!--for error messages end-->
         <div class="header_wrap">
           <!--Search bar-->
           <div class="tb_search">
@@ -144,33 +157,26 @@
             <thead>
               <tr>
                 <th>SL</th>
-                <th>Graphics title</th>
+                <th>Link Title</th>
                 <th>Created on</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
-              <form method="POST">
+              {% for links in all_links %}
                 <tr>
                   <td>1</td>
                   <td>
-                    <!--<button id="burger" type="button" value={{event.id}} name="result"  data-toggle="modal"  onclick="openModal('{{event.id}}')"  data-target="#modal" ui-target="#animate">{{event.event_name}}</button>-->
-                    <a class="event_name_column_content" href="#">
-                      heeeeeeeeee</a
-                    >
+                    <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal{{links.pk}}">{{links.link_title}}</a>
                   </td>
-                  <td>01/02/2024</td>
-                </tr>
-                <tr>
-                  <td>1</td>
+                  <td>{{links.created_at}}</td>
                   <td>
-                    <!--<button id="burger" type="button" value={{event.id}} name="result"  data-toggle="modal"  onclick="openModal('{{event.id}}')"  data-target="#modal" ui-target="#animate">{{event.event_name}}</button>-->
-                    <a class="event_name_column_content" href="#">
-                      heeeeeeeeee</a
-                    >
+                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                      <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal"  onclick="openModal('{{links.pk}}')">✖</button>
+                    </div>
                   </td>
-                  <td>01/02/2024</td>
                 </tr>
-              </form>
+                {% endfor %}
             </tbody>
 
             <tbody></tbody>
@@ -191,6 +197,125 @@
       </div>
     </div>
     <!--Events table end-->
+
+    <!-- Updated Modal for adding Links -->
+    <div class="modal fade" id="AddLinkModal" tabindex="-1" role="dialog" aria-labelledby="AddLinkModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="addLinkModalLabel">Add Links</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <form method="POST">
+                      {% csrf_token %}
+                      
+                      <div class="form-group">
+                          <label>Title: </label> 
+                              <input
+                                  placeholder="Title"
+                                  class="form-control"
+                                  type="text"
+                                  autocomplete="off"
+                                  required
+                                  name="title"
+                              />
+                          <br>
+                          <label>Links:</label>
+                          <input
+                          placeholder="Provide Drive Link"
+                          class="form-control"
+                          type="url"
+                          autocomplete="off"
+                          id="field1"
+                          name="graphics_form_link"
+                          required
+                          />
+                      </div>
+              </div>
+              <div class="modal-footer">
+                  <!-- Change the button label and name attribute -->
+                  <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_link" value="Add">
+                  <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+              </div>
+              </form>
+          </div>
+      </div>
+    </div>
+    {% for link in all_links %}
+    <div class="modal fade" id="EditLinkModal{{link.pk}}" tabindex="-1" role="dialog" aria-labelledby="EditLinkModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editLinkModalLabel">Edit Link - {{link.link_title}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Display existing Link in a textarea for editing -->
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Title: </label> 
+                                <input
+                                    placeholder="Title"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="edit_title"
+                                    value="{{link.link_title}}" 
+                                />
+                            <br>
+                            <label>Links:</label>
+                            <input
+                            placeholder="Provide Drive Link"
+                            class="form-control"
+                            type="url"
+                            autocomplete="off"
+                            id="field1"
+                            name="edit_drive_link"
+                            value="{{link.link}}"/>
+                            <input type="hidden" name = "link_pk" value ="{{link.pk}}">
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" name = "update_link" class="btn btn-outline-primary txt-primary buttons" value="Update">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-top" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <form method="POST">
+                  {% csrf_token %}
+              <p><input id="remove_link" name= "remove_link" type="hidden"></p>
+              Are you sure you want to delete this link?
+          </div>
+          <div class="modal-footer">
+              <input type="submit" class="btn btn-outline-danger" value="Confirm" name = "delete_link">
+              <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+          </div>
+           </form>
+      </div>
+      </div>
+  </div>
+    {% endfor %}
 
     <!--Theme Switcher-->
     {% block theme_switcher %} 
@@ -354,6 +479,12 @@
           }
         }
       }
+
+      function openModal(id) {
+        // Set data in the modal
+        var inputElement = document.getElementById('remove_link');    
+        inputElement.value=id;
+    }
     </script>
   </body>
 </html>
