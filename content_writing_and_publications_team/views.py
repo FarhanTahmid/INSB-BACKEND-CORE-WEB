@@ -18,13 +18,14 @@ import logging
 from datetime import datetime
 import traceback
 from .forms import Content_Form
-from users.renderData import PanelMembersData,LoggedinUser
+from users.renderData import PanelMembersData,LoggedinUser,member_login_permission
 from central_branch import views as cv
 
 logger=logging.getLogger(__name__)
 # Create your views here.
 
 @login_required
+@member_login_permission
 def homepage(request):
 
     try:
@@ -52,6 +53,7 @@ def homepage(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_team(request):
 
     '''This function loads the manage team page for content writing and publications team and is accessable
@@ -152,6 +154,7 @@ def manage_team(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def event_page(request):
 
     '''Only events organised by INSB would be shown on the event page of Content and Publications Team
@@ -178,6 +181,7 @@ def event_page(request):
 
 
 @login_required
+@member_login_permission
 def event_form(request,event_id):
 
     try:
@@ -250,6 +254,7 @@ def event_form(request,event_id):
     
 
 @login_required
+@member_login_permission
 def event_form_add_notes(request,event_id):
     ''' This function is used to generate view for add notes of content team. '''
 

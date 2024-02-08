@@ -11,7 +11,7 @@ import traceback
 from datetime import datetime
 from system_administration.models import EMT_Data_Access
 from .renderData import Events_And_Management_Team
-from users.renderData import PanelMembersData,LoggedinUser
+from users.renderData import PanelMembersData,LoggedinUser,member_login_permission
 import logging
 from system_administration.system_error_handling import ErrorHandling
 from central_branch import views as cv
@@ -19,6 +19,7 @@ from central_branch import views as cv
 
 logger=logging.getLogger(__name__)
 @login_required
+@member_login_permission
 def em_team_homepage(request):
 
     '''This function is responsible to load the main home page
@@ -49,6 +50,7 @@ def em_team_homepage(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def emt_data_access(request):
 
     # '''This function mantains all the data access works'''
@@ -157,6 +159,7 @@ def emt_data_access(request):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 def emt_task_assign(request):
 
     try:

@@ -35,10 +35,12 @@ from users.models import Alumni_Members
 from django.views.decorators.clickjacking import xframe_options_exempt
 from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
 from central_branch import views as cv
-from users.renderData import LoggedinUser
+from users.renderData import LoggedinUser,member_login_permission
 # Create your views here.
 logger=logging.getLogger(__name__)
 
+@login_required
+@member_login_permission
 def sc_ag_homepage(request,primary):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -72,6 +74,7 @@ def sc_ag_homepage(request,primary):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def sc_ag_members(request,primary):
     
     try:
@@ -132,6 +135,7 @@ def sc_ag_members(request,primary):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def sc_ag_panels(request,primary):
 
     try:
@@ -177,6 +181,7 @@ def sc_ag_panels(request,primary):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def sc_ag_panel_details(request,primary,panel_pk):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -392,7 +397,8 @@ def sc_ag_panel_details(request,primary,panel_pk):
         return cv.custom_500(request) 
        
 
-@login_required               
+@login_required  
+@member_login_permission             
 def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -451,7 +457,8 @@ def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
         return cv.custom_500(request)
         
         
-@login_required    
+@login_required   
+@member_login_permission 
 def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -515,6 +522,7 @@ def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -585,6 +593,7 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 @login_required
+@member_login_permission
 def sc_ag_membership_renewal_sessions(request,primary):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -611,6 +620,8 @@ def sc_ag_membership_renewal_sessions(request,primary):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
+@login_required
+@member_login_permission
 def sc_ag_renewal_session_details(request,primary,renewal_session):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -650,6 +661,7 @@ def sc_ag_renewal_session_details(request,primary,renewal_session):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def get_sc_ag_renewal_stats(request):
     
     if request.method=="GET":
@@ -688,6 +700,7 @@ def get_sc_ag_renewal_stats(request):
             return cv.custom_500(request)
         
 @login_required
+@member_login_permission
 def sc_ag_manage_access(request,primary):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -774,6 +787,7 @@ def sc_ag_manage_access(request,primary):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 def sc_ag_renewal_excel_sheet(request,primary,renewal_session):
     try:
         has_access = SC_Ag_Render_Access.access_for_membership_renewal_access(request=request,sc_ag_primary=primary)
@@ -791,6 +805,7 @@ def sc_ag_renewal_excel_sheet(request,primary,renewal_session):
         return cv.custom_500(request)
         
 @login_required
+@member_login_permission
 def event_control_homepage(request,primary):
 
     '''This is the event control homepage view function for rest of the groups, except 1'''
@@ -840,6 +855,7 @@ def event_control_homepage(request,primary):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 def mega_event_creation(request, primary):
 
     '''function for creating super event'''
@@ -890,6 +906,7 @@ def mega_event_creation(request, primary):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 def mega_events(request,primary):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -916,6 +933,7 @@ def mega_events(request,primary):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 def mega_event_edit(request,primary,mega_event_id):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -980,6 +998,7 @@ def mega_event_edit(request,primary,mega_event_id):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 def mega_event_add_event(request,primary,mega_event_id):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -1037,6 +1056,7 @@ def mega_event_add_event(request,primary,mega_event_id):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def event_creation_form_page(request,primary):
     #######load data to show in the form boxes#########
     try:
@@ -1117,6 +1137,7 @@ def event_creation_form_page(request,primary):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def event_creation_form_page2(request,primary,event_id):
     #loading all inter branch collaboration Options
 
@@ -1166,6 +1187,7 @@ def event_creation_form_page2(request,primary,event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 @login_required
+@member_login_permission
 def event_creation_form_page3(request,primary,event_id):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -1216,6 +1238,7 @@ def event_creation_form_page3(request,primary,event_id):
     
 
 @login_required
+@member_login_permission
 def event_edit_form(request, primary, event_id):
 
     ''' This function loads the edit page of events '''
@@ -1349,7 +1372,8 @@ def event_edit_form(request, primary, event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
-@login_required    
+@login_required  
+@member_login_permission  
 def event_edit_media_form_tab(request, primary, event_id):
     ''' This function loads the media tab page of events '''
 
@@ -1421,6 +1445,8 @@ def event_edit_media_form_tab(request, primary, event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
+@login_required
+@member_login_permission
 def event_edit_graphics_form_tab(request, primary, event_id):
 
     ''' This function loads the graphics tab page of events '''
@@ -1495,7 +1521,8 @@ def event_edit_graphics_form_tab(request, primary, event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
     
-
+@login_required
+@member_login_permission
 def event_edit_graphics_form_links_sub_tab(request,primary,event_id):
 
     ''' This function loads the graphics tab page of events '''
@@ -1562,7 +1589,8 @@ def event_edit_graphics_form_links_sub_tab(request,primary,event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
-
+@login_required
+@member_login_permission
 def event_edit_content_form_tab(request,primary,event_id):
 
     ''' This function loads the content tab page of events '''
@@ -1676,6 +1704,7 @@ def event_edit_content_form_tab(request,primary,event_id):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 @xframe_options_exempt
 def event_preview(request, primary, event_id):
     ''' This function displays a preview of an event regardless of it's published status '''
@@ -1725,6 +1754,7 @@ def event_preview(request, primary, event_id):
     
 
 @login_required
+@member_login_permission
 def manage_main_website(request, primary):
 
     '''This view function loads the portals page for managung main website of socities
@@ -1829,6 +1859,7 @@ def manage_main_website(request, primary):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 @xframe_options_exempt
 def manage_main_website_preview(request,primary):
     try:
@@ -1864,6 +1895,7 @@ def manage_main_website_preview(request,primary):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def feedbacks(request,primary):
 
     '''This view function loads the feedback page for the particular societies and affinity
@@ -1911,6 +1943,7 @@ def feedbacks(request,primary):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def event_feedback(request, primary, event_id):
 
     try:

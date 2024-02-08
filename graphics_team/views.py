@@ -19,13 +19,14 @@ from system_administration.system_error_handling import ErrorHandling
 from django.http import Http404,HttpResponseBadRequest
 from datetime import datetime
 from port.renderData import PortData
-from users.renderData import PanelMembersData
+from users.renderData import PanelMembersData,member_login_permission
 from users import renderData
 from central_branch import views as cv
 
 logger=logging.getLogger(__name__)
 # Create your views here.
 @login_required
+@member_login_permission
 def team_homepage(request):
 
     try:
@@ -54,6 +55,7 @@ def team_homepage(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_team(request):
 
     try:
@@ -157,6 +159,7 @@ def manage_team(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def event_page(request):
 
     try:
@@ -183,6 +186,7 @@ def event_page(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 @login_required
+@member_login_permission
 def event_form(request,event_id):
 
     sc_ag=PortData.get_all_sc_ag(request=request)
@@ -251,6 +255,7 @@ def event_form(request,event_id):
     
 
 @login_required
+@member_login_permission
 def event_form_add_links(request,event_id):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -310,6 +315,7 @@ def event_form_add_links(request,event_id):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def graphics_drive_links(request):
 
     sc_ag=PortData.get_all_sc_ag(request=request)

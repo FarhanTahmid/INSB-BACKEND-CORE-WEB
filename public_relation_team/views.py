@@ -24,7 +24,7 @@ from users.renderData import LoggedinUser
 from django.utils.datastructures import MultiValueDictKeyError
 from .render_email import PRT_Email_System
 from port.renderData import PortData
-from users.renderData import PanelMembersData
+from users.renderData import PanelMembersData,member_login_permission
 from chapters_and_affinity_group.renderData import SC_AG_Info
 import logging
 from system_administration.system_error_handling import ErrorHandling
@@ -35,6 +35,8 @@ from central_branch import views as cv
 
 logger=logging.getLogger(__name__)
 
+@login_required
+@member_login_permission
 def team_home_page(request):
 
     try:
@@ -61,6 +63,7 @@ def team_home_page(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def event_control(request):
 
     try:
@@ -81,6 +84,7 @@ def event_control(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def super_event_creation(request):
 
     '''function for creating super event'''
@@ -115,6 +119,7 @@ def super_event_creation(request):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 def event_creation_form_page1(request):
     
     #######load data to show in the form boxes#########
@@ -168,6 +173,7 @@ def event_creation_form_page1(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def event_creation_form_page2(request,event_id):
 
     try:
@@ -201,6 +207,7 @@ def event_creation_form_page2(request,event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 @login_required
+@member_login_permission
 def event_creation_form_page3(request,event_id):
 
     try:
@@ -237,6 +244,7 @@ def event_creation_form_page3(request,event_id):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_event(request):
 
     try:
@@ -267,6 +275,7 @@ def manage_event(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def event_dashboard(request,event_id):
 
     '''Checking to see whether the user has access to view events on portal and edit them'''
@@ -310,6 +319,7 @@ def event_dashboard(request,event_id):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_team(request):
 
     '''This function loads the manage team page for public relations and is accessable
@@ -413,6 +423,7 @@ def manage_team(request):
         return cv.custom_500(request)
         
 @login_required
+@member_login_permission
 def manageWebsiteHome(request):
 
     try:
@@ -429,6 +440,7 @@ def manageWebsiteHome(request):
 
 
 @login_required
+@member_login_permission
 def send_email(request):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
