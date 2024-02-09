@@ -26,6 +26,7 @@ from users.models import Members,Panel_Members
 from django.conf import settings
 from users.renderData import LoggedinUser
 import os
+import xlwt
 from users import renderData as port_render
 from port.renderData import PortData
 from users.renderData import PanelMembersData,Alumnis
@@ -2559,12 +2560,14 @@ def event_control_homepage(request):
         is_branch = True
         sc_ag=PortData.get_all_sc_ag(request=request)
         all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(1)
+        all_event_years = Branch.get_event_years(1)
         context={
             'all_sc_ag':sc_ag,
             'user_data':user_data,
             'events':all_insb_events_with_interbranch_collaborations,
             'has_access_to_create_event':has_access_to_create_event,
             'is_branch':is_branch,
+            'all_event_years':all_event_years
             
         }
 
@@ -3643,7 +3646,8 @@ def insb_members_list(request):
             'members':members,
             'totalNumber':totalNumber,
             'has_view_permission':has_view_permission,
-            'user_data':user_data
+            'user_data':user_data,
+            'is_MDT':False
         }
         
         return render(request,'INSB Members/members_list.html',context=context)
@@ -3836,7 +3840,81 @@ def member_details(request,ieee_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return redirect('central_branch:member_details',ieee_id)
 
+@login_required
+@member_login_permission
+def generateExcelSheet_events_by_year(request,year):
+    '''This method generates the excel files for The events according to the year selected'''
+
+    try:
+        #Loading Access Permission
+        user=request.user
+        #need to give acccess for downloading this file
+        has_access=(Branch_View_Access.common_access(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
+        if has_access:
+            date=datetime.now()
+            response = HttpResponse(
+                content_type='application/ms-excel')  # eclaring content type for the excel files
+            response['Content-Disposition'] = f'attachment; filename=All Events of {year} - ' +\
+                str(date.strftime('%m/%d/%Y')) + \
+                '.xls'  # making files downloadable with name of session and timestamp
+            # adding encoding to the workbook
+            workBook = xlwt.Workbook(encoding='utf-8')
+            # opening an worksheet to work with the columns
+            workSheet = workBook.add_sheet(f'Events List of {year}')
+
+            # generating the first row
+            row_num = 0
+            font_style = xlwt.XFStyle()
+            font_style.font.bold = True
+
+            # Defining columns that will stay in the first row
+            columns = ['SL','Event Name','Event Date', 'Organiser', 'Collaborations','Event Type']
+
+            # Defining first column
+            column_widths = [1000,4000, 6000, 18000, 18000, 6000]
+            for col, width in enumerate(column_widths):
+                workSheet.col(col).width = width
+
+
+            for column in range(len(columns)):
+                workSheet.write(row_num, column, columns[column], font_style)
+
+            # reverting font style to default
+            font_style = xlwt.XFStyle()
+
+            # Center alignment style
+            center_alignment = xlwt.easyxf('align: horiz center')
+            # Word wrap style
+            word_wrap_style = xlwt.easyxf('alignment: wrap True')
+
+            events= Branch.load_all_inter_branch_collaborations_with_events_yearly(year,1)
+            sl_num = 0
+            for event,collaborations in events.items():
+                row_num += 1
+                sl_num += 1
+                workSheet.write(row_num,0 , sl_num,  center_alignment)
+                workSheet.write(row_num,1 , event.event_name,  center_alignment)
+                workSheet.write(row_num,2 , event.event_date.strftime('%Y-%m-%d'),  center_alignment)
+                workSheet.write(row_num,3 , event.event_organiser.group_name,  center_alignment)
+                collaborations_text = ""
+                for collabs in collaborations:
+                    collaborations_text += collabs + '\n'
+                workSheet.write(row_num, 4, collaborations_text, word_wrap_style) 
+                categories = ""   
+                for event_type in event.event_type.all():
+                    categories+=event_type.event_category + '\n'  
+                workSheet.write(row_num, 5, categories, word_wrap_style)
+                    
+            workBook.save(response)
+            return (response)
+        else:
+            return render(request,'access_denied2.html')
         
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
+          
 def custom_404(request):
     return render(request,'404.html',status=404)
 

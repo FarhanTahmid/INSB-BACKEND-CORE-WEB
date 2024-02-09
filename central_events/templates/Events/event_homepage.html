@@ -157,6 +157,21 @@
                   {% endif %}
                   <button type="button" class="btn btn-outline-success buttons" data-toggle="modal" data-target="#EventTypeModal" style="margin-bottom:15px;">Create a New Event Type</button>
                   {% endif %}
+                  {% if is_branch %}
+                  <button class="btn btn-outline b-success text-success  dropdown-toggle" data-toggle="dropdown">Generate an Excel Sheet for Yealy Events</button>
+                        <div class="dropdown-menu dropdown-menu-scale info pull-right">
+                          {% for year in all_event_years %}
+                          <a href="{% url 'central_branch:generateExcelSheet_events_by_year' year %}" class="dropdown-item">{{year}}</a>
+                          {% endfor %}
+                        </div>
+                  {% else %}
+                  <button class="btn btn-outline b-success text-success  dropdown-toggle" data-toggle="dropdown">Generate an Excel Sheet for Yealy Events</button>
+                        <div class="dropdown-menu dropdown-menu-scale info pull-right">
+                          {% for year in all_event_years %}
+                          <a href="{% url 'chapters_and_affinity_group:generateExcelSheet_events_by_year_sc_ag' sc_ag_info.primary year %}" class="dropdown-item">{{year}}</a>
+                          {% endfor %}
+                        </div>
+                  {% endif %}
                 </div>
               </div> 
              
