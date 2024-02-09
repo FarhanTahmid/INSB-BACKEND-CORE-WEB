@@ -69,9 +69,9 @@ class ContentWritingTeam:
         Branch.add_member_to_team(ieee_id=ieee_id,position=position,team_primary=2)
         return True
     
-    def cwp_manage_team_access_modifications(manage_team_access, event_access, ieee_id):
+    def cwp_manage_team_access_modifications(manage_team_access, event_access, content_access, content_view_access, ieee_id):
         try:
-            CWP_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access, event_access=event_access)
+            CWP_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access, event_access=event_access, content_access=content_access, content_view_access=content_view_access)
             return True
         except CWP_Data_Access.DoesNotExist:
             return False
