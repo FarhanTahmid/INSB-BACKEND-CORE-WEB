@@ -3855,7 +3855,7 @@ def generateExcelSheet_events_by_year(request,year):
             date=datetime.now()
             response = HttpResponse(
                 content_type='application/ms-excel')  # eclaring content type for the excel files
-            response['Content-Disposition'] = f'attachment; filename=All Events of {year} - ' +\
+            response['Content-Disposition'] = f'attachment; filename=IEEE NSU SB_Events_{year} - ' +\
                 str(date.strftime('%m/%d/%Y')) + \
                 '.xls'  # making files downloadable with name of session and timestamp
             # adding encoding to the workbook
@@ -3869,10 +3869,10 @@ def generateExcelSheet_events_by_year(request,year):
             font_style.font.bold = True
 
             # Defining columns that will stay in the first row
-            columns = ['SL','Event Name','Event Date', 'Organiser', 'Collaborations','Event Type']
+            columns = ['SL','Event Name','Event Date', 'Organiser', 'Collaborations','Event Type','Venue']
 
             # Defining first column
-            column_widths = [1000,4000, 6000, 18000, 18000, 6000]
+            column_widths = [1000,4000, 6000, 18000, 18000, 6000,6000]
             for col, width in enumerate(column_widths):
                 workSheet.col(col).width = width
 
@@ -3905,6 +3905,11 @@ def generateExcelSheet_events_by_year(request,year):
                 for event_type in event.event_type.all():
                     categories+=event_type.event_category + '\n'  
                 workSheet.write(row_num, 5, categories, word_wrap_style)
+                venue_list = Branch.get_selected_venues(event.pk)
+                venues=""
+                for venue in venue_list:
+                    venues += venue + '\n'
+                workSheet.write(row_num, 6, venues, word_wrap_style)
                     
             workBook.save(response)
             return (response)
