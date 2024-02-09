@@ -48,6 +48,48 @@
       word-wrap: break-word; /* Break long words if necessary */
       font-size: 16px; /* Adjust the font size as needed */
     }
+    .update_button{
+        display : flex;
+        justify-content: space-around;
+
+    }
+    .tooltip-container {
+        position: relative;
+        display: inline-block;
+      }
+
+      .tooltip-container.right {
+        float: right; /* Float the container to the right */
+        margin-right: 0; /* Reset the margin for the right-aligned button */
+      }
+
+      .image-button:hover + .tooltip-text {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(10px); /* Adjust the distance from the link */
+      }
+
+      .tooltip-text {
+        position: absolute;
+        top: 50%;
+        left: 100%;
+        transform: translateY(-50%);
+        white-space: nowrap;
+        background-color: #333;
+        color: #fff;
+        padding: 5px;
+        border-radius: 5px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+      }
+
+      .image-button img {
+        height: 50px;
+        width: 50px; /* Adjust as needed */
+        height: auto; /* Maintain aspect ratio */
+        border-radius: 5px; /* Add rounded corners if desired */
+      }
     
     /* Media query for smaller screens (adjust the breakpoint as needed) */
     @media (max-width: 768px) {
@@ -233,10 +275,19 @@
 
     <!-- ############ PAGE START-->
     <br>
-    <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> IEEE NSU SB Registered Members List </h2>
-    
+    <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">IEEE NSU SB Registered Members List
+    </h2>
     <h4 style="justify-content:center;text-align:center;margin-bottom:30px;"> Total Registered Member in System: <span style="color:#00629B;"><b>{{totalNumber}}</b></span> </h4>
-    
+    <div class="update_button"> 
+        <button name="update_attendance" type="submit" class="btn btn-success">Update</button>
+    </div>
+
+    <div class="tooltip-container">
+        <a href="/portal/membership_development_team/members/" class="image-button">
+          <img src="/static/back-arrow.png" alt="Go back to session">
+        </a>
+        <span class="tooltip-text">Go back to Member List</span>
+      </div>
     <!--Messages-->
     <div style="justify-content:center; text-align:center;">
       {% if messages %}
@@ -260,7 +311,7 @@
           </form>          
         </div>
         <div style="margin-left:5px;">
-          <a href="{% url 'membership_development_team:user_access' %}" class="btn btn-outline b-primary text-primary">Something</a>
+          <a href="" class="btn btn-outline b-primary text-primary">User Access</a>
         </div>
 
         
@@ -300,11 +351,11 @@
               <th data-priority="1">IEEE ID</th>
               <th data-priority="1">NSU ID</th>
               <th data-priority="1">Name</th>
-              <th data-priority="1">Email</th>
-              <th data-priority="1">Current Position</th>
-              <th data-priority="1">Current Team</th>
+              <th data-priority= "1">User Access</th>
+              
+             
               {% if has_view_permission %}
-              <th data-priority="1">Contact No</th>
+              
               {% endif %}
             </tr>
           </thead>
@@ -316,12 +367,21 @@
                   <td style="color:#00629B"><a href="{% if is_branch %}{% url 'central_branch:member_details' member.ieee_id %}{% else %}{% url 'membership_development_team:member_details' member.ieee_id %}{% endif %}">{{ member.ieee_id  }}</a></td>
                   <td>{{ member.nsu_id }}</td>
                   <td>{{ member.name  }}</td>
-                  <td>{{ member.email_ieee }}</td>
-                  <td>{{ member.position.role }}</td>
-                  <td>{{ member.team.team_name }}</td>
+                  
+                  
                   {% if has_view_permission %}
                   <td>{{ member.contact_no }}</td>
                   {% endif %}
+
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                     
+                        </label>
+                      </div>
+
+                </td>
                                 
               </tr>
       
