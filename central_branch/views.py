@@ -3931,3 +3931,26 @@ class UpdatePositionAjax(View):
                 return JsonResponse(role_data,safe=False)
         # return null if nothing is selected
         return JsonResponse({},safe=False)
+
+@login_required
+def volunteerAwardsPanel(request):
+    # get all sc ag for sidebar
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    # get user data for side bar
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+
+    context={
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
+    }
+    
+    get_all_panels=PortData.get_all_panels(request=request,sc_ag_primary=1) #getting branch panels only
+    if(get_all_panels is False):
+        pass
+    else:
+        context['panels']=get_all_panels
+    
+       
+    return render(request,"Volunteer_Awards/awards_home_panel.html",context=context)
+

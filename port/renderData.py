@@ -1,11 +1,21 @@
-from .models import Chapters_Society_and_Affinity_Groups,Roles_and_Position,Teams,Panels
+from .models import Chapters_Society_and_Affinity_Groups,Roles_and_Position,Teams,Panels,VolunteerAwards
 from django.contrib import messages
-from users.models import Members, Panel_Members
+from users.models import Members, Panel_Members,VolunteerAwardRecievers
 from datetime import datetime
 import sqlite3
 import logging
 import traceback
 from system_administration.system_error_handling import ErrorHandling
+
+
+class VolunteerAwards:
+    '''Handles all the activities related to volunteer awards'''
+    logger=logging.getLogger(__name__)
+
+    def create_new_award(request,**kwargs):
+        pass
+    
+
 
 class PortData:
     logger=logging.getLogger(__name__)
@@ -297,3 +307,15 @@ class PortData:
                 sc_ag_previous_positions.update({sc_ag.primary:position_data})
 
         return sc_ag_previous_positions
+    
+    def get_all_panels(request,sc_ag_primary):
+        '''returns the objects of all panels for specific sc ag + branch as a queryset'''
+        try:
+            get_all_panels=Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).order_by('-current','-year')
+            return get_all_panels
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Error loading Panels. Something went wrong!")
+            return False
+                      

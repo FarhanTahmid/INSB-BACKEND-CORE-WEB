@@ -113,5 +113,9 @@ urlpatterns = [
     # get dynamic data in JS position edit
     path('get_position_data/',UpdatePositionAjax.as_view(),name="update_position"),
     #evente excel generation url
-    path('generateExcelSheet_events_by_year/<int:year>',views.generateExcelSheet_events_by_year,name="generateExcelSheet_events_by_year")
+    path('generateExcelSheet_events_by_year/<int:year>',views.generateExcelSheet_events_by_year,name="generateExcelSheet_events_by_year"),
+    
+    # volunteer awards
+    path('volunteer_awards/panels/',views.volunteerAwardsPanel,name="volunteer_awards_panels"),
+    
 ]
