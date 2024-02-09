@@ -850,6 +850,7 @@ def event_control_homepage(request,primary):
             # TODO:
             # if dont have event edit access, make people redirect to event in main web
             'has_access_to_edit_event':SC_Ag_Render_Access.access_for_event_details_edit(request=request,sc_ag_primary=primary),
+            'common_access':SC_Ag_Render_Access.get_sc_ag_common_access(request,primary)
             
         }
         return render(request,"Events/event_homepage.html",context)
@@ -1989,7 +1990,7 @@ def generateExcelSheet_events_by_year_sc_ag(request,primary,year):
         #Loading Access Permission
         user=request.user
         #need to give acccess for downloading this file
-        has_access=(SC_Ag_Render_Access.get_sc_ag_common_access(request,user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
+        has_access=SC_Ag_Render_Access.get_sc_ag_common_access(request,user.username)
         if has_access:
             date=datetime.now()
             response = HttpResponse(
