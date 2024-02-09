@@ -1801,4 +1801,57 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
 
+    def get_event_years(primary):
 
+        '''This function returns the events year along with collaborated event years'''
+        try:
+            #if of branch then no need to check for collaborations
+            if primary == 1:
+                all_events = Events.objects.all()
+            #checking for collaborations
+            else:
+                events = Events.objects.filter(event_organiser= Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
+                collaborations_list = InterBranchCollaborations.objects.filter(collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)).values_list('event_id')
+                all_events = events.union(Events.objects.filter(pk__in=collaborations_list))
+            #getting all the years
+            unique_years = []
+            for event in all_events:
+                if event.event_date:
+                    if event.event_date.year not in unique_years:
+                        unique_years.append(event.event_date.year)
+            #sorting it
+            unique_years.sort(reverse=True)
+            return unique_years
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def load_all_inter_branch_collaborations_with_events_yearly(year,primary):
+        
+        '''This fuction returns a dictionary with key as events id and values as a list of inter collaborations 
+            for that specific event yearly'''
+        try:
+            dic = {}
+            collaborations=[]
+            if primary == 1 :
+                final_events = Events.objects.filter(event_date__year = year)
+            else:
+                events = Events.objects.filter(event_date__year = year,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary))
+                collaborations_list = InterBranchCollaborations.objects.filter(collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)).values_list('event_id')
+                events_with_collaborated_events = events.union(Events.objects.filter(pk__in=collaborations_list,event_date__year = year))
+                final_events = events_with_collaborated_events.order_by('-event_date')
+           
+            for i in final_events:
+                all_collaborations_for_this_event = InterBranchCollaborations.objects.filter(event_id = i.id)
+                for j in all_collaborations_for_this_event:
+                    collaborations.append(j.collaboration_with.group_name)  
+                dic.update({i:collaborations})
+                collaborations=[]
+                
+            return dic
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
