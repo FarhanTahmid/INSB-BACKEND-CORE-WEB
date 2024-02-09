@@ -99,7 +99,8 @@ def insb_members_list(request):
                 'members':members,
                 'totalNumber':totalNumber,
                 'has_view_permission':has_view_permission,
-                'user_data':user_data
+                'user_data':user_data,
+                'is_MDT':True,
             }
             
             return render(request,'INSB Members/members_list.html',context=context)

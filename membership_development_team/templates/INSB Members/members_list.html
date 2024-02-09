@@ -248,9 +248,11 @@
     {% if has_view_permission %}
     <div style="justify-content:center;text-align:center;">  
       <div class="btn-container row">
+        {% if is_MDT %}
         <div style="margin-right:5px;">
           <a href="{% url 'membership_development_team:export_excel' %}" class="btn btn-outline b-success text-success">Generate an Excel Sheet of All Registered INSB Members</a>
         </div>
+        {% endif %}
         <div>
           <form method="POST">
             {% csrf_token %}

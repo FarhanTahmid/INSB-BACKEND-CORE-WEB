@@ -57,4 +57,6 @@ urlpatterns = [
     path('<str:primary>/events/mega_event_edit/<int:mega_event_id>/',views.mega_event_edit,name="mega_event_edit"), 
     #Add Events to Mega Event
     path('<str:primary>/events/mega_event_add_event/<int:mega_event_id>/',views.mega_event_add_event,name="mega_event_add_event"), 
+    #excel generation
+    path('<str:primary>/events/generateExcelSheet_events_by_year_sc_ag/<int:year>/',views.generateExcelSheet_events_by_year_sc_ag,name = "generateExcelSheet_events_by_year_sc_ag")
 ]
