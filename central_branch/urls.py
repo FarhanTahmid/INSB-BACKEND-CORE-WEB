@@ -112,6 +112,6 @@ urlpatterns = [
 
     # get dynamic data in JS position edit
     path('get_position_data/',UpdatePositionAjax.as_view(),name="update_position"),
-    #evente excel generation url
+    #event excel generation url
     path('generateExcelSheet_events_by_year/<int:year>',views.generateExcelSheet_events_by_year,name="generateExcelSheet_events_by_year")
 ]
