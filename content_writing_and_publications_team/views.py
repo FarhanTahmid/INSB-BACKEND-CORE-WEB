@@ -317,6 +317,7 @@ def event_form_add_notes(request,event_id):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def content_page(request):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -338,6 +339,7 @@ def content_page(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def create_content_form(request):
     # try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -366,83 +368,106 @@ def create_content_form(request):
     #     return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def content_edit(request, content_id):
+    # try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        sc_ag=PortData.get_all_sc_ag(request=request)
 
-    content = Content_Team_Content.objects.get(id=content_id)
-    content_docs = Content_Team_Content_Document.objects.filter(content_id=content_id)
+        if request.method == 'POST':
+            if 'update' in request.POST:
+                title = request.POST.get('content_title')
+                description = request.POST.get('content_description_details')
+                documents_link = request.POST.get('drive_link_of_documents')
 
-    if request.method == 'POST':
-        if 'update' in request.POST:
-            title = request.POST.get('content_title')
-            description = request.POST.get('content_description_details')
-            documents_link = request.POST.get('drive_link_of_documents')
+                documents = None
+                if request.FILES.get('document'):
+                    documents = request.FILES.getlist('document')
 
-            content.title = title
-            content.description = description
-            content.documents_link = documents_link
-            content.save()
+                if ContentWritingTeam.update_content(content_id, title, description, documents_link, documents):
+                    messages.success(request,'Content updated successfully!')
+                else:
+                    messages.warning(request,'Something went wrong while updating the content!')
+                
+                return redirect('content_writing_and_publications_team:content_edit', content_id)   
 
-            if request.FILES.get('document'):
-                documents = request.FILES.getlist('document')
-                for document in documents:
-                    Content_Team_Content_Document.objects.create(content_id=content, document=document)
+            elif 'remove' in request.POST:
+                document_id = request.POST.get('remove_doc')
 
-            messages.success(request,'Content updated successfully!')
+                if(ContentWritingTeam.remove_content_doc(document_id)):
+                    messages.success(request, 'Document deleted successfully!')
+                else:
+                    messages.warning(request,'Something went wrong while deleting the document!')
 
-        elif 'remove' in request.POST:
-            document_id = request.POST.get('remove_doc')
-            doc = Content_Team_Content_Document.objects.get(id=document_id)
-            path = settings.MEDIA_ROOT+str(doc.document)
-            if os.path.exists(path):
-                os.remove(path)
-            doc.delete()
+                return redirect('content_writing_and_publications_team:content_edit', content_id)   
+        
+        content = Content_Team_Content.objects.get(id=content_id)
+        content_docs = Content_Team_Content_Document.objects.filter(content_id=content_id)
 
-            messages.success(request, 'something deleted successfully')
+        context = {
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'content_id':content_id,
+            'content':content,
+            'content_docs':content_docs,
+            'media_url':settings.MEDIA_URL
+        }
 
-        return redirect('content_writing_and_publications_team:content_edit', content_id)
-
-    context = {
-        'content_id':content_id,
-        'content':content,
-        'content_docs':content_docs,
-        'media_url':settings.MEDIA_URL
-    }
-
-    return render(request,"Content/edit_content_form.html",context)
+        return render(request,"Content/edit_content_form.html",context)
+    # except Exception as e:
+    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+    #     return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def edit_content_form_add_notes(request, content_id):
+    # try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        captions = Content_Team_Content_Caption.objects.filter(content_id=content_id)
 
-    captions = Content_Team_Content_Caption.objects.filter(content_id=content_id)
+        if request.method == 'POST':
+            if 'add_caption' in request.POST:
+                title = request.POST.get('title')
+                caption = request.POST.get('add_content_caption_details')
 
-    if request.method == 'POST':
-        if 'add_caption' in request.POST:
-            title = request.POST.get('title')
-            caption = request.POST.get('add_content_caption_details')
+                if(ContentWritingTeam.create_content_caption(content_id, title, caption)):
+                    messages.success(request,'Caption added successfully!')
+                else:
+                    messages.warning(request,'Something went wrong while creating the caption!')
+            
+            elif 'update' in request.POST:
+                caption_id = request.POST.get('update_caption')
+                title = request.POST.get('title')
+                caption = request.POST.get(f'content_caption_details_{caption_id}')
+                
+                if(ContentWritingTeam.update_content_caption(caption_id, title, caption)):
+                    messages.success(request,'Caption updated successfully!')
+                else:
+                    messages.warning(request,'Something went wrong while updating the caption!')
+            
+            elif 'remove' in request.POST:
+                caption_id = request.POST.get('remove_caption')
 
-            Content_Team_Content_Caption.objects.create(content_id=Content_Team_Content.objects.get(id=content_id), title=title, caption=caption)
-            messages.success(request,'Caption added successfully!')
-        
-        elif 'update' in request.POST:
-            caption_id = request.POST.get('update_caption')
-            title = request.POST.get('title')
-            caption = request.POST.get(f'content_caption_details_{caption_id}')
-            content_caption = Content_Team_Content_Caption.objects.get(id=caption_id)
-            content_caption.title = title
-            content_caption.caption = caption
-            content_caption.save()
-            messages.success(request,'Caption updated successfully!')
-        
-        elif 'remove' in request.POST:
-            caption_id = request.POST.get('remove_caption')
-            Content_Team_Content_Caption.objects.get(id=caption_id).delete()
-            messages.success(request,'Caption deleted successfully!')
-        
-        return redirect('content_writing_and_publications_team:edit_content_form_add_notes', content_id)
+                if(ContentWritingTeam.delete_content_caption(caption_id)):
+                    messages.success(request,'Caption deleted successfully!')
+                else:
+                    messages.warning(request,'Something went wrong while deleting the caption')
+            
+            return redirect('content_writing_and_publications_team:edit_content_form_add_notes', content_id)
 
-    context = {
-        'content_id':content_id,
-        'captions':captions
-    }
+        context = {
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'content_id':content_id,
+            'captions':captions
+        }
 
-    return render(request,"Content/edit_content_form_add_notes.html",context)
+        return render(request,"Content/edit_content_form_add_notes.html",context)
+    # except Exception as e:
+    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+    #     return cv.custom_500(request)
