@@ -1,13 +1,12 @@
 import logging
 import traceback
-from bs4 import BeautifulSoup
 from django.http import JsonResponse
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from central_events.models import Event_Category, Event_Venue, Events, InterBranchCollaborations, IntraBranchCollaborations, SuperEvents
+from central_events.models import Events, InterBranchCollaborations, IntraBranchCollaborations, SuperEvents
 from content_writing_and_publications_team.forms import Content_Form
 from content_writing_and_publications_team.renderData import ContentWritingTeam
 from events_and_management_team.renderData import Events_And_Management_Team
@@ -21,20 +20,19 @@ from users import renderData
 from port.models import Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
 from django.db import DatabaseError
 from central_branch.renderData import Branch
-from main_website.models import Research_Papers,Blog_Category,Blog
+from main_website.models import Research_Papers,Blog
 from users.models import Members,Panel_Members
 from django.conf import settings
 from users.renderData import LoggedinUser
 import os
 import xlwt
 from users import renderData as port_render
-from port.renderData import PortData
+from port.renderData import PortData,HandleVolunteerAwards
 from users.renderData import PanelMembersData,Alumnis
 from . view_access import Branch_View_Access
 from datetime import datetime
 from django.utils.datastructures import MultiValueDictKeyError
 from users.renderData import Alumnis
-from django.http import Http404,HttpResponseBadRequest
 import logging
 import traceback
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
@@ -45,7 +43,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 import port.forms as PortForms
 from chapters_and_affinity_group.renderData import Sc_Ag
 from recruitment.models import recruitment_session
-from membership_development_team.models import Renewal_Sessions,Renewal_requests
+from membership_development_team.models import Renewal_Sessions
 from system_administration.render_access import Access_Render
 from django.views import View
 from users.renderData import member_login_permission
@@ -3934,23 +3932,53 @@ class UpdatePositionAjax(View):
 
 @login_required
 def volunteerAwardsPanel(request):
+    try:
+        # get all sc ag for sidebar
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # get user data for side bar
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        context={
+            'all_sc_ag':sc_ag,
+            'user_data':user_data,
+        }
+        
+        get_all_panels=PortData.get_all_panels(request=request,sc_ag_primary=1) #getting branch panels only
+        if(get_all_panels is False):
+            pass
+        else:
+            context['panels']=get_all_panels
+        
+        
+        return render(request,"Volunteer_Awards/awards_home_panel.html",context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
+    
+    
+def panel_specific_volunteer_awards_page(request,panel_pk):
+    
     # get all sc ag for sidebar
     sc_ag=PortData.get_all_sc_ag(request=request)
     # get user data for side bar
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-
+    
     context={
         'all_sc_ag':sc_ag,
         'user_data':user_data,
     }
     
-    get_all_panels=PortData.get_all_panels(request=request,sc_ag_primary=1) #getting branch panels only
-    if(get_all_panels is False):
-        pass
-    else:
-        context['panels']=get_all_panels
+    # get panel info
+    panel_info=Panels.objects.get(pk=panel_pk)
+    context["panel_info"] = panel_info
     
-       
-    return render(request,"Volunteer_Awards/awards_home_panel.html",context=context)
+    if request.method=="POST":
+        if(request.POST.get('create_award')):
+            award_name=request.POST['award_name']
+            if(HandleVolunteerAwards.create_new_award(request=request,volunteer_award_name=award_name,panel_pk=panel_pk,sc_ag_primary=1)):
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+    return render(request,"Volunteer_Awards/volunteer_awards_control_base.html",context=context)
 

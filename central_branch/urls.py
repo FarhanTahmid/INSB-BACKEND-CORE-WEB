@@ -117,5 +117,6 @@ urlpatterns = [
     
     # volunteer awards
     path('volunteer_awards/panels/',views.volunteerAwardsPanel,name="volunteer_awards_panels"),
+    path('volunteer_awards/panel/<int:panel_pk>/awards',views.panel_specific_volunteer_awards_page,name="panel_specific_volunteer_awards_page")
     
 ]

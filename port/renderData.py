@@ -1,6 +1,6 @@
 from .models import Chapters_Society_and_Affinity_Groups,Roles_and_Position,Teams,Panels,VolunteerAwards
 from django.contrib import messages
-from users.models import Members, Panel_Members,VolunteerAwardRecievers
+from users.models import Members, Panel_Members,VolunteerAwardRecievers,VolunteerAwards
 from datetime import datetime
 import sqlite3
 import logging
@@ -8,12 +8,27 @@ import traceback
 from system_administration.system_error_handling import ErrorHandling
 
 
-class VolunteerAwards:
+class HandleVolunteerAwards:
     '''Handles all the activities related to volunteer awards'''
     logger=logging.getLogger(__name__)
 
     def create_new_award(request,**kwargs):
-        pass
+        try:
+            # create new award
+            new_award=VolunteerAwards.objects.create(
+                volunteer_award_name=kwargs['volunteer_award_name'],
+                panel=Panels.objects.get(pk=kwargs['panel_pk']),
+                award_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=kwargs['sc_ag_primary'])
+            )
+            new_award.save()
+            messages.success(request,f"New Award: {kwargs['volunteer_award_name']} was created!")
+            return True            
+            
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.info(request,'Something went wrong while creating new award!')
+            return False
     
 
 
