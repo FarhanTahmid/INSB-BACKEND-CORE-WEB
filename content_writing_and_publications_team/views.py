@@ -419,7 +419,15 @@ def content_edit(request, content_id):
                     else:
                         messages.warning(request,'Something went wrong while deleting the document!')
 
-                    return redirect('content_writing_and_publications_team:content_edit', content_id)   
+                    return redirect('content_writing_and_publications_team:content_edit', content_id)
+
+                elif 'delete_content' in request.POST:
+                    if(ContentWritingTeam.delete_content(request,content_id)):
+                        messages.success(request,'Content deleted successfully!')
+                    else:
+                        messages.warning(request,'Something went wrong while deleting the content')
+                    
+                    return redirect('content_writing_and_publications_team:content_page') 
             
             content = Content_Team_Content.objects.get(id=content_id)
             content_docs = Content_Team_Content_Document.objects.filter(content_id=content_id)

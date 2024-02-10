@@ -3,6 +3,7 @@ from django.conf import settings
 from central_branch.renderData import Branch
 from django.shortcuts import get_object_or_404
 from users.models import Members
+from django.contrib import messages
 from port.models import Teams,Roles_and_Position
 from system_administration.models import CWP_Data_Access
 from .models import Content_Notes, Content_Team_Content, Content_Team_Content_Caption, Content_Team_Content_Document, Content_Team_Document, Content_Team_Documents_Link
@@ -278,6 +279,22 @@ class ContentWritingTeam:
         ''' This function is used to delete a content caption for CWP Team '''
         try:
             Content_Team_Content_Caption.objects.get(id=caption_id).delete()
+
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def delete_content(request,content_id):
+        ''' This function is used to delete a content for CWP Team '''
+        try:
+            content_docs = Content_Team_Content_Document.objects.filter(content_id=content_id)
+            for content_doc in content_docs:
+                if(not ContentWritingTeam.remove_content_doc(content_doc.pk)):
+                    messages.warning(request,f'Could not delete associated document: {content_doc.document}')
+
+            Content_Team_Content.objects.get(id=content_id).delete()
 
             return True
         except Exception as e:
