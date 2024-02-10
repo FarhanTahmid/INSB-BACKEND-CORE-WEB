@@ -1,7 +1,16 @@
 {% load static %}
 
 {% block blog_card_container %}
-
+<link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Foldit:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
 <style>
 
     
@@ -89,7 +98,7 @@
             padding: 5px;
             box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
             display: grid;
-            grid-template-columns: 3fr 1fr;
+            grid-template-columns: 6fr 1fr;
           }
           .search_blog input{
         width: 100%;
@@ -139,7 +148,131 @@
             width: 300px;
         }
     }
-    
+    .dropdown {
+        width: 100%;
+        min-width: 145px;
+        height: fit-content;
+        box-sizing: border-box;
+        position: relative;
+      }
+      .dropdown .input-box {
+        width: 100%;
+        height: 60px;
+        box-sizing: border-box;
+        outline: 0.3mm solid rgba(0, 0, 0, 0.15);
+        border-radius: 5px;
+        padding: 10px 15px;
+        font-family: poppins;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        position: relative;
+      }
+      .dropdown .input-box::before {
+        content: "expand_more";
+        font-family: "Material Icons";
+        position: absolute;
+        font-size: 18px;
+        top: 50%;
+        right: 15px;
+        transform: translate(0, -50%);
+        width: fit-content;
+        height: fit-content;
+      }
+      .dropdown .input-box.open::before {
+        content: "expand_less";
+      }
+      .dropdown .input-box:empty::after {
+        content: "Date Latest";
+        color: rgba(0, 0, 0, 0.5);
+      }
+      .dropdown .list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        height: fit-content;
+        background: white;
+        margin-top: 10px;
+        border-radius: 2mm;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: column;
+        max-height: 0;
+        transition: 0.25s ease-out;
+        z-index: 100;
+      }
+      .dropdown .list input {
+        display: none;
+      }
+      .dropdown .list label {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: flex-start;
+        font-family: poppins;
+        font-size: 14px;
+        padding: 10px 15px;
+        box-sizing: border-box;
+        cursor: pointer;
+        position: relative;
+      }
+      .dropdown .list label .material-icons-outlined,
+      .dropdown .input-box .material-icons-outlined {
+        margin-right: 5px;
+        font-size: 22px;
+      }
+      .dropdown .list label:hover {
+        background: rgba(0, 0, 0, 0.08);
+      }
+      .dropdown input:checked + label {
+        color: #00B5E2;
+        background: rgb(238, 245, 252);
+      }
+      .dropdown input:checked + label::before {
+        content: "done";
+        font-family: "Material Icons";
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translate(0, -50%);
+        font-size: 18px;
+      }
+      .dropdown .open {
+        outline: 0.7mm solid rgb(20, 117, 213);
+      }
+      .dropdown .title {
+        font-family: poppins;
+        font-size: small;
+        font-weight: 500;
+        margin-bottom: 10px;
+      }
+      .dropdown .search-box {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 8px;
+      }
+      .dropdown #search {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px;
+        border-radius: 1mm;
+        border: none;
+        outline: 0.3mm solid rgba(0, 0, 0, 0.15);
+        font-family: poppins;
+      }
+      .dropdown #search:focus {
+        outline: 0.5mm solid rgba(0, 0, 0, 0.35);
+      }
+      .category-option {
+          display: none;
+      }
+
 
 </style>
 <!-- Search Section -->
@@ -152,12 +285,39 @@
     placeholder="Search Blogs.."
     title="Type in a name"
     />
-    <select name="filter">
-        <option value="date_latest" selected>Date Latest</option>
-        <option value="date_oldest">Date Oldest</option>
-        <option value="name">Name</option>
-        <option value="category">Category</option>
-    </select>
+    <div class="dropdown">
+        <div class="input-box"></div>
+        <div class="list main">
+          <input type="radio" name="drop1" id="id11" class="radio" checked/>
+          <label for="id11">
+              <span class="name">Date Latest</span>
+          </label>
+
+          <input type="radio" name="drop1" id="id12" class="radio" />
+          <label for="id12">
+            <span class="name">Date Oldest</span>
+          </label>
+
+          
+          <!-- <input type="radio" name="drop1" id="id13" class="radio" />
+          <label for="id13">
+            <span class="name">Category</span>
+          </label> -->
+
+          <input type="radio" name="drop1" id="id14" class="radio category-option hidden" />
+          <label for="id14" class="category-option">
+            <span class="name">Back</span>
+          </label>
+
+          {% for i in categories %}
+          <input type="radio" name="drop1" id="{{i.blog_category}}" class="radio category-option hidden" data-category="{{i.blog_category}}"/>
+          <label for="{{i.blog_category}}" class="category-option">
+              <span class="name">{{i.blog_category}}</span>
+          </label>
+          {% endfor %}
+
+        </div>
+    </div>
 </div>
 
 <!-- Cards starts here -->
@@ -192,6 +352,42 @@
 
 
 <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Hide the category options
+    var categoryOptions = document.querySelectorAll('.category-option');
+    categoryOptions.forEach(function(option) {
+        option.style.display = 'none';
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    var categoryOptions = document.querySelectorAll('.category-option');
+    var categoryRadio = document.getElementById('id13');
+
+    // Function to show only category options and hide others
+    function showOnlyCategoryOptions() {
+        categoryOptions.forEach(function(option) {
+            if (option.dataset.category === 'category') {
+                option.classList.remove('hidden');
+            } else {
+                option.classList.add('hidden');
+            }
+        });
+    }
+
+    // Hide category options initially
+    categoryOptions.forEach(function(option) {
+        option.classList.add('hidden');
+    });
+
+    // Event listener for the "Category" radio button
+    categoryRadio.addEventListener('change', function() {
+        showOnlyCategoryOptions();
+    });
+});
+
+
+
     function blogFilterFunction() {
         var input, filter, cardContainer, cards, card, title, writer;
         input = document.getElementById("blogFilter");
@@ -211,57 +407,124 @@
         }
     }
 
-    // Add event listener to the select dropdown
-    document.querySelector("select[name='filter']").addEventListener("change", function() {
-        var filter = this.value;
+    document.addEventListener("DOMContentLoaded", function() {
+    var input = document.querySelector(".dropdown .input-box");
+    input.onclick = function () {
+      this.classList.toggle("open");
+      let list = this.nextElementSibling;
+      if (list.style.maxHeight) {
+        list.style.maxHeight = null;
+        list.style.boxShadow = null;
+      } else {
+        list.style.maxHeight = list.scrollHeight + "px";
+        list.style.boxShadow =
+          "0 1px 2px 0 rgba(0, 0, 0, 0.15),0 1px 3px 1px rgba(0, 0, 0, 0.1)";
+      }
+    };
+
+    var rad = document.querySelectorAll(".dropdown .radio");
+    rad.forEach((item) => {
+      item.addEventListener("change", () => {
+        input.innerHTML = item.nextElementSibling.innerHTML;
+        input.click();
+
+        // Perform sorting based on selected option
+        var filter = item.nextElementSibling.innerText.toLowerCase().trim();
+        sortBlogs(filter);
+      });
+    });
+
+    function sortBlogs(filter) {
         var cardContainer = document.querySelector(".card_container");
         var cards = Array.from(cardContainer.getElementsByClassName("card"));
 
         switch(filter) {
-            case 'date_latest':
+            case 'date latest':
                 cards.sort(function(a, b) {
                     return new Date(b.querySelector(".card_time_writer span").innerText) - new Date(a.querySelector(".card_time_writer span").innerText);
                 });
                 break;
-            case 'date_oldest':
+            case 'date oldest':
                 cards.sort(function(a, b) {
                     return new Date(a.querySelector(".card_time_writer span").innerText) - new Date(b.querySelector(".card_time_writer span").innerText);
                 });
                 break;
-            case 'name':
-                cards.sort(function(a, b) {
-                    var titleA = a.querySelector("h5").innerText.toUpperCase();
-                    var titleB = b.querySelector("h5").innerText.toUpperCase();
-                    if (titleA < titleB) {
-                        return -1;
-                    }
-                    if (titleA > titleB) {
-                        return 1;
-                    }
-                    return 0;
-                });
-                break;
-            case 'category':
-                cards.sort(function(a, b) {
-                    var categoryA = a.getAttribute('data-category').toUpperCase();
-                    var categoryB = b.getAttribute('data-category').toUpperCase();
-                    if (categoryA < categoryB) {
-                        return -1;
-                    }
-                    if (categoryA > categoryB) {
-                        return 1;
-                    }
-                    return 0;
-                });
-                break;
+            // case 'name':
+            //     cards.sort(function(a, b) {
+            //         var titleA = a.querySelector("h5").innerText.toUpperCase();
+            //         var titleB = b.querySelector("h5").innerText.toUpperCase();
+            //         if (titleA < titleB) {
+            //             return -1;
+            //         }
+            //         if (titleA > titleB) {
+            //             return 1;
+            //         }
+            //         return 0;
+            //     });
+            //     break;
+            // case 'category':
+            //     cards.sort(function(a, b) {
+            //         var categoryA = a.getAttribute('data-category').toUpperCase();
+            //         var categoryB = b.getAttribute('data-category').toUpperCase();
+            //         if (categoryA < categoryB) {
+            //             return -1;
+            //         }
+            //         if (categoryA > categoryB) {
+            //             return 1;
+            //         }
+            //         return 0;
+            //     });
+            //     break;
         }
 
         // Reorder cards in the container
+        cardContainer.innerHTML = ""; // Clear the container
         cards.forEach(function(card) {
             cardContainer.appendChild(card);
         });
-    });
-</script>
+    }
+});
 
+</script>
+<script>
+    var input = document.querySelector(".dropdown .input-box");
+    input.onclick = function () {
+      this.classList.toggle("open");
+      let list = this.nextElementSibling;
+      if (list.style.maxHeight) {
+        list.style.maxHeight = null;
+        list.style.boxShadow = null;
+      } else {
+        list.style.maxHeight = list.scrollHeight + "px";
+        list.style.boxShadow =
+          "0 1px 2px 0 rgba(0, 0, 0, 0.15),0 1px 3px 1px rgba(0, 0, 0, 0.1)";
+      }
+    };
+
+    var rad = document.querySelectorAll(".dropdown .radio");
+    rad.forEach((item) => {
+      item.addEventListener("change", () => {
+        input.innerHTML = item.nextElementSibling.innerHTML;
+        input.click();
+      });
+    });
+
+    var label = document.querySelectorAll(".dropdown label");
+    function search(searchin) {
+      let searchVal = searchin.value;
+      searchVal = searchVal.toUpperCase();
+      label.forEach((item) => {
+        let checkVal = item.querySelector(".dropdown .name").innerHTML;
+        checkVal = checkVal.toUpperCase();
+        if (checkVal.indexOf(searchVal) == -1) {
+          item.style.display = "none";
+        } else {
+          item.style.display = "flex";
+        }
+        let list = input.nextElementSibling;
+        list.style.maxHeight = list.scrollHeight + "px";
+      });
+    }
+  </script>
 
 {% endblock blog_card_container %}
