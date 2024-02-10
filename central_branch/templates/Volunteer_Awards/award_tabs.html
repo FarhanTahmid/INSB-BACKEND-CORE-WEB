@@ -35,7 +35,7 @@
 <div class="tabs-container" style="display: flex; flex-direction: column;">
     <ul class="tabs" style="display: flex; margin-right: 0px; justify-content: center;">
         {% for i in all_awards %}
-        <li class="tab"><a href="#">{{i.volunteer_award_name}}</a></li>
+        <li class="tab"><a href="{% url 'central_branch:panel_award_specific_volunteer_awards_page' panel_info.pk i.pk %}">{{i.volunteer_award_name}}</a></li>
         {% endfor %}
         
     </ul>

@@ -40,6 +40,65 @@ class HandleVolunteerAwards:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.info(request,'Something went wrong while loading awards!')
             return False
+    
+    def load_award_details(request,award_pk):
+        try:
+            get_award=VolunteerAwards.objects.get(pk=award_pk)
+            return get_award
+        
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.info(request,'Something went wrong while loading award information!')
+            return False
+    
+    def load_award_winners(request,award_pk):
+        try:
+            get_award_winners=VolunteerAwardRecievers.objects.filter(award=VolunteerAwards.objects.get(pk=award_pk))
+            return get_award_winners
+        
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.info(request,'Something went wrong while loading award winners!')
+            return False
+    
+    def add_award_winners(request,award_pk,selected_members,contribution):
+        try:
+            for i in selected_members:
+                if(VolunteerAwardRecievers.objects.filter(award_reciever=Members.objects.get(ieee_id=i),award=VolunteerAwards.objects.get(pk=award_pk)).exists()):
+                    messages.info(request,f"IEEE ID: {i} already exists in this award table.")
+                else:
+                    new_award_winner=VolunteerAwardRecievers.objects.create(
+                        award=VolunteerAwards.objects.get(pk=award_pk),
+                        award_reciever=Members.objects.get(ieee_id=i),
+                        contributions=contribution
+                    )
+                    new_award_winner.save()
+            messages.success(request,f"Award members were updated!")
+            return True
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.warning(request,'Something went wrong while adding award winners!')
+            return False
+    
+    def remove_award_winner(request,award_pk,member_ieee_id):
+        try:
+            get_object=VolunteerAwardRecievers.objects.filter(award=VolunteerAwards.objects.get(pk=award_pk),award_reciever=Members.objects.get(ieee_id=member_ieee_id)).first()
+            if(get_object is not None):
+                messages.warning(request,f"IEEE ID: {get_object.award_reciever} was removed from the award!")
+                get_object.delete()
+                return True
+            else:
+                messages.info(request,"Member doest not exists in awards table!")
+                return False
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.warning(request,'Something went wrong while deleting award winners!')
+            return False
+
 
 class PortData:
     logger=logging.getLogger(__name__)
