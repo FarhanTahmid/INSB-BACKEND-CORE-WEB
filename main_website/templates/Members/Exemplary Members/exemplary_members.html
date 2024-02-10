@@ -35,17 +35,19 @@
             margin: 20px 0px;
             width: 535px;
             background-color:	#00629B;
-            border-radius: 7px 7px 7px 7px;
+            border-radius: 4px;
             display: flex;
             flex-direction: column;
-            padding: 10px;
-            height: 175px;
+            /* height: 175px; */
         }
 
         .profile{
             width: 240px;
             overflow: hidden;
             border-radius: 500px;
+            display: flex;
+            align-content: center;
+            justify-content: center;
         }
         
         .profile img{
@@ -58,11 +60,10 @@
         }
         
         .info{
-            padding:6px 10px 0;
+            padding:23px 10px 0;
         }
 
         .info h3{
-            padding: 0;
             font-size: 18px;
             font-weight: 600;
         }
@@ -77,44 +78,56 @@
         }
 
         .info i{
+            color: white;
             margin: 10px 0;
-            margin-right: 10px;
+            margin-right: 15px;
             transition: all .2s ease-in-out;
+            font-size: 20px;
         }
         
         .info i:hover{
             color: #FFC72C;
         }
 
-        .info a{
+        .achievements label , .down_arrow{
             text-decoration: none;
-            color: white;
+            color: #000;
             transition: all .2s ease-in-out;
-        }
-
-        .info a:hover{
-            color: #FFC72C;
         }
         
         .achievements{
             margin-top: 10px;
             padding: 10px 10px;
-            display: none;
-            height: 100px;
-            overflow-y: scroll;
-            color: white;
+            color: #000;
+            background-color: white;
+            box-shadow: 0px 0px 20px 0px #00000030;
         }
+        
+        /* .view_achieve_tab:hover label , .view_achieve_tab:hover .down_arrow{
+            color: #FFC72C;
+        } */
         
         .card-wrap{
             display: flex;
+            padding: 10px;
         }
-
+        .view_achieve_tab{
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0 11px;
+        }
+        .achieve_list{
+            display: none;
+            margin-top: 10px
+        }
         @media screen and (max-width:534px) {
             .card_section{
                 margin: 3%;
             }
             .container-card{
-                height: 316px;
+                /* height: 316px; */
             }
             .profile{
                 width: 150px;
@@ -148,67 +161,38 @@
                     <h3>MINHAZ UDDIN AHMED SHANTO</h3>
                     <p><b>Chair(Technical) 2017-2018</b></p>
                     <p>Currently Doctoral Graduate Research Assistant at North Dakota State University</p>
-                    <p><i class="fa-brands fa-facebook"></i><i class="fa-solid fa-envelope"></i></p>
-                    <p><b><a href="#" onclick="expandCard()" class="">View Achievements</a></b></p>
+                    <i class="fa-brands fa-facebook"></i><i class="fa-solid fa-envelope"></i>
                     </div>
-
+                
                 </div>
                 <div class="achievements">
-                    <ul>
-                        <li>Best Presenter Award, BICAME 2018
-                        </li>
-                        <li>Event Coordinator, Educational Activities Committee, IEEE Bangladesh Section 2018</li>
-                        <li>Country Lead, IEEEXtreme 12.o</li>
-                        <li>Delegate, IEEE Region 10 SYWL Congress 2018, Bali Indonesia
-                            Travel Grant Winner from IEEE Region 10 Computer Society for IEEE R10 SYWL Congress 2018</li>
-                        <li>Best Student Volunteer (Humanitarian) Award, IEEE Bangladesh Section 2017</li>
-                        <li>Ambassador, IEEEMadC 2017</li>
-                        <li>Ambassador, IEEEXtreme 11.0</li>
-                        <li>Content Writer, Student Activities Committee, IEEE Bangladesh Section 2017</li>
-                        <li>Graphics Designer, Humanitarian Activities Committee, IEEE Bangladesh Section 2017</li>
-                        <li>Team Lead, Video & Media, IEEE BDS SYW Congress 2017
-                        </li>
-                        <li>Organizing Chair, IEEE BDS SYW Congress 2017
-                        </li>
-                        <li>Publication, IHTPC 2017
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="container-card">
-                <div class="card-wrap">
-        
-                    <div class="profile"><img src="https://ieeensusb.org/media_files/main_website_files/exemplary_members_picture/wordh-ul-hasan-1.jpg" alt=""></div>
-                    <div class="info">
-                    <h3>MINHAZ UDDIN AHMED SHANTO</h3>
-                    <p><b>Chair(Technical) 2017-2018</b></p>
-                    <p>Currently Doctoral Graduate Research Assistant at North Dakota State University</p>
-                    <p><i class="fa-brands fa-facebook"></i><i class="fa-solid fa-envelope"></i></p>
-                    <p><b><a href="#">View Achievements</a></b></p>
+                    <div class="view_achieve_tab" onclick="myfunction()">
+                        <label style="position: relative; top: 1px"><b>View Achievements</b></label>
+                        <i class="fa-solid fa-angle-down down_arrow"></i>
                     </div>
+                    <div class="achieve_list" id="text">
 
-                </div>
-                <div class="achievements">
-                    <ul>
-                        <li>Best Presenter Award, BICAME 2018
-                        </li>
-                        <li>Event Coordinator, Educational Activities Committee, IEEE Bangladesh Section 2018</li>
-                        <li>Country Lead, IEEEXtreme 12.o</li>
-                        <li>Delegate, IEEE Region 10 SYWL Congress 2018, Bali Indonesia
-                            Travel Grant Winner from IEEE Region 10 Computer Society for IEEE R10 SYWL Congress 2018</li>
-                        <li>Best Student Volunteer (Humanitarian) Award, IEEE Bangladesh Section 2017</li>
-                        <li>Ambassador, IEEEMadC 2017</li>
-                        <li>Ambassador, IEEEXtreme 11.0</li>
-                        <li>Content Writer, Student Activities Committee, IEEE Bangladesh Section 2017</li>
-                        <li>Graphics Designer, Humanitarian Activities Committee, IEEE Bangladesh Section 2017</li>
-                        <li>Team Lead, Video & Media, IEEE BDS SYW Congress 2017
-                        </li>
-                        <li>Organizing Chair, IEEE BDS SYW Congress 2017
-                        </li>
-                        <li>Publication, IHTPC 2017
-                        </li>
-                    </ul>
-                </div>
+                        <ul>
+                            <li>Best Presenter Award, BICAME 2018
+                            </li>
+                            <li>Event Coordinator, Educational Activities Committee, IEEE Bangladesh Section 2018</li>
+                            <li>Country Lead, IEEEXtreme 12.o</li>
+                            <li>Delegate, IEEE Region 10 SYWL Congress 2018, Bali Indonesia
+                                Travel Grant Winner from IEEE Region 10 Computer Society for IEEE R10 SYWL Congress 2018</li>
+                            <li>Best Student Volunteer (Humanitarian) Award, IEEE Bangladesh Section 2017</li>
+                            <li>Ambassador, IEEEMadC 2017</li>
+                            <li>Ambassador, IEEEXtreme 11.0</li>
+                            <li>Content Writer, Student Activities Committee, IEEE Bangladesh Section 2017</li>
+                            <li>Graphics Designer, Humanitarian Activities Committee, IEEE Bangladesh Section 2017</li>
+                            <li>Team Lead, Video & Media, IEEE BDS SYW Congress 2017
+                            </li>
+                            <li>Organizing Chair, IEEE BDS SYW Congress 2017
+                            </li>
+                            <li>Publication, IHTPC 2017
+                            </li>
+                        </ul>
+                    </div>
+                    </div>
             </div>
             
         
@@ -222,6 +206,14 @@
     {% block common_js %}
         {% include "common_js_includes.html" %}
     {% endblock %}
+
+    <script>
+        let achieveTab  = document.querySelector(".view_achieve_tab");
+
+        achieveTab.onclick = function myfunction(){
+            document.querySelector(".achieve_list").style.display = "block";
+        }
+    </script>
 </body>
 
 </html>
