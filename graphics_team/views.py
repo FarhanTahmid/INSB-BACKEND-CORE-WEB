@@ -12,20 +12,21 @@ from users.renderData import LoggedinUser
 from . import renderData
 from django.conf import settings
 from central_events.models import Events
-from .models import Graphics_Banner_Image,Graphics_Link
+from .models import Graphics_Banner_Image,Graphics_Link,Graphics_Drive_links
 import traceback
 import logging
 from system_administration.system_error_handling import ErrorHandling
 from django.http import Http404,HttpResponseBadRequest
 from datetime import datetime
 from port.renderData import PortData
-from users.renderData import PanelMembersData
+from users.renderData import PanelMembersData,member_login_permission
 from users import renderData
 from central_branch import views as cv
 
 logger=logging.getLogger(__name__)
 # Create your views here.
 @login_required
+@member_login_permission
 def team_homepage(request):
 
     try:
@@ -54,6 +55,7 @@ def team_homepage(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_team(request):
 
     try:
@@ -157,6 +159,7 @@ def manage_team(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def event_page(request):
 
     try:
@@ -183,6 +186,7 @@ def event_page(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 @login_required
+@member_login_permission
 def event_form(request,event_id):
 
     sc_ag=PortData.get_all_sc_ag(request=request)
@@ -251,6 +255,7 @@ def event_form(request,event_id):
     
 
 @login_required
+@member_login_permission
 def event_form_add_links(request,event_id):
     sc_ag=PortData.get_all_sc_ag(request=request)
     current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -309,10 +314,62 @@ def event_form_add_links(request,event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
+@login_required
+@member_login_permission
+def graphics_drive_links(request):
 
-def graphics_page(request):
-        return render(request,"Graphics/graphics_page.html")
-def create_graphics_form(request):
-        return render(request,"Graphics/create_graphics_form.html")
-def graphics_event_form_add_links(request):
-        return render(request,"Graphics/graphics_event_form_add_links.html")
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+        
+    try:
+        all_links = Graphics_Drive_links.objects.all()
+        if request.method == "POST":
+
+            if request.POST.get('add_link'):
+                
+                link_title = request.POST.get('title')
+                link = request.POST.get('graphics_form_link')
+
+                if GraphicsTeam.add_graphics_drive_links(link_title,link):
+                    messages.success(request,'Added Successfully')
+                else:
+                    messages.error(request,'Something went wrong')
+                return redirect('graphics_team:graphics_drive_links')
+            
+            if request.POST.get('update_link'):
+
+                edit_title = request.POST.get('edit_title')
+                edit_link = request.POST.get('edit_drive_link')
+                link_pk = request.POST.get('link_pk')
+
+                if GraphicsTeam.edit_graphics_drive_links(edit_title,edit_link,link_pk):
+                    messages.success(request,'Updated Successfully')
+                else:
+                    messages.error(request,'Something went wrong')
+                return redirect('graphics_team:graphics_drive_links')
+            
+            if request.POST.get('delete_link'):
+
+                link_pk = request.POST.get('remove_link')
+                
+                if GraphicsTeam.remove_graphics_drive_link(link_pk):
+                    messages.success(request,'Deleted Successfully')
+                else:
+                    messages.error(request,'Something went wrong')
+                return redirect('graphics_team:graphics_drive_links')
+
+
+        context = {
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'all_links':all_links,
+            }
+        
+        return render(request,"Graphics/graphics_page.html",context)
+    
+    
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)

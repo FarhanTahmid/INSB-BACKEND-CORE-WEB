@@ -1,4 +1,5 @@
-{% load static %} {% block create_content_form_add_notes_content %}
+{% load static %} 
+{% block edit_content_form_add_notes_content %}
 <!-- CKEditor CDN -->
 <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
 <style>
@@ -37,52 +38,57 @@
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="box-body">
+        {% if content_access %}
         <div class="form-group row align-items-center">
-            <!--add captions-->
-          <label for="captions" class="col-sm-3 form-control-label">Add Captions:</label>
+          <!--add captions-->
+        <label for="captions" class="col-sm-3 form-control-label">Add Captions:</label>
 
 
-          <div class="col-sm-7">
-            <!-- Add input field for captions here if needed -->
-          </div>
-
-
-          <!--add caption button-->
-          <div class="col-sm-2 d-flex align-items-center justify-content-center">
-            <button
-              type="button"
-              class="circle-btn plus-sign"
-              data-toggle="modal"
-              data-target="#AddCaptionModal"></button>
-          </div>
+        <div class="col-sm-7">
+          <!-- Add input field for captions here if needed -->
         </div>
 
-        <hr>
+
+        <!--add caption button-->
+        <div class="col-sm-2 d-flex align-items-center justify-content-center">
+          <button
+            type="button"
+            class="circle-btn plus-sign"
+            data-toggle="modal"
+            data-target="#AddCaptionModal"></button>
+        </div>
+      </div>
+      <hr>
+        {% endif %}
 
         <div id="captions-container" class="mt-3">
             <!--added captions-->
           <label>Captions:</label>
           
+          {% for caption in captions %}
           <div class="row container-fluid bg-light mt-3" style="margin: auto">
             <div class="col-sm-11">
               <a
                 href="#"
                 class="btn btn-link btn-block"
                 data-toggle="modal"
-                data-target="#EditCaptionModal_{{note.pk}}">Sample</a>
+                data-target="#EditCaptionModal_{{caption.pk}}">{{caption.title}}</a>
             </div>
             <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                {% if content_access %}
                 <!--delete caption button-->
               <button
-                type="button"
-                class="close"
-                aria-label="Close"
-                data-toggle="modal"
-                data-target="#ConfirmDeleteModal"
-                onclick="openModal('{{note.pk}}')">
-                ✖ </button>
+              type="button"
+              class="close"
+              aria-label="Close"
+              data-toggle="modal"
+              data-target="#ConfirmDeleteModal"
+              onclick="openModal('{{caption.pk}}')">
+              ✖ </button>
+                {% endif %}
             </div>
           </div>
+          {% endfor %}
           
         </div>
 
@@ -92,6 +98,7 @@
   </div>
 </div>
 
+{% if content_access %}
 <!-- Updated Modal for adding captions -->
 <div
   class="modal fade"
@@ -129,6 +136,13 @@
               name="title"
               value=""
             />
+            <br>
+            <label>Caption: </label>
+            <textarea 
+            class="form-control" 
+            type="text"
+            name="add_content_caption_details"></textarea>
+            <p id="add_content_captionCharacterCount" style="color: red;">Required</p>
 
             <!-- Use form-control class for full-width textarea -->
             
@@ -139,7 +153,7 @@
           <input
             type="submit"
             class="btn btn-outline-success txt-success buttons"
-            name="add_note"
+            name="add_caption"
             value="Add"
           />
           <button
@@ -154,11 +168,13 @@
     </div>
   </div>
 </div>
+{% endif %}
 
 <!-- New modal for editing captions -->
+{% for caption in captions %}
 <div
   class="modal fade"
-  id="EditCaptionModal_{{note.pk}}"
+  id="EditCaptionModal_{{caption.pk}}"
   tabindex="-1"
   role="dialog"
   aria-labelledby="EditCaptionModalLabel"
@@ -167,7 +183,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editCaptionModalLabel">Edit Caption</h5>
+        <h5 class="modal-title" id="editCaptionModalLabel">{% if content_access %}Edit{% else %}View{% endif %} Caption</h5>
         <button
           type="button"
           class="close"
@@ -182,9 +198,9 @@
         <div class="modal-body">
           {% csrf_token %}
           <input
-            id="update_note_{{note.pk}}"
-            name="update_note"
-            value="{{note.pk}}"
+            id="update_caption_{{caption.pk}}"
+            name="update_caption"
+            value="{{caption.pk}}"
             type="hidden"
           />
           <div class="form-group">
@@ -196,24 +212,26 @@
               autocomplete="off"
               required
               name="title"
-              value="{{note.title}}"
-            />
+              value="{{caption.title}}"
+            {% if not content_access %}disabled{% endif %}/>
             <br>
             <label>Caption: </label>
             <textarea 
             class="form-control" 
             type="text"
-            name="content_caption_details"></textarea>
+            name="content_caption_details_{{caption.pk}}" {% if not content_access %}disabled{% endif %}>{{caption.caption|safe}}</textarea>
             <p id="content_captionCharacterCount" style="color: red;">Required</p>
           </div>
         </div>
         <div class="modal-footer">
+          {% if content_access %}
           <input
             type="submit"
             name="update"
             class="btn btn-outline-primary txt-primary"
             value="Update"
           />
+          {% endif %}
           <button
             type="button"
             class="btn btn-outline-secondary"
@@ -226,6 +244,7 @@
     </div>
   </div>
 </div>
+{% endfor %}
 
 <!-- Confirmation modal for delete -->
 <div
@@ -252,7 +271,7 @@
       <form method="POST">
         <div class="modal-body">
           {% csrf_token %}
-          <p><input id="remove_note" name="remove_note" type="hidden" /></p>
+          <p><input id="remove_caption" name="remove_caption" type="hidden" /></p>
           Are you sure you want to delete the caption?
         </div>
         <div class="modal-footer">
@@ -276,20 +295,23 @@
 </div>
 
 <script>
-  function openModal(remove_note) {
+  function openModal(remove_caption) {
     // Set data in the modal
-    var inputElement = document.getElementById("remove_note");
-    inputElement.value = remove_note;
+    var inputElement = document.getElementById("remove_caption");
+    inputElement.value = remove_caption;
   }
 </script>
 <!--Script for CKEditor Control-->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
       // Replace the textareas with CKEditor instances
-      CKEDITOR.replace('content_caption_details');
+      CKEDITOR.replace('add_content_caption_details');
+      {% for caption in captions %}
+      CKEDITOR.replace('content_caption_details_{{caption.pk}}');
+      {% endfor %}
 
       // Attach a function to the change event for each CKEditor instance
-      ["content_caption"]
+      ["content_caption","add_content_caption"]
           .forEach(function (editorId) {
               var editor = CKEDITOR.instances[editorId + '_details'];
 
@@ -324,4 +346,4 @@
       }
   }
 </script>
-{% endblock create_content_form_add_notes_content %}
+{% endblock edit_content_form_add_notes_content %}

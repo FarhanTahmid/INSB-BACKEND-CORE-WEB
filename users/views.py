@@ -23,7 +23,7 @@ from system_administration.system_error_handling import ErrorHandling
 from datetime import datetime
 import traceback
 from central_branch import views as cv
-
+from .renderData import member_login_permission
 
 logger=logging.getLogger(__name__)
 
@@ -171,6 +171,7 @@ def signup(request,ieee_id,token):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def dashboard(request):
     '''This function loads all the dashboard activities for the program'''
     
@@ -245,6 +246,7 @@ def dashboard(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def getDashboardStats(request):
 
     try:
@@ -263,7 +265,8 @@ def getDashboardStats(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
     
-
+@login_required
+@member_login_permission
 def profile_page(request):
     
     '''This function loads all the view for User profile View'''
@@ -310,6 +313,8 @@ def profile_page(request):
         return cv.custom_500(request)
 
 # profile settings
+@login_required
+@member_login_permission
 def change_password(request):
 
     try:
@@ -364,6 +369,7 @@ def change_password(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 # update profile information
 def update_information(request):
 
@@ -455,6 +461,7 @@ def update_information(request):
 
 
 @login_required
+@member_login_permission
 def logoutUser(request):
     try:
 
@@ -465,7 +472,6 @@ def logoutUser(request):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
-
 
 def forgotPassword_getUsername(request):
     '''this function is used to get the username for password resetting and sending them an email with reset link'''

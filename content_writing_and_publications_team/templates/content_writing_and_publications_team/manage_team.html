@@ -293,6 +293,21 @@
                                         <label for="event_access">Event Access</label><br>
                                         {% endif %}
 
+                                        {% if data_access.content_access %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="content_access" name="content_access">
+                                        <label for="content_access">Content Create/Edit Access</label><br>
+                                        {% else %}
+                                        <input type="checkbox" class="checkbox" value="content_access" name="content_access">
+                                        <label for="content_access">Content Create/Edit Access</label><br>
+                                        {% endif %}
+
+                                        {% if data_access.content_view_access %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="content_view_access" name="content_view_access">
+                                        <label for="content_view_access">Content View Access</label><br>
+                                        {% else %}
+                                        <input type="checkbox" class="checkbox" value="content_view_access" name="content_view_access">
+                                        <label for="content_view_access">Content View Access</label><br>
+                                        {% endif %}
                                             
                                     </td>
                                 

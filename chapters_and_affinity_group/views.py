@@ -35,10 +35,15 @@ from users.models import Alumni_Members
 from django.views.decorators.clickjacking import xframe_options_exempt
 from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
 from central_branch import views as cv
-from users.renderData import LoggedinUser
+from users.renderData import LoggedinUser,member_login_permission
+import xlwt
+from system_administration.render_access import Access_Render
+
 # Create your views here.
 logger=logging.getLogger(__name__)
 
+@login_required
+@member_login_permission
 def sc_ag_homepage(request,primary):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -72,6 +77,7 @@ def sc_ag_homepage(request,primary):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def sc_ag_members(request,primary):
     
     try:
@@ -132,6 +138,7 @@ def sc_ag_members(request,primary):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def sc_ag_panels(request,primary):
 
     try:
@@ -177,6 +184,7 @@ def sc_ag_panels(request,primary):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def sc_ag_panel_details(request,primary,panel_pk):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -392,7 +400,8 @@ def sc_ag_panel_details(request,primary,panel_pk):
         return cv.custom_500(request) 
        
 
-@login_required               
+@login_required  
+@member_login_permission             
 def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -451,7 +460,8 @@ def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
         return cv.custom_500(request)
         
         
-@login_required    
+@login_required   
+@member_login_permission 
 def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -515,6 +525,7 @@ def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -585,6 +596,7 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 @login_required
+@member_login_permission
 def sc_ag_membership_renewal_sessions(request,primary):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -611,6 +623,8 @@ def sc_ag_membership_renewal_sessions(request,primary):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
+@login_required
+@member_login_permission
 def sc_ag_renewal_session_details(request,primary,renewal_session):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -650,6 +664,7 @@ def sc_ag_renewal_session_details(request,primary,renewal_session):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def get_sc_ag_renewal_stats(request):
     
     if request.method=="GET":
@@ -688,6 +703,7 @@ def get_sc_ag_renewal_stats(request):
             return cv.custom_500(request)
         
 @login_required
+@member_login_permission
 def sc_ag_manage_access(request,primary):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -774,6 +790,7 @@ def sc_ag_manage_access(request,primary):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 def sc_ag_renewal_excel_sheet(request,primary,renewal_session):
     try:
         has_access = SC_Ag_Render_Access.access_for_membership_renewal_access(request=request,sc_ag_primary=primary)
@@ -791,6 +808,7 @@ def sc_ag_renewal_excel_sheet(request,primary,renewal_session):
         return cv.custom_500(request)
         
 @login_required
+@member_login_permission
 def event_control_homepage(request,primary):
 
     '''This is the event control homepage view function for rest of the groups, except 1'''
@@ -805,7 +823,7 @@ def event_control_homepage(request,primary):
         
         #loading all events for society affinity groups now
         events= Branch.load_all_inter_branch_collaborations_with_events(primary)
-        
+        all_event_years = Branch.get_event_years(primary)
         if request.method=="POST":
             if request.POST.get('add_event_type'):
                 event_type = request.POST.get('event_type')
@@ -827,10 +845,12 @@ def event_control_homepage(request,primary):
             'is_branch':is_branch,
             'has_access_to_create_event':has_access_to_create_event,
             'events':events,
+            'all_event_years':all_event_years,
             'has_access_to_create_event':SC_Ag_Render_Access.access_for_create_event(request=request,sc_ag_primary=primary),
             # TODO:
             # if dont have event edit access, make people redirect to event in main web
             'has_access_to_edit_event':SC_Ag_Render_Access.access_for_event_details_edit(request=request,sc_ag_primary=primary),
+            'common_access':SC_Ag_Render_Access.get_sc_ag_common_access(request,primary)
             
         }
         return render(request,"Events/event_homepage.html",context)
@@ -840,6 +860,7 @@ def event_control_homepage(request,primary):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 def mega_event_creation(request, primary):
 
     '''function for creating super event'''
@@ -890,6 +911,7 @@ def mega_event_creation(request, primary):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 def mega_events(request,primary):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -916,6 +938,7 @@ def mega_events(request,primary):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 def mega_event_edit(request,primary,mega_event_id):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -980,6 +1003,7 @@ def mega_event_edit(request,primary,mega_event_id):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 def mega_event_add_event(request,primary,mega_event_id):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -1037,6 +1061,7 @@ def mega_event_add_event(request,primary,mega_event_id):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def event_creation_form_page(request,primary):
     #######load data to show in the form boxes#########
     try:
@@ -1117,6 +1142,7 @@ def event_creation_form_page(request,primary):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def event_creation_form_page2(request,primary,event_id):
     #loading all inter branch collaboration Options
 
@@ -1166,6 +1192,7 @@ def event_creation_form_page2(request,primary,event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 @login_required
+@member_login_permission
 def event_creation_form_page3(request,primary,event_id):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -1216,6 +1243,7 @@ def event_creation_form_page3(request,primary,event_id):
     
 
 @login_required
+@member_login_permission
 def event_edit_form(request, primary, event_id):
 
     ''' This function loads the edit page of events '''
@@ -1349,7 +1377,8 @@ def event_edit_form(request, primary, event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
-@login_required    
+@login_required  
+@member_login_permission  
 def event_edit_media_form_tab(request, primary, event_id):
     ''' This function loads the media tab page of events '''
 
@@ -1421,6 +1450,8 @@ def event_edit_media_form_tab(request, primary, event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
+@login_required
+@member_login_permission
 def event_edit_graphics_form_tab(request, primary, event_id):
 
     ''' This function loads the graphics tab page of events '''
@@ -1495,7 +1526,8 @@ def event_edit_graphics_form_tab(request, primary, event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
     
-
+@login_required
+@member_login_permission
 def event_edit_graphics_form_links_sub_tab(request,primary,event_id):
 
     ''' This function loads the graphics tab page of events '''
@@ -1562,7 +1594,8 @@ def event_edit_graphics_form_links_sub_tab(request,primary,event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
-
+@login_required
+@member_login_permission
 def event_edit_content_form_tab(request,primary,event_id):
 
     ''' This function loads the content tab page of events '''
@@ -1676,6 +1709,7 @@ def event_edit_content_form_tab(request,primary,event_id):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 @xframe_options_exempt
 def event_preview(request, primary, event_id):
     ''' This function displays a preview of an event regardless of it's published status '''
@@ -1725,6 +1759,7 @@ def event_preview(request, primary, event_id):
     
 
 @login_required
+@member_login_permission
 def manage_main_website(request, primary):
 
     '''This view function loads the portals page for managung main website of socities
@@ -1829,6 +1864,7 @@ def manage_main_website(request, primary):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 @xframe_options_exempt
 def manage_main_website_preview(request,primary):
     try:
@@ -1864,6 +1900,7 @@ def manage_main_website_preview(request,primary):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def feedbacks(request,primary):
 
     '''This view function loads the feedback page for the particular societies and affinity
@@ -1911,6 +1948,7 @@ def feedbacks(request,primary):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def event_feedback(request, primary, event_id):
 
     try:
@@ -1941,3 +1979,84 @@ def event_feedback(request, primary, event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
     
+@login_required
+@member_login_permission
+def generateExcelSheet_events_by_year_sc_ag(request,primary,year):
+
+    '''This method generates the excel files for The events according to the year selected'''
+
+    try:
+        society = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
+        #Loading Access Permission
+        user=request.user
+        #need to give acccess for downloading this file
+        has_access=SC_Ag_Render_Access.get_sc_ag_common_access(request,user.username)
+        if has_access:
+            date=datetime.now()
+            response = HttpResponse(
+                content_type='application/ms-excel')  # eclaring content type for the excel files
+            response['Content-Disposition'] = f'attachment; filename={society.short_form}_Events_{year} - ' +\
+                str(date.strftime('%m/%d/%Y')) + \
+                '.xls'  # making files downloadable with name of session and timestamp
+            # adding encoding to the workbook
+            workBook = xlwt.Workbook(encoding='utf-8')
+            # opening an worksheet to work with the columns
+            workSheet = workBook.add_sheet(f'Events List of {year}')
+
+            # generating the first row
+            row_num = 0
+            font_style = xlwt.XFStyle()
+            font_style.font.bold = True
+
+            # Defining columns that will stay in the first row
+            columns = ['SL','Event Name','Event Date', 'Organiser', 'Collaborations','Event Type','Venue']
+
+            # Defining first column
+            column_widths = [1000,4000, 6000, 18000, 18000, 6000,6000]
+            for col, width in enumerate(column_widths):
+                workSheet.col(col).width = width
+
+
+            for column in range(len(columns)):
+                workSheet.write(row_num, column, columns[column], font_style)
+
+            # reverting font style to default
+            font_style = xlwt.XFStyle()
+
+            # Center alignment style
+            center_alignment = xlwt.easyxf('align: horiz center')
+            # Word wrap style
+            word_wrap_style = xlwt.easyxf('alignment: wrap True')
+
+            events= Branch.load_all_inter_branch_collaborations_with_events_yearly(year,primary)
+            sl_num = 0
+            for event,collaborations in events.items():
+                row_num += 1
+                sl_num += 1
+                workSheet.write(row_num,0 , sl_num,  center_alignment)
+                workSheet.write(row_num,1 , event.event_name,  center_alignment)
+                workSheet.write(row_num,2 , event.event_date.strftime('%Y-%m-%d'),  center_alignment)
+                workSheet.write(row_num,3 , event.event_organiser.group_name,  center_alignment)
+                collaborations_text = ""
+                for collabs in collaborations:
+                    collaborations_text += collabs + '\n'
+                workSheet.write(row_num, 4, collaborations_text, word_wrap_style) 
+                categories = ""   
+                for event_type in event.event_type.all():
+                    categories+=event_type.event_category + '\n'  
+                workSheet.write(row_num, 5, categories, word_wrap_style)
+                venue_list = Branch.get_selected_venues(event.pk)
+                venues=""
+                for venue in venue_list:
+                    venues += venue + '\n'
+                workSheet.write(row_num, 6, venues, word_wrap_style)
+                    
+            workBook.save(response)
+            return (response)
+        else:
+            return render(request,'access_denied2.html')
+        
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)

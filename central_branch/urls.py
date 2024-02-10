@@ -1,7 +1,7 @@
 import imp
 from django.urls import path,include
 from . import views
-from .views import UpdatePositionAjax
+from .views import UpdatePositionAjax,UpdateRestrictionAjax
 
 app_name='central_branch'
 
@@ -111,5 +111,9 @@ urlpatterns = [
     path('member_details/<int:ieee_id>',views.member_details,name="member_details"),
 
     # get dynamic data in JS position edit
-    path('get_position_data/',UpdatePositionAjax.as_view(),name="update_position")
+    path('get_position_data/',UpdatePositionAjax.as_view(),name="update_position"),
+    #event excel generation url
+    path('generateExcelSheet_events_by_year/<int:year>',views.generateExcelSheet_events_by_year,name="generateExcelSheet_events_by_year"),
+    path('members/user_access/',views.user_access,name="user_access"),
+    path('update_restricted_members/',UpdateRestrictionAjax.as_view(),name="update_restricted_members")
 ]

@@ -8,7 +8,7 @@ from django.contrib import messages
 from .renderData import PromotionTeam
 from system_administration.models import Promotions_Data_Access
 from port.renderData import PortData
-from users.renderData import PanelMembersData,LoggedinUser
+from users.renderData import PanelMembersData,LoggedinUser,member_login_permission
 from system_administration.system_error_handling import ErrorHandling
 from datetime import datetime
 import traceback
@@ -19,6 +19,7 @@ from central_branch import views as cv
 logger=logging.getLogger(__name__)
 
 @login_required
+@member_login_permission
 def team_homepage(request):
 
     try:
@@ -44,6 +45,7 @@ def team_homepage(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_team(request):
 
     '''This function loads the manage team page for promotions team and is accessable

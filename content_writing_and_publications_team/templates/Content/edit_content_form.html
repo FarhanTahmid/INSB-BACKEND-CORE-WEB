@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Graphics | Graphics Team</title>
+    <title>Update Content | Content Writing & Publications Team</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -31,7 +31,7 @@
 
       .notes {
         font-weight: bold;
-        margin: 66px 0px 66px;
+        margin: 66px 0px 20px;
       }
 
       label {
@@ -75,6 +75,11 @@
         height: auto; /* Maintain aspect ratio */
         border-radius: 5px; /* Add rounded corners if desired */
       }
+
+      .btn-container {
+        text-align: center;
+      }
+
       @media screen and (max-width: 700px) {
         .wrapper{
           margin: 0 3%;
@@ -99,7 +104,7 @@
       <!-- navbar -->
       <div id="content" class="app-content box-shadow-z0" role="main">
         {% block navbar %} 
-         {% include 'graphics_navbar.html' %} 
+         {% include 'content_navbar.html' %} 
         {% endblock navbar %}
       </div>
 
@@ -119,19 +124,21 @@
           <div class="notes">
             <h6>Note:</h6>
             <ol>
-              <li>Provide the drive link of the folder for the banner images </li>
-                <li>If the banner picture is already uploaded, you can change it by deleting the existing one.
-                    Select the desired picture and hit <span style="color:blue;">'Save'</span>.</li>
-                <li>Make sure to save any changes you make before leaving</li>
+              <li>Provide the drive link for the documents</li>
+              <li>You can also upload the document files</li>
+              <li>Make sure to save any changes made instantly to prevent data loss</li>
             </ol>
 
-            
+            <!--Tab view-->
+            {% block edit_content_form_tab %} 
+             {% include "Content/edit_content_form_tab.html" %} 
+            {% endblock edit_content_form_tab %}
 
-            <!-- {% for message in messages %} -->
+            {% for message in messages %}
             <div
               class="alert alert-success alert-dismissible fade show"
               role="alert">
-              <!-- {{message}} -->
+                {{message}}
               <button
                 type="button"
                 class="close"
@@ -140,32 +147,52 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <!-- {% endfor %} -->
-
-             <!--Tab view for Events-->
-            <!--Tab view Start-->
-            {% block graphics_event_form_tabs %}
-                {% include "Graphics/graphics_event_form_tabs.html" %}
-            {% endblock graphics_event_form_tabs %}
-            <!--Tab view end-->
-            
+            {% endfor %}
 
             <!--back button-->
             <div class="tooltip-container">
-              <a href="{% url 'graphics_team:graphics_page' %}" class="image-button">
+              <a href="{% url 'content_writing_and_publications_team:content_page' %}" class="image-button">
                 <img
                   src="{% static 'back-arrow.png' %}"
                   alt="Go back to session"/>
               </a>
-              <span class="tooltip-text">Go back to Graphics</span>
+              <span class="tooltip-text">Go back to Content</span>
             </div>
+          </div>
+
+          <div class="btn-container">
+            <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal" style="margin-bottom:15px">Delete Content</button>
           </div>
 
 
           <!--form contents-->
-          {% block graphics_form_content %}
-           {% include "Graphics/create_graphics_form_content.html" %} 
-          {% endblock graphics_form_content %}
+          {% block content_edit_form_content %}
+           {% include "Content/edit_content_form_content.html" %} 
+          {% endblock content_edit_form_content %}
+
+          <!-- Confirm Delete Modal -->
+          <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this content?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-outline-danger buttons"  value="Delete" name="delete_content">
+                        <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
         </div>
       </div>
 

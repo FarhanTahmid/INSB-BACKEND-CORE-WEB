@@ -107,3 +107,63 @@ class CWPTeam_Render_Access:
                 CWPTeam_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
                 ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
                 return False
+            
+    def access_for_content(request):
+        ''' This function checks if the requested user has access to create/edit contents. Will return True if it has access permission '''
+        try:
+            # get the user and username. Username will work as IEEE ID and Developer username both
+            user=request.user
+            username=user.username
+
+            #Get member from graphics data access table
+            get_member = CWP_Data_Access.objects.filter(ieee_id=username)
+            #Check if the member exits
+            if(get_member.exists()):
+                #The member exists. Now check if it has events access
+                if(get_member[0].content_access or CWPTeam_Render_Access.get_common_access(request)):
+                    return True
+                else:
+                    return False
+            else:
+                #The member does not exist in the permissions table
+                if(CWPTeam_Render_Access.get_common_access(request)):
+                    return True
+                else:
+                    return False
+        except Exception as e:
+            if(CWPTeam_Render_Access.get_common_access(request)):
+                return True
+            else:
+                CWPTeam_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+                ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                return False
+    
+    def access_for_view_content(request):
+        ''' This function checks if the requested user has access to view contents. Will return True if it has access permission '''
+        try:
+            # get the user and username. Username will work as IEEE ID and Developer username both
+            user=request.user
+            username=user.username
+
+            #Get member from graphics data access table
+            get_member = CWP_Data_Access.objects.filter(ieee_id=username)
+            #Check if the member exits
+            if(get_member.exists()):
+                #The member exists. Now check if it has events access
+                if(get_member[0].content_view_access or CWPTeam_Render_Access.get_common_access(request)):
+                    return True
+                else:
+                    return False
+            else:
+                #The member does not exist in the permissions table
+                if(CWPTeam_Render_Access.get_common_access(request)):
+                    return True
+                else:
+                    return False
+        except Exception as e:
+            if(CWPTeam_Render_Access.get_common_access(request)):
+                return True
+            else:
+                CWPTeam_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+                ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                return False

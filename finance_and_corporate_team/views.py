@@ -9,7 +9,7 @@ from .renderData import FinanceAndCorporateTeam
 from system_administration.models import FCT_Data_Access
 from port.renderData import PortData
 from users import renderData
-from users.renderData import PanelMembersData
+from users.renderData import PanelMembersData,member_login_permission
 import traceback
 from datetime import datetime
 import logging
@@ -19,6 +19,7 @@ from central_branch import views as cv
 logger=logging.getLogger(__name__)
 # Create your views here.
 @login_required
+@member_login_permission
 def team_homepage(request):
 
     try:
@@ -46,6 +47,7 @@ def team_homepage(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_team(request):
 
     try:

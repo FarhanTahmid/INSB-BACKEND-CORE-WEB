@@ -45,6 +45,7 @@ class Members(models.Model):
     session=models.ForeignKey(recruitment_session,null=True,blank=True,on_delete=models.CASCADE) #recruitment session
     last_renewal_session=models.ForeignKey(Renewal_Sessions,null=True,blank=True,on_delete=models.CASCADE) #last renewal session    
     is_active_member = models.BooleanField(null=False,blank=False,default=True)
+    is_blocked = models.BooleanField(null=False,blank=False,default=False)
     class Meta:
         verbose_name='INSB Registered Members'
         ordering = ['position__rank']
@@ -117,7 +118,7 @@ class UserSignupTokenTable(models.Model):
 '''This class is for the number of daily hits on the page'''
 class User_IP_Address(models.Model):
     ip_address = models.GenericIPAddressField(blank=True,null=True)
-    created_at = models.DateField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = "Visitors on Main Website"

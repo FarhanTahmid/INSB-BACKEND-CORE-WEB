@@ -3,9 +3,10 @@ from django.conf import settings
 from central_branch.renderData import Branch
 from django.shortcuts import get_object_or_404
 from users.models import Members
+from django.contrib import messages
 from port.models import Teams,Roles_and_Position
 from system_administration.models import CWP_Data_Access
-from .models import Content_Notes, Content_Team_Document, Content_Team_Documents_Link
+from .models import Content_Notes, Content_Team_Content, Content_Team_Content_Caption, Content_Team_Content_Document, Content_Team_Document, Content_Team_Documents_Link
 import logging
 import traceback
 from system_administration.system_error_handling import ErrorHandling
@@ -69,9 +70,9 @@ class ContentWritingTeam:
         Branch.add_member_to_team(ieee_id=ieee_id,position=position,team_primary=2)
         return True
     
-    def cwp_manage_team_access_modifications(manage_team_access, event_access, ieee_id):
+    def cwp_manage_team_access_modifications(manage_team_access, event_access, content_access, content_view_access, ieee_id):
         try:
-            CWP_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access, event_access=event_access)
+            CWP_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access, event_access=event_access, content_access=content_access, content_view_access=content_view_access)
             return True
         except CWP_Data_Access.DoesNotExist:
             return False
@@ -198,5 +199,107 @@ class ContentWritingTeam:
         except Exception as e:
             ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            return False       
+            return False 
+
+    def create_content(title, description, documents_link, documents):
+        ''' This function is used to create content for CWP Team '''
+        try:
+            new_content = Content_Team_Content(title=title,description=description,documents_link=documents_link)
+            new_content.save()
+
+            if documents:
+                for document in documents:
+                    Content_Team_Content_Document.objects.create(content_id=new_content, document=document)
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+    
+    def update_content(content_id, title, description, documents_link, documents):
+        ''' This function is used to update content for CWP Team '''
+        try:
+            content = Content_Team_Content.objects.get(id=content_id)
+            content.title = title
+            content.description = description
+            content.documents_link = documents_link
+            content.save()
+
+            if documents:
+                for document in documents:
+                    Content_Team_Content_Document.objects.create(content_id=content, document=document)
+
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+    
+    def remove_content_doc(document_id):
+        ''' This function is used to remove a content document for CWP Team '''
+        try:
+            doc = Content_Team_Content_Document.objects.get(id=document_id)
+            path = settings.MEDIA_ROOT+str(doc.document)
+            if os.path.exists(path):
+                os.remove(path)
+            doc.delete()
+
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+    
+    def create_content_caption(content_id, title, caption):
+        ''' This function is used to create a content caption for CWP Team '''
+        try:
+            Content_Team_Content_Caption.objects.create(content_id=Content_Team_Content.objects.get(id=content_id), title=title, caption=caption)
+            
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+    
+    def update_content_caption(caption_id, title, caption):
+        ''' This function is used to update content caption for CWP Team '''
+        try:
+            content_caption = Content_Team_Content_Caption.objects.get(id=caption_id)
+            content_caption.title = title
+            content_caption.caption = caption
+            content_caption.save()
+
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+    
+    def delete_content_caption(caption_id):
+        ''' This function is used to delete a content caption for CWP Team '''
+        try:
+            Content_Team_Content_Caption.objects.get(id=caption_id).delete()
+
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def delete_content(request,content_id):
+        ''' This function is used to delete a content for CWP Team '''
+        try:
+            content_docs = Content_Team_Content_Document.objects.filter(content_id=content_id)
+            for content_doc in content_docs:
+                if(not ContentWritingTeam.remove_content_doc(content_doc.pk)):
+                    messages.warning(request,f'Could not delete associated document: {content_doc.document}')
+
+            Content_Team_Content.objects.get(id=content_id).delete()
+
+            return True
+        except Exception as e:
+            ContentWritingTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+
         
