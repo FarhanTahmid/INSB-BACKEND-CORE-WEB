@@ -30,7 +30,16 @@ class HandleVolunteerAwards:
             messages.info(request,'Something went wrong while creating new award!')
             return False
     
-
+    def load_awards_for_panels(request,panel_pk):
+        try:
+            load_all_awards=VolunteerAwards.objects.filter(panel=Panels.objects.get(pk=panel_pk))
+            return load_all_awards
+        
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.info(request,'Something went wrong while loading awards!')
+            return False
 
 class PortData:
     logger=logging.getLogger(__name__)

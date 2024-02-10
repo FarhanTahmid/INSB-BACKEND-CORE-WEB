@@ -3975,6 +3975,13 @@ def panel_specific_volunteer_awards_page(request,panel_pk):
     panel_info=Panels.objects.get(pk=panel_pk)
     context["panel_info"] = panel_info
     
+    # load all awards of the panel
+    all_awards_of_panel=HandleVolunteerAwards.load_awards_for_panels(request=request,panel_pk=panel_pk)
+    if(all_awards_of_panel is False):
+        pass
+    else:
+        context['all_awards']=all_awards_of_panel
+        
     if request.method=="POST":
         if(request.POST.get('create_award')):
             award_name=request.POST['award_name']
