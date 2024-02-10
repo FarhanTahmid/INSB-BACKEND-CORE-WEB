@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>INSB Registered Members | Membership Development Team</title>
+  <title>INSB Restrict Members Login | Membership Development Team</title>
   <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -275,50 +275,29 @@
 
     <!-- ############ PAGE START-->
     <br>
-    <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">IEEE NSU SB Registered Members List
+    <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">IEEE NSU SB Members Login Restriction
     </h2>
-    <h4 style="justify-content:center;text-align:center;margin-bottom:30px;"> Total Registered Member in System: <span style="color:#00629B;"><b>{{totalNumber}}</b></span> </h4>
-    <div class="update_button"> 
+    <h4 style="justify-content:center;text-align:center;margin-bottom:30px;"> Total Restricted Members in System: <span style="color:#00629B;" id = "total_number"><b>{{totalNumber}}</b></span> </h4>
+    {% comment %} <div class="update_button"> 
         <button name="update_attendance" type="submit" class="btn btn-success">Update</button>
-    </div>
-
+    </div> {% endcomment %}
+    <!--Messages-->
+    <div id="messageContainer" style="display:none; justify-content:center; text-align:center;">
+      <div id="messageBox" class="alert alert-success" role="alert">
+          <span id="messageText"></span>
+          <button type="button" class="close" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+  </div>
+  <!--Messages-->
     <div class="tooltip-container">
-        <a href="/portal/membership_development_team/members/" class="image-button">
+        <a href="{% url 'central_branch:members_list' %}" class="image-button">
           <img src="/static/back-arrow.png" alt="Go back to session">
         </a>
         <span class="tooltip-text">Go back to Member List</span>
       </div>
-    <!--Messages-->
-    <div style="justify-content:center; text-align:center;">
-      {% if messages %}
-          {% for message in messages %}
-              <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
-          {% endfor %}
-        <br>
-      {% endif %}
-  </div>
-  <!--Messages-->
-    {% if has_view_permission %}
-    <div style="justify-content:center;text-align:center;">  
-      <div class="btn-container row">
-        <div style="margin-right:5px;">
-          <a href="{% url 'membership_development_team:export_excel' %}" class="btn btn-outline b-success text-success">Generate an Excel Sheet of All Registered INSB Members</a>
-        </div>
-        <div>
-          <form method="POST">
-            {% csrf_token %}
-            <input type="submit" name="refresh_member_status" class="btn btn-outline b-info text-info" value="Refresh Membership Status of INSB Members">
-          </form>          
-        </div>
-        <div style="margin-left:5px;">
-          <a href="" class="btn btn-outline b-primary text-primary">User Access</a>
-        </div>
 
-        
-      
-      </div>
-  </div>
-    {% endif %}
 
 
 <div style="justify-content:center;text-align:center; margin-top:30px;">  
@@ -351,12 +330,7 @@
               <th data-priority="1">IEEE ID</th>
               <th data-priority="1">NSU ID</th>
               <th data-priority="1">Name</th>
-              <th data-priority= "1">User Access</th>
-              
-             
-              {% if has_view_permission %}
-              
-              {% endif %}
+              <th data-priority= "1">Block User ?</th>
             </tr>
           </thead>
           <tbody>
@@ -364,25 +338,18 @@
                               
               <tr>
               
-                  <td style="color:#00629B"><a href="{% if is_branch %}{% url 'central_branch:member_details' member.ieee_id %}{% else %}{% url 'membership_development_team:member_details' member.ieee_id %}{% endif %}">{{ member.ieee_id  }}</a></td>
+                  <td>{{ member.ieee_id }}</td>
                   <td>{{ member.nsu_id }}</td>
                   <td>{{ member.name  }}</td>
-                  
-                  
-                  {% if has_view_permission %}
-                  <td>{{ member.contact_no }}</td>
-                  {% endif %}
-
-                <td>
+                  <td>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <input id="update_member" name="update_member" type="checkbox" {% if member.is_blocked %} checked {% endif %}>
+                        <input type="hidden" name="memeber_id" value = {{member.ieee_id}}>
                         <label class="form-check-label" for="flexCheckDefault">
                      
                         </label>
                       </div>
-
-                </td>
-                                
+                  </td>
               </tr>
       
             {% endfor %}
@@ -486,6 +453,7 @@
   <!-- ajax -->
   {% comment %} <script src="{% static 'script/jquery.pjax.js'%}"></script> {% endcomment %}
   <script src="{% static 'script/ajax.js'%}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
     getPagination('#table-id');
 	$('#maxRows').trigger('change');
@@ -644,6 +612,51 @@ function FilterkeyWord_all_table() {
           }
         });
       });
+    </script>
+    <script>
+
+        $(document).on('change', 'input[name="update_member"]', function() {
+          // Extract member ID from the corresponding row
+          var memberId = $(this).siblings('input[name="memeber_id"]').val();
+          // Determine whether the checkbox is checked or unchecked
+          var isChecked = $(this).is(':checked');
+          console.log(memberId);
+          console.log(isChecked);
+          // Send AJAX request to the backend
+          $.ajax({
+            url: "{% url 'central_branch:update_restricted_members' %}",
+            type: 'GET',
+            data: {
+                'member_id': memberId,
+                'is_checked': isChecked
+            },
+            success: function(response) {
+                // Handle success response from the backend
+                console.log('AJAX request successful');
+                $('#total_number').text(response.restricted_number);
+                showMessage(response.message);
+            },
+            error: function(xhr, status, error) {
+                // Handle error response from the backend
+                console.error('AJAX request error:', error);
+            }
+        });
+      });
+
+      function showMessage(message) {
+        $('#messageText').text(message);
+        $('#messageContainer').show();
+    }
+    
+    // Function to hide the message box
+    function hideMessage() {
+        $('#messageContainer').hide();
+    }
+    // Add event listener to close button
+    $('#messageBox .close').click(function() {
+      // Hide the message box when the close button is clicked
+      hideMessage();
+    });
   </script>
 <!-- endbuild -->
 </body>

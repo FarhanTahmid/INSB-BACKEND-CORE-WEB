@@ -3920,7 +3920,39 @@ def generateExcelSheet_events_by_year(request,year):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
-          
+        
+def user_access(request):
+    
+    try:
+        user=request.user
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        has_view_permission=renderData.MDT_DATA.insb_member_details_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username)
+        
+        if has_view_permission:
+
+            members=Members.objects.all().order_by('-is_blocked')
+            totalNumber=Members.objects.filter(is_blocked = True).count
+
+            context={
+                'is_branch':True,
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'members':members,
+                'totalNumber':totalNumber,
+                'has_view_permission':has_view_permission,
+                'is_MDT':False
+            }
+            
+            return render(request, 'INSB Members/members_update.html',context)
+        else:
+            return render(request,'access_denied2.html')
+    
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
 def custom_404(request):
     return render(request,'404.html',status=404)
 
@@ -3936,3 +3968,23 @@ class UpdatePositionAjax(View):
                 return JsonResponse(role_data,safe=False)
         # return null if nothing is selected
         return JsonResponse({},safe=False)
+    
+class UpdateRestrictionAjax(View):
+    def get(self,request, *args, **kwargs):
+        status=request.GET.get('is_checked')
+        member_id = request.GET.get('member_id')
+        try:
+            member = Members.objects.get(ieee_id = member_id)
+        
+            if status == "true":
+                member.is_blocked = True
+                message = f"Member ID {member_id}, is now restricted."
+            else:
+                member.is_blocked = False
+                message = f"Member ID {member_id} is no longer restricted ."
+            member.save()
+            number = Members.objects.filter(is_blocked = True).count()
+            return JsonResponse({'message': message,'restricted_number':number}, status=200)
+        except Members.DoesNotExist:
+            message = f"Member ID {member_id} does not exist."
+            return JsonResponse({'message': message}, status=404)

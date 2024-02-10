@@ -1409,7 +1409,3 @@ def site_registration_faculty_confirmation(request):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
-
-
-def user_access(request):
-    return render(request, 'INSB Members/members_update.html')

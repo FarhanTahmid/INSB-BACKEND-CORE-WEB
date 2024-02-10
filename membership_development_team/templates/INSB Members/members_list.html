@@ -261,9 +261,11 @@
             <input type="submit" name="refresh_member_status" class="btn btn-outline b-info text-info" value="Refresh Membership Status of INSB Members">
           </form>          
         </div>
+        {% if is_branch %}
         <div style="margin-left:5px;">
-          <a href="{% url 'membership_development_team:user_access' %}" class="btn btn-outline b-primary text-primary">Something</a>
+          <a href="{% url 'central_branch:user_access' %}" class="btn btn-outline b-primary text-primary">Restrict Users</a>
         </div>
+        {% endif %}
 
         
       
