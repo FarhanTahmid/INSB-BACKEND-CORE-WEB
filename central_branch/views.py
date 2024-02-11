@@ -4014,8 +4014,20 @@ def panel_specific_volunteer_awards_page(request,panel_pk):
             
             change_award_pk=request.POST.get('select_award')
             award_name=request.POST['award_name']
-            print(change_award_pk)
-        
+            
+            if(HandleVolunteerAwards.update_awards(request=request,award_pk=change_award_pk,award_name=award_name)):
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+            else:
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+
+        # delete award
+        if(request.POST.get('delete_award')):
+            award_to_delete_pk=request.POST.get('select_award')
+            if(HandleVolunteerAwards.delete_award(request=request,award_pk=award_to_delete_pk)):
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+            else:
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+
         
         # add member to award
         if(request.POST.get('add_member_to_award')):
