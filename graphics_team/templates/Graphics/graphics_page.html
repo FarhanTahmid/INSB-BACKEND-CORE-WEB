@@ -111,7 +111,7 @@
           <span style="color: #00629b">IEEE NSU Student Branch</span>
         </h2>
 
-        {% if graphics_access %}
+        {% if has_graphics_access %}
         <!--Create Content button-->
         <button  class="create_graphics_button" data-toggle="modal" data-target="#AddLinkModal"><span style="font-size: large">+</span>&nbspAdd Links</button>
         {% else %}
@@ -163,7 +163,7 @@
                 <th>SL</th>
                 <th>Link Title</th>
                 <th>Created on</th>
-                {% if graphics_access %}
+                {% if has_graphics_access %}
                 <th>Remove?</th>
                 {% endif %}
               </tr>
@@ -176,7 +176,7 @@
                     <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal{{links.pk}}">{{links.link_title}}</a>
                   </td>
                   <td>{{links.created_at}}</td>
-                  {% if graphics_access %}
+                  {% if has_graphics_access %}
                   <td>
                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
                       <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal"  onclick="openModal('{{links.pk}}')">✖</button>
@@ -206,7 +206,7 @@
     </div>
     <!--Events table end-->
 
-    {% if graphics_access %}
+    {% if has_graphics_access %}
     <!-- Updated Modal for adding Links -->
     <div class="modal fade" id="AddLinkModal" tabindex="-1" role="dialog" aria-labelledby="AddLinkModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -279,7 +279,7 @@
                                     required
                                     name="edit_title"
                                     value="{{link.link_title}}"
-                                    {% if not graphics_access %}disabled{% endif %} 
+                                    {% if not has_graphics_access %}disabled{% endif %} 
                                 />
                             <br>
                             <label>Links:</label>
@@ -291,12 +291,12 @@
                             id="field1"
                             name="edit_drive_link"
                             value="{{link.link}}"
-                            {% if not graphics_access %}disabled{% endif %}/>
+                            {% if not has_graphics_access %}disabled{% endif %}/>
                             <input type="hidden" name = "link_pk" value ="{{link.pk}}">
                         </div>
                 </div>
                 <div class="modal-footer">
-                  {% if graphics_access %}
+                  {% if has_graphics_access %}
                   <input type="submit" name = "update_link" class="btn btn-outline-primary txt-primary buttons" value="Update">
                   {% endif %}
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
@@ -307,7 +307,7 @@
     </div>
 
 
-    {% if graphics_access %}
+    {% if has_graphics_access %}
     <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-top" role="document">
       <div class="modal-content">

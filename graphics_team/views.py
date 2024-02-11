@@ -329,11 +329,11 @@ def graphics_drive_links(request):
         current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
         
-        graphics_access = GraphicsTeam_Render_Access.access_for_graphics(request)
-        has_access = graphics_access or GraphicsTeam_Render_Access.access_for_view_graphics(request)
+        has_graphics_access = GraphicsTeam_Render_Access.access_for_graphics(request)
+        has_access = has_graphics_access or GraphicsTeam_Render_Access.access_for_view_graphics(request)
         if has_access:
             all_links = Graphics_Drive_links.objects.all()
-            if request.method == "POST" and graphics_access:
+            if request.method == "POST" and has_graphics_access:
 
                 if request.POST.get('add_link'):
                     
@@ -373,7 +373,7 @@ def graphics_drive_links(request):
                 'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'all_links':all_links,
-                'graphics_access':graphics_access
+                'has_graphics_access':has_graphics_access
             }
             
             return render(request,"Graphics/graphics_page.html",context)

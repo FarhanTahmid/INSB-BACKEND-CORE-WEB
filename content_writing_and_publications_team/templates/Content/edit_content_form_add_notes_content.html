@@ -38,7 +38,7 @@
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="box-body">
-        {% if content_access %}
+        {% if has_content_access %}
         <div class="form-group row align-items-center">
           <!--add captions-->
         <label for="captions" class="col-sm-3 form-control-label">Add Captions:</label>
@@ -75,7 +75,7 @@
                 data-target="#EditCaptionModal_{{caption.pk}}">{{caption.title}}</a>
             </div>
             <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                {% if content_access %}
+                {% if has_content_access %}
                 <!--delete caption button-->
               <button
               type="button"
@@ -98,7 +98,7 @@
   </div>
 </div>
 
-{% if content_access %}
+{% if has_content_access %}
 <!-- Updated Modal for adding captions -->
 <div
   class="modal fade"
@@ -183,7 +183,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editCaptionModalLabel">{% if content_access %}Edit{% else %}View{% endif %} Caption</h5>
+        <h5 class="modal-title" id="editCaptionModalLabel">{% if has_content_access %}Edit{% else %}View{% endif %} Caption</h5>
         <button
           type="button"
           class="close"
@@ -213,18 +213,18 @@
               required
               name="title"
               value="{{caption.title}}"
-            {% if not content_access %}disabled{% endif %}/>
+            {% if not has_content_access %}disabled{% endif %}/>
             <br>
             <label>Caption: </label>
             <textarea 
             class="form-control" 
             type="text"
-            name="content_caption_details_{{caption.pk}}" {% if not content_access %}disabled{% endif %}>{{caption.caption|safe}}</textarea>
+            name="content_caption_details_{{caption.pk}}" {% if not has_content_access %}disabled{% endif %}>{{caption.caption|safe}}</textarea>
             <p id="content_captionCharacterCount" style="color: red;">Required</p>
           </div>
         </div>
         <div class="modal-footer">
-          {% if content_access %}
+          {% if has_content_access %}
           <input
             type="submit"
             name="update"
