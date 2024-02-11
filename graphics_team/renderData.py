@@ -69,9 +69,9 @@ class GraphicsTeam:
     def add_member_to_team(ieee_id,position):
         Branch.add_member_to_team(ieee_id=ieee_id,position=position,team_primary=10)
         
-    def graphics_manage_team_access_modifications(manage_team_access, event_access, ieee_id):
+    def graphics_manage_team_access_modifications(manage_team_access, event_access, graphics_access, graphics_view_access, ieee_id):
         try:
-            Graphics_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access, event_access=event_access)
+            Graphics_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access, event_access=event_access, graphics_access=graphics_access, graphics_view_access=graphics_view_access)
             return True
         except Graphics_Data_Access.DoesNotExist:
             return False

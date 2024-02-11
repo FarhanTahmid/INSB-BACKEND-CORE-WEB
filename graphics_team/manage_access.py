@@ -106,3 +106,63 @@ class GraphicsTeam_Render_Access:
                 GraphicsTeam_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
                 ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
                 return False
+            
+    def access_for_graphics(request):
+        ''' This function checks if the requested user has access to create/edit graphics. Will return True if it has access permission '''
+        try:
+            # get the user and username. Username will work as IEEE ID and Developer username both
+            user=request.user
+            username=user.username
+
+            #Get member from graphics data access table
+            get_member = Graphics_Data_Access.objects.filter(ieee_id=username)
+            #Check if the member exits
+            if(get_member.exists()):
+                #The member exists. Now check if it has create/edit graphics access
+                if(get_member[0].graphics_access or GraphicsTeam_Render_Access.get_common_access(request)):
+                    return True
+                else:
+                    return False
+            else:
+                #The member does not exist in the permissions table
+                if(GraphicsTeam_Render_Access.get_common_access(request)):
+                    return True
+                else:
+                    return False
+        except Exception as e:
+            if(GraphicsTeam_Render_Access.get_common_access(request)):
+                return True
+            else:
+                GraphicsTeam_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+                ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                return False
+            
+    def access_for_view_graphics(request):
+        ''' This function checks if the requested user has access to view graphics. Will return True if it has access permission '''
+        try:
+            # get the user and username. Username will work as IEEE ID and Developer username both
+            user=request.user
+            username=user.username
+
+            #Get member from graphics data access table
+            get_member = Graphics_Data_Access.objects.filter(ieee_id=username)
+            #Check if the member exits
+            if(get_member.exists()):
+                #The member exists. Now check if it has only view graphics access
+                if(get_member[0].graphics_view_access or GraphicsTeam_Render_Access.get_common_access(request)):
+                    return True
+                else:
+                    return False
+            else:
+                #The member does not exist in the permissions table
+                if(GraphicsTeam_Render_Access.get_common_access(request)):
+                    return True
+                else:
+                    return False
+        except Exception as e:
+            if(GraphicsTeam_Render_Access.get_common_access(request)):
+                return True
+            else:
+                GraphicsTeam_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+                ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                return False

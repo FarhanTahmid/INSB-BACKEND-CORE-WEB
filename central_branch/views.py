@@ -3919,6 +3919,8 @@ def generateExcelSheet_events_by_year(request,year):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
         
+@login_required
+@member_login_permission
 def user_access(request):
     
     try:
@@ -3968,6 +3970,7 @@ class UpdatePositionAjax(View):
         return JsonResponse({},safe=False)
 
 @login_required
+@member_login_permission
 def volunteerAwardsPanel(request):
     try:
         # get all sc ag for sidebar
@@ -3994,7 +3997,8 @@ def volunteerAwardsPanel(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
     
-    
+@login_required
+@member_login_permission    
 def panel_specific_volunteer_awards_page(request,panel_pk):
     
     # get all sc ag for sidebar
@@ -4085,6 +4089,8 @@ def panel_specific_volunteer_awards_page(request,panel_pk):
         
     return render(request,"Volunteer_Awards/volunteer_awards_control_base.html",context=context)
 
+@login_required
+@member_login_permission
 def panel_and_award_specific_page(request,panel_pk,award_pk):
     # get all sc ag for sidebar
     sc_ag=PortData.get_all_sc_ag(request=request)
