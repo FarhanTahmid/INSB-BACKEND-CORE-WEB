@@ -120,7 +120,7 @@ urlpatterns = [
     path('volunteer_awards/panels/',views.volunteerAwardsPanel,name="volunteer_awards_panels"),
     path('volunteer_awards/panel/<int:panel_pk>/awards',views.panel_specific_volunteer_awards_page,name="panel_specific_volunteer_awards_page"),
     path('volunteer_awards/panel/<int:panel_pk>/awards/<int:award_pk>',views.panel_and_award_specific_page,name="panel_award_specific_volunteer_awards_page"),
-    path('get_award_data/',UpdateAwardAjax.as_view(),name="update_award")
+    path('get_award_data/',UpdateAwardAjax.as_view(),name="update_award"),
     #event excel generation url
     path('generateExcelSheet_events_by_year/<int:year>',views.generateExcelSheet_events_by_year,name="generateExcelSheet_events_by_year"),
     path('members/user_access/',views.user_access,name="user_access"),
