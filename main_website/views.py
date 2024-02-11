@@ -589,9 +589,11 @@ def blogs(request):
 
     try:
         get_all_blog= Blog.objects.filter(publish_blog=True).order_by('-date')
+        get_all_categories = Blog_Category.objects.all()
         context={
             'page_title':"Blogs",
             'blogs':get_all_blog,
+            'categories':get_all_categories,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         }
         return render(request,"Publications/Blog/blog.html",context=context)
