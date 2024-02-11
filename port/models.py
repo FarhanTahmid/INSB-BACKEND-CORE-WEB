@@ -1,9 +1,6 @@
 from django.db import models
 from ckeditor.fields import RichTextField
 from django_resized import ResizedImageField
-from PIL import Image, ExifTags
-from io import BytesIO
-from django.core.files import File
 
 # Create your models here.
 class Chapters_Society_and_Affinity_Groups(models.Model):
@@ -106,5 +103,24 @@ class Panels(models.Model):
         verbose_name='IEEE NSU SB Panels'
     def __str__(self) -> str:
         return str(self.year)
+
+class VolunteerAwards(models.Model):
+    '''The main theory of this volunteer award is-
+        -Every panel will have own awards. Awards will be distinguished by panels
+        -Every SC-AG will have their own awards. Awards will be distinguished by sc ags as well.
+    '''
+    volunteer_award_name=models.CharField(null=False,blank=False,max_length=100,verbose_name="Name of Award")
+    panel=models.ForeignKey(Panels,null=False,blank=False,on_delete=models.CASCADE)
+    award_of=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE)
+    rank_of_awards=models.IntegerField(null=False,blank=False,default=0)
+    
+    class Meta:
+        verbose_name="Volunteer Award"
+        ordering=["-rank_of_awards"]
+        
+    def __str__(self):
+        return self.volunteer_award_name
+
+    
     
     
