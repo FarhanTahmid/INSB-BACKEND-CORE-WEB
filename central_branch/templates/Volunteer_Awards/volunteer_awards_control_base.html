@@ -266,19 +266,20 @@
                             <p>Do mention the contributions of the Member Carefully!</p>
                             <br>
                             <!--Form Field for awards-->
-                            <label>Select award to edit</label>
-                            <select class="form-control w-75" name="select_award" id="award_to_edit">
-                                <option value="">-----------</option>
-                                {% for i in all_awards %}
-                                <option value="{{i.pk}}">{{i.volunteer_award_name}}</option>
-                                {% endfor %}
-                            </select>
-
-                            <div class="modal-body text-left p-lg">
-                                <p>Edit Award attributes.</p>        
-                            </div>
                             <form method="POST">
                                 {% csrf_token %}
+                                <label>Select award to edit</label>
+                                <select class="form-control w-75" name="select_award" id="award_to_edit">
+                                    <option value="">-----------</option>
+                                    {% for i in all_awards %}
+                                    <option value="{{i.pk}}">{{i.volunteer_award_name}}</option>
+                                    {% endfor %}
+                                </select>
+
+                                <div class="modal-body text-left p-lg">
+                                    <p>Edit Award attributes.</p>        
+                                </div>
+                            
                                 <div class="row">
                                     <div class="col-md-6 mx-auto">
                                         <label for="award_name">Award Name:</label>
@@ -291,6 +292,7 @@
                                 <br>
                                 <div class="modal-footer">
                                     <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">Cancel</button>
+                                    <button class="btn primary p-x-md" data-dismiss="modal" data-toggle="modal" data-target="#m-s-rank" ui-toggle-class="bounce" ui-target="#animate">Manage Award Ranking</button>
                                     <input type="submit" class="btn success p-x-md" name="update_award" value="Update Award"></input>  
                                 </div>
                             </form>
@@ -303,6 +305,39 @@
             </div>
             <!--Add modal ends-->
 
+            <!--Modal To Rank Awards-->
+            <div id="m-s-rank" class="modal" data-backdrop="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Rank Awards</h5>
+                        </div>
+                        <div class="modal-body p-lg">
+                            <p>Awards will appear by their ranked order</p>
+                            <p>Press the Upward or Downward buttons to rank the awards higher or lower.</p>
+                            <br>
+                            <!--Form Field for awards-->
+                            {% for i in all_awards %}
+                            <p class="btn btn-outline b-info text-info">{{i.volunteer_award_name}}</p><span style="margin-left:3px;"><p class="btn btn-outline b-info text-info">{{i.volunteer_award_name}}</p></span>
+                            <br>
+                            {% endfor %}
+
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="modal-footer">
+                                    <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">Cancel</button>
+                                    <input type="submit" class="btn success p-x-md" name="save_ranking" value="Save Ranking"></input>  
+
+                                </div>
+                            </form>
+                        </div>                
+        
+                        
+        
+                  </div><!-- /.modal-content -->
+                </div>
+            </div>
+            <!--Add modal ends-->
         </div>
         <!--PAGE END-->
 
