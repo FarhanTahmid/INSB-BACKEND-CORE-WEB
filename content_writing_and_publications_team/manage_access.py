@@ -55,7 +55,7 @@ class CWPTeam_Render_Access:
             user=request.user
             username=user.username
 
-            #Get member from graphics data access table
+            #Get member from content data access table
             get_member = CWP_Data_Access.objects.filter(ieee_id=username)
             #Check if the member exits
             if(get_member.exists()):
@@ -85,7 +85,7 @@ class CWPTeam_Render_Access:
             user=request.user
             username=user.username
 
-            #Get member from graphics data access table
+            #Get member from content data access table
             get_member = CWP_Data_Access.objects.filter(ieee_id=username)
             #Check if the member exits
             if(get_member.exists()):
@@ -115,11 +115,11 @@ class CWPTeam_Render_Access:
             user=request.user
             username=user.username
 
-            #Get member from graphics data access table
+            #Get member from content data access table
             get_member = CWP_Data_Access.objects.filter(ieee_id=username)
             #Check if the member exits
             if(get_member.exists()):
-                #The member exists. Now check if it has events access
+                #The member exists. Now check if it has create/edit content access
                 if(get_member[0].content_access or CWPTeam_Render_Access.get_common_access(request)):
                     return True
                 else:
@@ -145,11 +145,11 @@ class CWPTeam_Render_Access:
             user=request.user
             username=user.username
 
-            #Get member from graphics data access table
+            #Get member from content data access table
             get_member = CWP_Data_Access.objects.filter(ieee_id=username)
             #Check if the member exits
             if(get_member.exists()):
-                #The member exists. Now check if it has events access
+                #The member exists. Now check if it has only view content access
                 if(get_member[0].content_view_access or CWPTeam_Render_Access.get_common_access(request)):
                     return True
                 else:
