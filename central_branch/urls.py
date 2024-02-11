@@ -1,7 +1,7 @@
 import imp
 from django.urls import path,include
 from . import views
-from .views import UpdatePositionAjax,UpdateRestrictionAjax,UpdateAwardAjax
+from .views import UpdatePositionAjax,UpdateAwardAjax,UpdateRestrictionAjax
 
 app_name='central_branch'
 

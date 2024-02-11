@@ -6,7 +6,7 @@
         <div class="box-header">
             <h1 style="text-align: center; font-size: 30px;
             font-weight: bold;
-            margin-top: 23px;">{% if content_access %}Update{% else %}View{% endif %} Content</h1>
+            margin-top: 23px;">{% if has_content_access %}Update{% else %}View{% endif %} Content</h1>
         </div>
 
         <form method="POST" enctype="multipart/form-data">
@@ -22,14 +22,14 @@
                     autocomplete="off"
                     required
                     name="content_title"
-                    value="{{content.title}}" {% if not content_access %}disabled{% endif %}/>
+                    value="{{content.title}}" {% if not has_content_access %}disabled{% endif %}/>
             </div>
 
 
             <!--description-->
             <div class="form-group">
                 <label>Description: <span style="color:red">*<span></label> 
-                <textarea class="form-control" type="text" name="content_description_details" {% if not content_access %}disabled{% endif %}>{{content.description}}</textarea>
+                <textarea class="form-control" type="text" name="content_description_details" {% if not has_content_access %}disabled{% endif %}>{{content.description}}</textarea>
                 <p id="content_descriptionCharacterCount" style="color: red;"></p>
             </div>
 
@@ -44,24 +44,25 @@
                 autocomplete="off"
                 id="field1"
                 value="{{content.documents_link}}"
-                name="drive_link_of_documents" {% if not content_access %}disabled{% endif %}/>
+                name="drive_link_of_documents" {% if not has_content_access %}disabled{% endif %}/>
             </div>
 
-
+            {% if has_content_access %}
             <!--upload doc-->
             <div class="form-group">
               <label for="documents">Upload Documents:</label>
               <div class="custom-file">
-                  <input type="file" class="custom-file-input" id="content-doc-input" name="document" accept=".doc, .docx, .pdf" multiple {% if not content_access %}disabled{% endif %}>
+                  <input type="file" class="custom-file-input" id="content-doc-input" name="document" accept=".doc, .docx, .pdf" multiple>
                   <label class="custom-file-label bg-light" for="content-doc-input">Choose files</label>
               </div>
               
               <br>
-          
+              
               <div id="content-selected-docs-container"></div>
               <input type="hidden" name="selected_documents" id="content-selected-documents">
               <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
-          </div>
+            </div>
+            {% endif %}
 
           <!--files-->
           <div flex-direction="column" justify-content="flex-end">
@@ -71,7 +72,7 @@
                   <div class="col-sm-11 text-left">
                       <a href="{{media_url}}{{document.document}}" class="btn btn-link btn-block" target="_blank" rel="noopener noreferrer">{{document.document}}</a>
                   </div>
-                  {% if content_access %}
+                  {% if has_content_access %}
                   <div class="col-sm-1 d-flex align-items-center justify-content-center">
                     <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{document.pk}}')">✖</button>
                   </div>
@@ -82,7 +83,7 @@
 
            <hr>
        
-          {% if content_access %}
+          {% if has_content_access %}
           <!--save button-->
           <div class="form-group text-center">
             <button type="submit" name="update" class="btn btn-outline-success mb-2">Update Changes</button>
@@ -95,7 +96,7 @@
   </div>
 </div>
 
-{% if content_access %}
+{% if has_content_access %}
 <!-- Confirmation modal for delete -->
 <div
   class="modal fade"

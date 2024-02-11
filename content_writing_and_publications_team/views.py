@@ -330,8 +330,8 @@ def content_page(request):
         user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
 
-        content_access = CWPTeam_Render_Access.access_for_content(request)
-        has_access = content_access or CWPTeam_Render_Access.access_for_view_content(request)
+        has_content_access = CWPTeam_Render_Access.access_for_content(request)
+        has_access = has_content_access or CWPTeam_Render_Access.access_for_view_content(request)
         if has_access:
             all_contents = Content_Team_Content.objects.all().order_by('-pk')
 
@@ -339,7 +339,7 @@ def content_page(request):
                 'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'all_contents':all_contents,
-                'content_access':content_access
+                'has_content_access':has_content_access
             }
 
             return render(request,"Content/content_page.html",context)
@@ -391,10 +391,10 @@ def content_edit(request, content_id):
         user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
 
-        content_access = CWPTeam_Render_Access.access_for_content(request)
-        has_access = content_access or CWPTeam_Render_Access.access_for_view_content(request)
+        has_content_access = CWPTeam_Render_Access.access_for_content(request)
+        has_access = has_content_access or CWPTeam_Render_Access.access_for_view_content(request)
         if has_access:
-            if request.method == 'POST' and content_access:
+            if request.method == 'POST' and has_content_access:
                 if 'update' in request.POST:
                     title = request.POST.get('content_title')
                     description = request.POST.get('content_description_details')
@@ -439,7 +439,7 @@ def content_edit(request, content_id):
                 'content':content,
                 'content_docs':content_docs,
                 'media_url':settings.MEDIA_URL,
-                'content_access':content_access
+                'has_content_access':has_content_access
             }
 
             return render(request,"Content/edit_content_form.html",context)
@@ -458,12 +458,12 @@ def edit_content_form_add_notes(request, content_id):
         user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
 
-        content_access = CWPTeam_Render_Access.access_for_content(request)
-        has_access = content_access or CWPTeam_Render_Access.access_for_view_content(request)
+        has_content_access = CWPTeam_Render_Access.access_for_content(request)
+        has_access = has_content_access or CWPTeam_Render_Access.access_for_view_content(request)
         if has_access:
             captions = Content_Team_Content_Caption.objects.filter(content_id=content_id)
 
-            if request.method == 'POST' and content_access:
+            if request.method == 'POST' and has_content_access:
                 if 'add_caption' in request.POST:
                     title = request.POST.get('title')
                     caption = request.POST.get('add_content_caption_details')
@@ -498,7 +498,7 @@ def edit_content_form_add_notes(request, content_id):
                 'all_sc_ag':sc_ag,
                 'content_id':content_id,
                 'captions':captions,
-                'content_access':content_access
+                'has_content_access':has_content_access
             }
 
             return render(request,"Content/edit_content_form_add_notes.html",context)

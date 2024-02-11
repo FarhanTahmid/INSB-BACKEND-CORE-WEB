@@ -293,6 +293,21 @@
                                         <label for="event_access">Event Access</label><br>
                                         {% endif %}
 
+                                        {% if data_access.graphics_access %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="graphics_access" name="graphics_access">
+                                        <label for="graphics_access">Graphics Create/Edit Access</label><br>
+                                        {% else %}
+                                        <input type="checkbox" class="checkbox" value="graphics_access" name="graphics_access">
+                                        <label for="graphics_access">Graphics Create/Edit Access</label><br>
+                                        {% endif %}
+
+                                        {% if data_access.graphics_view_access %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="graphics_view_access" name="graphics_view_access">
+                                        <label for="graphics_view_access">Graphics View Access</label><br>
+                                        {% else %}
+                                        <input type="checkbox" class="checkbox" value="graphics_view_access" name="graphics_view_access">
+                                        <label for="graphics_view_access">Graphics View Access</label><br>
+                                        {% endif %}
                                             
                                     </td>
                                 

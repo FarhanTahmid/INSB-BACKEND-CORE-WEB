@@ -110,7 +110,7 @@
           <span style="color: #00629b">IEEE NSU Student Branch</span>
         </h2>
 
-        {% if content_access %}
+        {% if has_content_access %}
         <!--Create Content button-->
         <a href="{% url 'content_writing_and_publications_team:create_content_form' %}" class="create_content_button"><span style="font-size: large">+</span>&nbspCreate Content</a>
         {% endif %}
