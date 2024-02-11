@@ -3,6 +3,7 @@ from .models import SystemErrors,adminUsers
 import logging
 from django.core.mail import send_mail
 from django.conf import settings
+from insb_port.settings import DEBUG
 
 class ErrorHandling:
     
@@ -16,7 +17,10 @@ class ErrorHandling:
                 error_traceback=error_traceback
             )
             new_error.save()
-            ErrorHandling.email_devs_to_handle_errors(error_name=error_name,error_traceback=error_traceback)
+            if(DEBUG):
+                pass
+            else:
+                ErrorHandling.email_devs_to_handle_errors(error_name=error_name,error_traceback=error_traceback)
         except:
             ErrorHandling.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
     

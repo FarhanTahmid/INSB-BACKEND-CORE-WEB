@@ -1,11 +1,104 @@
-from .models import Chapters_Society_and_Affinity_Groups,Roles_and_Position,Teams,Panels
+from .models import Chapters_Society_and_Affinity_Groups,Roles_and_Position,Teams,Panels,VolunteerAwards
 from django.contrib import messages
-from users.models import Members, Panel_Members
+from users.models import Members, Panel_Members,VolunteerAwardRecievers,VolunteerAwards
 from datetime import datetime
 import sqlite3
 import logging
 import traceback
 from system_administration.system_error_handling import ErrorHandling
+
+
+class HandleVolunteerAwards:
+    '''Handles all the activities related to volunteer awards'''
+    logger=logging.getLogger(__name__)
+
+    def create_new_award(request,**kwargs):
+        try:
+            # create new award
+            new_award=VolunteerAwards.objects.create(
+                volunteer_award_name=kwargs['volunteer_award_name'],
+                panel=Panels.objects.get(pk=kwargs['panel_pk']),
+                award_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=kwargs['sc_ag_primary'])
+            )
+            new_award.save()
+            messages.success(request,f"New Award: {kwargs['volunteer_award_name']} was created!")
+            return True            
+            
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.info(request,'Something went wrong while creating new award!')
+            return False
+    
+    def load_awards_for_panels(request,panel_pk):
+        try:
+            load_all_awards=VolunteerAwards.objects.filter(panel=Panels.objects.get(pk=panel_pk))
+            return load_all_awards
+        
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.info(request,'Something went wrong while loading awards!')
+            return False
+    
+    def load_award_details(request,award_pk):
+        try:
+            get_award=VolunteerAwards.objects.get(pk=award_pk)
+            return get_award
+        
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.info(request,'Something went wrong while loading award information!')
+            return False
+    
+    def load_award_winners(request,award_pk):
+        try:
+            get_award_winners=VolunteerAwardRecievers.objects.filter(award=VolunteerAwards.objects.get(pk=award_pk))
+            return get_award_winners
+        
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.info(request,'Something went wrong while loading award winners!')
+            return False
+    
+    def add_award_winners(request,award_pk,selected_members,contribution):
+        try:
+            for i in selected_members:
+                if(VolunteerAwardRecievers.objects.filter(award_reciever=Members.objects.get(ieee_id=i),award=VolunteerAwards.objects.get(pk=award_pk)).exists()):
+                    messages.info(request,f"IEEE ID: {i} already exists in this award table.")
+                else:
+                    new_award_winner=VolunteerAwardRecievers.objects.create(
+                        award=VolunteerAwards.objects.get(pk=award_pk),
+                        award_reciever=Members.objects.get(ieee_id=i),
+                        contributions=contribution
+                    )
+                    new_award_winner.save()
+            messages.success(request,f"Award members were updated!")
+            return True
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.warning(request,'Something went wrong while adding award winners!')
+            return False
+    
+    def remove_award_winner(request,award_pk,member_ieee_id):
+        try:
+            get_object=VolunteerAwardRecievers.objects.filter(award=VolunteerAwards.objects.get(pk=award_pk),award_reciever=Members.objects.get(ieee_id=member_ieee_id)).first()
+            if(get_object is not None):
+                messages.warning(request,f"IEEE ID: {get_object.award_reciever} was removed from the award!")
+                get_object.delete()
+                return True
+            else:
+                messages.info(request,"Member doest not exists in awards table!")
+                return False
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.warning(request,'Something went wrong while deleting award winners!')
+            return False
+
 
 class PortData:
     logger=logging.getLogger(__name__)
@@ -297,3 +390,15 @@ class PortData:
                 sc_ag_previous_positions.update({sc_ag.primary:position_data})
 
         return sc_ag_previous_positions
+    
+    def get_all_panels(request,sc_ag_primary):
+        '''returns the objects of all panels for specific sc ag + branch as a queryset'''
+        try:
+            get_all_panels=Panels.objects.filter(panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=sc_ag_primary)).order_by('-current','-year')
+            return get_all_panels
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error(request,"Error loading Panels. Something went wrong!")
+            return False
+                      
