@@ -106,7 +106,7 @@ class UserSignupTokenTable(models.Model):
 '''This class is for the number of daily hits on the page'''
 class User_IP_Address(models.Model):
     ip_address = models.GenericIPAddressField(blank=True,null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateField(auto_now_add=True)
 
     class Meta:
         verbose_name = "Visitors on Main Website"
