@@ -1820,8 +1820,7 @@ class Branch:
                     if event.event_date.year not in unique_years:
                         unique_years.append(event.event_date.year)
             #sorting it
-            unique_years.sort()
-
+            unique_years.sort(reverse=True)
             return unique_years
 
         except Exception as e:

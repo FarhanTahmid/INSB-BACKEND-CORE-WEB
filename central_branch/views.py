@@ -3853,7 +3853,7 @@ def generateExcelSheet_events_by_year(request,year):
             date=datetime.now()
             response = HttpResponse(
                 content_type='application/ms-excel')  # eclaring content type for the excel files
-            response['Content-Disposition'] = f'attachment; filename=All Events of {year} - ' +\
+            response['Content-Disposition'] = f'attachment; filename=IEEE NSU SB_Events_{year} - ' +\
                 str(date.strftime('%m/%d/%Y')) + \
                 '.xls'  # making files downloadable with name of session and timestamp
             # adding encoding to the workbook
@@ -3867,10 +3867,10 @@ def generateExcelSheet_events_by_year(request,year):
             font_style.font.bold = True
 
             # Defining columns that will stay in the first row
-            columns = ['SL','Event Name','Event Date', 'Organiser', 'Collaborations','Event Type']
+            columns = ['SL','Event Name','Event Date', 'Organiser', 'Collaborations','Event Type','Venue']
 
             # Defining first column
-            column_widths = [1000,4000, 6000, 18000, 18000, 6000]
+            column_widths = [1000,4000, 6000, 18000, 18000, 6000,6000]
             for col, width in enumerate(column_widths):
                 workSheet.col(col).width = width
 
@@ -3903,6 +3903,11 @@ def generateExcelSheet_events_by_year(request,year):
                 for event_type in event.event_type.all():
                     categories+=event_type.event_category + '\n'  
                 workSheet.write(row_num, 5, categories, word_wrap_style)
+                venue_list = Branch.get_selected_venues(event.pk)
+                venues=""
+                for venue in venue_list:
+                    venues += venue + '\n'
+                workSheet.write(row_num, 6, venues, word_wrap_style)
                     
             workBook.save(response)
             return (response)
@@ -3913,7 +3918,39 @@ def generateExcelSheet_events_by_year(request,year):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
-          
+        
+def user_access(request):
+    
+    try:
+        user=request.user
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        has_view_permission=renderData.MDT_DATA.insb_member_details_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username)
+        
+        if has_view_permission:
+
+            members=Members.objects.all().order_by('-is_blocked')
+            totalNumber=Members.objects.filter(is_blocked = True).count
+
+            context={
+                'is_branch':True,
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'members':members,
+                'totalNumber':totalNumber,
+                'has_view_permission':has_view_permission,
+                'is_MDT':False
+            }
+            
+            return render(request, 'INSB Members/members_update.html',context)
+        else:
+            return render(request,'access_denied2.html')
+    
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
 def custom_404(request):
     return render(request,'404.html',status=404)
 
@@ -4145,3 +4182,23 @@ class UpdateAwardAjax(View):
                 return JsonResponse(award_data,safe=False)
         # return null if nothing is selected
         return JsonResponse({},safe=False)
+    
+class UpdateRestrictionAjax(View):
+    def get(self,request, *args, **kwargs):
+        status=request.GET.get('is_checked')
+        member_id = request.GET.get('member_id')
+        try:
+            member = Members.objects.get(ieee_id = member_id)
+        
+            if status == "true":
+                member.is_blocked = True
+                message = f"Member ID {member_id}, is now restricted."
+            else:
+                member.is_blocked = False
+                message = f"Member ID {member_id} is no longer restricted ."
+            member.save()
+            number = Members.objects.filter(is_blocked = True).count()
+            return JsonResponse({'message': message,'restricted_number':number}, status=200)
+        except Members.DoesNotExist:
+            message = f"Member ID {member_id} does not exist."
+            return JsonResponse({'message': message}, status=404)

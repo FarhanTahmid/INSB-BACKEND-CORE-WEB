@@ -174,9 +174,9 @@
                 {% endfor %}
 
                 <!--Tab view-->
-                {% block create_content_form_tab %} 
-                {% include "Content/create_content_form_tab.html" %} 
-                {% endblock create_content_form_tab %}
+                {% block edit_content_form_tab %} 
+                {% include "Content/edit_content_form_tab.html" %} 
+                {% endblock edit_content_form_tab %}
 
                 <div class="tooltip-container">
                     <a href="{% url 'content_writing_and_publications_team:content_page' %}" class="image-button">
@@ -187,9 +187,9 @@
             </div>
         </div>
 
-        {% block create_content_form_add_notes_content %} 
-         {% include "Content/create_content_form_add_notes_content.html" %}
-        {% endblock create_content_form_add_notes_content %}
+        {% block edit_content_form_add_notes_content %} 
+         {% include "Content/edit_content_form_add_notes_content.html" %}
+        {% endblock edit_content_form_add_notes_content %}
       </div>
     </div>
 

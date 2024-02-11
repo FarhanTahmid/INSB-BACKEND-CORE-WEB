@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Add Content | Content Writing & Publications Team</title>
+    <title>Update Content | Content Writing & Publications Team</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -31,7 +31,7 @@
 
       .notes {
         font-weight: bold;
-        margin: 66px 0px 66px;
+        margin: 66px 0px 20px;
       }
 
       label {
@@ -75,6 +75,11 @@
         height: auto; /* Maintain aspect ratio */
         border-radius: 5px; /* Add rounded corners if desired */
       }
+
+      .btn-container {
+        text-align: center;
+      }
+
       @media screen and (max-width: 700px) {
         .wrapper{
           margin: 0 3%;
@@ -121,7 +126,13 @@
             <ol>
               <li>Provide the drive link for the documents</li>
               <li>You can also upload the document files</li>
+              <li>Make sure to save any changes made instantly to prevent data loss</li>
             </ol>
+
+            <!--Tab view-->
+            {% block edit_content_form_tab %} 
+             {% include "Content/edit_content_form_tab.html" %} 
+            {% endblock edit_content_form_tab %}
 
             {% for message in messages %}
             <div
@@ -149,11 +160,39 @@
             </div>
           </div>
 
+          <div class="btn-container">
+            <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal" style="margin-bottom:15px">Delete Content</button>
+          </div>
+
 
           <!--form contents-->
-          {% block content_form_content %}
-           {% include "Content/create_content_form_content.html" %} 
-          {% endblock content_form_content %}
+          {% block content_edit_form_content %}
+           {% include "Content/edit_content_form_content.html" %} 
+          {% endblock content_edit_form_content %}
+
+          <!-- Confirm Delete Modal -->
+          <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this content?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-outline-danger buttons"  value="Delete" name="delete_content">
+                        <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
         </div>
       </div>
 

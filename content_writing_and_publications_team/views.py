@@ -1,10 +1,11 @@
+import os
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from central_events.forms import EventForm
 from central_events.models import Events
 from content_writing_and_publications_team.manage_access import CWPTeam_Render_Access
-from content_writing_and_publications_team.models import Content_Team_Document, Content_Team_Documents_Link
+from content_writing_and_publications_team.models import Content_Team_Content, Content_Team_Content_Caption, Content_Team_Content_Document, Content_Team_Document, Content_Team_Documents_Link
 from insb_port import settings
 from port.renderData import PortData
 from users.models import Members
@@ -105,8 +106,14 @@ def manage_team(request):
                     event_access=False
                     if(request.POST.get('event_access')):
                         event_access=True
+                    content_access=False
+                    if(request.POST.get('content_access')):
+                        content_access=True
+                    content_view_access=False
+                    if(request.POST.get('content_view_access')):
+                        content_view_access=True
                     ieee_id=request.POST['access_ieee_id']
-                    if (ContentWritingTeam.cwp_manage_team_access_modifications(manage_team_access, event_access, ieee_id)):
+                    if (ContentWritingTeam.cwp_manage_team_access_modifications(manage_team_access, event_access, content_access, content_view_access, ieee_id)):
                         permission_updated_for=Members.objects.get(ieee_id=ieee_id)
                         messages.info(request,f"Permission Details Was Updated for {permission_updated_for.name}")
                     else:
@@ -315,9 +322,189 @@ def event_form_add_notes(request,event_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
+@login_required
+@member_login_permission
 def content_page(request):
-        return render(request,"Content/content_page.html")
+    try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        sc_ag=PortData.get_all_sc_ag(request=request)
+
+        content_access = CWPTeam_Render_Access.access_for_content(request)
+        has_access = content_access or CWPTeam_Render_Access.access_for_view_content(request)
+        if has_access:
+            all_contents = Content_Team_Content.objects.all().order_by('-pk')
+
+            context = {
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'all_contents':all_contents,
+                'content_access':content_access
+            }
+
+            return render(request,"Content/content_page.html",context)
+        else:
+            return render(request,"content_writing_and_publications_team/access_denied.html", {'all_sc_ag':sc_ag,'user_data':user_data})
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
+
+@login_required
+@member_login_permission
 def create_content_form(request):
-        return render(request,"Content/create_content_form.html")
-def create_content_form_add_notes(request):
-        return render(request,"Content/create_content_form_add_notes.html")
+    try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        sc_ag=PortData.get_all_sc_ag(request=request)
+
+        has_access = CWPTeam_Render_Access.access_for_content(request)
+        if has_access:
+            if request.method == 'POST':
+                title = request.POST.get('content_title')
+                description = request.POST.get('content_description_details')
+                documents_link = request.POST.get('drive_link_of_documents')
+                documents = None
+                if request.FILES.get('document'):
+                    documents = request.FILES.getlist('document')
+
+                if(ContentWritingTeam.create_content(title,description,documents_link,documents)):
+                    messages.success(request, 'Content created successfully!')
+                else:
+                    messages.warning(request,'Something went wrong while creating the content!')
+
+                return redirect('content_writing_and_publications_team:content_page')
+
+            return render(request,"Content/create_content_form.html", {'user_data':user_data, 'all_sc_ag':sc_ag})
+        else:
+            return render(request,"content_writing_and_publications_team/access_denied.html", {'all_sc_ag':sc_ag,'user_data':user_data})
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
+
+@login_required
+@member_login_permission
+def content_edit(request, content_id):
+    try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        sc_ag=PortData.get_all_sc_ag(request=request)
+
+        content_access = CWPTeam_Render_Access.access_for_content(request)
+        has_access = content_access or CWPTeam_Render_Access.access_for_view_content(request)
+        if has_access:
+            if request.method == 'POST' and content_access:
+                if 'update' in request.POST:
+                    title = request.POST.get('content_title')
+                    description = request.POST.get('content_description_details')
+                    documents_link = request.POST.get('drive_link_of_documents')
+
+                    documents = None
+                    if request.FILES.get('document'):
+                        documents = request.FILES.getlist('document')
+
+                    if ContentWritingTeam.update_content(content_id, title, description, documents_link, documents):
+                        messages.success(request,'Content updated successfully!')
+                    else:
+                        messages.warning(request,'Something went wrong while updating the content!')
+                    
+                    return redirect('content_writing_and_publications_team:content_edit', content_id)   
+
+                elif 'remove' in request.POST:
+                    document_id = request.POST.get('remove_doc')
+
+                    if(ContentWritingTeam.remove_content_doc(document_id)):
+                        messages.success(request, 'Document deleted successfully!')
+                    else:
+                        messages.warning(request,'Something went wrong while deleting the document!')
+
+                    return redirect('content_writing_and_publications_team:content_edit', content_id)
+
+                elif 'delete_content' in request.POST:
+                    if(ContentWritingTeam.delete_content(request,content_id)):
+                        messages.success(request,'Content deleted successfully!')
+                    else:
+                        messages.warning(request,'Something went wrong while deleting the content')
+                    
+                    return redirect('content_writing_and_publications_team:content_page') 
+            
+            content = Content_Team_Content.objects.get(id=content_id)
+            content_docs = Content_Team_Content_Document.objects.filter(content_id=content_id)
+
+            context = {
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'content_id':content_id,
+                'content':content,
+                'content_docs':content_docs,
+                'media_url':settings.MEDIA_URL,
+                'content_access':content_access
+            }
+
+            return render(request,"Content/edit_content_form.html",context)
+        else:
+            return render(request,"content_writing_and_publications_team/access_denied.html", {'all_sc_ag':sc_ag,'user_data':user_data})
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
+
+@login_required
+@member_login_permission
+def edit_content_form_add_notes(request, content_id):
+    try:
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        sc_ag=PortData.get_all_sc_ag(request=request)
+
+        content_access = CWPTeam_Render_Access.access_for_content(request)
+        has_access = content_access or CWPTeam_Render_Access.access_for_view_content(request)
+        if has_access:
+            captions = Content_Team_Content_Caption.objects.filter(content_id=content_id)
+
+            if request.method == 'POST' and content_access:
+                if 'add_caption' in request.POST:
+                    title = request.POST.get('title')
+                    caption = request.POST.get('add_content_caption_details')
+
+                    if(ContentWritingTeam.create_content_caption(content_id, title, caption)):
+                        messages.success(request,'Caption added successfully!')
+                    else:
+                        messages.warning(request,'Something went wrong while creating the caption!')
+                
+                elif 'update' in request.POST:
+                    caption_id = request.POST.get('update_caption')
+                    title = request.POST.get('title')
+                    caption = request.POST.get(f'content_caption_details_{caption_id}')
+                    
+                    if(ContentWritingTeam.update_content_caption(caption_id, title, caption)):
+                        messages.success(request,'Caption updated successfully!')
+                    else:
+                        messages.warning(request,'Something went wrong while updating the caption!')
+                
+                elif 'remove' in request.POST:
+                    caption_id = request.POST.get('remove_caption')
+
+                    if(ContentWritingTeam.delete_content_caption(caption_id)):
+                        messages.success(request,'Caption deleted successfully!')
+                    else:
+                        messages.warning(request,'Something went wrong while deleting the caption')
+                
+                return redirect('content_writing_and_publications_team:edit_content_form_add_notes', content_id)
+
+            context = {
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'content_id':content_id,
+                'captions':captions,
+                'content_access':content_access
+            }
+
+            return render(request,"Content/edit_content_form_add_notes.html",context)
+        else:
+            return render(request,"content_writing_and_publications_team/access_denied.html", {'all_sc_ag':sc_ag,'user_data':user_data})
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)

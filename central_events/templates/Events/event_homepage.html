@@ -185,6 +185,16 @@
                 <div class="container" style="justify-content:center;">
                   <div class="header_wrap">
                     <div class="num_rows">
+
+                      <div class="form-group">
+                        <!--		Show Numbers Of Rows 		-->
+                        <select class="form-control" name="year_to_be_selected" id="year_to_be_selected">
+                          {% for year in all_event_years %}
+                          <option value="{{year}}">{{year}}</option>
+                          {% endfor %}
+                          <option value="All">Show ALL Years</option>
+                        </select>
+                      </div>
                 
                       <div class="form-group">
                         <!--		Show Numbers Of Rows 		-->

@@ -2,6 +2,7 @@ import imp
 from django.urls import path,include
 from . import views
 from .views import UpdatePositionAjax,UpdateAwardAjax
+from .views import UpdatePositionAjax,UpdateRestrictionAjax
 
 app_name='central_branch'
 
@@ -120,4 +121,8 @@ urlpatterns = [
     path('volunteer_awards/panel/<int:panel_pk>/awards',views.panel_specific_volunteer_awards_page,name="panel_specific_volunteer_awards_page"),
     path('volunteer_awards/panel/<int:panel_pk>/awards/<int:award_pk>',views.panel_and_award_specific_page,name="panel_award_specific_volunteer_awards_page"),
     path('get_award_data/',UpdateAwardAjax.as_view(),name="update_award")
+    #event excel generation url
+    path('generateExcelSheet_events_by_year/<int:year>',views.generateExcelSheet_events_by_year,name="generateExcelSheet_events_by_year"),
+    path('members/user_access/',views.user_access,name="user_access"),
+    path('update_restricted_members/',UpdateRestrictionAjax.as_view(),name="update_restricted_members")
 ]
