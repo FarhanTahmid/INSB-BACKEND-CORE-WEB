@@ -3981,24 +3981,23 @@ def panel_specific_volunteer_awards_page(request,panel_pk):
     
     # load all awards of the panel
     all_awards_of_panel=HandleVolunteerAwards.load_awards_for_panels(request=request,panel_pk=panel_pk)
-    if(all_awards_of_panel is False):
+    if(all_awards_of_panel.exists() is False):
         pass
     else:
+        # get award information of the latest as the tabs will also be sorted like from high rank to low rank
+        award=all_awards_of_panel[0]
+        if(award is None):
+            pass
+        else:
+            context['award']=award
         context['all_awards']=all_awards_of_panel
     
-    # get award information of the latest as the tabs will also be sorted like from high rank to low rank
-    award=all_awards_of_panel[0]
-    if(award is None):
-        pass
-    else:
-        context['award']=award
-        
-    # get award winners for that specific award
-    award_winners=HandleVolunteerAwards.load_award_winners(request,award.pk)
-    if(award_winners is False):
-        pass
-    else:
-        context['award_winners']=award_winners
+        # get award winners for that specific award
+        award_winners=HandleVolunteerAwards.load_award_winners(request,award.pk)
+        if(award_winners is False):
+            pass
+        else:
+            context['award_winners']=award_winners
     
      
     if request.method=="POST":
