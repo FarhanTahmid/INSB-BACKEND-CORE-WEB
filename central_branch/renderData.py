@@ -939,7 +939,26 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.error("Can not load intercollaboration details for each events. Something went wrong!")
             return False
+
+    def events_not_registered_to_mega_events(events_list):
+
+        '''This function returns only those events with collaboration those are not associated
+            with any mega events'''
+        try:
+            dic = {}
+            for key,value in events_list.items():
+
+                if key.super_event_id  is None or key.super_event_id == 0:
+                    dic[key] = value
+
+            return dic
         
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.error("Can not load intercollaboration details for each events. Something went wrong!")
+            return False
+
     def load_event_published(event_id):
         '''This function will return wheather the event is published or not'''
 
@@ -1711,21 +1730,17 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
         
-    def add_events_to_mega_event(event_list,mega_event,primary):
+    def add_events_to_mega_event(event_list,mega_event):
 
         '''This function add the events to the mega events'''
 
         try:
-            all_events_of_society = Branch.load_all_inter_branch_collaborations_with_events(primary)
-            #iterating over the event id found
-            for i in all_events_of_society:
-                #getting that event object and assigning it to that specific event
-                event = Events.objects.get(id = i.id)
-
-                if str(event.id) in event_list:
-                    event.super_event_id = mega_event
-                else:
-                    event.super_event_id = None
+            for i in event_list:
+                #getting that event object and assigning it to that specific mega event
+                event = Events.objects.get(id = i)
+                #assigning event to that mega event
+                event.super_event_id = mega_event
+                #saving the event
                 event.save()
             return True
         
@@ -1786,4 +1801,57 @@ class Branch:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
 
+    def get_event_years(primary):
 
+        '''This function returns the events year along with collaborated event years'''
+        try:
+            #if of branch then no need to check for collaborations
+            if primary == 1:
+                all_events = Events.objects.all()
+            #checking for collaborations
+            else:
+                events = Events.objects.filter(event_organiser= Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
+                collaborations_list = InterBranchCollaborations.objects.filter(collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)).values_list('event_id')
+                all_events = events.union(Events.objects.filter(pk__in=collaborations_list))
+            #getting all the years
+            unique_years = []
+            for event in all_events:
+                if event.event_date:
+                    if event.event_date.year not in unique_years:
+                        unique_years.append(event.event_date.year)
+            #sorting it
+            unique_years.sort(reverse=True)
+            return unique_years
+
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def load_all_inter_branch_collaborations_with_events_yearly(year,primary):
+        
+        '''This fuction returns a dictionary with key as events id and values as a list of inter collaborations 
+            for that specific event yearly'''
+        try:
+            dic = {}
+            collaborations=[]
+            if primary == 1 :
+                final_events = Events.objects.filter(event_date__year = year)
+            else:
+                events = Events.objects.filter(event_date__year = year,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary))
+                collaborations_list = InterBranchCollaborations.objects.filter(collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)).values_list('event_id')
+                events_with_collaborated_events = events.union(Events.objects.filter(pk__in=collaborations_list,event_date__year = year))
+                final_events = events_with_collaborated_events.order_by('-event_date')
+           
+            for i in final_events:
+                all_collaborations_for_this_event = InterBranchCollaborations.objects.filter(event_id = i.id)
+                for j in all_collaborations_for_this_event:
+                    collaborations.append(j.collaboration_with.group_name)  
+                dic.update({i:collaborations})
+                collaborations=[]
+                
+            return dic
+        except Exception as e:
+            Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False

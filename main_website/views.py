@@ -524,6 +524,7 @@ def events_for_sc_ag(request,primary):
     try:
 
         all_events = HomepageItems.load_all_events(request,True,primary)
+        all_mega_events=HomepageItems.get_all_mega_events(primary=primary)
         latest_five_events = HomepageItems.load_all_events(request,False,primary)
         date_and_event = HomepageItems.get_event_for_calender(request,primary)
         upcoming_event = HomepageItems.get_upcoming_event(request,primary)
@@ -557,6 +558,7 @@ def events_for_sc_ag(request,primary):
             'page_title': 'Events',
             'page_subtitle':society.short_form,
             'all_events':all_events,
+            'all_mega_events':all_mega_events,
             'media_url':settings.MEDIA_URL,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'latest_five_event':latest_five_events,
@@ -587,9 +589,11 @@ def blogs(request):
 
     try:
         get_all_blog= Blog.objects.filter(publish_blog=True).order_by('-date')
+        get_all_categories = Blog_Category.objects.all()
         context={
             'page_title':"Blogs",
             'blogs':get_all_blog,
+            'categories':get_all_categories,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         }
         return render(request,"Publications/Blog/blog.html",context=context)
@@ -1233,7 +1237,8 @@ def member_profile(request, ieee_id):
                 has_current_branch_position = False
 
             context = {
-                'page_title':'Member Details',
+                'page_title':'Member Profile',
+                'page_subtitle': member_data.name,
                 'branch_teams': branch_teams,
                 'member':member_data,
                 'sc_ag_position_data':sc_ag_position_data,

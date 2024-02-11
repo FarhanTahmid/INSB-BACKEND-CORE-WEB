@@ -103,7 +103,7 @@
     }
     .team_container .text{
         margin-top: 3rem!important;
-        margin-bottom: 5rem!important;
+        margin-bottom: 2rem!important;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -155,7 +155,7 @@
             {% else %}
             <div class="profile-card">
                 <div class="img">
-                    <a href="{% url 'main_website:member_profile' i.ex_member.ieee_id %}"><img src="/media_files/{{i.ex_member.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';"></a>
+                    <img src="/media_files/{{i.ex_member.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';"></a>
                 </div>
                 <div class="caption">
                     <h3>{{i.ex_member.name}}</h3>

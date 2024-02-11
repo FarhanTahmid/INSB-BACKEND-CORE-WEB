@@ -44,7 +44,7 @@ class LogisticsTeam:
                 if(i.position.is_core_volunteer):
                     core_volunteers.append(i)
                 else:
-                    team_members.append(i)
+                    team_volunteers.append(i)
         return core_volunteers,team_volunteers
     
     

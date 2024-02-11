@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Graphics | IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+
+    <!--common CSS-->
+    {% block common_css %}
+     {% include "common_css.html" %}
+    {% endblock common_css %}
+
+    <style>
+      body {
+        margin: auto;
+        padding: 0%;
+        /* font-family: 'Poppins' , sans-serif; */
+      }
+
+      .heading {
+        margin: 15px 0px 20px;
+        text-align: center;
+      }
+
+      .header_wrap {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .tb_search {
+        min-width: fit-content;
+      }
+
+      .create_graphics_button {
+        width: fit-content;
+        color: #5cb85c;
+        border: 1px solid #5cb85c;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px 10px;
+        height: 39px;
+        transition: all 0.2s ease-in-out;
+        margin: auto auto 30px;
+      }
+      .create_graphics_button:hover {
+        background-color: #5cb85c;
+        color: white;
+      }
+
+      .wrapper {
+        margin: 0 20%;
+        max-width: 900px;
+      }
+      
+      .rows_count {
+        display: flex;
+        justify-content: center;
+      }
+      .event_name_column_content{
+        color: blue;
+      }
+
+      @media screen and (max-width: 768px) {
+        .wrapper {
+          margin: 0 5%;
+        }
+      }
+      @media screen and (max-width: 560px) {
+        h2 {
+          font-size: 1.5rem;
+        }
+      }
+
+    </style>
+  </head>
+
+  <body>
+
+    <!--LAYOUT START-->
+    <div class="app" id="app">
+
+
+      <!-- aside -->
+      <div id="aside" class="app-aside modal nav-dropdown">
+        {% block sidebar %} 
+         {% include 'users/sidebar.html' %} 
+        {% endblock %}
+      </div>
+
+
+      <!-- navbar -->
+      <div id="content" class="app-content box-shadow-z0" role="main">
+        {% block navbar %}
+         {% include 'graphics_navbar.html' %} 
+        {% endblock navbar %}
+      </div>
+
+
+      <!--PAGE START-->
+      <div ui-view class="app-body wrapper" id="view">
+        <br>
+        <h2 class="heading">
+          <span><b>Graphics</b></span> 
+          created by
+          <span style="color: #00629b">IEEE NSU Student Branch</span>
+        </h2>
+
+        {% if has_graphics_access %}
+        <!--Create Content button-->
+        <button  class="create_graphics_button" data-toggle="modal" data-target="#AddLinkModal"><span style="font-size: large">+</span>&nbspAdd Links</button>
+        {% else %}
+        <br>
+        {% endif %}
+        
+        <!--for error messages-->
+        {% for message in messages  %}
+            <p>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <p style="margin: 0;">{{message}}</p>
+                </div>
+            </p>
+        {% endfor %}
+        <!--for error messages end-->
+        <div class="header_wrap">
+          <!--Search bar-->
+          <div class="tb_search">
+            <input
+              type="text"
+              id="search_input_all"
+              onkeyup="FilterkeyWord_all_table()"
+              placeholder="Search..."
+              class="form-control"/>
+          </div>
+
+          <div class="num_rows">
+            <div class="form-group">
+              <!--Shows numbers of rows-->
+              <select class="form-control" name="state" id="maxRows">
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="5000">Show all rows</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!--Table start-->
+        <div class="table-responsive">
+          <table class="table table-striped table-class" id="table-id">
+            <thead>
+              <tr>
+                <th>SL</th>
+                <th>Link Title</th>
+                <th>Created on</th>
+                {% if has_graphics_access %}
+                <th>Remove?</th>
+                {% endif %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for links in all_links %}
+                <tr>
+                  <td>{{forloop.counter}}</td>
+                  <td>
+                    <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditLinkModal{{links.pk}}">{{links.link_title}}</a>
+                  </td>
+                  <td>{{links.created_at}}</td>
+                  {% if has_graphics_access %}
+                  <td>
+                    <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                      <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal"  onclick="openModal('{{links.pk}}')">✖</button>
+                    </div>
+                  </td>
+                  {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <!--Start pagination-->
+        <div class="pagination-container">
+          <nav>
+            <ul class="pagination">
+              <!--Here the JS Function Will Add the Rows -->
+            </ul>
+          </nav>
+        </div>
+
+        <!--Shows number of entries-->
+        <div class="rows_count">Showing 11 to 20 of 91 entries</div>
+      </div>
+    </div>
+    <!--Events table end-->
+
+    {% if has_graphics_access %}
+    <!-- Updated Modal for adding Links -->
+    <div class="modal fade" id="AddLinkModal" tabindex="-1" role="dialog" aria-labelledby="AddLinkModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="addLinkModalLabel">Add Links</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <form method="POST">
+                      {% csrf_token %}
+                      
+                      <div class="form-group">
+                          <label>Title: </label> 
+                              <input
+                                  placeholder="Title"
+                                  class="form-control"
+                                  type="text"
+                                  autocomplete="off"
+                                  required
+                                  name="title"
+                              />
+                          <br>
+                          <label>Links:</label>
+                          <input
+                          placeholder="Provide Drive Link"
+                          class="form-control"
+                          type="url"
+                          autocomplete="off"
+                          id="field1"
+                          name="graphics_form_link"
+                          required
+                          />
+                      </div>
+              </div>
+              <div class="modal-footer">
+                  <!-- Change the button label and name attribute -->
+                  <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_link" value="Add">
+                  <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+              </div>
+              </form>
+          </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% for link in all_links %}
+    <div class="modal fade" id="EditLinkModal{{link.pk}}" tabindex="-1" role="dialog" aria-labelledby="EditLinkModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editLinkModalLabel">Edit Link - {{link.link_title}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Display existing Link in a textarea for editing -->
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Title: </label> 
+                                <input
+                                    placeholder="Title"
+                                    class="form-control"
+                                    type="text"
+                                    autocomplete="off"
+                                    required
+                                    name="edit_title"
+                                    value="{{link.link_title}}"
+                                    {% if not has_graphics_access %}disabled{% endif %} 
+                                />
+                            <br>
+                            <label>Links:</label>
+                            <input
+                            placeholder="Provide Drive Link"
+                            class="form-control"
+                            type="url"
+                            autocomplete="off"
+                            id="field1"
+                            name="edit_drive_link"
+                            value="{{link.link}}"
+                            {% if not has_graphics_access %}disabled{% endif %}/>
+                            <input type="hidden" name = "link_pk" value ="{{link.pk}}">
+                        </div>
+                </div>
+                <div class="modal-footer">
+                  {% if has_graphics_access %}
+                  <input type="submit" name = "update_link" class="btn btn-outline-primary txt-primary buttons" value="Update">
+                  {% endif %}
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    {% if has_graphics_access %}
+    <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-top" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <form method="POST">
+                  {% csrf_token %}
+              <p><input id="remove_link" name= "remove_link" type="hidden"></p>
+              Are you sure you want to delete this link?
+          </div>
+          <div class="modal-footer">
+              <input type="submit" class="btn btn-outline-danger" value="Confirm" name = "delete_link">
+              <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+          </div>
+           </form>
+      </div>
+      </div>
+  </div>
+    {% endif %}
+    {% endfor %}
+
+    <!--Theme Switcher-->
+    {% block theme_switcher %} 
+     {% include "theme_switcher.html" %} 
+    {% endblock theme_switcher %}
+    <!-- app end-->
+
+    {% block common_js %}
+     {% include "common_js.html" %}
+    {% endblock common_js %}
+    
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      getPagination("#table-id");
+      $("#maxRows").trigger("change");
+      function getPagination(table) {
+        $("#maxRows").on("change", function () {
+          $(".pagination").html(""); // reset pagination div
+          var trnum = 0; // reset tr counter
+          var maxRows = parseInt($(this).val()); // get Max Rows from select option
+
+          var totalRows = $(table + " tbody tr").length; // numbers of rows
+          $(table + " tr:gt(0)").each(function () {
+            // each TR in  table and not the header
+            trnum++; // Start Counter
+            if (trnum > maxRows) {
+              // if tr number gt maxRows
+
+              $(this).hide(); // fade it out
+            }
+            if (trnum <= maxRows) {
+              $(this).show();
+            } // else fade in Important in case if it ..
+          }); //  was fade out to fade it in
+          if (totalRows > maxRows) {
+            // if tr total rows gt max rows option
+            var pagenum = Math.ceil(totalRows / maxRows); // ceil total(rows/maxrows) to get ..
+            //	numbers of pages
+            for (var i = 1; i <= pagenum; ) {
+              // for each page append pagination li
+              $(".pagination")
+                .append(
+                  '<li data-page="' +
+                    i +
+                    '">\
+                          ' +
+                    i++ +
+                    '<span class="sr-only">(current)</span>\
+                        </li>'
+                )
+                .show();
+            } // end for i
+          } // end if row count > max rows
+          $(".pagination li:first-child").addClass("active"); // add active class to the first li
+
+          //SHOWING ROWS NUMBER OUT OF TOTAL DEFAULT
+          showig_rows_count(maxRows, 1, totalRows);
+          //SHOWING ROWS NUMBER OUT OF TOTAL DEFAULT
+
+          $(".pagination li").on("click", function (e) {
+            // on click each page
+            e.preventDefault();
+            var pageNum = $(this).attr("data-page"); // get it's number
+            var trIndex = 0; // reset tr counter
+            $(".pagination li").removeClass("active"); // remove active class from all li
+            $(this).addClass("active"); // add active class to the clicked
+
+            //SHOWING ROWS NUMBER OUT OF TOTAL
+            showig_rows_count(maxRows, pageNum, totalRows);
+            //SHOWING ROWS NUMBER OUT OF TOTAL
+
+            $(table + " tr:gt(0)").each(function () {
+              // each tr in table not the header
+              trIndex++; // tr index counter
+              // if tr index gt maxRows*pageNum or lt maxRows*pageNum-maxRows fade if out
+              if (
+                trIndex > maxRows * pageNum ||
+                trIndex <= maxRows * pageNum - maxRows
+              ) {
+                $(this).hide();
+              } else {
+                $(this).show();
+              } //else fade in
+            }); // end of for each tr in table
+          }); // end of on click pagination list
+        });
+        // end of on select change
+
+        // END OF PAGINATION
+      }
+
+      // SI SETTING
+      /**$(function(){
+          // Just to append id number for each row  
+        default_index();
+                  
+        });*/
+
+      //ROWS SHOWING FUNCTION
+      function showig_rows_count(maxRows, pageNum, totalRows) {
+        //Default rows showing
+        var end_index = maxRows * pageNum;
+        var start_index = maxRows * pageNum - maxRows + parseFloat(1);
+        var string =
+          "Showing " +
+          start_index +
+          " to " +
+          end_index +
+          " of " +
+          totalRows +
+          " entries";
+        $(".rows_count").html(string);
+      }
+
+      // CREATING INDEX
+      /**function default_index() {
+          $('table tr:eq(0)').prepend('<th> SL No. </th>')
+    
+                  var id = 0;
+    
+                  $('table tr:gt(0)').each(function(){	
+                    id++
+                    $(this).prepend('<td>'+id+'</td>');
+                  });
+        }*/
+
+      // All Table search script
+      function FilterkeyWord_all_table() {
+        // Declare variables
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("search_input_all");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("table-id");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows and hide those that don't match the search query
+        for (i = 0; i < tr.length; i++) {
+          // Skip the header row
+          if (i === 0) continue;
+
+          // Loop through all table cells in the current row
+          var rowContainsSearchTerm = false;
+          for (var j = 0; j < tr[i].cells.length; j++) {
+            td = tr[i].cells[j];
+            if (td) {
+              txtValue = td.textContent || td.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                rowContainsSearchTerm = true;
+                break;
+              }
+            }
+          }
+
+          // Toggle the visibility of the row based on whether it contains the search term
+          if (rowContainsSearchTerm) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+
+      function openModal(id) {
+        // Set data in the modal
+        var inputElement = document.getElementById('remove_link');    
+        inputElement.value=id;
+    }
+    </script>
+  </body>
+</html>

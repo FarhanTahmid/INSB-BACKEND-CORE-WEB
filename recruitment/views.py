@@ -16,7 +16,7 @@ from django.db.utils import IntegrityError
 from membership_development_team.renderData import MDT_DATA
 from membership_development_team import email_sending
 from system_administration.render_access import Access_Render
-from users.renderData import LoggedinUser
+from users.renderData import LoggedinUser,member_login_permission
 import logging
 from system_administration.system_error_handling import ErrorHandling
 from datetime import datetime
@@ -27,6 +27,7 @@ from central_branch import views as cv
 logger=logging.getLogger(__name__)
 
 @login_required
+@member_login_permission
 def recruitment_home(request):
     '''Loads all the recruitment sessions present in the database
         this can also register a recruitment session upon data entry
@@ -68,6 +69,7 @@ def recruitment_home(request):
 
 
 @login_required
+@member_login_permission
 def recruitee(request, pk):
     '''This function is responsible for getting all the members registered in a particular
     recruitment session. Loads all the datas and show them
@@ -108,6 +110,7 @@ def recruitee(request, pk):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def getPaymentStats(request):
 
     try:
@@ -128,6 +131,7 @@ def getPaymentStats(request):
 
 
 @login_required
+@member_login_permission
 def recruitee_details(request,session_id,nsu_id):  
     """Preloads all the data of the recruitees who are registered in the particular session, here we can edit and save the data of the recruitee"""
     
@@ -339,6 +343,7 @@ def recruitee_details(request,session_id,nsu_id):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def recruit_member(request, session_id):
 
     try:
@@ -442,6 +447,7 @@ def recruit_member(request, session_id):
 
 
 @login_required
+@member_login_permission
 def generateExcelSheet(request, session_id):
     '''This method generates the excel files for different sessions'''
 

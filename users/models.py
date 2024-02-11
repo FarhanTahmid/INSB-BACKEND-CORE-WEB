@@ -1,23 +1,11 @@
-from email.policy import default
-from pyexpat import model
-from tabnanny import verbose
-from tokenize import blank_re
-from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.urls import reverse
-from insb_port import settings
-from port.models import Teams,Roles_and_Position
+from port.models import *
 from recruitment.models import recruitment_session
 from membership_development_team.models import Renewal_Sessions
 from django.contrib.auth.models import User
 from django_resized import ResizedImageField
-import datetime
-from django.contrib.postgres.fields import ArrayField
 from port.models import Panels
-from PIL import Image, ExifTags
-from io import BytesIO
-from django.core.files import File
-import os
 
 # from membership_development_team.models import Renewal_Sessions
 # Create your models here.
@@ -45,6 +33,7 @@ class Members(models.Model):
     session=models.ForeignKey(recruitment_session,null=True,blank=True,on_delete=models.CASCADE) #recruitment session
     last_renewal_session=models.ForeignKey(Renewal_Sessions,null=True,blank=True,on_delete=models.CASCADE) #last renewal session    
     is_active_member = models.BooleanField(null=False,blank=False,default=True)
+    is_blocked = models.BooleanField(null=False,blank=False,default=False)
     class Meta:
         verbose_name='INSB Registered Members'
         ordering = ['position__rank']
@@ -117,11 +106,22 @@ class UserSignupTokenTable(models.Model):
 '''This class is for the number of daily hits on the page'''
 class User_IP_Address(models.Model):
     ip_address = models.GenericIPAddressField(blank=True,null=True)
-    created_at = models.DateField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = "Visitors on Main Website"
     def __str__(self):
         return self.ip_address
+
+class VolunteerAwardRecievers(models.Model):
+    '''Stores the recievers of the particular awards'''
+    award=models.ForeignKey(VolunteerAwards,null=False,blank=False,on_delete=models.CASCADE)
+    award_reciever=models.ForeignKey(Members ,null=False,blank=False,on_delete=models.CASCADE)
+    contributions=models.CharField(null=True,blank=True,max_length=600)
+    
+    class Meta:
+        verbose_name="Award Recievers"
+    def __str__(self) -> str:
+        return str(self.award_reciever)
 
     

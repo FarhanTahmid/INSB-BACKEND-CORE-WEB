@@ -7,7 +7,7 @@ import logging
 from datetime import datetime
 from system_administration.system_error_handling import ErrorHandling
 import traceback
-from .models import Graphics_Link,Graphics_Banner_Image,Graphics_Form_Link
+from .models import Graphics_Link,Graphics_Banner_Image,Graphics_Form_Link,Graphics_Drive_links
 from central_events.models import Events
 from django.conf import settings
 class GraphicsTeam:
@@ -69,9 +69,9 @@ class GraphicsTeam:
     def add_member_to_team(ieee_id,position):
         Branch.add_member_to_team(ieee_id=ieee_id,position=position,team_primary=10)
         
-    def graphics_manage_team_access_modifications(manage_team_access, event_access, ieee_id):
+    def graphics_manage_team_access_modifications(manage_team_access, event_access, graphics_access, graphics_view_access, ieee_id):
         try:
-            Graphics_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access, event_access=event_access)
+            Graphics_Data_Access.objects.filter(ieee_id=ieee_id).update(manage_team_access=manage_team_access, event_access=event_access, graphics_access=graphics_access, graphics_view_access=graphics_view_access)
             return True
         except Graphics_Data_Access.DoesNotExist:
             return False
@@ -185,4 +185,54 @@ class GraphicsTeam:
         except Exception as e:
             GraphicsTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            return False
+            return False  
+        
+    def add_graphics_drive_links(title,link):
+
+        '''This function adds the drive links with title which are not associated with any events'''
+
+        try:
+
+            #creating new instance of drive link
+            new_instance = Graphics_Drive_links.objects.create(link_title = title, link = link )
+            new_instance.save()
+
+            return True
+        
+        except Exception as e:
+            GraphicsTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False 
+        
+    def edit_graphics_drive_links(title,link,pk):
+
+        '''This function updates the drive link details'''
+
+        try:
+            #getting the object to be updated from database using its primary key
+            obj = Graphics_Drive_links.objects.get(pk=pk)
+            #updating the fields and saving it back to the database
+            obj.link_title = title
+            obj.link = link
+            obj.save()
+            return True
+        
+        except Exception as e:
+            GraphicsTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False 
+        
+    def remove_graphics_drive_link(pk):
+
+        '''This function deletes the link'''
+
+        try:
+            #getting the link using pk
+            obj = Graphics_Drive_links.objects.get(pk=pk)
+            obj.delete()
+            return True
+        
+        except Exception as e:
+            GraphicsTeam.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False 

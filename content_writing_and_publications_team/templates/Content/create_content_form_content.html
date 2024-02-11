@@ -1,0 +1,127 @@
+{% load static %} 
+{% block content_form_content %}
+<div class="container">
+  <div class="box" style="border-radius: 6px;">
+        <!--Heading-->
+        <div class="box-header">
+            <h1 style="text-align: center; font-size: 30px;
+            font-weight: bold;
+            margin-top: 23px;">Add Content</h1>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="box-body">
+            <!--title-->
+            <div class="form-group">
+                <label>Title: <span style="color:red">*<span></label> 
+                <input
+                    placeholder="Title"
+                    class="form-control"
+                    type="text"
+                    autocomplete="off"
+                    required
+                    name="content_title"/>
+            </div>
+
+
+            <!--description-->
+            <div class="form-group">
+                <label>Description: <span style="color:red">*<span></label> 
+                <textarea class="form-control" type="text" name="content_description_details"></textarea>
+                <p id="content_descriptionCharacterCount" style="color: red;"></p>
+            </div>
+
+
+            <!--drive link-->
+            <div class="form-group">
+            <label>Folder Drive Link For Documents</label>
+            <input
+                placeholder="Drive link"
+                class="form-control"
+                type="url"
+                autocomplete="off"
+                id="field1"
+                name="drive_link_of_documents"/>
+            </div>
+
+
+            <!--upload doc-->
+            <div class="form-group">
+              <label for="documents">Upload Documents:</label>
+              <div class="custom-file">
+                  <input type="file" class="custom-file-input" id="content-doc-input" name="document" accept=".doc, .docx, .pdf" multiple>
+                  <label class="custom-file-label bg-light" for="content-doc-input">Choose files</label>
+              </div>
+              
+              <br>
+          
+              <div id="content-selected-docs-container"></div>
+              <input type="hidden" name="selected_documents" id="content-selected-documents">
+              <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
+          </div>
+
+           <hr>
+
+
+          <!--create button-->
+          <div class="form-group text-center">
+            <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Create</button>
+          </div>
+        </div>
+        </form>
+  </div>
+</div>
+
+
+<script>
+  // Function to update the selected documents container
+  function updateSelectedDocuments() {
+      var selectedDocumentsContainer = document.getElementById('content-selected-docs-container');
+      var selectedDocumentsInput = document.getElementById('content-selected-documents');
+      var inputFiles = document.getElementById('content-doc-input').files;
+
+      // Clear the container
+      selectedDocumentsContainer.innerHTML = '';
+
+      // Update the container with selected document links
+      for (var i = 0; i < inputFiles.length; i++) {
+          var documentLink = document.createElement('a');
+          //documentLink.href = '#'; // Set the link href accordingly
+          documentLink.className = 'btn btn-link btn-block';
+          documentLink.textContent = inputFiles[i].name;
+          selectedDocumentsContainer.appendChild(documentLink);
+
+          // Add a line break after each link
+          selectedDocumentsContainer.appendChild(document.createElement('br'));
+
+          // Update the hidden input with selected document names
+          selectedDocumentsInput.value += inputFiles[i].name + ',';
+      }
+  }
+
+  // Attach the updateSelectedDocuments function to the file input change event
+  document.getElementById('content-doc-input').addEventListener('change', updateSelectedDocuments);
+</script>
+
+<script>
+  function openModal(remove_doc) {
+    // Set data in the modal
+    var inputElement = document.getElementById("remove_doc");
+    inputElement.value = remove_doc;
+  }
+</script>
+
+<!--Script to handle file name showing when choosing file-->
+<script type="text/javascript">
+
+  $('.custom-file input').change(function (e) {
+      var files = [];
+      for (var i = 0; i < $(this)[0].files.length; i++) {
+          files.push($(this)[0].files[i].name);
+      }
+      $(this).next('.custom-file-label').html(files.join(', '));
+  });
+
+</script>
+{% endblock content_form_content %}

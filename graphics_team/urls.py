@@ -12,6 +12,6 @@ urlpatterns = [
     #Event form
     path('event_page/<int:event_id>',views.event_form,name="event_form"),
     path('event_page/<int:event_id>/add_links',views.event_form_add_links,name="add_link_event_form"),
-
+    path('graphics_drive_links/',views.graphics_drive_links,name="graphics_drive_links"),
 
 ]

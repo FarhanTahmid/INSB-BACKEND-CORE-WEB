@@ -117,7 +117,7 @@
                     <section class="userProfile card">
                         <div class="profile">
                             <div class="profile_content">
-                                <img src="{{ user_data.profile_picture }}" alt="profile_picture">
+                                <img src="{{ user_data.profile_picture }}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
                             </div>
                         </div>
                     </section>

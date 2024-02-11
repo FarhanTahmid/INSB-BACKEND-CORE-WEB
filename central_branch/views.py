@@ -1,13 +1,12 @@
 import logging
 import traceback
-from bs4 import BeautifulSoup
 from django.http import JsonResponse
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from central_events.models import Event_Category, Event_Venue, Events, InterBranchCollaborations, IntraBranchCollaborations, SuperEvents
+from central_events.models import Events, InterBranchCollaborations, IntraBranchCollaborations, SuperEvents
 from content_writing_and_publications_team.forms import Content_Form
 from content_writing_and_publications_team.renderData import ContentWritingTeam
 from events_and_management_team.renderData import Events_And_Management_Team
@@ -18,22 +17,22 @@ from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
 from system_administration.system_error_handling import ErrorHandling
 from users import renderData
-from port.models import Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
+from port.models import VolunteerAwards,Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
 from django.db import DatabaseError
 from central_branch.renderData import Branch
-from main_website.models import Research_Papers,Blog_Category,Blog
+from main_website.models import Research_Papers,Blog
 from users.models import Members,Panel_Members
 from django.conf import settings
 from users.renderData import LoggedinUser
 import os
+import xlwt
 from users import renderData as port_render
-from port.renderData import PortData
+from port.renderData import PortData,HandleVolunteerAwards
 from users.renderData import PanelMembersData,Alumnis
 from . view_access import Branch_View_Access
 from datetime import datetime
 from django.utils.datastructures import MultiValueDictKeyError
 from users.renderData import Alumnis
-from django.http import Http404,HttpResponseBadRequest
 import logging
 import traceback
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
@@ -44,13 +43,16 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 import port.forms as PortForms
 from chapters_and_affinity_group.renderData import Sc_Ag
 from recruitment.models import recruitment_session
-from membership_development_team.models import Renewal_Sessions,Renewal_requests
+from membership_development_team.models import Renewal_Sessions
 from system_administration.render_access import Access_Render
 from django.views import View
+from users.renderData import member_login_permission
 
 # Create your views here.
 logger=logging.getLogger(__name__)
 
+@login_required
+@member_login_permission
 def central_home(request):
     try:
         current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -76,6 +78,8 @@ def central_home(request):
 
 
 #Panel and Team Management
+@login_required
+@member_login_permission
 def teams(request):
 
     try:
@@ -125,7 +129,8 @@ def teams(request):
         return custom_500(request)
     
 
-
+@login_required
+@member_login_permission
 def team_details(request,primary,name):
 
     try:
@@ -236,6 +241,7 @@ def team_details(request,primary,name):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_team(request,pk,team_name):
 
     try:
@@ -258,6 +264,7 @@ def manage_team(request,pk,team_name):
 
 #PANEL WORkS
 @login_required
+@member_login_permission
 def panel_home(request):
 
     try:
@@ -294,6 +301,7 @@ def panel_home(request):
 
 
 @login_required
+@member_login_permission
 def branch_panel_details(request,panel_id):
 
     try:
@@ -518,6 +526,7 @@ def branch_panel_details(request,panel_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def branch_panel_officers_tab(request,panel_id):
 
     try:
@@ -579,6 +588,7 @@ def branch_panel_officers_tab(request,panel_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def branch_panel_volunteers_tab(request,panel_id):
 
     try:
@@ -641,6 +651,7 @@ def branch_panel_volunteers_tab(request,panel_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def branch_panel_alumni_tab(request,panel_id):
 
     try:
@@ -719,6 +730,7 @@ def branch_panel_alumni_tab(request,panel_id):
 
 
 @login_required
+@member_login_permission
 def others(request):
     try:
         return render(request,"others.html")
@@ -728,6 +740,7 @@ def others(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_research(request):
 
     try:
@@ -777,6 +790,7 @@ def manage_research(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_research_request(request):
 
     try:
@@ -807,6 +821,7 @@ def manage_research_request(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def publish_research_request(request,pk):
 
     try:
@@ -847,6 +862,7 @@ def publish_research_request(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def update_researches(request,pk):
 
     try:
@@ -885,6 +901,7 @@ def update_researches(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_blogs(request):
 
     try:
@@ -938,6 +955,7 @@ def manage_blogs(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def update_blogs(request,pk):
 
     try:
@@ -977,6 +995,7 @@ def update_blogs(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def blog_requests(request):
 
     try:
@@ -1016,6 +1035,7 @@ def blog_requests(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def publish_blog_request(request,pk):
 
     try:
@@ -1060,6 +1080,7 @@ def publish_blog_request(request,pk):
 
 from main_website.models import HomePageTopBanner
 @login_required
+@member_login_permission
 def manage_website_homepage(request):
 
     try:
@@ -1221,6 +1242,7 @@ def manage_website_homepage(request):
         return custom_500(request)
     
 @login_required
+@member_login_permission
 def manage_website_homepage_top_banner_update(request, pk):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -1267,6 +1289,7 @@ def manage_website_homepage_top_banner_update(request, pk):
 
 
 @login_required
+@member_login_permission
 def update_volunteer_of_month(request,pk):
 
     try:
@@ -1298,6 +1321,7 @@ def update_volunteer_of_month(request,pk):
 
 
 @login_required
+@member_login_permission
 def manage_about(request):
 
     try:
@@ -1430,6 +1454,7 @@ def manage_about(request):
 
 
 @login_required
+@member_login_permission
 def ieee_region_10(request):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -1549,6 +1574,7 @@ def ieee_region_10(request):
 
 
 @login_required
+@member_login_permission
 def ieee_bangladesh_section(request):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -1675,6 +1701,7 @@ def ieee_bangladesh_section(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def ieee_nsu_student_branch(request):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -1760,6 +1787,7 @@ def ieee_nsu_student_branch(request):
         return custom_500(request)
     
 @login_required
+@member_login_permission
 @xframe_options_exempt
 def manage_about_preview(request):
     try:
@@ -1784,6 +1812,7 @@ def manage_about_preview(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 @xframe_options_exempt
 def ieee_region_10_preview(request):
     try:
@@ -1808,6 +1837,7 @@ def ieee_region_10_preview(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 @xframe_options_exempt
 def ieee_bangladesh_section_preview(request):
     try:
@@ -1832,6 +1862,7 @@ def ieee_bangladesh_section_preview(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 @xframe_options_exempt
 def ieee_nsu_student_branch_preview(request):
     try:
@@ -1853,6 +1884,7 @@ def ieee_nsu_student_branch_preview(request):
         return custom_500(request)
     
 @login_required
+@member_login_permission
 def faq(request):
 
     try:
@@ -1931,6 +1963,7 @@ def faq(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 @xframe_options_exempt
 def faq_preview(request):
     try:
@@ -1951,6 +1984,7 @@ def faq_preview(request):
 
 
 @login_required
+@member_login_permission
 def manage_achievements(request):
 
     try:
@@ -1999,6 +2033,7 @@ def manage_achievements(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def update_achievements(request,pk):
 
     try:
@@ -2038,6 +2073,7 @@ def update_achievements(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_news(request):
 
     try:
@@ -2083,6 +2119,7 @@ def manage_news(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def update_news(request,pk):
 
     try:
@@ -2120,6 +2157,7 @@ def update_news(request,pk):
 
 
 @login_required
+@member_login_permission
 def manage_magazines(request):
 
     try:
@@ -2170,6 +2208,7 @@ def manage_magazines(request):
 
 
 @login_required
+@member_login_permission
 def update_magazine(request,pk):
 
     try:
@@ -2203,6 +2242,7 @@ def update_magazine(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_gallery(request):
 
     try:
@@ -2263,6 +2303,7 @@ def manage_gallery(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def update_images(request,pk):
 
     try:
@@ -2301,6 +2342,7 @@ def update_images(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def update_videos(request,pk):
 
     try:
@@ -2339,6 +2381,7 @@ def update_videos(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_exemplary_members(request):
 
     try:
@@ -2384,6 +2427,7 @@ def manage_exemplary_members(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def update_exemplary_members(request,pk):
 
     try:
@@ -2420,6 +2464,7 @@ def update_exemplary_members(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_view_access(request):
 
     try:
@@ -2502,6 +2547,7 @@ def manage_view_access(request):
 # Create your views here.
 
 @login_required
+@member_login_permission
 def event_control_homepage(request):
     # This function loads all events and super events in the event homepage table
     
@@ -2512,12 +2558,15 @@ def event_control_homepage(request):
         is_branch = True
         sc_ag=PortData.get_all_sc_ag(request=request)
         all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(1)
+        all_event_years = Branch.get_event_years(1)
         context={
             'all_sc_ag':sc_ag,
             'user_data':user_data,
             'events':all_insb_events_with_interbranch_collaborations,
             'has_access_to_create_event':has_access_to_create_event,
             'is_branch':is_branch,
+            'all_event_years':all_event_years,
+            'common_access':Branch_View_Access.common_access(request.user.username)
             
         }
 
@@ -2545,6 +2594,7 @@ def event_control_homepage(request):
     
 
 @login_required
+@member_login_permission
 def mega_event_creation(request):
 
     '''function for creating mega event'''
@@ -2595,6 +2645,7 @@ def mega_event_creation(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def mega_events(request):
     try:
         current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -2626,6 +2677,7 @@ def mega_events(request):
 
 
 @login_required
+@member_login_permission
 def mega_event_edit(request,mega_event_id):
     try:
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -2689,6 +2741,7 @@ def mega_event_edit(request,mega_event_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def mega_event_add_event(request,mega_event_id):    
 
     try:
@@ -2701,6 +2754,7 @@ def mega_event_add_event(request,mega_event_id):
         if has_access:
             mega_event = SuperEvents.objects.get(id=mega_event_id)
             all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(1)
+            filtered_events_with_collaborations = Branch.events_not_registered_to_mega_events(all_insb_events_with_interbranch_collaborations)
             events_of_mega_Event = Branch.get_events_of_mega_event(mega_event)
 
             if request.method == "POST":
@@ -2708,7 +2762,7 @@ def mega_event_add_event(request,mega_event_id):
                 if request.POST.get('add_event_to_mega_event'):
 
                     event_list = request.POST.getlist('selected_events')
-                    if Branch.add_events_to_mega_event(event_list,mega_event,1):
+                    if Branch.add_events_to_mega_event(event_list,mega_event):
                         messages.success(request,f"Events Added Successfully to {mega_event.super_event_name}")
                     else:
                         messages.error(request,"Error occured!")
@@ -2733,7 +2787,7 @@ def mega_event_add_event(request,mega_event_id):
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
                 'mega_event':mega_event,
-                'events':all_insb_events_with_interbranch_collaborations,
+                'events':filtered_events_with_collaborations,
                 'events_of_mega_event':events_of_mega_Event,
 
             }
@@ -2750,6 +2804,7 @@ def mega_event_add_event(request,mega_event_id):
     
 
 @login_required
+@member_login_permission
 def event_creation_form_page(request):
     
     #######load data to show in the form boxes#########
@@ -2832,6 +2887,7 @@ def event_creation_form_page(request):
         
 
 @login_required
+@member_login_permission
 def event_creation_form_page2(request,event_id):
     #loading all inter branch collaboration Options
 
@@ -2877,6 +2933,7 @@ def event_creation_form_page2(request,event_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def event_creation_form_page3(request,event_id):
     try:
         has_access = Branch_View_Access.get_create_event_access(request)
@@ -2925,6 +2982,7 @@ def event_creation_form_page3(request,event_id):
         return custom_500(request)
     
 @login_required
+@member_login_permission
 def get_updated_options_for_event_dashboard(request):
 
     try:
@@ -2952,6 +3010,7 @@ def get_updated_options_for_event_dashboard(request):
         return custom_500(request)
     
 @login_required
+@member_login_permission
 def event_edit_form(request, event_id):
 
     ''' This function loads the edit page of events '''
@@ -3085,6 +3144,7 @@ def event_edit_form(request, event_id):
 
 
 @login_required
+@member_login_permission
 def event_edit_media_form_tab(request, event_id):
 
     ''' This function loads the media tab page of events '''
@@ -3154,6 +3214,7 @@ def event_edit_media_form_tab(request, event_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def event_edit_graphics_form_tab(request, event_id):
 
     ''' This function loads the graphics tab page of events '''
@@ -3226,6 +3287,7 @@ def event_edit_graphics_form_tab(request, event_id):
         return custom_500(request)
     
 @login_required
+@member_login_permission
 def event_edit_graphics_form_links_sub_tab(request,event_id):
     ''' This function loads the graphics form link page of events '''
 
@@ -3289,6 +3351,7 @@ def event_edit_graphics_form_links_sub_tab(request,event_id):
 
 
 @login_required
+@member_login_permission
 def event_edit_content_form_tab(request,event_id):
     ''' This function loads the content tab page of events '''
 
@@ -3351,6 +3414,7 @@ def event_edit_content_form_tab(request,event_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 @xframe_options_exempt
 def event_preview(request, event_id):
     ''' This function displays a preview of an event regardless of it's published status '''
@@ -3395,6 +3459,7 @@ def event_preview(request, event_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_toolkit(request):
 
     try:
@@ -3440,6 +3505,7 @@ def manage_toolkit(request):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def update_toolkit(request,pk):
 
     try:
@@ -3477,6 +3543,7 @@ def update_toolkit(request,pk):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def feedbacks(request):
 
     '''This view function loads the feedback page for the particular societies and affinity
@@ -3520,6 +3587,7 @@ def feedbacks(request):
         return custom_500(request)
     
 @login_required
+@member_login_permission
 def event_feedback(request, event_id):
 
     try:
@@ -3550,6 +3618,7 @@ def event_feedback(request, event_id):
         return custom_500(request)
 
 @login_required
+@member_login_permission
 def insb_members_list(request):
     
     try:
@@ -3576,7 +3645,8 @@ def insb_members_list(request):
             'members':members,
             'totalNumber':totalNumber,
             'has_view_permission':has_view_permission,
-            'user_data':user_data
+            'user_data':user_data,
+            'is_MDT':False
         }
         
         return render(request,'INSB Members/members_list.html',context=context)
@@ -3587,6 +3657,7 @@ def insb_members_list(request):
         return custom_500(request)
     
 @login_required
+@member_login_permission
 def member_details(request,ieee_id):
     '''This function loads an editable member details view for particular IEEE ID'''
     try:
@@ -3768,7 +3839,120 @@ def member_details(request,ieee_id):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return redirect('central_branch:member_details',ieee_id)
 
+@login_required
+@member_login_permission
+def generateExcelSheet_events_by_year(request,year):
+    '''This method generates the excel files for The events according to the year selected'''
+
+    try:
+        #Loading Access Permission
+        user=request.user
+        #need to give acccess for downloading this file
+        has_access=(Branch_View_Access.common_access(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
+        if has_access:
+            date=datetime.now()
+            response = HttpResponse(
+                content_type='application/ms-excel')  # eclaring content type for the excel files
+            response['Content-Disposition'] = f'attachment; filename=IEEE NSU SB_Events_{year} - ' +\
+                str(date.strftime('%m/%d/%Y')) + \
+                '.xls'  # making files downloadable with name of session and timestamp
+            # adding encoding to the workbook
+            workBook = xlwt.Workbook(encoding='utf-8')
+            # opening an worksheet to work with the columns
+            workSheet = workBook.add_sheet(f'Events List of {year}')
+
+            # generating the first row
+            row_num = 0
+            font_style = xlwt.XFStyle()
+            font_style.font.bold = True
+
+            # Defining columns that will stay in the first row
+            columns = ['SL','Event Name','Event Date', 'Organiser', 'Collaborations','Event Type','Venue']
+
+            # Defining first column
+            column_widths = [1000,4000, 6000, 18000, 18000, 6000,6000]
+            for col, width in enumerate(column_widths):
+                workSheet.col(col).width = width
+
+
+            for column in range(len(columns)):
+                workSheet.write(row_num, column, columns[column], font_style)
+
+            # reverting font style to default
+            font_style = xlwt.XFStyle()
+
+            # Center alignment style
+            center_alignment = xlwt.easyxf('align: horiz center')
+            # Word wrap style
+            word_wrap_style = xlwt.easyxf('alignment: wrap True')
+
+            events= Branch.load_all_inter_branch_collaborations_with_events_yearly(year,1)
+            sl_num = 0
+            for event,collaborations in events.items():
+                row_num += 1
+                sl_num += 1
+                workSheet.write(row_num,0 , sl_num,  center_alignment)
+                workSheet.write(row_num,1 , event.event_name,  center_alignment)
+                workSheet.write(row_num,2 , event.event_date.strftime('%Y-%m-%d'),  center_alignment)
+                workSheet.write(row_num,3 , event.event_organiser.group_name,  center_alignment)
+                collaborations_text = ""
+                for collabs in collaborations:
+                    collaborations_text += collabs + '\n'
+                workSheet.write(row_num, 4, collaborations_text, word_wrap_style) 
+                categories = ""   
+                for event_type in event.event_type.all():
+                    categories+=event_type.event_category + '\n'  
+                workSheet.write(row_num, 5, categories, word_wrap_style)
+                venue_list = Branch.get_selected_venues(event.pk)
+                venues=""
+                for venue in venue_list:
+                    venues += venue + '\n'
+                workSheet.write(row_num, 6, venues, word_wrap_style)
+                    
+            workBook.save(response)
+            return (response)
+        else:
+            return render(request,'access_denied2.html')
         
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
+        
+@login_required
+@member_login_permission
+def user_access(request):
+    
+    try:
+        user=request.user
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        has_view_permission=renderData.MDT_DATA.insb_member_details_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username)
+        
+        if has_view_permission:
+
+            members=Members.objects.all().order_by('-is_blocked')
+            totalNumber=Members.objects.filter(is_blocked = True).count
+
+            context={
+                'is_branch':True,
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'members':members,
+                'totalNumber':totalNumber,
+                'has_view_permission':has_view_permission,
+                'is_MDT':False
+            }
+            
+            return render(request, 'INSB Members/members_update.html',context)
+        else:
+            return render(request,'access_denied2.html')
+    
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
 def custom_404(request):
     return render(request,'404.html',status=404)
 
@@ -3784,3 +3968,243 @@ class UpdatePositionAjax(View):
                 return JsonResponse(role_data,safe=False)
         # return null if nothing is selected
         return JsonResponse({},safe=False)
+
+@login_required
+@member_login_permission
+def volunteerAwardsPanel(request):
+    try:
+        # get all sc ag for sidebar
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # get user data for side bar
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        context={
+            'all_sc_ag':sc_ag,
+            'user_data':user_data,
+        }
+        
+        get_all_panels=PortData.get_all_panels(request=request,sc_ag_primary=1) #getting branch panels only
+        if(get_all_panels is False):
+            pass
+        else:
+            context['panels']=get_all_panels
+        
+        
+        return render(request,"Volunteer_Awards/awards_home_panel.html",context=context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
+    
+@login_required
+@member_login_permission    
+def panel_specific_volunteer_awards_page(request,panel_pk):
+    
+    # get all sc ag for sidebar
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    # get user data for side bar
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    
+    context={
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
+    }
+    
+    # get panel info
+    panel_info=Panels.objects.get(pk=panel_pk)
+    context["panel_info"] = panel_info
+    
+    # get all insb members
+    all_insb_members=Members.objects.all().order_by('-position__rank')
+    context["insb_members"]=all_insb_members
+    
+    # load all awards of the panel
+    all_awards_of_panel=HandleVolunteerAwards.load_awards_for_panels(request=request,panel_pk=panel_pk)
+    if(all_awards_of_panel.exists() is False):
+        pass
+    else:
+        # get award information of the latest as the tabs will also be sorted like from high rank to low rank
+        award=all_awards_of_panel[0]
+        if(award is None):
+            pass
+        else:
+            context['award']=award
+        context['all_awards']=all_awards_of_panel
+    
+        # get award winners for that specific award
+        award_winners=HandleVolunteerAwards.load_award_winners(request,award.pk)
+        if(award_winners is False):
+            pass
+        else:
+            context['award_winners']=award_winners
+    
+     
+    if request.method=="POST":
+        # create award
+        if(request.POST.get('create_award')):
+            award_name=request.POST['award_name']
+            if(HandleVolunteerAwards.create_new_award(request=request,volunteer_award_name=award_name,panel_pk=panel_pk,sc_ag_primary=1)):
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+
+        
+        # update award
+        if(request.POST.get('update_award')):
+            
+            change_award_pk=request.POST.get('select_award')
+            award_name=request.POST['award_name']
+            
+            if(HandleVolunteerAwards.update_awards(request=request,award_pk=change_award_pk,award_name=award_name)):
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+            else:
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+
+        # delete award
+        if(request.POST.get('delete_award')):
+            award_to_delete_pk=request.POST.get('select_award')
+            if(HandleVolunteerAwards.delete_award(request=request,award_pk=award_to_delete_pk)):
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+            else:
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+
+        # add member to award
+        if(request.POST.get('add_member_to_award')):
+            get_selected_members=request.POST.getlist("member_select")
+            contribution=request.POST['contribution_description']
+            if(HandleVolunteerAwards.add_award_winners(request=request,award_pk=award.pk,selected_members=get_selected_members,contribution=contribution)):
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+            else:
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+
+        # remove member from award
+        if(request.POST.get('remove_member')):
+            remove_member=request.POST['remove_award_member']
+            if(HandleVolunteerAwards.remove_award_winner(request=request,award_pk=award.pk,member_ieee_id=remove_member)):
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+            else:
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+
+        
+        
+    return render(request,"Volunteer_Awards/volunteer_awards_control_base.html",context=context)
+
+@login_required
+@member_login_permission
+def panel_and_award_specific_page(request,panel_pk,award_pk):
+    # get all sc ag for sidebar
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    # get user data for side bar
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    
+    context={
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
+    }
+    
+    # get panel info
+    panel_info=Panels.objects.get(pk=panel_pk)
+    context["panel_info"] = panel_info
+    
+    # get all insb members
+    all_insb_members=Members.objects.all().order_by('-position__rank')
+    context["insb_members"]=all_insb_members
+    
+    # load all awards of the panel
+    all_awards_of_panel=HandleVolunteerAwards.load_awards_for_panels(request=request,panel_pk=panel_pk)
+    if(all_awards_of_panel is False):
+        pass
+    else:
+        context['all_awards']=all_awards_of_panel
+    
+    # get award information
+    award=HandleVolunteerAwards.load_award_details(request=request,award_pk=award_pk)
+    if(award is False):
+        pass
+    else:
+        context['award']=award
+        
+    # get award winners for that specific award
+    award_winners=HandleVolunteerAwards.load_award_winners(request,award_pk)
+    if(award_winners is False):
+        pass
+    else:
+        context['award_winners']=award_winners
+          
+    if request.method=="POST":
+        
+        # create award
+        if(request.POST.get('create_award')):
+            award_name=request.POST['award_name']
+            if(HandleVolunteerAwards.create_new_award(request=request,volunteer_award_name=award_name,panel_pk=panel_pk,sc_ag_primary=1)):
+                return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+        
+        # update award
+        if(request.POST.get('update_award')):
+            
+            change_award_pk=request.POST.get('select_award')
+            award_name=request.POST['award_name']
+            
+            if(HandleVolunteerAwards.update_awards(request=request,award_pk=change_award_pk,award_name=award_name)):
+                return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+            else:
+                return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+
+        # delete award
+        if(request.POST.get('delete_award')):
+            award_to_delete_pk=request.POST.get('select_award')
+            if(HandleVolunteerAwards.delete_award(request=request,award_pk=award_to_delete_pk)):
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+            else:
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+
+        # add member to award
+        if(request.POST.get('add_member_to_award')):
+            get_selected_members=request.POST.getlist("member_select")
+            contribution=request.POST['contribution_description']
+            if(HandleVolunteerAwards.add_award_winners(request=request,award_pk=award_pk,selected_members=get_selected_members,contribution=contribution)):
+                return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+            else:
+                return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+
+        # remove member from award
+        if(request.POST.get('remove_member')):
+            remove_member=request.POST['remove_award_member']
+            if(HandleVolunteerAwards.remove_award_winner(request=request,award_pk=award_pk,member_ieee_id=remove_member)):
+                return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+            else:
+                return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+                
+
+    return render(request,"Volunteer_Awards/volunteer_awards_control_base.html",context=context)
+
+class UpdateAwardAjax(View):
+    def get(self,request, *args, **kwargs):
+        award_pk=request.GET.get('award_pk',None)
+        if award_pk is not None:
+            award_data=VolunteerAwards.objects.filter(pk=award_pk).values('volunteer_award_name','pk').first()
+            if award_data:
+                return JsonResponse(award_data,safe=False)
+        # return null if nothing is selected
+        return JsonResponse({},safe=False)
+    
+class UpdateRestrictionAjax(View):
+    def get(self,request, *args, **kwargs):
+        status=request.GET.get('is_checked')
+        member_id = request.GET.get('member_id')
+        try:
+            member = Members.objects.get(ieee_id = member_id)
+        
+            if status == "true":
+                member.is_blocked = True
+                message = f"Member ID {member_id}, is now restricted."
+            else:
+                member.is_blocked = False
+                message = f"Member ID {member_id} is no longer restricted ."
+            member.save()
+            number = Members.objects.filter(is_blocked = True).count()
+            return JsonResponse({'message': message,'restricted_number':number}, status=200)
+        except Members.DoesNotExist:
+            message = f"Member ID {member_id} does not exist."
+            return JsonResponse({'message': message}, status=404)

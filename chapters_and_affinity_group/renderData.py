@@ -78,7 +78,9 @@ class Sc_Ag:
         try:
             get_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=panel_id))
             for member in get_panel_members:
-                SC_AG_Members.objects.filter(member=Members.objects.get(ieee_id=member.member.ieee_id)).update(position=None,team=None)
+                if member.member:
+                    SC_AG_Members.objects.filter(member=Members.objects.get(ieee_id=member.member.ieee_id)).update(position=None,team=None)
+
             return True
         except Exception as e:
             Sc_Ag.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
@@ -131,11 +133,12 @@ class Sc_Ag:
                 # now get the members of the panel and update their team and Position in SC-AG members Table
                 members_in_panel=Panel_Members.objects.filter(tenure=Panels.objects.get(pk=panel_pk))
                 for member in members_in_panel:
-                    if member.team is None:
-                        # update team as none
-                        SC_AG_Members.objects.filter(member=Members.objects.get(ieee_id=member.member.ieee_id)).update(team=None,position=Roles_and_Position.objects.get(id=member.position.id))                
-                    else:
-                        SC_AG_Members.objects.filter(member=Members.objects.get(ieee_id=member.member.ieee_id)).update(team=Teams.objects.get(primary=member.team.primary),position=Roles_and_Position.objects.get(id=member.position.id))
+                    if member.member:
+                        if member.team is None:
+                            # update team as none
+                            SC_AG_Members.objects.filter(member=Members.objects.get(ieee_id=member.member.ieee_id)).update(team=None,position=Roles_and_Position.objects.get(id=member.position.id))                
+                        else:
+                            SC_AG_Members.objects.filter(member=Members.objects.get(ieee_id=member.member.ieee_id)).update(team=Teams.objects.get(primary=member.team.primary),position=Roles_and_Position.objects.get(id=member.position.id))
                 #now update the panel
                 panel_to_update.current=True
                 panel_to_update.year=panel_tenure

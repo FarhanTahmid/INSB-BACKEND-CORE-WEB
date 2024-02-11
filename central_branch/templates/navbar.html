@@ -73,6 +73,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div ui-include="'../views/blocks/dropdown.new.html'"></div>
             </li>
             <li class="nav-item dropdown">
+                <a class="nav-link" href="{% url 'central_branch:volunteer_awards_panels' %}">
+                <i class="fa fa-star"></i>
+                <span>Volunteer Awards</span>
+                </a>
+                <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+            </li>
+            <li class="nav-item dropdown">
                 <a class="nav-link" href="{% url 'central_branch:manage_website_home' %}">
                 <i class="material-icons">&#xe894;</i>
                 <span>Manage Branch Website</span>
