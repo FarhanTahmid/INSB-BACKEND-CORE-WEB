@@ -17,7 +17,7 @@ from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
 from system_administration.system_error_handling import ErrorHandling
 from users import renderData
-from port.models import Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
+from port.models import VolunteerAwards,Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
 from django.db import DatabaseError
 from central_branch.renderData import Branch
 from main_website.models import Research_Papers,Blog
@@ -4008,6 +4008,15 @@ def panel_specific_volunteer_awards_page(request,panel_pk):
             if(HandleVolunteerAwards.create_new_award(request=request,volunteer_award_name=award_name,panel_pk=panel_pk,sc_ag_primary=1)):
                 return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
 
+        
+        # update award
+        if(request.POST.get('update_award')):
+            
+            change_award_pk=request.POST.get('select_award')
+            award_name=request.POST['award_name']
+            print(change_award_pk)
+        
+        
         # add member to award
         if(request.POST.get('add_member_to_award')):
             get_selected_members=request.POST.getlist("member_select")
@@ -4095,3 +4104,13 @@ def panel_and_award_specific_page(request,panel_pk,award_pk):
                 
 
     return render(request,"Volunteer_Awards/volunteer_awards_control_base.html",context=context)
+
+class UpdateAwardAjax(View):
+    def get(self,request, *args, **kwargs):
+        award_pk=request.GET.get('award_pk',None)
+        if award_pk is not None:
+            award_data=VolunteerAwards.objects.filter(pk=award_pk).values('volunteer_award_name','pk').first()
+            if award_data:
+                return JsonResponse(award_data,safe=False)
+        # return null if nothing is selected
+        return JsonResponse({},safe=False)

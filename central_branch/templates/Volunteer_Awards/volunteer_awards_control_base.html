@@ -255,6 +255,54 @@
 
             <!--Modal ends-->
 
+            <!--Modal To Manage Awards-->
+            <div id="m-s-manage" class="modal" data-backdrop="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Manage Awards</h5>
+                        </div>
+                        <div class="modal-body p-lg">
+                            <p>Do mention the contributions of the Member Carefully!</p>
+                            <br>
+                            <!--Form Field for awards-->
+                            <label>Select award to edit</label>
+                            <select class="form-control w-75" name="select_award" id="award_to_edit">
+                                <option value="">-----------</option>
+                                {% for i in all_awards %}
+                                <option value="{{i.pk}}">{{i.volunteer_award_name}}</option>
+                                {% endfor %}
+                            </select>
+
+                            <div class="modal-body text-left p-lg">
+                                <p>Edit Award attributes.</p>        
+                            </div>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-6 mx-auto">
+                                        <label for="award_name">Award Name:</label>
+                                        <input class="form-control w-75" type="text" id="award_name" name="award_name">
+                                    </div>
+                                    <div class="col-md-6 mx-auto" style="margin-top:25px;">
+                                        <input class="btn btn-outline b-danger text-danger" name="delete_award" type="submit" value="Delete Selected Award">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">Cancel</button>
+                                    <input type="submit" class="btn success p-x-md" name="update_award" value="Update Award"></input>  
+                                </div>
+                            </form>
+                        </div>                
+        
+                        
+        
+                  </div><!-- /.modal-content -->
+                </div>
+            </div>
+            <!--Add modal ends-->
+
         </div>
         <!--PAGE END-->
 
@@ -270,7 +318,28 @@
     {% block common_js %}
         {% include "common_js.html" %}
     {% endblock common_js %}
-    
+
+    <!--Ajax Function to override Form data with select option change-->
+    <script>
+        $(document).ready(function () {
+            $("#award_to_edit").change(function () {
+                var selectedAwardID = $(this).val();
+                // Make an AJAX request to retrieve data for the selected role
+                $.ajax({
+                    url: "{% url 'central_branch:update_award' %}",
+                    type: "GET",
+                    data: {'award_pk': selectedAwardID},
+                    success: function (data) {
+                        // Update other form fields based on the received data
+                        $("#award_name").val(data.volunteer_award_name);
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
+                    }
+                });
+            });
+        });
+    </script>
     <script src="{% static 'tab_view.js'%}"></script>
 
 </body>

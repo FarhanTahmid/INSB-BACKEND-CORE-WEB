@@ -1,7 +1,7 @@
 import imp
 from django.urls import path,include
 from . import views
-from .views import UpdatePositionAjax
+from .views import UpdatePositionAjax,UpdateAwardAjax
 
 app_name='central_branch'
 
@@ -119,5 +119,5 @@ urlpatterns = [
     path('volunteer_awards/panels/',views.volunteerAwardsPanel,name="volunteer_awards_panels"),
     path('volunteer_awards/panel/<int:panel_pk>/awards',views.panel_specific_volunteer_awards_page,name="panel_specific_volunteer_awards_page"),
     path('volunteer_awards/panel/<int:panel_pk>/awards/<int:award_pk>',views.panel_and_award_specific_page,name="panel_award_specific_volunteer_awards_page"),
-
+    path('get_award_data/',UpdateAwardAjax.as_view(),name="update_award")
 ]
