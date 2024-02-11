@@ -4028,7 +4028,6 @@ def panel_specific_volunteer_awards_page(request,panel_pk):
             else:
                 return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
 
-        
         # add member to award
         if(request.POST.get('add_member_to_award')):
             get_selected_members=request.POST.getlist("member_select")
@@ -4092,11 +4091,32 @@ def panel_and_award_specific_page(request,panel_pk,award_pk):
         context['award_winners']=award_winners
           
     if request.method=="POST":
+        
+        # create award
         if(request.POST.get('create_award')):
             award_name=request.POST['award_name']
             if(HandleVolunteerAwards.create_new_award(request=request,volunteer_award_name=award_name,panel_pk=panel_pk,sc_ag_primary=1)):
                 return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
         
+        # update award
+        if(request.POST.get('update_award')):
+            
+            change_award_pk=request.POST.get('select_award')
+            award_name=request.POST['award_name']
+            
+            if(HandleVolunteerAwards.update_awards(request=request,award_pk=change_award_pk,award_name=award_name)):
+                return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+            else:
+                return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+
+        # delete award
+        if(request.POST.get('delete_award')):
+            award_to_delete_pk=request.POST.get('select_award')
+            if(HandleVolunteerAwards.delete_award(request=request,award_pk=award_to_delete_pk)):
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+            else:
+                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+
         # add member to award
         if(request.POST.get('add_member_to_award')):
             get_selected_members=request.POST.getlist("member_select")
