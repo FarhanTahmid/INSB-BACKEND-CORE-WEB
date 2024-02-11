@@ -98,6 +98,40 @@ class HandleVolunteerAwards:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             messages.warning(request,'Something went wrong while deleting award winners!')
             return False
+    
+    def update_awards(request,award_pk,award_name):
+        try:
+            get_object=VolunteerAwards.objects.get(pk=award_pk)
+            try:
+                get_object.volunteer_award_name=award_name
+                get_object.save()
+                messages.success(request,"Award was updated!")
+                return True
+            except VolunteerAwards.DoesNotExist:
+                messages.warning(request,"Award does not exist!")
+                return False
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.warning(request,'Something went wrong while updating award!')
+            return False
+    
+    def delete_award(request,award_pk):
+        try:
+            get_object=VolunteerAwards.objects.get(pk=award_pk)
+            try:
+                messages.warning(request,f"{get_object.volunteer_award_name} award was deleted!")
+                get_object.delete()
+                return True
+            except VolunteerAwards.DoesNotExist:
+                messages.warning(request,"Award does not exist!")
+                return False
+
+        except Exception as e:
+            PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            messages.warning(request,'Something went wrong while deleting award!')
+            return False
 
 
 class PortData:
