@@ -299,22 +299,22 @@
           </label>
 
           
-          <!-- <input type="radio" name="drop1" id="id13" class="radio" />
+          {% comment %} <input type="radio" name="drop1" id="id13" class="radio" />
           <label for="id13">
             <span class="name">Category</span>
-          </label> -->
+          </label>
 
           <input type="radio" name="drop1" id="id14" class="radio category-option hidden" />
-          <label for="id14" class="category-option">
+          <label for="id14">
             <span class="name">Back</span>
           </label>
 
           {% for i in categories %}
           <input type="radio" name="drop1" id="{{i.blog_category}}" class="radio category-option hidden" data-category="{{i.blog_category}}"/>
-          <label for="{{i.blog_category}}" class="category-option">
+          <label for="{{i.blog_category}}">
               <span class="name">{{i.blog_category}}</span>
           </label>
-          {% endfor %}
+          {% endfor %} {% endcomment %}
 
         </div>
     </div>
