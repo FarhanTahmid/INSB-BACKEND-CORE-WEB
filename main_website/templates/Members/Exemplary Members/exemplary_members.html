@@ -209,9 +209,14 @@
 
     <script>
         let achieveTab  = document.querySelector(".view_achieve_tab");
+        
 
         achieveTab.onclick = function myfunction(){
-            document.querySelector(".achieve_list").style.display = "block";
+            if(active){
+                document.querySelector(".achieve_list").style.display = "block";
+            }
+            else
+                document.querySelector(".achieve_list").style.display = "none";
         }
     </script>
 </body>
