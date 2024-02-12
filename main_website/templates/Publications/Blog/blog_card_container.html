@@ -362,25 +362,6 @@
 
 
 <script>
-    function blogFilterFunction() {
-        var input, filter, cardContainer, cards, card, title, writer;
-        input = document.getElementById("blogFilter");
-        filter = input.value.toUpperCase();
-        cardContainer = document.querySelector(".card_container");
-        cards = cardContainer.getElementsByClassName("card");
-
-        for (var i = 0; i < cards.length; i++) {
-            card = cards[i];
-            title = card.getElementsByTagName("h5")[0].innerText;
-
-            if (title.toUpperCase().indexOf(filter) > -1) {
-                card.style.display = "";
-            } else {
-                card.style.display = "none";
-            }
-        }
-    }
-
     document.addEventListener("DOMContentLoaded", function() {
     var input = document.querySelector(".dropdown .input-box");
     input.onclick = function () {
@@ -522,5 +503,59 @@
       dateOldest.style.display = 'block';
       category.style.display = 'block';
     }
+  </script>
+  <script>
+      let radioButtons = document.querySelectorAll(".dropdown .category-option");
+
+      radioButtons.forEach((item) => {
+      item.addEventListener("change", () => {
+        input.innerHTML = item.nextElementSibling.innerHTML;
+        input.click();
+
+        let filter = item.nextElementSibling.innerText.toLowerCase().trim();
+        // console.log(filter);
+        sortByCategory(filter);
+      });
+    });
+
+    function sortByCategory(filter) {
+      let cardContainer = document.querySelector(".card_container");
+      let cards = Array.from(cardContainer.getElementsByClassName("card"));
+
+      cards.forEach(function(filtered) {
+        if(filter == 'back'){
+            filtered.style.display = 'block';
+        }else{
+          if(filtered.getAttribute('data-category') == filter)
+            filtered.style.display = 'block'; 
+          else 
+            filtered.style.display = 'none';  
+          }
+        // console.log(filtered.getAttribute('data-category'));
+      });
+
+    }
+
+        function blogFilterFunction() {
+        var input, filter, cardContainer, cards, card, title, writer;
+        input = document.getElementById("blogFilter");
+        filter = input.value.toUpperCase();
+        cardContainer = document.querySelector(".card_container");
+        cards = cardContainer.getElementsByClassName("card");
+
+        for (var i = 0; i < cards.length; i++) {
+            card = cards[i];
+            title = card.getElementsByTagName("h5")[0].innerText;
+            console.log(title);
+            if(card.style.display == 'none'){
+              if (title.toUpperCase().indexOf(filter) > -1) {
+                  card.style.display = "";
+              } else {
+                  card.style.display = "none";
+              }
+            }
+        }
+    }
+
   </script>
 {% endblock blog_card_container %}
