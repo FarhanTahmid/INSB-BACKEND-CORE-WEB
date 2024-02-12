@@ -109,8 +109,14 @@ def manage_team(request):
                     event_access=False
                     if(request.POST.get('event_access')):
                         event_access=True
+                    graphics_access=False
+                    if(request.POST.get('graphics_access')):
+                        graphics_access=True
+                    graphics_view_access=False
+                    if(request.POST.get('graphics_view_access')):
+                        graphics_view_access=True
                     ieee_id=request.POST['access_ieee_id']
-                    if (GraphicsTeam.graphics_manage_team_access_modifications(manage_team_access, event_access, ieee_id)):
+                    if (GraphicsTeam.graphics_manage_team_access_modifications(manage_team_access, event_access, graphics_access, graphics_view_access, ieee_id)):
                         permission_updated_for=Members.objects.get(ieee_id=ieee_id)
                         messages.info(request,f"Permission Details Was Updated for {permission_updated_for.name}")
                     else:
@@ -318,57 +324,62 @@ def event_form_add_links(request,event_id):
 @member_login_permission
 def graphics_drive_links(request):
 
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-    user_data=current_user.getUserData() #getting user data as dictionary file
-        
     try:
-        all_links = Graphics_Drive_links.objects.all()
-        if request.method == "POST":
-
-            if request.POST.get('add_link'):
-                
-                link_title = request.POST.get('title')
-                link = request.POST.get('graphics_form_link')
-
-                if GraphicsTeam.add_graphics_drive_links(link_title,link):
-                    messages.success(request,'Added Successfully')
-                else:
-                    messages.error(request,'Something went wrong')
-                return redirect('graphics_team:graphics_drive_links')
-            
-            if request.POST.get('update_link'):
-
-                edit_title = request.POST.get('edit_title')
-                edit_link = request.POST.get('edit_drive_link')
-                link_pk = request.POST.get('link_pk')
-
-                if GraphicsTeam.edit_graphics_drive_links(edit_title,edit_link,link_pk):
-                    messages.success(request,'Updated Successfully')
-                else:
-                    messages.error(request,'Something went wrong')
-                return redirect('graphics_team:graphics_drive_links')
-            
-            if request.POST.get('delete_link'):
-
-                link_pk = request.POST.get('remove_link')
-                
-                if GraphicsTeam.remove_graphics_drive_link(link_pk):
-                    messages.success(request,'Deleted Successfully')
-                else:
-                    messages.error(request,'Something went wrong')
-                return redirect('graphics_team:graphics_drive_links')
-
-
-        context = {
-            'user_data':user_data,
-            'all_sc_ag':sc_ag,
-            'all_links':all_links,
-            }
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
         
-        return render(request,"Graphics/graphics_page.html",context)
-    
-    
+        has_graphics_access = GraphicsTeam_Render_Access.access_for_graphics(request)
+        has_access = has_graphics_access or GraphicsTeam_Render_Access.access_for_view_graphics(request)
+        if has_access:
+            all_links = Graphics_Drive_links.objects.all()
+            if request.method == "POST" and has_graphics_access:
+
+                if request.POST.get('add_link'):
+                    
+                    link_title = request.POST.get('title')
+                    link = request.POST.get('graphics_form_link')
+
+                    if GraphicsTeam.add_graphics_drive_links(link_title,link):
+                        messages.success(request,'Added Successfully')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect('graphics_team:graphics_drive_links')
+                
+                if request.POST.get('update_link'):
+
+                    edit_title = request.POST.get('edit_title')
+                    edit_link = request.POST.get('edit_drive_link')
+                    link_pk = request.POST.get('link_pk')
+
+                    if GraphicsTeam.edit_graphics_drive_links(edit_title,edit_link,link_pk):
+                        messages.success(request,'Updated Successfully')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect('graphics_team:graphics_drive_links')
+                
+                if request.POST.get('delete_link'):
+
+                    link_pk = request.POST.get('remove_link')
+                    
+                    if GraphicsTeam.remove_graphics_drive_link(link_pk):
+                        messages.success(request,'Deleted Successfully')
+                    else:
+                        messages.error(request,'Something went wrong')
+                    return redirect('graphics_team:graphics_drive_links')
+
+
+            context = {
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'all_links':all_links,
+                'has_graphics_access':has_graphics_access
+            }
+            
+            return render(request,"Graphics/graphics_page.html",context)
+        else:
+            return render(request,"access_denied2.html", { 'all_sc_ag' : sc_ag ,'user_data':user_data,})   
+        
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

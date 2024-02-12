@@ -230,7 +230,7 @@ def member_login_permission(view_func):
             user = Members.objects.get(ieee_id = int(user))
             if user.is_blocked:
                 auth.logout(request)
-                messages.error(request, 'Your account has been blocked by Administrator')
+                messages.error(request, 'Your account has been blocked by Administrator. If you are not supposed to receive this message please contact IEEE NSU SB membership development team')
                 return redirect('users:login')
             return view_func(request, *args, **kwargs)
     return _wrapped_view

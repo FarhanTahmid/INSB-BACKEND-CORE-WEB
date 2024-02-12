@@ -112,13 +112,6 @@
       <!--PAGE START-->
       <div ui-view class="app-body wrapper" id="view">
         <div class="container">
-          <!--event name-->
-          <h2 style=
-              "justify-content: center;
-              text-align: center;
-              margin-bottom: 15px;">
-            <span style="color: #00629b">{{event_name}}</span>
-          </h2>
 
           <!--notes-->
           <div class="notes">
@@ -160,9 +153,11 @@
             </div>
           </div>
 
+          {% if has_content_access %}
           <div class="btn-container">
             <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal" style="margin-bottom:15px">Delete Content</button>
           </div>
+          {% endif %}
 
 
           <!--form contents-->

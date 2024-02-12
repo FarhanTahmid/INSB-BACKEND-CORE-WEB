@@ -80,6 +80,10 @@ def event_homepage(request):
         upcoming_event = HomepageItems.get_upcoming_event(request,1)
         upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
         all_mega_events = HomepageItems.get_all_mega_events(1)
+
+        has_mega_events=True
+        if(all_mega_events==False):
+            has_mega_events=False
         
         # prepare event stat list for event category with numbers
         get_event_stat=userData.getTypeOfEventStats(request,1)
@@ -116,6 +120,7 @@ def event_homepage(request):
             'years':get_years,
             'yearly_event_count':get_yearly_event_count,
             'all_mega_events':all_mega_events,
+            'has_mega_events':has_mega_events,
         }
 
         return render(request,'Events/events_homepage.html',context)
@@ -309,6 +314,7 @@ def rasPage(request):
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 3)
         # get mega events
         all_mega_events=HomepageItems.get_all_mega_events(primary=3)
+        organised_events = Events.objects.filter(event_organiser = society,publish_in_main_web = True).order_by('-event_date')
         has_mega_events=True
         if(all_mega_events==False):
             has_mega_events=False
@@ -352,6 +358,7 @@ def rasPage(request):
             'page_subtitle':society.secondary_paragraph,
             'all_mega_events':all_mega_events,
             'has_mega_events':has_mega_events,
+            'organised_events':organised_events,
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
     except Exception as e:
@@ -366,6 +373,7 @@ def pesPage(request):
         #getting object of PES
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 2)
         all_mega_events=HomepageItems.get_all_mega_events(primary=2)
+        organised_events = Events.objects.filter(event_organiser = society,publish_in_main_web = True).order_by('-event_date')
         has_mega_events=True
         if(all_mega_events==False):
             has_mega_events=False
@@ -405,6 +413,7 @@ def pesPage(request):
             'page_subtitle':society.secondary_paragraph,
             'all_mega_events':all_mega_events,
             'has_mega_events':has_mega_events,
+            'organised_events':organised_events,
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
     
@@ -420,6 +429,7 @@ def iasPage(request):
         #getting object of IAS
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 4)
         all_mega_events=HomepageItems.get_all_mega_events(primary=4)
+        organised_events = Events.objects.filter(event_organiser = society,publish_in_main_web = True).order_by('-event_date')
         has_mega_events=True
         if(all_mega_events==False):
             has_mega_events=False
@@ -457,6 +467,7 @@ def iasPage(request):
             'page_subtitle':society.secondary_paragraph,
             'all_mega_events':all_mega_events,
             'has_mega_events':has_mega_events,
+            'organised_events':organised_events,
 
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
@@ -472,6 +483,7 @@ def wiePage(request):
         #getting object of WIE
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 5)
         all_mega_events=HomepageItems.get_all_mega_events(primary=5)
+        organised_events = Events.objects.filter(event_organiser = society,publish_in_main_web = True).order_by('-event_date')
         has_mega_events=True
         if(all_mega_events==False):
             has_mega_events=False
@@ -510,6 +522,7 @@ def wiePage(request):
             'page_subtitle':society.secondary_paragraph,
             'all_mega_events':all_mega_events,
             'has_mega_events':has_mega_events,
+            'organised_events':organised_events,
 
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
@@ -523,13 +536,19 @@ def events_for_sc_ag(request,primary):
     ''' This view function loads the events for the society affinity group event homepage'''
     try:
 
+        society = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
         all_events = HomepageItems.load_all_events(request,True,primary)
         all_mega_events=HomepageItems.get_all_mega_events(primary=primary)
+        organised_events = Events.objects.filter(event_organiser = society,publish_in_main_web = True).order_by('-event_date')
         latest_five_events = HomepageItems.load_all_events(request,False,primary)
         date_and_event = HomepageItems.get_event_for_calender(request,primary)
         upcoming_event = HomepageItems.get_upcoming_event(request,primary)
         upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
-        society = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
+        
+
+        has_mega_events=True
+        if(all_mega_events==False):
+            has_mega_events=False
 
         # prepare event stat list for event category with numbers
         get_event_stat=userData.getTypeOfEventStats(request,primary)
@@ -568,6 +587,8 @@ def events_for_sc_ag(request,primary):
             'data':event_stat,
             'years':get_years,
             'yearly_event_count':get_yearly_event_count,
+            'has_mega_events':has_mega_events,
+            'organised_events':organised_events,
         }
 
 

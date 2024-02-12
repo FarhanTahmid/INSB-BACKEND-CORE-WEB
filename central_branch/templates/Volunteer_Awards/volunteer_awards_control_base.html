@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Panels | IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+    <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <style>
+        body, html {
+        
+        margin: 0;
+        
+        align-items: center;
+        justify-content: center;
+        }
+
+        .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+          }
+          .btn-container {
+            text-align: center;
+          }
+          
+          .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+          }
+
+          /* Media query for smaller screens (adjust the breakpoint as needed) */
+          @media (max-width: 768px) {
+            .btn {
+              width: 100%; /* Make the button full width on smaller screens */
+            }
+          }
+          .ui-switch{
+            /* Add shadow to the icon */
+            box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+
+            /* You can customize the shadow properties */
+        }
+        .form-control-label {
+            display: inline-block;
+            margin-right: 10px; /* Add margin for spacing between elements */
+        }
+    
+        .ui-switch {
+            display: inline-block;
+        }
+        .table-container {
+            overflow: hidden; /* Hide table overflow */
+        }
+        
+        .table-wrapper {
+            max-height: 300px; /* Set the maximum height for scrolling */
+            overflow: auto; /* Enable vertical scrolling */
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        
+        /* Add responsive styling for smaller screens */
+        @media (max-width: 768px) {
+            .table-wrapper {
+                max-height: none; /* Allow table to expand vertically on smaller screens */
+            }
+        }
+        .image_icon{
+            padding:10px;
+            
+          }
+          .tooltip-container {
+            position: relative;
+            display: inline-block;
+          }
+          .tooltip-container.right {
+            float: right; /* Float the container to the right */
+            margin-right: 0; /* Reset the margin for the right-aligned button */
+          }
+          
+          .image-button:hover + .tooltip-text {
+              opacity: 1;
+              visibility: visible;
+              transform: translateX(10px); /* Adjust the distance from the link */
+          }
+          
+          .tooltip-text {
+              position: absolute;
+              top: 50%;
+              left: 100%;
+              transform: translateY(-50%);
+              white-space: nowrap;
+              background-color: #333;
+              color: #fff;
+              padding: 5px;
+              border-radius: 5px;
+              opacity: 0;
+              visibility: hidden;
+              transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+          }
+          .image-button {
+            display: inline-block;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+        
+        /* Add additional styling for image appearance, such as size and alignment */
+        .image-button img {
+            height:50px;
+            width: 50px; /* Adjust as needed */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 5px; /* Add rounded corners if desired */
+        }
+        .fix-modal.show{
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+                {% include 'navbar.html' %}
+            {% endblock navbar %}
+
+        </div>
+        <!--navbar content-->
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
+            <br>
+            <!--Back button-->
+            <div class="tooltip-container">
+                <a href="{% url 'central_branch:volunteer_awards_panels' %}" class="image-button">
+                    <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+                </a>
+                <span class="tooltip-text">Go back to all Panels</span>
+            </div>
+            <!--Back button-->
+
+            <!--Start from here-->
+            <br>
+            {% if panel_info.current %}
+                <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Awards of Panel<b><span style="color:#00629B;"> {{panel_info.year}} </span><span style="color:green">(Visible in the Website)</span></b><br><b>{{panel_info.panel_of}}</b></h2>
+            {% else %}
+                <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">Awards of Panel<b><span style="color:#00629B;"> {{panel_info.year}} </span></b><br><b>{{panel_info.panel_of}}</b></h2>
+            {% endif %}
+        
+            <div style="justify-content:center;text-align:center;">  
+                <div class="btn-container">
+                    <div class="btn-group dropdown">
+                        <button class="btn  btn-outline b-accent text-accent  dropdown-toggle" data-toggle="dropdown">Create New Awards or Manage Awards</button>
+                        <div class="dropdown-menu dropdown-menu-scale info pull-right">
+                            <button class="dropdown-item" data-toggle="modal" data-target="#m-s-create" ui-toggle-class="bounce" ui-target="#animate">Create New Awards</button>
+                            <button class="dropdown-item" data-toggle="modal" data-target="#m-s-manage" ui-toggle-class="bounce" ui-target="#animate">Manage Awards</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+            <!--Messages-->
+            <div style="justify-content:center; text-align:center;">
+                {% if messages %}
+                    {% for message in messages %}
+                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                    {% endfor %}
+                    <br>
+                {% endif %}
+            </div>
+            <!--Messages End-->
+            <!--Tab view for Panels-->
+            <!--Tab view Start-->
+            {% block award_tab %}
+                {% include "Volunteer_Awards/award_tabs.html" %}
+            {% endblock award_tab %}
+            
+            {% block award_tables %}
+                {% include "Volunteer_Awards/award_tables.html" %}
+            {% endblock award_tables %}
+
+
+            <!--Modal to create awards-->
+
+            <div id="m-s-create" class="modal fade animate" data-backdrop="true">
+                
+                <div class="modal-dialog" id="animate">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Create New Award</h5>
+                        </div>
+            
+                        <br>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="row" style="margin-left:5px;">
+                                <div class="col-md">
+                                    <label>Award Name</label>
+                                    <input placeholder="Eg: Rising Star / Best Volunteer of the Month" class="form-control w-75" type="text" name="award_name"/>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                            <input type="submit" class="btn btn-success p-x-md" name="create_award" value="Create Award"></input>                  
+                            </div>
+                        </form>
+                    </div><!-- /.modal-content -->
+                </div>
+            </div>
+
+            <!--Modal ends-->
+
+            <!--Modal To Manage Awards-->
+            <div id="m-s-manage" class="modal" data-backdrop="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Manage Awards</h5>
+                        </div>
+                        <div class="modal-body p-lg">
+                            <p>Do mention the contributions of the Member Carefully!</p>
+                            <br>
+                            <!--Form Field for awards-->
+                            <form method="POST">
+                                {% csrf_token %}
+                                <label>Select award to edit</label>
+                                <select class="form-control w-75" name="select_award" id="award_to_edit">
+                                    <option value="">-----------</option>
+                                    {% for i in all_awards %}
+                                    <option value="{{i.pk}}">{{i.volunteer_award_name}}</option>
+                                    {% endfor %}
+                                </select>
+
+                                <div class="modal-body text-left p-lg">
+                                    <p>Edit Award attributes.</p>        
+                                </div>
+                            
+                                <div class="row">
+                                    <div class="col-md-6 mx-auto">
+                                        <label for="award_name">Award Name:</label>
+                                        <input class="form-control w-75" type="text" id="award_name" name="award_name">
+                                    </div>
+                                    <div class="col-md-6 mx-auto" style="margin-top:25px;">
+                                        <input class="btn btn-outline b-danger text-danger" name="delete_award" type="submit" value="Delete Selected Award">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">Cancel</button>
+                                    <button class="btn primary p-x-md" data-dismiss="modal" data-toggle="modal" data-target="#m-s-rank" ui-toggle-class="bounce" ui-target="#animate">Manage Award Ranking</button>
+                                    <input type="submit" class="btn success p-x-md" name="update_award" value="Update Award"></input>  
+                                </div>
+                            </form>
+                        </div>                
+        
+                        
+        
+                  </div><!-- /.modal-content -->
+                </div>
+            </div>
+            <!--Add modal ends-->
+
+            <!--Modal To Rank Awards-->
+            <div id="m-s-rank" class="modal" data-backdrop="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Rank Awards</h5>
+                        </div>
+                        <div class="modal-body p-lg">
+                            <p>Awards will appear by their ranked order</p>
+                            <p>Press the Upward or Downward buttons to rank the awards higher or lower.</p>
+                            <br>
+                            <!--Form Field for awards-->
+                            {% for i in all_awards %}
+                            <p class="btn btn-outline b-info text-info">{{i.volunteer_award_name}}</p><span style="margin-left:3px;"><p class="btn btn-outline b-info text-info">{{i.volunteer_award_name}}</p></span>
+                            <br>
+                            {% endfor %}
+
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="modal-footer">
+                                    <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">Cancel</button>
+                                    <input type="submit" class="btn success p-x-md" name="save_ranking" value="Save Ranking"></input>  
+
+                                </div>
+                            </form>
+                        </div>                
+        
+                        
+        
+                  </div><!-- /.modal-content -->
+                </div>
+            </div>
+            <!--Add modal ends-->
+        </div>
+        <!--PAGE END-->
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+    
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+
+    <!--Ajax Function to override Form data with select option change-->
+    <script>
+        $(document).ready(function () {
+            $("#award_to_edit").change(function () {
+                var selectedAwardID = $(this).val();
+                // Make an AJAX request to retrieve data for the selected role
+                $.ajax({
+                    url: "{% url 'central_branch:update_award' %}",
+                    type: "GET",
+                    data: {'award_pk': selectedAwardID},
+                    success: function (data) {
+                        // Update other form fields based on the received data
+                        $("#award_name").val(data.volunteer_award_name);
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
+                    }
+                });
+            });
+        });
+    </script>
+    <script src="{% static 'tab_view.js'%}"></script>
+
+</body>
+</html>

@@ -36,3 +36,10 @@ class User(admin.ModelAdmin):
 @admin.register(UserSignupTokenTable)
 class UserSignupTokens(admin.ModelAdmin):
     list_display=['user','token']
+
+from .models import VolunteerAwardRecievers
+@admin.register(VolunteerAwardRecievers)
+class Award_Recievers(admin.ModelAdmin):
+    list_display=[
+        'award_reciever','award'
+    ]
