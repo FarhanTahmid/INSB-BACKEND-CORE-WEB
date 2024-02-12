@@ -80,6 +80,10 @@ def event_homepage(request):
         upcoming_event = HomepageItems.get_upcoming_event(request,1)
         upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
         all_mega_events = HomepageItems.get_all_mega_events(1)
+
+        has_mega_events=True
+        if(all_mega_events==False):
+            has_mega_events=False
         
         # prepare event stat list for event category with numbers
         get_event_stat=userData.getTypeOfEventStats(request,1)
@@ -116,6 +120,7 @@ def event_homepage(request):
             'years':get_years,
             'yearly_event_count':get_yearly_event_count,
             'all_mega_events':all_mega_events,
+            'has_mega_events':has_mega_events,
         }
 
         return render(request,'Events/events_homepage.html',context)
