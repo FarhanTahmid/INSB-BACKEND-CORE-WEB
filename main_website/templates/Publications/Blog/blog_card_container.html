@@ -314,11 +314,18 @@
             <span class="name">Back</span>
           </label>
 
-          <input type="radio" name="drop1" id="{{i.blog_category}}" class="radio category-option hidden"/>
+          <!-- <input type="radio" name="drop1" id="{{i.blog_category}}" class="radio category-option hidden"/>
           <label for="{{i.blog_category}}" id="back_end">
               <span class="name">temp</span>
-          </label>
-
+          </label> -->
+          	<div id="back_end">
+              {% for i in categories %}
+              <input type="radio" name="drop1" id="{{i.blog_category}}" class="radio category-option hidden" data-category="{{i.blog_category}}"/>
+              <label for="{{i.blog_category}}">
+                <span class="name">{{i.blog_category}}</span>
+              </label>
+              {% endfor %}
+            </div>
         </div>
     </div>
 </div>
@@ -337,7 +344,7 @@
                     <div class="card_time_writer"><i class="fa-regular fa-clock"></i>
                     <span>{{i.date}}</span>
                     <i class="fa-solid fa-align-left"></i><span> {{i.writer_name}}</span></div>
-                    <i class="fa-regular fa-folder" style="font-size: 18px;"></i><span>Category- {{i.category}}</span>
+                    <i class="fa-regular fa-folder" style="font-size: 18px;"></i><span class="category">Category- {{i.category}}</span>
                     <span style="display: -webkit-box;
                     overflow: hidden;
                     -webkit-box-orient: vertical;
@@ -355,42 +362,6 @@
 
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    // Hide the category options
-    var categoryOptions = document.querySelectorAll('.category-option');
-    categoryOptions.forEach(function(option) {
-        option.style.display = 'none';
-    });
-});
-
-document.addEventListener("DOMContentLoaded", function() {
-    var categoryOptions = document.querySelectorAll('.category-option');
-    var categoryRadio = document.getElementById('id13');
-
-    // Function to show only category options and hide others
-    function showOnlyCategoryOptions() {
-        categoryOptions.forEach(function(option) {
-            if (option.dataset.category === 'category') {
-                option.classList.remove('hidden');
-            } else {
-                option.classList.add('hidden');
-            }
-        });
-    }
-
-    // Hide category options initially
-    categoryOptions.forEach(function(option) {
-        option.classList.add('hidden');
-    });
-
-    // Event listener for the "Category" radio button
-    categoryRadio.addEventListener('change', function() {
-        showOnlyCategoryOptions();
-    });
-});
-
-
-
     function blogFilterFunction() {
         var input, filter, cardContainer, cards, card, title, writer;
         input = document.getElementById("blogFilter");
@@ -451,6 +422,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 cards.sort(function(a, b) {
                     return new Date(a.querySelector(".card_time_writer span").innerText) - new Date(b.querySelector(".card_time_writer span").innerText);
                 });
+                break;
+            case 'temp':
+                 const tempCards = cards.filter(card => card.category === "temp");
+
+                  console.log(tempCards);
+                 console.log(cards)
                 break;
             // case 'name':
             //     cards.sort(function(a, b) {
@@ -541,7 +518,7 @@ document.addEventListener("DOMContentLoaded", function() {
       dateOldest.style.display = 'none';
       category.style.display = 'none';
       back.style.display = 'block';
-      backEnd.style.display = 'block';
+      backEnd.style.display = 'contents';
     }
 
     back.onclick = function (){
@@ -552,5 +529,4 @@ document.addEventListener("DOMContentLoaded", function() {
       category.style.display = 'block';
     }
   </script>
-
 {% endblock blog_card_container %}
