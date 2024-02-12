@@ -78,6 +78,21 @@
         a{
             text-decoration:none;
         }
+        .col-md-8.mt-2{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        @media only screen and (min-width: 992px){
+            .row.m-0.p-3{
+                height: 250px;
+            }
+        }
+        @media only screen and (min-width: 768px){
+            .row.m-0.p-3{
+                height: 330px;
+            }
+        }
     </style>
 </head>
 
@@ -99,7 +114,7 @@
                 {% for i in exemplary_members %}
                 <div class="col-md-6 my-3">
                     <div class="border rounded shadow">
-                        <div class="row m-0 p-3" style="background-color: #3780d3;">
+                        <div class="row m-0 p-3" style="background-color: #00629B;">
                             <div class="col-md-4 d-flex align-items-center">
                                 <img class="img-fluid rounded-circle shadow" src="/media_files/{{i.member_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="{{i.member_name}} profile">
                             </div>

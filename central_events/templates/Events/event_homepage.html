@@ -79,7 +79,23 @@
                   margin-right: 5%;
               }
           }
-        
+          .num_rows{
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            width: 200px;
+          }
+          @media screen and (max-width: 500px){
+            .header_wrap{
+              display: flex;
+              flex-direction: column-reverse;
+              align-items: center;
+              gap: 10px;
+            }
+            .tb_search{
+              width: 100%;
+            }
+          }
     </style>
 </head>
 <body>
@@ -159,21 +175,25 @@
                   {% endif %}
                   {% if is_branch %}
                   {% if common_access %}
-                  <button class="btn btn-outline b-success text-success  dropdown-toggle" data-toggle="dropdown">Generate an Excel Sheet for Yealy Events</button>
-                        <div class="dropdown-menu dropdown-menu-scale info pull-right">
-                          {% for year in all_event_years %}
-                          <a href="{% url 'central_branch:generateExcelSheet_events_by_year' year %}" class="dropdown-item">{{year}}</a>
-                          {% endfor %}
-                        </div>
+                  <div>
+                    <button class="btn btn-outline b-success text-success  dropdown-toggle" data-toggle="dropdown">Generate an Excel Sheet for Yealy Events</button>
+                    <div class="dropdown-menu dropdown-menu-scale info pull-right" style="right: 50%; left: 50%;">
+                      {% for year in all_event_years %}
+                      <a href="{% url 'central_branch:generateExcelSheet_events_by_year' year %}" class="dropdown-item">{{year}}</a>
+                      {% endfor %}
+                    </div>
+                  </div>      
                   {% endif %}
                   {% else %}
                   {% if common_access %}
-                  <button class="btn btn-outline b-success text-success  dropdown-toggle" data-toggle="dropdown">Generate an Excel Sheet for Yealy Events</button>
-                        <div class="dropdown-menu dropdown-menu-scale info pull-right">
-                          {% for year in all_event_years %}
-                          <a href="{% url 'chapters_and_affinity_group:generateExcelSheet_events_by_year_sc_ag' sc_ag_info.primary year %}" class="dropdown-item">{{year}}</a>
-                          {% endfor %}
-                        </div>
+                  <div>
+                    <button class="btn btn-outline b-success text-success  dropdown-toggle" data-toggle="dropdown">Generate an Excel Sheet for Yealy Events</button>
+                          <div class="dropdown-menu dropdown-menu-scale info pull-right" style="right: 50%; left: 50%;">
+                            {% for year in all_event_years %}
+                            <a href="{% url 'chapters_and_affinity_group:generateExcelSheet_events_by_year_sc_ag' sc_ag_info.primary year %}" class="dropdown-item">{{year}}</a>
+                            {% endfor %}
+                          </div>
+                  </div> 
                   {% endif %}
                   {% endif %}
                 </div>
@@ -192,7 +212,7 @@
                           {% for year in all_event_years %}
                           <option value="{{year}}">{{year}}</option>
                           {% endfor %}
-                          <option value="All">Show ALL Years</option>
+                          <option value="All" selected>Show ALL Years</option>
                         </select>
                       </div>
                 
@@ -321,6 +341,56 @@
     {% endblock common_js %}
 
     <script src="{% static 'table_search.js'%}"></script>
+    <script>
+      document.getElementById('year_to_be_selected').addEventListener('change', function() {
+          var selectedYear = this.value;
+          var tableRows = document.querySelectorAll('#table-id tbody tr');
+  
+          tableRows.forEach(function(row) {
+              var eventDate = row.querySelector('td:nth-child(6)').textContent.trim(); // Get event date
+              var eventYear = new Date(eventDate).getFullYear(); // Extract year from event date
+  
+              if (selectedYear === 'All' || selectedYear === eventYear.toString()) {
+                  row.style.display = 'table-row';
+              } else {
+                  row.style.display = 'none';
+              }
+          });
+      });
+      function FilterkeyWord_all_table() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("search_input_all");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("table-id");
+        tr = table.getElementsByTagName("tr");
+    
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1]; // Change index to 1 for the event name column
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                var eventYear = tr[i].querySelector('td:nth-child(6)').textContent.trim().split(' ')[2]; // Extract year from event date
+    
+                // Check if "Show all years" is selected or if the event year matches the selected year
+                if (document.getElementById('year_to_be_selected').value === 'All' || eventYear === document.getElementById('year_to_be_selected').value) {
+                    // Check if the event name contains the filter text
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = ""; // Show the row
+                    } else {
+                        tr[i].style.display = "none"; // Hide the row
+                    }
+                } else {
+                    tr[i].style.display = "none"; // Hide the row if it doesn't match the selected year
+                }
+            }
+        }
+    }
+    
+    
+    
+    
+    
+  </script>
+  
   
 
 </body>

@@ -62,13 +62,13 @@
         .gdlr-item,
         .post-2255,
         .gdlr-standard-style {
-            height: 400px;
+            height: 500px;
         }
 
         .article-image {
             width: 100%;
             /* Make the image fill the container */
-            height: 150px;
+            height: 220px;
             /* Fix the image height to 250px */
             object-fit: cover;
             /* Maintain aspect ratio and cover the container */
@@ -390,7 +390,7 @@
                     <div style="border-radius: 7px;" class="col-lg-4 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box_mega mega_event">
                         <article id="post-2255"
                             class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
-                            <div class="gdlr-standard-style" style="height: 400px;">
+                            <div class="gdlr-standard-style" style="height: 500px;">
                                 <div class="gdlr-blog-thumbnail">
                                     <a href="{% if events.id %}{% url 'main_website:mega_event_description_page' events.id %}{% endif %}"> <img
                                             class="article-image"
@@ -459,7 +459,7 @@
                         <article id="post-2255"
                             class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style"
                             style="border: 1px solid black;">
-                            <div class="gdlr-standard-style" style="height: 400px;">
+                            <div class="gdlr-standard-style" style="height: 500px;">
                                 <div class="gdlr-blog-thumbnail">
                                     <a href="{% url 'main_website:event_details' events.id %}">
                                         <img class="article-image"
@@ -475,7 +475,7 @@
                                                 <span class="gdlr-sep">/</span>{{events.event_date|date:"M"}}.{{events.event_date.day}}{% if event.event_date.day == 1 %}st{% elif event.event_date.day == 2 %}nd {% elif event.event_date.day == 3 %}rd{% else %}th{% endif %}, {{events.event_date.year}}
                                             </div>
                                             <div class="blog-info blog-author gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span>By {{events.event_organiser.short_form}}
+                                                <span class="gdlr-sep">/</span>By {{events.event_organiser.group_name}}
                                             </div>
                                             <div class="clear"></div>
                                         </div>
