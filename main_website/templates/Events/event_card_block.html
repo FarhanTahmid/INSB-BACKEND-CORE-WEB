@@ -68,9 +68,9 @@
 
     
 </div>
-{% comment %} event category list start {% endcomment %}
-<span style="display: none;"> All Event Category in sort </span>
-{% comment %} event category list end {% endcomment %}
+{% for category in all_categories %}
+<h1><span style="display:none">{{category.event_category}}</span></h1>
+{% endfor %}
 
 <!--EVENT CARD CONTAINER-->
 

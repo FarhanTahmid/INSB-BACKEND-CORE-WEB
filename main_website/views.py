@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from central_events.models import Events
+from central_events.models import Events,Event_Category
 from central_branch.renderData import Branch
 from chapters_and_affinity_group.models import SC_AG_Members
 from main_website.models import Research_Papers,Blog,Achievements,News
@@ -80,7 +80,8 @@ def event_homepage(request):
         upcoming_event = HomepageItems.get_upcoming_event(request,1)
         upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
         all_mega_events = HomepageItems.get_all_mega_events(1)
-
+        all_categories = Event_Category.objects.filter(event_category_for= Chapters_Society_and_Affinity_Groups.objects.get(primary = 1))
+        print(all_categories)
         has_mega_events=True
         if(all_mega_events==False):
             has_mega_events=False
@@ -121,6 +122,7 @@ def event_homepage(request):
             'yearly_event_count':get_yearly_event_count,
             'all_mega_events':all_mega_events,
             'has_mega_events':has_mega_events,
+            'all_categories':all_categories
         }
 
         return render(request,'Events/events_homepage.html',context)
@@ -544,7 +546,7 @@ def events_for_sc_ag(request,primary):
         date_and_event = HomepageItems.get_event_for_calender(request,primary)
         upcoming_event = HomepageItems.get_upcoming_event(request,primary)
         upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
-        
+        all_categories = Event_Category.objects.filter(event_category_for= Chapters_Society_and_Affinity_Groups.objects.get(primary = primary))
 
         has_mega_events=True
         if(all_mega_events==False):
@@ -589,6 +591,7 @@ def events_for_sc_ag(request,primary):
             'yearly_event_count':get_yearly_event_count,
             'has_mega_events':has_mega_events,
             'organised_events':organised_events,
+            'all_categories':all_categories
         }
 
 
