@@ -98,9 +98,9 @@
                         position: absolute;
                         border-radius: 0 0 10px 0;
                         box-shadow: 2px 3px 6px 1px rgb(0 0 0 / 52%);">
-                        {% comment %} event catgory loop start {% endcomment %}
-                        Category, Category
-                        {% comment %} event catgory loop end {% endcomment %}
+                        {% for category in key.event_type.all %}
+                        {{category.event_category}}{% if not forloop.last%},{% endif %}
+                        {% endfor %}
 
                     </div>
                         <div class="gdlr-blog-thumbnail">
