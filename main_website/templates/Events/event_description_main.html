@@ -500,6 +500,11 @@
                                     <h2 style="color: #000;">{{event.event_name}}</h2>
                                 </div>
                                 <div class="event_header" style="text-transform: uppercase;">
+                                    <p style="color: #000; font-size:15px;"><i class="fa-regular fa-folder" style="color: #E87722;"></i>Category - <span style="color: #E87722">
+                                        {% comment %} event catgory loop start {% endcomment %}
+                                        Event Category <span style="color:#002855">|</span> Event Category
+                                        {% comment %} event catgory loop end {% endcomment %}
+                                    </span></p>
                                     <!--Event Header-->
                                     <p style="color: #000; font-size:15px;"><i class="fa-solid fa-angles-right" style="color: #E87722;"></i>Event organised by <span style="color: #E87722">{{event.event_organiser}}</span></p>
                                     {% if has_interbranch_collab %}
