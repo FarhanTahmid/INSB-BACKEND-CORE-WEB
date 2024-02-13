@@ -388,15 +388,15 @@ def update_information(request):
                 if('profile_picture' in request.FILES):
                     #Get the image file
                     file=request.FILES.get('profile_picture')
-                    if(file.size>(2*1024*1024)):
-                        messages.warning(request,"Maximum File size of 2 MB exceeded!")
-                        return redirect('users:update_information')
+                    # if(file.size>(2*1024*1024)):
+                    #     messages.warning(request,"Maximum File size of 2 MB exceeded!")
+                    #     return redirect('users:update_information')
+                    # else:
+                    change_pro_pic=current_user.change_profile_picture(file) #Calling function to change profile picture of the user
+                    if(change_pro_pic==False):
+                        return DatabaseError
                     else:
-                        change_pro_pic=current_user.change_profile_picture(file) #Calling function to change profile picture of the user
-                        if(change_pro_pic==False):
-                            return DatabaseError
-                        else:
-                            messages.info(request,"Profile Picture was changed successfully!")
+                        messages.info(request,"Profile Picture was changed successfully!")
             except MultiValueDictKeyError:
                 messages.info(request,"Please select a file first!")
 

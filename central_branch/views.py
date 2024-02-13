@@ -2393,7 +2393,7 @@ def manage_exemplary_members(request):
         has_access = Branch_View_Access.get_manage_web_access(request)
         if has_access:
             # get all exemplary members
-            exemplary_members = ExemplaryMembers.objects.all().order_by('rank')
+            exemplary_members = ExemplaryMembers.objects.all().order_by('-rank')
             
             if(request.method=="POST"):
                 exemplary_member_form=ExemplaryMembersForm(request.POST,request.FILES)
