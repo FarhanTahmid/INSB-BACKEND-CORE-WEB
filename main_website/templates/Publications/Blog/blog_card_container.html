@@ -515,7 +515,7 @@
         let filter = item.nextElementSibling.innerText.toLowerCase().trim();
         // console.log(filter);
         sortByCategory(filter);
-        // blogFilterFunction(filter)
+        // blogFilterFunction(filter);
       });
     });
 
@@ -538,29 +538,45 @@
     }
 
     function blogFilterFunction() {
-    var input, filter, cardContainer, cards, card, title, writer;
+    var input, filter, cardContainer, cards, card, title, writer , category;
     input = document.getElementById("blogFilter");
     filter = input.value.toUpperCase();
     cardContainer = document.querySelector(".card_container");
     cards = cardContainer.getElementsByClassName("card");
       
+    var checkedRadioButton = document.querySelector('input[name="drop1"]:checked');
+
+    // Check if any radio button is checked
+    if (checkedRadioButton) {
+      // Access the ID of the checked radio button
+      var checkedRadioButtonId = checkedRadioButton.id;
+      // console.log("Checked Radio Button ID:", checkedRadioButtonId);
+    } else {
+      console.log("No radio button is checked.");
+    }
+
     for (var i = 0; i < cards.length; i++) {
         card = cards[i];
         title = card.getElementsByTagName("h5")[0].innerText;
-        console.log(cards)
+        category = card.getAttribute('data-category');
+        console.log(category);
+        console.log(checkedRadioButtonId);
         // Check if the card is not explicitly set to 'none' by sortByCategory
-        if (!selected) {
+        if (checkedRadioButtonId == category) {
             if (title.toUpperCase().indexOf(filter) > -1) {
                 card.style.display = "";
             } else {
                 card.style.display = "none";
             }
-        } else if (selected && card.getAttribute('data-category') == selected) {
+        } 
+        else if (checkedRadioButtonId == 'id12' || checkedRadioButtonId == 'id11' || checkedRadioButtonId == 'id13' || checkedRadioButtonId == 'id14') {
             if (title.toUpperCase().indexOf(filter) > -1) {
                 card.style.display = "";
             } else {
                 card.style.display = "none";
             }
+            // console.log(cards)
+
         } 
     }
 }

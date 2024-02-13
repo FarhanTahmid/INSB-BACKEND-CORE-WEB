@@ -3,10 +3,7 @@
 <!--YOU MUST IMPORT THE event.css IN THE HTML FILE YOU ARE USING THIS BLOCK. JS IS INTEGRATED IN THIS BLOCK -->
 
 {% block event_container %}
-<link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone"
-      rel="stylesheet"
-    />
+
 <style>
     .load-more-button {
       background-color: #002855;
@@ -53,177 +50,25 @@
             max-width: 960px;
         }
     }
-    .search_event{
-            max-width: 1150px;
-            margin: 60px auto 10px auto;
-            border: 2px solid #fecd13;
-            border-radius: 6px;
-            padding: 5px;
-            box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
-            display: grid;
-            grid-template-columns: 6fr 1fr;
-          }
-          .search_event input{
-        width: 100%;
-        height: 60px;
-        padding: 0 10px;
-        font-size: 18px;
-        background-color: #fff;
-        color: #000;
-        transition: all 0.3s;
-        border-radius: 4px;
-      }
-      .search_event input:hover{
-        background-color: #75787b25;
-      }
-      .search_event select{
-        border-radius: 5px;
-        border: 1px solid #75787b80;
-        padding: 10px;
-        transition: all 0.3s;
-        font-size: 15px;
-        color: #000;
-        font-weight: 400;
-        text-transform: capitalize;
-      }
-      .search_event select option{
-        font-size: 15px;
-        color: #000;
-        font-weight: 400;
-      }
-    .dropdown {
-        width: 100%;
-        min-width: 145px;
-        height: fit-content;
-        box-sizing: border-box;
-        position: relative;
-      }
-      .dropdown .input-box {
-        width: 100%;
-        height: 60px;
-        box-sizing: border-box;
-        outline: 0.3mm solid rgba(0, 0, 0, 0.15);
-        border-radius: 5px;
-        padding: 10px 15px;
-        font-family: poppins;
-        font-size: 14px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        position: relative;
-      }
-      .dropdown .input-box::before {
-        content: "expand_more";
-        font-family: "Material Icons";
-        position: absolute;
-        font-size: 18px;
-        top: 50%;
-        right: 15px;
-        transform: translate(0, -50%);
-        width: fit-content;
-        height: fit-content;
-      }
-      .dropdown .input-box.open::before {
-        content: "expand_less";
-      }
-      .dropdown .input-box:empty::after {
-        content: "Date Latest";
-        color: rgba(0, 0, 0, 0.5);
-      }
-      .dropdown .list {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        height: fit-content;
-        background: white;
-        margin-top: 10px;
-        border-radius: 2mm;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-direction: column;
-        max-height: 0;
-        transition: 0.25s ease-out;
-        z-index: 100;
-      }
-      .dropdown .list input {
-        display: none;
-      }
-      .dropdown .list label {
-        display: flex;
-        width: 100%;
-        align-items: center;
-        justify-content: flex-start;
-        font-family: poppins;
-        font-size: 14px;
-        padding: 10px 15px;
-        box-sizing: border-box;
-        cursor: pointer;
-        position: relative;
-      }
-      .dropdown .list label .material-icons-outlined,
-      .dropdown .input-box .material-icons-outlined {
-        margin-right: 5px;
-        font-size: 22px;
-      }
-      .dropdown .list label:hover {
-        background: rgba(0, 0, 0, 0.08);
-      }
-      .dropdown input:checked + label {
-        color: #00B5E2;
-        background: rgb(238, 245, 252);
-      }
-      .dropdown input:checked + label::before {
-        content: "done";
-        font-family: "Material Icons";
-        position: absolute;
-        top: 50%;
-        right: 15px;
-        transform: translate(0, -50%);
-        font-size: 18px;
-      }
-      .dropdown .open {
-        outline: 0.7mm solid rgb(20, 117, 213);
-      }
-      .dropdown .title {
-        font-family: poppins;
-        font-size: small;
-        font-weight: 500;
-        margin-bottom: 10px;
-      }
-      .dropdown .search-box {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 10px 8px;
-      }
-      .dropdown #search {
-        display: block;
-        width: 100%;
-        box-sizing: border-box;
-        padding: 8px;
-        border-radius: 1mm;
-        border: none;
-        outline: 0.3mm solid rgba(0, 0, 0, 0.15);
-        font-family: poppins;
-      }
-      .dropdown #search:focus {
-        outline: 0.5mm solid rgba(0, 0, 0, 0.35);
-      }
-      .category-option {
-          display: none;
-      }
-      #default1 , #default2 , #default3{
-        display: block;
-      }
-      #back , #back_end{
-        display: none;
-      }
+    .category{
+      max-width: 300px;
+      z-index: 10;
+      font-size: 15px;
+      margin-top: -10px;
+      margin-left: -1px;
+      padding: 6px;
+      text-transform: capitalize;
+      background: #002855;
+      font-style: italic;
+      color: #ffffff;
+      font-weight: 400;
+      position: absolute;
+      border-radius: 0 0 10px 0;
+      box-shadow: 2px 3px 6px 1px rgb(0 0 0 / 52%);
+    }
 </style>
 
-<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous"> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
 <!-- Search Section -->
 <h3 style="text-align: center; margin: 40px 0px; font-weight: bold;"><span style="border-bottom: 4px solid #fecd13;">OUR E</span>VENTS</h3>
@@ -236,42 +81,12 @@
     placeholder="Search by event name.."
     title="Type in a name"
     />
-    <div class="dropdown">
-        <div class="input-box"></div>
-        <div class="list main">
-          <input type="radio" name="drop1" id="id11" class="radio" checked/>
-          <label for="id11" id="default1">
-              <span class="name">Date Latest</span>
-          </label>
 
-          <input type="radio" name="drop1" id="id12" class="radio" />
-          <label for="id12" id="default2">
-            <span class="name">Date Oldest</span>
-          </label>
-
-          
-          <input type="radio" name="drop1" id="id13" class="radio" />
-          <label for="id13" id="default3">
-            <span class="name">Category</span>
-          </label>
-
-          <input type="radio" name="drop1" id="id14" class="radio category-option hidden" />
-          <label for="id14" id="back">
-            <span class="name">Back</span>
-          </label>
-
-          <div id="back_end">
-            {% for key in all_events.items %}
-            <input type="radio" name="drop1" id="{{key.pk}}" class="radio category-option hidden" data-category="{{key.pk}}"/>
-            <label for="{{key.pk}}">
-              <span class="name">category</span>
-            </label>
-            {% endfor %}
-          </div>
-
-        </div>
-    </div>
+    
 </div>
+{% for category in all_categories %}
+<span style="">{{category.event_category}}</span>
+{% endfor %}
 
 <!--EVENT CARD CONTAINER-->
 
@@ -282,13 +97,18 @@
             <label>Search: </label>
             <input type="text" onkeyup="searchfunction()" id="search" placeholder="Search with event title">
         </div> -->
-        <div class="row m-0 box-container card_container" style="transition: .3s ease-in-out; ">
+        <div class="row m-0 box-container" style="transition: .3s ease-in-out; ">
             {% for key, value in all_events.items %}
-            <div style="border-radius: 7px;" class="col-lg-4 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box card">
+            <div style="border-radius: 7px;" class="col-lg-4 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
                 <article id="post-2255"
                     class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
                     <div class="gdlr-standard-style" style="height:500px;">
-                      <div style="height: 40px;width: auto;z-index: 10;font-size: 15px;padding: 6px;background: white;position: absolute;border-radius: 0 0 10px 0; text-transform: capitalize;">Category</div>
+                        <div class="category">
+                        {% for category in key.event_type.all %}
+                        {{category.event_category}}{% if not forloop.last%},{% endif %}
+                        {% endfor %}
+
+                    </div>
                         <div class="gdlr-blog-thumbnail">
                             <a href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}"> <img
                                     class="article-image"
@@ -410,182 +230,4 @@
         }
     }
 </script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-      // Hide the category options
-      var categoryOptions = document.querySelectorAll('.category-option');
-      categoryOptions.forEach(function(option) {
-          option.style.display = 'none';
-      });
-  });
-  
-  document.addEventListener("DOMContentLoaded", function() {
-      var categoryOptions = document.querySelectorAll('.category-option');
-      var categoryRadio = document.getElementById('id13');
-  
-      // Function to show only category options and hide others
-      function showOnlyCategoryOptions() {
-          categoryOptions.forEach(function(option) {
-              if (option.dataset.category === 'category') {
-                  option.classList.remove('hidden');
-              } else {
-                  option.classList.add('hidden');
-              }
-          });
-      }
-  
-      // Hide category options initially
-      categoryOptions.forEach(function(option) {
-          option.classList.add('hidden');
-      });
-  
-      // Event listener for the "Category" radio button
-      categoryRadio.addEventListener('change', function() {
-          showOnlyCategoryOptions();
-      });
-  });
-  
-      document.addEventListener("DOMContentLoaded", function() {
-      var input = document.querySelector(".dropdown .input-box");
-      input.onclick = function () {
-        this.classList.toggle("open");
-        let list = this.nextElementSibling;
-        if (list.style.maxHeight) {
-          list.style.maxHeight = null;
-          list.style.boxShadow = null;
-        } else {
-          list.style.maxHeight = list.scrollHeight + "px";
-          list.style.boxShadow =
-            "0 1px 2px 0 rgba(0, 0, 0, 0.15),0 1px 3px 1px rgba(0, 0, 0, 0.1)";
-        }
-      };
-  
-      var rad = document.querySelectorAll(".dropdown .radio");
-      rad.forEach((item) => {
-        item.addEventListener("change", () => {
-          input.innerHTML = item.nextElementSibling.innerHTML;
-          input.click();
-  
-          // Perform sorting based on selected option
-          var filter = item.nextElementSibling.innerText.toLowerCase().trim();
-          sortBlogs(filter);
-          console.log(filter);
-        });
-      });
-  
-      function sortBlogs(filter) {
-          var cardContainer = document.querySelector(".card_container");
-          var cards = Array.from(cardContainer.getElementsByClassName("card"));
-  
-          switch(filter) {
-              case 'date latest':
-                  cards.sort(function(a, b) {
-                      return new Date(b.querySelector(".card_time_writer span").innerText) - new Date(a.querySelector(".card_time_writer span").innerText);
-                  });
-                  break;
-              case 'date oldest':
-                  cards.sort(function(a, b) {
-                      return new Date(a.querySelector(".card_time_writer span").innerText) - new Date(b.querySelector(".card_time_writer span").innerText);
-                  });
-                  break;
-              // case 'name':
-              //     cards.sort(function(a, b) {
-              //         var titleA = a.querySelector("h5").innerText.toUpperCase();
-              //         var titleB = b.querySelector("h5").innerText.toUpperCase();
-              //         if (titleA < titleB) {
-              //             return -1;
-              //         }
-              //         if (titleA > titleB) {
-              //             return 1;
-              //         }
-              //         return 0;
-              //     });
-              //     break;
-              // case 'category':
-              //     cards.sort(function(a, b) {
-              //         var categoryA = a.getAttribute('data-category').toUpperCase();
-              //         var categoryB = b.getAttribute('data-category').toUpperCase();
-              //         if (categoryA < categoryB) {
-              //             return -1;
-              //         }
-              //         if (categoryA > categoryB) {
-              //             return 1;
-              //         }
-              //         return 0;
-              //     });
-              //     break;
-          }
-  
-          // Reorder cards in the container
-          cardContainer.innerHTML = ""; // Clear the container
-          cards.forEach(function(card) {
-              cardContainer.appendChild(card);
-          });
-      }
-  });
-  
-  </script>
-  <script>
-      var input = document.querySelector(".dropdown .input-box");
-      input.onclick = function () {
-        this.classList.toggle("open");
-        let list = this.nextElementSibling;
-        if (list.style.maxHeight) {
-          list.style.maxHeight = null;
-          list.style.boxShadow = null;
-        } else {
-          list.style.maxHeight = list.scrollHeight + "px";
-          list.style.boxShadow =
-            "0 1px 2px 0 rgba(0, 0, 0, 0.15),0 1px 3px 1px rgba(0, 0, 0, 0.1)";
-        }
-      };
-  
-      var rad = document.querySelectorAll(".dropdown .radio");
-      rad.forEach((item) => {
-        item.addEventListener("change", () => {
-          input.innerHTML = item.nextElementSibling.innerHTML;
-          input.click();
-        });
-      });
-  
-      var label = document.querySelectorAll(".dropdown label");
-      function search(searchin) {
-        let searchVal = searchin.value;
-        searchVal = searchVal.toUpperCase();
-        label.forEach((item) => {
-          let checkVal = item.querySelector(".dropdown .name").innerHTML;
-          checkVal = checkVal.toUpperCase();
-          if (checkVal.indexOf(searchVal) == -1) {
-            item.style.display = "none";
-          } else {
-            item.style.display = "flex";
-          }
-          let list = input.nextElementSibling;
-          list.style.maxHeight = list.scrollHeight + "px";
-        });
-      }
-    </script>
-    <script>
-      let category = document.getElementById("default3");
-      let dateLatest = document.getElementById("default1");
-      let dateOldest = document.getElementById("default2");
-      let back = document.getElementById("back");
-      let backEnd = document.getElementById("back_end");
-  
-      category.onclick = function (){
-        dateLatest.style.display = 'none';
-        dateOldest.style.display = 'none';
-        category.style.display = 'none';
-        back.style.display = 'block';
-        backEnd.style.display = 'block';
-      }
-  
-      back.onclick = function (){
-        back.style.display = 'none';
-        backEnd.style.display = 'none';
-        dateLatest.style.display = 'block';
-        dateOldest.style.display = 'block';
-        category.style.display = 'block';
-      }
-    </script>
 {% endblock event_container %}
