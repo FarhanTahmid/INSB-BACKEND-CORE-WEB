@@ -118,14 +118,19 @@ class HandleVolunteerAwards:
     
     def delete_award(request,award_pk):
         try:
-            get_object=VolunteerAwards.objects.get(pk=award_pk)
-            try:
-                messages.warning(request,f"{get_object.volunteer_award_name} award was deleted!")
-                get_object.delete()
-                return True
-            except VolunteerAwards.DoesNotExist:
-                messages.warning(request,"Award does not exist!")
+            if(award_pk==""):
+                print("here")
+                messages.warning(request,"Please select an award first!")
                 return False
+            else:
+                try:
+                    get_object=VolunteerAwards.objects.get(pk=award_pk)
+                    messages.warning(request,f"{get_object.volunteer_award_name} award was deleted!")
+                    get_object.delete()
+                    return True
+                except VolunteerAwards.DoesNotExist:
+                    messages.warning(request,"Award does not exist!")
+                    return False
 
         except Exception as e:
             PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
