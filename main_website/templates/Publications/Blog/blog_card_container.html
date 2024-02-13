@@ -515,6 +515,7 @@
         let filter = item.nextElementSibling.innerText.toLowerCase().trim();
         // console.log(filter);
         sortByCategory(filter);
+        // blogFilterFunction(filter)
       });
     });
 
@@ -536,26 +537,33 @@
 
     }
 
-        function blogFilterFunction() {
-        var input, filter, cardContainer, cards, card, title, writer;
-        input = document.getElementById("blogFilter");
-        filter = input.value.toUpperCase();
-        cardContainer = document.querySelector(".card_container");
-        cards = cardContainer.getElementsByClassName("card");
-
-        for (var i = 0; i < cards.length; i++) {
-            card = cards[i];
-            title = card.getElementsByTagName("h5")[0].innerText;
-            console.log(title);
-            if(card.style.display == 'none'){
-              if (title.toUpperCase().indexOf(filter) > -1) {
-                  card.style.display = "";
-              } else {
-                  card.style.display = "none";
-              }
+    function blogFilterFunction() {
+    var input, filter, cardContainer, cards, card, title, writer;
+    input = document.getElementById("blogFilter");
+    filter = input.value.toUpperCase();
+    cardContainer = document.querySelector(".card_container");
+    cards = cardContainer.getElementsByClassName("card");
+      
+    for (var i = 0; i < cards.length; i++) {
+        card = cards[i];
+        title = card.getElementsByTagName("h5")[0].innerText;
+        console.log(cards)
+        // Check if the card is not explicitly set to 'none' by sortByCategory
+        if (!selected) {
+            if (title.toUpperCase().indexOf(filter) > -1) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
             }
-        }
+        } else if (selected && card.getAttribute('data-category') == selected) {
+            if (title.toUpperCase().indexOf(filter) > -1) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
+        } 
     }
+}
 
   </script>
 {% endblock blog_card_container %}

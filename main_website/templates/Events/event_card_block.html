@@ -260,10 +260,14 @@
             <span class="name">Back</span>
           </label>
 
-          <input type="radio" name="drop1" id="{{i.event_category}}" class="radio category-option hidden"/>
-          <label for="{{i.event_category}}" id="back_end">
-              <span class="name">temp</span>
-          </label>
+          <div id="back_end">
+            {% for key in all_events.items %}
+            <input type="radio" name="drop1" id="{{key.pk}}" class="radio category-option hidden" data-category="{{key.pk}}"/>
+            <label for="{{key.pk}}">
+              <span class="name">category</span>
+            </label>
+            {% endfor %}
+          </div>
 
         </div>
     </div>
@@ -278,12 +282,13 @@
             <label>Search: </label>
             <input type="text" onkeyup="searchfunction()" id="search" placeholder="Search with event title">
         </div> -->
-        <div class="row m-0 box-container" style="transition: .3s ease-in-out; ">
+        <div class="row m-0 box-container card_container" style="transition: .3s ease-in-out; ">
             {% for key, value in all_events.items %}
-            <div style="border-radius: 7px;" class="col-lg-4 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+            <div style="border-radius: 7px;" class="col-lg-4 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box card">
                 <article id="post-2255"
                     class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
                     <div class="gdlr-standard-style" style="height:500px;">
+                      <div style="height: 40px;width: auto;z-index: 10;font-size: 15px;padding: 6px;background: white;position: absolute;border-radius: 0 0 10px 0; text-transform: capitalize;">Category</div>
                         <div class="gdlr-blog-thumbnail">
                             <a href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}"> <img
                                     class="article-image"
@@ -440,27 +445,6 @@
       });
   });
   
-  
-  
-      function blogFilterFunction() {
-          var input, filter, cardContainer, cards, card, title, writer;
-          input = document.getElementById("blogFilter");
-          filter = input.value.toUpperCase();
-          cardContainer = document.querySelector(".card_container");
-          cards = cardContainer.getElementsByClassName("card");
-  
-          for (var i = 0; i < cards.length; i++) {
-              card = cards[i];
-              title = card.getElementsByTagName("h5")[0].innerText;
-  
-              if (title.toUpperCase().indexOf(filter) > -1) {
-                  card.style.display = "";
-              } else {
-                  card.style.display = "none";
-              }
-          }
-      }
-  
       document.addEventListener("DOMContentLoaded", function() {
       var input = document.querySelector(".dropdown .input-box");
       input.onclick = function () {
@@ -485,6 +469,7 @@
           // Perform sorting based on selected option
           var filter = item.nextElementSibling.innerText.toLowerCase().trim();
           sortBlogs(filter);
+          console.log(filter);
         });
       });
   
