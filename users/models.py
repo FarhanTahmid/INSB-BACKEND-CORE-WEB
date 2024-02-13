@@ -6,6 +6,9 @@ from membership_development_team.models import Renewal_Sessions
 from django.contrib.auth.models import User
 from django_resized import ResizedImageField
 from port.models import Panels
+import os
+from PIL import Image
+from insb_port import settings
 
 # from membership_development_team.models import Renewal_Sessions
 # Create your models here.
@@ -34,6 +37,59 @@ class Members(models.Model):
     last_renewal_session=models.ForeignKey(Renewal_Sessions,null=True,blank=True,on_delete=models.CASCADE) #last renewal session    
     is_active_member = models.BooleanField(null=False,blank=False,default=True)
     is_blocked = models.BooleanField(null=False,blank=False,default=False)
+
+    def save(self, *args, **kwargs):
+
+        if self.pk:
+            try:
+                # Retrieve the original instance from the database
+                original_instance = Members.objects.get(pk=self.pk)
+                # Check if the profile picture field has changed 
+                if original_instance.user_profile_picture != self.user_profile_picture:
+                    # Remove the existing profile picture from the data base
+                    if original_instance.user_profile_picture and os.path.isfile(original_instance.user_profile_picture.path):
+                        os.remove(original_instance.user_profile_picture.path)
+                    # Resize and compress the new image
+                    _, ext = os.path.splitext(self.user_profile_picture.name)
+                    profile_picture_path = os.path.join('user_profile_pictures', f"{self.pk}_profile_picture{ext}")
+                    compressed_profile_picture_path = os.path.join(settings.MEDIA_ROOT, profile_picture_path)
+                    if self.user_profile_picture:
+                        image = Image.open(self.user_profile_picture)
+                        image.thumbnail((800, 800), Image.ANTIALIAS)  
+
+                        if image.format == 'png':
+                            
+                            with Image.open(self.user_profile_picture) as img:
+                                # Convert the image to RGB mode (if it's in RGBA mode)
+                                if img.mode in ('RGBA', 'LA'):
+                                    img = img.convert('RGB')
+                                
+                                # Save the image with the specified quality
+                                img.save(compressed_profile_picture_path, format='PNG', quality=85, optimize=True)
+                        else:
+                            image.save(compressed_profile_picture_path, quality=85, optimize=True)
+                            self.user_profile_picture = profile_picture_path
+
+                elif not original_instance.user_profile_picture and self.user_profile_picture:
+                    # If there was no profile picture initially, compress the new image
+                    image = Image.open(self.user_profile_picture)
+                    image.thumbnail((800, 800), Image.ANTIALIAS)
+                    if image.format == 'png':
+                        
+                        with Image.open(self.user_profile_picture) as img:
+                            # Convert the image to RGB mode (if it's in RGBA mode)
+                            if img.mode in ('RGBA', 'LA'):
+                                img = img.convert('RGB')
+                            img.save(compressed_profile_picture_path, format='PNG', quality=85, optimize=True)
+                    else:
+                        image.save(compressed_profile_picture_path, quality=85, optimize=True)
+                        self.user_profile_picture = profile_picture_path
+            
+            except Members.DoesNotExist:
+                pass
+                
+        super().save(*args, **kwargs)
+
     class Meta:
         verbose_name='INSB Registered Members'
         ordering = ['position__rank']
@@ -45,6 +101,8 @@ class Members(models.Model):
     
     def get_image_url(self):
         return self.user_profile_picture
+    
+    
 
 
 '''This table will be used to get the data of the EX Panel Members of IEEE NSU SB '''
