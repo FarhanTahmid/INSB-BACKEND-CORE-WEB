@@ -272,7 +272,12 @@
       .category-option {
           display: none;
       }
-
+      #default1 , #default2 , #default3{
+        display: block;
+      }
+      #back , #back_end{
+        display: none;
+      }
 
 </style>
 <!-- Search Section -->
@@ -289,33 +294,38 @@
         <div class="input-box"></div>
         <div class="list main">
           <input type="radio" name="drop1" id="id11" class="radio" checked/>
-          <label for="id11">
+          <label for="id11" id="default1">
               <span class="name">Date Latest</span>
           </label>
 
           <input type="radio" name="drop1" id="id12" class="radio" />
-          <label for="id12">
+          <label for="id12" id="default2">
             <span class="name">Date Oldest</span>
           </label>
 
           
-          {% comment %} <input type="radio" name="drop1" id="id13" class="radio" />
-          <label for="id13">
+          <input type="radio" name="drop1" id="id13" class="radio" />
+          <label for="id13" id="default3">
             <span class="name">Category</span>
           </label>
 
           <input type="radio" name="drop1" id="id14" class="radio category-option hidden" />
-          <label for="id14">
+          <label for="id14" id="back">
             <span class="name">Back</span>
           </label>
 
-          {% for i in categories %}
-          <input type="radio" name="drop1" id="{{i.blog_category}}" class="radio category-option hidden" data-category="{{i.blog_category}}"/>
-          <label for="{{i.blog_category}}">
-              <span class="name">{{i.blog_category}}</span>
-          </label>
-          {% endfor %} {% endcomment %}
-
+          <!-- <input type="radio" name="drop1" id="{{i.blog_category}}" class="radio category-option hidden"/>
+          <label for="{{i.blog_category}}" id="back_end">
+              <span class="name">temp</span>
+          </label> -->
+          	<div id="back_end">
+              {% for i in categories %}
+              <input type="radio" name="drop1" id="{{i.blog_category}}" class="radio category-option hidden" data-category="{{i.blog_category}}"/>
+              <label for="{{i.blog_category}}">
+                <span class="name">{{i.blog_category}}</span>
+              </label>
+              {% endfor %}
+            </div>
         </div>
     </div>
 </div>
@@ -334,7 +344,7 @@
                     <div class="card_time_writer"><i class="fa-regular fa-clock"></i>
                     <span>{{i.date}}</span>
                     <i class="fa-solid fa-align-left"></i><span> {{i.writer_name}}</span></div>
-                    <i class="fa-regular fa-folder" style="font-size: 18px;"></i><span>Category- {{i.category}}</span>
+                    <i class="fa-regular fa-folder" style="font-size: 18px;"></i><span class="category">Category- {{i.category}}</span>
                     <span style="display: -webkit-box;
                     overflow: hidden;
                     -webkit-box-orient: vertical;
@@ -352,61 +362,6 @@
 
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    // Hide the category options
-    var categoryOptions = document.querySelectorAll('.category-option');
-    categoryOptions.forEach(function(option) {
-        option.style.display = 'none';
-    });
-});
-
-document.addEventListener("DOMContentLoaded", function() {
-    var categoryOptions = document.querySelectorAll('.category-option');
-    var categoryRadio = document.getElementById('id13');
-
-    // Function to show only category options and hide others
-    function showOnlyCategoryOptions() {
-        categoryOptions.forEach(function(option) {
-            if (option.dataset.category === 'category') {
-                option.classList.remove('hidden');
-            } else {
-                option.classList.add('hidden');
-            }
-        });
-    }
-
-    // Hide category options initially
-    categoryOptions.forEach(function(option) {
-        option.classList.add('hidden');
-    });
-
-    // Event listener for the "Category" radio button
-    categoryRadio.addEventListener('change', function() {
-        showOnlyCategoryOptions();
-    });
-});
-
-
-
-    function blogFilterFunction() {
-        var input, filter, cardContainer, cards, card, title, writer;
-        input = document.getElementById("blogFilter");
-        filter = input.value.toUpperCase();
-        cardContainer = document.querySelector(".card_container");
-        cards = cardContainer.getElementsByClassName("card");
-
-        for (var i = 0; i < cards.length; i++) {
-            card = cards[i];
-            title = card.getElementsByTagName("h5")[0].innerText;
-
-            if (title.toUpperCase().indexOf(filter) > -1) {
-                card.style.display = "";
-            } else {
-                card.style.display = "none";
-            }
-        }
-    }
-
     document.addEventListener("DOMContentLoaded", function() {
     var input = document.querySelector(".dropdown .input-box");
     input.onclick = function () {
@@ -526,5 +481,98 @@ document.addEventListener("DOMContentLoaded", function() {
       });
     }
   </script>
+  <script>
+    let category = document.getElementById("default3");
+    let dateLatest = document.getElementById("default1");
+    let dateOldest = document.getElementById("default2");
+    let back = document.getElementById("back");
+    let backEnd = document.getElementById("back_end");
 
+    category.onclick = function (){
+      dateLatest.style.display = 'none';
+      dateOldest.style.display = 'none';
+      category.style.display = 'none';
+      back.style.display = 'block';
+      backEnd.style.display = 'contents';
+    }
+
+    back.onclick = function (){
+      back.style.display = 'none';
+      backEnd.style.display = 'none';
+      dateLatest.style.display = 'block';
+      dateOldest.style.display = 'block';
+      category.style.display = 'block';
+    }
+  </script>
+  <script>
+      let radioButtons = document.querySelectorAll(".dropdown .category-option");
+
+      radioButtons.forEach((item) => {
+      item.addEventListener("change", () => {
+        input.innerHTML = item.nextElementSibling.innerHTML;
+        input.click();
+
+        let filter = item.nextElementSibling.innerText.toLowerCase().trim();
+        sortByCategory(filter);
+      });
+    });
+
+    function sortByCategory(filter) {
+      let cardContainer = document.querySelector(".card_container");
+      let cards = Array.from(cardContainer.getElementsByClassName("card"));
+
+      cards.forEach(function(filtered) {
+        if(filter == 'back'){
+            filtered.style.display = 'block';
+        }else{
+          if(filtered.getAttribute('data-category') == filter)
+            filtered.style.display = 'block'; 
+          else 
+            filtered.style.display = 'none';  
+          }
+      });
+
+    }
+
+    function blogFilterFunction() {
+    var input, filter, cardContainer, cards, card, title, writer , category;
+    input = document.getElementById("blogFilter");
+    filter = input.value.toUpperCase();
+    cardContainer = document.querySelector(".card_container");
+    cards = cardContainer.getElementsByClassName("card");
+      
+    var checkedRadioButton = document.querySelector('input[name="drop1"]:checked');
+
+    // Check if any radio button is checked
+    if (checkedRadioButton) {
+      // Access the ID of the checked radio button
+      var checkedRadioButtonId = checkedRadioButton.id;
+    }
+
+    for (var i = 0; i < cards.length; i++) {
+        card = cards[i];
+        title = card.getElementsByTagName("h5")[0].innerText;
+        category = card.getAttribute('data-category');
+        console.log(category);
+        console.log(checkedRadioButtonId);
+        // Check if the card is not explicitly set to 'none' by sortByCategory
+        if (checkedRadioButtonId == category) {
+            if (title.toUpperCase().indexOf(filter) > -1) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
+        } 
+        else if (checkedRadioButtonId == 'id12' || checkedRadioButtonId == 'id11' || checkedRadioButtonId == 'id13' || checkedRadioButtonId == 'id14') {
+            if (title.toUpperCase().indexOf(filter) > -1) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
+
+        } 
+    }
+}
+
+  </script>
 {% endblock blog_card_container %}
