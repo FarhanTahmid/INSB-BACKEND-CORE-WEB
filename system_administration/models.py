@@ -6,6 +6,9 @@ from django_resized import ResizedImageField
 from ckeditor.fields import RichTextField
 from port.models import Chapters_Society_and_Affinity_Groups
 from chapters_and_affinity_group.models import SC_AG_Members
+import os
+from insb_port import settings
+from PIL import Image
 # Create your models here.
 
 # System Model
@@ -14,6 +17,7 @@ class system(models.Model):
     main_website_under_maintenance=models.BooleanField(null=False,blank=False,default=False)
     portal_under_maintenance=models.BooleanField(null=False,blank=False,default=False)
     scheduling_under_maintenance = models.BooleanField(null=False,blank=False,default=False)
+    restrict_sc_ag_updates = models.BooleanField(null=False,blank=False,default=False)
     
     class Meta:
         verbose_name="System Handling"
@@ -26,8 +30,61 @@ class system(models.Model):
 class adminUsers(models.Model):
     username=models.CharField(primary_key=True,null=False,blank=False,max_length=30,default='Undetermined')
     name=models.CharField(null=False,blank=False,max_length=60,default="Undetermined")
-    profile_picture=ResizedImageField(null=False,blank=False,default='Admin/admin_profile_pictures/default_profile_picture.png',upload_to='Admin/admin_profile_pictures/')
+    profile_picture=models.ImageField(null=False,blank=False,default='Admin/admin_profile_pictures/default_profile_picture.png',upload_to='Admin/admin_profile_pictures/')
     email=models.EmailField(null=False,blank=False,max_length=50)
+
+    def save(self, *args, **kwargs):
+
+        if self.pk:
+            try:
+                # Retrieve the original instance from the database
+                original_instance = adminUsers.objects.get(pk=self.pk)
+                # Check if the profile picture field has changed 
+                if original_instance.profile_picture != self.profile_picture:
+                    # Remove the existing profile picture from the data base
+                    if original_instance.profile_picture and os.path.isfile(original_instance.profile_picture.path):
+                        os.remove(original_instance.profile_picture.path)
+                    # Resize and compress the new image
+                    _, ext = os.path.splitext(self.profile_picture.name)
+                    profile_picture_path = os.path.join('Admin', 'admin_profile_pictures', f"{self.pk}_profile_picture{ext}")
+                    compressed_profile_picture_path = os.path.join(settings.MEDIA_ROOT, profile_picture_path)
+                    if self.profile_picture:
+                        image = Image.open(self.profile_picture)
+                        image.thumbnail((800, 800), Image.ANTIALIAS)  
+
+                        if image.format == 'png':
+                            
+                            with Image.open(self.profile_picture) as img:
+                                # Convert the image to RGB mode (if it's in RGBA mode)
+                                if img.mode in ('RGBA', 'LA'):
+                                    img = img.convert('RGB')
+                                
+                                # Save the image with the specified quality
+                                img.save(compressed_profile_picture_path, format='PNG', quality=85, optimize=True)
+                        else:
+                            image.save(compressed_profile_picture_path, quality=85, optimize=True)
+                            self.profile_picture = profile_picture_path
+
+                elif not original_instance.profile_picture and self.profile_picture:
+                    # If there was no profile picture initially, compress the new image
+                    image = Image.open(self.profile_picture)
+                    image.thumbnail((800, 800), Image.ANTIALIAS)
+                    if image.format == 'png':
+                        
+                        with Image.open(self.profile_picture) as img:
+                            # Convert the image to RGB mode (if it's in RGBA mode)
+                            if img.mode in ('RGBA', 'LA'):
+                                img = img.convert('RGB')
+                            img.save(compressed_profile_picture_path, format='PNG', quality=85, optimize=True)
+                    else:
+                        image.save(compressed_profile_picture_path, quality=85, optimize=True)
+                        self.profile_picture = profile_picture_path
+            
+            except adminUsers.DoesNotExist:
+                pass
+                         
+        super().save(*args, **kwargs)
+
     class Meta:
         verbose_name="Admin User"
     def __str__(self) -> str:

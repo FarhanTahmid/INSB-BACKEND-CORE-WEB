@@ -2393,7 +2393,7 @@ def manage_exemplary_members(request):
         has_access = Branch_View_Access.get_manage_web_access(request)
         if has_access:
             # get all exemplary members
-            exemplary_members = ExemplaryMembers.objects.all().order_by('rank')
+            exemplary_members = ExemplaryMembers.objects.all().order_by('-rank')
             
             if(request.method=="POST"):
                 exemplary_member_form=ExemplaryMembersForm(request.POST,request.FILES)
@@ -4208,3 +4208,10 @@ class UpdateRestrictionAjax(View):
         except Members.DoesNotExist:
             message = f"Member ID {member_id} does not exist."
             return JsonResponse({'message': message}, status=404)
+
+class AwardRanking(View):
+    def get(self,request):
+        award_id = request.GET.get('award_id')
+        direction = request.GET.get('direction')
+        
+        print(f"Award id is {award_id} and direction is {direction}")

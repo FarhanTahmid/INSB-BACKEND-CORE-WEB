@@ -500,6 +500,11 @@
                                     <h2 style="color: #000;">{{event.event_name}}</h2>
                                 </div>
                                 <div class="event_header" style="text-transform: uppercase;">
+                                    <p style="color: #000; font-size:15px;"><i class="fa-regular fa-folder" style="color: #E87722;"></i>Category - <span style="color: #E87722">
+                                        {% for category in event.event_type.all %}
+                                        {{category.event_category}} <span style="color:#002855">{% if not forloop.last %}|{% endif %}</span>
+                                        {% endfor %}
+                                    </span></p>
                                     <!--Event Header-->
                                     <p style="color: #000; font-size:15px;"><i class="fa-solid fa-angles-right" style="color: #E87722;"></i>Event organised by <span style="color: #E87722">{{event.event_organiser}}</span></p>
                                     {% if has_interbranch_collab %}

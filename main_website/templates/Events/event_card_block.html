@@ -65,7 +65,12 @@
     placeholder="Search by event name.."
     title="Type in a name"
     />
+
+    
 </div>
+{% for category in all_categories %}
+<h1><span style="display:none">{{category.event_category}}</span></h1>
+{% endfor %}
 
 <!--EVENT CARD CONTAINER-->
 
@@ -82,6 +87,25 @@
                 <article id="post-2255"
                     class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
                     <div class="gdlr-standard-style" style="height:500px;">
+                        <div style="max-width: 300px;
+                        z-index: 10;
+                        font-size: 15px;
+                        margin-top: -10px;
+                        margin-left: -1px;
+                        padding: 6px;
+                        text-transform: capitalize;
+                        background: #002855;
+                        font-style: italic;
+                        color: #ffffff;
+                        font-weight: 400;
+                        position: absolute;
+                        border-radius: 0 0 10px 0;
+                        box-shadow: 2px 3px 6px 1px rgb(0 0 0 / 52%);">
+                        {% for category in key.event_type.all %}
+                        {{category.event_category}}{% if not forloop.last%},{% endif %}
+                        {% endfor %}
+
+                    </div>
                         <div class="gdlr-blog-thumbnail">
                             <a href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}"> <img
                                     class="article-image"
