@@ -94,8 +94,18 @@ def sc_ag_members(request,primary):
         # get sc_ag members
         sc_ag_members=SC_AG_Info.get_sc_ag_members(request,primary)
         
+        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
         has_access_to_view_member_details=SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary)
         
+        show_restriction_banner = False
+        #If access restricted from admin and has view permissions then show banner
+        if not has_access_for_sc_ag_updates and has_access_to_view_member_details:
+            show_restriction_banner = True
+
+        #If access is restricted then override the view access
+        if not has_access_for_sc_ag_updates:
+            has_access_to_view_member_details=False
+
         if request.method=="POST":
             if request.POST.get('add_sc_ag_member'):
                 position = request.POST['position']
@@ -128,6 +138,7 @@ def sc_ag_members(request,primary):
             'sc_ag_members':sc_ag_members,
             'member_count':len(sc_ag_members),
             'has_access_to_view_member_details':has_access_to_view_member_details,
+            'show_restriction_banner':show_restriction_banner
             
         }
         return render(request,'Members/sc_ag_members.html',context=context)
@@ -1762,7 +1773,7 @@ def event_preview(request, primary, event_id):
 @member_login_permission
 def manage_main_website(request, primary):
 
-    '''This view function loads the portals page for managung main website of socities
+    '''This view function loads the portals page for managing main website of socities
         and affinity group'''
 
     try:
@@ -1774,7 +1785,13 @@ def manage_main_website(request, primary):
     
         has_access = SC_Ag_Render_Access.access_for_manage_web(request, primary)
         if(has_access):
-            
+            has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+
+            show_restriction_banner = False
+            #If access restricted from admin then show banner
+            if not has_access_for_sc_ag_updates:
+                show_restriction_banner = True
+
             if request.method == "POST":
                 #if save button is clicked then saving the details user entered
                 if request.POST.get('save'):
@@ -1801,7 +1818,6 @@ def manage_main_website(request, primary):
                     facebook_link = request.POST.get('facebook_link')
                     mission_vision_color_code_details = request.POST.get('mission_vision_color_code')
 
-                    print(about_image)
                     #checking to see if no picture is uploaded by user, if so then if picture is already present in database
                     #then updating it with saved value to prevent data loss. Otherwise it is None
                     if about_image == None:
@@ -1852,6 +1868,8 @@ def manage_main_website(request, primary):
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
                 'media_url':settings.MEDIA_URL,
+                'has_access_for_sc_ag_updates':has_access_for_sc_ag_updates,
+                'show_restriction_banner':show_restriction_banner
             }
 
             return render(request,"Main Web Form/portal_form.html",context)
