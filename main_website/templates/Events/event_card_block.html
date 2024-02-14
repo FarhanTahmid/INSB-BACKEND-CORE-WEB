@@ -556,12 +556,11 @@
   function sortByCategory(filter) {
     let cardContainer = document.querySelector(".card_container");
     let cards = Array.from(cardContainer.getElementsByClassName("event_box"));
-    
     cards.forEach(function(filtered) {
       if(filter == 'back'){
           filtered.style.display = 'block';
       }else{
-        if(filtered.querySelector(".category").innerHTML.trim() == filter)
+        if(filtered.querySelector(".category").innerHTML.includes(filter))
           filtered.style.display = 'block'; 
         else 
           filtered.style.display = 'none';  
