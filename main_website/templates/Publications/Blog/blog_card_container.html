@@ -513,9 +513,7 @@
         input.click();
 
         let filter = item.nextElementSibling.innerText.toLowerCase().trim();
-        // console.log(filter);
         sortByCategory(filter);
-        // blogFilterFunction(filter);
       });
     });
 
@@ -532,7 +530,6 @@
           else 
             filtered.style.display = 'none';  
           }
-        // console.log(filtered.getAttribute('data-category'));
       });
 
     }
@@ -550,9 +547,6 @@
     if (checkedRadioButton) {
       // Access the ID of the checked radio button
       var checkedRadioButtonId = checkedRadioButton.id;
-      // console.log("Checked Radio Button ID:", checkedRadioButtonId);
-    } else {
-      console.log("No radio button is checked.");
     }
 
     for (var i = 0; i < cards.length; i++) {
@@ -575,7 +569,6 @@
             } else {
                 card.style.display = "none";
             }
-            // console.log(cards)
 
         } 
     }

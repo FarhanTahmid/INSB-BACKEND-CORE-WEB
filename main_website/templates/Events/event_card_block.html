@@ -243,32 +243,13 @@
 
           <div id="back_end">
             <!-- backend to display event categories in dropdown -->
-            <!-- {% for category in all_categories %}
-            <input type="radio" name="drop1" id="id15" class="radio category-option hidden" data-category="id15"/>
-            <label for="id15">
+            {% for category in all_categories %}
+            <input type="radio" name="drop1" id="{{category.event_category}}" class="radio category-option hidden" data-category="{{category.event_category}}"/>
+            <label for="{{category.event_category}}">
               <span class="name">{{category.event_category}}</span>
             </label>
-            {% endfor %} -->
+            {% endfor %}
 
-            <input type="radio" name="drop1" id="asdgwaehw" class="radio category-option hidden" data-category="asdgwaehw">
-            <label for="asdgwaehw">
-              <span class="name">asdgwaehw</span>
-            </label>
-            
-            <input type="radio" name="drop1" id="id16" class="radio category-option hidden" data-category="id15">
-            <label for="id15">
-              <span class="name">test</span>
-            </label>
-            
-            <input type="radio" name="drop1" id="id17" class="radio category-option hidden" data-category="id15">
-            <label for="id15">
-              <span class="name">event</span>
-            </label>
-            
-            <input type="radio" name="drop1" id="id18" class="radio category-option hidden" data-category="id15">
-            <label for="id15">
-              <span class="name">temp</span>
-            </label>
           </div>
       </div>
   </div>
@@ -340,7 +321,7 @@
             {% endfor %}
         </div>
     <div class="text-center mt-4 mb-5" style="margin: auto;">
-          <button class="load-more-button load-more">LOAD MORE</button>
+          <button class="load-more-button load-more load-event">LOAD MORE</button>
     </div>
         
     </div>
@@ -389,11 +370,6 @@
 </script>
 
 <script>
-
-
-</script>
-
-<script>
   function eventFilter() {
   var input, filter, box, eventName, i, txtValue , cards;
   input = document.getElementById("eventFilter");
@@ -407,33 +383,15 @@
   if (checkedRadioButton) {
     // Access the ID of the checked radio button
     var checkedRadioButtonId = checkedRadioButton.id;
-    console.log("Checked Radio Button ID:", checkedRadioButtonId);
-  } else {
-    console.log("No radio button is checked.");
   }
 
   for (i = 0; i < box.length; i++) {
       eventName = box[i].getElementsByClassName("event_name")[0];
       cards = box[i].querySelector(".category").innerHTML.trim();
 
-      if (checkedRadioButtonId == 'id11'){
-          txtValue = eventName.textContent || eventName.innerText;
-          // console.log('Name: ', txtValue)
-
-
-          if(filter){
-            document.querySelector(".load-more-button").style.display = 'none';
-          }
-          else {
-            document.querySelector(".load-more-button").style.display = 'inline-block';
-          }
-      }
-      // console.log(cards)
       if (checkedRadioButtonId == cards) {
           txtValue = eventName.textContent || eventName.innerText;
-          if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            console.log('id5')
-            
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {            
               box[i].style.display = "block";
           } else {
               box[i].style.display = "none";
@@ -441,15 +399,7 @@
       }
       else if (checkedRadioButtonId == 'id11' || checkedRadioButtonId == 'id12' || checkedRadioButtonId == 'id13' || checkedRadioButtonId == 'id14') {
           txtValue = eventName.textContent || eventName.innerText;
-          // console.log('Name: ', txtValue)
 
-          // if(filter){
-          //   document.querySelector(".load-more-button").style.display = 'none';
-          // }
-          // else {
-          //   document.querySelector(".load-more-button").style.display = 'inline-block';
-          // }
-          
           if (txtValue.toUpperCase().indexOf(filter) > -1) {
 
               box[i].style.display = "block";
@@ -457,7 +407,16 @@
               box[i].style.display = "none";
           }
       }
-      
+      // if (checkedRadioButtonId == 'id11'){
+      //     console.log('Name: ', txtValue)
+
+      //     if(filter){
+      //       document.querySelector(".load-event").style.display = 'none';
+      //     }
+      //     else {
+      //       document.querySelector(".load-event").style.display = 'inline-block';
+      //     }
+      // }
   }
 }
 </script>
@@ -607,54 +566,8 @@
         else 
           filtered.style.display = 'none';  
         }
-      // console.log(filtered.getAttribute('data-category'));
     });
 
   }
-
-  function blogFilterFunction() {
-  var input, filter, cardContainer, cards, card, title, writer , category;
-  input = document.getElementById("blogFilter");
-  filter = input.value.toUpperCase();
-  cardContainer = document.querySelector(".card_container");
-  cards = cardContainer.getElementsByClassName("event_card");
-    
-  var checkedRadioButton = document.querySelector('input[name="drop1"]:checked');
-
-  // Check if any radio button is checked
-  if (checkedRadioButton) {
-    // Access the ID of the checked radio button
-    var checkedRadioButtonId = checkedRadioButton.id;
-    console.log("Checked Radio Button ID:", checkedRadioButtonId);
-  } else {
-    console.log("No radio button is checked.");
-  }
-
-  for (var i = 0; i < cards.length; i++) {
-      card = cards[i];
-      title = card.getElementsByTagName("h5")[0].innerText;
-      category = card.getAttribute('data-category');
-      console.log(category);
-      console.log(checkedRadioButtonId);
-      // Check if the card is not explicitly set to 'none' by sortByCategory
-      if (checkedRadioButtonId == category) {
-          if (title.toUpperCase().indexOf(filter) > -1) {
-              card.style.display = "";
-          } else {
-              card.style.display = "none";
-          }
-      } 
-      else if (checkedRadioButtonId == 'id12' || checkedRadioButtonId == 'id11' || checkedRadioButtonId == 'id13' || checkedRadioButtonId == 'id14') {
-          if (title.toUpperCase().indexOf(filter) > -1) {
-              card.style.display = "";
-          } else {
-              card.style.display = "none";
-          }
-          // console.log(cards)
-
-      } 
-  }
-}
-
 </script>
 {% endblock event_container %}
