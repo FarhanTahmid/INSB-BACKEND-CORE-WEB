@@ -220,18 +220,18 @@
     <div class="dropdown">
       <div class="input-box"></div>
       <div class="list main">
-        <input type="radio" name="drop1" id="id11" class="radio" checked/>
+        <input type="radio" name="drop1" id="id11" class="radio1" checked/>
         <label for="id11" id="default1">
             <span class="name">Date Latest</span>
         </label>
 
-        <input type="radio" name="drop1" id="id12" class="radio" />
+        <input type="radio" name="drop1" id="id12" class="radio1" />
         <label for="id12" id="default2">
           <span class="name">Date Oldest</span>
         </label>
 
         
-        <input type="radio" name="drop1" id="id13" class="radio" />
+        <input type="radio" name="drop1" id="id13" class="radio1" />
         <label for="id13" id="default3">
           <span class="name">Category</span>
         </label>
@@ -242,21 +242,39 @@
         </label>
 
           <div id="back_end">
-            <!--backend to display event categories in dropdown-->
-            <!-- {% for i in categories %}
-            <input type="radio" name="drop1" id="{{i.blog_category}}" class="radio category-option hidden" data-category="{{i.blog_category}}"/>
-            <label for="{{i.blog_category}}">
-              <span class="name">{{i.blog_category}}</span>
+            <!-- backend to display event categories in dropdown -->
+            <!-- {% for category in all_categories %}
+            <input type="radio" name="drop1" id="id15" class="radio category-option hidden" data-category="id15"/>
+            <label for="id15">
+              <span class="name">{{category.event_category}}</span>
             </label>
             {% endfor %} -->
+
+            <input type="radio" name="drop1" id="asdgwaehw" class="radio category-option hidden" data-category="asdgwaehw">
+            <label for="asdgwaehw">
+              <span class="name">asdgwaehw</span>
+            </label>
+            
+            <input type="radio" name="drop1" id="id16" class="radio category-option hidden" data-category="id15">
+            <label for="id15">
+              <span class="name">test</span>
+            </label>
+            
+            <input type="radio" name="drop1" id="id17" class="radio category-option hidden" data-category="id15">
+            <label for="id15">
+              <span class="name">event</span>
+            </label>
+            
+            <input type="radio" name="drop1" id="id18" class="radio category-option hidden" data-category="id15">
+            <label for="id15">
+              <span class="name">temp</span>
+            </label>
           </div>
       </div>
   </div>
     
 </div>
-{% for category in all_categories %}
-<span style="">{{category.event_category}}</span>
-{% endfor %}
+
 
 <!--EVENT CARD CONTAINER-->
 
@@ -269,7 +287,7 @@
         </div> -->
         <div class="row m-0 box-container" style="transition: .3s ease-in-out; width: inherit;">
             {% for key, value in all_events.items %}
-            <div style="border-radius: 7px;" class="col-lg-4 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box event_card">
+            <div style="border-radius: 7px; display: flex;" class="col-lg-4 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box event_card">
                 <article id="post-2255"
                     class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
                     <div class="gdlr-standard-style" style="height:500px;">
@@ -372,38 +390,12 @@
 
 <script>
 
-    //EVENT SEARCH FUNCTION WITH NAME ONLY
-    function searchfunction() {
-        let input, filter, table, tr, td, j;
-        input = document.getElementById("search");
-        filter = input.value.toUpperCase();
-        table = document.querySelector(".box-container");
-        tr = table.querySelector(".box");
 
-        for (j = 0; j < tr.length; j++) {
-            td = tr[j].getElementsByTagName("div");
-            message = document.getElementById("no_data");
-
-            if (td.length > 0) {
-                if (td[2].innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[j].style.display = "";
-                    message.innerHTML = "";
-                }
-                else {
-                    tr[j].style.display = "none";
-                }
-
-            }
-            if (td.length == 0) {
-                message.innerHTML = "Event not found!";
-            }
-        }
-    }
 </script>
 
 <script>
   function eventFilter() {
-  var input, filter, box, eventName, i, txtValue;
+  var input, filter, box, eventName, i, txtValue , cards;
   input = document.getElementById("eventFilter");
   filter = input.value.toUpperCase();
   box = document.getElementsByClassName("event_box");
@@ -422,26 +414,42 @@
 
   for (i = 0; i < box.length; i++) {
       eventName = box[i].getElementsByClassName("event_name")[0];
-      if (checkedRadioButtonId == 'id12' || checkedRadioButtonId == 'id13' || checkedRadioButtonId == 'id14') {
-          txtValue = eventName.textContent || eventName.innerText;
-          console.log('Name: ', txtValue)
-          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      cards = box[i].querySelector(".category").innerHTML.trim();
 
-              box[i].style.display = "block";
-          } else {
-              box[i].style.display = "none";
-          }
-      }
-      else if (!(checkedRadioButtonId == 'id12' || !(checkedRadioButtonId) == 'id11' || checkedRadioButtonId == 'id13' || checkedRadioButtonId == 'id14') ){
+      if (checkedRadioButtonId == 'id11'){
           txtValue = eventName.textContent || eventName.innerText;
-          console.log('Name: ', txtValue)
+          // console.log('Name: ', txtValue)
+
+
           if(filter){
-    document.querySelector(".load-more-button").style.display = 'none';
-  }
-  else {
-    document.querySelector(".load-more-button").style.display = 'inline-block';
-  }
+            document.querySelector(".load-more-button").style.display = 'none';
+          }
+          else {
+            document.querySelector(".load-more-button").style.display = 'inline-block';
+          }
+      }
+      // console.log(cards)
+      if (checkedRadioButtonId == cards) {
+          txtValue = eventName.textContent || eventName.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            console.log('id5')
+            
+              box[i].style.display = "block";
+          } else {
+              box[i].style.display = "none";
+          }
+      }
+      else if (checkedRadioButtonId == 'id11' || checkedRadioButtonId == 'id12' || checkedRadioButtonId == 'id13' || checkedRadioButtonId == 'id14') {
+          txtValue = eventName.textContent || eventName.innerText;
+          // console.log('Name: ', txtValue)
 
+          // if(filter){
+          //   document.querySelector(".load-more-button").style.display = 'none';
+          // }
+          // else {
+          //   document.querySelector(".load-more-button").style.display = 'inline-block';
+          // }
+          
           if (txtValue.toUpperCase().indexOf(filter) > -1) {
 
               box[i].style.display = "block";
@@ -449,6 +457,7 @@
               box[i].style.display = "none";
           }
       }
+      
   }
 }
 </script>
@@ -469,7 +478,7 @@
     }
   };
 
-  var rad = document.querySelectorAll(".dropdown .radio");
+  var rad = document.querySelectorAll(".dropdown .radio1");
   rad.forEach((item) => {
     item.addEventListener("change", () => {
       input.innerHTML = item.nextElementSibling.innerHTML;
@@ -487,7 +496,6 @@
       cards.forEach(function(show){
         show.style.display = 'block';
       });
-      
       switch(filter) {
         case 'date latest':
               cards.sort(function(a, b) {
@@ -582,21 +590,19 @@
       input.click();
 
       let filter = item.nextElementSibling.innerText.toLowerCase().trim();
-      console.log(filter);
       sortByCategory(filter);
-      // blogFilterFunction(filter);
     });
   });
-
+  
   function sortByCategory(filter) {
     let cardContainer = document.querySelector(".card_container");
-    let cards = Array.from(cardContainer.getElementsByClassName("card"));
-
+    let cards = Array.from(cardContainer.getElementsByClassName("event_box"));
+    
     cards.forEach(function(filtered) {
       if(filter == 'back'){
           filtered.style.display = 'block';
       }else{
-        if(filtered.getAttribute('data-category') == filter)
+        if(filtered.querySelector(".category").innerHTML.trim() == filter)
           filtered.style.display = 'block'; 
         else 
           filtered.style.display = 'none';  
