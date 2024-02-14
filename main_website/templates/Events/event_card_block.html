@@ -192,9 +192,9 @@
       .dropdown #search:focus {
         outline: 0.5mm solid rgba(0, 0, 0, 0.35);
       }
-      .category-option {
+      /* .category-option {
           display: none;
-      }
+      } */
       #default1 , #default2 , #default3{
         display: block;
       }
@@ -223,18 +223,18 @@
     <div class="dropdown">
       <div class="input-box"></div>
       <div class="list main">
-        <input type="radio" name="drop1" id="id11" class="radio1" checked/>
+        <input type="radio" name="drop1" id="id11" class="radio" checked/>
         <label for="id11" id="default1">
             <span class="name">Date Latest</span>
         </label>
 
-        <input type="radio" name="drop1" id="id12" class="radio1" />
+        <input type="radio" name="drop1" id="id12" class="radio" />
         <label for="id12" id="default2">
           <span class="name">Date Oldest</span>
         </label>
 
         
-        <input type="radio" name="drop1" id="id13" class="radio1" />
+        <input type="radio" name="drop1" id="id13" class="radio" />
         <label for="id13" id="default3">
           <span class="name">Category</span>
         </label>
@@ -392,7 +392,9 @@
       eventName = box[i].getElementsByClassName("event_name")[0];
       cards = box[i].querySelector(".category").innerHTML.trim();
 
-      if (checkedRadioButtonId == cards) {
+      if (cards.includes(checkedRadioButtonId)) {
+        console.log(checkedRadioButtonId);
+        console.log(cards);
           txtValue = eventName.textContent || eventName.innerText;
           if (txtValue.toUpperCase().indexOf(filter) > -1) {            
               box[i].style.display = "block";
@@ -440,7 +442,7 @@
     }
   };
 
-  var rad = document.querySelectorAll(".dropdown .radio1");
+  var rad = document.querySelectorAll(".dropdown .radio");
   rad.forEach((item) => {
     item.addEventListener("change", () => {
       input.innerHTML = item.nextElementSibling.innerHTML;
@@ -455,6 +457,7 @@
   function sortBlogs(filter) {
       var cardContainer = document.querySelector(".card_container");
       var cards = Array.from(cardContainer.getElementsByClassName("event_card"));
+      var cardBox = Array.from(cardContainer.getElementsByClassName("event_box"));
       cards.forEach(function(show){
         show.style.display = 'block';
       });
@@ -469,6 +472,20 @@
                   return new Date(a.querySelector(".blog-date").innerText) - new Date(b.querySelector(".blog-date").innerText);
               });
               break;
+          default :
+              cards.forEach(function(filtered) {
+                // console.log(filter)
+                  if(filter == 'back'){
+                      filtered.style.display = 'block';
+                  }else{
+                    if(filtered.querySelector(".category").innerHTML.includes(filter))
+                      filtered.style.display = 'block'; 
+                    else 
+                      filtered.style.display = 'none';  
+                    }
+                });
+                break;
+
       }
 
       // Reorder cards in the container
@@ -544,49 +561,6 @@
   }
 </script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-    var input = document.querySelector(".dropdown .input-box");
-    input.onclick = function () {
-      this.classList.toggle("open");
-      let list = this.nextElementSibling;
-      if (list.style.maxHeight) {
-        list.style.maxHeight = null;
-        list.style.boxShadow = null;
-      } else {
-        list.style.maxHeight = list.scrollHeight + "px";
-        list.style.boxShadow =
-          "0 1px 2px 0 rgba(0, 0, 0, 0.15),0 1px 3px 1px rgba(0, 0, 0, 0.1)";
-      }
-    };
-    
-    let radioButtons = document.querySelectorAll(".dropdown .category-option");
-
-    radioButtons.forEach((item) => {
-    item.addEventListener("change", () => {
-      input.innerHTML = item.nextElementSibling.innerHTML;
-      input.click();
-
-      let filter = item.nextElementSibling.innerText.toLowerCase().trim();
-      sortByCategory(filter);
-    });
-  });
-  
-  function sortByCategory(filter) {
-    let cardContainer = document.querySelector(".card_container");
-    let cards = Array.from(cardContainer.getElementsByClassName("event_box"));
-    cards.forEach(function(filtered) {
-      if(filter == 'back'){
-          filtered.style.display = 'block';
-      }else{
-        if(filtered.querySelector(".category").innerHTML.includes(filter))
-          filtered.style.display = 'block'; 
-        else 
-          filtered.style.display = 'none';  
-        }
-    });
-
-  }
-
-});
+   
 </script>
 {% endblock event_container %}
