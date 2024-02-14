@@ -475,7 +475,7 @@
           default :
               cards.forEach(function(filtered) {
                 // console.log(filter)
-                  if(filter == 'back'){
+                  if(filter == 'back' || filter == 'category'){
                       filtered.style.display = 'block';
                   }else{
                     if(filtered.querySelector(".category").innerHTML.includes(filter))
