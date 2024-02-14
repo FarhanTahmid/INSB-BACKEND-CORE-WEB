@@ -17,6 +17,7 @@ class system(models.Model):
     main_website_under_maintenance=models.BooleanField(null=False,blank=False,default=False)
     portal_under_maintenance=models.BooleanField(null=False,blank=False,default=False)
     scheduling_under_maintenance = models.BooleanField(null=False,blank=False,default=False)
+    restrict_sc_ag_updates = models.BooleanField(null=False,blank=False,default=False)
     
     class Meta:
         verbose_name="System Handling"
