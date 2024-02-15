@@ -393,7 +393,6 @@
     function sortBlogs(filter) {
       var cardContainer = document.querySelector(".card_container");
       var cards = Array.from(cardContainer.getElementsByClassName("card"));
-  
       switch(filter) {
           case 'date latest':
               cards.sort(function(a, b) {
@@ -465,39 +464,40 @@ let category = document.getElementById("default3");
   <script>
     function blogFilterFunction() {
       var input, filter, cardContainer, cards, card, title, category;
+  
       input = document.getElementById("blogFilter");
-      filter = input.value.trim().toUpperCase(); // Ensure filter value is trimmed and converted to uppercase
+      filter = input.value.toUpperCase(); // Ensure filter value is trimmed and converted to uppercase
       cardContainer = document.querySelector(".card_container");
       cards = cardContainer.getElementsByClassName("card");
-    
+  
       var checkedRadioButton = document.querySelector('input[name="drop1"]:checked');
-    
+  
       // Check if any radio button is checked
       if (checkedRadioButton) {
-        // Access the value of the checked radio button
-        var checkedCategory = checkedRadioButton.getAttribute('data-category').toUpperCase();
-        console.log(checkedCategory);
-      }
-    
-      for (var i = 0; i < cards.length; i++) {
-        card = cards[i];
-        title = card.getElementsByTagName("h5")[0].innerText;
-        category = card.getAttribute('data-category').toUpperCase(); // Ensure category value is converted to uppercase
-    
-        // Check if the card belongs to the selected category or if all categories are selected
-        if (checkedCategory === 'ALL' || checkedCategory === category) {
-          if (filter === "" || title.toUpperCase().indexOf(filter) > -1 || category.indexOf(filter) > -1) {
-            card.style.display = "block";
-          } else {
-            card.style.display = "none";
-          }
-        } else {
-          card.style.display = "none";
-        }
-      }
-    }
-    
+          // Access the value of the checked radio button
+          var checkedCategory = checkedRadioButton.getAttribute('id');
   
-
+          // Loop through cards to check title and category matches with filter
+          for (var i = 0; i < cards.length; i++) {
+              card = cards[i];
+              title = card.getElementsByTagName("h5")[0].innerText;
+              category = card.getAttribute('data-category').toUpperCase(); // Ensure category value is converted to uppercase
+  
+              // Check if the card belongs to the selected category or if all categories are selected
+              if ((checkedCategory === 'id13' && category.toLowerCase().includes(checkedRadioButton.nextElementSibling.innerText.toLowerCase().trim())) ||
+                  (filter === "" || title.toUpperCase().indexOf(filter) > -1)) {
+                  card.style.display = "block";
+              } else {
+                  card.style.display = "none";
+              }
+          }
+      }
+  }
+  
+  // Helper function to extract blog date
+  function getBlogDate(card) {
+      return card.querySelector(".card_time_writer span").innerText;
+  }
+  
   </script>
 {% endblock blog_card_container %}
