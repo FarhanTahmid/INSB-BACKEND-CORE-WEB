@@ -382,119 +382,65 @@
       item.addEventListener("change", () => {
         input.innerHTML = item.nextElementSibling.innerHTML;
         input.click();
-
+    
         // Perform sorting based on selected option
         var filter = item.nextElementSibling.innerText.toLowerCase().trim();
         sortBlogs(filter);
       });
     });
+    
 
     function sortBlogs(filter) {
-        var cardContainer = document.querySelector(".card_container");
-        var cards = Array.from(cardContainer.getElementsByClassName("card"));
-
-        switch(filter) {
-            case 'date latest':
-                cards.sort(function(a, b) {
-                    return new Date(b.querySelector(".card_time_writer span").innerText) - new Date(a.querySelector(".card_time_writer span").innerText);
-                });
-                break;
-            case 'date oldest':
-                cards.sort(function(a, b) {
-                    return new Date(a.querySelector(".card_time_writer span").innerText) - new Date(b.querySelector(".card_time_writer span").innerText);
-                });
-                break;
-            default :
-                cards.forEach(function(filtered) {
-                  if(filter == 'back' || filter == 'category'){
-                      filtered.style.display = 'block';
-                  }else{
-                    if(filtered.getAttribute('data-category') == filter)
-                      filtered.style.display = 'block'; 
-                    else 
-                      filtered.style.display = 'none';  
-                    }
-                });
-                break;
-            // case 'name':
-            //     cards.sort(function(a, b) {
-            //         var titleA = a.querySelector("h5").innerText.toUpperCase();
-            //         var titleB = b.querySelector("h5").innerText.toUpperCase();
-            //         if (titleA < titleB) {
-            //             return -1;
-            //         }
-            //         if (titleA > titleB) {
-            //             return 1;
-            //         }
-            //         return 0;
-            //     });
-            //     break;
-            // case 'category':
-            //     cards.sort(function(a, b) {
-            //         var categoryA = a.getAttribute('data-category').toUpperCase();
-            //         var categoryB = b.getAttribute('data-category').toUpperCase();
-            //         if (categoryA < categoryB) {
-            //             return -1;
-            //         }
-            //         if (categoryA > categoryB) {
-            //             return 1;
-            //         }
-            //         return 0;
-            //     });
-            //     break;
-        }
-
-        // Reorder cards in the container
-        cardContainer.innerHTML = ""; // Clear the container
-        cards.forEach(function(card) {
-            cardContainer.appendChild(card);
-        });
-    }
+      var cardContainer = document.querySelector(".card_container");
+      var cards = Array.from(cardContainer.getElementsByClassName("card"));
+  
+      switch(filter) {
+          case 'date latest':
+              cards.sort(function(a, b) {
+                  return new Date(b.querySelector(".card_time_writer span").innerText) - new Date(a.querySelector(".card_time_writer span").innerText);
+              });
+              break;
+          case 'date oldest':
+              cards.sort(function(a, b) {
+                  return new Date(a.querySelector(".card_time_writer span").innerText) - new Date(b.querySelector(".card_time_writer span").innerText);
+              });
+              break;
+          case 'category':
+              // If 'back' is selected, show all cards
+              cards.forEach(function(card) {
+                  card.style.display = 'block';
+              });
+              break;
+          case 'back':
+              // If 'back' is selected, show all cards
+              cards.forEach(function(card) {
+                  card.style.display = 'block';
+              });
+              break;
+          default:
+              // Filter cards based on category
+              cards.forEach(function(card) {
+                  if (filter === card.getAttribute('data-category').toLowerCase()) {
+                      card.style.display = 'block';
+                  } else {
+                      card.style.display = 'none';
+                  }
+              });
+              break;
+      }
+  
+      // Reorder cards in the container
+      cardContainer.innerHTML = ""; // Clear the container
+      cards.forEach(function(card) {
+          cardContainer.appendChild(card);
+      });
+  }
+  
 });
 
 </script>
-<script>
-    var input = document.querySelector(".dropdown .input-box");
-    input.onclick = function () {
-      this.classList.toggle("open");
-      let list = this.nextElementSibling;
-      if (list.style.maxHeight) {
-        list.style.maxHeight = null;
-        list.style.boxShadow = null;
-      } else {
-        list.style.maxHeight = list.scrollHeight + "px";
-        list.style.boxShadow =
-          "0 1px 2px 0 rgba(0, 0, 0, 0.15),0 1px 3px 1px rgba(0, 0, 0, 0.1)";
-      }
-    };
-
-    var rad = document.querySelectorAll(".dropdown .radio");
-    rad.forEach((item) => {
-      item.addEventListener("change", () => {
-        input.innerHTML = item.nextElementSibling.innerHTML;
-        input.click();
-      });
-    });
-
-    var label = document.querySelectorAll(".dropdown label");
-    function search(searchin) {
-      let searchVal = searchin.value;
-      searchVal = searchVal.toUpperCase();
-      label.forEach((item) => {
-        let checkVal = item.querySelector(".dropdown .name").innerHTML;
-        checkVal = checkVal.toUpperCase();
-        if (checkVal.indexOf(searchVal) == -1) {
-          item.style.display = "none";
-        } else {
-          item.style.display = "flex";
-        }
-        let list = input.nextElementSibling;
-        list.style.maxHeight = list.scrollHeight + "px";
-      });
-    }
-  </script>
   <script>
-    let category = document.getElementById("default3");
+let category = document.getElementById("default3");
     let dateLatest = document.getElementById("default1");
     let dateOldest = document.getElementById("default2");
     let back = document.getElementById("back");
@@ -505,7 +451,7 @@
       dateOldest.style.display = 'none';
       category.style.display = 'none';
       back.style.display = 'block';
-      backEnd.style.display = 'contents';
+      backEnd.style.display = 'block';
     }
 
     back.onclick = function (){
@@ -518,38 +464,40 @@
   </script>
   <script>
     function blogFilterFunction() {
-    var input, filter, cardContainer, cards, card, title, category;
-    input = document.getElementById("blogFilter");
-    filter = input.value.toUpperCase();
-    cardContainer = document.querySelector(".card_container");
-    cards = cardContainer.getElementsByClassName("card");
-
-    var checkedRadioButton = document.querySelector('input[name="drop1"]:checked');
-
-    // Check if any radio button is checked
-    if (checkedRadioButton) {
-        // Access the ID of the checked radio button
-        var checkedRadioButtonId = checkedRadioButton.id;
-    }
-
-    for (var i = 0; i < cards.length; i++) {
+      var input, filter, cardContainer, cards, card, title, category;
+      input = document.getElementById("blogFilter");
+      filter = input.value.trim().toUpperCase(); // Ensure filter value is trimmed and converted to uppercase
+      cardContainer = document.querySelector(".card_container");
+      cards = cardContainer.getElementsByClassName("card");
+    
+      var checkedRadioButton = document.querySelector('input[name="drop1"]:checked');
+    
+      // Check if any radio button is checked
+      if (checkedRadioButton) {
+        // Access the value of the checked radio button
+        var checkedCategory = checkedRadioButton.getAttribute('data-category').toUpperCase();
+        console.log(checkedCategory);
+      }
+    
+      for (var i = 0; i < cards.length; i++) {
         card = cards[i];
         title = card.getElementsByTagName("h5")[0].innerText;
-        category = card.getAttribute('data-category');
-
+        category = card.getAttribute('data-category').toUpperCase(); // Ensure category value is converted to uppercase
+    
         // Check if the card belongs to the selected category or if all categories are selected
-        if (checkedRadioButtonId == category || checkedRadioButtonId == 'id14') {
-            if (title.toUpperCase().indexOf(filter) > -1) {
-                card.style.display = "";
-            } else {
-                card.style.display = "none";
-            }
-        } else {
+        if (checkedCategory === 'ALL' || checkedCategory === category) {
+          if (filter === "" || title.toUpperCase().indexOf(filter) > -1 || category.indexOf(filter) > -1) {
+            card.style.display = "block";
+          } else {
             card.style.display = "none";
+          }
+        } else {
+          card.style.display = "none";
         }
+      }
     }
-}
-
+    
+  
 
   </script>
 {% endblock blog_card_container %}

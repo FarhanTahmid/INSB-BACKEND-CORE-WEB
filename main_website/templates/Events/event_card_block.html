@@ -323,9 +323,9 @@
             </div>
             {% endfor %}
         </div>
-    <div class="text-center mt-4 mb-5" style="margin: auto;">
+    {% comment %} <div class="text-center mt-4 mb-5" style="margin: auto;">
           <button class="load-more-button load-more load-event">LOAD MORE</button>
-    </div>
+    </div> {% endcomment %}
         
     </div>
 </section>
@@ -340,7 +340,7 @@
   </script>
 
 <!-- event load more button -->
-<script>
+{% comment %} <script>
     $(document).ready(function () {
         var visibleCount = 3; // Initial number of elements to show
         var totalElements = $(".event_box").length; // Total number of elements
@@ -370,7 +370,7 @@
         });
     });
     
-</script>
+</script> {% endcomment %}
 
 <script>
   function eventFilter() {
@@ -428,75 +428,62 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-  var input = document.querySelector(".dropdown .input-box");
-  input.onclick = function () {
-    this.classList.toggle("open");
-    let list = this.nextElementSibling;
-    if (list.style.maxHeight) {
-      list.style.maxHeight = null;
-      list.style.boxShadow = null;
-    } else {
-      list.style.maxHeight = list.scrollHeight + "px";
-      list.style.boxShadow =
-        "0 1px 2px 0 rgba(0, 0, 0, 0.15),0 1px 3px 1px rgba(0, 0, 0, 0.1)";
-    }
-  };
+    var input = document.querySelector(".dropdown .input-box");
+    input.onclick = function () {
+      this.classList.toggle("open");
+      let list = this.nextElementSibling;
+      if (list.style.maxHeight) {
+        list.style.maxHeight = null;
+        list.style.boxShadow = null;
+      } else {
+        list.style.maxHeight = list.scrollHeight + "px";
+        list.style.boxShadow =
+          "0 1px 2px 0 rgba(0, 0, 0, 0.15),0 1px 3px 1px rgba(0, 0, 0, 0.1)";
+      }
+    };
 
-  var rad = document.querySelectorAll(".dropdown .radio");
-  rad.forEach((item) => {
-    item.addEventListener("change", () => {
-      input.innerHTML = item.nextElementSibling.innerHTML;
-      input.click();
+    var rad = document.querySelectorAll(".dropdown .radio");
+    rad.forEach((item) => {
+      item.addEventListener("change", () => {
+        input.innerHTML = item.nextElementSibling.innerHTML;
+        input.click();
 
-      // Perform sorting based on selected option
-      var filter = item.nextElementSibling.innerText.toLowerCase().trim();
-      sortBlogs(filter);
+        // Perform sorting based on selected option
+        var filter = item.nextElementSibling.innerText.toLowerCase().trim();
+        sortBlogs(filter);
+      });
     });
-  });
 
-  function sortBlogs(filter) {
+    function sortBlogs(filter) {
       var cardContainer = document.querySelector(".card_container");
       var cards = Array.from(cardContainer.getElementsByClassName("event_card"));
-      var cardBox = Array.from(cardContainer.getElementsByClassName("event_box"));
-      cards.forEach(function(show){
-        show.style.display = 'block';
-      });
-      switch(filter) {
-        case 'date latest':
-              cards.sort(function(a, b) {
-                  return new Date(b.querySelector(".blog-date").innerText) - new Date(a.querySelector(".blog-date").innerText);
-              });
-              break;
-          case 'date oldest':
-              cards.sort(function(a, b) {
-                  return new Date(a.querySelector(".blog-date").innerText) - new Date(b.querySelector(".blog-date").innerText);
-              });
-              break;
-          default :
-              cards.forEach(function(filtered) {
-                // console.log(filter)
-                  if(filter == 'back' || filter == 'category'){
-                      filtered.style.display = 'block';
-                  }else{
-                    if(filtered.querySelector(".category").innerHTML.includes(filter))
-                      filtered.style.display = 'block'; 
-                    else 
-                      filtered.style.display = 'none';  
-                    }
-                });
-                break;
 
-      }
-
-      // Reorder cards in the container
-      cardContainer.innerHTML = ""; // Clear the container
       cards.forEach(function(card) {
-          cardContainer.appendChild(card);
-      });
-  }
-});
+        var category = card.querySelector(".category").innerText.toLowerCase().trim();
+        var eventName = card.querySelector(".event_name").innerText.toLowerCase().trim();
 
+        if (filter === 'category') {
+          // Show only cards with selected category
+          var selectedCategory = input.innerText.toLowerCase().trim();
+          if (category.includes(selectedCategory)) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        } else {
+          // Show cards based on search filter
+          if ((eventName.includes(input.innerText.toLowerCase().trim()) || category.includes(input.innerText.toLowerCase().trim()))) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        }
+      });
+    }
+  });
 </script>
+
+
 <script>
   var input = document.querySelector(".dropdown .input-box");
   input.onclick = function () {
