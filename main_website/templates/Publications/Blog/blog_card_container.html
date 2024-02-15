@@ -518,44 +518,38 @@
   </script>
   <script>
     function blogFilterFunction() {
-    var input, filter, cardContainer, cards, card, title, writer , category;
+    var input, filter, cardContainer, cards, card, title, category;
     input = document.getElementById("blogFilter");
     filter = input.value.toUpperCase();
     cardContainer = document.querySelector(".card_container");
     cards = cardContainer.getElementsByClassName("card");
-      
+
     var checkedRadioButton = document.querySelector('input[name="drop1"]:checked');
 
     // Check if any radio button is checked
     if (checkedRadioButton) {
-      // Access the ID of the checked radio button
-      var checkedRadioButtonId = checkedRadioButton.id;
+        // Access the ID of the checked radio button
+        var checkedRadioButtonId = checkedRadioButton.id;
     }
 
     for (var i = 0; i < cards.length; i++) {
         card = cards[i];
         title = card.getElementsByTagName("h5")[0].innerText;
         category = card.getAttribute('data-category');
-        console.log(category);
-        console.log(checkedRadioButtonId);
-        // Check if the card is not explicitly set to 'none' by sortByCategory
-        if (checkedRadioButtonId == category) {
-            if (title.toUpperCase().indexOf(filter) > -1) {
-                card.style.display = "";
-            } else {
-                card.style.display = "none";
-            }
-        } 
-        else if (checkedRadioButtonId == 'id12' || checkedRadioButtonId == 'id11' || checkedRadioButtonId == 'id13' || checkedRadioButtonId == 'id14') {
-            if (title.toUpperCase().indexOf(filter) > -1) {
-                card.style.display = "";
-            } else {
-                card.style.display = "none";
-            }
 
-        } 
+        // Check if the card belongs to the selected category or if all categories are selected
+        if (checkedRadioButtonId == category || checkedRadioButtonId == 'id14') {
+            if (title.toUpperCase().indexOf(filter) > -1) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
+        } else {
+            card.style.display = "none";
+        }
     }
 }
+
 
   </script>
 {% endblock blog_card_container %}
