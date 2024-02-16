@@ -4086,6 +4086,9 @@ def panel_specific_volunteer_awards_page(request,panel_pk):
             else:
                 return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
 
+        # save ranking
+        if(request.POST.get('save_ranking')):
+            return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
         
         
     return render(request,"Volunteer_Awards/volunteer_awards_control_base.html",context=context)
@@ -4176,7 +4179,10 @@ def panel_and_award_specific_page(request,panel_pk,award_pk):
                 return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
             else:
                 return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
-                
+        # save ranking
+        if(request.POST.get('save_ranking')):
+            return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+
 
     return render(request,"Volunteer_Awards/volunteer_awards_control_base.html",context=context)
 
@@ -4216,12 +4222,11 @@ class AwardRanking(View):
         direction = request.GET.get('direction')
         panel_pk=request.GET.get('panel_pk')
         
-        if(award_id==direction):
+        if(award_id==direction=='0'):
             # fetching awards
             return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
         else:
             
-        
             # get all the awards and the list in sorted order
             all_award_list=[]
             all_awards=HandleVolunteerAwards.load_awards_for_panels(request,panel_pk)
@@ -4229,37 +4234,118 @@ class AwardRanking(View):
             for i in all_awards:
                 all_award_list.append(i)
             
+            # if the direction is up
             if(direction == 'up'):
+                # first get the award to change
                 get_the_award_to_change=VolunteerAwards.objects.get(pk=award_id)
+                
+                # then get a previous award that is ranked the same with the award to change
                 get_the_previous_ranked_award=VolunteerAwards.objects.filter(
-                    rank_of_awards__gt=get_the_award_to_change.rank_of_awards
-                ).last()
-                if(get_the_previous_ranked_award is not None):
-                    
-                    # get the award of the previous ranked award
-                    get_the_previous_of_previous_ranked_award=VolunteerAwards.objects.filter(
-                        rank_of_awards__gt=get_the_previous_ranked_award.rank_of_awards
+                    rank_of_awards=get_the_award_to_change.rank_of_awards
+                ).exclude(pk=get_the_award_to_change.pk).last()
+                
+                if(get_the_previous_ranked_award is None):
+                    # if that kind of event doesnot exist then replace with the last object that has greater rank than the one to edit
+                    get_the_previous_ranked_award=VolunteerAwards.objects.filter(
+                        rank_of_awards__gt=get_the_award_to_change.rank_of_awards
                     ).last()
-                    if(get_the_previous_of_previous_ranked_award is not None):
-                        # this piece of logic is for the awards that has two awards or + higher ranked than it.
+                    
+                if(get_the_previous_ranked_award is not None):
+
+                    # if such award exists then do follow the below conditions
+                    
+                    if(get_the_award_to_change.rank_of_awards==get_the_previous_ranked_award.rank_of_awards==0):
                         
-                        # generate a random number between the range of previous award and the award previous of previous award
-                        random_rank=generate_random_rank_for_awards(get_the_previous_ranked_award.rank_of_awards,get_the_previous_of_previous_ranked_award.rank_of_awards,all_awards)
+                        # if both previous and award to change has 0 values (means that they are newly added)
                         
-                        # assign the random rank to awards now
-                        get_the_award_to_change.rank_of_awards=random_rank
+                        # then change the rank of the award to change to +2. means the new rank will be 0+2=2
+                        get_the_award_to_change.rank_of_awards=(get_the_award_to_change.rank_of_awards+2)
+                        # update award
                         get_the_award_to_change.save()
-                        
                         return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
+
+                    elif(get_the_award_to_change.rank_of_awards==get_the_previous_ranked_award.rank_of_awards):
                         
+                        # check if any other object has a rank of the same as (get_the_previous_ranked_award.rank_of_awards+1) value
+                        get_previous_one_award=VolunteerAwards.objects.filter(rank_of_awards=get_the_previous_ranked_award.rank_of_awards+1).last()
+                        if(get_previous_one_award is not None):
+                            # if such an object exists then increase the rank of that object by 1 so that the award to update can be updated by +1.
+                            get_previous_one_award.rank_of_awards=get_previous_one_award.rank_of_awards+1
+                            get_previous_one_award.save()
+                            
+                        # update the award rank by +1 of the previous ranked award
+                        get_the_award_to_change.rank_of_awards=(get_the_previous_ranked_award.rank_of_awards+1)
+                        get_the_award_to_change.save()
+                        return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
+
                     else:
-                        # implement the logic of having only 1 award higher in rank
+                        # otherwise just swap the previous values of previous award and award to change
                         
-                        pass
+                        temp=get_the_award_to_change.rank_of_awards
+                        get_the_award_to_change.rank_of_awards=get_the_previous_ranked_award.rank_of_awards
+                        get_the_award_to_change.save()
+                        get_the_previous_ranked_award.rank_of_awards=temp
+                        get_the_previous_ranked_award.save()
+                        return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
                 else:
-                    pass
+                    # this is the highest ranked award so no need to change
+                    return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
             
-            print(f"Award id is {award_id} and direction is {direction}")
+            elif(direction=="down"):
+                #if the direction is down
+                
+                # first get the award to change
+                get_the_award_to_change=VolunteerAwards.objects.get(pk=award_id)
+
+                # get the award lower to its rank
+                # first check if an award with same rank exists
+                get_the_next_award=VolunteerAwards.objects.filter(
+                    rank_of_awards=get_the_award_to_change.rank_of_awards
+                    ).exclude(pk=get_the_award_to_change.pk).first()
+                if(get_the_next_award is None):
+                    # if same rank does not exist, then get the next award with lower rank
+                    get_the_next_award=VolunteerAwards.objects.filter(
+                        rank_of_awards__lt=get_the_award_to_change.rank_of_awards
+                        ).exclude(pk=get_the_award_to_change.pk).first()
+                
+                if(get_the_next_award is not None):
+                    # if next award exists
+                    if(get_the_award_to_change.rank_of_awards==get_the_next_award.rank_of_awards==0):
+                        
+                        # if both next and award to change has 0 values (means that they are newly added)
+                        
+                        # then change the rank of the award to change to -2. means the new rank will be 0-2=-2
+                        get_the_award_to_change.rank_of_awards=(get_the_award_to_change.rank_of_awards-2)
+                        # update award
+                        get_the_award_to_change.save()
+                        return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
+                    
+                    elif(get_the_award_to_change.rank_of_awards==get_the_next_award.rank_of_awards):
+                        
+                        # check if any other object has a rank of the same as (get_the_next_award.rank_of_awards+1) value
+                        get_next_one_award=VolunteerAwards.objects.filter(rank_of_awards=get_the_next_award.rank_of_awards-1).first()
+                        if(get_next_one_award is not None):
+                            # if such an object exists then decrease the rank of that object by 1 so that the award to update can be updated by +-1.
+                            get_next_one_award.rank_of_awards=get_next_one_award.rank_of_awards-1
+                            get_previous_one_award.save()
+                            
+                        # update the award rank by -1 of the next ranked award
+                        get_the_award_to_change.rank_of_awards=(get_the_next_award.rank_of_awards-1)
+                        get_the_award_to_change.save()
+                        return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
+                    
+                    else:
+                        # otherwise just swap the rank values of next award and award to change
+                        
+                        temp=get_the_award_to_change.rank_of_awards
+                        get_the_award_to_change.rank_of_awards=get_the_next_award.rank_of_awards
+                        get_the_award_to_change.save()
+                        get_the_next_award.rank_of_awards=temp
+                        get_the_next_award.save()
+                        return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
+                    
+        #load script    
+        return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
         
     def get_award_values_json(request,panel_pk):
         get_awards=HandleVolunteerAwards.load_awards_for_panels(request,panel_pk)
@@ -4270,11 +4356,3 @@ class AwardRanking(View):
                 "volunteer_award_name": i.volunteer_award_name,
             })
         return data
-def generate_random_rank_for_awards(start,end,award_list):
-    random_rank= random.randint(start,end)
-    for i in award_list:
-        if(i.rank_of_awards==random_rank):
-            generate_random_rank_for_awards(start,end,award_list)
-        else:
-            pass
-    return random_rank

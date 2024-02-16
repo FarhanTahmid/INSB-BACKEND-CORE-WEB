@@ -327,25 +327,11 @@
                             <br>
                             <!--Award Lists-->
                             <ul style="list-style-type:none;" id="award_list">
-                                {% comment %} {% for i in all_awards %}
-                                    <li id="award_{{ i.id }}" class="award-item">
-                                        <p class="btn btn-outline b-info text-info">{{ i.volunteer_award_name }}</p>
-                                        <span style="margin-left:5px;">
-                                            <button id="rank_down_{{ i.id }}" class="rank-down btn btn-outline b-danger text-danger" style="margin-bottom:15px;">
-                                                <i class="fa fa-sort-desc"></i>
-                                            </button>
-                                        </span>
-                                        <span style="margin-left:3px;">
-                                            <button id="rank_up_{{ i.id }}" class="rank-up btn btn-outline b-success text-success" style="margin-bottom:15px;">
-                                                <i class="fa fa-sort-up"></i>
-                                            </button>
-                                        </span>
-                                    </li>
-                                {% endfor %}                             {% endcomment %}
+                        
                             </ul>
                             
-
                             <form method="POST">
+                                {% csrf_token %}
                                 <div class="modal-footer">
                                     <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">Cancel</button>
                                     <input type="submit" class="btn success p-x-md" name="save_ranking" value="Save Ranking"></input>  
@@ -407,8 +393,8 @@
                     url: "{% url 'central_branch:award_ranking' %}",
                     type: 'GET',
                     data: {
-                        award_id: 0,
-                        direction: 0,
+                        award_id: '0',
+                        direction: '0',
                         panel_pk:"{{panel_info.pk}}"
                     },
                     success: function(response) {
