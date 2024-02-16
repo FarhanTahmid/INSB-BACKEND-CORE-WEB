@@ -145,6 +145,14 @@
             overflow-x: hidden;
             overflow-y: auto;
         }
+        .rank-down{
+            margin-left:5px;
+            margin-bottom:15px;
+        }
+        .rank-up{
+            margin-left:5px;
+            margin-bottom:15px;
+        }
         
     </style>
 </head>
@@ -319,10 +327,10 @@
                             <br>
                             <!--Award Lists-->
                             <ul style="list-style-type:none;" id="award_list">
-                                {% for i in all_awards %}
+                                {% comment %} {% for i in all_awards %}
                                     <li id="award_{{ i.id }}" class="award-item">
                                         <p class="btn btn-outline b-info text-info">{{ i.volunteer_award_name }}</p>
-                                        <span style="margin-left:3px;">
+                                        <span style="margin-left:5px;">
                                             <button id="rank_down_{{ i.id }}" class="rank-down btn btn-outline b-danger text-danger" style="margin-bottom:15px;">
                                                 <i class="fa fa-sort-desc"></i>
                                             </button>
@@ -333,7 +341,7 @@
                                             </button>
                                         </span>
                                     </li>
-                                {% endfor %}                            
+                                {% endfor %}                             {% endcomment %}
                             </ul>
                             
 
@@ -392,16 +400,91 @@
 
     <script>
         $(document).ready(function() {
-            
-            $('.rank-up').click(function() {
-                var awardId = $(this).attr('id').split('_')[2];
-                rankAward(awardId, 'up');
-            });
-        
-            $('.rank-down').click(function() {
-                var awardId = $(this).attr('id').split('_')[2];
-                rankAward(awardId, 'down');
-            });
+            fetchAward();
+
+            function fetchAward() {
+                $.ajax({
+                    url: "{% url 'central_branch:award_ranking' %}",
+                    type: 'GET',
+                    data: {
+                        award_id: 0,
+                        direction: 0,
+                        panel_pk:"{{panel_info.pk}}"
+                    },
+                    success: function(response) {
+                        // Access DOM elements
+                        const awardList = document.getElementById("award_list"); // Assuming IDs match
+                        // Clear existing content (if there's any)
+                        $("#award_list").empty();
+
+                        // Iterate through awards and create DOM elements
+                        for (let i = 0; i < response.length; i++) {
+                            const award = response[i];
+                          
+                            // Create list item
+                            const listItem = document.createElement("li");
+                            listItem.classList.add("award-item");
+                            listItem.id = `award_${award.id}`;
+                          
+                            // Create award name p element
+                            const awardName = document.createElement("p");
+                            awardName.classList.add("btn", "btn-outline", "b-info", "text-info");
+                            awardName.textContent = award.volunteer_award_name;
+                            listItem.appendChild(awardName);
+                          
+                            // Create rank buttons container
+                            const rankButtons = document.createElement("span");
+                            rankButtons.classList.add("rank-buttons");
+                          
+                            // Create rank down button
+                            const rankDownButton = document.createElement("button");
+                            rankDownButton.classList.add("rank-down", "btn", "btn-outline", "b-danger", "text-danger");
+                            rankDownButton.id = `rank_down_${award.id}`;
+                            const icon = document.createElement("i");
+                            icon.classList.add("fa", "fa-sort-desc");
+                            rankDownButton.appendChild(icon)
+                            rankButtons.appendChild(rankDownButton);
+                            
+                            rankDownButton.onclick = function() {
+                                // Access the button's ID:
+                                const awardId = this.id.split('_')[2];
+                              
+                                // Perform actions based on the button ID (e.g., send an AJAX request, update data):
+                                rankAward(awardId,'down')
+                                
+                            };
+
+                            // Create rank up button
+                            const rankUpButton = document.createElement("button");
+                            rankUpButton.classList.add("rank-up", "btn", "btn-outline", "b-success", "text-success");
+                            rankUpButton.id = `rank_up_${award.id}`;
+                            const icon2 = document.createElement("i");
+                            icon2.classList.add("fa", "fa-sort-up");
+                            rankUpButton.appendChild(icon2)
+                            rankButtons.appendChild(rankUpButton);
+                          
+                            // Add rank buttons to list item
+                            listItem.appendChild(rankButtons);
+                          
+                            // Add list item to award list
+                            awardList.appendChild(listItem);
+
+                            rankUpButton.onclick = function() {
+                                // Access the button's ID:
+                                const awardId = this.id.split('_')[2];
+                              
+                                // Perform actions based on the button ID (e.g., send an AJAX request, update data):
+                                rankAward(awardId,'up')
+                                
+                            };
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error ranking award list:", error);
+                    }
+                });
+            }
+
 
             function rankAward(awardId, direction) {
                 $.ajax({
@@ -413,21 +496,7 @@
                         panel_pk:"{{panel_info.pk}}"
                     },
                     success: function(response) {
-                        // Clear existing content (if there's any)
-                        $("#award_list").empty();
-
-                        // Iterate through awards and create DOM elements
-                        for (var i = 0; i < response.length; i++) {
-                            var award = response[i];
-                            var listItem = $("<li></li>").addClass("award-item")
-                                .attr("id", "award_" + award.id); // Set award ID as list item ID
-                            listItem.append($("<p></p>").addClass("btn btn-outline b-info text-info").text(award.volunteer_award_name));
-                            listItem.append($("<span></span>").addClass("rank-buttons")
-                                .append($("<button></button>").addClass("rank-down btn btn-outline b-danger text-danger").attr("id", "rank_down_" + award.id).text("Rank Down"))
-                                .append($("<button></button>").addClass("rank-up btn btn-outline b-success text-success").attr("id", "rank_up_" + award.id).text("Rank Up"))
-                            );
-                            $("#award_list").append(listItem);
-                        }
+                        fetchAward();
                     },
                     error: function(xhr, status, error) {
                         console.error("Error fetching award list:", error);
