@@ -333,7 +333,7 @@
                                             </button>
                                         </span>
                                     </li>
-                                {% endfor %}
+                                {% endfor %}                            
                             </ul>
                             
 
@@ -389,8 +389,10 @@
             });
         });
     </script>
+
     <script>
         $(document).ready(function() {
+            
             $('.rank-up').click(function() {
                 var awardId = $(this).attr('id').split('_')[2];
                 rankAward(awardId, 'up');
@@ -400,7 +402,7 @@
                 var awardId = $(this).attr('id').split('_')[2];
                 rankAward(awardId, 'down');
             });
-        
+
             function rankAward(awardId, direction) {
                 $.ajax({
                     url: "{% url 'central_branch:award_ranking' %}",
@@ -408,20 +410,27 @@
                     data: {
                         award_id: awardId,
                         direction: direction,
+                        panel_pk:"{{panel_info.pk}}"
                     },
                     success: function(response) {
-                        if (response.success) {
-                            // Successful ranking, update the list
-                            var awardItem = $('#award_' + awardId);
-                            var newPosition = direction === 'up' ? awardItem.prev() : awardItem.next();
-                            awardItem.detach().insertAfter(newPosition);
-                        } else {
-                            // Handle error message or other actions
-                            alert(response.error);
+                        // Clear existing content (if there's any)
+                        $("#award_list").empty();
+
+                        // Iterate through awards and create DOM elements
+                        for (var i = 0; i < response.length; i++) {
+                            var award = response[i];
+                            var listItem = $("<li></li>").addClass("award-item")
+                                .attr("id", "award_" + award.id); // Set award ID as list item ID
+                            listItem.append($("<p></p>").addClass("btn btn-outline b-info text-info").text(award.volunteer_award_name));
+                            listItem.append($("<span></span>").addClass("rank-buttons")
+                                .append($("<button></button>").addClass("rank-down btn btn-outline b-danger text-danger").attr("id", "rank_down_" + award.id).text("Rank Down"))
+                                .append($("<button></button>").addClass("rank-up btn btn-outline b-success text-success").attr("id", "rank_up_" + award.id).text("Rank Up"))
+                            );
+                            $("#award_list").append(listItem);
                         }
                     },
                     error: function(xhr, status, error) {
-                        console.error('Error ranking award:', error);
+                        console.error("Error fetching award list:", error);
                     }
                 });
             }
