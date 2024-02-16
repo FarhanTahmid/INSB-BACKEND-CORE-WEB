@@ -94,17 +94,7 @@ def sc_ag_members(request,primary):
         # get sc_ag members
         sc_ag_members=SC_AG_Info.get_sc_ag_members(request,primary)
         
-        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
         has_access_to_view_member_details=SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary)
-        
-        show_restriction_banner = False
-        #If access restricted from admin and has view permissions then show banner
-        if not has_access_for_sc_ag_updates and has_access_to_view_member_details:
-            show_restriction_banner = True
-
-        #If access is restricted then override the view access
-        if not has_access_for_sc_ag_updates:
-            has_access_to_view_member_details=False
 
         if request.method=="POST":
             if request.POST.get('add_sc_ag_member'):
@@ -137,9 +127,7 @@ def sc_ag_members(request,primary):
             'teams':sc_ag_teams,
             'sc_ag_members':sc_ag_members,
             'member_count':len(sc_ag_members),
-            'has_access_to_view_member_details':has_access_to_view_member_details,
-            'show_restriction_banner':show_restriction_banner
-            
+            'has_access_to_view_member_details':has_access_to_view_member_details,            
         }
         return render(request,'Members/sc_ag_members.html',context=context)
     
@@ -1781,8 +1769,7 @@ def manage_main_website(request, primary):
         user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-
-    
+  
         has_access = SC_Ag_Render_Access.access_for_manage_web(request, primary)
         if(has_access):
             has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)

@@ -320,9 +320,11 @@
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal1">Logo</a>
                                     </div>
+                                    {% if not show_restriction_banner %}
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.logo}}', 'sc_ag_logo')">✖</button>
                                     </div>
+                                    {% endif %}
                                 </div>
                                 {% endif %}
                             </div>
@@ -342,9 +344,11 @@
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal2">Group Picture</a>
                                     </div>
+                                    {% if not show_restriction_banner %}
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.background_image}}', 'background_image')">✖</button>
                                     </div>
+                                    {% endif %}
                                 </div>
                                 {% endif %}
                             </div>
@@ -385,9 +389,11 @@
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal3">Mission Image</a>
                                     </div>
+                                    {% if not show_restriction_banner %}
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.mission_picture}}', 'mission_picture')">✖</button>
                                     </div>
+                                    {% endif %}
                                 </div>
                                 {% endif %}
                             </div>
@@ -422,9 +428,11 @@
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal4">Vision Image</a>
                                     </div>
+                                    {% if not show_restriction_banner %}
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.vision_picture}}', 'vision_picture')">✖</button>
                                     </div>
+                                    {% endif %}
                                 </div>
                                 {% endif %}
                             </div>
