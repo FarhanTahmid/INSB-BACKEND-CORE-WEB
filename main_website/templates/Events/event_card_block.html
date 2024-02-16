@@ -323,9 +323,9 @@
             </div>
             {% endfor %}
         </div>
-    <div class="text-center mt-4 mb-5" style="margin: auto;">
+    {% comment %} <div class="text-center mt-4 mb-5" style="margin: auto;">
           <button class="load-more-button load-more load-event">LOAD MORE</button>
-    </div>
+    </div> {% endcomment %}
         
     </div>
 </section>
@@ -340,7 +340,7 @@
   </script>
 
 <!-- event load more button -->
-<script>
+{% comment %} <script>
     $(document).ready(function () {
         var visibleCount = 3; // Initial number of elements to show
         var totalElements = $(".event_box").length; // Total number of elements
@@ -370,7 +370,7 @@
         });
     });
     
-</script>
+</script> {% endcomment %}
 
 <script>
   function eventFilter() {
