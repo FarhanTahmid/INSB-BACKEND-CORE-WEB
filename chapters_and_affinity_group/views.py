@@ -148,6 +148,15 @@ def sc_ag_panels(request,primary):
         
         # get panels of SC-AG
         all_panels=SC_AG_Info.get_panels_of_sc_ag(request=request,sc_ag_primary=primary)
+
+        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+        panel_edit_access=SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary)
+        
+        show_restriction_banner = False
+        #If there is edit access while update access is restricted from admin then show banner and override the edit access
+        if not has_access_for_sc_ag_updates and panel_edit_access:
+            show_restriction_banner = True
+            panel_edit_access = False
         
         if request.method=="POST":
             if request.POST.get('create_panel'):
@@ -167,13 +176,14 @@ def sc_ag_panels(request,primary):
                                                 sc_ag_primary=primary,tenure_year=tenure_year)
                 ):
                     return redirect('chapters_and_affinity_group:sc_ag_panels',primary)  
-        panel_edit_access=SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary)
+
         context={
             'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'panels':all_panels,
             'panel_edit_access':panel_edit_access,
+            'show_restriction_banner':show_restriction_banner
         }
         return render(request,'Panels/panel_homepage.html',context=context)
     
@@ -205,6 +215,16 @@ def sc_ag_panel_details(request,primary,panel_pk):
 
         # get sc_ag_executives
         sc_ag_eb_members=SC_AG_Info.get_sc_ag_executives_from_panels(request=request,panel_id=panel_pk)
+
+        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+        panel_edit_access = SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary)
+        
+        show_restriction_banner = False
+        #If there is edit access while update access is restricted from admin then show banner and override the edit access
+        if not has_access_for_sc_ag_updates and panel_edit_access:
+            show_restriction_banner = True
+            panel_edit_access = False
+
         if request.method=="POST":
             # adding member to panel
             if request.POST.get('add_executive_to_sc_ag_panel'):
@@ -388,7 +408,8 @@ def sc_ag_panel_details(request,primary,panel_pk):
             'sc_ag_members':sc_ag_members,
             'sc_ag_eb_members':sc_ag_eb_members,
             'sc_ag_eb_positions':SC_AG_Info.get_sc_ag_executive_positions(request=request,sc_ag_primary=primary),
-            'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
+            'panel_edit_access':panel_edit_access,
+            'show_restriction_banner':show_restriction_banner,
             'member_details_access':SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary),
             'all_positions':PortData.get_all_positions_of_everyone(request=request,sc_ag_primary=primary)
         }
@@ -421,6 +442,15 @@ def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
         sc_ag_officer_members_in_panel=SC_AG_Info.get_sc_ag_officers_from_panels(panel_id=panel_pk,request=request)
         # get sc_ag members
         sc_ag_members=SC_AG_Info.get_sc_ag_members(request,primary)
+
+        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+        panel_edit_access = SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary)
+        
+        show_restriction_banner = False
+        #If there is edit access while update access is restricted from admin then show banner and override the edit access
+        if not has_access_for_sc_ag_updates and panel_edit_access:
+            show_restriction_banner = True
+            panel_edit_access = False
         
         if(request.method=="POST"):
             # Add Member to officer panel
@@ -449,7 +479,8 @@ def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
             'sc_ag_officer_positions':SC_AG_Info.get_sc_ag_officer_positions(request=request,sc_ag_primary=primary),
             'sc_ag_teams':SC_AG_Info.get_teams_of_sc_ag(request=request,sc_ag_primary=primary),
             'member_details_access':SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary),
-            'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
+            'panel_edit_access':panel_edit_access,
+            'show_restriction_banner':show_restriction_banner,
 
         }
         return render(request,'Panels/sc_ag_officer_members_tab.html',context=context)
@@ -485,6 +516,15 @@ def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
         # get_sc_ag_officer members from panels
         sc_ag_volunteer_members_in_panel=SC_AG_Info.get_sc_ag_volunteer_from_panels(request=request,panel_id=panel_pk)
         
+        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+        panel_edit_access = SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary)
+        
+        show_restriction_banner = False
+        #If there is edit access while update access is restricted from admin then show banner and override the edit access
+        if not has_access_for_sc_ag_updates and panel_edit_access:
+            show_restriction_banner = True
+            panel_edit_access = False
+
         if(request.method=="POST"):
             # Add Member to officer panel
             if(request.POST.get('add_volunteer_to_sc_ag_panel')):
@@ -514,7 +554,8 @@ def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
             'sc_ag_teams':SC_AG_Info.get_teams_of_sc_ag(request=request,sc_ag_primary=primary),
             'sc_ag_volunteer_members':sc_ag_volunteer_members_in_panel,
             'member_details_access':SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary),
-            'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
+            'panel_edit_access':panel_edit_access,
+            'show_restriction_banner':show_restriction_banner
 
         }
         return render(request,'Panels/sc_ag_volunteer_members_tab.html',context=context)
@@ -540,6 +581,15 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
             tenure_time=present_date.date()-panel_info.creation_time.date()
         else:
             tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+
+        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+        panel_edit_access = SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary)
+        
+        show_restriction_banner = False
+        #If there is edit access while update access is restricted from admin then show banner and override the edit access
+        if not has_access_for_sc_ag_updates and panel_edit_access:
+            show_restriction_banner = True
+            panel_edit_access = False
 
         # get all alumni members registered in database of IEEE NSU SB
         alumni_members=Alumni_Members.objects.all().order_by('pk')
@@ -587,7 +637,8 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
             'positions':SC_AG_Info.get_sc_ag_executive_positions(request=request,sc_ag_primary=primary),
             'alumni_members':alumni_members,
             'alumni_members_in_panel':PanelMembersData.get_alumni_members_from_panel(panel=panel_pk,request=request),
-            'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
+            'panel_edit_access':panel_edit_access,
+            'show_restriction_banner':show_restriction_banner
         }
         return render(request,'Panels/sc_ag_alumni_members_tab.html',context=context)
     except Exception as e:
