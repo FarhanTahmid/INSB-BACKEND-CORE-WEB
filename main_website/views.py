@@ -1150,7 +1150,7 @@ def exemplary_members(request):
         #loading all the teams of Branch
         branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
         # get all exemplary members
-        all_exemplary_members=ExemplaryMembers.objects.all().order_by('-rank')
+        all_exemplary_members=ExemplaryMembers.objects.all().order_by('rank')
             
         context={
             'page_title':"Exemplary Members",
