@@ -409,7 +409,7 @@
                   if(filter == 'back' || filter == 'category'){
                       filtered.style.display = 'block';
                   }else{
-                    if(filtered.getAttribute('data-category') == filter)
+                    if(filtered.getAttribute('data-category').toLowerCase() == filter)
                       filtered.style.display = 'block'; 
                     else 
                       filtered.style.display = 'none';  

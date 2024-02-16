@@ -323,9 +323,9 @@
             </div>
             {% endfor %}
         </div>
-    <div class="text-center mt-4 mb-5" style="margin: auto;">
+    {% comment %} <div class="text-center mt-4 mb-5" style="margin: auto;">
           <button class="load-more-button load-more load-event">LOAD MORE</button>
-    </div>
+    </div> {% endcomment %}
         
     </div>
 </section>
@@ -340,7 +340,7 @@
   </script>
 
 <!-- event load more button -->
-<script>
+{% comment %} <script>
     $(document).ready(function () {
         var visibleCount = 3; // Initial number of elements to show
         var totalElements = $(".event_box").length; // Total number of elements
@@ -370,7 +370,7 @@
         });
     });
     
-</script>
+</script> {% endcomment %}
 
 <script>
   function eventFilter() {
@@ -461,7 +461,8 @@
       cards.forEach(function(show){
         show.style.display = 'block';
       });
-      switch(filter) {
+      console.log(filter);
+      switch (filter.toLowerCase()) {
         case 'date latest':
               cards.sort(function(a, b) {
                   return new Date(b.querySelector(".blog-date").innerText) - new Date(a.querySelector(".blog-date").innerText);
@@ -472,19 +473,22 @@
                   return new Date(a.querySelector(".blog-date").innerText) - new Date(b.querySelector(".blog-date").innerText);
               });
               break;
-          default :
+          default:
               cards.forEach(function(filtered) {
-                // console.log(filter)
-                  if(filter == 'back' || filter == 'category'){
-                      filtered.style.display = 'block';
-                  }else{
-                    if(filtered.querySelector(".category").innerHTML.includes(filter))
-                      filtered.style.display = 'block'; 
-                    else 
-                      filtered.style.display = 'none';  
-                    }
-                });
-                break;
+                if (filter == 'back' || filter == 'category') {
+                  filtered.style.display = 'block';
+                } else {
+                  var categories = filtered.querySelector(".category").innerText.toLowerCase().split(',').map(function(item) {
+                    return item.trim();
+                  });
+                  if (categories.includes(filter.toLowerCase())) {
+                    filtered.style.display = 'block';
+                  } else {
+                    filtered.style.display = 'none';
+                  }
+                }
+              });
+              break;
 
       }
 
