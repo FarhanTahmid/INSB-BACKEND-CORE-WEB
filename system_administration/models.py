@@ -99,6 +99,7 @@ class Branch_Data_Access(models.Model):
     create_panels_access=models.BooleanField(null=False,blank=False,default=False)
     panel_memeber_add_remove_access=models.BooleanField(null=False,blank=False,default=False)
     team_details_page=models.BooleanField(null=False,blank=False,default=False)
+    manage_award_access=models.BooleanField(null=False,blank=False,default=False)
     manage_web_access=models.BooleanField(null=False,blank=False,default=False)
 
     class Meta:
