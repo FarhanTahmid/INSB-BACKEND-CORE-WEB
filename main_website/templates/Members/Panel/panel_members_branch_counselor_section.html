@@ -155,20 +155,20 @@
             {% else %}
             <div class="profile-card">
                 <div class="img">
-                    <img src="/media_files/{{i.ex_member.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';"></a>
+                    <img src="/media_files/{{i.ex_member.picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';"></a>
                 </div>
                 <div class="caption">
                     <h3>{{i.ex_member.name}}</h3>
                     <p>{{i.position}}</p>
                     <div class="social-links">
-                        {% if i.ex_member.linkedin_url %}
-                        <a href="{{i.ex_member.linkedin_url}}"><i class="fa-brands fa-linkedin"></i></a>
+                        {% if i.ex_member.linkedin_link %}
+                        <a href="{{i.ex_member.linkedin_link}}"><i class="fa-brands fa-linkedin"></i></a>
                         {% endif %}
-                        {% if i.ex_member.facebook_url %}
-                        <a href="{{i.ex_member.facebook_url}}"><i class="fa-brands fa-facebook"></i></a>
+                        {% if i.ex_member.facebook_link %}
+                        <a href="{{i.ex_member.facebook_link}}"><i class="fa-brands fa-facebook"></i></a>
                         {% endif %}
-                        {% if i.ex_member.email_ieee %}
-                        <a href="mailto:{{i.ex_member.email_ieee}}"><i class="fa-solid fa-envelope"></i></a>
+                        {% if i.ex_member.email %}
+                        <a href="mailto:{{i.ex_member.email}}"><i class="fa-solid fa-envelope"></i></a>
                         {% endif %}
                     </div>
                 </div>
