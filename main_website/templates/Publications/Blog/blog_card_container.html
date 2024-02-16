@@ -292,7 +292,7 @@
     />
     <div class="dropdown">
         <div class="input-box"></div>
-        <div class="list main">
+        <div class="list main" style="overflow: scroll; overflow-x: hidden;">
           <input type="radio" name="drop1" id="id11" class="radio" checked/>
           <label for="id11" id="default1">
               <span class="name">Date Latest</span>
@@ -371,7 +371,7 @@
         list.style.maxHeight = null;
         list.style.boxShadow = null;
       } else {
-        list.style.maxHeight = list.scrollHeight + "px";
+        list.style.maxHeight = "200px";
         list.style.boxShadow =
           "0 1px 2px 0 rgba(0, 0, 0, 0.15),0 1px 3px 1px rgba(0, 0, 0, 0.1)";
       }
