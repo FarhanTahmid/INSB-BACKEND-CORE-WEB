@@ -47,6 +47,7 @@ from membership_development_team.models import Renewal_Sessions
 from system_administration.render_access import Access_Render
 from django.views import View
 from users.renderData import member_login_permission
+import random
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -2393,7 +2394,7 @@ def manage_exemplary_members(request):
         has_access = Branch_View_Access.get_manage_web_access(request)
         if has_access:
             # get all exemplary members
-            exemplary_members = ExemplaryMembers.objects.all().order_by('-rank')
+            exemplary_members = ExemplaryMembers.objects.all().order_by('rank')
             
             if(request.method=="POST"):
                 exemplary_member_form=ExemplaryMembersForm(request.POST,request.FILES)
@@ -4213,5 +4214,67 @@ class AwardRanking(View):
     def get(self,request):
         award_id = request.GET.get('award_id')
         direction = request.GET.get('direction')
+        panel_pk=request.GET.get('panel_pk')
         
-        print(f"Award id is {award_id} and direction is {direction}")
+        if(award_id==direction):
+            # fetching awards
+            return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
+        else:
+            
+        
+            # get all the awards and the list in sorted order
+            all_award_list=[]
+            all_awards=HandleVolunteerAwards.load_awards_for_panels(request,panel_pk)
+
+            for i in all_awards:
+                all_award_list.append(i)
+            
+            if(direction == 'up'):
+                get_the_award_to_change=VolunteerAwards.objects.get(pk=award_id)
+                get_the_previous_ranked_award=VolunteerAwards.objects.filter(
+                    rank_of_awards__gt=get_the_award_to_change.rank_of_awards
+                ).last()
+                if(get_the_previous_ranked_award is not None):
+                    
+                    # get the award of the previous ranked award
+                    get_the_previous_of_previous_ranked_award=VolunteerAwards.objects.filter(
+                        rank_of_awards__gt=get_the_previous_ranked_award.rank_of_awards
+                    ).last()
+                    if(get_the_previous_of_previous_ranked_award is not None):
+                        # this piece of logic is for the awards that has two awards or + higher ranked than it.
+                        
+                        # generate a random number between the range of previous award and the award previous of previous award
+                        random_rank=generate_random_rank_for_awards(get_the_previous_ranked_award.rank_of_awards,get_the_previous_of_previous_ranked_award.rank_of_awards,all_awards)
+                        
+                        # assign the random rank to awards now
+                        get_the_award_to_change.rank_of_awards=random_rank
+                        get_the_award_to_change.save()
+                        
+                        return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
+                        
+                    else:
+                        # implement the logic of having only 1 award higher in rank
+                        
+                        pass
+                else:
+                    pass
+            
+            print(f"Award id is {award_id} and direction is {direction}")
+        
+    def get_award_values_json(request,panel_pk):
+        get_awards=HandleVolunteerAwards.load_awards_for_panels(request,panel_pk)
+        data=[]
+        for i in get_awards:
+            data.append({
+                "id":i.pk,
+                "volunteer_award_name": i.volunteer_award_name,
+            })
+        return data
+def generate_random_rank_for_awards(start,end,award_list):
+    random_rank= random.randint(start,end)
+    for i in award_list:
+        if(i.rank_of_awards==random_rank):
+            generate_random_rank_for_awards(start,end,award_list)
+        else:
+            pass
+    return random_rank
