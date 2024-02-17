@@ -155,9 +155,21 @@
         margin-right: -30px;
     }
 </style>
-<section id="content-section-2"
-    >
+<section id="content-section-2">
     <div class="section1">
+        <div class="filter">
+            <select id="filter-dropdown" style="    width: 200px;
+            height: 40px;
+            border-radius: 5px;
+            padding: 5px;">
+                <option value="all">All</option>
+                <option value="team1">Team 1</option>
+                <option value="team2">Team 2</option>
+                <!-- Add more options as needed -->
+            </select>
+        </div>
+    </div>
+    <div class="section1 loop" id="filter-all" data-category="all" style="display: flex;">
         <div class="section2">
             <div class="section3">
                 <div class="section4">
@@ -199,33 +211,116 @@
         <button class="prev" onclick="prevSlide()"><i class="icon-angle-left gdlr-flex-prev"></i></button>
         <button class="next" onclick="nextSlide()"><i class="icon-angle-right gdlr-flex-next"></i></button>
     </div>
+    <div class="section1 loop" id="filter-team1" data-category="team1" style="display: none;">
+        <div class="section2">
+            <div class="section3">
+                <div class="section4">
+                    <h1 class="gdlr-heading-shortcode">
+                        team1 <br class="break"> of <br class="break">the month</h1>
+                    <div class="bar">
+                    </div>
+                </div>
+                <div class="carousal">
+                    <div class="container">
+                        {% for i in all_vom %}
+                        <div class="content">
+                            <div class="con">
+                                <div class="circle">
+                                    <img src="/media_files/{{i.ieee_id.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="picture_of_volunteer_of_the_month">
+                                </div>
+                                <div class="details">
+                                    <div class="list-with-icon-caption">
+                                        <p style="text-align: left;">Name: <span style="color: #002855;">{{i.ieee_id.name}}</span></p>
+                                        <p style="text-align: left;">Team: <span style="color: #002855;">{{i.ieee_id.team}}</span></p>
+                                        <p style="text-align: left;">Position: <span style="color: #002855;">{{i.ieee_id.position}}</span></p>
+                                    </div>
+                                    <div class="list-with-icon-content">
+                                        <div class="list-with-icon-title gdlr-skin-title" style="font-weight: 500;">
+                                            Contributions
+                                        </div>
+                                        <div class="list-with-icon-caption">
+                                            <p style="text-align: justify;">{{i.contributions | safe}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="prev" onclick="prevSlide()"><i class="icon-angle-left gdlr-flex-prev"></i></button>
+        <button class="next" onclick="nextSlide()"><i class="icon-angle-right gdlr-flex-next"></i></button>
+    </div>
+    <div class="section1 loop" id="filter-team2" data-category="team2" style="display: none;">
+        <div class="section2">
+            <div class="section3">
+                <div class="section4">
+                    <h1 class="gdlr-heading-shortcode">
+                        Team2 <br class="break"> of <br class="break">the month</h1>
+                    <div class="bar">
+                    </div>
+                </div>
+                <div class="carousal">
+                    <div class="container">
+                        {% for i in all_vom %}
+                        <div class="content">
+                            <div class="con">
+                                <div class="circle">
+                                    <img src="/media_files/{{i.ieee_id.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="picture_of_volunteer_of_the_month">
+                                </div>
+                                <div class="details">
+                                    <div class="list-with-icon-caption">
+                                        <p style="text-align: left;">Name: <span style="color: #002855;">{{i.ieee_id.name}}</span></p>
+                                        <p style="text-align: left;">Team: <span style="color: #002855;">{{i.ieee_id.team}}</span></p>
+                                        <p style="text-align: left;">Position: <span style="color: #002855;">{{i.ieee_id.position}}</span></p>
+                                    </div>
+                                    <div class="list-with-icon-content">
+                                        <div class="list-with-icon-title gdlr-skin-title" style="font-weight: 500;">
+                                            Contributions
+                                        </div>
+                                        <div class="list-with-icon-caption">
+                                            <p style="text-align: justify;">{{i.contributions | safe}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="prev" onclick="prevSlide()"><i class="icon-angle-left gdlr-flex-prev"></i></button>
+        <button class="next" onclick="nextSlide()"><i class="icon-angle-right gdlr-flex-next"></i></button>
+    </div>
 </section>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         let currentIndex = 0;
-        let startX = 0;
-        let isDragging = false;
-        let autoSwipeInterval;
+    let startX = 0;
+    let isDragging = false;
+    let autoSwipeInterval;
 
-        const slides = document.querySelectorAll('#content-section-2 .section1 .section2 .section3 .carousal .container .content');
-        const totalSlides = slides.length;
-
-        function showSlide(index) {
+    function showSlide(index, container) {
+        if (container) { // Check if container is not null
             const percentage = -index * 100;
-            document.querySelector('#content-section-2 .section1 .section2 .section3 .carousal .container').style.transform = `translateX(${percentage}%)`;
+            container.style.transform = `translateX(${percentage}%)`;
         }
+    }
 
-        function prevSlide() {
-            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-            showSlide(currentIndex);
-            restartAutoSwipe();
-        }
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+        showSlide(currentIndex, currentContainer);
+        restartAutoSwipe();
+    }
 
-        function nextSlide() {
-            currentIndex = (currentIndex + 1) % totalSlides;
-            showSlide(currentIndex);
-            restartAutoSwipe();
-        }
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % totalSlides;
+        showSlide(currentIndex, currentContainer);
+        restartAutoSwipe();
+    }
 
         function handleTouchStart(e) {
             startX = e.touches[0].clientX;
@@ -280,23 +375,58 @@
             autoSwipeInterval = setInterval(nextSlide, 3000);
         }
 
-        const container = document.querySelector('#content-section-2 .section1 .section2 .section3 .carousal .container');
-        container.addEventListener('touchstart', handleTouchStart);
-        container.addEventListener('touchmove', handleTouchMove);
-        container.addEventListener('touchend', handleTouchEnd);
+            const filterDropdown = document.getElementById('filter-dropdown');
+            if (filterDropdown) {
+                filterDropdown.addEventListener('change', function() {
+                    const selectedValue = this.value.toLowerCase();
+                    const sections = document.querySelectorAll('.section1.loop');
+                    sections.forEach(function(section) {
+                        const category = section.getAttribute('data-category');
+                        if ((category && category.toLowerCase() === selectedValue)) {
+                            section.style.display = 'flex';
+                        } else {
+                            section.style.display = 'none';
+                        }
+                    });
 
-        container.addEventListener('mousedown', handleMouseDown);
-        container.addEventListener('mousemove', handleMouseMove);
-        container.addEventListener('mouseup', handleMouseUp);
+                    const selectedSection = document.querySelector(`[data-category="${selectedValue}"]`);
+                    if (selectedSection) {
+                        currentIndex = 0;
+                        currentContainer = selectedSection.querySelector('.section1.loop .container');
+                        totalSlides = currentContainer.querySelectorAll('.content').length;
+                        showSlide(currentIndex, currentContainer);
+                        restartAutoSwipe();
+                    }
+                });
+            }
 
-        document.querySelector('.prev').addEventListener('click', prevSlide);
-        document.querySelector('.next').addEventListener('click', nextSlide);
+        const container = document.querySelector('#content-section-2 .section1.loop .section2 .section3 .carousal .container');
+        let totalSlides = container ? container.querySelectorAll('.content').length : 0;
+    let currentContainer = container;
 
-        container.addEventListener('mouseenter', stopAutoSwipe);
-        container.addEventListener('mouseleave', restartAutoSwipe);
+        if (container) { // Check if container is not null
+            container.addEventListener('touchstart', handleTouchStart);
+            container.addEventListener('touchmove', handleTouchMove);
+            container.addEventListener('touchend', handleTouchEnd);
+
+            container.addEventListener('mousedown', handleMouseDown);
+            container.addEventListener('mousemove', handleMouseMove);
+            container.addEventListener('mouseup', handleMouseUp);
+
+            container.addEventListener('mouseenter', restartAutoSwipe);
+            container.addEventListener('mouseleave', restartAutoSwipe);
+        }
+
+        const prevButton = document.querySelector('.prev');
+        const nextButton = document.querySelector('.next');
+
+        if (prevButton && nextButton) { // Check if prevButton and nextButton are not null
+            prevButton.addEventListener('click', prevSlide);
+            nextButton.addEventListener('click', nextSlide);
+        }
 
         restartAutoSwipe(); // Start auto-swipe on page load
-        showSlide(currentIndex);
+    showSlide(currentIndex, container);
     });
 </script>
 
